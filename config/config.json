@@ -107,7 +107,7 @@
 				]
 			},
 			"objects": [
-				{ "name": "source/main/d3d_intimacy.cpp", "index": 6, "status": "NonMatching" },
+				{ "name": "source/main/d3d_intimacy.cpp", "index": 6, "status": "Matching" },
 				{ "name": "source/cseries/headers.c", "index": 7, "status": "NonMatching" },
 				{ "name": "source/sound/sound_scenery_group.c", "index": 8, "status": "Matching" },
 				{ "name": "source/sound/sound_scenery.c", "index": 9, "status": "NonMatching" },
