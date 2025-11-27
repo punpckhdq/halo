@@ -14,7 +14,10 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/RASTERIZER.C */
+
+boolean rasterizer_initialize(void);
+void rasterizer_dispose(void);
 
 /* ---------- globals */
 

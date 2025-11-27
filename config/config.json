@@ -439,7 +439,7 @@
 				{ "name": "source/structures/radiosity/intermediate_radiosity.c", "index": 67, "status": "Matching" },
 				{ "name": "source/shell/shell_xbox.c", "index": 68, "status": "NonMatching" },
 				{ "name": "source/shell/shell_windows.c", "index": 69, "status": "Matching" },
-				{ "name": "source/shell/shell.c", "index": 70, "status": "NonMatching" },
+				{ "name": "source/shell/shell.c", "index": 70, "status": "Matching" },
 				{ "name": "source/shaders/shaders.c", "index": 71, "status": "NonMatching" },
 				{ "name": "source/shaders/shader_definitions.c", "index": 72, "status": "NonMatching" },
 				{ "name": "source/scenario/wind_definitions.c", "index": 73, "status": "Matching" },

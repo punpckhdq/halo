@@ -14,7 +14,10 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/TAG_FILES.C */
+
+void tag_files_open(void);
+void tag_files_close(void);
 
 /* ---------- globals */
 

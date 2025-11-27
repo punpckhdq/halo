@@ -201,6 +201,9 @@ struct gamepad_state
 
 /* ---------- prototypes/INPUT_XBOX.C */
 
+void input_dispose();
+void input_initialize();
+
 /* ---------- globals */
 
 /* ---------- public code */

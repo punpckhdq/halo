@@ -14,7 +14,10 @@ file has inline function assertions.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/REAL_MATH.C */
+
+void real_math_initialize(void);
+void real_math_dispose(void);
 
 /* ---------- globals */
 

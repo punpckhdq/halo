@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/GAME_STATE_XBOX.C */
+
+void game_state_initialize(void);
 
 /* ---------- globals */
 
