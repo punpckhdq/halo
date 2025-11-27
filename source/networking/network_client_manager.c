@@ -1,0 +1,380 @@
+/*
+NETWORK_CLIENT_MANAGER.C
+
+symbols in this file:
+001141C0 0040:
+	_code_001141c0 (0000)
+00114200 0060:
+	_network_game_client_dispose (0000)
+00114260 0020:
+	_network_game_client_keep_alive (0000)
+00114280 0070:
+	_network_game_client_get_state (0000)
+001142F0 0100:
+	_network_game_client_initiate_join_game (0000)
+001143F0 0070:
+	_network_game_client_set_machine (0000)
+00114460 0030:
+	_network_game_client_get_machine (0000)
+00114490 0040:
+	_network_game_client_get_machine_index (0000)
+001144D0 0040:
+	_network_game_client_get_available_games (0000)
+00114510 0040:
+	_network_game_client_get_error (0000)
+00114550 0040:
+	_network_game_client_get_seconds_to_game_start (0000)
+00114590 0010:
+	_network_game_client_write (0000)
+001145A0 00d0:
+	_network_game_client_address_matches_server (0000)
+00114670 0070:
+	_network_game_client_game_out_of_sync (0000)
+001146E0 00b0:
+	_network_game_client_ponged (0000)
+00114790 0110:
+	_network_game_client_accepted_into_game (0000)
+001148A0 0130:
+	_network_game_client_game_settings_updated (0000)
+001149D0 0060:
+	_unstrip_player_index (0000)
+00114A30 01a0:
+	_network_game_client_game_has_started (0000)
+00114BD0 0190:
+	_network_game_client_handle_game_update (0000)
+00114D60 0100:
+	_network_game_client_add_player_to_game (0000)
+00114E60 0050:
+	_network_game_client_switch_to_postgame (0000)
+00114EB0 00b0:
+	_network_game_client_switch_to_pregame (0000)
+00114F60 0040:
+	_network_game_client_get_connection (0000)
+00114FA0 0050:
+	_network_game_client_get_remote_server_address (0000)
+00114FF0 0040:
+	_network_game_client_get_game (0000)
+00115030 0040:
+	_network_game_client_server_has_started_game (0000)
+00115070 0040:
+	_network_game_client_get_next_update_number (0000)
+001150B0 0040:
+	_network_client_get_oos (0000)
+001150F0 01f0:
+	_network_game_client_add_player (0000)
+001152E0 0100:
+	_network_game_client_update_local_player_data (0000)
+001153E0 00d0:
+	_network_game_client_request_start_time_change (0000)
+001154B0 0050:
+	_network_game_client_countdown_timer_update (0000)
+00115500 0030:
+	_network_game_client_advertised_game_is_valid (0000)
+00115530 02d0:
+	_code_00115530 (0000)
+00115800 0050:
+	_code_00115800 (0000)
+00115850 00c0:
+	_code_00115850 (0000)
+00115910 0080:
+	_code_00115910 (0000)
+00115990 0260:
+	_network_game_client_leave_game (0000)
+00115BF0 01f0:
+	_network_game_client_request_remove_player (0000)
+00115DE0 0170:
+	_network_game_client_remove_player (0000)
+00115F50 0050:
+	_network_game_client_new_advertised_game (0000)
+00115FA0 0070:
+	_network_game_client_game_shutdown (0000)
+00116010 00e0:
+	_network_game_client_reset (0000)
+001160F0 02c0:
+	_code_001160f0 (0000)
+001163B0 0180:
+	_code_001163b0 (0000)
+00116530 00d0:
+	_code_00116530 (0000)
+00116600 0190:
+	_code_00116600 (0000)
+00116790 00a0:
+	_code_00116790 (0000)
+00116830 0090:
+	_network_game_client_create (0000)
+001168C0 0130:
+	_network_game_client_idle (0000)
+001169F0 00c0:
+	_network_game_client_rejected_by_game (0000)
+0027FC5C 0018:
+	??_C@_0BI@DEMLIONO@network?5client?5disposed?$AA@ (0000)
+0027FC74 002d:
+	??_C@_0CN@POHNGKMA@network_game_client_dont_use_dir@ (0000)
+0027FCA4 0033:
+	??_C@_0DD@GHLNCEHN@c?3?2halo?2SOURCE?2networking?2networ@ (0000)
+0027FCD8 0007:
+	??_C@_06DGDLPBAN@client?$AA@ (0000)
+0027FCE0 0035:
+	??_C@_0DF@IEPBBGCD@failed?5attempt?5to?5initiate?5a?5con@ (0000)
+0027FD18 0023:
+	??_C@_0CD@NIGOILLF@attempting?5to?5connect?5to?5game?5?$EA?5@ (0000)
+0027FD40 00e1:
+	??_C@_0OB@CAKDCBMD@client?5?$CG?$CG?5?$CIclient?9?$DOstate?5?$DN?$DN?5_net@ (0000)
+0027FE28 0065:
+	??_C@_0GF@JAOOPLIH@client?5?$CG?$CG?5?$CIclient?9?$DOmachine_index@ (0000)
+0027FE90 001e:
+	??_C@_0BO@IIIGFMHE@address?9?$DOaddress?4ipv4_address?$AA@ (0000)
+0027FEB0 0010:
+	??_C@_0BA@IONABMGK@address?5?$CB?$DN?5NULL?$AA@ (0000)
+0027FEC0 0013:
+	??_C@_0BD@PONNKDL@client?9?$DOconnection?$AA@ (0000)
+0027FED4 000f:
+	??_C@_0P@FOLJNCCO@client?5?$CB?$DN?5NULL?$AA@ (0000)
+0027FEE4 002d:
+	??_C@_0CN@FOHIFFFA@local?5machine?5is?5out?5of?5sync?5wit@ (0000)
+0027FF14 0036:
+	??_C@_0DG@JNMFILGG@received?5a?5pong?5from?5a?5system?5we@ (0000)
+0027FF4C 0020:
+	??_C@_0CA@IDICKDHG@received?5a?5pong?5from?5the?5future?$AA@ (0000)
+0027FF6C 0019:
+	??_C@_0BJ@NIPOLBAB@client?5?$CG?$CG?5source_address?$AA@ (0000)
+0027FF88 004c:
+	??_C@_0EM@DJKCNCJP@received?5a?5message_server_machin@ (0000)
+0027FFD4 003b:
+	??_C@_0DL@PONBKBJJ@failed?5to?5create?5a?5message_clien@ (0000)
+00280010 005b:
+	??_C@_0FL@OHPOKFBL@network_game_client_write?$CI?$CJ?5fail@ (0000)
+0028006C 0033:
+	??_C@_0DD@POLEJMBC@successfully?5joined?5a?5net?5game?$DL?5@ (0000)
+002800A0 0064:
+	??_C@_0GE@OLBCDHF@client?5?$CG?$CG?5source_address?5?$CG?$CG?5mess@ (0000)
+00280108 005e:
+	??_C@_0FO@NIJHHMKN@invalid?5message_server_game_sett@ (0000)
+00280168 0021:
+	??_C@_0CB@KMIKJFNP@player?5count?5?$CFd?5machine?5count?5?$CFd@ (0000)
+00280190 0060:
+	??_C@_0GA@FCJMEIKG@received?5updated?5game?5settings?5f@ (0000)
+002801F0 0017:
+	??_C@_0BH@KPFLOHLF@precaching?5map?5?8?$CFs?8?4?4?4?$AA@ (0000)
+00280208 0019:
+	??_C@_0BJ@MGLALEIH@client?5?$CG?$CG?5message_packet?$AA@ (0000)
+00280224 0027:
+	??_C@_0CH@CHLJGLMB@failed?5to?5load?5the?5necessary?5gam@ (0000)
+0028024C 0031:
+	??_C@_0DB@BGLEMKKH@failed?5to?5create?5a?5message_clien@ (0000)
+00280280 0051:
+	??_C@_0FB@NFJPBNDI@network_game_client_write?$CI?$CJ?5fail@ (0000)
+002802D4 0028:
+	??_C@_0CI@DFFIDDAF@local?5machine?5is?5loaded?5?$CG?5ready?5@ (0000)
+00280300 0040:
+	??_C@_0EA@MFKNPKNH@client?5?$CG?$CG?5?$CIclient?9?$DOstate?5?$DN?$DN?5_net@ (0000)
+00280340 0036:
+	??_C@_0DG@PKKMJLJH@client?5is?5lagging?5behind?5the?5ser@ (0000)
+00280378 0061:
+	??_C@_0GB@LLAIIL@out?5of?5sync?3?5client?1server?5rando@ (0000)
+002803DC 002d:
+	??_C@_0CN@HEOJJEAC@not?5a?5bug?0?5but?5update?5?$CFd?5time?5?$CFd@ (0000)
+0028040C 003e:
+	??_C@_0DO@OFILJPBP@out?5of?5sync?3?5missed?5a?5server?5upd@ (0000)
+0028044C 003c:
+	??_C@_0DM@JCJEPCIA@added?5new?5player?5to?5the?5game?5?$CIma@ (0000)
+00280488 0011:
+	??_C@_0BB@NJALFKEL@client?5?$CG?$CG?5player?$AA@ (0000)
+0028049C 0016:
+	??_C@_0BG@OEHGDLGH@switching?5to?5postgame?$AA@ (0000)
+002804B4 0015:
+	??_C@_0BF@FFECCEDB@switching?5to?5pregame?$AA@ (0000)
+002804CC 001e:
+	??_C@_0BO@NFAGDPGC@client?5is?5in?5an?5unknown?5state?$AA@ (0000)
+002804EC 002e:
+	??_C@_0CO@BDJGBKN@client?5tried?5to?5add?5a?5new?5player@ (0000)
+00280520 0044:
+	??_C@_0EE@EPIGONGI@failed?5to?5create?5a?5message_clien@ (0000)
+00280568 0064:
+	??_C@_0GE@JOEDNBHN@network_game_client_write?$CI?$CJ?5fail@ (0000)
+002805D0 0045:
+	??_C@_0EF@CDEPJEJP@failed?5to?5create?5a?5message_clien@ (0000)
+00280618 0065:
+	??_C@_0GF@EOEDLFEI@network_game_client_write?$CI?$CJ?5fail@ (0000)
+00280680 0039:
+	??_C@_0DJ@IAEGENPP@can?8t?5add?5players?5to?5a?5game?5unti@ (0000)
+002806BC 0034:
+	??_C@_0DE@DFECLBOM@requesting?5a?5player?5addition?5?$CIco@ (0000)
+002806F0 005a:
+	??_C@_0FK@DNGOMOFK@client?5?$CG?$CG?5?$CIlocal_player_index?$DO?$DN0@ (0000)
+00280750 0075:
+	??_C@_0HF@KCCMHIFI@network_game_client_update_local@ (0000)
+002807C8 0020:
+	??_C@_0CA@GNHJCNBC@network_player_is_valid?$CIplayer?$CJ?$AA@ (0000)
+002807E8 002d:
+	??_C@_0CN@MLPKDKFB@player?9?$DOmachine_index?$DN?$DNclient?9?$DOm@ (0000)
+00280818 005b:
+	??_C@_0FL@EPANHPNG@failed?5to?5send?5a?5message_client_@ (0000)
+00280878 006b:
+	??_C@_0GL@IAFAMNHJ@network_game_client_request_star@ (0000)
+002808E8 0042:
+	??_C@_0EC@OCMHEGGP@?$CIrequest_type?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIrequest_ty@ (0000)
+0028092C 0038:
+	??_C@_0DI@NNABEADG@there?5is?5?$CFs?5?$CFs?5net?5game?5with?5?$CFd?5@ (0000)
+00280964 0009:
+	??_C@_08EDJFMNDP@a?5closed?$AA@ (0000)
+00280970 0008:
+	??_C@_07JPIGLNNP@an?5open?$AA@ (0000)
+00280978 0013:
+	??_C@_0BD@DEAGDPEH@?$DMunknown?5platform?$DO?$AA@ (0000)
+0028098C 0003:
+	??_C@_02LHFGBEJL@PC?$AA@ (0000)
+00280990 0005:
+	??_C@_04KEMOGDLN@XBox?$AA@ (0000)
+00280998 0008:
+	??_C@_17JLFEDMMI@?$AA?$DP?$AA?$DP?$AA?$DP?$AA?$AA@ (0000)
+002809A0 0050:
+	??_C@_0FA@NLFFOHBN@not?5fatal?0?5but?5we?5have?5to?5many?5a@ (0000)
+002809F0 000f:
+	??_C@_0P@JAPJELHA@current?9?$DOvalid?$AA@ (0000)
+00280A00 0065:
+	??_C@_0GF@OLAKLCGH@network_game_client_write?$CI?$CJ?5fail@ (0000)
+00280A68 005f:
+	??_C@_0FP@INNHEEHK@network_game_client_handle_messa@ (0000)
+00280AC8 004b:
+	??_C@_0EL@PNCEEMAP@network_connection_disconnect?$CI?$CJ?5@ (0000)
+00280B18 0066:
+	??_C@_0GG@PLNHOJNK@network_game_client_write?$CI?$CJ?5fail@ (0000)
+00280B80 0049:
+	??_C@_0EJ@ENIOKCKK@network_connection_disconnect?$CI?$CJ?5@ (0000)
+00280BD0 004a:
+	??_C@_0EK@GLADDNKH@network_connection_disconnect?$CI?$CJ?5@ (0000)
+00280C20 0045:
+	??_C@_0EF@IGAGJDLA@failed?5to?5create?5a?5message_clien@ (0000)
+00280C68 004a:
+	??_C@_0EK@PGHLLHE@network_connection_disconnect?$CI?$CJ?5@ (0000)
+00280CB4 0032:
+	??_C@_0DC@NBAMODMB@?$CBnetwork_connection_connected?$CIcl@ (0000)
+00280CE8 0015:
+	??_C@_0BF@IHNDJMJI@leaving?5network?5game?$AA@ (0000)
+00280D00 001d:
+	??_C@_0BN@LOKEMLAG@client?5?$CG?$CG?5client?9?$DOconnection?$AA@ (0000)
+00280D20 0049:
+	??_C@_0EJ@ENDAFHHG@failed?5to?5create?5a?5message_clien@ (0000)
+00280D70 0069:
+	??_C@_0GJ@FAIKKIGI@network_game_client_write?$CI?$CJ?5fail@ (0000)
+00280DE0 0047:
+	??_C@_0EH@PAHGGHIO@failed?5to?5create?5a?5message_clien@ (0000)
+00280E28 0047:
+	??_C@_0EH@NIHALOOC@failed?5to?5create?5a?5message_clien@ (0000)
+00280E70 003e:
+	??_C@_0DO@LCAGMDAF@can?8t?5remove?5players?5from?5a?5game@ (0000)
+00280EB0 0033:
+	??_C@_0DD@MJJEPI@requesting?5a?5player?5removal?5?$CIcon@ (0000)
+00280EE4 0039:
+	??_C@_0DJ@ICFAMCBO@client?8s?5can?5only?5remove?5players@ (0000)
+00280F20 002a:
+	??_C@_0CK@HGKAMGLN@client?5?$CG?$CG?5network_player_is_vali@ (0000)
+00280F50 004b:
+	??_C@_0EL@IAJNHEOO@network?5game?5tried?5to?5delete?5a?5p@ (0000)
+00280F9C 003a:
+	??_C@_0DK@NONHICBE@no?5local?5players?5remain?5in?5the?5g@ (0000)
+00280FD8 0027:
+	??_C@_0CH@HDEKFDCH@?$CFx?5quit?5of?5of?5game?5at?5tick?5?$CFd?5?$CIn@ (0000)
+00281000 001f:
+	??_C@_0BP@BGMFPCP@the?5game?5host?5is?5shutting?5down?$AA@ (0000)
+00281020 002b:
+	??_C@_0CL@FIOOPCIN@failed?5to?5reinitialize?5network?5g@ (0000)
+0028104C 002f:
+	??_C@_0CP@KMAGFDPK@failed?5to?5create?5a?5message_clien@ (0000)
+00281080 004f:
+	??_C@_0EP@PHHJAEIL@network_game_client_write?$CI?$CJ?5fail@ (0000)
+002810D0 0040:
+	??_C@_0EA@BPICBMAG@failed?5to?5create?5a?5message_clien@ (0000)
+00281110 0060:
+	??_C@_0GA@PDNHMAGG@network_game_client_write?$CI?$CJ?5fail@ (0000)
+00281170 0028:
+	??_C@_0CI@BAIHEHNF@sent?5out?5a?5broadcast?5game?5search@ (0000)
+00281198 005f:
+	??_C@_0FP@MCNPILK@network_game_client_process_inco@ (0000)
+002811F8 0049:
+	??_C@_0EJ@CNGHFAJM@network_connection_idle?$CI?$CJ?5failed@ (0000)
+00281244 0030:
+	??_C@_0DA@OHNFENCP@network_game_client_initiate_joi@ (0000)
+00281278 0047:
+	??_C@_0EH@NDJKGODE@network_connection_idle?$CI?$CJ?5failed@ (0000)
+002812C0 0045:
+	??_C@_0EF@EDNLPKBO@client?5connection?5process?5has?5ti@ (0000)
+00281308 005d:
+	??_C@_0FN@FLBCCMKM@network_game_client_process_inco@ (0000)
+00281368 003c:
+	??_C@_0DM@ONBHNBGE@failed?5to?5create?5a?5message_clien@ (0000)
+002813A8 0056:
+	??_C@_0FG@EPCJDBOJ@network_game_client_write?$CI?$CJ?5fail@ (0000)
+00281400 005d:
+	??_C@_0FN@PFNMPIAB@network_game_client_process_inco@ (0000)
+00281460 0047:
+	??_C@_0EH@HNFELKJJ@network_connection_idle?$CI?$CJ?5failed@ (0000)
+002814A8 0046:
+	??_C@_0EG@BKDKHIKF@network_connection_idle?$CI?$CJ?5failed@ (0000)
+002814F0 001c:
+	??_C@_0BM@GGCBKEBE@new2?5idle?5in?5game?5abort?5hit?$AA@ (0000)
+0028150C 001b:
+	??_C@_0BL@IEONCJFK@new?5idle?5in?5game?5abort?5hit?$AA@ (0000)
+00281528 005c:
+	??_C@_0FM@JKCCAGHN@network_game_client_process_inco@ (0000)
+00281588 0050:
+	??_C@_0FA@IKFHHCAC@network?5client?5connection?5has?5be@ (0000)
+002815D8 002d:
+	??_C@_0CN@GOKOEOFK@network?5connection?5went?5down?5?$CIid@ (0000)
+00281608 005e:
+	??_C@_0FO@IANECALJ@network_game_client_process_inco@ (0000)
+00281668 0048:
+	??_C@_0EI@HOIILDIN@network_connection_idle?$CI?$CJ?5failed@ (0000)
+002816B0 0049:
+	??_C@_0EJ@KIFFADMI@network_game_create_client?$CI?$CJ?5fai@ (0000)
+002816FC 002e:
+	??_C@_0CO@LNIBCIDF@?$CBnetwork_game_client_dont_use_di@ (0000)
+0028172C 0018:
+	??_C@_0BI@HFOMKHNG@?$CB?$CCunknown?5client?5state?$CC?$AA@ (0000)
+00281744 002b:
+	??_C@_0CL@EHLJKOCJ@network_game_client_idle_postgam@ (0000)
+00281770 0029:
+	??_C@_0CJ@NNEAELPC@network_game_client_idle_ingame?$CI@ (0000)
+0028179C 002a:
+	??_C@_0CK@IFHOOMMF@network_game_client_idle_pregame@ (0000)
+002817C8 002a:
+	??_C@_0CK@NBDMDINO@network_game_client_idle_joining@ (0000)
+002817F4 002c:
+	??_C@_0CM@IDLHBFKK@network_game_client_idle_searchi@ (0000)
+00281820 0024:
+	??_C@_0CE@DOGOGKDE@unable?5to?5join?5game?3?5reason?$DN?5?$CD?$CFd@ (0000)
+00281844 0024:
+	??_C@_0CE@JOPGMOA@_rejection_code_blacklisted_mach@ (0000)
+00281868 001f:
+	??_C@_0BP@EHGPFGEK@_rejection_code_game_is_closed?$AA@ (0000)
+00281888 001d:
+	??_C@_0BN@IDHMJFHO@_rejection_code_game_is_full?$AA@ (0000)
+002818A8 001d:
+	??_C@_0BN@NIEJJECI@_rejection_code_bad_password?$AA@ (0000)
+002818C8 001f:
+	??_C@_0BP@MGMNOIHD@_rejection_code_bad_join_token?$AA@ (0000)
+002818E8 0020:
+	??_C@_0CA@EEFCENHL@_rejection_code_version_too_new?$AA@ (0000)
+00281908 0020:
+	??_C@_0CA@JCNAFAAD@_rejection_code_version_too_old?$AA@ (0000)
+004566D8 0002:
+	_allow_out_of_sync (0000)
+	_network_game_client_dont_use_directly_in_use (0001)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

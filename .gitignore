@@ -1,0 +1,36 @@
+# IDE folders
+.idea/
+.vs/
+
+# Caches
+__pycache__
+.mypy_cache
+.cache/
+
+# Build files
+build/
+projects/
+.ninja_*
+build.ninja
+*.vcxproj*
+*.sln*
+
+# decompctx output
+ctx.*
+*.ctx
+
+# Generated configs
+objdiff.json
+compile_commands.json
+
+# Miscellaneous
+*.exe
+*.pdb
+*.idb
+*.i64
+*.id0
+*.id1
+*.nam
+*.til
+xbox/
+!source/**/xbox/

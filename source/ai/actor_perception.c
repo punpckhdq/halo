@@ -1,0 +1,262 @@
+/*
+ACTOR_PERCEPTION.C
+
+symbols in this file:
+0001D8C0 00d0:
+	_actor_perception_acknowledge (0000)
+0001D990 00f0:
+	_actor_get_perception_knowledge (0000)
+0001DA80 0140:
+	_actor_get_vision_distances (0000)
+0001DBC0 0040:
+	_code_0001dbc0 (0000)
+0001DC00 00f0:
+	_code_0001dc00 (0000)
+0001DCF0 0230:
+	_actor_perception_desire_prop (0000)
+0001DF20 00a0:
+	_actor_perception_find_prop_pathfinding_location (0000)
+0001DFC0 00c0:
+	_actor_perception_find_killer_prop_index (0000)
+0001E080 0010:
+	_arctangent (0000)
+0001E090 00f0:
+	_actor_perception_find_recent_damaging_prop_index (0000)
+0001E180 0050:
+	_actor_perception_forget_recent_damage (0000)
+0001E1D0 0060:
+	_actor_perception_retreat_successful (0000)
+0001E230 00f0:
+	_actor_compute_prop_unopposable (0000)
+0001E320 03a0:
+	_actor_compute_prop_target_weight (0000)
+0001E6C0 0200:
+	_actor_situation_update_target_status (0000)
+0001E8C0 0140:
+	_actor_situation_combat_status_update (0000)
+0001EA00 04f0:
+	_actor_situation_update (0000)
+0001EEF0 00f0:
+	_actor_situation_try_new_target (0000)
+0001EFE0 01b0:
+	_actor_perception_friend_prop_is_attacking (0000)
+0001F190 0190:
+	_actor_perception_aiming_vector_test_blockage (0000)
+0001F320 0150:
+	_actor_emotion_flee_with_friends (0000)
+0001F470 0080:
+	_code_0001f470 (0000)
+0001F4F0 0070:
+	_code_0001f4f0 (0000)
+0001F560 04f0:
+	_code_0001f560 (0000)
+0001FA50 00b0:
+	_actor_berserk (0000)
+0001FB00 0360:
+	_actor_visibility_at_point (0000)
+0001FE60 0240:
+	_actor_audibility_at_point (0000)
+000200A0 0170:
+	_actor_perception_find_sense_position (0000)
+00020210 01f0:
+	_code_00020210 (0000)
+00020400 0380:
+	_prop_position_refresh (0000)
+00020780 0210:
+	_code_00020780 (0000)
+00020990 05c0:
+	_code_00020990 (0000)
+00020F50 0180:
+	_actor_expected_acknowledgement (0000)
+000210D0 0090:
+	_actor_perception_unreachable (0000)
+00021160 0060:
+	_actor_perception_tried_to_uncover (0000)
+000211C0 0060:
+	_actor_perception_tried_to_search (0000)
+00021220 00a0:
+	_actor_perception_abandoned_search (0000)
+000212C0 0680:
+	_actor_emotion_update (0000)
+00021940 0110:
+	_actor_perception_become_acknowledged (0000)
+00021A50 0e60:
+	_prop_status_refresh (0000)
+000228B0 06d0:
+	_code_000228b0 (0000)
+00022F80 0310:
+	_actor_perception_create_orphan_from_friend (0000)
+00023290 0970:
+	_code_00023290 (0000)
+00023C00 1270:
+	_actor_perception_update (0000)
+00245AB8 0038:
+	_global_combat_status_table (0000)
+	_global_acknowledgement_speeds (0018)
+00245AF0 0020:
+	??_C@_0CA@OIEKNKJL@prop?9?$DOorphan_prop_index?5?$DN?$DN?5NONE?$AA@ (0000)
+00245B10 0018:
+	??_C@_0BI@EKGDDPPJ@prop_acknowledged?$CIprop?$CJ?$AA@ (0000)
+00245B28 0027:
+	??_C@_0CH@HJCPLECH@prop?9?$DOowner_actor_index?5?$DN?$DN?5actor@ (0000)
+00245B50 0025:
+	??_C@_0CF@BOOBPIOF@c?3?2halo?2SOURCE?2ai?2actor_percepti@ (0000)
+00245B78 0004:
+	__real@42100000 (0000)
+00245B7C 0004:
+	__real@43610000 (0000)
+00245B80 0004:
+	__real@44c80000 (0000)
+00245B84 0022:
+	??_C@_0CC@ECCIDOIG@damaging_prop_index?5?$CB?$DN?50x0000000@ (0000)
+00245BA8 0014:
+	??_C@_0BE@JCINMMJG@prop_orphaned?$CIprop?$CJ?$AA@ (0000)
+00245BBC 0013:
+	??_C@_0BD@GACNHPJP@target_prop?9?$DOenemy?$AA@ (0000)
+00245BD0 005f:
+	??_C@_0FP@LFCAOKBD@?$CIactor?9?$DOtarget?4target_type?5?$DO?$DN?50?$CJ@ (0000)
+00245C30 003a:
+	??_C@_0DK@BNBOMGMC@?$CIactor_type?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIactor_type@ (0000)
+00245C6C 0010:
+	??_C@_0BA@NODDFKHB@new_prop?9?$DOenemy?$AA@ (0000)
+00245C80 004c:
+	??_C@_0EM@HGNPMJBO@prop_acknowledged?$CIfriend_prop?$CJ?5?$CG@ (0000)
+00245CCC 0004:
+	__real@bf4ccccd (0000)
+00245CD0 0004:
+	__real@3f9ae148 (0000)
+00245CD4 0004:
+	__real@3eb851ec (0000)
+00245CD8 0004:
+	__real@bf490fdb (0000)
+00245CDC 0004:
+	__real@3f060a92 (0000)
+00245CE0 0004:
+	__real@3e19999a (0000)
+00245CE4 0004:
+	__real@3fd55555 (0000)
+00245CE8 0004:
+	__real@40010204 (0000)
+00245CEC 0004:
+	__real@3ee66666 (0000)
+00245CF0 0018:
+	??_C@_0BI@GICPJHMO@best_unit_index?5?$CB?$DN?5NONE?$AA@ (0000)
+00245D08 0025:
+	??_C@_0CF@GHOKMPCH@actor?9?$DOmeta?4swarm_unit_index?5?$CB?$DN?5@ (0000)
+00245D30 0021:
+	??_C@_0CB@MPKGJDOK@actor?9?$DOmeta?4swarm_unit_count?5?$DO?50@ (0000)
+00245D54 003b:
+	??_C@_0DL@MCFLLIBG@?$CIexisting_unit_index?5?$DN?$DN?5NONE?$CJ?5?$HM?$HM@ (0000)
+00245D90 0004:
+	__real@40100000 (0000)
+00245D94 0018:
+	??_C@_0BI@LJGDFJPJ@swarm_actor?9?$DOmeta?4swarm?$AA@ (0000)
+00245DAC 0004:
+	__real@3a91a2b4 (0000)
+00245DB0 002f:
+	??_C@_0CP@MPBEBNC@object?9?$DOobject?4type?5?$DN?$DN?5_object_t@ (0000)
+00245DE0 0004:
+	__real@383a69dc (0000)
+00245DE8 00c6:
+	??_C@_0MG@IKFAABEC@?$CIactor?9?$DOdanger_zone?4danger_type?5@ (0000)
+00245EB0 0008:
+	__real@3ff8000000000000 (0000)
+00245EB8 0015:
+	??_C@_0BF@NEEODENG@?$CBprop_orphaned?$CIprop?$CJ?$AA@ (0000)
+00245ED0 0008:
+	__real@bfa7a8d000000000 (0000)
+00245ED8 0004:
+	__real@3f680347 (0000)
+00245EDC 0004:
+	__real@3f7e147b (0000)
+00245EE0 0004:
+	__real@bb5a740e (0000)
+00245EE4 0004:
+	__real@bc888889 (0000)
+00245EE8 0004:
+	__real@bd088889 (0000)
+00245EEC 0004:
+	__real@3c888889 (0000)
+00245EF0 0004:
+	__real@3b5a740e (0000)
+00245EF4 0006:
+	??_C@_05KKADFBMH@?$CBdead?$AA@ (0000)
+00245EFC 0038:
+	??_C@_0DI@GEDMEBOM@current_orphan?9?$DOparent_prop_inde@ (0000)
+00245F34 0038:
+	??_C@_0DI@CJNILOBC@current_prop?9?$DOorphan_prop_index?5@ (0000)
+00245F6C 0031:
+	??_C@_0DB@FLDFMNOK@current_orphan?9?$DOowner_actor_inde@ (0000)
+00245FA0 002f:
+	??_C@_0CP@JODIIBNI@current_prop?9?$DOowner_actor_index?5@ (0000)
+00245FD0 001e:
+	??_C@_0BO@PHJOMEBD@prop_orphaned?$CIcurrent_orphan?$CJ?$AA@ (0000)
+00245FF0 0022:
+	??_C@_0CC@OGFEAFJH@prop_unacknowledged?$CIcurrent_prop@ (0000)
+00246014 003c:
+	??_C@_0DM@LBOGCEIF@actor_perception_refresh?5overflo@ (0000)
+00246050 0008:
+	??_C@_07BJLCCHPO@friends?$AA@ (0000)
+00246058 0008:
+	??_C@_07OMOEAPJD@enemies?$AA@ (0000)
+00246060 0004:
+	__real@3f31c71c (0000)
+00246064 000c:
+	??_C@_0M@JMHOJBDN@?$CBprop?9?$DOdead?$AA@ (0000)
+00246070 0020:
+	??_C@_0CA@JNPJKEOJ@prop?9?$DOparent_prop_index?5?$CB?$DN?5NONE?$AA@ (0000)
+00246090 0017:
+	??_C@_0BH@IAHDHPJP@new_state?$CB?$DNprop?9?$DOstate?$AA@ (0000)
+002460A8 0012:
+	??_C@_0BC@COANDKJL@?$CFs?3?5become?5aware?$CB?$AA@ (0000)
+002460C0 0041:
+	??_C@_0EB@HOGHONEE@?5?5awareness?5delta?3?5?$CF?42f?5?$CIcurrent@ (0000)
+00246104 002b:
+	??_C@_0CL@DNKONGGM@?$CFs?3?5knowledge?5?$CFs?5percep?5?$CFs?5?9?$DO?5aw@ (0000)
+00246130 000d:
+	??_C@_0N@OCHNCJBI@unmistakable?$AA@ (0000)
+00246140 0005:
+	??_C@_04PLMLMMEO@full?$AA@ (0000)
+00246148 0008:
+	??_C@_07JHIHCBKH@partial?$AA@ (0000)
+00246150 0009:
+	??_C@_08GMLBJMKA@definite?$AA@ (0000)
+0024615C 000a:
+	??_C@_09HJLAOOGF@searching?$AA@ (0000)
+00246168 0008:
+	??_C@_07IFJEFPGA@instant?$AA@ (0000)
+00246170 0006:
+	??_C@_05DAFACFLE@never?$AA@ (0000)
+00246178 0051:
+	??_C@_0FB@GKMFLAFD@?$CIprop?9?$DOperception?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIprop@ (0000)
+002461D0 004c:
+	??_C@_0EM@LBLHCEME@?$CIknowledge_type?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIknowle@ (0000)
+0024621C 0018:
+	??_C@_0BI@PALENGAG@?$CFs?3?5stop?5becoming?5aware?$AA@ (0000)
+00246234 001a:
+	??_C@_0BK@OHGMLFML@?$CFs?3?5start?5to?5become?5aware?$AA@ (0000)
+00246250 0024:
+	??_C@_0CE@DMMCLDJG@?$CBrefresh_status?5?$HM?$HM?5refresh_posit@ (0000)
+00246274 0031:
+	??_C@_0DB@OOOKPDMG@parent_prop?9?$DOorphan_prop_index?5?$DN@ (0000)
+002462A8 002b:
+	??_C@_0CL@GMGBPAA@prop?9?$DOunopposable_casualties_inf@ (0000)
+002B6AE0 0004:
+	_data_002b6ae0 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

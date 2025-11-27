@@ -1,0 +1,640 @@
+/*
+UI_WIDGET.C
+
+symbols in this file:
+000D32C0 0020:
+	_code_000d32c0 (0000)
+000D32E0 0020:
+	_code_000d32e0 (0000)
+000D3300 0030:
+	_event_controller_index_compatible_with_widget (0000)
+000D3330 0030:
+	_set_ui_plasma_effect_color (0000)
+000D3360 00a0:
+	_ui_widgets_initialize (0000)
+000D3400 0010:
+	_ui_widgets_safe_to_load (0000)
+000D3410 0010:
+	_ui_widgets_set_fade_value (0000)
+000D3420 0010:
+	_ui_widget_debug_show_path (0000)
+000D3430 0020:
+	_widget_instance_count_children (0000)
+000D3450 0050:
+	_widget_instance_get_nth_child (0000)
+000D34A0 0030:
+	_ui_widget_realloc (0000)
+000D34D0 0020:
+	_widget_free (0000)
+000D34F0 0030:
+	_ui_widgets_active (0000)
+000D3520 0070:
+	_ui_widgets_active_for_local_player (0000)
+000D3590 0050:
+	_ui_widgets_inhibit_processing (0000)
+000D35E0 0020:
+	_code_000d35e0 (0000)
+000D3600 0490:
+	_draw_bitmap_in_rect (0000)
+000D3A90 0020:
+	_widget_instance_get_topmost_parent (0000)
+000D3AB0 0040:
+	_widget_instance_get_child_index_from_parent (0000)
+000D3AF0 0060:
+	_widget_instance_set_visibility_recursive (0000)
+000D3B50 0010:
+	_main_menu_active (0000)
+000D3B60 0010:
+	_main_menu_is_active (0000)
+000D3B70 0030:
+	_main_menu_screen_is_active (0000)
+000D3BA0 0050:
+	_ui_set_next_level (0000)
+000D3BF0 0010:
+	_ui_widget_load_progress_widget (0000)
+000D3C00 0010:
+	_filesystem_check_thread_is_active (0000)
+000D3C10 0040:
+	_code_000d3c10 (0000)
+000D3C50 0030:
+	_display_error_when_main_menu_loaded (0000)
+000D3C80 0090:
+	_display_error_deferred (0000)
+000D3D10 0040:
+	_display_error_abort_to_dashboard_deferred (0000)
+000D3D50 0070:
+	_ui_start_main_menu_music (0000)
+000D3DC0 0060:
+	_ui_stop_main_menu_music (0000)
+000D3E20 0010:
+	_ui_main_menu_music_active (0000)
+000D3E30 0040:
+	_ui_widgets_disable_pause_game (0000)
+000D3E70 0080:
+	_code_000d3e70 (0000)
+000D3EF0 0060:
+	_code_000d3ef0 (0000)
+000D3F50 0030:
+	_code_000d3f50 (0000)
+000D3F80 0090:
+	_code_000d3f80 (0000)
+000D4010 0080:
+	_code_000d4010 (0000)
+000D4090 0050:
+	_code_000d4090 (0000)
+000D40E0 0020:
+	_code_000d40e0 (0000)
+000D4100 0080:
+	_code_000d4100 (0000)
+000D4180 0040:
+	_code_000d4180 (0000)
+000D41C0 0040:
+	_code_000d41c0 (0000)
+000D4200 0050:
+	_code_000d4200 (0000)
+000D4250 01a0:
+	_code_000d4250 (0000)
+000D43F0 0070:
+	_code_000d43f0 (0000)
+000D4460 0060:
+	_code_000d4460 (0000)
+000D44C0 0060:
+	_code_000d44c0 (0000)
+000D4520 0130:
+	_remap_sticks_for_local_player (0000)
+000D4650 0030:
+	_code_000d4650 (0000)
+000D4680 0010:
+	_code_000d4680 (0000)
+000D4690 0010:
+	_code_000d4690 (0000)
+000D46A0 0170:
+	_code_000d46a0 (0000)
+000D4810 00d0:
+	_code_000d4810 (0000)
+000D48E0 0020:
+	_code_000d48e0 (0000)
+000D4900 01d0:
+	_code_000d4900 (0000)
+000D4AD0 0030:
+	_code_000d4ad0 (0000)
+000D4B00 0040:
+	_code_000d4b00 (0000)
+000D4B40 0020:
+	_code_000d4b40 (0000)
+000D4B60 0060:
+	_code_000d4b60 (0000)
+000D4BC0 00a0:
+	_code_000d4bc0 (0000)
+000D4C60 0050:
+	_get_ui_rgb_white (0000)
+000D4CB0 0060:
+	_get_ui_argb_white (0000)
+000D4D10 0050:
+	_code_000d4d10 (0000)
+000D4D60 0040:
+	_modulate_pixel32_by_real_alpha (0000)
+000D4DA0 02a0:
+	_ui_widget_delete (0000)
+000D5040 0050:
+	_ui_widgets_close_all (0000)
+000D5090 0090:
+	_ui_widgets_close_all_for_local_player (0000)
+000D5120 0040:
+	_ui_widgets_delete_history (0000)
+000D5160 0060:
+	_ui_widgets_pop_stack (0000)
+000D51C0 0070:
+	_main_screen_shell_begin_fade (0000)
+000D5230 0060:
+	_ui_play_audio_feedback_sound (0000)
+000D5290 02a0:
+	_code_000d5290 (0000)
+000D5530 0030:
+	_code_000d5530 (0000)
+000D5560 0360:
+	_draw_string_and_hack_in_icons (0000)
+000D58C0 0310:
+	_code_000d58c0 (0000)
+000D5BD0 0440:
+	_code_000d5bd0 (0000)
+000D6010 0050:
+	_code_000d6010 (0000)
+000D6060 00a0:
+	_code_000d6060 (0000)
+000D6100 00e0:
+	_code_000d6100 (0000)
+000D61E0 0050:
+	_ui_widgets_dispose (0000)
+000D6230 0200:
+	_widget_event_function_list_widget_goto_next_item (0000)
+000D6430 0220:
+	_widget_event_function_list_widget_goto_previous_item (0000)
+000D6650 04f0:
+	_code_000d6650 (0000)
+000D6B40 02f0:
+	_code_000d6b40 (0000)
+000D6E30 00b0:
+	_code_000d6e30 (0000)
+000D6EE0 0180:
+	_render_ui_widgets_postgame (0000)
+000D7060 0230:
+	_render_ui_widgets (0000)
+000D7290 01f0:
+	_code_000d7290 (0000)
+000D7480 07e0:
+	_code_000d7480 (0000)
+000D7C60 0220:
+	_ui_widget_load_by_name_or_tag (0000)
+000D7E80 0130:
+	_main_screen_shell_load (0000)
+000D7FB0 00e0:
+	_network_game_reset_to_pregame_ui (0000)
+000D8090 0380:
+	_display_error (0000)
+000D8410 0090:
+	_display_error_abort_to_dashboard (0000)
+000D84A0 0090:
+	_display_error_damaged_media (0000)
+000D8530 0070:
+	_display_errors_deferred_until_cinematic_stop (0000)
+000D85A0 0260:
+	_display_scenario_help (0000)
+000D8800 02a0:
+	_code_000d8800 (0000)
+000D8AA0 0130:
+	_code_000d8aa0 (0000)
+000D8BD0 03c0:
+	_process_ui_widgets (0000)
+00271380 0012:
+	??_C@_1BC@GEHLELKL@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA8?$AA?$AA@ (0000)
+00271394 0012:
+	??_C@_1BC@DMBIFLPN@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA7?$AA?$AA@ (0000)
+002713A8 0012:
+	??_C@_1BC@IEKEDMJI@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA6?$AA?$AA@ (0000)
+002713BC 0012:
+	??_C@_1BC@JGBBJDHG@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA5?$AA?$AA@ (0000)
+002713D0 0012:
+	??_C@_1BC@COKNPEBD@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA4?$AA?$AA@ (0000)
+002713E4 0012:
+	??_C@_1BC@LDHKMMKK@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA3?$AA?$AA@ (0000)
+002713F8 0012:
+	??_C@_1BC@LMGKLMP@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA2?$AA?$AA@ (0000)
+0027140C 0012:
+	??_C@_1BC@BJHDAECB@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA1?$AA?$AA@ (0000)
+00271420 000a:
+	??_C@_19MLOAAMON@?$AAl?$AAo?$AAo?$AAk?$AA?$AA@ (0000)
+0027142C 000a:
+	??_C@_19OACEEDLD@?$AAm?$AAo?$AAv?$AAe?$AA?$AA@ (0000)
+00271438 000a:
+	??_C@_19LHGBOOBH@?$AAb?$AAa?$AAc?$AAk?$AA?$AA@ (0000)
+00271444 000e:
+	??_C@_1O@CNPOHNDJ@?$AAa?$AAc?$AAc?$AAe?$AAp?$AAt?$AA?$AA@ (0000)
+00271454 000a:
+	??_C@_19MEDLKCJO@?$AAz?$AAo?$AAo?$AAm?$AA?$AA@ (0000)
+00271460 000e:
+	??_C@_1O@KCCHFBLA@?$AAc?$AAr?$AAo?$AAu?$AAc?$AAh?$AA?$AA@ (0000)
+00271470 0020:
+	??_C@_1CA@KFDCIJKK@?$AAr?$AAo?$AAt?$AAa?$AAt?$AAe?$AA?9?$AAg?$AAr?$AAe?$AAn?$AAa?$AAd?$AAe?$AAs?$AA?$AA@ (0000)
+00271490 001e:
+	??_C@_1BO@POELNCJG@?$AAr?$AAo?$AAt?$AAa?$AAt?$AAe?$AA?9?$AAw?$AAe?$AAa?$AAp?$AAo?$AAn?$AAs?$AA?$AA@ (0000)
+002714B0 001c:
+	??_C@_1BM@IKPPIMCO@?$AAu?$AAs?$AAe?$AA?9?$AAe?$AAq?$AAu?$AAi?$AAp?$AAm?$AAe?$AAn?$AAt?$AA?$AA@ (0000)
+002714CC 000a:
+	??_C@_19OBFFCANM@?$AAj?$AAu?$AAm?$AAp?$AA?$AA@ (0000)
+002714D8 0022:
+	??_C@_1CC@OGCINJG@?$AAi?$AAn?$AAt?$AAe?$AAg?$AAr?$AAa?$AAt?$AAe?$AAd?$AA?9?$AAl?$AAi?$AAg?$AAh?$AAt?$AA?$AA@ (0000)
+002714FC 0020:
+	??_C@_1CA@BEHOBGA@?$AAp?$AAr?$AAi?$AAm?$AAa?$AAr?$AAy?$AA?9?$AAt?$AAr?$AAi?$AAg?$AAg?$AAe?$AAr?$AA?$AA@ (0000)
+0027151C 001c:
+	??_C@_1BM@HECBOACM@?$AAt?$AAh?$AAr?$AAo?$AAw?$AA?9?$AAg?$AAr?$AAe?$AAn?$AAa?$AAd?$AAe?$AA?$AA@ (0000)
+00271538 000e:
+	??_C@_1O@HCAHPFFC@?$AAa?$AAc?$AAt?$AAi?$AAo?$AAn?$AA?$AA@ (0000)
+00271548 0018:
+	??_C@_1BI@IAFIHGKJ@?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?9?$AAs?$AAt?$AAi?$AAc?$AAk?$AA?$AA@ (0000)
+00271560 0016:
+	??_C@_1BG@GNIACJFB@?$AAl?$AAe?$AAf?$AAt?$AA?9?$AAs?$AAt?$AAi?$AAc?$AAk?$AA?$AA@ (0000)
+00271578 0018:
+	??_C@_1BI@KFEEPENO@?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?9?$AAt?$AAh?$AAu?$AAm?$AAb?$AA?$AA@ (0000)
+00271590 0016:
+	??_C@_1BG@EIJMKLCG@?$AAl?$AAe?$AAf?$AAt?$AA?9?$AAt?$AAh?$AAu?$AAm?$AAb?$AA?$AA@ (0000)
+002715A8 0018:
+	??_C@_1BI@KIILCNEB@?$AAb?$AAa?$AAc?$AAk?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+002715C0 001a:
+	??_C@_1BK@CFIHHNDP@?$AAs?$AAt?$AAa?$AAr?$AAt?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+002715DC 0016:
+	??_C@_1BG@CGEEKDJO@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?$AA@ (0000)
+002715F4 0014:
+	??_C@_1BE@LFENLMOB@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAl?$AAe?$AAf?$AAt?$AA?$AA@ (0000)
+00271608 0014:
+	??_C@_1BE@MAHEIGBI@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAd?$AAo?$AAw?$AAn?$AA?$AA@ (0000)
+0027161C 0010:
+	??_C@_1BA@CNADAJOL@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAu?$AAp?$AA?$AA@ (0000)
+0027162C 001c:
+	??_C@_1BM@DNLFOGBJ@?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?9?$AAt?$AAr?$AAi?$AAg?$AAg?$AAe?$AAr?$AA?$AA@ (0000)
+00271648 001a:
+	??_C@_1BK@IONNGAAO@?$AAl?$AAe?$AAf?$AAt?$AA?9?$AAt?$AAr?$AAi?$AAg?$AAg?$AAe?$AAr?$AA?$AA@ (0000)
+00271664 001a:
+	??_C@_1BK@DHOCGHBB@?$AAw?$AAh?$AAi?$AAt?$AAe?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+00271680 001a:
+	??_C@_1BK@JINDKLEA@?$AAb?$AAl?$AAa?$AAc?$AAk?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+0027169C 0012:
+	??_C@_1BC@JDEDLPGE@?$AAy?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+002716B0 0012:
+	??_C@_1BC@HMBBAJIF@?$AAx?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+002716C4 0012:
+	??_C@_1BC@EADHJABC@?$AAb?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+002716D8 0012:
+	??_C@_1BC@KKLBENHA@?$AAa?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
+002716EC 000f:
+	??_C@_0P@OHNLNAJA@levels?2d40?2d40?$AA@ (0000)
+002716FC 000f:
+	??_C@_0P@IAIGJJBI@levels?2d20?2d20?$AA@ (0000)
+0027170C 000f:
+	??_C@_0P@HAMJOBDA@levels?2c40?2c40?$AA@ (0000)
+0027171C 000f:
+	??_C@_0P@BHJEKILI@levels?2c20?2c20?$AA@ (0000)
+0027172C 000f:
+	??_C@_0P@CEDKAMHM@levels?2c10?2c10?$AA@ (0000)
+0027173C 000f:
+	??_C@_0P@ENPIGML@levels?2b40?2b40?$AA@ (0000)
+0027174C 000f:
+	??_C@_0P@MEDHKOMA@levels?2b30?2b30?$AA@ (0000)
+0027175C 000f:
+	??_C@_0P@DPFAEPEF@levels?2a50?2a50?$AA@ (0000)
+0027176C 000f:
+	??_C@_0P@FIANAGMN@levels?2a30?2a30?$AA@ (0000)
+0027177C 000f:
+	??_C@_0P@MMBGMDIK@levels?2a10?2a10?$AA@ (0000)
+0027178C 0013:
+	??_C@_0BD@CKKOGMCD@widget_memory_pool?$AA@ (0000)
+002717A0 0008:
+	__one_over_255 (0000)
+	_SECONDS_PER_MILLISECOND (0004)
+002717A8 0025:
+	??_C@_0CF@BFKKDAFO@c?3?2halo?2SOURCE?2interface?2ui_widg@ (0000)
+002717D0 0007:
+	??_C@_06KLKLDLLI@widget?$AA@ (0000)
+002717D8 0024:
+	??_C@_0CE@JONHIOKA@expected?5a?5valid?5local_player_in@ (0000)
+002717FC 001b:
+	??_C@_0BL@IGOIGKAA@widget_globals?4initialized?$AA@ (0000)
+00271818 0004:
+	__real@38026b7e (0000)
+0027181C 0004:
+	__real@43490000 (0000)
+00271820 0004:
+	__real@38150d23 (0000)
+00271824 0004:
+	__real@37e0c670 (0000)
+00271828 0004:
+	__real@439b8000 (0000)
+0027182C 0004:
+	__real@3806dd76 (0000)
+00271830 000e:
+	??_C@_0O@CJGPHCNG@the_main_menu?$AA@ (0000)
+00271840 000e:
+	??_C@_0O@LGOJGHAO@unknown?5level?$AA@ (0000)
+00271850 0048:
+	??_C@_0EI@DFLNAEDH@the?5old?5loading?5progress?5screen?5@ (0000)
+00271898 0059:
+	??_C@_0FJ@HLIPNJGE@there?5is?5already?5an?5error?5messag@ (0000)
+002718F8 0051:
+	??_C@_0FB@JEKLNNGC@there?5is?5already?5a?5deferred?5erro@ (0000)
+0027194C 0036:
+	??_C@_0DG@OLDDPPAF@?$CIindex?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIindex?$DMMAXIMUM_NUM@ (0000)
+00271988 0047:
+	??_C@_0EH@LLPKBLA@there?5is?5already?5a?5deferred?5dash@ (0000)
+002719D0 001a:
+	??_C@_0BK@LDNBEGIO@title?5music?5tag?5not?5found?$AA@ (0000)
+002719EC 0019:
+	??_C@_0BJ@DOPIPCPC@starting?5main?5menu?5music?$AA@ (0000)
+00271A08 001a:
+	??_C@_0BK@GFHNHPPO@sound?2music?2title1?2title1?$AA@ (0000)
+00271A24 0019:
+	??_C@_0BJ@OPCCAOJF@stopping?5main?5menu?5music?$AA@ (0000)
+00271A40 0012:
+	??_C@_0BC@MKLFKPBF@duration_ticks?$DO?$DN0?$AA@ (0000)
+00271A54 0034:
+	??_C@_0DE@HOKJOLHA@out?5of?5memory?$CB?5the?5UI?5screen?5his@ (0000)
+00271A88 000c:
+	??_C@_0M@EABMFPBO@top?5?$CG?$CG?5data?$AA@ (0000)
+00271A94 0019:
+	??_C@_0BJ@FOOJDKHD@tail_child?9?$DOnext?5?$DN?$DN?5NULL?$AA@ (0000)
+00271AB0 0033:
+	??_C@_0DD@MMOLGAOL@?$CIchild?9?$DOprevious?5?$DN?$DN?5NULL?$CJ?5?$CG?$CG?5?$CIch@ (0000)
+00271AE4 0018:
+	??_C@_0BI@LBDKLIFA@next?9?$DOprevious?5?$DN?$DN?5child?$AA@ (0000)
+00271AFC 0018:
+	??_C@_0BI@LBKIDJB@child?9?$DOprevious?5?$DN?$DN?5NULL?$AA@ (0000)
+00271B18 0041:
+	??_C@_0EB@BEJBEEHM@initial_indent?$DM0?5in?5render_state@ (0000)
+00271B5C 001d:
+	??_C@_0BN@EEMEPEOK@31?5?$DN?$DN?5get_icon_type?$CIL?$CClook?$CC?$CJ?$AA@ (0000)
+00271B7C 0024:
+	??_C@_0CE@DPIKLLNB@17?5?$DN?$DN?5get_icon_type?$CIL?$CCright?9stic@ (0000)
+00271BA0 001d:
+	??_C@_0BN@GOCJIAID@30?5?$DN?$DN?5get_icon_type?$CIL?$CCmove?$CC?$CJ?$AA@ (0000)
+00271BC0 0023:
+	??_C@_0CD@BJHDPKGJ@16?5?$DN?$DN?5get_icon_type?$CIL?$CCleft?9stick@ (0000)
+00271BE8 0041:
+	??_C@_0EB@PKGKIBFB@?$CD?$CD?$CDWARNING?3?5possible?5memory?5leak@ (0000)
+00271C2C 0022:
+	??_C@_0CC@MHEDEDIP@widget?5pause?5counter?5out?5of?5whac@ (0000)
+00271C50 0025:
+	??_C@_0CF@EFHCMBNF@event?5handler?5failed?5to?5spawn?5wi@ (0000)
+00271C78 004b:
+	??_C@_0EL@BONJAKAK@a?5?8widget?5deleted?8?5event?5handler@ (0000)
+00271CC4 0025:
+	??_C@_0CF@OIBDABJ@widget?5?$CG?$CG?5widget_globals?4initial@ (0000)
+00271CEC 001a:
+	??_C@_0BK@EFAHKEKA@sound?2sfx?2ui?2flag_failure?$AA@ (0000)
+00271D08 0012:
+	??_C@_0BC@LFDBPFAD@sound?2sfx?2ui?2back?$AA@ (0000)
+00271D1C 0015:
+	??_C@_0BF@FGMCPHMP@sound?2sfx?2ui?2forward?$AA@ (0000)
+00271D34 0014:
+	??_C@_0BE@EOGFPNHD@sound?2sfx?2ui?2cursor?$AA@ (0000)
+00271D48 003a:
+	??_C@_0DK@MJICNCDL@invalid?5controller?5index?5specifi@ (0000)
+00271D88 005d:
+	??_C@_0FN@LKLJLEJ@_list_items_generated_from_strin@ (0000)
+00271DE8 0069:
+	??_C@_0GJ@EGCLHEFN@no?5child?5widget?5references?5are?5n@ (0000)
+00271E58 0063:
+	??_C@_0GD@BFCMHBJK@_list_items_generated_from_strin@ (0000)
+00271EBC 0026:
+	??_C@_0CG@GCOFCMPN@icon_index?$DO?$DN0?5?$CG?$CG?5icon_index?$DMNUM_@ (0000)
+00271EE4 0006:
+	??_C@_05MAJJAKPI@FALSE?$AA@ (0000)
+00271EEC 0004:
+	??_C@_13EJFHHPOP@?$AA?$CF?$AA?$AA@ (0000)
+00271EF0 0047:
+	??_C@_0EH@BDEOCECI@failed?5to?5render?5text?5box?5widget@ (0000)
+00271F38 0042:
+	??_C@_0EC@OINFLBMA@failed?5to?5render?5text?5box?5widget@ (0000)
+00271F7C 0020:
+	??_C@_1CA@EBMNPDDP@?$AA?$DM?$AAo?$AAu?$AAt?$AA?5?$AAo?$AAf?$AA?5?$AAm?$AAe?$AAm?$AAo?$AAr?$AAy?$AA?$DO?$AA?$AA@ (0000)
+00271FA0 0049:
+	??_C@_0EJ@ICFFKBCK@failed?5to?5render?5spinner?5list?5it@ (0000)
+00271FF0 0044:
+	??_C@_0EE@GFHAOED@failed?5to?5render?5spinner?5list?5it@ (0000)
+00272034 0029:
+	??_C@_0CJ@CLCMGDOK@failed?5to?5find?5event?5focus?5targe@ (0000)
+00272060 0046:
+	??_C@_0EG@GAAKHNIE@failed?5to?5spawn?5thread?5for?5files@ (0000)
+002720A8 003c:
+	??_C@_0DM@DBODFMFA@begining?5filesystem?5checks?5?$CG?5sav@ (0000)
+002720E4 002b:
+	??_C@_0CL@DAIOFIBL@widget_globals?4initialization_th@ (0000)
+00272110 003d:
+	??_C@_0DN@CLOOAICL@failed?5to?5set?5focus?5to?5the?5next?5@ (0000)
+00272150 006d:
+	??_C@_0GN@CDIJNPDM@spinner?5lists?5with?5more?5that?51?5v@ (0000)
+002721C0 0033:
+	??_C@_0DD@MMCOEHPE@spinner?5lists?5must?5be?5either?51?9?5@ (0000)
+002721F8 0041:
+	??_C@_0EB@HAOLGJEB@failed?5to?5set?5focus?5to?5the?5?$CD?$CFd?5l@ (0000)
+0027223C 0034:
+	??_C@_0DE@PKDHGMBO@calling?5a?5list?5widget?5function?5o@ (0000)
+00272270 0016:
+	??_C@_0BG@ENJMIAKH@widget?9?$DOfocused_child?$AA@ (0000)
+00272288 0048:
+	??_C@_0EI@GEFPBJMP@couldn?8t?5load?5conditional?5widget@ (0000)
+002722D0 0029:
+	??_C@_0CJ@FPJLGLJO@condition?5handler?5failed?5to?5spaw@ (0000)
+00272300 0045:
+	??_C@_0EF@JLKENOEN@failed?5to?5open?5widget?5because?5th@ (0000)
+00272348 0019:
+	??_C@_0BJ@KIDHBPBC@previous?9?$DOnext?5?$DN?$DN?5widget?$AA@ (0000)
+00272364 0019:
+	??_C@_0BJ@FGBHJFEB@next?9?$DOprevious?5?$DN?$DN?5widget?$AA@ (0000)
+00272380 0044:
+	??_C@_0EE@NFLPKLKO@failed?5to?5close?5widget?5because?5e@ (0000)
+002723C8 0045:
+	??_C@_0EF@EEMBCNDP@failed?5to?5reload?5widget?5because?5@ (0000)
+00272410 004e:
+	??_C@_0EO@PGEAPKEN@failed?5to?5give?5focus?5to?5a?5widget@ (0000)
+00272460 001e:
+	??_C@_0BO@HFOFCHPP@event?5handler?5function?5failed?$AA@ (0000)
+00272480 002a:
+	??_C@_0CK@GOFLJEI@failed?5to?5run?5ui?5widget?5event?5sc@ (0000)
+002724AC 000c:
+	??_C@_0M@EJOMDMOI@ui?2small_ui?$AA@ (0000)
+002724B8 0016:
+	??_C@_0BG@ELECBMPG@window_bounds?5?$CB?$DN?5NULL?$AA@ (0000)
+002724D0 001f:
+	??_C@_0BP@JAOAINDB@failed?5to?5load?5widget?5children?$AA@ (0000)
+002724F0 009a:
+	??_C@_0JK@BLPAHHHK@if?5the?5_widget_pass_handled_even@ (0000)
+0027258C 0021:
+	??_C@_0CB@BADDKMAA@widget?9?$DOlocal_player_index?$DN?$DNNONE@ (0000)
+002725B0 0037:
+	??_C@_0DH@DCPBMEID@widget?5?$CG?$CG?5definition?5?$CG?$CG?5event?5?$CG?$CG@ (0000)
+002725E8 002c:
+	??_C@_0CM@OJPOGECC@ui_widget_definition?5tag?5?8?$CFs?8?1?$CFd@ (0000)
+00272614 002c:
+	??_C@_0CM@MEFFCNMB@failed?5to?5create?5new?5widget?$DL?5out@ (0000)
+00272640 0035:
+	??_C@_0DF@PBOMEHIM@?$CIwidget_stack?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIwidget_sta@ (0000)
+00272678 0026:
+	??_C@_0CG@GBPNNCLI@?$CIname?5?$CB?$DN?5NULL?$CJ?5?$HM?$HM?5?$CItag_index?5?$CB?$DN?5@ (0000)
+002726A0 002a:
+	??_C@_0CK@OFOHOPCB@failed?5to?5initialize?5the?5virtual@ (0000)
+002726CC 0028:
+	??_C@_0CI@EBHLJEJP@failed?5to?5load?5main?5screen?5shell@ (0000)
+002726F4 001d:
+	??_C@_0BN@PLHBGNEF@ui?2shell?2main_menu?2main_menu?$AA@ (0000)
+00272714 0018:
+	??_C@_0BI@HFFEIMKP@xbox?5command?5line?$DN?5?8?$CFs?8?$AA@ (0000)
+0027272C 0006:
+	??_C@_05GLGMCIFH@xdemo?$AA@ (0000)
+00272734 002f:
+	??_C@_0CP@FMNMOLIB@failed?5to?5load?5networked?5pregame@ (0000)
+00272768 005b:
+	??_C@_0FL@CANKNMEF@ui?2shell?2main_menu?2multiplayer_t@ (0000)
+002727C4 002a:
+	??_C@_0CK@BADOGGKF@failed?5to?5load?5map?5select?5postga@ (0000)
+002727F0 0060:
+	??_C@_0GA@GFIHBLPH@ui?2shell?2main_menu?2multiplayer_t@ (0000)
+00272850 0035:
+	??_C@_0DF@GJABDHAE@failed?5to?5load?5pregame?5screen?5af@ (0000)
+00272888 0063:
+	??_C@_0GD@HIMIFBNM@ui?2shell?2main_menu?2multiplayer_t@ (0000)
+002728EC 0025:
+	??_C@_0CF@GLGHHELH@widget?5pause?5counter?5is?5out?5of?5w@ (0000)
+00272914 002f:
+	??_C@_0CP@BGKPJLCC@expected?5a?5text?5box?5widget?5in?5th@ (0000)
+00272944 0032:
+	??_C@_0DC@JNAKMNPN@error?5screen?5widget?5tag?5not?5laye@ (0000)
+00272978 0020:
+	??_C@_0CA@PLEKCLAA@failed?5to?5display?5error?5message?$AA@ (0000)
+00272998 0048:
+	??_C@_0EI@MDMAJGJE@there?5is?5already?5an?5error?5messag@ (0000)
+002729E0 0032:
+	??_C@_0DC@JLPDPOMG@aborting?5to?5the?5main?5menu?5root?0?5@ (0000)
+00272A18 0044:
+	??_C@_0EE@HGHDGOBG@?$CIwidget_stack?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIwidget_sta@ (0000)
+00272A5C 001b:
+	??_C@_0BL@ILOCFJOB@invalid?5local?5player?5count?$AA@ (0000)
+00272A78 0028:
+	??_C@_0CI@NLLLFMIK@ui?2shell?2error?2error_nonmodal_qt@ (0000)
+00272AA0 0025:
+	??_C@_0CF@IPCJKMOA@ui?2shell?2error?2error_modal_qtrsc@ (0000)
+00272AC8 0029:
+	??_C@_0CJ@MDGMGIIG@ui?2shell?2error?2error_nonmodal_ha@ (0000)
+00272AF4 0026:
+	??_C@_0CG@GOFPHCDA@ui?2shell?2error?2error_modal_halfs@ (0000)
+00272B1C 0029:
+	??_C@_0CJ@COJPHONK@ui?2shell?2error?2error_nonmodal_fu@ (0000)
+00272B48 0026:
+	??_C@_0CG@IDKMGEGM@ui?2shell?2error?2error_modal_fulls@ (0000)
+00272B70 0059:
+	??_C@_0FJ@LCJINDPJ@there?5is?5already?5a?5deferred?9for?9@ (0000)
+00272BCC 001b:
+	??_C@_0BL@DHJKOIEB@failed?5to?5load?5?8?$CFs?8?5widget?$AA@ (0000)
+00272BE8 001b:
+	??_C@_0BL@PIJOAKFD@expected?5a?5text?5box?5widget?$AA@ (0000)
+00272C04 003b:
+	??_C@_0DL@MFGPNPO@ui?2shell?2error?2error_abort_to_da@ (0000)
+00272C40 0028:
+	??_C@_0CI@JFEBNJBP@ui?2shell?2error?2error_abort_to_da@ (0000)
+00272C68 0017:
+	??_C@_0BH@FIKKMDKG@Noooooooooooooooooo?$CB?$CB?$CB?$AA@ (0000)
+00272C80 003a:
+	??_C@_0DK@KGMPEFEN@can?8t?5display?5scenario?5help?5beca@ (0000)
+00272CBC 003d:
+	??_C@_0DN@BOLHGMPP@can?8t?5display?5scenario?5help?$DL?5unk@ (0000)
+00272CFC 0023:
+	??_C@_0CD@DGCLPNFD@failed?5to?5load?5in?9game?5help?5dial@ (0000)
+00272D20 002f:
+	??_C@_0CP@ODEPBIAI@expected?5text?5box?5widget?5in?5play@ (0000)
+00272D50 0036:
+	??_C@_0DG@EMGDHLEG@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272D88 0004:
+	??_C@_03JGNLDLAI@d40?$AA@ (0000)
+00272D8C 0036:
+	??_C@_0DG@EIOOAHPE@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272DC4 0004:
+	??_C@_03JCFGEHLK@d20?$AA@ (0000)
+00272DC8 0036:
+	??_C@_0DG@NBLEEDPP@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272E00 0004:
+	??_C@_03LAMADLB@c40?$AA@ (0000)
+00272E04 0036:
+	??_C@_0DG@NFDJDPEN@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272E3C 0004:
+	??_C@_03PIBHPAD@c20?$AA@ (0000)
+00272E40 0036:
+	??_C@_0DG@NHHPIBBE@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272E78 0004:
+	??_C@_03NMHMBFK@c10?$AA@ (0000)
+00272E7C 0036:
+	??_C@_0DG@GJAICEJK@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272EB4 0004:
+	??_C@_03LDLAGENE@b40?$AA@ (0000)
+00272EB8 0036:
+	??_C@_0DG@GMEHDCBP@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272EF0 0004:
+	??_C@_03LGPPHCFB@b30?$AA@ (0000)
+00272EF4 0036:
+	??_C@_0DG@HKHPOBED@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272F2C 0004:
+	??_C@_03KAMHKBAN@a50?$AA@ (0000)
+00272F30 0036:
+	??_C@_0DG@HOPCJNPB@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272F68 0004:
+	??_C@_03KEEKNNLP@a30?$AA@ (0000)
+00272F6C 0036:
+	??_C@_0DG@HNHGEJJP@ui?2shell?2solo_game?2player_help?2p@ (0000)
+00272FA4 0004:
+	??_C@_03KHMOAJNB@a10?$AA@ (0000)
+00272FA8 0010:
+	??_C@_0BA@CDPMFNHN@string_index?$DO?$DN0?$AA@ (0000)
+00272FB8 002d:
+	??_C@_0CN@FAHAPHCM@failed?5to?5load?5full?5screen?5pause@ (0000)
+00272FE8 0029:
+	??_C@_0CJ@OJHKNGAB@ui?2shell?2solo_game?2pause_game?2pa@ (0000)
+00273018 0053:
+	??_C@_0FD@MJAJHNPK@the?5ui?5seems?5to?5be?5confused?4?4?4?5a@ (0000)
+0027306C 002e:
+	??_C@_0CO@LCDPHEGN@failed?5to?5load?5split?5screen?5paus@ (0000)
+0027309C 0036:
+	??_C@_0DG@NEJLJPFI@ui?2shell?2solo_game?2pause_game?2pa@ (0000)
+002730D4 0030:
+	??_C@_0DA@JLINLCDA@invalid?5local?5player?5count?5for?5m@ (0000)
+00273104 0033:
+	??_C@_0DD@CLAJLOAB@ui?2shell?2multiplayer_game?2pause_@ (0000)
+00273138 0033:
+	??_C@_0DD@NDMLPFLH@ui?2shell?2multiplayer_game?2pause_@ (0000)
+0027316C 002d:
+	??_C@_0CN@BIDFDGIG@failed?5to?5load?5multiplayer?5pause@ (0000)
+0027319C 0033:
+	??_C@_0DD@KPKKNAGM@ui?2shell?2multiplayer_game?2pause_@ (0000)
+002731D0 002a:
+	??_C@_0CK@MAHDJCLA@invalid?5widget?5controller?5index?5@ (0000)
+002731FC 0037:
+	??_C@_0DH@EDIJCICF@waiting?5for?5?$CFd?5ticks?5before?5disp@ (0000)
+00301DA0 413c:
+	_data_00301da0 (0000)
+	_widget_memory_pool (4034)
+	_dashboard_abort_error (403c)
+00454240 08b0:
+	_bss_00454240 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

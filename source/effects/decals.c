@@ -1,0 +1,227 @@
+/*
+DECALS.C
+
+symbols in this file:
+00086FE0 0130:
+	_code_00086fe0 (0000)
+00087110 0080:
+	_code_00087110 (0000)
+00087190 0180:
+	_code_00087190 (0000)
+00087310 00a0:
+	_decals_initialize (0000)
+000873B0 00b0:
+	_decals_initialize_for_new_map (0000)
+00087460 0070:
+	_decals_dispose_from_old_map (0000)
+000874D0 0010:
+	_decals_dispose (0000)
+000874E0 0170:
+	_decals_unlock (0000)
+00087650 0080:
+	_decal_get_first_decal_index (0000)
+000876D0 0010:
+	_decal_new_from_media_collision (0000)
+000876E0 01b0:
+	_render_debug_decals (0000)
+00087890 0050:
+	_projection_from_vector3d (0000)
+000878E0 0060:
+	_projection_sign_from_vector3d (0000)
+00087940 00e0:
+	_project_point2d (0000)
+00087A20 0050:
+	_triple_product3d (0000)
+00087A70 0090:
+	_plane2d_from_points (0000)
+00087B00 0040:
+	_plane3d_from_point_and_normal (0000)
+00087B40 0030:
+	_plane3d_negate (0000)
+00087B70 0030:
+	_plane3d_distance_to_point (0000)
+00087BA0 0110:
+	_real_a_rgb_color_to_pixel32 (0000)
+00087CB0 0070:
+	_bsp3d_get_plane_from_designator (0000)
+00087D20 0190:
+	_code_00087d20 (0000)
+00087EB0 0070:
+	_code_00087eb0 (0000)
+00087F20 02c0:
+	_code_00087f20 (0000)
+000881E0 01f0:
+	_decals_reconnect_to_structure_bsp (0000)
+000883D0 0220:
+	_decals_disconnect_from_structure_bsp (0000)
+000885F0 0050:
+	_decals_update (0000)
+00088640 0190:
+	_decals_delete_permanent_from_cluster (0000)
+000887D0 01a0:
+	_decal_delete (0000)
+00088970 02a0:
+	_code_00088970 (0000)
+00088C10 06f0:
+	_code_00088c10 (0000)
+00089300 1820:
+	_decal_new_from_collision (0000)
+0008AB20 01a0:
+	_decal_new (0000)
+00259930 0044:
+	_decal_wrap_parameters (0000)
+00259974 0024:
+	??_C@_0CE@PKGKLMN@?$CBlayer_check?5?$HM?$HM?5layer?$DN?$DNdecal?9?$DOla@ (0000)
+00259998 0024:
+	??_C@_0CE@PMCDPOFC@cluster_index?$DN?$DNdecal?9?$DOcluster_in@ (0000)
+002599BC 0020:
+	??_C@_0CA@FFOMHEBD@c?3?2halo?2SOURCE?2effects?2decals?4c?$AA@ (0000)
+002599DC 0029:
+	??_C@_0CJ@BKINAOBK@layer?$DO?$DN0?5?$CG?$CG?5layer?$DMNUMBER_OF_DECA@ (0000)
+00259A08 0041:
+	??_C@_0EB@OBNKLKGI@cluster_index?$DO?$DN0?5?$CG?$CG?5cluster_inde@ (0000)
+00259A4C 0007:
+	??_C@_06FFNMNHIJ@extent?$AA@ (0000)
+00259A54 000e:
+	??_C@_0O@MAIKJNJC@sprite_bounds?$AA@ (0000)
+00259A64 000b:
+	??_C@_0L@KFJNHKLL@definition?$AA@ (0000)
+00259A70 000e:
+	??_C@_0O@EKGCOMJI@decal_globals?$AA@ (0000)
+00259A80 000e:
+	??_C@_0O@GFHIOAJM@decal?5globals?$AA@ (0000)
+00259A90 0012:
+	??_C@_0BC@DBAPGLGJ@global_decal_data?$AA@ (0000)
+00259AA4 0007:
+	??_C@_06FNIEFDBE@decals?$AA@ (0000)
+00259AB0 0044:
+	??_C@_0EE@OLGOOHOI@?$CD?$CD?$CD?5ERROR?5decals?3?5permanent?5coun@ (0000)
+00259AF8 0041:
+	??_C@_0EB@DFPFDBH@?$CD?$CD?$CD?5ERROR?5decals?3?5locked?5count?5i@ (0000)
+00259B40 0046:
+	??_C@_0EG@JHKMCNDN@?$CD?$CD?$CD?5ERROR?5decals?3?5duplicate?5surf@ (0000)
+00259B88 0006:
+	??_C@_05PEENBMOG@color?$AA@ (0000)
+00259B90 001b:
+	??_C@_0BL@NGHLOACP@alpha?$DO?$DN0?40f?5?$CG?$CG?5alpha?$DM?$DN1?40f?$AA@ (0000)
+00259BAC 001d:
+	??_C@_0BN@KCHNANLB@?4?4?2bitmaps?2bitmaps_inlines?4h?$AA@ (0000)
+00259BCC 0013:
+	??_C@_0BD@LPCEAGAP@f?$DO?$DN0?40f?5?$CG?$CG?5f?$DM?$DN1?40f?$AA@ (0000)
+00259BE0 001e:
+	??_C@_0BO@HLBLEDNJ@decal?9?$DOdefinition_index?$CB?$DNNONE?$AA@ (0000)
+00259C00 0021:
+	??_C@_0CB@PFKIGAKK@?$CD?$CD?$CD?5ERROR?5failed?5to?5insert?5decal@ (0000)
+00259C24 0023:
+	??_C@_0CD@DCCMGEFL@next?9?$DOcluster_index?$DN?$DNcluster_ind@ (0000)
+00259C48 0049:
+	??_C@_0EJ@NBFMBGG@?$CD?$CD?$CD?5ERROR?5decals?3?5failed?5to?5unlo@ (0000)
+00259C94 0031:
+	??_C@_0DB@JNHNEGFP@?$CD?$CD?$CD?5ERROR?5decals?3?5infinite?5loop?5@ (0000)
+00259CC8 003b:
+	??_C@_0DL@ENKJDMFL@decal_globals?9?$DOfirst_disconnecte@ (0000)
+00259D04 0037:
+	??_C@_0DH@MPACCKAA@decal?9?$DOlayer?$DO?$DN0?5?$CG?$CG?5decal?9?$DOlayer?$DM@ (0000)
+00259D3C 001b:
+	??_C@_0BL@ODAOPDKM@decal?9?$DOcluster_index?$DN?$DNNONE?$AA@ (0000)
+00259D58 0024:
+	??_C@_0CE@KECMKPKI@decal?9?$DOcluster_index?$DN?$DNcluster_in@ (0000)
+00259D7C 0022:
+	??_C@_0CC@MKGKINNH@decal_globals?9?$DOpermanent_count?$DO?$DN@ (0000)
+00259DA0 002c:
+	??_C@_0CM@MAEMJIML@?$CBTEST_FLAG?$CIdecal?9?$DOflags?0?5_decal_@ (0000)
+00259DD0 004d:
+	??_C@_0EN@LNGBHJKL@decal_get_first_decal_index?$CIdeca@ (0000)
+00259E20 0042:
+	??_C@_0EC@DGIGMKEO@?$CD?$CD?$CD?5ERROR?5decals?3?5deleting?5perma@ (0000)
+00259E64 003f:
+	??_C@_0DP@BICALKPG@?$CD?$CD?$CD?5ERROR?5decals?3?5deleting?5locke@ (0000)
+00259EA4 0006:
+	??_C@_05CFEEDGHM@decal?$AA@ (0000)
+00259EAC 000b:
+	??_C@_0L@PPHAJBEH@projection?$AA@ (0000)
+00259EB8 0006:
+	??_C@_05JFMNHLBI@basis?$AA@ (0000)
+00259EC0 003f:
+	??_C@_0DP@PCODPOLL@geometry?9?$DOdecal_surface_count?$DMMA@ (0000)
+00259F00 006f:
+	??_C@_0GP@JPNMMOPK@deviant_surface_count?5?$CG?$CG?5?$CKdevian@ (0000)
+00259F70 0015:
+	??_C@_0BF@NGACPBPD@deviant_surface_list?$AA@ (0000)
+00259F88 007b:
+	??_C@_0HL@CPOHEJM@surface_queue_write_index?5?$CG?$CG?5?$CKsu@ (0000)
+0025A004 000e:
+	??_C@_0O@MONIPKDM@surface_queue?$AA@ (0000)
+0025A014 0009:
+	??_C@_08GMGMDIBM@geometry?$AA@ (0000)
+0025A020 0026:
+	??_C@_0CG@IGINKMHI@type?$DO?$DN0?5?$CG?$CG?5type?$DMNUMBER_OF_DECAL_@ (0000)
+0025A048 0046:
+	??_C@_0EG@JHOMKFJL@?$CD?$CD?$CD?5WTF?5decals?3?5failed?5to?5alloca@ (0000)
+0025A090 0041:
+	??_C@_0EB@NPLPNMDO@?$CD?$CD?$CD?5WTF?5decals?3?5failed?5to?5insert@ (0000)
+0025A0D4 0028:
+	??_C@_0CI@FELCGKJB@?$CD?$CD?$CD?5WTF?5decals?3?5failed?5to?5lock?5v@ (0000)
+0025A0FC 001d:
+	??_C@_0BN@FJJJPKIB@quad_index?$DN?$DNdecal_quad_count?$AA@ (0000)
+0025A11C 0038:
+	??_C@_0DI@NKLICGOE@decal_surface_vertex_index?$CL1?$DMdec@ (0000)
+0025A154 003c:
+	??_C@_0DM@CJCALELL@decal_surface_vertex_count?$DO?$DNNUMB@ (0000)
+0025A190 001f:
+	??_C@_0BP@DMKBANMF@?$CIu?$CG0x8000?$CJ?$DN?$DN0?5?$CG?$CG?5?$CIv?$CG0x8000?$CJ?$DN?$DN0?$AA@ (0000)
+0025A1B0 0004:
+	__real@46fffe00 (0000)
+0025A1B4 0004:
+	__real@47000000 (0000)
+0025A1B8 0061:
+	??_C@_0GB@BFKPFOAD@decal_geometry?4decal_surface_ver@ (0000)
+0025A220 0045:
+	??_C@_0EF@GKPEALIB@?$CD?$CD?$CD?5ERROR?3?5decals?3?5failed?5to?5wra@ (0000)
+0025A268 001c:
+	??_C@_0BM@OHCKIEGH@closest_surface_index?$CB?$DNNONE?$AA@ (0000)
+0025A284 003c:
+	??_C@_0DM@IKBFNNO@deviant_surface_bunch_size?$DMMAXIM@ (0000)
+0025A2C0 003c:
+	??_C@_0DM@PHDNGGDN@surface_queue_write_index?$DM?$DNMAXIM@ (0000)
+0025A2FC 003a:
+	??_C@_0DK@BPOMGHAN@surface_queue_read_index?$DMMAXIMUM@ (0000)
+0025A338 0059:
+	??_C@_0FJ@FJNHAALP@?$CD?$CD?$CD?5DECALS?3?5Bernie?5doesn?8t?5under@ (0000)
+0025A394 002b:
+	??_C@_0CL@PJMHEHFM@?$CD?$CD?$CD?5ERROR?5unsupported?5projection@ (0000)
+0025A3C0 0004:
+	__real@b8d1b717 (0000)
+0025A3C4 0011:
+	??_C@_0BB@INIEPHFC@?$CBeditor_geometry?$AA@ (0000)
+0025A3D8 000f:
+	??_C@_0P@FPCAJBIO@decals_enabled?$AA@ (0000)
+0025A3E8 0009:
+	??_C@_08ICEJNDOI@velocity?$AA@ (0000)
+0025A3F4 000a:
+	??_C@_09BHPEDNK@collision?$AA@ (0000)
+0025A400 0007:
+	??_C@_06NHCMNMEH@origin?$AA@ (0000)
+0025A408 001a:
+	??_C@_0BK@DEMGPIOC@local_random_seed_address?$AA@ (0000)
+002DD190 0001:
+	_decals_enabled (0000)
+00435CB0 78d2:
+	_bss_00435cb0 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

@@ -1,0 +1,261 @@
+/*
+NETWORK_SERVER_MESSAGE_HANDLER.C
+
+symbols in this file:
+0011E890 0090:
+	_code_0011e890 (0000)
+0011E920 00a0:
+	_code_0011e920 (0000)
+0011E9C0 0090:
+	_code_0011e9c0 (0000)
+0011EA50 0090:
+	_code_0011ea50 (0000)
+0011EAE0 00a0:
+	_code_0011eae0 (0000)
+0011EB80 00a0:
+	_code_0011eb80 (0000)
+0011EC20 0020:
+	_code_0011ec20 (0000)
+0011EC40 0040:
+	_network_game_server_send_message_to_machine (0000)
+0011EC80 0110:
+	_network_game_server_send_message_to_all_machines (0000)
+0011ED90 0090:
+	_network_game_server_send_player_joined_info_ingame (0000)
+0011EE20 00c0:
+	_network_game_server_send_game_data_pregame (0000)
+0011EEE0 0240:
+	_code_0011eee0 (0000)
+0011F120 00c0:
+	_code_0011f120 (0000)
+0011F1E0 03f0:
+	_code_0011f1e0 (0000)
+0011F5D0 00c0:
+	_code_0011f5d0 (0000)
+0011F690 00c0:
+	_code_0011f690 (0000)
+0011F750 00e0:
+	_code_0011f750 (0000)
+0011F830 00d0:
+	_code_0011f830 (0000)
+0011F900 00d0:
+	_code_0011f900 (0000)
+0011F9D0 00f0:
+	_code_0011f9d0 (0000)
+0011FAC0 0310:
+	_network_game_server_handle_datagram (0000)
+0011FDD0 0400:
+	_network_game_server_handle_client_message (0000)
+00286F00 005a:
+	??_C@_0FK@KMJJAKFL@failed?5to?5handle?5a?5message_clien@ (0000)
+00286F60 0043:
+	??_C@_0ED@BONJCMOD@server?5failed?5to?5decode?5a?5messag@ (0000)
+00286FA8 0065:
+	??_C@_0GF@BGPKJGEH@failed?5to?5handle?5a?5message_type_@ (0000)
+00287010 004e:
+	??_C@_0EO@HMJBCLNP@server?5failed?5to?5decode?5a?5messag@ (0000)
+00287060 0056:
+	??_C@_0FG@LPGCCINN@failed?5to?5handle?5a?5message_clien@ (0000)
+002870B8 0037:
+	??_C@_0DH@MMOKOPCN@server?5failed?5to?5decode?5a?5messag@ (0000)
+002870F0 005e:
+	??_C@_0FO@NHCIMMDF@failed?5to?5handle?5a?5message_clien@ (0000)
+00287150 004a:
+	??_C@_0EK@ONPDOJKK@server?5failed?5to?5decode?5a?5messag@ (0000)
+002871A0 0068:
+	??_C@_0GI@DLKCJODI@failed?5to?5handle?5a?5message_clien@ (0000)
+00287208 004f:
+	??_C@_0EP@DAOANLDM@server?5failed?5to?5decode?5a?5messag@ (0000)
+00287258 0033:
+	??_C@_0DD@FJKDMFNA@server?5failed?5to?5remove?5a?5networ@ (0000)
+00287290 005b:
+	??_C@_0FL@NDHDFCNK@failed?5to?5handle?5a?5message_clien@ (0000)
+002872F0 0045:
+	??_C@_0EF@MJLJMBIP@network_game_server_switch_machi@ (0000)
+00287338 0059:
+	??_C@_0FJ@PEAAKLFN@network_game_server_write?$CI?$CJ?5fail@ (0000)
+00287394 0027:
+	??_C@_0CH@EEEHHOGO@message_length?$DM?$DNsizeof?$CImessage_b@ (0000)
+002873BC 0012:
+	??_C@_0BC@FDHBPMJE@server?5?$CG?$CG?5message?$AA@ (0000)
+002873D0 003b:
+	??_C@_0DL@ICDCPLFI@c?3?2halo?2SOURCE?2networking?2networ@ (0000)
+0028740C 003c:
+	??_C@_0DM@MOMFHJIG@failed?5to?5create?5a?5message_serve@ (0000)
+00287448 0072:
+	??_C@_0HC@FGJDKKLC@network_game_server_send_message@ (0000)
+002874C0 0058:
+	??_C@_0FI@LBJCENJB@failed?5to?5handle?5a?5message_serve@ (0000)
+00287518 003f:
+	??_C@_0DP@CCCLFFGC@failed?5to?5create?5a?5message_serve@ (0000)
+00287558 004b:
+	??_C@_0EL@NFHCHAEG@failed?5to?5send?5message_server_ga@ (0000)
+002875A4 0039:
+	??_C@_0DJ@PCNJDMDI@failed?5to?5create?5a?5message_serve@ (0000)
+002875E0 0054:
+	??_C@_0FE@HMKEDIDF@network_game_server_write?$CI?$CJ?5fail@ (0000)
+00287634 002b:
+	??_C@_0CL@FOJJMNII@server?5?$CG?$CG?5source_address?5?$CG?$CG?5clie@ (0000)
+00287660 002f:
+	??_C@_0CP@JCCANCCC@failed?5to?5create?5a?5message_serve@ (0000)
+00287690 0043:
+	??_C@_0ED@LGNNJLKJ@network_game_server_write?$CI?$CJ?5fail@ (0000)
+002876D8 0042:
+	??_C@_0EC@MGMKMMHI@server?5failed?5to?5decode?5a?5messag@ (0000)
+0028771C 003b:
+	??_C@_0DL@JAHACCAG@failed?5to?5create?5a?5message_serve@ (0000)
+00287758 0043:
+	??_C@_0ED@PLLDKIEI@client?5machine?5?8?$CFs?8?5?$EA?$CFs?5tried?5to@ (0000)
+002877A0 0041:
+	??_C@_0EB@ONCPMINI@client?5machine?5?8?$CFs?8?5?$EA?$CFs?5tried?5to@ (0000)
+002877E8 0043:
+	??_C@_0ED@DKNIPKFL@network_game_server_write?$CI?$CJ?5fail@ (0000)
+00287830 0044:
+	??_C@_0EE@MGEHHOCB@server?5failed?5to?5accept?5valid?5cl@ (0000)
+00287878 0075:
+	??_C@_0HF@HFOMEJBD@network_game_server_send_game_da@ (0000)
+002878F0 0039:
+	??_C@_0DJ@CKOCAMEF@sent?5_message_type_server_machin@ (0000)
+00287930 0064:
+	??_C@_0GE@MLODGBHN@network_game_server_write?$CI?$CJ?5fail@ (0000)
+00287994 0029:
+	??_C@_0CJ@EPMEBAJK@network_machine_is_valid?$CIclient_@ (0000)
+002879C0 0040:
+	??_C@_0EA@HPKAIHHK@server?5refused?5client?5?8?$CFs?8?5becau@ (0000)
+00287A00 000d:
+	??_C@_0N@MPMCKMFC@d?3?2hosts?4txt?$AA@ (0000)
+00287A10 002d:
+	??_C@_0CN@LBHCOBFK@ignoring?5redundant?5join?5request?5@ (0000)
+00287A40 0062:
+	??_C@_0GC@IBIEHGFG@failed?5to?5handle?5a?5message_clien@ (0000)
+00287AA8 004b:
+	??_C@_0EL@BFEPJEFO@server?5failed?5to?5decode?5a?5messag@ (0000)
+00287AF8 0070:
+	??_C@_0HA@DHHGOECG@server?5failed?5to?5add?5a?5network?5p@ (0000)
+00287B68 0072:
+	??_C@_0HC@LODCIJJJ@server?5failed?5to?5send?5pregame?5ga@ (0000)
+00287BE0 0065:
+	??_C@_0GF@EKICMCEL@failed?5to?5handle?5a?5message_clien@ (0000)
+00287C48 004e:
+	??_C@_0EO@JJCAGDLG@server?5failed?5to?5decode?5a?5messag@ (0000)
+00287C98 0076:
+	??_C@_0HG@LNIKCCLC@server?5failed?5to?5remove?5a?5networ@ (0000)
+00287D10 0075:
+	??_C@_0HF@KPAHGLDA@server?5failed?5to?5send?5pregame?5ga@ (0000)
+00287D88 0058:
+	??_C@_0FI@HEMIANGD@failed?5to?5handle?5a?5message_clien@ (0000)
+00287DE0 0041:
+	??_C@_0EB@EACNFEBF@server?5failed?5to?5decode?5a?5messag@ (0000)
+00287E28 0075:
+	??_C@_0HF@CJBDOMOO@network_game_server_adjust_machi@ (0000)
+00287EA0 0068:
+	??_C@_0GI@IHEHKNKB@server?5failed?5to?5send?5pregame?5ga@ (0000)
+00287F08 0036:
+	??_C@_0DG@ECGMMKBK@server?5received?5machine?5settings@ (0000)
+00287F40 005f:
+	??_C@_0FP@BKMGBKPC@failed?5to?5handle?5a?5message_clien@ (0000)
+00287FA0 0048:
+	??_C@_0EI@NDLJFMCJ@server?5failed?5to?5decode?5a?5messag@ (0000)
+00287FE8 006b:
+	??_C@_0GL@MGDAOAGD@network_game_update_player?$CI?$CJ?5fai@ (0000)
+00288058 006f:
+	??_C@_0GP@IGEJNGEG@server?5failed?5to?5send?5pregame?5ga@ (0000)
+002880C8 0028:
+	??_C@_0CI@NAMNDBJF@server?5received?5updated?5player?5s@ (0000)
+002880F0 006a:
+	??_C@_0GK@PIEMGCFK@failed?5to?5handle?5a?5message_clien@ (0000)
+00288160 004b:
+	??_C@_0EL@FGPNNAHJ@server?5failed?5to?5decode?5a?5messag@ (0000)
+002881B0 0080:
+	??_C@_0IA@GMAELFDC@network_game_server_remove_machi@ (0000)
+00288230 0072:
+	??_C@_0HC@JPOEIOK@server?5failed?5to?5send?5pregame?5ga@ (0000)
+002882A8 0061:
+	??_C@_0GB@BICEKEIA@failed?5to?5handle?5a?5message_clien@ (0000)
+00288310 004d:
+	??_C@_0EN@FBHIPCPE@server?5failed?5to?5decode?5a?5messag@ (0000)
+00288360 003a:
+	??_C@_0DK@HGNCDCGJ@server?5received?5a?5malformed?1dama@ (0000)
+002883A0 0047:
+	??_C@_0EH@HDCJJGCF@server?5received?5low?9level?5error?5@ (0000)
+002883E8 0046:
+	??_C@_0EG@NGIBKKFK@server?5received?5a?5bad?5message?5ty@ (0000)
+00288430 003f:
+	??_C@_0DP@DJCDAEKP@failed?5to?5decode?5a?5message_clien@ (0000)
+00288470 003e:
+	??_C@_0DO@EMEMPFEN@server?5failed?5to?5advertise?5game?5@ (0000)
+002884B0 002e:
+	??_C@_0CO@IFNMPAGP@failed?5to?5decode?5a?5message_clien@ (0000)
+002884E0 0026:
+	??_C@_0CG@PBGOHBCL@server?5failed?5to?5handle?5a?5client@ (0000)
+00288508 0042:
+	??_C@_0EC@OIEIALKJ@ignoring?5a?5message_client_game_u@ (0000)
+00288550 0062:
+	??_C@_0GC@EMAKPFP@failed?5to?5handle?5a?5message_clien@ (0000)
+002885B4 0035:
+	??_C@_0DF@NPLDDCCG@failed?5to?5decode?5a?5message_clien@ (0000)
+002885F0 0046:
+	??_C@_0EG@DEJFBBLL@server?5received?5datagram?5with?5an@ (0000)
+00288638 004c:
+	??_C@_0EM@NPFBANHI@server?5received?5a?5datagram?5with?5@ (0000)
+00288684 003c:
+	??_C@_0DM@HFFMPMPG@server?5received?5a?5datagram?5with?5@ (0000)
+002886C0 0081:
+	??_C@_0IB@OPFACLKA@server?5?$CG?$CG?5message?5?$CG?$CG?5source_addr@ (0000)
+00288744 003a:
+	??_C@_0DK@NEANDKEL@server?5received?5a?5malformed?1dama@ (0000)
+00288780 0047:
+	??_C@_0EH@PCKBOEPO@server?5received?5low?9level?5error?5@ (0000)
+002887C8 0046:
+	??_C@_0EG@GPPJDFA@server?5received?5a?5bad?5message?5ty@ (0000)
+00288810 003e:
+	??_C@_0DO@LBJNGIAJ@bad?5or?5inappropriate?5packet?5type@ (0000)
+00288850 004e:
+	??_C@_0EO@OPDINPHL@network_game_server_handle_messa@ (0000)
+002888A0 0045:
+	??_C@_0EF@FHPBCOMI@network_game_server_handle_messa@ (0000)
+002888E8 0052:
+	??_C@_0FC@HBMALEKE@network_game_server_handle_messa@ (0000)
+00288940 0050:
+	??_C@_0FA@OHGBEJHJ@network_game_server_handle_messa@ (0000)
+00288990 004d:
+	??_C@_0EN@IOBKAAMM@network_game_server_handle_messa@ (0000)
+002889E0 003a:
+	??_C@_0DK@DJBGFGMF@network_game_server_handle_messa@ (0000)
+00288A20 0046:
+	??_C@_0EG@KNLLMEKN@network_game_server_handle_messa@ (0000)
+00288A68 004b:
+	??_C@_0EL@IBNDPBLB@network_game_server_handle_messa@ (0000)
+00288AB8 0044:
+	??_C@_0EE@KLMGADOJ@network_game_server_handle_messa@ (0000)
+00288B00 0051:
+	??_C@_0FB@PPCOJHGP@network_game_server_handle_messa@ (0000)
+00288B58 004e:
+	??_C@_0EO@EEEMKLCF@network_game_server_handle_messa@ (0000)
+00288BA8 0045:
+	??_C@_0EF@FHABLMKA@network_game_server_handle_messa@ (0000)
+00288BF0 0048:
+	??_C@_0EI@INBBOEGP@an?5un?9validated?5client?5sent?5some@ (0000)
+00288C38 0044:
+	??_C@_0EE@EPDDKPMF@server?5received?5a?5client?5message@ (0000)
+00288C7C 0032:
+	??_C@_0DC@DAGHEIED@server?5received?5client?5message?5w@ (0000)
+00288CB0 0054:
+	??_C@_0FE@BPJHKGCF@server?5?$CG?$CG?5machine?5?$CG?$CG?5message?5?$CG?$CG?5@ (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

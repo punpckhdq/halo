@@ -1,0 +1,233 @@
+/*
+BITMAP_EXTRACT.C
+
+symbols in this file:
+00061EA0 0130:
+	_code_00061ea0 (0000)
+00061FD0 0120:
+	_code_00061fd0 (0000)
+000620F0 0080:
+	_code_000620f0 (0000)
+00062170 0340:
+	_code_00062170 (0000)
+000624B0 0190:
+	_code_000624b0 (0000)
+00062640 0240:
+	_code_00062640 (0000)
+00062880 03b0:
+	_code_00062880 (0000)
+00062C30 0210:
+	_code_00062c30 (0000)
+00062E40 0260:
+	_code_00062e40 (0000)
+000630A0 0580:
+	_extract_build_debug_plate (0000)
+00063620 03d0:
+	_code_00063620 (0000)
+000639F0 02b0:
+	_code_000639f0 (0000)
+00063CA0 01d0:
+	_code_00063ca0 (0000)
+00063E70 0220:
+	_code_00063e70 (0000)
+00064090 0450:
+	_code_00064090 (0000)
+000644E0 0490:
+	_code_000644e0 (0000)
+00064970 0110:
+	_code_00064970 (0000)
+00064A80 02d0:
+	_code_00064a80 (0000)
+00064D50 00b0:
+	_code_00064d50 (0000)
+00064E00 02e0:
+	_bitmaps_extract (0000)
+000650E0 0130:
+	_bitmaps_extract_from_plate (0000)
+00251290 000e:
+	??_C@_0O@IOJAHIHH@top_reference?$AA@ (0000)
+002512A0 0028:
+	??_C@_0CI@MDNPJHJC@c?3?2halo?2SOURCE?2bitmaps?2bitmap_ex@ (0000)
+002512C8 0034:
+	??_C@_0DE@MPBEDKDP@?$CD?$CD?$CD?5WARNING?5horizontal?5border?5br@ (0000)
+00251300 0045:
+	??_C@_0EF@HOBDLMPH@?$CD?$CD?$CD?5ERROR?5extract?3?5plateless?5cub@ (0000)
+00251348 0042:
+	??_C@_0EC@CNAGFICN@?$CD?$CD?$CD?5ERROR?5extract?3?5can?8t?5handle?5@ (0000)
+0025138C 0037:
+	??_C@_0DH@JLCLDNBC@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5all@ (0000)
+002513C4 001c:
+	??_C@_0BM@HDLJMFAA@bitmap_verify?$CIbitmap?0?5TRUE?$CJ?$AA@ (0000)
+002513E0 001a:
+	??_C@_0BK@OPAPKIME@adjusted_bounds_reference?$AA@ (0000)
+002513FC 0007:
+	??_C@_06CGBPGGIE@bounds?$AA@ (0000)
+00251404 0033:
+	??_C@_0DD@OAKGMMJC@?$CD?$CD?$CD?5ERROR?5extract?3?5unsupported?5b@ (0000)
+00251438 0024:
+	??_C@_0CE@MAGCMLBE@?$CD?$CD?$CD?5ERROR?5unsupported?5bitmap?5for@ (0000)
+0025145C 003c:
+	??_C@_0DM@JCMHMNJE@?$CBTEST_FLAG?$CIdestination_bitmap?9?$DOf@ (0000)
+00251498 005a:
+	??_C@_0FK@KAGBNKPE@destination_mipmap_index?$DO?$DN0?5?$CG?$CG?5d@ (0000)
+002514F4 002e:
+	??_C@_0CO@MKAFAHJI@destination_bitmap?9?$DOtype?$DN?$DNsource@ (0000)
+00251524 0029:
+	??_C@_0CJ@PMPPCDAH@bitmap_verify?$CIdestination_bitmap@ (0000)
+00251550 0054:
+	??_C@_0FE@NNBMCEJD@source_bitmap?9?$DOdepth?5?$DN?$DNMAX?$CI1?0?5de@ (0000)
+002515A8 0054:
+	??_C@_0FE@NIAAMOKD@source_bitmap?9?$DOheight?$DN?$DNMAX?$CI1?0?5de@ (0000)
+00251600 0054:
+	??_C@_0FE@OGKNFLAG@source_bitmap?9?$DOwidth?5?$DN?$DNMAX?$CI1?0?5de@ (0000)
+00251654 0023:
+	??_C@_0CD@ECDENEFB@bitmap_verify?$CIsource_bitmap?0?5TRU@ (0000)
+00251678 004b:
+	??_C@_0EL@CICFBLGI@source_mipmap_index?$DO?$DN0?5?$CG?$CG?5source@ (0000)
+002516C4 002e:
+	??_C@_0CO@LIKJMDNH@source_bitmap?9?$DOtype?$DN?$DNdestination@ (0000)
+002516F4 0024:
+	??_C@_0CE@HECEPIHL@bitmap_verify?$CIsource_bitmap?0?5FAL@ (0000)
+00251718 004f:
+	??_C@_0EP@JCFKDNGM@destination_bitmap?9?$DOdepth?5?$DN?$DNMAX?$CI@ (0000)
+00251768 004f:
+	??_C@_0EP@KOPMFNGM@destination_bitmap?9?$DOheight?$DN?$DNMAX?$CI@ (0000)
+002517B8 004f:
+	??_C@_0EP@OEMHGOAI@destination_bitmap?9?$DOwidth?5?$DN?$DNMAX?$CI@ (0000)
+00251808 0028:
+	??_C@_0CI@JBLFEOIJ@bitmap_verify?$CIdestination_bitmap@ (0000)
+00251830 0024:
+	??_C@_0CE@LCCMCEAJ@sequence?5spanned?5?$CFd?5texture?5page@ (0000)
+00251854 0030:
+	??_C@_0DA@BOIOHNMC@?$CD?$CD?$CD?5ERROR?5failed?5to?5allocate?5deb@ (0000)
+00251884 0030:
+	??_C@_0DA@NMPFGKNI@?$CD?$CD?$CD?5ERROR?5failed?5to?5allocate?5deb@ (0000)
+002518B4 002a:
+	??_C@_0CK@DMHGHFA@?$CD?$CD?$CD?5ERROR?5failed?5to?5allocate?5deb@ (0000)
+002518E0 0022:
+	??_C@_0CC@DECIGGNF@?$CD?$CD?$CD?5ERROR?5unsupported?5bitmap?5typ@ (0000)
+00251904 0024:
+	??_C@_0CE@BAFBIHF@alpha_bias?$DO?$DN?9255?5?$CG?$CG?5alpha_bias?$DM?$DN@ (0000)
+00251928 0030:
+	??_C@_0DA@KOPAIHGJ@destination_bitmap?9?$DOdepth?$DN?$DNsourc@ (0000)
+00251958 0032:
+	??_C@_0DC@IECBCEHB@destination_bitmap?9?$DOheight?$DN?$DNsour@ (0000)
+0025198C 0030:
+	??_C@_0DA@LLNHMAL@destination_bitmap?9?$DOwidth?$DN?$DNsourc@ (0000)
+002519BC 0021:
+	??_C@_0CB@CLPJEELI@destination_bitmap?9?$DObase_address@ (0000)
+002519E0 0013:
+	??_C@_0BD@JMEMKNJH@destination_bitmap?$AA@ (0000)
+002519F4 0029:
+	??_C@_0CJ@PEGGHKHE@bitmap?5created?3?5?$CD?$CFdx?$CD?$CFd?0?5?$CFs?0?5?$CFdK@ (0000)
+00251A20 002d:
+	??_C@_0CN@MGDDLHDM@bitmap?5created?3?5?$CD?$CFdx?$CD?$CFdx?$CD?$CFd?0?5?$CFs?0@ (0000)
+00251A50 0028:
+	??_C@_0CI@GPIJKLOM@?$CD?$CD?$CD?5ERROR?5unsupported?5bitmap?5gro@ (0000)
+00251A78 0036:
+	??_C@_0DG@OFJIKCDA@?$CD?$CD?$CD?5WARNING?5tried?5to?5smooth?5an?5i@ (0000)
+00251AB0 002b:
+	??_C@_0CL@CJDNFNLC@?$CD?$CD?$CD?5WARNING?5tried?5to?5smooth?5a?5sp@ (0000)
+00251ADC 0003:
+	??_C@_02PCIJFNDE@?$AN?6?$AA@ (0000)
+00251AE0 0038:
+	??_C@_0DI@GIJPOGBA@skipping?53D?5texture?5with?5non?5pow@ (0000)
+00251B18 002f:
+	??_C@_0CP@OCGAOEDI@skipping?53D?5texture?5with?5incompa@ (0000)
+00251B48 0035:
+	??_C@_0DF@CHABNBMJ@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5cre@ (0000)
+00251B80 002b:
+	??_C@_0CL@KIGCKIOC@skipping?5cube?5map?5which?5spanned?5@ (0000)
+00251BAC 0031:
+	??_C@_0DB@JFFHMOLJ@skipping?5cube?5map?5with?5incompati@ (0000)
+00251BE0 002d:
+	??_C@_0CN@GHMACEEI@skipping?5cube?5map?5with?5less?5than@ (0000)
+00251C10 002a:
+	??_C@_0CK@MAFGCHJA@skipping?5cube?5map?5with?5non?9squar@ (0000)
+00251C3C 0012:
+	??_C@_0BC@OIPPCJDD@?$CBtemporary_bitmap?$AA@ (0000)
+00251C50 002b:
+	??_C@_0CL@MNFLENMO@?$CD?$CD?$CD?5ERROR?5sprite?5budget?5exceeded@ (0000)
+00251C7C 001e:
+	??_C@_0BO@PEKHFDDE@sprite?5budget?5met?5?$CI?$CF3?40f?$CF?$CF?$CJ?$AN?6?$AA@ (0000)
+00251C9C 0023:
+	??_C@_0CD@PAPLMEDP@?$CD?$CD?$CD?5WARNING?5no?5sprite?5budget?5set@ (0000)
+00251CC0 002e:
+	??_C@_0CO@CKBCALDJ@texture?5page?5created?5?$CD?$CFdx?$CD?$CFd?5?$CI?$CF3@ (0000)
+00251CF0 0041:
+	??_C@_0EB@GJMFGLDP@?$CD?$CD?$CD?5ERROR?5extract_sprite?3?5failed@ (0000)
+00251D38 0084:
+	??_C@_0IE@MKAIONEP@?$CD?$CD?$CD?5ERROR?5hey?5?9?5don?8t?5even?5try?5i@ (0000)
+00251DC0 0044:
+	??_C@_0EE@DCBFAMBD@?$CD?$CD?$CD?5ERROR?5one?5or?5more?5sprites?5do@ (0000)
+00251E04 0037:
+	??_C@_0DH@NFCBCMJC@?$CD?$CD?$CD?5WARNING?5skipped?5a?5bitmap?5whi@ (0000)
+00251E3C 0034:
+	??_C@_0DE@MGADPMCF@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5add@ (0000)
+00251E70 0097:
+	??_C@_0JH@OBKFAPGC@?$CD?$CD?$CD?5ERROR?5extract?3?5tried?5to?5extr@ (0000)
+00251F08 003b:
+	??_C@_0DL@FLDEAMAO@?$CD?$CD?$CD?5ERROR?5interface?1linear?5bitma@ (0000)
+00251F48 0054:
+	??_C@_0FE@BCCMGDBK@?$DN?$DN?$DO?5?$CB?$CBWARNING?$CB?$CB?5bitmap?5with?5grea@ (0000)
+00251FA0 0052:
+	??_C@_0FC@GFFGPBON@?$DN?$DN?$DO?5?$CB?$CBWARNING?$CB?$CB?5usage?5set?5to?5alp@ (0000)
+00251FF4 0036:
+	??_C@_0DG@DKLFGIJN@?$CD?$CD?$CD?5ERROR?5can?8t?5extract?5sprites?5@ (0000)
+0025202C 003a:
+	??_C@_0DK@PBJHAOGB@?$CD?$CD?$CD?5ERROR?5can?8t?5extract?53D?5textu@ (0000)
+00252068 0053:
+	??_C@_0FD@OJBFAEHG@?$CD?$CD?$CD?5ERROR?5extract?3?5compressed?5co@ (0000)
+002520BC 0023:
+	??_C@_0CD@LJHCCFGP@bottom?$DM?$DNextract_data?4plate?9?$DOheig@ (0000)
+002520E0 000c:
+	??_C@_0M@NNAAFJDK@bottom?$DO?$DNtop?$AA@ (0000)
+002520EC 0007:
+	??_C@_06JJMFEGFL@top?$DO?$DN0?$AA@ (0000)
+002520F4 002f:
+	??_C@_0CP@LHGGIDHB@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5all@ (0000)
+00252124 0032:
+	??_C@_0DC@MGLFJBKA@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5all@ (0000)
+00252158 0034:
+	??_C@_0DE@BGBBNNDB@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5dec@ (0000)
+00252190 0052:
+	??_C@_0FC@OEKPABF@decompressed_plate_size?$DN?$DNsizeof?$CI@ (0000)
+002521E4 003e:
+	??_C@_0DO@EDMJDNFC@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5res@ (0000)
+00252224 0033:
+	??_C@_0DD@FAIEDAFJ@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5all@ (0000)
+00252258 0040:
+	??_C@_0EA@PFFINKKO@group?9?$DOusage?5?$DO?$DN0?5?$CG?$CG?5group?9?$DOusage@ (0000)
+00252298 0041:
+	??_C@_0EB@OKMLMBHL@group?9?$DOformat?$DO?$DN0?5?$CG?$CG?5group?9?$DOforma@ (0000)
+002522DC 003d:
+	??_C@_0DN@FIMFNAFO@group?9?$DOtype?5?$DO?$DN0?5?$CG?$CG?5group?9?$DOtype?5?$DM@ (0000)
+0025231C 0006:
+	??_C@_05MGJOOGAJ@group?$AA@ (0000)
+00252324 0037:
+	??_C@_0DH@BHCBHGEP@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5all@ (0000)
+0025235C 0032:
+	??_C@_0DC@MDFBMDEG@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5com@ (0000)
+00252390 0031:
+	??_C@_0DB@KLKAOHKM@?$CD?$CD?$CD?5ERROR?5extract?3?5failed?5to?5rea@ (0000)
+002523C4 001b:
+	??_C@_0BL@KAAMGFCF@bitmap_verify?$CIplate?0?5TRUE?$CJ?$AA@ (0000)
+0031BED4 002c:
+	_bss_0031bed4 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

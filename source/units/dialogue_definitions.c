@@ -1,0 +1,617 @@
+/*
+DIALOGUE_DEFINITIONS.C
+
+symbols in this file:
+00196090 0030:
+	_dialogue_get_vocalization_name (0000)
+001960C0 0040:
+	_dialogue_get_vocalization_type_by_name (0000)
+002A3788 0008:
+	??_C@_07LBCGNMOI@rout?5re?$AA@ (0000)
+002A3790 0005:
+	??_C@_04MAODEKFB@rout?$AA@ (0000)
+002A3798 000c:
+	??_C@_0M@CJDHPCEN@massacre?5re?$AA@ (0000)
+002A37A4 000b:
+	??_C@_0L@LIGHMJPN@wounded?5re?$AA@ (0000)
+002A37B0 0015:
+	??_C@_0BF@FCAKBLFF@seriously?5wounded?5re?$AA@ (0000)
+002A37C8 0012:
+	??_C@_0BC@PBKBLPEJ@seriously?5wounded?$AA@ (0000)
+002A37DC 000d:
+	??_C@_0N@HMBIILNK@sh?5corps?5ply?$AA@ (0000)
+002A37EC 001b:
+	??_C@_0BL@JBINDEDK@shooting?5dead?5enemy?5player?$AA@ (0000)
+002A3808 0009:
+	??_C@_08BILMCBMJ@sh?5corps?$AA@ (0000)
+002A3814 0014:
+	??_C@_0BE@IOKFGPBD@shooting?5dead?5enemy?$AA@ (0000)
+002A3828 000a:
+	??_C@_09LNLOOHHD@check?5fri?$AA@ (0000)
+002A3834 0012:
+	??_C@_0BC@GPCNBBAA@check?5body?5friend?$AA@ (0000)
+002A3848 0009:
+	??_C@_08NDEKFFAI@check?5en?$AA@ (0000)
+002A3854 0011:
+	??_C@_0BB@LFHLCGCM@check?5body?5enemy?$AA@ (0000)
+002A3868 0006:
+	??_C@_05PJKIJDMA@celeb?$AA@ (0000)
+002A3870 000c:
+	??_C@_0M@PPFCBDIO@celebration?$AA@ (0000)
+002A387C 000a:
+	??_C@_09KMHALOOH@resurrect?$AA@ (0000)
+002A3888 000d:
+	??_C@_0N@HIDFEGDO@resurrection?$AA@ (0000)
+002A3898 0009:
+	??_C@_08EHLJLOLC@leap?5att?$AA@ (0000)
+002A38A4 000c:
+	??_C@_0M@EBCDPFFE@leap?5attack?$AA@ (0000)
+002A38B0 0009:
+	??_C@_08ONEBMJJA@unc?5leap?$AA@ (0000)
+002A38BC 000d:
+	??_C@_0N@COBAPDBA@uncover?5leap?$AA@ (0000)
+002A38CC 000d:
+	??_C@_0N@HFAFGMMJ@melee?5attack?$AA@ (0000)
+002A38DC 0006:
+	??_C@_05ELFLAEEC@bersk?$AA@ (0000)
+002A38E4 0006:
+	??_C@_05HKHHFFLP@surpr?$AA@ (0000)
+002A38EC 0009:
+	??_C@_08DGFOFAID@pleading?$AA@ (0000)
+002A38F8 000b:
+	??_C@_0L@BNPGFLMH@part?5nothn?$AA@ (0000)
+002A3904 000e:
+	??_C@_0O@FLOMCMAI@nothing?5there?$AA@ (0000)
+002A3914 000b:
+	??_C@_0L@NPHPLNII@part?5sight?$AA@ (0000)
+002A3920 0012:
+	??_C@_0BC@FEGOGHLP@partially?5sighted?$AA@ (0000)
+002A3934 000c:
+	??_C@_0M@DPALGLHH@veh?5collide?$AA@ (0000)
+002A3940 0012:
+	??_C@_0BC@OJDHGKHC@vehicle?5collision?$AA@ (0000)
+002A3954 000a:
+	??_C@_09KCCEOFGH@veh?5scare?$AA@ (0000)
+002A3960 000f:
+	??_C@_0P@HBJJNIBC@vehicle?5scared?$AA@ (0000)
+002A3970 0009:
+	??_C@_08KBLKDNFC@veh?5yeah?$AA@ (0000)
+002A397C 000f:
+	??_C@_0P@JMODGJPN@vehicle?5woohoo?$AA@ (0000)
+002A398C 0009:
+	??_C@_08EOLNMEHG@veh?5exit?$AA@ (0000)
+002A3998 000d:
+	??_C@_0N@FCAKALAJ@vehicle?5exit?$AA@ (0000)
+002A39A8 000a:
+	??_C@_09OILDKKA@veh?5entry?$AA@ (0000)
+002A39B4 000e:
+	??_C@_0O@MOCNOBMC@vehicle?5entry?$AA@ (0000)
+002A39C4 000b:
+	??_C@_0L@PHEGMFGE@hid?5finish?$AA@ (0000)
+002A39D0 0010:
+	??_C@_0BA@JNFONDBI@hiding?5finished?$AA@ (0000)
+002A39E0 0009:
+	??_C@_08FDJEBOIH@lostcont?$AA@ (0000)
+002A39EC 000d:
+	??_C@_0N@LLPJFAIO@lost?5contact?$AA@ (0000)
+002A39FC 000a:
+	??_C@_09ONFKPIKI@a?9flee?5re?$AA@ (0000)
+002A3A08 0012:
+	??_C@_0BC@JMHKODHM@attempted?5flee?5re?$AA@ (0000)
+002A3A1C 0007:
+	??_C@_06MFHECNEH@a?9flee?$AA@ (0000)
+002A3A24 000f:
+	??_C@_0P@PLJKAAFJ@attempted?5flee?$AA@ (0000)
+002A3A34 0009:
+	??_C@_08NCJKEEBH@flee?5ldr?$AA@ (0000)
+002A3A40 0011:
+	??_C@_0BB@ECLOBEA@flee?5leader?5died?$AA@ (0000)
+002A3A54 0008:
+	??_C@_07CGGJEFAN@flee?5re?$AA@ (0000)
+002A3A5C 0009:
+	??_C@_08MHMJICOG@taunt?5re?$AA@ (0000)
+002A3A68 0006:
+	??_C@_05CPCHEFAA@taunt?$AA@ (0000)
+002A3A70 000b:
+	??_C@_0L@JEFMGMOI@shoot?5trai?$AA@ (0000)
+002A3A7C 0011:
+	??_C@_0BB@EFPFGDMK@shooting?5traitor?$AA@ (0000)
+002A3A90 000a:
+	??_C@_09BNEMGOBE@shoot?5grp?$AA@ (0000)
+002A3A9C 000f:
+	??_C@_0P@JJFEFNFG@shooting?5group?$AA@ (0000)
+002A3AAC 000a:
+	??_C@_09BLPMNOF@shoot?5brs?$AA@ (0000)
+002A3AB8 0011:
+	??_C@_0BB@JFBBKPPB@shooting?5berserk?$AA@ (0000)
+002A3ACC 000a:
+	??_C@_09GOJLHDEC@shoot?5veh?$AA@ (0000)
+002A3AD8 0011:
+	??_C@_0BB@EIKNMCNG@shooting?5vehicle?$AA@ (0000)
+002A3AEC 000c:
+	??_C@_0M@FMPDOEIO@friend?5play?$AA@ (0000)
+002A3AF8 0016:
+	??_C@_0BG@KPOMHHGO@sighted?5friend?5player?$AA@ (0000)
+002A3B10 000b:
+	??_C@_0L@LPHLBLHB@retreat?5re?$AA@ (0000)
+002A3B1C 000b:
+	??_C@_0L@KJCAIHAI@advance?5re?$AA@ (0000)
+002A3B28 000d:
+	??_C@_0N@HJNIHLBJ@unc?5start?5re?$AA@ (0000)
+002A3B38 0011:
+	??_C@_0BB@BMLAFCHL@uncover?5start?5re?$AA@ (0000)
+002A3B4C 000a:
+	??_C@_09BHDFLEGN@unc?5start?$AA@ (0000)
+002A3B58 000e:
+	??_C@_0O@PKEOGGHH@uncover?5start?$AA@ (0000)
+002A3B68 000c:
+	??_C@_0M@NOPFGMMA@sea?5g?9aband?$AA@ (0000)
+002A3B74 0015:
+	??_C@_0BF@FMIDKM@search?5group?5abandon?$AA@ (0000)
+002A3B8C 000a:
+	??_C@_09CEBLNEHN@sea?5aband?$AA@ (0000)
+002A3B98 000f:
+	??_C@_0P@EMODMFHN@search?5abandon?$AA@ (0000)
+002A3BA8 000b:
+	??_C@_0L@NDGHBKNJ@sea?5report?$AA@ (0000)
+002A3BB4 000e:
+	??_C@_0O@DPENBEJK@search?5report?$AA@ (0000)
+002A3BC4 000d:
+	??_C@_0N@BOEAHBLB@sea?5query?5re?$AA@ (0000)
+002A3BD4 0010:
+	??_C@_0BA@CCKMKMFK@search?5query?5re?$AA@ (0000)
+002A3BE4 000a:
+	??_C@_09JADPDMCL@sea?5query?$AA@ (0000)
+002A3BF0 000d:
+	??_C@_0N@NJMDFJOK@search?5query?$AA@ (0000)
+002A3C00 000a:
+	??_C@_09NKFLFNIK@sea?5start?$AA@ (0000)
+002A3C0C 000d:
+	??_C@_0N@JDKHDIEL@search?5start?$AA@ (0000)
+002A3C1C 000b:
+	??_C@_0L@NIFCLHKA@blocked?5re?$AA@ (0000)
+002A3C28 000b:
+	??_C@_0L@NIJLFNMM@al?5lost?5re?$AA@ (0000)
+002A3C34 0016:
+	??_C@_0BG@NLGCBBNL@alert?5lost?5contact?5re?$AA@ (0000)
+002A3C4C 000b:
+	??_C@_0L@INBNBADE@al?5lostcom?$AA@ (0000)
+002A3C58 0013:
+	??_C@_0BD@LHBAJOLC@alert?5lost?5contact?$AA@ (0000)
+002A3C6C 000b:
+	??_C@_0L@PHDGAAGG@al?5nonc?5re?$AA@ (0000)
+002A3C78 0010:
+	??_C@_0BA@FFKHCNJP@alert?5friend?5re?$AA@ (0000)
+002A3C88 0008:
+	??_C@_07IEPIFDCD@al?5nonc?$AA@ (0000)
+002A3C90 000d:
+	??_C@_0N@PMDOILOO@alert?5friend?$AA@ (0000)
+002A3CA0 000d:
+	??_C@_0N@EEPHNBPD@en?5nearby?5re?$AA@ (0000)
+002A3CB0 0015:
+	??_C@_0BF@DNAGEBGC@nea?5combat?5nearby?5re?$AA@ (0000)
+002A3CC8 000c:
+	??_C@_0M@JPFNCKLF@en?5group?5re?$AA@ (0000)
+002A3CD4 0014:
+	??_C@_0BE@JCKKPPCB@new?5combat?5group?5re?$AA@ (0000)
+002A3CE8 000b:
+	??_C@_0L@IFCHLBCB@gre?5friend?$AA@ (0000)
+002A3CF4 0016:
+	??_C@_0BG@BPPKIANA@grenade?5danger?5friend?$AA@ (0000)
+002A3D0C 0009:
+	??_C@_08NBEDJEOO@gre?5self?$AA@ (0000)
+002A3D18 0014:
+	??_C@_0BE@IOBJMKLC@grenade?5danger?5self?$AA@ (0000)
+002A3D2C 000a:
+	??_C@_09GKJMDOKI@gre?5enemy?$AA@ (0000)
+002A3D38 0015:
+	??_C@_0BF@IBOHJCJ@grenade?5danger?5enemy?$AA@ (0000)
+002A3D50 000a:
+	??_C@_09BEFPHHBD@gre?5sight?$AA@ (0000)
+002A3D5C 0010:
+	??_C@_0BA@EIBKBJAN@grenade?5sighted?$AA@ (0000)
+002A3D6C 000a:
+	??_C@_09LIPFFNFK@gre?5start?$AA@ (0000)
+002A3D78 0010:
+	??_C@_0BA@KENAICPD@grenade?5startle?$AA@ (0000)
+002A3D88 000a:
+	??_C@_09HNJPIMPA@gre?5throw?$AA@ (0000)
+002A3D94 0011:
+	??_C@_0BB@NEIMDFPM@grenade?5throwing?$AA@ (0000)
+002A3DA8 000c:
+	??_C@_0M@NCGBHNKJ@ally?5reform?$AA@ (0000)
+002A3DB4 0012:
+	??_C@_0BC@FKDDPILJ@alliance?5reformed?$AA@ (0000)
+002A3DC8 000c:
+	??_C@_0M@BLFKMAFE@ally?5broken?$AA@ (0000)
+002A3DD4 0010:
+	??_C@_0BA@NAALCAOE@alliance?5broken?$AA@ (0000)
+002A3DE4 0009:
+	??_C@_08PECPNAA@deadbody?$AA@ (0000)
+002A3DF0 0012:
+	??_C@_0BC@MOLIHEFO@dead?5friend?5found?$AA@ (0000)
+002A3E04 0008:
+	??_C@_07JNMCKJHN@en?5unex?$AA@ (0000)
+002A3E0C 0011:
+	??_C@_0BB@GKAOCKMD@unexpected?5enemy?$AA@ (0000)
+002A3E20 000a:
+	??_C@_09EBAEJGLO@en?5search?$AA@ (0000)
+002A3E2C 0012:
+	??_C@_0BC@HOPNELLP@old?5enemy?5sighted?$AA@ (0000)
+002A3E40 000a:
+	??_C@_09LONCGPEC@en?5recent?$AA@ (0000)
+002A3E4C 0018:
+	??_C@_0BI@DMEMLHJL@new?5enemy?5recent?5combat?$AA@ (0000)
+002A3E64 0007:
+	??_C@_06LNLJGECH@en?5new?$AA@ (0000)
+002A3E6C 0011:
+	??_C@_0BB@LKAOPNIB@new?5combat?5alone?$AA@ (0000)
+002A3E80 0009:
+	??_C@_08NPJDNHDK@d?5betray?$AA@ (0000)
+002A3E8C 0010:
+	??_C@_0BA@MBJBDCCA@friend?5betrayed?$AA@ (0000)
+002A3E9C 0009:
+	??_C@_08EBBKMGKD@d?5b?5sent?$AA@ (0000)
+002A3EA8 001a:
+	??_C@_0BK@DPINGBLD@friend?5killed?5by?5sentinel?$AA@ (0000)
+002A3EC4 000a:
+	??_C@_09LIMLJMJK@d?5b?5flood?$AA@ (0000)
+002A3ED0 0017:
+	??_C@_0BH@JFGDDAOJ@friend?5killed?5by?5flood?$AA@ (0000)
+002A3EE8 0008:
+	??_C@_07JGEBDMJO@d?5b?5cov?$AA@ (0000)
+002A3EF0 001a:
+	??_C@_0BK@PKDLIHGD@friend?5killed?5by?5covenant?$AA@ (0000)
+002A3F0C 000d:
+	??_C@_0N@OPGOPONK@d?5b?5en?5playr?$AA@ (0000)
+002A3F1C 001e:
+	??_C@_0BO@KHDCPJKE@friend?5killed?5by?5enemy?5player?$AA@ (0000)
+002A3F3C 000a:
+	??_C@_09NHMKOFEC@d?5b?5enemy?$AA@ (0000)
+002A3F48 0017:
+	??_C@_0BH@PKGCEJDB@friend?5killed?5by?5enemy?$AA@ (0000)
+002A3F60 000a:
+	??_C@_09IJKIGADK@d?5b?5playr?$AA@ (0000)
+002A3F6C 0021:
+	??_C@_0CB@HLGHPAKD@friend?5killed?5by?5friendly?5player@ (0000)
+002A3F90 0008:
+	??_C@_07HIDLPCBB@d?5b?5fri?$AA@ (0000)
+002A3F98 0018:
+	??_C@_0BI@MGEGELG@friend?5killed?5by?5friend?$AA@ (0000)
+002A3FB0 0008:
+	??_C@_07JDJCPIAL@d?5playr?$AA@ (0000)
+002A3FB8 0013:
+	??_C@_0BD@FKPCPGCL@friend?5player?5died?$AA@ (0000)
+002A3FCC 0006:
+	??_C@_05OBJOPIBL@d?5fri?$AA@ (0000)
+002A3FD4 000c:
+	??_C@_0M@GCIOBDO@friend?5died?$AA@ (0000)
+002A3FE0 000c:
+	??_C@_0M@LBFKKMDD@pk?5spree?5cm?$AA@ (0000)
+002A3FEC 0018:
+	??_C@_0BI@LOKIHIFC@player?5killing?5spree?5cm?$AA@ (0000)
+002A4004 000c:
+	??_C@_0M@ICCDGGCI@pk?5mount?5cm?$AA@ (0000)
+002A4010 001d:
+	??_C@_0BN@CALBMGDL@player?5kill?5mountedweapon?5cm?$AA@ (0000)
+002A4030 000a:
+	??_C@_09IJEPOHOH@pk?5veh?5cm?$AA@ (0000)
+002A403C 0017:
+	??_C@_0BH@IKCPPIBJ@player?5kill?5vehicle?5cm?$AA@ (0000)
+002A4054 000c:
+	??_C@_0M@KKEHPJPN@pk?5shotg?5cm?$AA@ (0000)
+002A4060 0017:
+	??_C@_0BH@CKBPNAIJ@player?5kill?5shotgun?5cm?$AA@ (0000)
+002A4078 000c:
+	??_C@_0M@MGHMILFH@pk?5flame?5cm?$AA@ (0000)
+002A4084 0015:
+	??_C@_0BF@JILFGLKL@player?5kill?5flame?5cm?$AA@ (0000)
+002A409C 000c:
+	??_C@_0M@NGOCONAM@pk?5melee?5cm?$AA@ (0000)
+002A40A8 0015:
+	??_C@_0BF@IICLANPA@player?5kill?5melee?5cm?$AA@ (0000)
+002A40C0 000b:
+	??_C@_0L@OLDAAJHH@pk?5expl?5cm?$AA@ (0000)
+002A40CC 0019:
+	??_C@_0BJ@DACNLHEJ@player?5kill?5explosion?5cm?$AA@ (0000)
+002A40E8 000b:
+	??_C@_0L@CELOJBAM@pk?5gren?5cm?$AA@ (0000)
+002A40F4 0017:
+	??_C@_0BH@HLLLEBKL@anyone?5kill?5grenade?5cm?$AA@ (0000)
+002A410C 000c:
+	??_C@_0M@OOKJNEDG@pk?5snipe?5cm?$AA@ (0000)
+002A4118 0016:
+	??_C@_0BG@GKLOBIAC@player?5kill?5sniper?5cm?$AA@ (0000)
+002A4130 000b:
+	??_C@_0L@GGMAFPII@pk?5plas?5cm?$AA@ (0000)
+002A413C 0016:
+	??_C@_0BG@IGGBOFJA@player?5kill?5plasma?5cm?$AA@ (0000)
+002A4154 000b:
+	??_C@_0L@NDDIDAMG@pk?5need?5cm?$AA@ (0000)
+002A4160 0017:
+	??_C@_0BH@PHNHEFKC@player?5kill?5needler?5cm?$AA@ (0000)
+002A4178 000b:
+	??_C@_0L@PEDGKDEO@pk?5bull?5cm?$AA@ (0000)
+002A4184 0016:
+	??_C@_0BG@OLJJCDAG@player?5kill?5bullet?5cm?$AA@ (0000)
+002A419C 0006:
+	??_C@_05JBANNKGM@pk?5cm?$AA@ (0000)
+002A41A4 000f:
+	??_C@_0P@DJLLECGJ@player?5kill?5cm?$AA@ (0000)
+002A41B4 0008:
+	??_C@_07DLCFMEHJ@k?5spree?$AA@ (0000)
+002A41BC 000e:
+	??_C@_0O@FMFFEDBA@killing?5spree?$AA@ (0000)
+002A41CC 000b:
+	??_C@_0L@EOALOFCP@k?5en?5mount?$AA@ (0000)
+002A41D8 001b:
+	??_C@_0BL@NNFFMGLP@killed?5enemy?5mountedweapon?$AA@ (0000)
+002A41F4 0009:
+	??_C@_08LJGLKDDG@k?5en?5veh?$AA@ (0000)
+002A4200 0015:
+	??_C@_0BF@CKJIPGFF@killed?5enemy?5vehicle?$AA@ (0000)
+002A4218 000b:
+	??_C@_0L@IKANIKBL@k?5en?5shotg?$AA@ (0000)
+002A4224 0015:
+	??_C@_0BF@PJLLCMBJ@killed?5enemy?5shotgun?$AA@ (0000)
+002A423C 000b:
+	??_C@_0L@ONIIDCLN@k?5en?5flame?$AA@ (0000)
+002A4248 0013:
+	??_C@_0BD@NJAPKLLI@killed?5enemy?5flame?$AA@ (0000)
+002A425C 000b:
+	??_C@_0L@HGCGCJGK@k?5en?5melee?$AA@ (0000)
+002A4268 0013:
+	??_C@_0BD@ECKBLAGP@killed?5enemy?5melee?$AA@ (0000)
+002A427C 000a:
+	??_C@_09JBENEKEJ@k?5en?5expl?$AA@ (0000)
+002A4288 0017:
+	??_C@_0BH@JIDDPLPA@killed?5enemy?5explosion?$AA@ (0000)
+002A42A0 000a:
+	??_C@_09KMOLPKFE@k?5en?5gren?$AA@ (0000)
+002A42AC 0015:
+	??_C@_0BF@JCFEDDFN@killed?5enemy?5grenade?$AA@ (0000)
+002A42C4 000b:
+	??_C@_0L@BFBJOKDJ@k?5en?5snipe?$AA@ (0000)
+002A42D0 0014:
+	??_C@_0BE@DCEHPJIA@killed?5enemy?5sniper?$AA@ (0000)
+002A42E4 000a:
+	??_C@_09DGIIFFKK@k?5en?5plas?$AA@ (0000)
+002A42F0 0014:
+	??_C@_0BE@DFOLGBD@killed?5enemy?5plasma?$AA@ (0000)
+002A4304 000a:
+	??_C@_09JGNKBPIJ@k?5en?5need?$AA@ (0000)
+002A4310 0015:
+	??_C@_0BF@JDPJKEOL@killed?5enemy?5needler?$AA@ (0000)
+002A4328 000a:
+	??_C@_09MEDLBEJA@k?5en?5bull?$AA@ (0000)
+002A4334 0014:
+	??_C@_0BE@BOIKFMHD@killed?5enemy?5bullet?$AA@ (0000)
+002A4348 000a:
+	??_C@_09EIIOPIBE@k?5sent?5cm?$AA@ (0000)
+002A4354 0019:
+	??_C@_0BJ@IHOGMDEH@killed?5enemy?5sentinel?5cm?$AA@ (0000)
+002A4370 0007:
+	??_C@_06FHBOPKFO@k?5sent?$AA@ (0000)
+002A4378 0016:
+	??_C@_0BG@KENFKIDM@killed?5enemy?5sentinel?$AA@ (0000)
+002A4390 000d:
+	??_C@_0N@DJEGAOGM@k?5carrier?5cm?$AA@ (0000)
+002A43A0 001d:
+	??_C@_0BN@BEAPCGHG@killed?5enemy?5floodcarrier?5cm?$AA@ (0000)
+002A43C0 000a:
+	??_C@_09BEOFLPPH@k?5carrier?$AA@ (0000)
+002A43CC 001a:
+	??_C@_0BK@FLNDDLAK@killed?5enemy?5floodcarrier?$AA@ (0000)
+002A43E8 000b:
+	??_C@_0L@NCPDIOMG@k?5flood?5cm?$AA@ (0000)
+002A43F4 001c:
+	??_C@_0BM@LHGKFED@killed?5enemy?5floodcombat?5cm?$AA@ (0000)
+002A4410 0008:
+	??_C@_07HLNBBGAH@k?5flood?$AA@ (0000)
+002A4418 0019:
+	??_C@_0BJ@GGPHEDLL@killed?5enemy?5floodcombat?$AA@ (0000)
+002A4434 0009:
+	??_C@_08DBCIKHEL@k?5cov?5cm?$AA@ (0000)
+002A4440 0019:
+	??_C@_0BJ@CAEJLEGB@killed?5enemy?5covenant?5cm?$AA@ (0000)
+002A445C 0006:
+	??_C@_05POLCIEEB@k?5cov?$AA@ (0000)
+002A4464 0016:
+	??_C@_0BG@GBGDEOOM@killed?5enemy?5covenant?$AA@ (0000)
+002A447C 000d:
+	??_C@_0N@IAAAKNIP@k?5en?5play?5cm?$AA@ (0000)
+002A448C 0017:
+	??_C@_0BH@HFLPJHDL@killed?5enemy?5player?5cm?$AA@ (0000)
+002A44A4 000a:
+	??_C@_09MMGHLNCA@k?5en?5play?$AA@ (0000)
+002A44B0 0014:
+	??_C@_0BE@DBPEGFN@killed?5enemy?5player?$AA@ (0000)
+002A44C4 0008:
+	??_C@_07JMCKDNIP@k?5en?5cm?$AA@ (0000)
+002A44CC 0010:
+	??_C@_0BA@BJBBIEHI@killed?5enemy?5cm?$AA@ (0000)
+002A44DC 0008:
+	??_C@_07BENAGPNP@k?5enemy?$AA@ (0000)
+002A44E4 000d:
+	??_C@_0N@HMIGPDBG@killed?5enemy?$AA@ (0000)
+002A44F4 000b:
+	??_C@_0L@GHDJENME@k?5playr?5cm?$AA@ (0000)
+002A4500 0018:
+	??_C@_0BI@JLHDJNDE@killed?5friend?5player?5cm?$AA@ (0000)
+002A4518 0008:
+	??_C@_07EKLCOKKH@k?5playr?$AA@ (0000)
+002A4520 0015:
+	??_C@_0BF@LJDJOAOM@killed?5friend?5player?$AA@ (0000)
+002A4538 0009:
+	??_C@_08DOOIJJPK@k?5fri?5cm?$AA@ (0000)
+002A4544 0011:
+	??_C@_0BB@HLIILKFN@killed?5friend?5cm?$AA@ (0000)
+002A4558 0006:
+	??_C@_05BAMIEKMO@k?5fri?$AA@ (0000)
+002A4560 000e:
+	??_C@_0O@KJOIDFGH@killed?5friend?$AA@ (0000)
+002A4570 000b:
+	??_C@_0L@NHOJIDCO@h?5en?5mount?$AA@ (0000)
+002A457C 0019:
+	??_C@_0BJ@LBEFPIDA@hurt?5enemy?5mountedweapon?$AA@ (0000)
+002A4598 0009:
+	??_C@_08IAOGJPPD@h?5en?5veh?$AA@ (0000)
+002A45A4 0013:
+	??_C@_0BD@LFMFJGFL@hurt?5enemy?5vehicle?$AA@ (0000)
+002A45B8 000b:
+	??_C@_0L@BDOPOMBK@h?5en?5shotg?$AA@ (0000)
+002A45C4 0013:
+	??_C@_0BD@GGOGEMBH@hurt?5enemy?5shotgun?$AA@ (0000)
+002A45D8 000b:
+	??_C@_0L@HEGKFELM@h?5en?5flame?$AA@ (0000)
+002A45E4 0011:
+	??_C@_0BB@OFNOPJHB@hurt?5enemy?5flame?$AA@ (0000)
+002A45F8 000b:
+	??_C@_0L@OPMEEPGL@h?5en?5melee?$AA@ (0000)
+002A4604 0011:
+	??_C@_0BB@HOHAOCKG@hurt?5enemy?5melee?$AA@ (0000)
+002A4618 000a:
+	??_C@_09HKHKPBEK@h?5en?5expl?$AA@ (0000)
+002A4624 0015:
+	??_C@_0BF@ELACCIHL@hurt?5enemy?5explosion?$AA@ (0000)
+002A463C 000a:
+	??_C@_09EHNMEBFH@h?5en?5gren?$AA@ (0000)
+002A4648 0013:
+	??_C@_0BD@NAJFDFD@hurt?5enemy?5grenade?$AA@ (0000)
+002A465C 000b:
+	??_C@_0L@IMPLIMDI@h?5en?5snipe?$AA@ (0000)
+002A4668 0012:
+	??_C@_0BC@NAMDFCMG@hurt?5enemy?5sniper?$AA@ (0000)
+002A467C 000a:
+	??_C@_09NNLPOOKJ@h?5en?5plas?$AA@ (0000)
+002A4688 0012:
+	??_C@_0BC@OBNKBNFF@hurt?5enemy?5plasma?$AA@ (0000)
+002A469C 000a:
+	??_C@_09HNONKEIK@h?5en?5need?$AA@ (0000)
+002A46A8 0013:
+	??_C@_0BD@MKEMEOF@hurt?5enemy?5needler?$AA@ (0000)
+002A46BC 000a:
+	??_C@_09CPAMKPJD@h?5en?5bull?$AA@ (0000)
+002A46C8 0012:
+	??_C@_0BC@PMAOPHDF@hurt?5enemy?5bullet?$AA@ (0000)
+002A46DC 0008:
+	??_C@_07BCKFDKGM@h?5en?5cm?$AA@ (0000)
+002A46E4 000e:
+	??_C@_0O@IPIPKBMN@hurt?5enemy?5cm?$AA@ (0000)
+002A46F4 0008:
+	??_C@_07MHJIHJCD@h?5en?5re?$AA@ (0000)
+002A46FC 000e:
+	??_C@_0O@FKLCOCIC@hurt?5enemy?5re?$AA@ (0000)
+002A470C 0008:
+	??_C@_07JKFPGIDM@h?5enemy?$AA@ (0000)
+002A4714 000b:
+	??_C@_0L@JLMMPACP@hurt?5enemy?$AA@ (0000)
+002A4720 0008:
+	??_C@_07MEDNONEE@h?5playr?$AA@ (0000)
+002A4728 0013:
+	??_C@_0BD@CGGEIAOC@hurt?5friend?5player?$AA@ (0000)
+002A473C 0009:
+	??_C@_08NCFIOGHA@h?5fri?5re?$AA@ (0000)
+002A4748 000f:
+	??_C@_0P@BFCICADE@hurt?5friend?5re?$AA@ (0000)
+002A4758 0006:
+	??_C@_05JGFMDIGA@h?5fri?$AA@ (0000)
+002A4760 000c:
+	??_C@_0M@PGAKPHGM@hurt?5friend?$AA@ (0000)
+002A476C 0008:
+	??_C@_07DDHEBHBB@s?5en?5cm?$AA@ (0000)
+002A4774 0011:
+	??_C@_0BB@BCFEFOOG@damaged?5enemy?5cm?$AA@ (0000)
+002A4788 0008:
+	??_C@_07LLIOEFEB@s?5enemy?$AA@ (0000)
+002A4790 000e:
+	??_C@_0O@DNBFCHMI@damaged?5enemy?$AA@ (0000)
+002A47A0 0008:
+	??_C@_07OFOMMADJ@s?5playr?$AA@ (0000)
+002A47A8 0016:
+	??_C@_0BG@LEDLGIA@damaged?5friend?5player?$AA@ (0000)
+002A47C0 0006:
+	??_C@_05PPENMKDI@s?5fri?$AA@ (0000)
+002A47C8 000f:
+	??_C@_0P@MIMCFJGA@damaged?5friend?$AA@ (0000)
+002A47D8 0009:
+	??_C@_08KMEGMOCM@d?5flying?$AA@ (0000)
+002A47E4 000d:
+	??_C@_0N@LDEMKINO@death?5flying?$AA@ (0000)
+002A47F4 0007:
+	??_C@_06EIPJLCLG@d?5inst?$AA@ (0000)
+002A47FC 000e:
+	??_C@_0O@KGNFHIA@death?5instant?$AA@ (0000)
+002A480C 0008:
+	??_C@_07DGIKADCJ@d?5agony?$AA@ (0000)
+002A4814 0010:
+	??_C@_0BA@CKPHGABN@death?5agonizing?$AA@ (0000)
+002A4824 0007:
+	??_C@_06HKLEJCF@d?5fall?$AA@ (0000)
+002A482C 000e:
+	??_C@_0O@CDEODALF@death?5falling?$AA@ (0000)
+002A483C 0007:
+	??_C@_06KALJEIBB@d?5viol?$AA@ (0000)
+002A4844 000e:
+	??_C@_0O@MBLHMDHN@death?5violent?$AA@ (0000)
+002A4854 0008:
+	??_C@_07LDOMALCA@d?5quiet?$AA@ (0000)
+002A485C 000c:
+	??_C@_0M@GDAJJHPD@death?5quiet?$AA@ (0000)
+002A4868 000a:
+	??_C@_09LMCDCKCE@maim?5head?$AA@ (0000)
+002A4874 000c:
+	??_C@_0M@CODDKDNB@maimed?5head?$AA@ (0000)
+002A4880 000a:
+	??_C@_09FMDFGNLO@maim?5limb?$AA@ (0000)
+002A488C 000c:
+	??_C@_0M@MOCFOEEL@maimed?5limb?$AA@ (0000)
+002A4898 000c:
+	??_C@_0M@MNDMEFPK@scream?5pain?$AA@ (0000)
+002A48A4 000c:
+	??_C@_0M@EFJKLMGK@scream?5fear?$AA@ (0000)
+002A48B0 0007:
+	??_C@_06JEDKPBPI@p?5fall?$AA@ (0000)
+002A48B8 000d:
+	??_C@_0N@KJKEODIA@pain?5falling?$AA@ (0000)
+002A48C8 0009:
+	??_C@_08PBICIDLJ@p?5shield?$AA@ (0000)
+002A48D4 000c:
+	??_C@_0M@JALOCPCN@pain?5shield?$AA@ (0000)
+002A48E0 000a:
+	??_C@_09CPJPMMJP@p?5b?5major?$AA@ (0000)
+002A48EC 0010:
+	??_C@_0BA@LGBADFDL@pain?5body?5major?$AA@ (0000)
+002A48FC 000a:
+	??_C@_09JAINBAAJ@p?5b?5minor?$AA@ (0000)
+002A4908 0010:
+	??_C@_0BA@JACOJKN@pain?5body?5minor?$AA@ (0000)
+002A4918 000a:
+	??_C@_09FIHKOHGE@idle?5flee?$AA@ (0000)
+002A4924 000c:
+	??_C@_0M@EELCLCJG@idle?5combat?$AA@ (0000)
+002A4930 000c:
+	??_C@_0M@ELOHEKPB@idle?5noncom?$AA@ (0000)
+002A493C 000f:
+	??_C@_0P@BDJHOLJF@idle?5noncombat?$AA@ (0000)
+002A4950 01a2:
+	_dialogue_vocalization_lookup (0000)
+00315550 0688:
+	_dialogue_vocalization_type_name (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

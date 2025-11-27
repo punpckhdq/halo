@@ -1,0 +1,261 @@
+/*
+ACTION_OBEY.C
+
+symbols in this file:
+00004F70 0040:
+	_code_00004f70 (0000)
+00004FB0 0230:
+	_code_00004fb0 (0000)
+000051E0 0070:
+	_code_000051e0 (0000)
+00005250 0040:
+	_code_00005250 (0000)
+00005290 0050:
+	_code_00005290 (0000)
+000052E0 0020:
+	_code_000052e0 (0000)
+00005300 0050:
+	_code_00005300 (0000)
+00005350 0130:
+	_code_00005350 (0000)
+00005480 0180:
+	_action_obey_command_list_setup (0000)
+00005600 0070:
+	_action_obey_flush_command_indices (0000)
+00005670 0030:
+	_action_obey_flush_structure_indices (0000)
+000056A0 0030:
+	_action_obey_advance_command_list (0000)
+000056D0 0030:
+	_action_obey_begin (0000)
+00005700 0030:
+	_action_obey_end (0000)
+00005730 0790:
+	_action_obey_describe_command (0000)
+00005EC0 0020:
+	_vector_from_points2d (0000)
+00005EE0 0040:
+	_cross_product3d (0000)
+00005F20 0030:
+	_negate_vector3d (0000)
+00005F50 0020:
+	_random_range (0000)
+00005F70 0150:
+	_code_00005f70 (0000)
+000060C0 10e0:
+	_code_000060c0 (0000)
+000071A0 0580:
+	_code_000071a0 (0000)
+00007720 0120:
+	_code_00007720 (0000)
+00007840 0050:
+	_code_00007840 (0000)
+00007890 0030:
+	_action_obey_update (0000)
+000078C0 00c0:
+	_action_obey_perform (0000)
+00007980 03e0:
+	_action_obey_control (0000)
+00243270 003c:
+	??_C@_0DM@JNBLNJLG@?$CFs?3?5command?5list?5?$CFs?5is?5stuck?5loo@ (0000)
+002432AC 0036:
+	??_C@_0DG@FLEHDLBK@?$CFs?3?5command?5list?5?$CFs?5entry?5?$CD?$CFd?5tr@ (0000)
+002432E4 0014:
+	??_C@_0BE@EJBCJKCJ@targeting_reference?$AA@ (0000)
+002432F8 0020:
+	??_C@_0CA@HHCNJNKK@c?3?2halo?2SOURCE?2ai?2action_obey?4c?$AA@ (0000)
+00243318 003e:
+	??_C@_0DO@JCOPLIPB@?$CBactor?9?$DOmeta?4swarm?5?$HM?$HM?5?$CIactor?9?$DOme@ (0000)
+00243358 0034:
+	??_C@_0DE@LLDIJCBD@wrong?5structure?5bsp?0?5cannot?5exec@ (0000)
+00243390 0044:
+	??_C@_0EE@KEBHPAE@swarm?5actor?5?$CFs?5cannot?5execute?5co@ (0000)
+002433D4 000d:
+	??_C@_0N@CEGJDJND@?$DMunknown?5?$CFd?$DO?$AA@ (0000)
+002433E4 0004:
+	??_C@_03DFHDCPPK@die?$AA@ (0000)
+002433E8 0014:
+	??_C@_0BE@OLHBIEN@teleport?5to?5?$CIp?$CFd?$CJ?$CFs?$AA@ (0000)
+002433FC 0013:
+	??_C@_0BD@OIBANJLL@?5and?5face?5at?5?$CIp?$CFd?$CJ?$AA@ (0000)
+0024340F 0001:
+	??_C@_00CNPNBAHC@?$AA@ (0000)
+00243410 0010:
+	??_C@_0BA@MGBBCPDG@set?5radius?5?$CF?42f?$AA@ (0000)
+00243420 000f:
+	??_C@_0P@KENFEEEA@loop?5to?5?$CD?$CFd?5?$CFs?$AA@ (0000)
+00243430 0012:
+	??_C@_0BC@OEJHODGH@loop?5to?5?$DMnone?$DO?5?$CFs?$AA@ (0000)
+00243444 001b:
+	??_C@_0BL@DGGHLGE@only?5until?5told?5to?5advance?$AA@ (0000)
+00243460 0007:
+	??_C@_06KHDOHNKC@always?$AA@ (0000)
+00243468 0008:
+	??_C@_07KIIGOGND@wait?5?$CFs?$AA@ (0000)
+00243470 0016:
+	??_C@_0BG@LEMJPAIB@until?5told?5to?5advance?$AA@ (0000)
+00243488 0014:
+	??_C@_0BE@DKOCLLMJ@until?5visible?5enemy?$AA@ (0000)
+0024349C 000e:
+	??_C@_0O@NBMOMCME@until?5alerted?$AA@ (0000)
+002434AC 000e:
+	??_C@_0O@EFALGMLH@initiative?5?$CFs?$AA@ (0000)
+002434BC 000a:
+	??_C@_09DEIMKGFJ@action?5?$CFs?$AA@ (0000)
+002434C8 000f:
+	??_C@_0P@OKJMMNMD@vehicle?9scared?$AA@ (0000)
+002434D8 000f:
+	??_C@_0P@HOGHMCM@vehicle?9woohoo?$AA@ (0000)
+002434E8 000b:
+	??_C@_0L@JFPBJIOJ@dive?9right?$AA@ (0000)
+002434F4 000a:
+	??_C@_09GLAJHPNM@dive?9left?$AA@ (0000)
+00243500 000a:
+	??_C@_09JAMKJKJP@dive?9back?$AA@ (0000)
+0024350C 0009:
+	??_C@_08HHGPGIIN@dive?9fwd?$AA@ (0000)
+00243518 000c:
+	??_C@_0M@FCCJKDHL@evade?9right?$AA@ (0000)
+00243524 000b:
+	??_C@_0L@GEJKFJKH@evade?9left?$AA@ (0000)
+00243530 000e:
+	??_C@_0O@MHCNGAHE@surprise?9back?$AA@ (0000)
+00243540 000f:
+	??_C@_0P@OMDAPGKA@surprise?9front?$AA@ (0000)
+00243550 0008:
+	??_C@_07PEIBNLKE@berserk?$AA@ (0000)
+00243558 000d:
+	??_C@_0N@PMOONPD@targeting?5?$CFs?$AA@ (0000)
+00243568 000c:
+	??_C@_0M@FBODOLG@vocalize?5?$CFs?$AA@ (0000)
+00243574 0012:
+	??_C@_0BC@JABMHOI@play?5recording?5?$CFs?$AA@ (0000)
+00243588 000b:
+	??_C@_0L@HCEEAAG@animate?5?$CFs?$AA@ (0000)
+00243594 000d:
+	??_C@_0N@EHHELJPO@script?5?$CFs?5?$CFs?$AA@ (0000)
+002435A4 0005:
+	??_C@_04OKGDLNCL@NONE?$AA@ (0000)
+002435AC 0012:
+	??_C@_0BC@EGIAGBFJ@wake?9and?9continue?$AA@ (0000)
+002435C0 0010:
+	??_C@_0BA@GMMPCDLM@wait?9for?9finish?$AA@ (0000)
+002435D0 001d:
+	??_C@_0BN@CPMBOFMF@targeted?5jump?5?$CI?$CF?42fh?0?5?$CF?42fv?$CJ?$AA@ (0000)
+002435F0 000d:
+	??_C@_0N@MHAJODEH@running?5jump?$AA@ (0000)
+00243600 0023:
+	??_C@_0CD@CFLDIMMG@enter?5vehicle?5as?5?$CFs?5if?5within?5?$CF?4@ (0000)
+00243624 0009:
+	??_C@_08OFIBMPOE@any?9seat?$AA@ (0000)
+00243630 0007:
+	??_C@_06NCODBMHO@driver?$AA@ (0000)
+00243638 000a:
+	??_C@_09NFKEFBPD@passenger?$AA@ (0000)
+00243644 0007:
+	??_C@_06NJIDJFDL@gunner?$AA@ (0000)
+0024364C 000f:
+	??_C@_0P@ELLMOHEN@any?9non?9driver?$AA@ (0000)
+0024365C 0017:
+	??_C@_0BH@JKPBBGH@throw?5grenade?5at?5?$CIp?$CFd?$CJ?$AA@ (0000)
+00243674 0018:
+	??_C@_0BI@CFJADMHA@shoot?5at?5?$CIp?$CFd?$CJ?5for?5?$CF?41f?$AA@ (0000)
+0024368C 000a:
+	??_C@_09PCOPMOEK@crouch?5?$CFs?$AA@ (0000)
+00243698 0007:
+	??_C@_06OFNJOBDK@enable?$AA@ (0000)
+002436A0 0008:
+	??_C@_07DBNODEFN@disable?$AA@ (0000)
+002436A8 0012:
+	??_C@_0BC@MGCAJCHA@animation?5mode?5?$CFs?$AA@ (0000)
+002436BC 0006:
+	??_C@_05DDGCEFJL@panic?$AA@ (0000)
+002436C4 0007:
+	??_C@_06NDKEFKOH@combat?$AA@ (0000)
+002436CC 0007:
+	??_C@_06PDPNPFPP@asleep?$AA@ (0000)
+002436D4 000a:
+	??_C@_09CENHCFNA@noncombat?$AA@ (0000)
+002436E0 0017:
+	??_C@_0BH@IPOBIPFB@look?5?$CFs?5at?5?$CFs?5for?5?$CF?41f?$AA@ (0000)
+002436F8 0008:
+	??_C@_07CBDMFKJF@?$DMerror?$DO?$AA@ (0000)
+00243700 001b:
+	??_C@_0BL@FFKOOMBE@look?5?$CFs?5at?5player?5for?5?$CF?41f?$AA@ (0000)
+0024371C 0031:
+	??_C@_0DB@IOOLPGJB@look?5?$CFs?5at?5random?5one?5of?5?$CIp?$CFd?9p?$CF@ (0000)
+00243750 001a:
+	??_C@_0BK@IEJFKCKH@look?5?$CFs?5at?5?$CIp?$CFd?$CJ?5for?5?$CF?41f?$AA@ (0000)
+0024376C 0015:
+	??_C@_0BF@IFMPJNE@move?5?$CFs?5for?5?$CF?41f?5sec?$AA@ (0000)
+00243784 0021:
+	??_C@_0CB@IFAAGCMK@move?5?$CFs?5towards?5?$CIp?$CFd?$CJ?0?5dist?5?$CF?42f@ (0000)
+002437A8 0024:
+	??_C@_0CE@PMEAGMOK@move?5?$CFs?5along?5angle?5?$CF?41f?0?5dist?5?$CF@ (0000)
+002437CC 000b:
+	??_C@_0L@CPPIDKFP@any?9facing?$AA@ (0000)
+002437D8 000a:
+	??_C@_09GNCFCLDO@backwards?$AA@ (0000)
+002437E4 0006:
+	??_C@_05DHJDAOHK@right?$AA@ (0000)
+002437EC 0005:
+	??_C@_04GOOOJOPP@left?$AA@ (0000)
+002437F4 0009:
+	??_C@_08HMDMCCDA@forwards?$AA@ (0000)
+00243800 001b:
+	??_C@_0BL@OJAEMMNB@go?5to?5?$CIp?$CFd?$CJ?5and?5face?5?$CIp?$CFd?$CJ?$AA@ (0000)
+0024381C 000f:
+	??_C@_0P@POPHLLEH@go?5to?5?$CIp?$CFd?$CJ?5?$CFs?$AA@ (0000)
+0024382C 000c:
+	??_C@_0M@PMIIAAGB@keep_moving?$AA@ (0000)
+00243838 000e:
+	??_C@_0O@MHBHOGCE@stop_at_point?$AA@ (0000)
+00243848 000b:
+	??_C@_0L@ENHEDOMM@pause?5?$CF?41f?$AA@ (0000)
+00243854 0012:
+	??_C@_0BC@PPCIDFNG@forced?5aim?5weapon?$AA@ (0000)
+00243868 0014:
+	??_C@_0BE@MMENGNPN@forced?5exact?5facing?$AA@ (0000)
+0024387C 0014:
+	??_C@_0BE@HLOJAFEL@idle?5look?5with?5head?$AA@ (0000)
+00243890 0011:
+	??_C@_0BB@CNNKGAPI@idle?5turn?5around?$AA@ (0000)
+002438A4 0010:
+	??_C@_0BA@HMGFJNDM@idle?5aim?5weapon?$AA@ (0000)
+002438B4 0011:
+	??_C@_0BB@FOMPEOPI@?$CFs?3?5?$CFs?5?$CD?$CFd?$CFs?3?5?$CFs?$AA@ (0000)
+002438C8 0008:
+	??_C@_07OGBBMDNN@?5FAILED?$AA@ (0000)
+002438D0 0006:
+	??_C@_05GFOLEBJA@?$CFs?1?$CFs?$AA@ (0000)
+002438D8 000f:
+	??_C@_0P@MPLGIMAD@?$DMno?5encounter?$DO?$AA@ (0000)
+002438E8 0004:
+	__real@3d888889 (0000)
+002438EC 0004:
+	__real@3c8efa35 (0000)
+002438F0 0004:
+	__real@43b40000 (0000)
+002438F4 0004:
+	__real@3f7be76d (0000)
+002438F8 0036:
+	??_C@_0DG@HCPHDADC@current_command?9?$DOatom_type?5?$DN?$DN?5_a@ (0000)
+00243930 0013:
+	??_C@_0BD@NEGHAILN@finished_reference?$AA@ (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

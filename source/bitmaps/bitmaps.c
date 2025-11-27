@@ -1,0 +1,243 @@
+/*
+BITMAPS.C
+
+symbols in this file:
+0006ADC0 0070:
+	_bitmap_type_get_string (0000)
+0006AE30 0080:
+	_bitmap_format_get_string (0000)
+0006AEB0 0070:
+	_bitmap_format_get_bits_per_pixel (0000)
+0006AF20 0040:
+	_bitmap_changed (0000)
+0006AF60 0050:
+	_bitmap_delete (0000)
+0006AFB0 0220:
+	_bitmap_2d_address (0000)
+0006B1D0 0290:
+	_bitmap_3d_address (0000)
+0006B460 0210:
+	_bitmap_cube_map_address (0000)
+0006B670 00d0:
+	_bitmap_mipmap_address (0000)
+0006B740 0220:
+	_bitmap_format_to_a8r8g8b8 (0000)
+0006B960 0010:
+	_bitmap_byte_swap_pixels (0000)
+0006B970 0100:
+	_palette_find_closest_match (0000)
+0006BA70 0020:
+	_code_0006ba70 (0000)
+0006BA90 0020:
+	_code_0006ba90 (0000)
+0006BAB0 0030:
+	_code_0006bab0 (0000)
+0006BAE0 0160:
+	_bitmap_verify (0000)
+0006BC40 0080:
+	_bitmap_rebuild (0000)
+0006BCC0 0090:
+	_bitmap_get_max_mipmap_count (0000)
+0006BD50 00a0:
+	_bitmap_mipmap_get_width (0000)
+0006BDF0 00a0:
+	_bitmap_mipmap_get_height (0000)
+0006BE90 0090:
+	_bitmap_mipmap_get_depth (0000)
+0006BF20 00b0:
+	_bitmap_mipmap_get_pixel_count (0000)
+0006BFD0 0090:
+	_bitmap_mipmap_get_pixel_data_size (0000)
+0006C060 00e0:
+	_bitmap_mipmap_get_row_pitch (0000)
+0006C140 0510:
+	_bitmap_2d_get_pixel (0000)
+0006C650 0060:
+	_bitmap_get_pixel_count (0000)
+0006C6B0 0070:
+	_bitmap_get_pixel_data_size (0000)
+0006C720 0180:
+	_bitmap_2d_new (0000)
+0006C8A0 01c0:
+	_bitmap_3d_new (0000)
+0006CA60 0170:
+	_bitmap_cube_map_new (0000)
+0006CBD0 0280:
+	_bitmap_3d_slice_extract (0000)
+0006CE50 0280:
+	_bitmap_3d_slice_insert (0000)
+0006D0D0 0280:
+	_bitmap_cube_map_face_extract (0000)
+0006D350 0280:
+	_bitmap_cube_map_face_insert (0000)
+002544CC 0013:
+	_rdata_002544cc (0000)
+002544E0 0014:
+	??_C@_0BE@NMMIDGBH@palettized?5bump?5map?$AA@ (0000)
+002544F4 0016:
+	??_C@_0BG@OOFEMLJA@true?9color?5with?5alpha?$AA@ (0000)
+0025450C 000b:
+	??_C@_0L@BOBKAIGE@true?9color?$AA@ (0000)
+00254518 0016:
+	??_C@_0BG@KKGKOADO@high?9color?5with?5alpha?$AA@ (0000)
+00254530 001c:
+	??_C@_0BM@LMNMJHOE@high?9color?5with?51?9bit?5alpha?$AA@ (0000)
+0025454C 0007:
+	??_C@_06MOMCHLAF@r6g5b5?$AA@ (0000)
+00254554 000b:
+	??_C@_0L@HMILFLFB@high?9color?$AA@ (0000)
+00254560 0019:
+	??_C@_0BJ@NGPIOEHO@separate?5alpha?9intensity?$AA@ (0000)
+0025457C 0019:
+	??_C@_0BJ@GECAPECH@combined?5alpha?9intensity?$AA@ (0000)
+00254598 000a:
+	??_C@_09DDBFFAKC@intensity?$AA@ (0000)
+002545A4 0006:
+	??_C@_05IAEKHIAN@alpha?$AA@ (0000)
+002545AC 000b:
+	??_C@_0L@HGKEADFO@3d?5texture?$AA@ (0000)
+002545B8 000b:
+	??_C@_0L@LHCKNMJO@2d?5texture?$AA@ (0000)
+002545C4 0037:
+	??_C@_0DH@BEHPNKOO@bitmap_type_string_table?$FLNUMBER_@ (0000)
+002545FC 0027:
+	??_C@_0CH@BDFKHBGO@type?$DO?$DN0?5?$CG?$CG?5type?$DMNUMBER_OF_BITMAP@ (0000)
+00254624 0021:
+	??_C@_0CB@ICKBKEMJ@c?3?2halo?2SOURCE?2bitmaps?2bitmaps?4c@ (0000)
+00254648 003b:
+	??_C@_0DL@KKAOOLLI@bitmap_format_string_table?$FLNUMBE@ (0000)
+00254684 002d:
+	??_C@_0CN@FACOLOCE@format?$DO?$DN0?5?$CG?$CG?5format?$DMNUMBER_OF_BI@ (0000)
+002546B4 002e:
+	??_C@_0CO@OINHIEJL@bitmap_format_bits_per_pixel_tab@ (0000)
+002546E8 0042:
+	??_C@_0EC@HCBFGBH@?$CBTEST_FLAG?$CIbitmap?9?$DOflags?0?5_bitma@ (0000)
+00254730 0044:
+	??_C@_0EE@JDKFDDJD@?$CBTEST_FLAG?$CIbitmap?9?$DOflags?0?5_bitma@ (0000)
+00254774 0036:
+	??_C@_0DG@JNCCJPLP@mipmap_index?$DO?$DN0?5?$CG?$CG?5mipmap_index?$DM@ (0000)
+002547AC 0019:
+	??_C@_0BJ@HFDMDDBL@y?$DO?$DN0?5?$CG?$CG?5y?$DMbitmap?9?$DOheight?$AA@ (0000)
+002547C8 0018:
+	??_C@_0BI@PFMPFOOK@x?$DO?$DN0?5?$CG?$CG?5x?$DMbitmap?9?$DOwidth?$AA@ (0000)
+002547E0 0015:
+	??_C@_0BF@FJOEGAHK@bitmap?9?$DObase_address?$AA@ (0000)
+002547F8 004a:
+	??_C@_0EK@CEJFGEAF@?$CBTEST_FLAG?$CIbitmap?9?$DOflags?0?5_bitma@ (0000)
+00254848 004c:
+	??_C@_0EM@ILMNFLHJ@?$CBTEST_FLAG?$CIbitmap?9?$DOflags?0?5_bitma@ (0000)
+00254894 0018:
+	??_C@_0BI@DEJNOKHK@z?$DO?$DN0?5?$CG?$CG?5z?$DMbitmap?9?$DOdepth?$AA@ (0000)
+002548AC 000f:
+	??_C@_0P@FPPECFAG@mipmap_address?$AA@ (0000)
+002548BC 001a:
+	??_C@_0BK@JFOFDHCG@closest_match_index?$CB?$DNNONE?$AA@ (0000)
+002548D8 0035:
+	??_C@_0DF@KNEGKCJ@?$CD?$CD?$CD?5ERROR?5bitmap?5?$EA?$CFp?5?$CI?$CD?$CFdx?$CD?$CFd?$CJ?5a@ (0000)
+00254910 0040:
+	??_C@_0EA@GIFFGKIJ@?$CD?$CD?$CD?5ERROR?5bitmap?5?$EA?$CFp?5?$CI?$CD?$CFdx?$CD?$CFd?$CJ?5a@ (0000)
+00254950 001d:
+	??_C@_0BN@GIHJBEAI@bitmap_verify?$CIbitmap?0?5FALSE?$CJ?$AA@ (0000)
+00254970 0030:
+	??_C@_0DA@NMAFJIPF@?$CBTEST_FLAG?$CIbitmap?9?$DOflags?0?5_bitma@ (0000)
+002549A0 0032:
+	??_C@_0DC@IAIEDLML@?$CBTEST_FLAG?$CIbitmap?9?$DOflags?0?5_bitma@ (0000)
+002549D4 000f:
+	??_C@_0P@KMBFAFCG@y?$DO?$DN0?5?$CG?$CG?5y?$DM4096?$AA@ (0000)
+002549E4 000f:
+	??_C@_0P@LDJJNFHK@x?$DO?$DN0?5?$CG?$CG?5x?$DM4096?$AA@ (0000)
+002549F8 0079:
+	??_C@_0HJ@FCOPIPKI@bitmap_2d_get_pixel?5tried?5to?5acc@ (0000)
+00254A78 007b:
+	??_C@_0HL@JNIKKJE@bitmap_2d_get_pixel?5tried?5to?5acc@ (0000)
+00254AF4 0017:
+	??_C@_0BH@KGBHNMIE@lod?$DO?$DN0?40f?5?$CG?$CG?5lod?$DM?$DN1?40f?$AA@ (0000)
+00254B0C 002e:
+	??_C@_0CO@GAMEHMN@?$CBTEST_FLAG?$CIbitmap?9?$DOflags?0?5_bitma@ (0000)
+00254B3C 0024:
+	??_C@_0CE@IDMEMNBL@?$CD?$CD?$CD?5ERROR?5failed?5to?5allocate?5bit@ (0000)
+00254B60 0032:
+	??_C@_0DC@NHEJMJDK@?$CD?$CD?$CD?5ERROR?5failed?5to?5allocate?5bit@ (0000)
+00254B98 0041:
+	??_C@_0EB@LFCKBNF@bitmap_format_type_valid_height?$CI@ (0000)
+00254BE0 0040:
+	??_C@_0EA@PKAAFKPD@bitmap_format_type_valid_width?5?$CI@ (0000)
+00254C20 0040:
+	??_C@_0EA@IPIJEMGL@bitmap_format_type_valid_depth?5?$CI@ (0000)
+00254C60 0041:
+	??_C@_0EB@JAPHONLK@bitmap_format_type_valid_height?$CI@ (0000)
+00254CA8 0040:
+	??_C@_0EA@DLIOIFDD@bitmap_format_type_valid_width?5?$CI@ (0000)
+00254CE8 0015:
+	??_C@_0BF@IJMOOLDH@?$CIwidth?$CG?$CIwidth?91?$CJ?$CJ?$DN?$DN0?$AA@ (0000)
+00254D00 0045:
+	??_C@_0EF@IICJNIK@bitmap_format_type_valid_width?$CIf@ (0000)
+00254D48 0036:
+	??_C@_0DG@FMDLIHFJ@?$CBTEST_FLAG?$CIslice_bitmap?9?$DOflags?0?5@ (0000)
+00254D80 002c:
+	??_C@_0CM@EGJNMILG@slice_bitmap?9?$DOformat?$DN?$DNsource_bit@ (0000)
+00254DAC 0024:
+	??_C@_0CE@BICOCAEK@slice_bitmap?9?$DOtype?$DN?$DN_bitmap_type@ (0000)
+00254DD0 001e:
+	??_C@_0BO@KMMCPBDP@slice_bitmap?9?$DOmipmap_count?$DN?$DN0?$AA@ (0000)
+00254DF0 0023:
+	??_C@_0CD@CAAKKKMF@bitmap_verify?$CIslice_bitmap?0?5FALS@ (0000)
+00254E14 0037:
+	??_C@_0DH@HEICNHNC@?$CBTEST_FLAG?$CIsource_bitmap?9?$DOflags?0@ (0000)
+00254E50 0049:
+	??_C@_0EJ@MCLGGFPA@MAX?$CI1?0?5source_bitmap?9?$DOheight?$DO?$DOso@ (0000)
+00254EA0 0048:
+	??_C@_0EI@LIHIIGIH@MAX?$CI1?0?5source_bitmap?9?$DOwidth?5?$DO?$DOso@ (0000)
+00254EE8 0041:
+	??_C@_0EB@KNIHOCN@source_slice_index?$DO?$DN0?5?$CG?$CG?5source_@ (0000)
+00254F30 0053:
+	??_C@_0FD@PPNICDCJ@MAX?$CI1?0?5destination_bitmap?9?$DOheigh@ (0000)
+00254F88 0052:
+	??_C@_0FC@FNCEBHHP@MAX?$CI1?0?5destination_bitmap?9?$DOwidth@ (0000)
+00254FE0 0050:
+	??_C@_0FA@MMKBHEAM@destination_slice_index?$DO?$DN0?5?$CG?$CG?5de@ (0000)
+00255030 0031:
+	??_C@_0DB@DIIJDBNH@slice_bitmap?9?$DOformat?$DN?$DNdestinatio@ (0000)
+00255064 0035:
+	??_C@_0DF@JCFMHHNJ@?$CBTEST_FLAG?$CIface_bitmap?9?$DOflags?0?5_@ (0000)
+0025509C 002b:
+	??_C@_0CL@JBBIIFAN@face_bitmap?9?$DOformat?$DN?$DNsource_bitm@ (0000)
+002550C8 0023:
+	??_C@_0CD@KFLOJMCE@face_bitmap?9?$DOtype?$DN?$DN_bitmap_type_@ (0000)
+002550EC 001d:
+	??_C@_0BN@PLKACPJ@face_bitmap?9?$DOmipmap_count?$DN?$DN0?$AA@ (0000)
+0025510C 0022:
+	??_C@_0CC@KDDOJPOH@bitmap_verify?$CIface_bitmap?0?5FALSE@ (0000)
+00255130 0048:
+	??_C@_0EI@OAEENKNE@MAX?$CI1?0?5source_bitmap?9?$DOheight?$DO?$DOso@ (0000)
+00255178 0047:
+	??_C@_0EH@OIPLGNCD@MAX?$CI1?0?5source_bitmap?9?$DOwidth?5?$DO?$DOso@ (0000)
+002551C0 0043:
+	??_C@_0ED@NEHKMLHM@source_face_index?$DO?$DN0?5?$CG?$CG?5source_f@ (0000)
+00255208 0052:
+	??_C@_0FC@FGJHNELB@MAX?$CI1?0?5destination_bitmap?9?$DOheigh@ (0000)
+00255260 0051:
+	??_C@_0FB@GBNEJIOO@MAX?$CI1?0?5destination_bitmap?9?$DOwidth@ (0000)
+002552B8 004d:
+	??_C@_0EN@PLLIEHKF@destination_face_index?$DO?$DN0?5?$CG?$CG?5des@ (0000)
+00255308 0030:
+	??_C@_0DA@BPGHACIB@face_bitmap?9?$DOformat?$DN?$DNdestination@ (0000)
+002DC660 045c:
+	_global_vector_palette (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

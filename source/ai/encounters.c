@@ -1,0 +1,294 @@
+/*
+ENCOUNTERS.C
+
+symbols in this file:
+00047520 00f0:
+	_encounters_initialize (0000)
+00047610 0010:
+	_encounters_dispose (0000)
+00047620 0020:
+	_encounters_dispose_from_old_map (0000)
+00047640 04b0:
+	_encounter_compute_activation_cluster_bit_vector (0000)
+00047AF0 01b0:
+	_encounter_detach_actor (0000)
+00047CA0 0110:
+	_encounter_attach_unit (0000)
+00047DB0 00b0:
+	_encounterless_attach_actor (0000)
+00047E60 0140:
+	_encounterless_detach_actor (0000)
+00047FA0 0060:
+	_encounter_get_by_name (0000)
+00048000 0030:
+	_encounter_iterator_new (0000)
+00048030 0040:
+	_encounter_iterator_next (0000)
+00048070 0050:
+	_encounter_actor_iterator_new (0000)
+000480C0 0040:
+	_encounter_actor_iterator_next (0000)
+00048100 0080:
+	_encounter_actor_iterator_prev (0000)
+00048180 0040:
+	_actor_iterator_new (0000)
+000481C0 00a0:
+	_actor_iterator_next (0000)
+00048260 0050:
+	_code_00048260 (0000)
+000482B0 00f0:
+	_code_000482b0 (0000)
+000483A0 00a0:
+	_encounter_modify_pursuit_desires (0000)
+00048440 0280:
+	_encounter_determine_pursuit_availability (0000)
+000486C0 00d0:
+	_code_000486c0 (0000)
+00048790 0290:
+	_code_00048790 (0000)
+00048A20 0080:
+	_code_00048a20 (0000)
+00048AA0 0060:
+	_encounterless_activate (0000)
+00048B00 0050:
+	_code_00048b00 (0000)
+00048B50 00c0:
+	_code_00048b50 (0000)
+00048C10 00a0:
+	_encounter_link_activation (0000)
+00048CB0 00a0:
+	_code_00048cb0 (0000)
+00048D50 03d0:
+	_code_00048d50 (0000)
+00049120 01b0:
+	_encounter_stand_down (0000)
+000492D0 0090:
+	_code_000492d0 (0000)
+00049360 0070:
+	_code_00049360 (0000)
+000493D0 0030:
+	_encounter_set_blind (0000)
+00049400 0030:
+	_encounter_set_deaf (0000)
+00049430 00b0:
+	_encounter_squad_timer_expire (0000)
+000494E0 0100:
+	_code_000494e0 (0000)
+000495E0 0290:
+	_code_000495e0 (0000)
+00049870 00a0:
+	_encounters_initialize_for_new_map (0000)
+00049910 00d0:
+	_encounters_unit_died (0000)
+000499E0 0140:
+	_encounter_verify_firing_position_owner_actor_indices (0000)
+00049B20 0130:
+	_encounter_build_firing_position_owner_actor_indices (0000)
+00049C50 0100:
+	_encounter_mark_examined_pursuit_position (0000)
+00049D50 00b0:
+	_encounter_pursuit_position_already_examined (0000)
+00049E00 02e0:
+	_encounter_get_actor_starting_location (0000)
+0004A0E0 0030:
+	_encounter_force_activate (0000)
+0004A110 0030:
+	_encounter_force_deactivate (0000)
+0004A140 0110:
+	_code_0004a140 (0000)
+0004A250 07c0:
+	_code_0004a250 (0000)
+0004AA10 0170:
+	_code_0004aa10 (0000)
+0004AB80 0120:
+	_encounter_spawn_actor (0000)
+0004ACA0 0050:
+	_encounter_set_respawn (0000)
+0004ACF0 02c0:
+	_code_0004acf0 (0000)
+0004AFB0 0140:
+	_code_0004afb0 (0000)
+0004B0F0 0780:
+	_code_0004b0f0 (0000)
+0004B870 0220:
+	_encounter_attach_actor (0000)
+0004BA90 0470:
+	_encounter_update_status (0000)
+0004BF00 0080:
+	_encounters_update_dirty_status (0000)
+0004BF80 02f0:
+	_encounter_create (0000)
+0004C270 01c0:
+	_code_0004c270 (0000)
+0004C430 00c0:
+	_encounters_create_for_new_map (0000)
+0004C4F0 0100:
+	_encounters_update (0000)
+0024CDBC 0018:
+	_global_empty_possibility (0000)
+	_global_post_combat_translation_table (0010)
+0024CDD4 000d:
+	??_C@_0N@BNPPEOCF@pursuit_data?$AA@ (0000)
+0024CDE4 000b:
+	??_C@_0L@BAANOOMI@ai?5pursuit?$AA@ (0000)
+0024CDF0 000e:
+	??_C@_0O@CIMAAJHO@platoon_array?$AA@ (0000)
+0024CE00 0008:
+	??_C@_07GONBCAAG@platoon?$AA@ (0000)
+0024CE08 000c:
+	??_C@_0M@EHCGPGM@squad_array?$AA@ (0000)
+0024CE14 0006:
+	??_C@_05BDFMLHFG@squad?$AA@ (0000)
+0024CE1C 000f:
+	??_C@_0P@MECKMOOF@encounter_data?$AA@ (0000)
+0024CE2C 001f:
+	??_C@_0BP@EGKKNGMH@c?3?2halo?2SOURCE?2ai?2encounters?4c?$AA@ (0000)
+0024CE50 0058:
+	??_C@_0FI@BMEIILPH@?$CImove_position?9?$DOcluster_index?5?$DO?$DN@ (0000)
+0024CEA8 005c:
+	??_C@_0FM@DFHIGNCO@?$CIfiring_position?9?$DOcluster_index?5@ (0000)
+0024CF04 003a:
+	??_C@_0DK@EFAAMOOO@?$CIcluster_index?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIcluster@ (0000)
+0024CF40 0031:
+	??_C@_0DB@KHGAFALI@structure_bsp?9?$DOclusters?4count?5?$DM?$DN@ (0000)
+0024CF74 001c:
+	??_C@_0BM@ONCBDDBG@platoon?9?$DOoriginal_count?5?$DO?50?$AA@ (0000)
+0024CF90 001a:
+	??_C@_0BK@NALIBEDP@squad?9?$DOoriginal_count?5?$DO?50?$AA@ (0000)
+0024CFAC 001e:
+	??_C@_0BO@FMKIINLL@encounter?9?$DOoriginal_count?5?$DO?50?$AA@ (0000)
+0024CFCC 001d:
+	??_C@_0BN@DOEKPEEH@?$CKactor_index_reference?$CB?$DNNONE?$AA@ (0000)
+0024CFEC 0025:
+	??_C@_0CF@FBFKAFPA@actor?9?$DOmeta?4unit_index?5?$DN?$DN?5unit_i@ (0000)
+0024D014 002f:
+	??_C@_0CP@NCMOENFD@actor?9?$DOmeta?4encounter_index?5?$DN?$DN?5e@ (0000)
+0024D044 001b:
+	??_C@_0BL@OIOHEOEO@?$CBactor?9?$DOmeta?4encounterless?$AA@ (0000)
+0024D060 0022:
+	??_C@_0CC@PHCDCJEH@actor?9?$DOmeta?4encounter_index?$DN?$DNNON@ (0000)
+0024D084 0022:
+	??_C@_0CC@LJBHAGND@actor?9?$DOmeta?4platoon_index?5?$DN?$DN?5NON@ (0000)
+0024D0A8 0020:
+	??_C@_0CA@HNKMILAG@actor?9?$DOmeta?4squad_index?5?$DN?$DN?5NONE?$AA@ (0000)
+0024D0C8 0024:
+	??_C@_0CE@BMJAJPHM@actor?9?$DOmeta?4encounter_index?5?$DN?$DN?5N@ (0000)
+0024D0F0 005d:
+	??_C@_0FN@LOCOBBFO@WARNING?3?5too?5many?5actors?5searchi@ (0000)
+0024D150 003d:
+	??_C@_0DN@ECMJNADN@?$CFs?5?$CF04X?3?5coord?5?$CFd?5current?5?$CFd?1?$CFd?1@ (0000)
+0024D190 0029:
+	??_C@_0CJ@GDIDEEDO@overflowed?5MAXIMUM_PLATOONS_PER_@ (0000)
+0024D1C0 0047:
+	??_C@_0EH@JLNGBIIA@encounter_definition?9?$DOplatoons?4c@ (0000)
+0024D208 0027:
+	??_C@_0CH@CNGIJGEJ@overflowed?5MAXIMUM_SQUADS_PER_MA@ (0000)
+0024D230 0043:
+	??_C@_0ED@JFKFDEJF@encounter_definition?9?$DOsquads?4cou@ (0000)
+0024D278 0063:
+	??_C@_0GD@GOGHLEAJ@?$CIlink_encounter_index?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CI@ (0000)
+0024D2DC 0036:
+	??_C@_0DG@EPEOFOPA@parent_prop?9?$DOorphan_prop_index?5?$DN@ (0000)
+0024D314 001a:
+	??_C@_0BK@GDHJJECC@?$CBencounter?9?$DOenemy_visible?$AA@ (0000)
+0024D330 001c:
+	??_C@_0BM@IJGMLGCM@?$CFs?1?$CFs?3?5delay?5timer?5finished?$AA@ (0000)
+0024D34C 0026:
+	??_C@_0CG@HJILMOOD@?$CFs?1?$CFs?3?5delay?5timer?5started?5?$CI?$CF?41f@ (0000)
+0024D374 0011:
+	??_C@_0BB@HBMEBMNH@survivors?5?$CFd?5?$DN?50?$AA@ (0000)
+0024D388 0012:
+	??_C@_0BC@FNKOIBFL@survivors?5?$CFd?5?$DM?$DN?51?$AA@ (0000)
+0024D39C 0021:
+	??_C@_0CB@HJKPDMEB@survivors?5?$CFd?5?$DM?$DN?575?$CF?$CF?5of?5total?5?$CFd@ (0000)
+0024D3C0 0021:
+	??_C@_0CB@NHMKHBJA@survivors?5?$CFd?5?$DM?$DN?550?$CF?$CF?5of?5total?5?$CFd@ (0000)
+0024D3E4 0021:
+	??_C@_0CB@INABNAMN@survivors?5?$CFd?5?$DM?$DN?525?$CF?$CF?5of?5total?5?$CFd@ (0000)
+0024D408 0018:
+	??_C@_0BI@IGDFHOAI@survivors?5?$CFd?5?$DM?5total?5?$CFd?$AA@ (0000)
+0024D420 0015:
+	??_C@_0BF@FJJAHOMB@strength?5?$CF?42f?5?$DM?525?$CF?$CF?$AA@ (0000)
+0024D438 0015:
+	??_C@_0BF@NMGOFCOD@strength?5?$CF?42f?5?$DM?550?$CF?$CF?$AA@ (0000)
+0024D450 0015:
+	??_C@_0BF@JBHAPBLB@strength?5?$CF?42f?5?$DM?575?$CF?$CF?$AA@ (0000)
+0024D468 004a:
+	??_C@_0EK@PHDJOLGD@owner_actor_indices?$FLactor?9?$DOfirin@ (0000)
+0024D4B8 0093:
+	??_C@_0JD@GAKCCOHE@actor?9?$DOfiring_positions?4current_@ (0000)
+0024D550 005a:
+	??_C@_0FK@DNNFPKMF@firing_position_owner_actor_indi@ (0000)
+0024D5B0 0084:
+	??_C@_0IE@GJHEMMJI@?$CIpursuit?9?$DOnext_actor_index_index@ (0000)
+0024D634 0038:
+	??_C@_0DI@GONNFCHM@pursuit?9?$DOfiring_position_index?5?$DN@ (0000)
+0024D66C 0014:
+	??_C@_0BE@MIHACDDA@found_index?5?$CB?$DN?5NONE?$AA@ (0000)
+0024D680 0035:
+	??_C@_0DF@FCNHHGJA@BIT_VECTOR_TEST_FLAG?$CIsquad?9?$DOunus@ (0000)
+0024D6B8 0063:
+	??_C@_0GD@GIHDEKAB@?$CIselected_behavior_index?5?$DO?$DN?50?$CJ?5?$CG@ (0000)
+0024D720 009d:
+	??_C@_0JN@COMBHAJN@?$CIprimary_postcombat_behaviors?$FLpr@ (0000)
+0024D7C0 0004:
+	__real@3b888889 (0000)
+0024D7C8 006c:
+	??_C@_0GM@MFIMGOEE@WARNING?3?5cannot?5spawn?5actors?5in?5@ (0000)
+0024D834 0022:
+	??_C@_0CC@EIGEOIGF@?$CFs?1?$CFs?3?5randomly?5selected?5to?5spaw@ (0000)
+0024D858 002b:
+	??_C@_0CL@DJPLPKCC@?$CFs?1?$CFs?3?5current?5?$CFd?5?$DM?5max?5?$CFd?5?9?$DO?5de@ (0000)
+0024D884 002f:
+	??_C@_0CP@JPOKCDIH@?$CFs?1?$CFs?3?5unable?5to?5spawn?0?5out?5of?5s@ (0000)
+0024D8B4 002e:
+	??_C@_0CO@IIDKDHP@?$CFs?1?$CFs?3?5current?5?$CFd?5?$DM?5min?5?$CFd?5?9?$DO?5sp@ (0000)
+0024D8E4 0018:
+	??_C@_0BI@NJPCKEMP@?$CFs?1?$CFs?5triggered?5?$CFs?5rule?$AA@ (0000)
+0024D8FC 000a:
+	??_C@_09MEJNCKEO@attacking?$AA@ (0000)
+0024D908 000a:
+	??_C@_09GNBACBHC@defending?$AA@ (0000)
+0024D914 0021:
+	??_C@_0CB@JPLEGLHP@?$CFs?1?$CFs?5triggered?5maneuvering?5rule@ (0000)
+0024D938 0030:
+	??_C@_0DA@LKCBJOBO@?$CFs?3?5current?5?$CFs?1?$CF?41f?5best?5?$CFs?1?$CF?41f@ (0000)
+0024D968 0004:
+	__real@c47a0000 (0000)
+0024D96C 0005:
+	??_C@_04NEBKMGJO@stay?$AA@ (0000)
+0024D974 0008:
+	??_C@_07JBBGNPIP@migrate?$AA@ (0000)
+0024D980 004d:
+	??_C@_0EN@MMBDPONO@WARNING?3?5squad?5?$CFs?1?$CFs?5has?5an?5inva@ (0000)
+0024D9D0 004b:
+	??_C@_0EL@LEBBGDPA@WARNING?3?5actor?5changing?5to?5encou@ (0000)
+0024DA1C 0035:
+	??_C@_0DF@OEDIHECK@?$CBencounter?9?$DOenemy_visible?5?$CG?$CG?5?$CBen@ (0000)
+0024DA54 002e:
+	??_C@_0CO@DFDAGGAE@?$CFs?1?$CFs?3?5?$CFd?5current?5?$CFd?5leaders?0?5cr@ (0000)
+0024DA84 000a:
+	??_C@_09PONLBLAH@no?5leader?$AA@ (0000)
+0024DA90 000b:
+	??_C@_0L@JLIMGEDN@new?5leader?$AA@ (0000)
+0024DA9C 000c:
+	??_C@_0M@ELGJNJDG@ai_place?5?$CFs?$AA@ (0000)
+0024DAA8 000f:
+	??_C@_0P@IGLHCPJF@ai_place?5?$CFs?1?$CFs?$AA@ (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

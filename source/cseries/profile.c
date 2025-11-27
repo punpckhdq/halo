@@ -1,0 +1,282 @@
+/*
+PROFILE.C
+
+symbols in this file:
+0007DCA0 0080:
+	_profile_initialize (0000)
+0007DD20 0160:
+	_code_0007dd20 (0000)
+0007DE80 0020:
+	_profile_rasterizer_stats (0000)
+0007DEA0 0040:
+	_code_0007dea0 (0000)
+0007DEE0 0010:
+	_profile_seconds_elapsed (0000)
+0007DEF0 0040:
+	_profile_lapsed_frames (0000)
+0007DF30 0020:
+	_profile_lapsed_msec (0000)
+0007DF50 0160:
+	_find_profile_section (0000)
+0007E0B0 0080:
+	_profile_enter_private (0000)
+0007E130 00a0:
+	_profile_exit_private (0000)
+0007E1D0 0610:
+	_code_0007e1d0 (0000)
+0007E7E0 0010:
+	_code_0007e7e0 (0000)
+0007E7F0 0050:
+	_code_0007e7f0 (0000)
+0007E840 0120:
+	_compare_profile_sections (0000)
+0007E960 0360:
+	_profile_dump (0000)
+0007ECC0 0080:
+	_profile_dump_to_file (0000)
+0007ED40 0080:
+	_code_0007ed40 (0000)
+0007EDC0 0040:
+	_code_0007edc0 (0000)
+0007EE00 0030:
+	_code_0007ee00 (0000)
+0007EE30 00a0:
+	_code_0007ee30 (0000)
+0007EED0 0020:
+	_profile_sections_activate (0000)
+0007EEF0 0020:
+	_profile_sections_deactivate (0000)
+0007EF10 0430:
+	_profile_find_frame_value (0000)
+0007F340 0040:
+	_profile_find_game_value (0000)
+0007F380 03a0:
+	_profile_frame_get_value (0000)
+0007F720 0060:
+	_profile_frame_iterator_new (0000)
+0007F780 0080:
+	_profile_frame_iterator_next (0000)
+0007F800 0090:
+	_profile_frame_get_messages (0000)
+0007F890 00a0:
+	_profile_frame_get_stalls (0000)
+0007F930 0090:
+	_profile_rasterizer_stalls (0000)
+0007F9C0 0030:
+	_code_0007f9c0 (0000)
+0007F9F0 0060:
+	_code_0007f9f0 (0000)
+0007FA50 0090:
+	_profile_tick_start (0000)
+0007FAE0 00a0:
+	_profile_tick_end (0000)
+0007FB80 0030:
+	_profile_render_start (0000)
+0007FBB0 0070:
+	_profile_render_end (0000)
+0007FC20 0090:
+	_profile_render_window_start (0000)
+0007FCB0 00a0:
+	_profile_render_window_end (0000)
+0007FD50 0030:
+	_profile_texture_start (0000)
+0007FD80 0070:
+	_profile_texture_end (0000)
+0007FDF0 0080:
+	_profile_frame_start (0000)
+0007FE70 0370:
+	_profile_frame_end (0000)
+000801E0 0030:
+	_profile_idle_start (0000)
+00080210 0070:
+	_profile_idle_end (0000)
+00257E54 0033:
+	??_C@_0DD@GJHCEALK@?$HMl?$CFs?$HMt?$HMr?$CF?53?42f?1?$CF?54ld?$HMt?$CF?53?42f?1?$CF?54@ (0000)
+00257E88 0044:
+	??_C@_0EE@LGPEPOLG@?$CF?950s?$CF6ld?5?1?5?$CF7?43f?5?5?5?5?5?5?5?5?5?5?5?5?$CF5?4@ (0000)
+00257ECC 0020:
+	??_C@_0CA@IFDPKCJJ@?$HMt?$HMrthis?5frame?$HMtaverage?$HMtpeak?$HMn?$AA@ (0000)
+00257EF0 0074:
+	??_C@_0HE@OCELNIBL@section?7?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5@ (0000)
+00257F68 0041:
+	??_C@_0EB@DNCFGCLL@parent_timesection?9?$DOself_msec?5?$DO?$DN@ (0000)
+00257FAC 0021:
+	??_C@_0CB@JIHDKIHN@c?3?2halo?2SOURCE?2cseries?2profile?4c@ (0000)
+00257FD0 0037:
+	??_C@_0DH@IAAOFPKE@profile_globals?4section_count?$DMMA@ (0000)
+00258008 0039:
+	??_C@_0DJ@MGEBDNKL@don?8t?5call?5profile_enter_private@ (0000)
+00258044 0010:
+	??_C@_0BA@OFIJJPPF@section?9?$DOactive?$AA@ (0000)
+00258054 0008:
+	??_C@_07BNGFJMOB@section?$AA@ (0000)
+0025805C 001b:
+	??_C@_0BL@DCGIKKDM@section?9?$DOstack_depth?$DN?$DNNONE?$AA@ (0000)
+00258078 0032:
+	??_C@_0DC@EBAGECGL@section?9?$DOstack_depth?$DN?$DNprofile_gl@ (0000)
+002580AC 000e:
+	??_C@_0O@CAINCP@f?9misc?5?$CF6?42f?5?$AA@ (0000)
+002580BC 000e:
+	??_C@_0O@HPDODOFI@r?9misc?5?$CF6?42f?5?$AA@ (0000)
+002580CC 000b:
+	??_C@_0L@CCBFPMDD@?5?5?5?5?5?5?5?5?5?5?$AA@ (0000)
+002580D8 000a:
+	??_C@_09DIDNDMFB@tex?$CF6?42f?5?$AA@ (0000)
+002580E4 000d:
+	??_C@_0N@ONKJJLFA@?5?5?5?5?5?5?5?5?5?5?5?5?$AA@ (0000)
+002580F4 000c:
+	??_C@_0M@CIJICDBL@stall?$CF6?42f?5?$AA@ (0000)
+00258100 000a:
+	??_C@_09LLNJGGAC@?5?5?5?5?5?5?5?$CFs?$AA@ (0000)
+0025810C 000a:
+	??_C@_09MEJENFBG@?$CFs?$CF6?42f?$CFs?$AA@ (0000)
+00258118 0002:
+	??_C@_01EFFIKLCJ@n?$AA@ (0000)
+0025811C 0002:
+	??_C@_01JBBJJEPG@p?$AA@ (0000)
+00258120 000d:
+	??_C@_0N@KKPPKAFO@?5render?$CF6?42f?$AA@ (0000)
+00258130 0002:
+	??_C@_01PKGAHCOL@?$CJ?$AA@ (0000)
+00258134 0009:
+	??_C@_08PBAHBJAK@?5?5?5?5?5?5?$CFs?$AA@ (0000)
+00258140 0008:
+	??_C@_07CCGGFFIN@?$CF6?42f?$CFs?$AA@ (0000)
+00258148 0003:
+	??_C@_02GFKOMOKH@?5?$CI?$AA@ (0000)
+0025814C 0009:
+	??_C@_08GLEMDNF@game?$CF2d?5?$AA@ (0000)
+00258158 000c:
+	??_C@_0M@CKHGFAEI@?5?5?5?5?5?5?5?5?5?5?5?$AA@ (0000)
+00258164 000b:
+	??_C@_0L@PHBKFODP@idle?$CF6?42f?5?$AA@ (0000)
+00258170 000a:
+	??_C@_09CIKJCKOO@?$CIsynced?$CJ?5?$AA@ (0000)
+0025817C 000a:
+	??_C@_09CCMCFOJI@?$CIslowed?$CJ?5?$AA@ (0000)
+00258188 000a:
+	??_C@_09CLBOIIGO@?$CIf?4?$CF3dms?$CJ?$AA@ (0000)
+00258194 000a:
+	??_C@_09LODAACPA@?$CIl?4?$CF3dms?$CJ?$AA@ (0000)
+002581A0 000a:
+	??_C@_09OAGDEMOJ@?$CIfree?$CF3d?$CJ?$AA@ (0000)
+002581AC 000a:
+	??_C@_09FOHHJKEH@?$CIlost?$CF3d?$CJ?$AA@ (0000)
+002581B8 001e:
+	??_C@_0BO@KFBPKJAE@frame?5?$CF5d?5vbl?5?$CF5I64d?5tot?$CF6?42f?$AA@ (0000)
+002581D8 0008:
+	__real@408f400000000000 (0000)
+002581E0 0018:
+	??_C@_0BI@LMKLONDN@maximum_section_count?$DO0?$AA@ (0000)
+002581F8 0042:
+	??_C@_0EC@FFADJNIP@format_mode?$DO?$DN0?5?$CG?$CG?5format_mode?$DMNU@ (0000)
+0025823C 0037:
+	??_C@_0DH@ICGEGPLO@sort_mode?$DO?$DN0?5?$CG?$CG?5sort_mode?$DMNUMBER@ (0000)
+00258274 0005:
+	??_C@_04LLEBNMDN@?$CFs?$AN?6?$AA@ (0000)
+0025827C 000f:
+	??_C@_0P@NHLICBHE@d?3?2profile?4txt?$AA@ (0000)
+0025828C 0011:
+	??_C@_0BB@MGJFLJKK@d?3?2framedump?4txt?$AA@ (0000)
+002582A0 0003:
+	??_C@_02GMLFBBN@wb?$AA@ (0000)
+002582A4 0002:
+	??_C@_01NBENCBCI@?$CK?$AA@ (0000)
+002582A8 000b:
+	??_C@_0L@KMPGOPBB@pushbuffer?$AA@ (0000)
+002582B4 0004:
+	??_C@_03HOPDAKLK@gpu?$AA@ (0000)
+002582B8 0003:
+	??_C@_02EDDPJOD@dt?$AA@ (0000)
+002582BC 0008:
+	??_C@_07JDHEGGGP@texture?$AA@ (0000)
+002582C4 0006:
+	??_C@_05MEMGOBLF@stall?$AA@ (0000)
+002582CC 000c:
+	??_C@_0M@BFMMLLIC@game_render?$AA@ (0000)
+002582D8 000c:
+	??_C@_0M@HBFEAABD@render0_3np?$AA@ (0000)
+002582E4 000a:
+	??_C@_09PKCOAFOC@render0_3?$AA@ (0000)
+002582F0 000a:
+	??_C@_09ODDFDEKD@render0_2?$AA@ (0000)
+002582FC 000a:
+	??_C@_09MIBIGHGA@render0_1?$AA@ (0000)
+00258308 0008:
+	??_C@_07HHKBOHGC@render0?$AA@ (0000)
+00258310 0007:
+	??_C@_06IAAOMEKN@render?$AA@ (0000)
+00258318 000a:
+	??_C@_09OHMOODOI@nonplayer?$AA@ (0000)
+00258324 0008:
+	??_C@_07OCBHBHOJ@player3?$AA@ (0000)
+0025832C 0008:
+	??_C@_07PLAMCGKI@player2?$AA@ (0000)
+00258334 0008:
+	??_C@_07NACBHFGL@player1?$AA@ (0000)
+0025833C 0008:
+	??_C@_07MJDKEECK@player0?$AA@ (0000)
+00258344 0006:
+	??_C@_05OIMJLJGC@game7?$AA@ (0000)
+0025834C 0006:
+	??_C@_05PBNCIICD@game6?$AA@ (0000)
+00258354 0006:
+	??_C@_05NKPPNLOA@game5?$AA@ (0000)
+0025835C 0006:
+	??_C@_05MDOEOKKB@game4?$AA@ (0000)
+00258364 0006:
+	??_C@_05IMKFHMGG@game3?$AA@ (0000)
+0025836C 0006:
+	??_C@_05JFLOENCH@game2?$AA@ (0000)
+00258374 0006:
+	??_C@_05LOJDBOOE@game1?$AA@ (0000)
+0025837C 0006:
+	??_C@_05KHIICPKF@game0?$AA@ (0000)
+00258384 0005:
+	??_C@_04EONOHKEP@load?$AA@ (0000)
+0025838C 0006:
+	??_C@_05MIJNFGED@frame?$AA@ (0000)
+00258394 0020:
+	??_C@_0CA@LFOMCIIE@name?5?$CG?$CG?5section_index_reference?$AA@ (0000)
+002583B4 0004:
+	__real@42055555 (0000)
+002583B8 0004:
+	__real@35aaaaab (0000)
+002583C0 004e:
+	??_C@_0EO@JBFLBLLD@iterator?9?$DOcurrent_buffer_index?5?$CB@ (0000)
+00258410 0078:
+	??_C@_0HI@EANDMEO@?$CIiterator?9?$DOcurrent_buffer_index?5@ (0000)
+00258488 0087:
+	??_C@_0IH@HJNMEKLP@?$CIprofile_globals?4current_frame?4g@ (0000)
+00258510 0074:
+	??_C@_0HE@FKBCHJEP@?$CIprofile_globals?4current_frame?4w@ (0000)
+00258588 0075:
+	??_C@_0HF@JPMAIONJ@?$CIprofile_globals?4current_frame?4w@ (0000)
+00258600 0088:
+	??_C@_0II@PFDJGDHA@?$CIprofile_globals?4current_frame?4g@ (0000)
+002DCD30 0010:
+	_header_strings (0000)
+	_format_strings (0008)
+0031DF40 113d54:
+	_bss_0031df40 (0000)
+	_profile_timebase_ticks (113d50)
+	_profile_global_enable (113d51)
+	_profile_dump_frames (113d52)
+	_profile_dump_lost_frames (113d53)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

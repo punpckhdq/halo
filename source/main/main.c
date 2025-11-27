@@ -1,0 +1,346 @@
+/*
+MAIN.C
+
+symbols in this file:
+000EF6F0 0010:
+	_main_get_seconds_elapsed (0000)
+000EF700 0080:
+	_gamepad_button_is_down (0000)
+000EF780 0010:
+	_game_connection_set (0000)
+000EF790 0010:
+	_game_connection (0000)
+000EF7A0 0010:
+	_main_disallow_persistent_storage (0000)
+000EF7B0 0060:
+	_main_set_map_name (0000)
+000EF810 0010:
+	_main_defer_map_map_change (0000)
+000EF820 0030:
+	_main_set_multiplayer_map_name (0000)
+000EF850 0010:
+	_main_get_map_name (0000)
+000EF860 0010:
+	_main_get_multiplayer_map_name (0000)
+000EF870 0020:
+	_main_set_difficulty (0000)
+000EF890 0010:
+	_main_get_difficulty (0000)
+000EF8A0 0040:
+	_code_000ef8a0 (0000)
+000EF8E0 01d0:
+	_code_000ef8e0 (0000)
+000EFAB0 0020:
+	_main_reset_map (0000)
+000EFAD0 0020:
+	_main_revert_map (0000)
+000EFAF0 0020:
+	_main_skip_cinematic (0000)
+000EFB10 0010:
+	_main_save_map_nonsafe (0000)
+000EFB20 0010:
+	_main_saving_map (0000)
+000EFB30 0010:
+	_main_save_cancel (0000)
+000EFB40 0040:
+	_main_save_map_safe (0000)
+000EFB80 0010:
+	_main_won_map (0000)
+000EFB90 0010:
+	_main_lost_map (0000)
+000EFBA0 0020:
+	_main_respawn (0000)
+000EFBC0 0020:
+	_main_save_core (0000)
+000EFBE0 0050:
+	_main_save_core_name (0000)
+000EFC30 0020:
+	_main_load_core (0000)
+000EFC50 0020:
+	_main_load_core_at_startup (0000)
+000EFC70 0050:
+	_main_load_core_name (0000)
+000EFCC0 0050:
+	_main_load_core_name_at_startup (0000)
+000EFD10 0060:
+	_main_switch_structure_bsp (0000)
+000EFD70 0030:
+	_main_skip (0000)
+000EFDA0 0040:
+	_main_queue_map_name (0000)
+000EFDE0 0050:
+	_code_000efde0 (0000)
+000EFE30 0020:
+	_main_goto_main_menu (0000)
+000EFE50 0050:
+	_main_menu_precache_resources (0000)
+000EFEA0 0020:
+	_main_menu_unload (0000)
+000EFEC0 0010:
+	_main_menu_ensure_player_queues_exist (0000)
+000EFED0 0010:
+	_main_menu_fade_active (0000)
+000EFEE0 0010:
+	_main_menu_switch_to_single_player (0000)
+000EFEF0 0010:
+	_main_set_game_connection_to_film_playback (0000)
+000EFF00 0170:
+	_main_get_solo_level_from_name (0000)
+000F0070 0010:
+	_main_get_current_solo_level (0000)
+000F0080 0020:
+	_main_get_solo_level_name (0000)
+000F00A0 0010:
+	_main_run_demos (0000)
+000F00B0 0070:
+	_code_000f00b0 (0000)
+000F0120 01f0:
+	_compute_window_bounds (0000)
+000F0310 0040:
+	_main_get_window_count (0000)
+000F0350 00d0:
+	_code_000f0350 (0000)
+000F0420 0180:
+	_code_000f0420 (0000)
+000F05A0 0020:
+	_code_000f05a0 (0000)
+000F05C0 0030:
+	_code_000f05c0 (0000)
+000F05F0 00b0:
+	_code_000f05f0 (0000)
+000F06A0 0020:
+	_code_000f06a0 (0000)
+000F06C0 00e0:
+	_code_000f06c0 (0000)
+000F07A0 0030:
+	_code_000f07a0 (0000)
+000F07D0 0040:
+	_code_000f07d0 (0000)
+000F0810 0040:
+	_code_000f0810 (0000)
+000F0850 0060:
+	_code_000f0850 (0000)
+000F08B0 0020:
+	_code_000f08b0 (0000)
+000F08D0 0020:
+	_code_000f08d0 (0000)
+000F08F0 0040:
+	_code_000f08f0 (0000)
+000F0930 0010:
+	_code_000f0930 (0000)
+000F0940 0220:
+	_code_000f0940 (0000)
+000F0B60 0050:
+	_code_000f0b60 (0000)
+000F0BB0 0030:
+	_code_000f0bb0 (0000)
+000F0BE0 0010:
+	_code_000f0be0 (0000)
+000F0BF0 05a0:
+	_code_000f0bf0 (0000)
+000F1190 0210:
+	_main_rasterizer_throttle (0000)
+000F13A0 0020:
+	_code_000f13a0 (0000)
+000F13C0 0020:
+	_main_taking_screenshot (0000)
+000F13E0 00b0:
+	_main_movie_start (0000)
+000F1490 0020:
+	_main_movie_stop (0000)
+000F14B0 0010:
+	_main_stop_time (0000)
+000F14C0 0010:
+	_main_start_time (0000)
+000F14D0 0010:
+	_main_crash (0000)
+000F14E0 0010:
+	_main_print_version (0000)
+000F14F0 00c0:
+	_main_vertical_blank_interrupt_handler (0000)
+000F15B0 0070:
+	_main_save_current_solo_map (0000)
+000F1620 00c0:
+	_main_load_last_solo_map (0000)
+000F16E0 0040:
+	_main_save_map_no_timeout (0000)
+000F1720 00e0:
+	_main_load_ui_scenario (0000)
+000F1800 0090:
+	_main_menu_load (0000)
+000F1890 0020:
+	_main_roll_credits (0000)
+000F18B0 0130:
+	_main_pregame_render (0000)
+000F19E0 01b0:
+	_set_window_camera_values (0000)
+000F1B90 0090:
+	_main_present_frame (0000)
+000F1C20 00c0:
+	_code_000f1c20 (0000)
+000F1CE0 0050:
+	_code_000f1ce0 (0000)
+000F1D30 01f0:
+	_code_000f1d30 (0000)
+000F1F20 02a0:
+	_main_framerate_render (0000)
+000F21C0 02a0:
+	_halt_and_catch_fire (0000)
+000F2460 0040:
+	_main_loop_of_death (0000)
+000F24A0 01c0:
+	_code_000f24a0 (0000)
+000F2660 0670:
+	_main_loop (0000)
+002795A8 003a:
+	??_C@_0DK@GMPCKHNN@button_index?$DO?$DN0?5?$CG?$CG?5button_index?$DM@ (0000)
+002795E4 001b:
+	??_C@_0BL@EKABHJPH@c?3?2halo?2SOURCE?2main?2main?4c?$AA@ (0000)
+00279600 0037:
+	??_C@_0DH@DGKBOONK@?$CIgamepad_index?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIgamepad_i@ (0000)
+00279638 0013:
+	??_C@_0BD@OOOKAGFE@j?$DMMAXIMUM_GAMEPADS?$AA@ (0000)
+00279650 0049:
+	??_C@_0EJ@DIAKEACK@?$CIdesired_controllers?$FLi?$FN?$DO?$DN0?$CJ?5?$CG?$CG?5?$CI@ (0000)
+0027969C 002c:
+	??_C@_0CM@EOEJOPGF@game_connection?$CI?$CJ?5?$DN?$DN?5_game_conne@ (0000)
+002796C8 0009:
+	??_C@_08FLLKDKH@core?4bin?$AA@ (0000)
+002796D4 003b:
+	??_C@_0DL@LKJEADLD@warning?0?5core?5file?5name?5will?5be?5@ (0000)
+00279710 002c:
+	??_C@_0CM@BPJFOCNH@tried?5to?5switch?5to?5invalid?5struc@ (0000)
+0027973C 002c:
+	??_C@_0CM@IOHNOMHF@tried?5to?5switch?5to?5current?5struc@ (0000)
+00279768 0030:
+	??_C@_0DA@FGIPPFOE@cannot?5skip?5more?5than?515?5frames?5@ (0000)
+00279798 0029:
+	??_C@_0CJ@GNBMIDNC@scenario?9?$DOtype?$DN?$DN_scenario_type_m@ (0000)
+002797C4 000e:
+	??_C@_0O@OJNPMJKK@num_players?$DO0?$AA@ (0000)
+002797D4 0039:
+	??_C@_0DJ@LGIIGICN@horizontal_index?$DO?$DN0?5?$CG?$CG?5horizonta@ (0000)
+00279810 0033:
+	??_C@_0DD@NNOBFMAG@vertical_index?$DO?$DN0?5?$CG?$CG?5vertical_in@ (0000)
+00279844 0019:
+	??_C@_0BJ@LDIFOEOI@player_index?$DMnum_players?$AA@ (0000)
+00279860 0017:
+	??_C@_0BH@PGKHPIFN@main_new_map?$CI?$CJ?5failed?4?$AA@ (0000)
+00279878 0014:
+	??_C@_0BE@HPJEDLPC@game_load?$CI?$CJ?5failed?4?$AA@ (0000)
+00279890 0041:
+	??_C@_0EB@NLDLOJCN@manual?5skipping?5doesn?8t?5work?5out@ (0000)
+002798D4 000c:
+	??_C@_0M@NBLPJHAH@unsafe?5save?$AA@ (0000)
+002798E0 0017:
+	??_C@_0BH@JAFGAFKC@gave?5up?5trying?5to?5save?$AA@ (0000)
+002798F8 001f:
+	??_C@_0BP@JOHDPJOL@?$DLcore_load_name_at_startup?5?$CFs?6?$AA@ (0000)
+00279918 0004:
+	??_C@_03CCGKKFHG@a?$CLt?$AA@ (0000)
+0027991C 000d:
+	??_C@_0N@HMFDKLFI@map_name?5?$CFs?6?$AA@ (0000)
+0027992C 0003:
+	??_C@_02BKFDOEMK@wt?$AA@ (0000)
+00279930 000f:
+	??_C@_0P@JFNDGJMB@d?3?2?$CFs_init?4txt?$AA@ (0000)
+00279940 001e:
+	??_C@_0BO@EFIKKGLE@?$CFs_slow_?$CFd_?$CFd_?$CFd_?$CFd_?$CFd_?$CFd?4bin?$AA@ (0000)
+00279960 0008:
+	__real@3fa26e978d4fdf3c (0000)
+00279968 0013:
+	??_C@_0BD@BANPCAEP@?5des?5?$CFd?5targ?$CF6I64d?$AA@ (0000)
+0027997C 000d:
+	??_C@_0N@ONKBMNKN@?5MAINTAIN?5?$CFd?$AA@ (0000)
+0027998C 000d:
+	??_C@_0N@MLBLHBF@?5RESTORE?5?5?$CFd?$AA@ (0000)
+0027999C 000d:
+	??_C@_0N@KHJNGILI@?5FAILDOWN?5?$CFd?$AA@ (0000)
+002799AC 000d:
+	??_C@_0N@KAJPDIPB@?$CI?$CFs?$CF2d?1?$CF2d?$CJ?5?$AA@ (0000)
+002799BC 0003:
+	??_C@_02LEBOADDI@dn?$AA@ (0000)
+002799C0 000c:
+	??_C@_0M@FONKJGHM@?$CIok?5?5?5?$CF2d?$CJ?5?$AA@ (0000)
+002799CC 0006:
+	??_C@_05MPKPLMMK@ignor?$AA@ (0000)
+002799D4 0009:
+	??_C@_08NGBFCLJE@?$CI?$CFs?$CF2d?$CJ?5?$AA@ (0000)
+002799E0 0006:
+	??_C@_05KGKFECIJ@fail?5?$AA@ (0000)
+002799E8 003a:
+	??_C@_0DK@KGLGNIMB@last?$CF6I64d?5init?$CF6I64d?5achv?$CF6I64d@ (0000)
+00279A24 0019:
+	??_C@_0BJ@GBFFHJIM@?$CF6I64d?$CItarg?$CF6I64d?5?$CFs?$CF2d?$CJ?$AA@ (0000)
+00279A40 0009:
+	??_C@_08EEAEDAMO@LAPSED?5?5?$AA@ (0000)
+00279A4C 0009:
+	??_C@_08KMBEHCPI@SYNCED?5?5?$AA@ (0000)
+00279A58 0009:
+	??_C@_08PLAGFMEO@THROTTLE?$AA@ (0000)
+00279A68 004a:
+	??_C@_0EK@OBDHCGCK@stuck?5waiting?5for?5VBLANK?5callbac@ (0000)
+00279AB4 0006:
+	??_C@_05PAONDCEJ@movie?$AA@ (0000)
+00279ABC 0019:
+	??_C@_0BJ@MFOKCFOP@main_globals?4movie?$DN?$DNNULL?$AA@ (0000)
+00279AD8 002a:
+	??_C@_0CK@IJIKLLCA@chucky?5was?5here?$CB?5?5NULL?5belongs?5t@ (0000)
+00279B04 0031:
+	??_C@_0DB@HPIOCFDH@halobeta?5xbox?501?401?414?42342?5Jan?5@ (0000)
+00279B38 0038:
+	??_C@_0DI@IKBOMHNJ@Couldn?8t?5create?5a?5file?5to?5write?5@ (0000)
+00279B70 0011:
+	??_C@_0BB@HAHOOKLD@z?3?2last_solo?4txt?$AA@ (0000)
+00279B84 0028:
+	??_C@_0CI@KPDFMEMF@?$CBmain_globals?4main_menu_scenario@ (0000)
+00279BAC 000d:
+	??_C@_0N@CBIELCEF@levels?2ui?2ui?$AA@ (0000)
+00279BBC 0023:
+	??_C@_0CD@IMDNHNHI@congratulations?0?5you?5won?5the?5gam@ (0000)
+00279BE0 0014:
+	??_C@_0BE@BDDOCJAN@movie?2frame?$CF06d?4tga?$AA@ (0000)
+00279BF4 0019:
+	??_C@_0BJ@CKCGDFO@error?5opening?5saved?5film?$AA@ (0000)
+00279C10 0015:
+	??_C@_0BF@LPIHHLNO@?$CFdscreenshot?$CFd?$CFd?4tif?$AA@ (0000)
+00279C28 003b:
+	??_C@_0DL@LMMABMNB@halobeta?5xbox?501?401?414?42342?5buil@ (0000)
+00279C64 001f:
+	??_C@_0BP@HEAODFIJ@old?5tags?2internal?5system?5plain?$AA@ (0000)
+00279C84 0012:
+	??_C@_0BC@FLAPBDJB@end?5of?5saved?5film?$AA@ (0000)
+00279C98 0018:
+	??_C@_0BI@HBMJOOEK@the?5game?5host?5went?5down?$AA@ (0000)
+00307818 0034:
+	_global_difficulty_level (0000)
+	_player_spawn_count (0004)
+	_global_frame_rate_throttle (0006)
+	_global_screenshot_size (0008)
+00455750 0a63:
+	_bss_00455750 (0000)
+	_debug_force_frame_rate_update (06d0)
+	_debug_no_drawing (06d1)
+	_debug_game_save (06d2)
+	_debug_frame_rate (06d3)
+	_display_framerate (06d4)
+	_display_vblank_deltas (06d5)
+	_display_precache_progress (06d6)
+	_global_screenshot_count (06d8)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

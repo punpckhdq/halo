@@ -1,0 +1,234 @@
+/*
+CACHE_FILES_DECOMPRESS_WINDOWS.C
+
+symbols in this file:
+001A9C10 0020:
+	_code_001a9c10 (0000)
+001A9C30 0040:
+	_cache_copy_buffer_size (0000)
+001A9C70 0040:
+	_cache_copy_set_priority (0000)
+001A9CB0 0020:
+	_cache_copy_compressed_file_complete (0000)
+001A9CD0 02e0:
+	_cache_copy_begin (0000)
+001A9FB0 0030:
+	_cache_copy_queue_end (0000)
+001A9FE0 0030:
+	_code_001a9fe0 (0000)
+001AA010 0030:
+	_code_001aa010 (0000)
+001AA040 0060:
+	_code_001aa040 (0000)
+001AA0A0 0050:
+	_code_001aa0a0 (0000)
+001AA0F0 00b0:
+	_code_001aa0f0 (0000)
+001AA1A0 00f0:
+	_code_001aa1a0 (0000)
+001AA290 0080:
+	_code_001aa290 (0000)
+001AA310 00a0:
+	_code_001aa310 (0000)
+001AA3B0 0070:
+	_acquire_read_request (0000)
+001AA420 0010:
+	_code_001aa420 (0000)
+001AA430 0050:
+	_code_001aa430 (0000)
+001AA480 0050:
+	_code_001aa480 (0000)
+001AA4D0 0040:
+	_code_001aa4d0 (0000)
+001AA510 0030:
+	_code_001aa510 (0000)
+001AA540 00a0:
+	_code_001aa540 (0000)
+001AA5E0 0030:
+	_code_001aa5e0 (0000)
+001AA610 0010:
+	_code_001aa610 (0000)
+001AA620 0020:
+	_code_001aa620 (0000)
+001AA640 0010:
+	_code_001aa640 (0000)
+001AA650 0030:
+	_code_001aa650 (0000)
+001AA680 0100:
+	_code_001aa680 (0000)
+001AA780 0020:
+	_code_001aa780 (0000)
+001AA7A0 0190:
+	_cache_copy_get_status (0000)
+001AA930 0050:
+	_cache_copy_end (0000)
+001AA980 01f0:
+	_cache_copy_FileIOCompletionRoutine@12 (0000)
+001AAB70 0140:
+	_code_001aab70 (0000)
+001AACB0 0140:
+	_code_001aacb0 (0000)
+001AADF0 0010:
+	_code_001aadf0 (0000)
+001AAE00 0010:
+	_code_001aae00 (0000)
+001AAE10 0100:
+	_code_001aae10 (0000)
+001AAF10 0020:
+	_code_001aaf10 (0000)
+001AAF30 0050:
+	_code_001aaf30 (0000)
+001AAF80 00a0:
+	_code_001aaf80 (0000)
+001AB020 0190:
+	_code_001ab020 (0000)
+001AB1B0 00d0:
+	_code_001ab1b0 (0000)
+001AB280 00d0:
+	_code_001ab280 (0000)
+001AB350 01f0:
+	_code_001ab350 (0000)
+001AB540 0340:
+	_code_001ab540 (0000)
+001AB880 03e0:
+	_code_001ab880 (0000)
+001ABC60 00e0:
+	_cache_copy_initialize (0000)
+002A678C 0027:
+	??_C@_0CH@DEOMLBEE@previous?5copy?5session?5did?5not?5co@ (0000)
+002A67B4 001f:
+	??_C@_0BP@HMMCGILP@global_self?9?$DOzlib_stream?4zfree?$AA@ (0000)
+002A67D4 0020:
+	??_C@_0CA@KHDIIHBG@global_self?9?$DOzlib_stream?4zalloc?$AA@ (0000)
+002A67F4 0019:
+	??_C@_0BJ@OMJKHEGP@global_self?9?$DOcopy_thread?$AA@ (0000)
+002A6810 0023:
+	??_C@_0CD@LDNLLCFF@global_self?9?$DOprogress_update_eve@ (0000)
+002A6834 001e:
+	??_C@_0BO@JMEKOEMJ@global_self?9?$DOcopy_start_event?$AA@ (0000)
+002A6854 001d:
+	??_C@_0BN@CPKCEALK@global_self?9?$DOcopy_stop_event?$AA@ (0000)
+002A6874 0021:
+	??_C@_0CB@BCJBNPEM@global_self?9?$DOcopy_complete_event@ (0000)
+002A6898 003b:
+	??_C@_0DL@ONPPJPGL@destination_file_size?$DN?$DNGetFileSi@ (0000)
+002A68D4 0019:
+	??_C@_0BJ@OEKJHJKP@size?$DO?$DN?5TOTAL_BUFFER_SIZE?$AA@ (0000)
+002A68F0 0027:
+	??_C@_0CH@CBDPEJFF@destination_file?$CB?$DNINVALID_HANDLE@ (0000)
+002A6918 0011:
+	??_C@_0BB@BCPHFHCK@source_file_name?$AA@ (0000)
+002A692C 0036:
+	??_C@_0DG@MLNPNOIK@c?3?2halo?2SOURCE?2cache?2cache_files@ (0000)
+002A6968 0054:
+	??_C@_0FE@LDLBBNEG@global_self?9?$DOnext_allocation?9glo@ (0000)
+002A69BC 002d:
+	??_C@_0CN@FECNJEGA@?$CIbyte?$CK?$CJaddress?$DM?$DNglobal_self?9?$DOnex@ (0000)
+002A69EC 002c:
+	??_C@_0CM@LBNMACHE@self?9?$DOread_bytes_left?$DO?$DNsizeof?$CIse@ (0000)
+002A6A18 0020:
+	??_C@_0CA@HLJBOAAC@wait_result?$DN?$DNWAIT_IO_COMPLETION?$AA@ (0000)
+002A6A38 0047:
+	??_C@_0EH@PCOCAIPP@?$CBBIT_VECTOR_TEST_FLAG?$CIself?9?$DOover@ (0000)
+002A6A80 0048:
+	??_C@_0EI@PCEOFLKP@?$CBBIT_VECTOR_TEST_FLAG?$CIself?9?$DOover@ (0000)
+002A6AC8 0047:
+	??_C@_0EH@IFOIJONL@BIT_VECTOR_TEST_FLAG?$CIself?9?$DOoverl@ (0000)
+002A6B10 0041:
+	??_C@_0EB@CMIFFJIK@read_buffer_index?$DO?$DN0?5?$CG?$CG?5read_buf@ (0000)
+002A6B58 0044:
+	??_C@_0EE@OHEFCECI@write_buffer_index?$DO?$DN0?5?$CG?$CG?5write_b@ (0000)
+002A6BA0 0073:
+	??_C@_0HD@EMNFMEOI@?$CBany_bit_vector_flag_set?$CIself?9?$DOo@ (0000)
+002A6C14 001d:
+	??_C@_0BN@LPNNBCIB@?5?5?5?5Total?5copying?5time?3?5?$CF?43f?$AA@ (0000)
+002A6C34 002d:
+	??_C@_0CN@LCCDIMEO@?5?5?5?5Total?5thread?5blocked?5on?5writ@ (0000)
+002A6C64 002c:
+	??_C@_0CM@JPMPFADM@?5?5?5?5Total?5thread?5blocked?5on?5read@ (0000)
+002A6C90 0024:
+	??_C@_0CE@BLKMPKLJ@?5?5?5?5Total?5thread?5blocked?5time?3?5?$CF@ (0000)
+002A6CB4 002c:
+	??_C@_0CM@KIFMLGDM@?5?5?5?5Total?5zlib?5during?5write?5file@ (0000)
+002A6CE0 001a:
+	??_C@_0BK@BCPDIOIM@?5?5?5?5Total?5zlib?5time?3?5?$CF?43f?$AA@ (0000)
+002A6CFC 0020:
+	??_C@_0CA@ENEIKNJP@?5?5?5?5Total?5write?5file?5time?3?5?$CF?43f?$AA@ (0000)
+002A6D1C 001f:
+	??_C@_0BP@PBPKHODK@?5?5?5?5Total?5read?5file?5time?3?5?$CF?43f?$AA@ (0000)
+002A6D3C 0024:
+	??_C@_0CE@MEJJJAJL@Timing?5for?5copying?5last?5cache?5fi@ (0000)
+002A6D60 0009:
+	??_C@_08LCGAPFCF@progress?$AA@ (0000)
+002A6D6C 0026:
+	??_C@_0CG@JIHKMCLM@async?5i?1o?5finished?5with?5error?5co@ (0000)
+002A6D94 0026:
+	??_C@_0CG@LFNPHDNB@global_self?9?$DOasync_write_bytes_l@ (0000)
+002A6DBC 0025:
+	??_C@_0CF@BLFCMLCE@global_self?9?$DOasync_read_bytes_le@ (0000)
+002A6DE4 0024:
+	??_C@_0CE@KFFHFCII@couldn?8t?5issue?5an?5asynchronous?5r@ (0000)
+002A6E08 0047:
+	??_C@_0EH@DHKKDFLG@?$CBBIT_VECTOR_TEST_FLAG?$CIself?9?$DOover@ (0000)
+002A6E50 0025:
+	??_C@_0CF@KANDJCBM@couldn?8t?5issue?5an?5asynchronous?5w@ (0000)
+002A6E78 0030:
+	??_C@_0DA@INJGOAAO@self?9?$DOcurrent_read_offset?$DM?$DNself?9@ (0000)
+002A6EA8 0023:
+	??_C@_0CD@JCFNHENM@request?9?$DOread_sequence_index?$DN?$DNNO@ (0000)
+002A6ED0 005c:
+	??_C@_0FM@IKECPIPA@BIT_VECTOR_TEST_FLAG?$CIself?9?$DOoverl@ (0000)
+002A6F2C 002e:
+	??_C@_0CO@NCHCHCFL@self?9?$DOcurrent_write_offset?$DM?$DNself@ (0000)
+002A6F5C 0005:
+	??_C@_04EPOOCEMM@blah?$AA@ (0000)
+002A6F64 0027:
+	??_C@_0CH@DEEKDHHP@global_self?9?$DOasync_write_bytes_l@ (0000)
+002A6F90 006f:
+	??_C@_0GP@MFMJKDCA@self?9?$DOwrite_requests?$FLself?9?$DOcurre@ (0000)
+002A7000 0036:
+	??_C@_0DG@CAGFFOJ@self?9?$DOwrite_requests_pending?$DM?$DNNU@ (0000)
+002A7038 0027:
+	??_C@_0CH@BJIGNIOE@self?9?$DOcurrent_write_buffer_index@ (0000)
+002A7060 0020:
+	??_C@_0CA@IJMJJMKI@self?9?$DOwrite_requests_pending?$DO?$DN0?$AA@ (0000)
+002A7080 0037:
+	??_C@_0DH@MLFGOAED@decompression?5fucked?5up?5with?5err@ (0000)
+002A70B8 0016:
+	??_C@_0BG@HEJBEIKN@self?9?$DOcurrent_request?$AA@ (0000)
+002A70D0 0027:
+	??_C@_0CH@HCGDPEBO@zlib_stream?9?$DOavail_in?$DN?$DNFILE_BLOC@ (0000)
+002A70F8 0023:
+	??_C@_0CD@IMPCPEEA@?$CBself?9?$DOcurrent_read_sequence_cou@ (0000)
+002A711C 0017:
+	??_C@_0BH@DHIODLEF@?$CBself?9?$DOcurrent_request?$AA@ (0000)
+002A7138 0075:
+	??_C@_0HF@HFIKFPMB@any_bit_vector_flag_set?$CIself?9?$DOov@ (0000)
+002A71B0 001d:
+	??_C@_0BN@OOGFMPNB@timeout?5for?5asynchronous?5i?1o?$AA@ (0000)
+002A71D0 0013:
+	??_C@_0BD@OOCFHNP@cache?5decompressed?$AA@ (0000)
+002A71E4 0013:
+	??_C@_0BD@KBCBBGOA@freq?4u?4HighPart?$DN?$DN0?$AA@ (0000)
+00316838 0008:
+	_data_00316838 (0000)
+004CD330 0cc1:
+	_bss_004cd330 (0000)
+	_decompressor_print_timing (0cc0)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

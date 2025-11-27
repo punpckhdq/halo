@@ -1,0 +1,459 @@
+/*
+AI_SCRIPT.C
+
+symbols in this file:
+00042690 0090:
+	_encounter_get_platoon (0000)
+00042720 0010:
+	_ai_script_initialize (0000)
+00042730 0010:
+	_ai_script_dispose (0000)
+00042740 0010:
+	_ai_script_initialize_for_new_map (0000)
+00042750 0010:
+	_ai_script_dispose_from_old_map (0000)
+00042760 0130:
+	_ai_index_from_string (0000)
+00042890 00f0:
+	_ai_index_to_string (0000)
+00042980 0120:
+	_ai_index_platoon_iterator_new (0000)
+00042AA0 0070:
+	_ai_index_platoon_iterator_next (0000)
+00042B10 0100:
+	_ai_index_squad_iterator_new (0000)
+00042C10 00e0:
+	_ai_index_squad_iterator_next (0000)
+00042CF0 00d0:
+	_ai_index_actor_iterator_new (0000)
+00042DC0 0070:
+	_ai_index_actor_iterator_next (0000)
+00042E30 00a0:
+	_object_list_from_ai_reference (0000)
+00042ED0 0220:
+	_ai_scripting_attach_unit (0000)
+000430F0 0040:
+	_ai_scripting_attach_units (0000)
+00043130 0060:
+	_ai_scripting_detach_unit (0000)
+00043190 0090:
+	_ai_scripting_detach_units (0000)
+00043220 0090:
+	_ai_scripting_place (0000)
+000432B0 0060:
+	_code_000432b0 (0000)
+00043310 0060:
+	_ai_scripting_kill (0000)
+00043370 0060:
+	_ai_scripting_kill_silent (0000)
+000433D0 0090:
+	_ai_scripting_erase (0000)
+00043460 0030:
+	_ai_scripting_erase_all (0000)
+00043490 0020:
+	_ai_scripting_deselect (0000)
+000434B0 0040:
+	_ai_scripting_select (0000)
+000434F0 0110:
+	_ai_scripting_spawn_actor (0000)
+00043600 0080:
+	_ai_scripting_set_respawn (0000)
+00043680 0080:
+	_ai_scripting_set_deaf (0000)
+00043700 0080:
+	_ai_scripting_set_blind (0000)
+00043780 00d0:
+	_ai_scripting_magically_see_unit (0000)
+00043850 0040:
+	_ai_scripting_magically_see_units (0000)
+00043890 0090:
+	_ai_scripting_timer_start (0000)
+00043920 00a0:
+	_ai_scripting_timer_expire (0000)
+000439C0 02d0:
+	_code_000439c0 (0000)
+00043C90 0020:
+	_ai_scripting_swarm_count (0000)
+00043CB0 0020:
+	_ai_scripting_nonswarm_count (0000)
+00043CD0 0020:
+	_ai_scripting_living_count (0000)
+00043CF0 0040:
+	_ai_scripting_living_fraction (0000)
+00043D30 0030:
+	_ai_scripting_strength (0000)
+00043D60 0060:
+	_ai_scripting_is_attacking (0000)
+00043DC0 0090:
+	_ai_scripting_attack (0000)
+00043E50 0090:
+	_ai_scripting_defend (0000)
+00043EE0 0090:
+	_ai_scripting_maneuver (0000)
+00043F70 00a0:
+	_ai_scripting_maneuver_enable (0000)
+00044010 0430:
+	_code_00044010 (0000)
+00044440 0550:
+	_code_00044440 (0000)
+00044990 00a0:
+	_ai_scripting_migrate (0000)
+00044A30 00f0:
+	_code_00044a30 (0000)
+00044B20 0110:
+	_ai_scripting_migrate_by_unit (0000)
+00044C30 00e0:
+	_ai_scripting_migrate_and_speak (0000)
+00044D10 00f0:
+	_ai_scripting_allegiance (0000)
+00044E00 0050:
+	_ai_scripting_allegiance_remove (0000)
+00044E50 0050:
+	_ai_scripting_allegiance_broken (0000)
+00044EA0 0050:
+	_code_00044ea0 (0000)
+00044EF0 0060:
+	_ai_scripting_going_to_vehicle (0000)
+00044F50 00a0:
+	_ai_scripting_exit_vehicle (0000)
+00044FF0 00a0:
+	_ai_scripting_braindead (0000)
+00045090 0100:
+	_ai_scripting_braindead_by_unit (0000)
+00045190 00a0:
+	_ai_scripting_ignore (0000)
+00045230 00a0:
+	_ai_scripting_prefer_target (0000)
+000452D0 0120:
+	_code_000452d0 (0000)
+000453F0 0060:
+	_ai_scripting_teleport_starting_location_if_unsupported (0000)
+00045450 0060:
+	_ai_scripting_teleport_starting_location (0000)
+000454B0 0090:
+	_ai_scripting_try_to_fight_nothing (0000)
+00045540 00d0:
+	_ai_scripting_try_to_fight (0000)
+00045610 0090:
+	_ai_scripting_try_to_fight_player (0000)
+000456A0 00a0:
+	_ai_scripting_allow_charge (0000)
+00045740 00c0:
+	_ai_scripting_command_list (0000)
+00045800 00a0:
+	_ai_scripting_command_list_by_unit (0000)
+000458A0 0090:
+	_ai_scripting_command_list_advance (0000)
+00045930 0070:
+	_ai_scripting_command_list_advance_by_unit (0000)
+000459A0 0050:
+	_code_000459a0 (0000)
+000459F0 0250:
+	_ai_scripting_command_list_status (0000)
+00045C40 00d0:
+	_ai_scripting_free (0000)
+00045D10 00d0:
+	_ai_scripting_free_units (0000)
+00045DE0 00e0:
+	_ai_scripting_attach_free (0000)
+00045EC0 00b0:
+	_ai_scripting_force_active (0000)
+00045F70 00d0:
+	_ai_scripting_force_active_by_unit (0000)
+00046040 00d0:
+	_ai_scripting_set_return_state (0000)
+00046110 00a0:
+	_ai_scripting_set_current_state (0000)
+000461B0 0080:
+	_code_000461b0 (0000)
+00046230 00a0:
+	_ai_scripting_status (0000)
+000462D0 0010:
+	_ai_scripting_reconnect (0000)
+000462E0 0090:
+	_ai_scripting_playfight (0000)
+00046370 01f0:
+	_ai_scripting_vehicle_encounter (0000)
+00046560 00a0:
+	_ai_scripting_find_vehicle_enterable (0000)
+00046600 0040:
+	_ai_scripting_vehicle_enterable_distance (0000)
+00046640 0050:
+	_ai_scripting_vehicle_enterable_team (0000)
+00046690 0050:
+	_ai_scripting_vehicle_enterable_actor_type (0000)
+000466E0 00a0:
+	_ai_scripting_vehicle_enterable_actors (0000)
+00046780 00a0:
+	_ai_scripting_vehicle_enterable_disable (0000)
+00046820 0070:
+	_ai_scripting_look_at_object (0000)
+00046890 0050:
+	_ai_scripting_stop_looking (0000)
+000468E0 00a0:
+	_ai_scripting_automatic_migration_target (0000)
+00046980 0080:
+	_ai_scripting_follow_target_disable (0000)
+00046A00 0080:
+	_ai_scripting_follow_target_players (0000)
+00046A80 0090:
+	_ai_scripting_follow_target_unit (0000)
+00046B10 00b0:
+	_ai_scripting_follow_target_ai (0000)
+00046BC0 0080:
+	_ai_scripting_follow_distance (0000)
+00046C40 0070:
+	_ai_scripting_conversation (0000)
+00046CB0 0060:
+	_ai_scripting_conversation_stop (0000)
+00046D10 0060:
+	_ai_scripting_conversation_advance (0000)
+00046D70 0010:
+	_ai_scripting_conversation_line (0000)
+00046D80 0010:
+	_ai_scripting_conversation_status (0000)
+00046D90 00b0:
+	_ai_scripting_link_activation (0000)
+00046E40 0090:
+	_ai_scripting_berserk (0000)
+00046ED0 0070:
+	_ai_scripting_set_team (0000)
+00046F40 00a0:
+	_ai_scripting_allow_dormant (0000)
+00046FE0 00d0:
+	_ai_scripting_magically_see_encounter (0000)
+000470B0 00a0:
+	_ai_scripting_magically_see_players (0000)
+00047150 0010:
+	_ai_scripting_retreat (0000)
+00047160 0150:
+	_code_00047160 (0000)
+000472B0 0080:
+	_ai_scripting_go_to_vehicle (0000)
+00047330 0080:
+	_ai_scripting_go_to_vehicle_override (0000)
+000473B0 0170:
+	_ai_scripting_renew (0000)
+0024BE60 0001:
+	_ai_script_squad_separator (0000)
+0024BE68 004d:
+	??_C@_0EN@GCPCCILO@platoon_absolute_index?$DO?$DN0?5?$CG?$CG?5pla@ (0000)
+0024BEB8 006b:
+	??_C@_0GL@DJKDNA@platoon_index?$DO?$DN0?5?$CG?$CG?5platoon_inde@ (0000)
+0024BF24 0020:
+	??_C@_0CA@NFDLKDJF@ai_string?5?$CG?$CG?5ai_index_reference?$AA@ (0000)
+0024BF44 001e:
+	??_C@_0BO@MOPGHLE@c?3?2halo?2SOURCE?2ai?2ai_script?4c?$AA@ (0000)
+0024BF64 0009:
+	??_C@_08EAMFHCBD@iterator?$AA@ (0000)
+0024BF70 0042:
+	??_C@_0EC@OOBEBCBB@ai_attach?3?5could?5not?5find?5a?5squa@ (0000)
+0024BFB8 0058:
+	??_C@_0FI@EBLCLMKD@ai_attach?3?5no?5actor?5variant?5spec@ (0000)
+0024C010 001d:
+	??_C@_0BN@JAFMEMLM@?$CFs?3?5ai_attach_unit?50x?$CF04X?5?$CFs?$AA@ (0000)
+0024C030 001a:
+	??_C@_0BK@DKGEFPIC@?$CFs?3?5ai_detach_unit?50x?$CF04X?$AA@ (0000)
+0024C04C 0010:
+	??_C@_0BA@GMNPJHGI@?$CFs?3?5ai_place?5?$CFs?$AA@ (0000)
+0024C05C 000f:
+	??_C@_0P@BLMJLDDB@?$CFs?3?5ai_kill?5?$CFs?$AA@ (0000)
+0024C06C 0016:
+	??_C@_0BG@OLKJPCEP@?$CFs?3?5ai_kill_silent?5?$CFs?$AA@ (0000)
+0024C084 0010:
+	??_C@_0BA@OAGPLBNE@?$CFs?3?5ai_erase?5?$CFs?$AA@ (0000)
+0024C094 0011:
+	??_C@_0BB@DAJIABOO@?$CFs?3?5ai_erase_all?$AA@ (0000)
+0024C0A8 0016:
+	??_C@_0BG@MJMIDNGO@?$CFs?3?5ai_spawn_actor?5?$CFs?$AA@ (0000)
+0024C0C0 0019:
+	??_C@_0BJ@EEKIPIPP@?$CFs?3?5ai_set_respawn?5?$CFs?5?$CFs?$AA@ (0000)
+0024C0DC 0004:
+	??_C@_03MCADLMAF@off?$AA@ (0000)
+0024C0E0 0003:
+	??_C@_02LIELOMNJ@on?$AA@ (0000)
+0024C0E4 0016:
+	??_C@_0BG@NGLFOKP@?$CFs?3?5ai_set_deaf?5?$CFs?5?$CFs?$AA@ (0000)
+0024C0FC 0017:
+	??_C@_0BH@HLGNJJOK@?$CFs?3?5ai_set_blind?5?$CFs?5?$CFs?$AA@ (0000)
+0024C114 0024:
+	??_C@_0CE@JALKNAAG@?$CFs?3?5ai_magically_see_unit?5?$CFs?50x?$CF@ (0000)
+0024C138 0016:
+	??_C@_0BG@LFPOGIIF@?$CFs?3?5ai_timer_start?5?$CFs?$AA@ (0000)
+0024C150 0017:
+	??_C@_0BH@JJJMMONM@?$CFs?3?5ai_timer_expire?5?$CFs?$AA@ (0000)
+0024C168 003d:
+	??_C@_0DN@EGOGAENI@?$CIcount_type?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIcount_type@ (0000)
+0024C1A8 0011:
+	??_C@_0BB@JNDCBAGE@?$CFs?3?5ai_attack?5?$CFs?$AA@ (0000)
+0024C1BC 0011:
+	??_C@_0BB@DELPBLFI@?$CFs?3?5ai_defend?5?$CFs?$AA@ (0000)
+0024C1D0 0013:
+	??_C@_0BD@CBLKAFAE@?$CFs?3?5ai_maneuver?5?$CFs?$AA@ (0000)
+0024C1E4 001d:
+	??_C@_0BN@CEFNBAKE@?$CFs?3?5ai_maneuver_enable?5?$CFs?5?$CFs?$AA@ (0000)
+0024C204 0038:
+	??_C@_0DI@LFBKAFPO@?5?5?$CFs?5?9?$DO?5?$CFs?5?$CIno?5matching?5squads?5f@ (0000)
+0024C23C 0025:
+	??_C@_0CF@LALAHEHA@?5?5?$CFs?5?9?$DO?5?$CFs?5?$CIno?5matching?5types?5fo@ (0000)
+0024C264 001a:
+	??_C@_0BK@CDOPAPNJ@?5?5?$CFs?5?9?$DO?5?$CFs?5?$CIsame?9type?5?$CFs?$CJ?$AA@ (0000)
+0024C280 001b:
+	??_C@_0BL@GFNCBEPH@?5?5?$CFs?5?9?$DO?5?$CFs?5?$CIsame?9actor?5?$CFs?$CJ?$AA@ (0000)
+0024C2A0 005c:
+	??_C@_0FM@JEMPJMEH@?$CIfound_squad_index?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIfou@ (0000)
+0024C2FC 001d:
+	??_C@_0BN@BJIJNCFF@?5?5?$CFs?5?9?$DO?5?$CFs?5?$CIsame?9variant?5?$CFs?$CJ?$AA@ (0000)
+0024C31C 000f:
+	??_C@_0P@HILOFCFK@?5?5?$CFs?5unchanged?$AA@ (0000)
+0024C330 008c:
+	??_C@_0IM@CIJDMBDM@?$CItarget_squad_indices?$FLcurrent_sq@ (0000)
+0024C3C0 0053:
+	??_C@_0FD@PAODIOCF@?$CIcurrent_squad_index?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIc@ (0000)
+0024C414 0009:
+	??_C@_08DLMOHGLB@squad?5?$CFs?$AA@ (0000)
+0024C420 0063:
+	??_C@_0GD@DHCPGCGK@?$CIsource_iterator?4squad_index?5?$DO?$DN?5@ (0000)
+0024C484 0015:
+	??_C@_0BF@OECKHMKF@?$CFs?3?5ai_migrate?5?$CFs?5?$CFs?$AA@ (0000)
+0024C49C 0005:
+	??_C@_04NPEDKLDA@unit?$AA@ (0000)
+0024C4A4 0026:
+	??_C@_0CG@IJGCILMG@?$CFs?3?5ai_migrate_by_unit?5?$DMsome?5guy@ (0000)
+0024C4D0 0050:
+	??_C@_0FA@GAKJCPBM@ai_migrate_and_speak?3?5unknown?5sp@ (0000)
+0024C520 0022:
+	??_C@_0CC@JKLCPGKI@?$CFs?3?5ai_migrate_and_speak?5?$CFs?5?$CFs?5?$CF@ (0000)
+0024C544 0018:
+	??_C@_0BI@ONAJBOCN@?$CFs?3?5ai_allegiance?5?$CFd?5?$CFd?$AA@ (0000)
+0024C55C 001f:
+	??_C@_0BP@ICGEEHN@?$CFs?3?5ai_allegiance_remove?5?$CFd?5?$CFd?$AA@ (0000)
+0024C57C 0017:
+	??_C@_0BH@HFKAOKKA@?$CFs?3?5ai_exit_vehicle?5?$CFs?$AA@ (0000)
+0024C594 0017:
+	??_C@_0BH@NDIAEFNI@?$CFs?3?5ai_braindead?5?$CFs?5?$CFs?$AA@ (0000)
+0024C5AC 0028:
+	??_C@_0CI@LMFNPANN@?$CFs?3?5ai_braindead_by_unit?5?$DMsome?5g@ (0000)
+0024C5D4 0020:
+	??_C@_0CA@GOECGNLE@?$CFs?3?5ai_disregard?5?$DMsome?5guys?$DO?5?$CFs?$AA@ (0000)
+0024C5F4 0024:
+	??_C@_0CE@HDJGLAIB@?$CFs?3?5ai_prefer_target?5?$DMsome?5guys?$DO@ (0000)
+0024C618 0034:
+	??_C@_0DE@FNEPLHAJ@?$CFs?3?5ai_teleport_starting_locatio@ (0000)
+0024C64C 0025:
+	??_C@_0CF@JAILDLKJ@?$CFs?3?5ai_teleport_starting_locatio@ (0000)
+0024C674 001f:
+	??_C@_0BP@MEILCKDB@?$CFs?3?5ai_try_to_fight_nothing?5?$CFs?$AA@ (0000)
+0024C694 001a:
+	??_C@_0BK@BDNNJAGD@?$CFs?3?5ai_try_to_fight?5?$CFs?5?$CFs?$AA@ (0000)
+0024C6B0 001e:
+	??_C@_0BO@OIEPGOJB@?$CFs?3?5ai_try_to_fight_player?5?$CFs?$AA@ (0000)
+0024C6D0 001a:
+	??_C@_0BK@MBMJKENK@?$CFs?3?5ai_allow_charge?5?$CFs?5?$CFs?$AA@ (0000)
+0024C6EC 0006:
+	??_C@_05LAPONLG@false?$AA@ (0000)
+0024C6F4 0005:
+	??_C@_04LOAJBDKD@true?$AA@ (0000)
+0024C6FC 001a:
+	??_C@_0BK@ECBKDHID@?$CFs?3?5ai_command_list?5?$CFs?5?$CFd?$AA@ (0000)
+0024C718 0026:
+	??_C@_0CG@KDJJNHNP@?$CFs?3?5ai_command_list_by_unit?5?$DMuni@ (0000)
+0024C740 001f:
+	??_C@_0BP@PAICMAGO@?$CFs?3?5ai_command_list_advance?5?$CFs?$AA@ (0000)
+0024C760 0030:
+	??_C@_0DA@BIDMGCPJ@?$CFs?3?5ai_command_list_advance_by_u@ (0000)
+0024C790 000f:
+	??_C@_0P@MPAKFNGN@?$CFs?3?5ai_free?5?$CFs?$AA@ (0000)
+0024C7A0 001f:
+	??_C@_0BP@HEGBFLAM@?$CFs?3?5ai_free_units?5?$DMsome?5units?$DO?$AA@ (0000)
+0024C7C0 0036:
+	??_C@_0DG@OFCIAFCL@?$CFs?3?5ai_attach_free?5?$CFs?5cannot?5be?5@ (0000)
+0024C7F8 001d:
+	??_C@_0BN@IEADAMKD@?$CFs?3?5ai_attach_free?50x?$CF04X?5?$CFs?$AA@ (0000)
+0024C818 001a:
+	??_C@_0BK@NGFIDLOP@?$CFs?3?5ai_force_active?5?$CFs?5?$CFs?$AA@ (0000)
+0024C838 0063:
+	??_C@_0GD@LKDLLFKG@ai_force_active_by_unit?3?5unit?5is@ (0000)
+0024C89C 002b:
+	??_C@_0CL@INBDPDM@?$CFs?3?5ai_force_active_by_unit?5?$DMsom@ (0000)
+0024C8C8 001e:
+	??_C@_0BO@GELBKNIM@?$CFs?3?5ai_set_return_state?5?$CFs?5?$CFd?$AA@ (0000)
+0024C8E8 001f:
+	??_C@_0BP@OMBCPLPA@?$CFs?3?5ai_set_current_state?5?$CFs?5?$CFd?$AA@ (0000)
+0024C908 0011:
+	??_C@_0BB@DKMLPAFC@?$CFs?3?5ai_status?5?$CFs?$AA@ (0000)
+0024C91C 0017:
+	??_C@_0BH@LGGEBDHB@?$CFs?3?5ai_playfight?5?$CFs?5?$CFs?$AA@ (0000)
+0024C934 0028:
+	??_C@_0CI@NHKIHJII@?$CFs?3?5ai_vehicle_encounter?5?$DMsome?5u@ (0000)
+0024C95C 003e:
+	??_C@_0DO@IHGIOMGJ@ai_vehicle_enterable?3?5too?5many?5e@ (0000)
+0024C99C 0031:
+	??_C@_0DB@BDJKMKHA@?$CFs?3?5ai_vehicle_enterable_distanc@ (0000)
+0024C9D0 0030:
+	??_C@_0DA@FDMBDBPG@?$CFs?3?5ai_vehicle_enterable_team?5?$DMs@ (0000)
+0024CA00 0036:
+	??_C@_0DG@LLMHMJE@?$CFs?3?5ai_vehicle_enterable_actor_t@ (0000)
+0024CA38 0043:
+	??_C@_0ED@KEKJMIKK@ai_vehicle_enterable_actors?3?5too@ (0000)
+0024CA7C 0032:
+	??_C@_0DC@OHFPMGGD@?$CFs?3?5ai_vehicle_enterable_actors?5@ (0000)
+0024CAB0 0030:
+	??_C@_0DA@KCDIODEC@?$CFs?3?5ai_vehicle_enterable_disable@ (0000)
+0024CAE0 0030:
+	??_C@_0DA@MEBODMJO@?$CFs?3?5ai_look_at_object?5?$DMsome?5unit@ (0000)
+0024CB10 0020:
+	??_C@_0CA@PDOKPGNA@?$CFs?3?5ai_stop_looking?5?$DMsome?5unit?$DO?$AA@ (0000)
+0024CB30 0028:
+	??_C@_0CI@LKLFKNDG@?$CFs?3?5ai_automatic_migration_targe@ (0000)
+0024CB58 0020:
+	??_C@_0CA@HJOJOKEG@?$CFs?3?5ai_follow_target_disable?5?$CFs?$AA@ (0000)
+0024CB78 0020:
+	??_C@_0CA@LPFMOJGF@?$CFs?3?5ai_follow_target_players?5?$CFs?$AA@ (0000)
+0024CB98 0029:
+	??_C@_0CJ@PMNFIMPA@?$CFs?3?5ai_follow_target_unit?5?$CFs?5?$DMso@ (0000)
+0024CBC4 001e:
+	??_C@_0BO@NGDADOD@?$CFs?3?5ai_follow_target_ai?5?$CFs?5?$CFs?$AA@ (0000)
+0024CBE4 001f:
+	??_C@_0BP@FMPPICBE@?$CFs?3?5ai_follow_distance?5?$CFs?5?$CF?41f?$AA@ (0000)
+0024CC04 0017:
+	??_C@_0BH@IGJNNOIC@?$CFs?3?5ai_conversation?5?$CFs?$AA@ (0000)
+0024CC1C 001c:
+	??_C@_0BM@HGJNKNLN@?$CFs?3?5ai_conversation_stop?5?$CFs?$AA@ (0000)
+0024CC38 001f:
+	??_C@_0BP@IBOEPNGC@?$CFs?3?5ai_conversation_advance?5?$CFs?$AA@ (0000)
+0024CC58 006a:
+	??_C@_0GK@GMJOKPPN@ai_link_activation?3?5cannot?5link?5@ (0000)
+0024CCC4 001d:
+	??_C@_0BN@OAHKKHJB@?$CFs?3?5ai_link_activation?5?$CFs?5?$CFs?$AA@ (0000)
+0024CCE4 0012:
+	??_C@_0BC@GFJPNDGO@?$CFs?3?5ai_berserk?5?$CFs?$AA@ (0000)
+0024CCF8 001b:
+	??_C@_0BL@MKHHLLAC@?$CFs?3?5ai_allow_dormant?5?$CFs?5?$CFs?$AA@ (0000)
+0024CD14 0025:
+	??_C@_0CF@EKNEFNDI@?$CFs?3?5ai_magically_see_encounter?5?$CF@ (0000)
+0024CD3C 0020:
+	??_C@_0CA@ENGIEHJO@?$CFs?3?5ai_magically_see_players?5?$CFs?$AA@ (0000)
+0024CD5C 0022:
+	??_C@_0CC@LGDPOIEJ@?$CFs?3?5ai_go_to_vehicle?5?$CFs?50x?$CF04X?5?$CF@ (0000)
+0024CD80 002b:
+	??_C@_0CL@HNAPEBL@?$CFs?3?5ai_go_to_vehicle_override?5?$CFs@ (0000)
+0024CDAC 0010:
+	??_C@_0BA@GHFHPDND@?$CFs?3?5ai_renew?5?$CFs?$AA@ (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

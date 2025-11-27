@@ -1,0 +1,248 @@
+/*
+BIPEDS.C
+
+symbols in this file:
+0018FFD0 0010:
+	_animation_left_foot_frame_index (0000)
+0018FFE0 0010:
+	_animation_right_foot_frame_index (0000)
+0018FFF0 0010:
+	_bipeds_initialize (0000)
+00190000 0010:
+	_bipeds_initialize_for_new_map (0000)
+00190010 0010:
+	_bipeds_dispose_from_old_map (0000)
+00190020 0010:
+	_bipeds_dispose (0000)
+00190030 0030:
+	_biped_place (0000)
+00190060 0010:
+	_biped_delete (0000)
+00190070 0060:
+	_biped_reset (0000)
+001900D0 0030:
+	_biped_disconnect_from_structure_bsp (0000)
+00190100 00c0:
+	_biped_get_physics_pill (0000)
+001901C0 0020:
+	_biped_stop_melee_attack (0000)
+001901E0 0080:
+	_biped_start_limp_body_physics (0000)
+00190260 0050:
+	_biped_stop_limp_body_physics (0000)
+001902B0 00f0:
+	_code_001902b0 (0000)
+001903A0 00b0:
+	_code_001903a0 (0000)
+00190450 01d0:
+	_code_00190450 (0000)
+00190620 0050:
+	_biped_flying_through_air (0000)
+00190670 0110:
+	_code_00190670 (0000)
+00190780 0110:
+	_code_00190780 (0000)
+00190890 0060:
+	_biped_adjust_placement (0000)
+001908F0 00c0:
+	_biped_export_function_values (0000)
+001909B0 01a0:
+	_biped_get_sight_position (0000)
+00190B50 0150:
+	_biped_get_autoaim_pill (0000)
+00190CA0 04d0:
+	_biped_fix_position (0000)
+00191170 0110:
+	_biped_render_debug (0000)
+00191280 0180:
+	_code_00191280 (0000)
+00191400 0030:
+	_biped_approximate_surface_index (0000)
+00191430 01c0:
+	_biped_find_pathfinding_surface_index (0000)
+001915F0 00f0:
+	_biped_exit_seat_end (0000)
+001916E0 0140:
+	_code_001916e0 (0000)
+00191820 01b0:
+	_code_00191820 (0000)
+001919D0 0130:
+	_code_001919d0 (0000)
+00191B00 01b0:
+	_code_00191b00 (0000)
+00191CB0 01a0:
+	_code_00191cb0 (0000)
+00191E50 0220:
+	_code_00191e50 (0000)
+00192070 0100:
+	_code_00192070 (0000)
+00192170 0160:
+	_code_00192170 (0000)
+001922D0 00b0:
+	_code_001922d0 (0000)
+00192380 0080:
+	_code_00192380 (0000)
+00192400 0200:
+	_code_00192400 (0000)
+00192600 01b0:
+	_biped_build_flying_axes (0000)
+001927B0 1500:
+	_code_001927b0 (0000)
+00193CB0 0550:
+	_code_00193cb0 (0000)
+00194200 00c0:
+	_biped_new (0000)
+001942C0 0020:
+	_biped_preprocess_node_orientations (0000)
+001942E0 01e0:
+	_biped_accelerate (0000)
+001944C0 06b0:
+	_code_001944c0 (0000)
+00194B70 0ff0:
+	_code_00194b70 (0000)
+00195B60 00d0:
+	_code_00195b60 (0000)
+00195C30 0460:
+	_biped_update (0000)
+002A30B0 0144:
+	_rdata_002a30b0 (0000)
+002A31F4 000d:
+	??_C@_0N@HOJCMADM@biped_update?$AA@ (0000)
+002A3208 0043:
+	??_C@_0ED@IAGIKAMA@WARNING?3?5biped?5?$CFs?5?$CI?$CFs?$CJ?5is?5in?5a?5b@ (0000)
+002A324C 0004:
+	__real@c4fa0000 (0000)
+002A3250 0039:
+	??_C@_0DJ@HLOPCOPC@WARNING?3?5biped?5?$CFs?5?$CI?$CFs?$CJ?5fell?5outs@ (0000)
+002A328C 001e:
+	??_C@_0BO@EMCOEGJH@c?3?2halo?2SOURCE?2units?2bipeds?4c?$AA@ (0000)
+002A32AC 0025:
+	??_C@_0CF@NNLMJPLM@desired_facing?5?$CG?$CG?5desired_gun_of@ (0000)
+002A32D8 004b:
+	??_C@_0EL@JGLDGCHJ@?$CIestimate_mode?5?$CB?$DN?5_unit_estimate@ (0000)
+002A3328 004c:
+	??_C@_0EM@DCHFFGOM@?$CIestimate_mode?5?$DN?$DN?5_unit_estimate@ (0000)
+002A3374 0023:
+	??_C@_0CD@INFHIELC@fixed_location?4cluster_index?$CB?$DNNO@ (0000)
+002A3398 0021:
+	??_C@_0CB@NBHLJDN@final_position?5?$HM?$HM?5?$CBdont_teleport@ (0000)
+002A33BC 0012:
+	??_C@_0BC@BGKMEKLE@pathfinding_point?$AA@ (0000)
+002A33D0 003f:
+	??_C@_0DP@JMJFKKMO@couldn?8t?5teleport?5the?5biped?5out?5@ (0000)
+002A3410 0004:
+	__real@44e10000 (0000)
+002A3414 0004:
+	__real@42700000 (0000)
+002A3418 0042:
+	??_C@_0EC@JBODJGAG@biped?5?$CFs?5?$CI?$CFs?$CFs?$CFs?$CJ?3?5?$CFs?5vector?5fai@ (0000)
+002A345C 0006:
+	??_C@_05MNHFFADL@climb?$AA@ (0000)
+002A3464 000f:
+	??_C@_0P@MMKEDIOE@player?9physics?$AA@ (0000)
+002A3474 0006:
+	??_C@_05JAAJDALH@?1dead?$AA@ (0000)
+002A347C 0009:
+	??_C@_08LOLHEFGJ@?1limping?$AA@ (0000)
+002A3488 000e:
+	??_C@_0O@HAMEHAGE@post?9airborne?$AA@ (0000)
+002A3498 0033:
+	??_C@_0DD@FLLKBPKC@TEST_FLAG?$CIbiped?9?$DObiped?4flags?0?5_b@ (0000)
+002A34CC 000d:
+	??_C@_0N@CBHHKMKF@post?9landing?$AA@ (0000)
+002A34DC 000e:
+	??_C@_0O@MGELMNBM@post?9slipping?$AA@ (0000)
+002A34EC 0004:
+	__real@3f36db6e (0000)
+002A34F0 0053:
+	??_C@_0FD@MEMEKANL@?$CFs?0?5?$CFs?0?5?$CFs?3?5assert_valid_real_ve@ (0000)
+002A3544 000f:
+	??_C@_0P@EFHIAMDK@forward_vector?$AA@ (0000)
+002A3554 000c:
+	??_C@_0M@MGINPDCA@left_vector?$AA@ (0000)
+002A3560 000a:
+	??_C@_09MDHMCNCN@up_vector?$AA@ (0000)
+002A356C 002b:
+	??_C@_0CL@JEOBBAMK@forward_vector?5?$CG?$CG?5left_vector?5?$CG?$CG@ (0000)
+002A3598 0017:
+	??_C@_0BH@LOKJEHJA@?$CGphysics?9?$DOnew_velocity?$AA@ (0000)
+002A35B0 0017:
+	??_C@_0BH@NMIMKOHN@?$CGphysics?9?$DOnew_position?$AA@ (0000)
+002A35C8 0004:
+	__real@322bcc76 (0000)
+002A35CC 0004:
+	__real@3d5a740e (0000)
+002A35D0 0013:
+	??_C@_0BD@LFOFBHEC@?$CGphysics?9?$DOvelocity?$AA@ (0000)
+002A35E4 0013:
+	??_C@_0BD@NHMAPOKP@?$CGphysics?9?$DOposition?$AA@ (0000)
+002A35F8 0017:
+	??_C@_0BH@OMEJIIDE@post?9normal?9snapfacing?$AA@ (0000)
+002A3610 001a:
+	??_C@_0BK@LJFJPFOM@post?9deadplane?9snapfacing?$AA@ (0000)
+002A362C 0019:
+	??_C@_0BJ@LPEPIIHF@pre?9deadplane?9snapfacing?$AA@ (0000)
+002A3648 0016:
+	??_C@_0BG@BILNKKA@post?9climb?9snapfacing?$AA@ (0000)
+002A3660 0015:
+	??_C@_0BF@BJAPGJCB@post?9bank?9snapfacing?$AA@ (0000)
+002A3678 0017:
+	??_C@_0BH@HMDDCPPK@?$CGbiped?9?$DOobject?4forward?$AA@ (0000)
+002A3690 0011:
+	??_C@_0BB@HNGPOHPO@preprocess?9nodes?$AA@ (0000)
+002A36A4 000b:
+	??_C@_0L@LGBFNPNE@post?9accel?$AA@ (0000)
+002A36B0 000a:
+	??_C@_09LBPFKLCO@pre?9accel?$AA@ (0000)
+002A36BC 0011:
+	??_C@_0BB@EHADHKAI@post?9moving?9turn?$AA@ (0000)
+002A36D0 0013:
+	??_C@_0BD@LNBPGJPJ@post?9standing?9turn?$AA@ (0000)
+002A36E4 000e:
+	??_C@_0O@NMGDOCHP@post?9fly?9turn?$AA@ (0000)
+002A36F4 0004:
+	__real@35b5b61c (0000)
+002A36F8 0004:
+	__real@3bef2eb7 (0000)
+002A36FC 000b:
+	??_C@_0L@EMJEBHAK@post?9dying?$AA@ (0000)
+002A3708 0014:
+	??_C@_0BE@OBCJD@post?9dying?9airborne?$AA@ (0000)
+002A371C 0011:
+	??_C@_0BB@JBPNJIHD@post?9limp?9noodle?$AA@ (0000)
+002A3730 000c:
+	??_C@_0M@KACGONJH@post?9update?$AA@ (0000)
+002A373C 0018:
+	??_C@_0BI@KEKHPNBM@post?9dead?1air?1land?1slip?$AA@ (0000)
+002A3754 000c:
+	??_C@_0M@PKIECHFJ@post?9moving?$AA@ (0000)
+002A3760 000d:
+	??_C@_0N@CDBMOEKH@post?9turning?$AA@ (0000)
+002A3770 000c:
+	??_C@_0M@JKCHFPFF@pre?9turning?$AA@ (0000)
+002A377C 000b:
+	??_C@_0L@PNEJBGOB@pre?9update?$AA@ (0000)
+00314F50 0600:
+	_rider_ejection (0000)
+004CCB10 0004:
+	_debug_biped_physics (0000)
+	_debug_biped_skip_update (0001)
+	_debug_biped_skip_collision (0002)
+	_debug_biped_limp_body_disable (0003)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

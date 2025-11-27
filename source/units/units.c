@@ -1,0 +1,658 @@
+/*
+UNITS.C
+
+symbols in this file:
+001977E0 0040:
+	_units_initialize (0000)
+00197820 0020:
+	_units_initialize_for_new_map (0000)
+00197840 0010:
+	_units_dispose_from_old_map (0000)
+00197850 0010:
+	_units_dispose (0000)
+00197860 0020:
+	_unit_kill (0000)
+00197880 0020:
+	_unit_kill_silent (0000)
+001978A0 0020:
+	_unit_kill_no_statistics (0000)
+001978C0 0010:
+	_unit_delete (0000)
+001978D0 0020:
+	_units_update (0000)
+001978F0 0180:
+	_unit_export_function_values (0000)
+00197A70 0070:
+	_unit_persistent_control (0000)
+00197AE0 01e0:
+	_unit_get_seat_entrance_point (0000)
+00197CC0 00e0:
+	_unit_get_melee_range_and_ticks (0000)
+00197DA0 0090:
+	_unit_get_animation_frames_remaining (0000)
+00197E30 0140:
+	_code_00197e30 (0000)
+00197F70 0020:
+	_unit_get_zoom_level (0000)
+00197F90 0080:
+	_code_00197f90 (0000)
+00198010 0040:
+	_code_00198010 (0000)
+00198050 0020:
+	_code_00198050 (0000)
+00198070 0060:
+	_code_00198070 (0000)
+001980D0 0060:
+	_code_001980d0 (0000)
+00198130 0040:
+	_code_00198130 (0000)
+00198170 0020:
+	_code_00198170 (0000)
+00198190 0060:
+	_code_00198190 (0000)
+001981F0 0040:
+	_code_001981f0 (0000)
+00198230 0040:
+	_code_00198230 (0000)
+00198270 0190:
+	_unit_animation_start_action (0000)
+00198400 01c0:
+	_code_00198400 (0000)
+001985C0 00c0:
+	_unit_can_enter_seat (0000)
+00198680 0070:
+	_unit_impulse (0000)
+001986F0 00d0:
+	_unit_handle_weapon_state_change (0000)
+001987C0 0250:
+	_unit_record_damage (0000)
+00198A10 00b0:
+	_unit_test_spawning (0000)
+00198AC0 0020:
+	_unit_destroy (0000)
+00198AE0 0040:
+	_unit_get_head_position (0000)
+00198B20 01a0:
+	_unit_get_camera_position (0000)
+00198CC0 0140:
+	_unit_estimate_position (0000)
+00198E00 0040:
+	_unit_get_center_of_mass (0000)
+00198E40 0190:
+	_code_00198e40 (0000)
+00198FD0 00d0:
+	_code_00198fd0 (0000)
+001990A0 00c0:
+	_unit_test_animation_impulse (0000)
+00199160 0080:
+	_unit_get_aiming_unit_index (0000)
+001991E0 0030:
+	_unit_get_aiming_vector (0000)
+00199210 0030:
+	_unit_get_looking_vector (0000)
+00199240 0020:
+	_unit_get_facing_vector (0000)
+00199260 00b0:
+	_unit_inventory_next_grenade (0000)
+00199310 0020:
+	_unit_controllable (0000)
+00199330 0040:
+	_unit_set_controllable (0000)
+00199370 0040:
+	_unit_set_possessed (0000)
+001993B0 0060:
+	_unit_is_busy (0000)
+00199410 0050:
+	_unit_scripting_set_emotion_animation (0000)
+00199460 0080:
+	_unit_scripting_suspended (0000)
+001994E0 0040:
+	_unit_scripting_can_blink (0000)
+00199520 0050:
+	_unit_scripting_doesnt_drop_items (0000)
+00199570 0110:
+	_unit_scripting_vehicle_test_seat_list (0000)
+00199680 00a0:
+	_unit_scripting_vehicle_test_seat (0000)
+00199720 0080:
+	_unit_scripting_unit_riders (0000)
+001997A0 0030:
+	_unit_scripting_unit_driver (0000)
+001997D0 0030:
+	_unit_scripting_unit_gunner (0000)
+00199800 0160:
+	_unit_shield_sapping_update (0000)
+00199960 00f0:
+	_units_debug_get_next_unit (0000)
+00199A50 00d0:
+	_units_debug_get_closest_unit (0000)
+00199B20 0120:
+	_unit_debug_ninja_rope (0000)
+00199C40 0060:
+	_unit_set_user_animation (0000)
+00199CA0 0070:
+	_any_unit_is_dangerous (0000)
+00199D10 00a0:
+	_unit_can_see_point (0000)
+00199DB0 0040:
+	_unit_driven_by_ai (0000)
+00199DF0 0040:
+	_unit_gunned_by_ai (0000)
+00199E30 0040:
+	_unit_set_desired_flashlight_state (0000)
+00199E70 0030:
+	_unit_get_current_flashlight_state (0000)
+00199EA0 0140:
+	_unit_detach_from_parent (0000)
+00199FE0 0070:
+	_unit_seat_filled (0000)
+0019A050 0060:
+	_unit_seat_is_driver (0000)
+0019A0B0 0060:
+	_unit_seat_is_gunner (0000)
+0019A110 0060:
+	_unit_seat_allow_noncombatants (0000)
+0019A170 00e0:
+	_code_0019a170 (0000)
+0019A250 0020:
+	_unit_get_current_equipment (0000)
+0019A270 0100:
+	_unit_add_grenade_to_inventory (0000)
+0019A370 0090:
+	_unit_add_grenade_type_to_inventory (0000)
+0019A400 0120:
+	_unit_add_equipment_to_inventory (0000)
+0019A520 0040:
+	_unit_delete_current_equipment (0000)
+0019A560 0080:
+	_unit_delete_all_weapons (0000)
+0019A5E0 0060:
+	_unit_has_weapon_definition_index (0000)
+0019A640 0030:
+	_code_0019a640 (0000)
+0019A670 0070:
+	_unit_get_weapon_count (0000)
+0019A6E0 0070:
+	_unit_approve_weapon_pickup (0000)
+0019A750 0070:
+	_unit_get_grenade_count (0000)
+0019A7C0 0060:
+	_unit_get_current_grenade_type (0000)
+0019A820 01d0:
+	_code_0019a820 (0000)
+0019A9F0 0310:
+	_code_0019a9f0 (0000)
+0019AD00 02d0:
+	_code_0019ad00 (0000)
+0019AFD0 0050:
+	_code_0019afd0 (0000)
+0019B020 0040:
+	_code_0019b020 (0000)
+0019B060 0050:
+	_code_0019b060 (0000)
+0019B0B0 00b0:
+	_code_0019b0b0 (0000)
+0019B160 0050:
+	_code_0019b160 (0000)
+0019B1B0 0080:
+	_code_0019b1b0 (0000)
+0019B230 0050:
+	_code_0019b230 (0000)
+0019B280 0190:
+	_code_0019b280 (0000)
+0019B410 00b0:
+	_code_0019b410 (0000)
+0019B4C0 0100:
+	_code_0019b4c0 (0000)
+0019B5C0 0040:
+	_unit_handle_region_destroyed (0000)
+0019B600 0080:
+	_code_0019b600 (0000)
+0019B680 02a0:
+	_code_0019b680 (0000)
+0019B920 0040:
+	_unit_set_enterable_by_player (0000)
+0019B960 0030:
+	_unit_set_emotion (0000)
+0019B990 0040:
+	_unit_aim_without_turning (0000)
+0019B9D0 0070:
+	_unit_get_custom_animation_time (0000)
+0019BA40 0030:
+	_unit_is_playing_custom_animation (0000)
+0019BA70 0170:
+	_unit_start_user_animation (0000)
+0019BBE0 0060:
+	_unit_set_mouth_aperture (0000)
+0019BC40 0060:
+	_unit_inventory_get_must_be_readied_weapon (0000)
+0019BCA0 0040:
+	_unit_has_weapon (0000)
+0019BCE0 0060:
+	_unit_has_weapon_with_flag (0000)
+0019BD40 00d0:
+	_unit_start_running_blindly (0000)
+0019BE10 0030:
+	_unit_stop_running_blindly (0000)
+0019BE40 0100:
+	_unit_flame_to_death (0000)
+0019BF40 0030:
+	_unit_flying_through_air (0000)
+0019BF70 04f0:
+	_code_0019bf70 (0000)
+0019C460 0200:
+	_code_0019c460 (0000)
+0019C660 0220:
+	_code_0019c660 (0000)
+0019C880 00d0:
+	_unit_adjust_projectile_ray (0000)
+0019C950 0200:
+	_unit_render_debug (0000)
+0019CB50 0580:
+	_code_0019cb50 (0000)
+0019D0D0 0020:
+	_unit_abort_animation (0000)
+0019D0F0 0290:
+	_unit_find_nearby_seat (0000)
+0019D380 0420:
+	_unit_clip_to_aiming_bounds (0000)
+0019D7A0 0060:
+	_unit_inventory_get_weapon (0000)
+0019D800 00b0:
+	_unit_set_actively_controlled (0000)
+0019D8B0 01a0:
+	_vehicle_scripting_find_available_seats (0000)
+0019DA50 0020:
+	_unit_open (0000)
+0019DA70 0020:
+	_unit_close (0000)
+0019DA90 0040:
+	_unit_overcharged (0000)
+0019DAD0 0030:
+	_unit_set_seat (0000)
+0019DB00 0080:
+	_units_set_desired_flashlight_state (0000)
+0019DB80 00a0:
+	_code_0019db80 (0000)
+0019DC20 0040:
+	_unit_drop_current_equipment (0000)
+0019DC60 0050:
+	_unit_can_use_weapon (0000)
+0019DCB0 00d0:
+	_unit_approve_weapon_swap (0000)
+0019DD80 0170:
+	_code_0019dd80 (0000)
+0019DEF0 0100:
+	_unit_drop_current_weapon (0000)
+0019DFF0 0030:
+	_code_0019dff0 (0000)
+0019E020 0020:
+	_scripting_set_magic_base_seat (0000)
+0019E040 0030:
+	_unit_scripting_set_seat (0000)
+0019E070 00c0:
+	_unit_handle_deleted_object (0000)
+0019E130 0250:
+	_unit_cause_melee_damage (0000)
+0019E380 0640:
+	_unit_cause_player_melee_damage (0000)
+0019E9C0 0030:
+	_unit_stop_custom_animation (0000)
+0019E9F0 0080:
+	_unit_custom_animation_at_frame (0000)
+0019EA70 0120:
+	_code_0019ea70 (0000)
+0019EB90 00a0:
+	_unit_start_flaming_to_death (0000)
+0019EC30 02e0:
+	_code_0019ec30 (0000)
+0019EF10 0090:
+	_code_0019ef10 (0000)
+0019EFA0 02e0:
+	_code_0019efa0 (0000)
+0019F280 03a0:
+	_unit_control (0000)
+0019F620 0780:
+	_unit_preprocess_node_orientations (0000)
+0019FDA0 0180:
+	_unit_postprocess_node_matrices (0000)
+0019FF20 06d0:
+	_unit_euler_aiming_update (0000)
+001A05F0 0090:
+	_unit_has_animation_to_enter_seat (0000)
+001A0680 0500:
+	_unit_update_animation (0000)
+001A0B80 00c0:
+	_unit_unzoom (0000)
+001A0C40 0050:
+	_unit_get_zoom_magnification (0000)
+001A0C90 0060:
+	_code_001a0c90 (0000)
+001A0CF0 0620:
+	_code_001a0cf0 (0000)
+001A1310 0120:
+	_unit_start_animation_impulse (0000)
+001A1430 0020:
+	_unit_inventory_next_weapon (0000)
+001A1450 0110:
+	_unit_melee_attack_begin (0000)
+001A1560 0090:
+	_unit_leap_begin (0000)
+001A15F0 00b0:
+	_unit_unsuspecting (0000)
+001A16A0 0130:
+	_unit_add_weapon_to_inventory (0000)
+001A17D0 01b0:
+	_code_001a17d0 (0000)
+001A1980 01d0:
+	_unit_throw_grenade_begin (0000)
+001A1B50 0030:
+	_scripting_magic_melee_attack (0000)
+001A1B80 0240:
+	_unit_impact_melee_damage (0000)
+001A1DC0 0140:
+	_unit_place (0000)
+001A1F00 0050:
+	_unit_solo_player_integrated_night_vision_is_active (0000)
+001A1F50 00e0:
+	_code_001a1f50 (0000)
+001A2030 0040:
+	_code_001a2030 (0000)
+001A2070 0400:
+	_unit_new (0000)
+001A2470 0250:
+	_unit_enter_seat (0000)
+001A26C0 0290:
+	_unit_exit_seat_end (0000)
+001A2950 0270:
+	_unit_died (0000)
+001A2BC0 0130:
+	_unit_scripting_enter_vehicle (0000)
+001A2CF0 0180:
+	_vehicle_scripting_load_magic (0000)
+001A2E70 0110:
+	_unit_try_and_exit_seat (0000)
+001A2F80 1730:
+	_unit_update (0000)
+001A46B0 0640:
+	_unit_damage_aftermath (0000)
+001A4CF0 0100:
+	_vehicle_scripting_unload (0000)
+001A4DF0 0040:
+	_unit_scripting_exit_vehicle (0000)
+002A4DCC 0006:
+	??_C@_05PJLLPND@stand?$AA@ (0000)
+002A4DD4 000c:
+	??_C@_0M@CHPCMCIL@unit_update?$AA@ (0000)
+002A4DE0 000d:
+	??_C@_0N@KFMOFEIC@unit_globals?$AA@ (0000)
+002A4DF0 001d:
+	??_C@_0BN@LFBAPBJD@c?3?2halo?2SOURCE?2units?2units?4c?$AA@ (0000)
+002A4E10 000d:
+	??_C@_0N@IKNEFIIG@unit?5globals?$AA@ (0000)
+002A4E20 0044:
+	??_C@_0EE@MJKOADBA@VALID_FLAGS?$CIpersistent_control_f@ (0000)
+002A4E64 000c:
+	??_C@_0M@GBEBNJOA@?5enter?9hint?$AA@ (0000)
+002A4E70 0010:
+	??_C@_0BA@EKKAICAF@animation_state?$AA@ (0000)
+002A4E80 0014:
+	??_C@_0BE@DJIPKBF@MISSING?3?5?$CFs?5?8?$CFs?5?$CFs?8?$AA@ (0000)
+002A4E94 001e:
+	??_C@_0BO@COLKAFDO@best_new_attacker_index?$CB?$DNNONE?$AA@ (0000)
+002A4EB8 0051:
+	??_C@_0FB@GIBLCPPG@?$CIestimate_mode?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIestimat@ (0000)
+002A4F0C 0024:
+	??_C@_0CE@EFKICMFK@body_position?5?$CG?$CG?5estimated_posit@ (0000)
+002A4F30 0005:
+	??_C@_04IEJGKNJ@body?$AA@ (0000)
+002A4F38 004c:
+	??_C@_0EM@FBFJECKJ@animation_impulse?$DO?$DN0?5?$CG?$CG?5animatio@ (0000)
+002A4F84 003f:
+	??_C@_0DP@JJACFPIN@current_index?$DO?$DN0?5?$CG?$CG?5current_inde@ (0000)
+002A4FC4 0029:
+	??_C@_0CJ@EPNCNOAE@couldn?8t?5find?5the?5emotion?5animat@ (0000)
+002A4FF0 0031:
+	??_C@_0DB@OCHKLFEM@index?$DO?$DN0?5?$CG?$CG?5index?$DMNUMBER_OF_UNIT@ (0000)
+002A5024 0004:
+	__real@3ca3d70b (0000)
+002A5028 0049:
+	??_C@_0EJ@NJDBEHGI@equipment_definition?9?$DOequipment?4@ (0000)
+002A5078 0045:
+	??_C@_0EF@EDBHKOAK@?$CIgrenade_type?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIgrenade_@ (0000)
+002A50C0 0011:
+	??_C@_0BB@JFCLDGNC@grenade_count?$DO?$DN0?$AA@ (0000)
+002A50D8 0049:
+	??_C@_0EJ@KGELGNBO@equipment_definition?9?$DOequipment?4@ (0000)
+002A5128 0046:
+	??_C@_0EG@DMMDGKIO@equipment_definition?9?$DOequipment?4@ (0000)
+002A5170 0055:
+	??_C@_0FF@BHHPBICM@grenade_type?$DN?$DNNONE?5?$HM?$HM?5?$CIgrenade_t@ (0000)
+002A51C8 0091:
+	??_C@_0JB@KAHIGLEC@unit?9?$DOunit?4current_grenade_index@ (0000)
+002A525C 000a:
+	??_C@_09KBFFALMN@left?5hand?$AA@ (0000)
+002A5268 003e:
+	??_C@_0DO@JIFEEFPA@unit?9?$DOunit?4grenade_counts?$FLunit?9?$DO@ (0000)
+002A52A8 0065:
+	??_C@_0GF@CHMEGMC@unit?9?$DOunit?4current_grenade_index@ (0000)
+002A5310 0040:
+	??_C@_0EA@DPJNOHJJ@base_seat_index?$DO?$DN0?5?$CG?$CG?5base_seat_@ (0000)
+002A5350 0046:
+	??_C@_0EG@PHNFDNJE@base_weapon_index?$DO?$DN0?5?$CG?$CG?5base_wea@ (0000)
+002A5398 0008:
+	??_C@_07GDJPGPDM@unarmed?$AA@ (0000)
+002A53A0 0011:
+	??_C@_0BB@FJNDJOGI@?$CFs?3?5animation?5?$CFs?$AA@ (0000)
+002A53B4 002b:
+	??_C@_0CL@FEKGNBAM@index?$DO?$DN0?5?$CG?$CG?5index?$DMMAXIMUM_WEAPON@ (0000)
+002A53E0 002d:
+	??_C@_0CN@HHCMEDCD@item?9?$DOobject?4parent_object_index@ (0000)
+002A5410 0038:
+	??_C@_0DI@FHACCLPK@a?5?$CFs?5tried?5to?5drop?5a?5?$CFs?5which?5wa@ (0000)
+002A5448 003c:
+	??_C@_0DM@HPMFIBJI@WARNING?3?5?$CFs?5tried?5to?5die?5from?5fl@ (0000)
+002A5484 001e:
+	??_C@_0BO@JNFPEPKG@plan?9?$DOcoast_t?5?$CL?5actual_t?5?$DO?$DN?5t?$AA@ (0000)
+002A54A4 0013:
+	??_C@_0BD@PPEPHKIE@plan?9?$DOcoast_t?5?$DO?$DN?50?$AA@ (0000)
+002A54B8 0011:
+	??_C@_0BB@MPHLKAIB@coasting_vel?5?$DM?50?$AA@ (0000)
+002A54CC 0007:
+	??_C@_06IGEDIHAH@t?5?$DO?$DN?50?$AA@ (0000)
+002A54D4 000a:
+	??_C@_09FAMPJHMJ@disc?5?$DO?$DN?50?$AA@ (0000)
+002A54E0 001a:
+	??_C@_0BK@JAFCIDEL@REAL_MAX?5?$CB?$DN?5plan?9?$DOdecel_t?$AA@ (0000)
+002A54FC 001a:
+	??_C@_0BK@KHOHGFFP@REAL_MAX?5?$CB?$DN?5plan?9?$DOdecel_a?$AA@ (0000)
+002A5518 001a:
+	??_C@_0BK@JCCGJEF@REAL_MAX?5?$CB?$DN?5plan?9?$DOcoast_t?$AA@ (0000)
+002A5534 001a:
+	??_C@_0BK@LLGCLIBF@REAL_MAX?5?$CB?$DN?5plan?9?$DOaccel_t?$AA@ (0000)
+002A5550 001a:
+	??_C@_0BK@IMNHFOAB@REAL_MAX?5?$CB?$DN?5plan?9?$DOaccel_a?$AA@ (0000)
+002A556C 0014:
+	??_C@_0BE@OJLFFFPC@plan?9?$DOinitial_v?5?$DM?50?$AA@ (0000)
+002A5580 001a:
+	??_C@_0BK@KCJNEIPK@plan?9?$DOinitial_p?5?$DO?5?91e?903f?$AA@ (0000)
+002A559C 0004:
+	__real@ba83126f (0000)
+002A55A0 003b:
+	??_C@_0DL@NDCNCHBI@?$CIadjust_plan?9?$DOaccel_t?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CI@ (0000)
+002A55DC 0010:
+	??_C@_0BA@JMNOFACH@t_extension?5?$DO?50?$AA@ (0000)
+002A55EC 0017:
+	??_C@_0BH@KDNEJEKJ@MISSING?3?5?$CFs?5?8?$CFs?5?$CFs?5?$CFs?8?$AA@ (0000)
+002A5604 001a:
+	??_C@_0BK@GEHICBJO@parent_seat_index?5?$CB?$DN?5NULL?$AA@ (0000)
+002A5620 001b:
+	??_C@_0BL@MGKMGDBI@relative_aiming_angles?4yaw?$AA@ (0000)
+002A563C 001d:
+	??_C@_0BN@LENPEPCG@relative_aiming_angles?4pitch?$AA@ (0000)
+002A565C 0011:
+	??_C@_0BB@DNAJOPNC@?$CGrelative_vector?$AA@ (0000)
+002A5670 0074:
+	??_C@_0HE@KJEMFFL@?$CIseat_desire_type?5?$DN?$DN?5NONE?$CJ?5?$HM?$HM?5?$CI?$CI@ (0000)
+002A56E4 0014:
+	??_C@_0BE@BPHFKLIJ@seat_substring_name?$AA@ (0000)
+002A56F8 003b:
+	??_C@_0DL@HBBDCAFF@current_index?$DO?$DN0?5?$CG?$CG?5current_inde@ (0000)
+002A5734 0004:
+	__real@3d0f5c29 (0000)
+002A5738 0016:
+	??_C@_0BG@JEMBMHGH@?$CGunit?9?$DOobject?4forward?$AA@ (0000)
+002A5750 0011:
+	??_C@_0BB@GELHHNAL@?$CGunit?9?$DOobject?4up?$AA@ (0000)
+002A5764 0011:
+	??_C@_0BB@LPKMKLOA@alignment_vector?$AA@ (0000)
+002A5778 0004:
+	__real@3cab92a6 (0000)
+002A577C 0004:
+	__real@bcab92a6 (0000)
+002A5780 0004:
+	__real@417ea5dd (0000)
+002A5784 0004:
+	__real@3e567750 (0000)
+002A5788 0004:
+	__real@4087cfed (0000)
+002A578C 0033:
+	??_C@_0DD@FIEJMHNA@unit_verify_vectors?5FAILURE?0?5see@ (0000)
+002A57C0 0038:
+	??_C@_0DI@OGIFHHM@?5?5looking?5vector?5?$CF08X?5?$CF08X?5?$CF08X?5@ (0000)
+002A57F8 0037:
+	??_C@_0DH@EJEBMEHF@?5?5aiming?5vector?5?$CF08X?5?$CF08X?5?$CF08X?5v@ (0000)
+002A5830 004f:
+	??_C@_0EP@KHDNKPNP@?5?5desired?5facing?5?$CF08X?5?$CF08X?5?$CF08X?0@ (0000)
+002A5880 0044:
+	??_C@_0EE@NPCICDEJ@?5?5object?3?5pos?5?$CF08X?5?$CF08X?5?$CF08X?0?5fw@ (0000)
+002A58C4 001f:
+	??_C@_0BP@KOGKNNHJ@?5?5warning?0?5hex?5dump?5follows?4?4?4?$AA@ (0000)
+002A58E4 002c:
+	??_C@_0CM@MJPCCGNM@?5?5looking?5vector?5?$CFf?5?$CFf?5?$CFf?5veloci@ (0000)
+002A5910 002b:
+	??_C@_0CL@ECJMNHKM@?5?5aiming?5vector?5?$CFf?5?$CFf?5?$CFf?5velocit@ (0000)
+002A593C 003d:
+	??_C@_0DN@FMBPFOHH@?5?5desired?5facing?5?$CFf?5?$CFf?5?$CFf?0?5aimin@ (0000)
+002A597C 003a:
+	??_C@_0DK@HCAIDIOB@?$CK?$CK?$CK?$CK?5unit_verify_vectors?3?5proble@ (0000)
+002A59B8 000d:
+	??_C@_0N@GHHFFCIH@unit?9control?$AA@ (0000)
+002A59C8 001e:
+	??_C@_0BO@MDANOMAD@control_data?9?$DOprimary_trigger?$AA@ (0000)
+002A59E8 0040:
+	??_C@_0EA@IBGHKCGO@control_data?9?$DOzoom_level?$DN?$DNNONE?5?$HM@ (0000)
+002A5A28 0082:
+	??_C@_0IC@CHONDMKL@control_data?9?$DOgrenade_index?$DN?$DNNON@ (0000)
+002A5AB0 007b:
+	??_C@_0HL@IFOOEEOJ@control_data?9?$DOweapon_index?$DN?$DNNONE@ (0000)
+002A5B2C 001e:
+	??_C@_0BO@CKDHHENP@?$CGcontrol_data?9?$DOlooking_vector?$AA@ (0000)
+002A5B4C 001d:
+	??_C@_0BN@CPLNIAKI@?$CGcontrol_data?9?$DOaiming_vector?$AA@ (0000)
+002A5B6C 001d:
+	??_C@_0BN@PJECCKBL@?$CGcontrol_data?9?$DOfacing_vector?$AA@ (0000)
+002A5B90 0047:
+	??_C@_0EH@EBEINPCA@VALID_FLAGS?$CIcontrol_data?9?$DOcontro@ (0000)
+002A5BD8 0059:
+	??_C@_0FJ@GIIHEDDP@control_data?9?$DOaiming_speed?$DO?$DN0?5?$CG?$CG@ (0000)
+002A5C38 0062:
+	??_C@_0GC@CEOKMDLJ@control_data?9?$DOanimation_state?$DO?$DN0@ (0000)
+002A5C9C 002b:
+	??_C@_0CL@MKJGLHIO@magnitude3d?$CI?$CGcontrol_data?9?$DOthrot@ (0000)
+002A5CC8 001c:
+	??_C@_0BM@MNPGDCFG@relative_looking_angles?4yaw?$AA@ (0000)
+002A5CE4 001e:
+	??_C@_0BO@MGEJEHJF@relative_looking_angles?4pitch?$AA@ (0000)
+002A5D04 0019:
+	??_C@_0BJ@IONAJDB@?$CGrelative_looking_vector?$AA@ (0000)
+002A5D20 0018:
+	??_C@_0BI@PHNGNHBO@?$CGrelative_aiming_vector?$AA@ (0000)
+002A5D38 001a:
+	??_C@_0BK@KJJPMJMN@?$CGunit?9?$DOunit?4aiming_vector?$AA@ (0000)
+002A5D54 0016:
+	??_C@_0BG@OEBDAJFJ@unit?9preprocess?9nodes?$AA@ (0000)
+002A5D6C 000e:
+	??_C@_0O@ODHCBCIJ@aiming_vector?$AA@ (0000)
+002A5D80 0061:
+	??_C@_0GB@FBDPEFM@?$CIend_aiming_angles?4pitch?5?$DO?$DN?5aimi@ (0000)
+002A5DE8 005d:
+	??_C@_0FN@IHCHGFNM@?$CIend_aiming_angles?4yaw?5?$DO?$DN?5aiming@ (0000)
+002A5E48 002b:
+	??_C@_0CL@BAPCPLDO@end_aiming_angles?4yaw?5?$DO?$DN?5aiming_@ (0000)
+002A5E74 002b:
+	??_C@_0CL@ONCNMLAC@end_aiming_angles?4yaw?5?$DM?$DN?5aiming_@ (0000)
+002A5EA0 002f:
+	??_C@_0CP@FHKMNBOC@desired_aiming_angles?4yaw?5?$DO?$DN?5aim@ (0000)
+002A5ED0 002f:
+	??_C@_0CP@KKHDOBNO@desired_aiming_angles?4yaw?5?$DM?$DN?5aim@ (0000)
+002A5F00 004f:
+	??_C@_0EP@KBPKPPJL@?$CIangular_acceleration_limit?5?$DO?50?4@ (0000)
+002A5F50 001f:
+	??_C@_0BP@DPNLKBBM@angular_velocity_limit?5?$DO?$DN?50?40f?$AA@ (0000)
+002A5F70 001e:
+	??_C@_0BO@GAMKEDMN@desired_base_seat_index?$CB?$DNNONE?$AA@ (0000)
+002A5F90 0038:
+	??_C@_0DI@EIIFDJIB@desired_state?$DO?$DN0?5?$CG?$CG?5desired_stat@ (0000)
+002A5FC8 0008:
+	__real@4001475cd2000000 (0000)
+002A5FD0 0027:
+	??_C@_0CH@KNBNIKNG@unit?9?$DOobject?4parent_object_index@ (0000)
+002A5FF8 0021:
+	??_C@_0CB@MFPLMKIO@unit?9?$DOunit?4feign_death_timer?5?$DO?50@ (0000)
+002A601C 0010:
+	??_C@_0BA@JFPDPOCG@unit?9update?9end?$AA@ (0000)
+002A602C 0024:
+	??_C@_0CE@EIFKFLM@game_globals_first_person_interf@ (0000)
+002A6050 002c:
+	??_C@_0CM@JCKFNLKN@player?5illumination?3?5self?5?$CF?42f?5a@ (0000)
+002A607C 0017:
+	??_C@_0BH@GFOLCKHG@unit?9update?9postvector?$AA@ (0000)
+002A6094 001b:
+	??_C@_0BL@BHGJMDEB@?$CGunit?9?$DOunit?4looking_vector?$AA@ (0000)
+002A60B0 0014:
+	??_C@_0BE@MNAOFPAE@unit?9update?9look?93d?$AA@ (0000)
+002A60C4 0017:
+	??_C@_0BH@HICAMLFB@unit?9update?9look?9euler?$AA@ (0000)
+002A60DC 0015:
+	??_C@_0BF@NGCFEELO@unit?9update?9look?9set?$AA@ (0000)
+002A60F4 0013:
+	??_C@_0BD@DPFKBAB@unit?9update?9aim?93d?$AA@ (0000)
+002A6108 0016:
+	??_C@_0BG@NOLLOOND@unit?9update?9aim?9euler?$AA@ (0000)
+002A6120 0014:
+	??_C@_0BE@KGIBELMP@unit?9update?9aim?9set?$AA@ (0000)
+002A6134 0022:
+	??_C@_0CC@HPCCHHEP@?$CGunit?9?$DOunit?4desired_aiming_vecto@ (0000)
+002A6158 0017:
+	??_C@_0BH@PCBGODII@unit?9update?9prevectors?$AA@ (0000)
+002A6170 0029:
+	??_C@_0CJ@GMJCHFEH@?$CGgunner_unit?9?$DOunit?4desired_aimin@ (0000)
+002A619C 0029:
+	??_C@_0CJ@KNNFHIN@?$CGdriver_unit?9?$DOunit?4desired_facin@ (0000)
+002A61C8 0012:
+	??_C@_0BC@FNMDNBAN@unit?9update?9begin?$AA@ (0000)
+002A61DC 0024:
+	??_C@_0CE@MIPDNKIJ@p?$CFd?3?5body?5?$CF?42f?5shld?5?$CF?42f?5from?5?$CFs@ (0000)
+00315C08 061c:
+	_magic_base_animation_seat_index (0000)
+	_base_seat_labels (0604)
+004CCB18 0004:
+	_bss_004ccb18 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

@@ -1,0 +1,233 @@
+/*
+SOUND_MANAGER.C
+
+symbols in this file:
+001BB280 0070:
+	_sound_valid_for_channel (0000)
+001BB2F0 0010:
+	_current_platform_definition (0000)
+001BB300 0010:
+	_sound_initialize_for_new_map (0000)
+001BB310 0060:
+	_sound_dispose (0000)
+001BB370 0020:
+	_sound_is_active (0000)
+001BB390 0040:
+	_sound_pause (0000)
+001BB3D0 0010:
+	_sound_render_time (0000)
+001BB3E0 0070:
+	_sound_reconnect_to_structure_bsp (0000)
+001BB450 0020:
+	_sound_try_and_get (0000)
+001BB470 0010:
+	_sound_enable (0000)
+001BB480 0020:
+	_sound_scripted_dialog_is_playing (0000)
+001BB4A0 0020:
+	_sound_manager_set_sound_environment (0000)
+001BB4C0 0030:
+	_code_001bb4c0 (0000)
+001BB4F0 0020:
+	_code_001bb4f0 (0000)
+001BB510 0060:
+	_code_001bb510 (0000)
+001BB570 0040:
+	_code_001bb570 (0000)
+001BB5B0 0040:
+	_code_001bb5b0 (0000)
+001BB5F0 00a0:
+	_code_001bb5f0 (0000)
+001BB690 0030:
+	_code_001bb690 (0000)
+001BB6C0 0050:
+	_code_001bb6c0 (0000)
+001BB710 0020:
+	_code_001bb710 (0000)
+001BB730 00f0:
+	_code_001bb730 (0000)
+001BB820 0200:
+	_code_001bb820 (0000)
+001BBA20 0080:
+	_code_001bba20 (0000)
+001BBAA0 00a0:
+	_code_001bbaa0 (0000)
+001BBB40 00f0:
+	_code_001bbb40 (0000)
+001BBC30 0080:
+	_code_001bbc30 (0000)
+001BBCB0 0040:
+	_code_001bbcb0 (0000)
+001BBCF0 00f0:
+	_code_001bbcf0 (0000)
+001BBDE0 0020:
+	_code_001bbde0 (0000)
+001BBE00 0130:
+	_code_001bbe00 (0000)
+001BBF30 0050:
+	_code_001bbf30 (0000)
+001BBF80 0060:
+	_code_001bbf80 (0000)
+001BBFE0 00c0:
+	_code_001bbfe0 (0000)
+001BC0A0 0160:
+	_code_001bc0a0 (0000)
+001BC200 01b0:
+	_sound_initialize (0000)
+001BC3B0 0030:
+	_code_001bc3b0 (0000)
+001BC3E0 0170:
+	_code_001bc3e0 (0000)
+001BC550 0180:
+	_code_001bc550 (0000)
+001BC6D0 00c0:
+	_code_001bc6d0 (0000)
+001BC790 00d0:
+	_code_001bc790 (0000)
+001BC860 0110:
+	_code_001bc860 (0000)
+001BC970 0100:
+	_code_001bc970 (0000)
+001BCA70 0210:
+	_code_001bca70 (0000)
+001BCC80 0130:
+	_code_001bcc80 (0000)
+001BCDB0 00d0:
+	_code_001bcdb0 (0000)
+001BCE80 00c0:
+	_code_001bce80 (0000)
+001BCF40 0080:
+	_sound_stop_impulse (0000)
+001BCFC0 0070:
+	_sound_stop_impulse_by_source_and_definition (0000)
+001BD030 0060:
+	_sound_stop_all (0000)
+001BD090 00f0:
+	_code_001bd090 (0000)
+001BD180 0220:
+	_code_001bd180 (0000)
+001BD3A0 01a0:
+	_code_001bd3a0 (0000)
+001BD540 01e0:
+	_code_001bd540 (0000)
+001BD720 0550:
+	_code_001bd720 (0000)
+001BDC70 03d0:
+	_sound_new_impulse (0000)
+001BE040 0470:
+	_sound_refresh_looping (0000)
+001BE4B0 01f0:
+	_code_001be4b0 (0000)
+001BE6A0 01f0:
+	_code_001be6a0 (0000)
+001BE890 0360:
+	_code_001be890 (0000)
+001BEBF0 01f0:
+	_code_001bebf0 (0000)
+001BEDE0 0070:
+	_sound_idle (0000)
+001BEE50 02e0:
+	_code_001bee50 (0000)
+001BF130 00f0:
+	_sound_dispose_from_old_map (0000)
+001BF220 00f0:
+	_sound_render (0000)
+002AF820 000d:
+	??_C@_0N@ICDMEFNC@sound_render?$AA@ (0000)
+002AF830 001c:
+	_rdata_002af830 (0000)
+002AF84C 0036:
+	??_C@_0DG@GEFEIAPP@index?$DO?$DN0?5?$CG?$CG?5index?$DMsound_manager_@ (0000)
+002AF884 0025:
+	??_C@_0CF@OMMIMEGJ@c?3?2halo?2SOURCE?2sound?2sound_manag@ (0000)
+002AF8AC 0032:
+	??_C@_0DC@IDLFGNMI@index?$DO?$DN0?5?$CG?$CG?5index?$DMMAXIMUM_NUMBER@ (0000)
+002AF8E0 0034:
+	??_C@_0DE@IJMAACKJ@sound_get?$CIsound_index?$CJ?9?$DOplaying_@ (0000)
+002AF918 006a:
+	??_C@_0GK@GIGJNEHE@sound?9?$DOplaying_channel_index?$DN?$DNNO@ (0000)
+002AF988 0042:
+	??_C@_0EC@NBNLKGJ@summary?9?$DOlike_source_count?$DMsumma@ (0000)
+002AF9CC 003f:
+	??_C@_0DP@JPHEDLPF@summary?9?$DOlike_definition_count?$DMs@ (0000)
+002AFA10 0053:
+	??_C@_0FD@BLJIIJII@summary?9?$DOmaximum_instance_count?$DM@ (0000)
+002AFA68 004f:
+	??_C@_0EP@DKNAFCF@summary?9?$DOmaximum_source_instance@ (0000)
+002AFAB8 0016:
+	??_C@_0BG@LLOIFBDE@properties?9?$DOpitch?$DO0?4f?$AA@ (0000)
+002AFAD0 001d:
+	??_C@_0BN@IEJOFEHG@?$CBchannel?9?$DOqueued_permutation?$AA@ (0000)
+002AFAF0 000a:
+	??_C@_09LAFJOCBG@?$CFs?$HMn?$CFf?5?$CFf?$AA@ (0000)
+002AFAFC 003c:
+	??_C@_0DM@PJIONELA@sound_manager_globals?4channel_co@ (0000)
+002AFB38 000f:
+	??_C@_0P@FIIBGGGF@looping?5sounds?$AA@ (0000)
+002AFB48 0007:
+	??_C@_06OHLGPBPO@sounds?$AA@ (0000)
+002AFB50 0038:
+	??_C@_0DI@CEKFNNAG@fade_in_sound_index?$CB?$DNNONE?5?$HM?$HM?5fad@ (0000)
+002AFB88 000d:
+	??_C@_0N@CFIAGGKK@seconds?$DO?$DN0?4f?$AA@ (0000)
+002AFB98 0042:
+	??_C@_0EC@MNDJFMMK@mode?$DN?$DN_sound_fade_mode_linear?5?$HM?$HM@ (0000)
+002AFBDC 0024:
+	??_C@_0CE@FPLGCI@listener_get?$CIlistener_index?$CJ?9?$DOva@ (0000)
+002AFC00 002d:
+	??_C@_0CN@BJAODDBE@challenger_sound_index?$CB?$DNchampion@ (0000)
+002AFC30 0026:
+	??_C@_0CG@JFKDGJLJ@sound_cache_sound_loaded?$CIpermuta@ (0000)
+002AFC58 002d:
+	??_C@_0CN@GMMAODPG@sound_get?$CIsound_index?$CJ?9?$DOtype?$DN?$DN_s@ (0000)
+002AFC88 0004:
+	__real@3be56042 (0000)
+002AFC90 0048:
+	??_C@_0EI@NEANMMGP@TEST_FLAG?$CIdefinition?9?$DOflags?0?5_so@ (0000)
+002AFCD8 001c:
+	??_C@_0BM@DILLGPMI@sound?9?$DOtype?$CB?$DN_sound_impulse?$AA@ (0000)
+002AFCF8 006a:
+	??_C@_0GK@CFIFHDCA@attempt?5to?5play?5a?5sound?5that?5was@ (0000)
+002AFD64 0012:
+	??_C@_0BC@IFEANPKO@sound?9?$DOtrack_data?$AA@ (0000)
+002AFD78 006f:
+	??_C@_0GP@PNOIFFBD@source?9?$DOspatialization_mode?$DN?$DN_so@ (0000)
+002AFDE8 002d:
+	??_C@_0CN@FLAINKPN@track_data_size?$DM?$DNMAXIMUM_SOUND_C@ (0000)
+002AFE18 0029:
+	??_C@_0CJ@HAJEDJHJ@loop?9?$DOdefinition_index?$DN?$DNdefiniti@ (0000)
+002AFE48 0044:
+	??_C@_0EE@CBCNGIMC@channel_get?$CIsound?9?$DOplaying_chann@ (0000)
+002AFE8C 0010:
+	??_C@_0BA@NKIBLFLK@listener?9?$DOvalid?$AA@ (0000)
+002AFEA0 00ad:
+	??_C@_0KN@CMACAPDF@TEST_FLAG?$CIsound?9?$DOflags?0?5_sound_d@ (0000)
+002AFF50 002c:
+	??_C@_0CM@MDCHMPMH@sound?9?$DOplaying_channel_index?$DN?$DNch@ (0000)
+002AFF80 0098:
+	??_C@_0JI@MGGHJBNL@sound_valid_for_channel?$CIdefiniti@ (0000)
+002B0018 0004:
+	__real@43960000 (0000)
+00317478 060c:
+	_sound_gain_under_dialog (0000)
+	_platform_definitions (0004)
+	_sound_fade_exponent (0608)
+004D2D60 0178:
+	_bss_004d2d60 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

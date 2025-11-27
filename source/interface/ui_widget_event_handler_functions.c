@@ -1,0 +1,922 @@
+/*
+UI_WIDGET_EVENT_HANDLER_FUNCTIONS.C
+
+symbols in this file:
+000D8F90 0090:
+	_ui_widget_event_handler_function_invoke (0000)
+000D9020 0010:
+	_code_000d9020 (0000)
+000D9030 0010:
+	_reset_last_player1_profile_index (0000)
+000D9040 01a0:
+	_code_000d9040 (0000)
+000D91E0 0030:
+	_code_000d91e0 (0000)
+000D9210 0140:
+	_code_000d9210 (0000)
+000D9350 0060:
+	_code_000d9350 (0000)
+000D93B0 0030:
+	_code_000d93b0 (0000)
+000D93E0 0010:
+	_code_000d93e0 (0000)
+000D93F0 0010:
+	_code_000d93f0 (0000)
+000D9400 0010:
+	_code_000d9400 (0000)
+000D9410 0020:
+	_code_000d9410 (0000)
+000D9430 0050:
+	_code_000d9430 (0000)
+000D9480 0040:
+	_code_000d9480 (0000)
+000D94C0 0090:
+	_code_000d94c0 (0000)
+000D9550 0200:
+	_code_000d9550 (0000)
+000D9750 0020:
+	_code_000d9750 (0000)
+000D9770 0020:
+	_code_000d9770 (0000)
+000D9790 0070:
+	_code_000d9790 (0000)
+000D9800 0010:
+	_code_000d9800 (0000)
+000D9810 0040:
+	_code_000d9810 (0000)
+000D9850 0010:
+	_code_000d9850 (0000)
+000D9860 0020:
+	_code_000d9860 (0000)
+000D9880 00f0:
+	_code_000d9880 (0000)
+000D9970 0020:
+	_code_000d9970 (0000)
+000D9990 01d0:
+	_code_000d9990 (0000)
+000D9B60 0160:
+	_code_000d9b60 (0000)
+000D9CC0 0030:
+	_code_000d9cc0 (0000)
+000D9CF0 02a0:
+	_code_000d9cf0 (0000)
+000D9F90 00f0:
+	_code_000d9f90 (0000)
+000DA080 0110:
+	_code_000da080 (0000)
+000DA190 0160:
+	_code_000da190 (0000)
+000DA2F0 0030:
+	_code_000da2f0 (0000)
+000DA320 01c0:
+	_code_000da320 (0000)
+000DA4E0 0160:
+	_code_000da4e0 (0000)
+000DA640 0140:
+	_code_000da640 (0000)
+000DA780 0020:
+	_code_000da780 (0000)
+000DA7A0 00e0:
+	_code_000da7a0 (0000)
+000DA880 0050:
+	_code_000da880 (0000)
+000DA8D0 03a0:
+	_code_000da8d0 (0000)
+000DAC70 0220:
+	_code_000dac70 (0000)
+000DAE90 0360:
+	_code_000dae90 (0000)
+000DB1F0 0580:
+	_code_000db1f0 (0000)
+000DB770 02d0:
+	_code_000db770 (0000)
+000DBA40 0580:
+	_code_000dba40 (0000)
+000DBFC0 0320:
+	_code_000dbfc0 (0000)
+000DC2E0 01f0:
+	_code_000dc2e0 (0000)
+000DC4D0 00c0:
+	_code_000dc4d0 (0000)
+000DC590 00a0:
+	_code_000dc590 (0000)
+000DC630 0390:
+	_code_000dc630 (0000)
+000DC9C0 0230:
+	_code_000dc9c0 (0000)
+000DCBF0 0350:
+	_code_000dcbf0 (0000)
+000DCF40 0510:
+	_code_000dcf40 (0000)
+000DD450 02e0:
+	_code_000dd450 (0000)
+000DD730 0550:
+	_code_000dd730 (0000)
+000DDC80 0310:
+	_code_000ddc80 (0000)
+000DDF90 0200:
+	_code_000ddf90 (0000)
+000DE190 00c0:
+	_code_000de190 (0000)
+000DE250 0110:
+	_code_000de250 (0000)
+000DE360 0030:
+	_code_000de360 (0000)
+000DE390 0100:
+	_code_000de390 (0000)
+000DE490 0130:
+	_code_000de490 (0000)
+000DE5C0 0020:
+	_code_000de5c0 (0000)
+000DE5E0 0050:
+	_code_000de5e0 (0000)
+000DE630 0080:
+	_code_000de630 (0000)
+000DE6B0 01e0:
+	_code_000de6b0 (0000)
+000DE890 02e0:
+	_code_000de890 (0000)
+000DEB70 01d0:
+	_code_000deb70 (0000)
+000DED40 0340:
+	_code_000ded40 (0000)
+000DF080 0050:
+	_code_000df080 (0000)
+000DF0D0 0020:
+	_code_000df0d0 (0000)
+000DF0F0 0110:
+	_code_000df0f0 (0000)
+000DF200 0140:
+	_code_000df200 (0000)
+000DF340 0050:
+	_code_000df340 (0000)
+000DF390 0040:
+	_code_000df390 (0000)
+000DF3D0 0010:
+	_code_000df3d0 (0000)
+000DF3E0 0180:
+	_code_000df3e0 (0000)
+000DF560 00f0:
+	_code_000df560 (0000)
+000DF650 00a0:
+	_code_000df650 (0000)
+000DF6F0 00a0:
+	_code_000df6f0 (0000)
+000DF790 0020:
+	_code_000df790 (0000)
+000DF7B0 0020:
+	_code_000df7b0 (0000)
+000DF7D0 0020:
+	_code_000df7d0 (0000)
+000DF7F0 0020:
+	_code_000df7f0 (0000)
+000DF810 0010:
+	_code_000df810 (0000)
+000DF820 0010:
+	_code_000df820 (0000)
+000DF830 0050:
+	_code_000df830 (0000)
+000DF880 0070:
+	_code_000df880 (0000)
+000DF8F0 0060:
+	_code_000df8f0 (0000)
+000DF950 0080:
+	_code_000df950 (0000)
+000DF9D0 0180:
+	_code_000df9d0 (0000)
+000DFB50 0050:
+	_code_000dfb50 (0000)
+000DFBA0 0010:
+	_code_000dfba0 (0000)
+000DFBB0 0090:
+	_code_000dfbb0 (0000)
+000DFC40 0160:
+	_code_000dfc40 (0000)
+000DFDA0 0020:
+	_code_000dfda0 (0000)
+000DFDC0 00e0:
+	_code_000dfdc0 (0000)
+000DFEA0 0020:
+	_code_000dfea0 (0000)
+000DFEC0 0050:
+	_code_000dfec0 (0000)
+000DFF10 02a0:
+	_code_000dff10 (0000)
+00273234 001c:
+	??_C@_0BM@CKKFJKOP@levels?2test?2longest?2longest?$AA@ (0000)
+00273250 001a:
+	??_C@_0BK@MPFNKPCD@levels?2test?2putput?2putput?$AA@ (0000)
+0027326C 001a:
+	??_C@_0BK@OFNDPNPO@levels?2test?2wizard?2wizard?$AA@ (0000)
+00273288 0022:
+	??_C@_0CC@POIILJDH@levels?2test?2bloodgulch?2bloodgulc@ (0000)
+002732AC 002a:
+	??_C@_0CK@HECAMEMK@levels?2test?2boardingaction?2board@ (0000)
+002732D8 001e:
+	??_C@_0BO@FIJEGPFC@levels?2test?2chillout?2chillout?$AA@ (0000)
+002732F8 0022:
+	??_C@_0CC@MJDACFAF@levels?2test?2hangemhigh?2hangemhig@ (0000)
+0027331C 001e:
+	??_C@_0BO@NDKKNFGF@levels?2test?2prisoner?2prisoner?$AA@ (0000)
+0027333C 001c:
+	??_C@_0BM@IKJMNKIP@levels?2test?2ratrace?2ratrace?$AA@ (0000)
+00273358 0020:
+	??_C@_0CA@JNPLOBAC@levels?2test?2damnation?2damnation?$AA@ (0000)
+00273378 0022:
+	??_C@_0CC@JCCBAGPB@levels?2test?2sidewinder?2sidewinde@ (0000)
+0027339C 0024:
+	??_C@_0CE@KHFKIHNB@levels?2test?2beavercreek?2beavercr@ (0000)
+002733C0 001d:
+	??_C@_0BN@PJAAEBLK@new?5game?5if?5no?5plyr?5profiles?$AA@ (0000)
+002733E0 0015:
+	??_C@_0BF@GNFLEJPM@begin?5music?5fade?5out?$AA@ (0000)
+002733F8 0015:
+	??_C@_0BF@NOJBMGJJ@difficulty?5menu?5init?$AA@ (0000)
+00273410 0017:
+	??_C@_0BH@MPIABOAL@pop?5history?5stack?5once?$AA@ (0000)
+00273428 0016:
+	??_C@_0BG@DCONGAJK@new?5campaign?5decision?$AA@ (0000)
+00273440 0014:
+	??_C@_0BE@LAFLJECA@new?5campaign?5chosen?$AA@ (0000)
+00273454 0017:
+	??_C@_0BH@PGIFGDHO@exit?5to?5xbox?5dashboard?$AA@ (0000)
+0027346C 001d:
+	??_C@_0BN@CMCONINM@close?5if?5not?5editing?5profile?$AA@ (0000)
+0027348C 0017:
+	??_C@_0BH@GEKFCEPO@net?5game?5unjoin?5player?$AA@ (0000)
+002734A4 0020:
+	??_C@_0CA@FJIAAMCI@start?5server?5if?5none?5advertised?$AA@ (0000)
+002734C4 001f:
+	??_C@_0BP@JGPNCJEH@error?5if?5no?5network?5connection?$AA@ (0000)
+002734E4 001c:
+	??_C@_0BM@CNEIABDN@sp?5set?5p2?5controller?5choice?$AA@ (0000)
+00273500 001c:
+	??_C@_0BM@ICOBEMPH@sp?5set?5p1?5controller?5choice?$AA@ (0000)
+0027351C 001c:
+	??_C@_0BM@MMMCBMPA@sp?5reset?5controller?5choices?$AA@ (0000)
+00273538 000b:
+	??_C@_0L@NMGEHBFG@run?5xdemos?$AA@ (0000)
+00273544 0015:
+	??_C@_0BF@KAAHCELF@disable?5if?5no?5xdemos?$AA@ (0000)
+0027355C 0017:
+	??_C@_0BH@LFMLNMCG@net?5server?5allow?5start?$AA@ (0000)
+00273574 0017:
+	??_C@_0BH@JMMJIBIA@net?5server?5defer?5start?$AA@ (0000)
+0027358C 0017:
+	??_C@_0BH@JOMFGOKO@net?5server?5accept?5conx?$AA@ (0000)
+002735A4 0015:
+	??_C@_0BF@OPPDMGPP@net?5game?5delay?5start?$AA@ (0000)
+002735BC 0015:
+	??_C@_0BF@OJFPEDJ@net?5game?5speed?5start?$AA@ (0000)
+002735D4 001b:
+	??_C@_0BL@PLPJJODF@create?$CGedit?5player?5profile?$AA@ (0000)
+002735F0 001d:
+	??_C@_0BN@ECPIMEEB@create?$CGedit?5playlist?5profile?$AA@ (0000)
+00273610 0016:
+	??_C@_0BG@MKAEGKD@cancel?5profile?5delete?$AA@ (0000)
+00273628 001b:
+	??_C@_0BL@NOENJPBG@final?5del?5playlist?5profile?$AA@ (0000)
+00273644 0019:
+	??_C@_0BJ@MAIEEAIE@final?5del?5player?5profile?$AA@ (0000)
+00273660 001d:
+	??_C@_0BN@JEGEKGKO@request?5del?5playlist?5profile?$AA@ (0000)
+00273680 001b:
+	??_C@_0BL@OFFLHPFB@request?5del?5player?5profile?$AA@ (0000)
+0027369C 001e:
+	??_C@_0BO@CDIODLMI@main?5menu?5switch?5to?5solo?5game?$AA@ (0000)
+002736BC 0014:
+	??_C@_0BE@OBGOABGF@mp?5game?5player?5quit?$AA@ (0000)
+002736D0 001b:
+	??_C@_0BL@KBEIKELI@plyr?5prf?5save?5adv?5cntl?5set?$AA@ (0000)
+002736EC 001c:
+	??_C@_0BM@JCFNELGA@plyr?5prf?5save?5cntl?5settings?$AA@ (0000)
+00273708 001b:
+	??_C@_0BL@MOLIBDPJ@plyr?5prf?5init?5adv?5cntl?5set?$AA@ (0000)
+00273724 001c:
+	??_C@_0BM@JDOJMKNB@plyr?5prf?5init?5cntl?5settings?$AA@ (0000)
+00273740 001c:
+	??_C@_0BM@IDODMIOF@player?5profile?5save?5changes?$AA@ (0000)
+0027375C 001b:
+	??_C@_0BL@LNBEKBDK@player?5profile?5change?5name?$AA@ (0000)
+00273778 001b:
+	??_C@_0BL@FJHEPBDC@player?5profile?5end?5editing?$AA@ (0000)
+00273794 001d:
+	??_C@_0BN@JGMAOMFB@player?5profile?5begin?5editing?$AA@ (0000)
+002737B4 001a:
+	??_C@_0BK@DDPMGOLB@color?5picker?5select?5color?$AA@ (0000)
+002737D0 001a:
+	??_C@_0BK@KLIELBBF@color?5picker?5menu?5dispose?$AA@ (0000)
+002737EC 001d:
+	??_C@_0BN@LOBGBHKN@color?5picker?5menu?5initialize?$AA@ (0000)
+0027380C 0018:
+	??_C@_0BI@BEFJGPMM@mp?5profile?5save?5changes?$AA@ (0000)
+00273824 001f:
+	??_C@_0BP@NNAOBMAO@mp?5profile?5init?5indicator?5opts?$AA@ (0000)
+00273844 001d:
+	??_C@_0BN@DOGEIAEE@mp?5profile?5init?5item?5options?$AA@ (0000)
+00273864 001c:
+	??_C@_0BM@HMFJPO@mp?5profile?5init?5player?5opts?$AA@ (0000)
+00273880 001d:
+	??_C@_0BN@JDIGJKOO@mp?5profile?5init?5racing?5rules?$AA@ (0000)
+002738A0 001e:
+	??_C@_0BO@HEJNENFA@mp?5profile?5init?5oddball?5rules?$AA@ (0000)
+002738C0 001d:
+	??_C@_0BN@BJHDNLDO@mp?5profile?5init?5slayer?5rules?$AA@ (0000)
+002738E0 001b:
+	??_C@_0BL@CECKFCFG@mp?5profile?5init?5koth?5rules?$AA@ (0000)
+002738FC 001a:
+	??_C@_0BK@OOPLKCME@mp?5profile?5init?5ctf?5rules?$AA@ (0000)
+00273918 0015:
+	??_C@_0BF@CGAEGGLI@mp?5profile?5init?5name?$AA@ (0000)
+00273930 001c:
+	??_C@_0BM@FLOIEBB@mp?5profile?5init?5game?5engine?$AA@ (0000)
+0027394C 001e:
+	??_C@_0BO@MBNNOLCN@mp?5profile?5set?5indicator?5opts?$AA@ (0000)
+0027396C 001c:
+	??_C@_0BM@HIEEMHHH@mp?5profile?5set?5item?5options?$AA@ (0000)
+00273988 001e:
+	??_C@_0BO@JOANNGJK@mp?5profile?5set?5player?5options?$AA@ (0000)
+002739A8 001c:
+	??_C@_0BM@NFKGNNNN@mp?5profile?5set?5racing?5rules?$AA@ (0000)
+002739C4 001d:
+	??_C@_0BN@MLALAMAB@mp?5profile?5set?5oddball?5rules?$AA@ (0000)
+002739E4 001c:
+	??_C@_0BM@FPFDJMAN@mp?5profile?5set?5slayer?5rules?$AA@ (0000)
+00273A00 001a:
+	??_C@_0BK@LECHLALA@mp?5profile?5set?5koth?5rules?$AA@ (0000)
+00273A1C 0019:
+	??_C@_0BJ@FMAENFML@mp?5profile?5set?5ctf?5rules?$AA@ (0000)
+00273A38 0017:
+	??_C@_0BH@NFGKAADB@mp?5profile?5change?5name?$AA@ (0000)
+00273A50 001b:
+	??_C@_0BL@EMEHMOLO@mp?5profile?5set?5game?5engine?$AA@ (0000)
+00273A6C 0017:
+	??_C@_0BH@DBAKFADJ@mp?5profile?5end?5editing?$AA@ (0000)
+00273A84 0019:
+	??_C@_0BJ@NEOFMOJK@mp?5profile?5begin?5editing?$AA@ (0000)
+00273AA0 001d:
+	??_C@_0BN@JEELJKPD@1wide?5plyr?5prof?5set?5for?5game?$AA@ (0000)
+00273AC0 001d:
+	??_C@_0BN@FCEECILL@3wide?5plyr?5prof?5set?5for?5game?$AA@ (0000)
+00273AE0 001c:
+	??_C@_0BM@FDFIEBEE@player?5profile?5list?5dispose?$AA@ (0000)
+00273AFC 001f:
+	??_C@_0BP@EILBCMJA@player?5profile?5list?5initialize?$AA@ (0000)
+00273B1C 0015:
+	??_C@_0BF@DEFPINBF@net?5game?5join?5player?$AA@ (0000)
+00273B34 0011:
+	??_C@_0BB@OAGILGIB@swap?5player?5team?$AA@ (0000)
+00273B48 0018:
+	??_C@_0BI@PANNINNP@mp?5profile?5set?5for?5game?$AA@ (0000)
+00273B60 0019:
+	??_C@_0BJ@LEMMAL@mp?5profiles?5list?5dispose?$AA@ (0000)
+00273B7C 001c:
+	??_C@_0BM@BEOGKOGL@mp?5profiles?5list?5initialize?$AA@ (0000)
+00273B98 0010:
+	??_C@_0BA@HKPGOGHG@mp?5level?5select?$AA@ (0000)
+00273BA8 0016:
+	??_C@_0BG@DPANKKCK@mp?5level?5list?5dispose?$AA@ (0000)
+00273BC0 0019:
+	??_C@_0BJ@KMHDEFIK@mp?5level?5list?5initialize?$AA@ (0000)
+00273BDC 0020:
+	??_C@_0CA@IHMPEHAC@pick?5play?5stage?5for?5quick?5start?$AA@ (0000)
+00273BFC 0018:
+	??_C@_0BI@GLDLEOML@mp?5type?5menu?5initialize?$AA@ (0000)
+00273C14 0014:
+	??_C@_0BE@IAMGJKAG@main?5menu?5intialize?$AA@ (0000)
+00273C28 0015:
+	??_C@_0BF@IPNDONHP@coop?5game?5initialize?$AA@ (0000)
+00273C40 001d:
+	??_C@_0BN@NGOBJECA@split?5screen?5game?5initialize?$AA@ (0000)
+00273C60 001f:
+	??_C@_0BP@OKMDBJFP@net?5game?5join?5from?5server?5list?$AA@ (0000)
+00273C80 0016:
+	??_C@_0BG@KCDKAAGE@shutdown?5network?5game?$AA@ (0000)
+00273C98 001d:
+	??_C@_0BN@BNONIGKN@dispose?5net?5game?5server?5list?$AA@ (0000)
+00273CB8 001a:
+	??_C@_0BK@OIAMDICB@start?5network?5game?5server?$AA@ (0000)
+00273CD4 0020:
+	??_C@_0CA@BOOGOHNA@initialize?5net?5game?5server?5list?$AA@ (0000)
+00273CF4 001b:
+	??_C@_0BL@HNHGNHOC@join?5controller?5to?5mp?5game?$AA@ (0000)
+00273D10 001f:
+	??_C@_0BP@NOHMKMMJ@clear?5multiplayer?5player?5joins?$AA@ (0000)
+00273D30 001f:
+	??_C@_0BP@HKCAHEBO@pause?5game?5return?5to?5main?5menu?$AA@ (0000)
+00273D50 0019:
+	??_C@_0BJ@MBLNANKA@pause?5game?5restart?5level?$AA@ (0000)
+00273D6C 0021:
+	??_C@_0CB@MLJNKJPN@pause?5game?5restart?5at?5checkpoint@ (0000)
+00273D90 000f:
+	??_C@_0P@ELIKNFC@start?5new?5game?$AA@ (0000)
+00273DA0 000f:
+	??_C@_0P@NMIEKKIE@set?5difficulty?$AA@ (0000)
+00273DB0 0013:
+	??_C@_0BD@CFCHPLOM@solo?5level?5set?5map?$AA@ (0000)
+00273DC4 0016:
+	??_C@_0BG@GLIOCLOO@dispose?5sp?5level?5list?$AA@ (0000)
+00273DDC 001e:
+	??_C@_0BO@GFDJFBIC@initialize?5sp?5level?5list?5coop?$AA@ (0000)
+00273DFC 001e:
+	??_C@_0BO@MKMFHGMH@initialize?5sp?5level?5list?5solo?$AA@ (0000)
+00273E1C 0018:
+	??_C@_0BI@KBLNOBEE@list?5goto?5previous?5item?$AA@ (0000)
+00273E34 0014:
+	??_C@_0BE@GIAPNLMB@list?5goto?5next?5item?$AA@ (0000)
+00273E48 0005:
+	??_C@_04HIBGFPH@NULL?$AA@ (0000)
+00273E50 001f:
+	??_C@_0BP@LILGJJIN@invalid?5event_handler_function?$AA@ (0000)
+00273E70 001a:
+	??_C@_0BK@KLBEFMEG@event?5handler?5?8?$CFs?8?5failed?$AA@ (0000)
+00273E8C 002d:
+	??_C@_0CN@PLPCDKAG@?$CIwidget?5?$CB?$DN?5NULL?$CJ?5?$CG?$CG?5?$CIwidget_dele@ (0000)
+00273EBC 003d:
+	??_C@_0DN@CNKLADJF@c?3?2halo?2SOURCE?2interface?2ui_widg@ (0000)
+00273EFC 0033:
+	??_C@_0DD@OHOLFOBA@expected?53?5list?5items?5for?5?8solo?5@ (0000)
+00273F30 003c:
+	??_C@_0DM@NMDHJKNH@expected?5a?5spinner?5list?5widget?5f@ (0000)
+00273F6C 0022:
+	??_C@_0CC@PKIAILIE@this?5level?5is?5unavailable?5to?5you@ (0000)
+00273F90 002c:
+	??_C@_0CM@JJCEJILN@invalid?5player?5count?5for?5single?5@ (0000)
+00273FBC 0031:
+	??_C@_0DB@OCCHKEGI@I?5don?8t?5think?5this?5is?5the?5solo?5l@ (0000)
+00273FF0 0031:
+	??_C@_0DB@KBOONLAB@I?5don?8t?5think?5this?5is?5the?5diffic@ (0000)
+00274028 0043:
+	??_C@_0ED@FBGCADHE@need?5a?5specific?5local?5player?5ind@ (0000)
+0027406C 0038:
+	??_C@_0DI@HJCBGPBM@failed?5to?5create?5network?5client?5@ (0000)
+002740A8 0071:
+	??_C@_0HB@LIIHEKKC@unable?5to?5join?5server?3?5this?5does@ (0000)
+00274120 0065:
+	??_C@_0GF@PKNHAMOD@unable?5to?5join?5server?3?5there?5are@ (0000)
+00274188 0020:
+	??_C@_0CA@NOFBALF@attempted?5to?5join?5a?5closed?5game?$AA@ (0000)
+002741A8 0057:
+	??_C@_0FH@LKFHGHJL@attempted?5to?5join?5a?5network?5game@ (0000)
+00274200 0036:
+	??_C@_0DG@KBGBLHKP@attempted?5to?5join?5a?5network?5game@ (0000)
+00274238 0028:
+	??_C@_0CI@FDBEIAII@failed?5to?5initiate?5join?5game?5pro@ (0000)
+00274260 0030:
+	??_C@_0DA@JMNAFPHL@failed?5to?5initiate?5split?5screen?5@ (0000)
+00274290 003a:
+	??_C@_0DK@FAPNEHOE@expected?53?5list?5items?5for?5?8multi@ (0000)
+002742D0 0043:
+	??_C@_0ED@LIBBFHLL@expected?5a?5spinner?5list?5widget?5f@ (0000)
+00274314 0005:
+	??_C@_04GIIIDFDH@?6?$AN?5?7?$AA@ (0000)
+0027431C 0016:
+	??_C@_0BG@JCJMDKIB@d?3?2map_automation?4txt?$AA@ (0000)
+00274338 004e:
+	??_C@_0EO@BEGBILMM@invalid?5multiplayer?5level?5specif@ (0000)
+00274388 004d:
+	??_C@_0EN@ECKNGNPN@expected?5the?5multiplayer?5level?5s@ (0000)
+002743D8 0045:
+	??_C@_0EF@MKBKJGIH@expected?5a?5wrapper?5widget?5around@ (0000)
+00274420 003d:
+	??_C@_0DN@CGGANPPO@expected?53?5list?5items?5for?5?8multi@ (0000)
+00274460 0046:
+	??_C@_0EG@KCPOAKJJ@expected?5a?5spinner?5list?5widget?5f@ (0000)
+002744A8 002e:
+	??_C@_0CO@IOMLMFLI@failed?5to?5retrieve?5user?5selected@ (0000)
+002744D8 001a:
+	??_C@_0BK@IHCJGFAG@d?3?2variant_automation?4txt?$AA@ (0000)
+002744F8 0052:
+	??_C@_0FC@NPAIGO@invalid?5multiplayer?5profile?5spec@ (0000)
+0027454C 003c:
+	??_C@_0DM@EHEIABGG@expected?53?5list?5items?5for?5?8multi@ (0000)
+00274588 0045:
+	??_C@_0EF@GHNMLIHF@expected?5a?5spinner?5list?5widget?5f@ (0000)
+002745D0 004f:
+	??_C@_0EP@BPILFDAD@expected?5the?5multiplayer?5profile@ (0000)
+00274620 0047:
+	??_C@_0EH@IDEDNEPI@expected?5a?5wrapper?5widget?5around@ (0000)
+00274668 0034:
+	??_C@_0DE@BFAJHNAN@failed?5to?5update?5player?8s?5team?5f@ (0000)
+0027469C 0006:
+	??_C@_05GFHEIIDD@event?$AA@ (0000)
+002746A4 001c:
+	??_C@_0BM@ODJCCMDB@failed?5to?5send?5join?5request?$AA@ (0000)
+002746C0 0005:
+	??_C@_04MJNAPEEI@game?$AA@ (0000)
+002746C8 0044:
+	??_C@_0EE@OLLGDBGO@expected?5either?51?5or?53?5list?5item@ (0000)
+00274710 0041:
+	??_C@_0EB@DCCMCEEJ@expected?5a?5spinner?5list?5widget?5f@ (0000)
+00274754 0028:
+	??_C@_0CI@FBPJAHMJ@this?5is?5not?5a?5selectable?5player?5@ (0000)
+0027477C 0030:
+	??_C@_0DA@INIMKAED@failed?5to?5retrieve?5user?5selected@ (0000)
+002747B0 004d:
+	??_C@_0EN@DAMMCLCE@invalid?5multiplayer?5profile?5spec@ (0000)
+00274800 0037:
+	??_C@_0DH@OLFFHCGO@expected?53?5list?5items?5for?5?8playe@ (0000)
+00274838 0040:
+	??_C@_0EA@KOPPJHK@expected?5a?5spinner?5list?5widget?5f@ (0000)
+00274878 0052:
+	??_C@_0FC@GCMGMAHG@expected?5the?5player?5profile?5sele@ (0000)
+002748CC 003b:
+	??_C@_0DL@DGCCINMB@setting?5a?5player?5profile?5require@ (0000)
+00274908 0050:
+	??_C@_0FA@MNFIIJIE@invalid?5multiplayer?5profile?5spec@ (0000)
+00274958 0052:
+	??_C@_0FC@GEGBOOAJ@expected?5a?5code?9generated?51?9wide@ (0000)
+002749B0 0066:
+	??_C@_0GG@HKMBCICA@failed?5to?5find?5the?51?9wide?5spinne@ (0000)
+00274A18 0050:
+	??_C@_0FA@OKGLHGEL@expected?5the?5multiplayer?5profile@ (0000)
+00274A68 0029:
+	??_C@_0CJ@BILCCILP@failed?5to?5retrieve?5editable?5game@ (0000)
+00274A94 0024:
+	??_C@_0CE@EHKAIEHI@unknown?5game?5engine?5option?5selec@ (0000)
+00274AB8 002f:
+	??_C@_0CP@NEIOJJBH@expected?5column?5list?5for?5game?5en@ (0000)
+00274AE8 0032:
+	??_C@_0DC@BKONMLHO@failed?5to?5invoke?5virtual?5keyboar@ (0000)
+00274B20 0041:
+	??_C@_0EB@HBCCICNL@unknown?5option?5selected?5in?5?8capt@ (0000)
+00274B64 002f:
+	??_C@_0CP@LPNNIAMP@expected?5?8captures?5to?5win?8?5optio@ (0000)
+00274B94 0020:
+	??_C@_0CA@JIGFKFNJ@expected?5?8captures?5to?5win?8?5item?$AA@ (0000)
+00274BB8 0047:
+	??_C@_0EH@JFABHGNL@unknown?5option?5selected?5in?5?8flag@ (0000)
+00274C00 0035:
+	??_C@_0DF@DCLCNIIN@expected?5?8flag?5at?5home?5to?5score?8@ (0000)
+00274C38 0026:
+	??_C@_0CG@HKINOOCO@expected?5?8flag?5at?5home?5to?5score?8@ (0000)
+00274C60 0041:
+	??_C@_0EB@CGKNEHBN@unknown?5option?5selected?5in?5?8flag@ (0000)
+00274CA4 002f:
+	??_C@_0CP@OIFCEFAJ@expected?5?8flag?5must?5reset?8?5optio@ (0000)
+00274CD4 0020:
+	??_C@_0CA@MJDABGHA@expected?5?8flag?5must?5reset?8?5item?$AA@ (0000)
+00274CF4 003d:
+	??_C@_0DN@PHJOOEPC@unknown?5option?5selected?5in?5?8sing@ (0000)
+00274D34 002b:
+	??_C@_0CL@LLJHPHCN@expected?5?8single?5flag?8?5option?5sp@ (0000)
+00274D60 0021:
+	??_C@_0CB@LHIFFFIG@expected?5?8single?5flag?8?5list?5item@ (0000)
+00274D84 0039:
+	??_C@_0DJ@HLIJINGC@unknown?5option?5selected?5in?5?8assa@ (0000)
+00274DC0 0027:
+	??_C@_0CH@PDPKILPB@expected?5?8assault?8?5option?5spinne@ (0000)
+00274DE8 001d:
+	??_C@_0BN@CBOBGHLN@expected?5?8assault?8?5list?5item?$AA@ (0000)
+00274E08 0037:
+	??_C@_0DH@MEHAIAGM@unknown?5option?5selected?5in?5?8team@ (0000)
+00274E40 0025:
+	??_C@_0CF@CJCOPGKG@expected?5?8teams?8?5option?5spinner?5@ (0000)
+00274E68 0016:
+	??_C@_0BG@PCIKNPB@expected?5?8teams?8?5item?$AA@ (0000)
+00274E80 003e:
+	??_C@_0DO@BCHNEKIC@unknown?5option?5selected?5in?5?8scor@ (0000)
+00274EC0 002c:
+	??_C@_0CM@EFNIMNE@expected?5?8score?5to?5win?8?5option?5s@ (0000)
+00274EEC 0022:
+	??_C@_0CC@HPHFEIIB@expected?5?8score?5to?5win?8?5list?5ite@ (0000)
+00274F10 003d:
+	??_C@_0DN@CIHCFDHC@unknown?5option?5selected?5in?5?8movi@ (0000)
+00274F50 002b:
+	??_C@_0CL@GEHLEAKN@expected?5?8moving?5hill?8?5option?5sp@ (0000)
+00274F7C 0021:
+	??_C@_0CB@GMMNACEB@expected?5?8moving?5hill?8?5list?5item@ (0000)
+00274FA0 003e:
+	??_C@_0DO@EGAILLBM@unknown?5option?5selected?5in?5?8kill@ (0000)
+00274FE0 002c:
+	??_C@_0CM@FACIHNEK@expected?5?8kills?5to?5win?8?5option?5s@ (0000)
+0027500C 001d:
+	??_C@_0BN@ONFPNDEA@expected?5?8kills?5to?5win?8?5item?$AA@ (0000)
+0027502C 003e:
+	??_C@_0DO@LOCDLFDG@unknown?5option?5selected?5in?5?8kill@ (0000)
+0027506C 002c:
+	??_C@_0CM@KIADHDGA@expected?5?8kill?5penalty?8?5option?5s@ (0000)
+00275098 001d:
+	??_C@_0BN@EEPNIEIC@expected?5?8kill?5penalty?8?5item?$AA@ (0000)
+002750B8 003f:
+	??_C@_0DP@OMJBMMFJ@unknown?5option?5selected?5in?5?8kill@ (0000)
+002750F8 002d:
+	??_C@_0CN@GOIPBIFO@expected?5?8kill?5in?5order?8?5option?5@ (0000)
+00275128 001e:
+	??_C@_0BO@BPPJICBD@expected?5?8kill?5in?5order?8?5item?$AA@ (0000)
+00275148 003d:
+	??_C@_0DN@CAAKCEOG@unknown?5option?5selected?5in?5?8deat@ (0000)
+00275188 002b:
+	??_C@_0CL@GMADDHDJ@expected?5?8death?5bonus?8?5option?5sp@ (0000)
+002751B4 0021:
+	??_C@_0CB@GGOOLOIH@expected?5?8death?5bonus?8?5list?5item@ (0000)
+002751D8 001d:
+	??_C@_0BN@BGJOOIEM@expected?5?8score?5to?5win?8?5item?$AA@ (0000)
+002751F8 0042:
+	??_C@_0EC@CNGNLKIP@unknown?5option?5selected?5in?5?8ball@ (0000)
+0027523C 0030:
+	??_C@_0DA@DHHJJBPA@expected?5?8ball?5spawn?5count?8?5opti@ (0000)
+0027526C 0021:
+	??_C@_0CB@KFIKNLPP@expected?5?8ball?5spawn?5count?8?5item@ (0000)
+00275290 003e:
+	??_C@_0DO@CNOIDBIE@unknown?5option?5selected?5in?5?8rand@ (0000)
+002752D0 002c:
+	??_C@_0CM@DLMIPHNC@expected?5?8random?5start?8?5option?5s@ (0000)
+002752FC 001d:
+	??_C@_0BN@IGOMDGMO@expected?5?8random?5start?8?5item?$AA@ (0000)
+0027531C 003b:
+	??_C@_0DL@ELHEFNKJ@unknown?5option?5selected?5in?5?8ball@ (0000)
+00275358 0029:
+	??_C@_0CJ@PIHLKJDG@expected?5?8ball?5type?8?5option?5spin@ (0000)
+00275384 001a:
+	??_C@_0BK@KGJGIPPN@expected?5?8ball?5type?8?5item?$AA@ (0000)
+002753A0 0041:
+	??_C@_0EB@PAOCLLOA@unknown?5option?5selected?5in?5?8spee@ (0000)
+002753E4 002f:
+	??_C@_0CP@DOBNLJPE@expected?5?8speed?5with?5ball?8?5optio@ (0000)
+00275414 0020:
+	??_C@_0CA@JLLKBAE@expected?5?8speed?5with?5ball?8?5item?$AA@ (0000)
+00275438 0044:
+	??_C@_0EE@JGOKJLCD@unknown?5option?5selected?5in?5?8trai@ (0000)
+0027547C 0032:
+	??_C@_0DC@JCPBBNEO@expected?5?8trait?5without?5ball?8?5op@ (0000)
+002754B0 0028:
+	??_C@_0CI@OIIALKKI@expected?5?8trait?5without?5ball?8?5li@ (0000)
+002754D8 0041:
+	??_C@_0EB@JHLOGGN@unknown?5option?5selected?5in?5?8trai@ (0000)
+0027551C 002f:
+	??_C@_0CP@MHIEOEHJ@expected?5?8trait?5with?5ball?8?5optio@ (0000)
+0027554C 0025:
+	??_C@_0CF@IEGNKFJE@expected?5?8trait?5with?5ball?8?5list?5@ (0000)
+00275574 003d:
+	??_C@_0DN@MLCIAKGM@unknown?5option?5selected?5in?5?8laps@ (0000)
+002755B4 002b:
+	??_C@_0CL@IHCBBJLD@expected?5?8laps?5to?5win?8?5option?5sp@ (0000)
+002755E0 001c:
+	??_C@_0BM@PDNFGFIN@expected?5?8laps?5to?5win?8?5item?$AA@ (0000)
+002755FC 003b:
+	??_C@_0DL@PFKKAJFD@unknown?5option?5selected?5in?5?8race@ (0000)
+00275638 0029:
+	??_C@_0CJ@EGKFPNMM@expected?5?8race?5type?8?5option?5spin@ (0000)
+00275664 001f:
+	??_C@_0BP@OOINMFFA@expected?5?8race?5type?8?5list?5item?$AA@ (0000)
+00275684 003e:
+	??_C@_0DO@BBKCLPHM@unknown?5option?5selected?5in?5?8team@ (0000)
+002756C4 002c:
+	??_C@_0CM@HICHJCK@expected?5?8team?5scoring?8?5option?5s@ (0000)
+002756F0 0022:
+	??_C@_0CC@EHLHFBCF@expected?5?8team?5scoring?8?5list?5ite@ (0000)
+00275718 0041:
+	??_C@_0EB@JIMOAOFB@unknown?5option?5selected?5in?5?8suic@ (0000)
+0027575C 002f:
+	??_C@_0CP@FGDBAMEF@expected?5?8suicide?5penalty?8?5optio@ (0000)
+00275790 0043:
+	??_C@_0ED@DAPJCPMO@unknown?5option?5selected?5in?5?8invi@ (0000)
+002757D4 0031:
+	??_C@_0DB@PAFJFHEI@expected?5?8invisible?5players?8?5opt@ (0000)
+00275808 0022:
+	??_C@_0CC@PDNGOBNG@expected?5?8invisible?5players?8?5ite@ (0000)
+0027582C 003d:
+	??_C@_0DN@CLJGJJAA@unknown?5option?5selected?5in?5?8odd?5@ (0000)
+0027586C 002b:
+	??_C@_0CL@GHJPIKNP@expected?5?8odd?5man?5out?8?5option?5sp@ (0000)
+00275898 001c:
+	??_C@_0BM@BHDHCLKH@expected?5?8odd?5man?5out?8?5item?$AA@ (0000)
+002758B8 0045:
+	??_C@_0EF@OIKIDCBL@unknown?5option?5selected?5in?5?8resp@ (0000)
+00275900 0033:
+	??_C@_0DD@NLKPDEHI@expected?5?8respawn?5time?5growth?8?5o@ (0000)
+00275934 0024:
+	??_C@_0CE@KBCHINMN@expected?5?8respawn?5time?5growth?8?5i@ (0000)
+00275958 003e:
+	??_C@_0DO@CKKLAEB@unknown?5option?5selected?5in?5?8resp@ (0000)
+00275998 002c:
+	??_C@_0CM@BEIKHGBH@expected?5?8respawn?5time?8?5option?5s@ (0000)
+002759C4 001d:
+	??_C@_0BN@DPHKLODK@expected?5?8respawn?5time?8?5item?$AA@ (0000)
+002759E4 0039:
+	??_C@_0DJ@DBDJNBHE@unknown?5option?5selected?5in?5?8shie@ (0000)
+00275A20 0027:
+	??_C@_0CH@LJEKNHOH@expected?5?8shields?8?5option?5spinne@ (0000)
+00275A48 0018:
+	??_C@_0BI@CEHIOBPG@expected?5?8shields?8?5item?$AA@ (0000)
+00275A60 0040:
+	??_C@_0EA@DABIHKOK@unknown?5option?5selected?5in?5?8maxi@ (0000)
+00275AA0 002e:
+	??_C@_0CO@KOPOPBJN@expected?5?8maximum?5health?8?5option@ (0000)
+00275AD0 0024:
+	??_C@_0CE@PMIGFAEH@expected?5?8maximum?5health?8?5list?5i@ (0000)
+00275AF8 0041:
+	??_C@_0EB@CKLNCFJI@unknown?5option?5selected?5in?5?8numb@ (0000)
+00275B3C 002f:
+	??_C@_0CP@OEECCHIM@expected?5?8number?5of?5lives?8?5optio@ (0000)
+00275B6C 0025:
+	??_C@_0CF@HPCBIIEO@expected?5?8number?5of?5lives?8?5list?5@ (0000)
+00275B98 0044:
+	??_C@_0EE@OIHOJDAL@unknown?5option?5selected?5in?5?8star@ (0000)
+00275BDC 0032:
+	??_C@_0DC@OMGFBFGG@expected?5?8starting?5equipment?8?5op@ (0000)
+00275C10 0023:
+	??_C@_0CD@CEBCLNHA@expected?5?8starting?5equipment?8?5it@ (0000)
+00275C34 003c:
+	??_C@_0DM@LJEKOMEA@unknown?5option?5selected?5in?5?8weap@ (0000)
+00275C70 002a:
+	??_C@_0CK@NJEJGNGB@expected?5?8weapon?5set?8?5option?5spi@ (0000)
+00275C9C 001b:
+	??_C@_0BL@EIPHFBCA@expected?5?8weapon?5set?8?5item?$AA@ (0000)
+00275CB8 003d:
+	??_C@_0DN@LNELOOFC@unknown?5option?5selected?5in?5?8vehi@ (0000)
+00275CF8 002b:
+	??_C@_0CL@PBECPNIN@expected?5?8vehicle?5set?8?5option?5sp@ (0000)
+00275D24 0021:
+	??_C@_0CB@EJJNGEPI@expected?5?8vehicle?5set?8?5list?5item@ (0000)
+00275D48 0043:
+	??_C@_0ED@LEBGDHCG@unknown?5option?5selected?5in?5?8infi@ (0000)
+00275D8C 0031:
+	??_C@_0DB@HELGEPKA@expected?5?8infinite?5grenades?8?5opt@ (0000)
+00275DC0 0027:
+	??_C@_0CH@DKDNJNOJ@expected?5?8infinite?5grenades?8?5lis@ (0000)
+00275DE8 0043:
+	??_C@_0ED@IMDCIIKE@unknown?5option?5selected?5in?5?8frie@ (0000)
+00275E2C 0031:
+	??_C@_0DB@EMJCPACC@expected?5?8friends?5on?5screen?8?5opt@ (0000)
+00275E60 0022:
+	??_C@_0CC@LMGDHIAO@expected?5?8friends?5on?5screen?8?5ite@ (0000)
+00275E88 0048:
+	??_C@_0EI@FOCJOPJP@unknown?5option?5selected?5in?5?8othe@ (0000)
+00275ED0 0036:
+	??_C@_0DG@NMIGKIPA@expected?5?8other?5players?5on?5radar@ (0000)
+00275F08 002c:
+	??_C@_0CM@LDFEKJGI@expected?5?8other?5players?5on?5radar@ (0000)
+00275F34 003f:
+	??_C@_0DP@GEBGHLEK@unknown?5option?5selected?5in?5?8rada@ (0000)
+00275F74 002d:
+	??_C@_0CN@OGAIKPEN@expected?5?8radar?5display?8?5option?5@ (0000)
+00275FA4 0023:
+	??_C@_0CD@GBAFKDJE@expected?5?8radar?5display?8?5list?5it@ (0000)
+00275FC8 003e:
+	??_C@_0DO@ENIMCAMG@expected?5a?5column?5list?5for?5the?5l@ (0000)
+00276008 002a:
+	??_C@_0CK@PKAEGOCK@expected?5text?5box?5widget?5for?5pro@ (0000)
+00276034 003a:
+	??_C@_0DK@FCMOBEK@expected?5column?5list?5for?5multipl@ (0000)
+00276070 0020:
+	??_C@_0CA@CBEFDPK@expected?5?8suicide?5penalty?8?5item?$AA@ (0000)
+00276090 0004:
+	__real@c1200000 (0000)
+00276094 0032:
+	??_C@_0DC@JFKLHNN@expected?5?8starting?5equpiment?8?5op@ (0000)
+002760C8 003c:
+	??_C@_0DM@HKEJCMPM@no?5changes?5to?5playlist?5profile?5d@ (0000)
+00276104 0037:
+	??_C@_0DH@LFKJEPCM@failed?5to?5save?5changes?5to?5multip@ (0000)
+0027613C 0028:
+	??_C@_0CI@CFFCECLC@failed?5to?5prompt?5user?5to?5rename?5@ (0000)
+00276164 0026:
+	??_C@_0CG@PAOGPANA@failed?5to?5find?5editing?5player?5pr@ (0000)
+0027618C 003c:
+	??_C@_0DM@CEMIACLO@expected?53?5list?5items?5for?5?8playe@ (0000)
+002761C8 0045:
+	??_C@_0EF@EFMLLKN@expected?5a?5spinner?5list?5widget?5f@ (0000)
+00276210 0050:
+	??_C@_0FA@JLLIDFJH@failed?5to?5set?5player?5profile?5col@ (0000)
+00276260 002d:
+	??_C@_0CN@MOIEDJPH@invalid?5player?5profile?5color?5ind@ (0000)
+00276290 0050:
+	??_C@_0FA@DIAMNMAL@expected?5the?5color?5select?5screen@ (0000)
+002762E0 0048:
+	??_C@_0EI@LGBBIBIN@invalid?5player?5profile?5specified@ (0000)
+00276328 0043:
+	??_C@_0ED@KGGAFPOI@expected?5the?5player?5profile?5sele@ (0000)
+0027636C 002b:
+	??_C@_0CL@BMHGDODI@failed?5to?5retrieve?5editable?5play@ (0000)
+00276398 0039:
+	??_C@_0DJ@EEDBFAPF@failed?5to?5invoke?5virtual?5keyboar@ (0000)
+002763D4 003a:
+	??_C@_0DK@GNCHNLBL@no?5changes?5to?5player?5profile?5det@ (0000)
+00276410 0029:
+	??_C@_0CJ@IAAFIHHO@failed?5to?5save?5changes?5to?5player@ (0000)
+0027643C 002d:
+	??_C@_0CN@MPCLCLKM@expected?5?8button?5config?8?5option?5@ (0000)
+0027646C 0023:
+	??_C@_0CD@OLPIPNIN@expected?5?8button?5config?8?5list?5it@ (0000)
+00276490 002f:
+	??_C@_0CP@BIPIEEBI@expected?5?8joystick?5config?8?5optio@ (0000)
+002764C0 0025:
+	??_C@_0CF@OPPPALBL@expected?5?8joystick?5config?8?5list?5@ (0000)
+002764E8 0034:
+	??_C@_0DE@COFFBEJJ@expected?5column?5list?5for?5control@ (0000)
+0027651C 002a:
+	??_C@_0CK@PDIFHFLO@expected?5?8autocenter?8?5option?5spi@ (0000)
+00276548 0020:
+	??_C@_0CA@LHOLDKPN@expected?5?8autocenter?8?5list?5item?$AA@ (0000)
+00276568 0035:
+	??_C@_0DF@CKIKEEOB@expected?5?8flight?5stick?5controls?8@ (0000)
+002765A0 002b:
+	??_C@_0CL@LGILJIEO@expected?5?8flight?5stick?5controls?8@ (0000)
+002765CC 0034:
+	??_C@_0DE@GKAMOJCH@expected?5?8controller?5vibration?8?5@ (0000)
+00276600 002a:
+	??_C@_0CK@MHECGMGN@expected?5?8controller?5vibration?8?5@ (0000)
+0027662C 0030:
+	??_C@_0DA@MCAAKNGI@expected?5?8look?5sensitivity?8?5opti@ (0000)
+0027665C 0026:
+	??_C@_0CG@JKPEBBJO@expected?5?8look?5sensitivity?8?5list@ (0000)
+00276684 002f:
+	??_C@_0CP@MJKCDOAK@expected?5?8invert?5joystick?8?5optio@ (0000)
+002766B4 0025:
+	??_C@_0CF@HEHNOJIA@expected?5?8invert?5joystick?8?5list?5@ (0000)
+002766DC 003d:
+	??_C@_0DN@EHAOJAGJ@expected?5column?5list?5for?5advance@ (0000)
+0027671C 0026:
+	??_C@_0CG@GJIEMKFG@unknown?5button?5config?5option?5sel@ (0000)
+00276744 002c:
+	??_C@_0CM@LCPFMMAJ@unknown?5option?5selected?5for?5joys@ (0000)
+00276770 0032:
+	??_C@_0DC@GJKGKFFM@unknown?5option?5selected?5for?5cont@ (0000)
+002767A8 0046:
+	??_C@_0EG@EHBHKPIP@unknown?5option?5selected?5for?5cont@ (0000)
+002767F0 0031:
+	??_C@_0DB@FDCPOOAP@unknown?5option?5selected?5for?5cont@ (0000)
+00276824 002d:
+	??_C@_0CN@OOBHBLBJ@unknown?5option?5selected?5for?5look@ (0000)
+00276854 002c:
+	??_C@_0CM@BMAPGOKA@unknown?5option?5selected?5for?5inve@ (0000)
+00276880 0043:
+	??_C@_0ED@LCCDOMCC@valid?5controller?5index?5required?5@ (0000)
+002768C4 0039:
+	??_C@_0DJ@HCJBFEGF@expected?53?5list?5items?5for?5?8playl@ (0000)
+00276900 0042:
+	??_C@_0EC@CGFFDICC@expected?5a?5spinner?5list?5widget?5f@ (0000)
+00276948 004d:
+	??_C@_0EN@KMDPJKLA@expected?5the?5playlist?5profile?5se@ (0000)
+00276998 003d:
+	??_C@_0DN@BMNEAMJB@sorry?0?5you?5are?5not?5allowed?5to?5de@ (0000)
+002769D8 0027:
+	??_C@_0CH@DEJGJFNG@?$CD0x?$CF08lX?5is?5not?5a?5player?5profile@ (0000)
+00276A00 0029:
+	??_C@_0CJ@OBODLPNP@?$CD0x?$CF08lX?5is?5not?5a?5playlist?5profi@ (0000)
+00276A2C 0028:
+	??_C@_0CI@ICBONEFN@unable?5to?5create?5a?5new?5untitled?5@ (0000)
+00276A54 0035:
+	??_C@_0DF@GHAGJAFN@failed?5to?5create?5a?5new?5multiplay@ (0000)
+00276A8C 0032:
+	??_C@_0DC@DAKIGPNM@failed?5to?5retrieve?5editable?5game@ (0000)
+00276AC0 003b:
+	??_C@_0DL@KBABGNPK@creating?5a?5new?5profile?5requires?5@ (0000)
+00276AFC 0026:
+	??_C@_0CG@JJGJJAEA@failed?5to?5create?5a?5new?5player?5pr@ (0000)
+00276B24 002c:
+	??_C@_0CM@KEIBNLED@failed?5to?5retrieve?5editable?5play@ (0000)
+00276B50 0037:
+	??_C@_0DH@GECHANBJ@network_game_client_request_star@ (0000)
+00276B88 000e:
+	??_C@_0O@DGLDALDL@event?5?$CB?$DN?5NULL?$AA@ (0000)
+00276B98 0048:
+	??_C@_0EI@BKECLHHJ@not?5attempting?5to?5start?5a?5new?5se@ (0000)
+00276BE0 0027:
+	??_C@_0CH@JIOCLNMI@expected?5a?5column?5list?5for?5serve@ (0000)
+00276C08 0053:
+	??_C@_0FD@LCEGCPBM@can?8t?5request?5player?5removal?5fro@ (0000)
+00276C5C 0021:
+	??_C@_0CB@NGMIIKKH@failed?5to?5request?5player?5removal@ (0000)
+00276C80 0024:
+	??_C@_0CE@CJLNJCKF@duplicate?5player?5registered?5in?5g@ (0000)
+00276CA4 003f:
+	??_C@_0DP@OCEIDKPE@closing?5widget?5?8?$CFs?8?5because?5no?5s@ (0000)
+00276CE8 0046:
+	??_C@_0EG@LAGPKDPO@failed?5to?5invoke?5the?5virtual?5key@ (0000)
+00276D30 002e:
+	??_C@_0CO@CIHPLIFE@can?8t?5create?5a?5new?5profile?5with?5@ (0000)
+00276D60 0024:
+	??_C@_0CE@MOMFODCN@failed?5to?5create?5new?5player?5prof@ (0000)
+00276D84 0030:
+	??_C@_0DA@HDOIMLAN@failed?5to?5retrieve?5newly?5created@ (0000)
+00276DB4 0026:
+	??_C@_0CG@GODFIEFJ@failed?5to?5find?5?8difficulty?8?5menu@ (0000)
+00276DDC 0030:
+	??_C@_0DA@CLKNGJMF@expected?5column?5list?5for?5difficu@ (0000)
+00305EE0 03a6:
+	_data_00305ee0 (0000)
+	_event_handler_functions (0330)
+00454AF0 016e:
+	_bss_00454af0 (0000)
+	_single_player_level_data (0018)
+	_persistant_game_data_info (0068)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

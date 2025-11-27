@@ -1,0 +1,219 @@
+/*
+ACTOR_MOVING.C
+
+symbols in this file:
+00018940 0030:
+	_actor_move_keep_moving_past_destination (0000)
+00018970 0040:
+	_actor_move_animation_busy (0000)
+000189B0 0030:
+	_actor_path_clear (0000)
+000189E0 0020:
+	_actor_path_has_path (0000)
+00018A00 0040:
+	_actor_path_at_destination (0000)
+00018A40 0040:
+	_actor_path_get_destination_firing_position_index (0000)
+00018A80 00c0:
+	_actor_path_input_new (0000)
+00018B40 0010:
+	_arccosine (0000)
+00018B50 0040:
+	_midpoint3d (0000)
+00018B90 0090:
+	_actor_test_destination (0000)
+00018C20 01d0:
+	_actor_get_stopping_distances (0000)
+00018DF0 0080:
+	_actor_move_animation_impulse (0000)
+00018E70 0090:
+	_actor_move_force_stop (0000)
+00018F00 0250:
+	_actor_move_try_evasion_vector (0000)
+00019150 01a0:
+	_actor_move_try_evasion_direction (0000)
+000192F0 0100:
+	_actor_aim_jump (0000)
+000193F0 0240:
+	_code_000193f0 (0000)
+00019630 02f0:
+	_code_00019630 (0000)
+00019920 00f0:
+	_code_00019920 (0000)
+00019A10 0090:
+	_actor_move_transform_avoidance_vector (0000)
+00019AA0 0140:
+	_actor_move_get_avoidance_direction (0000)
+00019BE0 0150:
+	_actor_move_initialize (0000)
+00019D30 0110:
+	_actor_path_3d_available (0000)
+00019E40 0280:
+	_code_00019e40 (0000)
+0001A0C0 02d0:
+	_code_0001a0c0 (0000)
+0001A390 1030:
+	_code_0001a390 (0000)
+0001B3C0 05a0:
+	_actor_path_refresh (0000)
+0001B960 03d0:
+	_actor_destination_update (0000)
+0001BD30 0130:
+	_actor_move_to_point (0000)
+0001BE60 00b0:
+	_actor_move_to_move_position (0000)
+0001BF10 00b0:
+	_actor_move_to_firing_position (0000)
+0001BFC0 00f0:
+	_actor_move_to_prop (0000)
+0001C0B0 0ac0:
+	_code_0001c0b0 (0000)
+0001CB70 0c40:
+	_actor_move_update (0000)
+0001D7B0 0090:
+	_actor_move_halt (0000)
+0001D840 0080:
+	_actor_move_halt_at_firing_position (0000)
+00245318 01e8:
+	_sense_ray_length (0000)
+	_sense_ray_offset (0004)
+	_sense_ray_divergence (0008)
+	_sense_ray_offsets (000c)
+	_sense_ray_divergences (0030)
+	_sense_ray_angles (0054)
+	_avoidance_ray_length (0078)
+	_avoidance_ray_angles (007c)
+	_avoidance_ray_offsets (009c)
+	_avoidance_ray_divergence (00a4)
+	_sense_ray_avoidance_weights (00b0)
+	_avoid_ray_avoidance_weights (01d0)
+	_avoid_ray_clear_bias_time (01d8)
+	_avoid_ray_adjacent_fractions (01dc)
+	_avoid_ray_fully_obstructed_t (01e4)
+00245500 0004:
+	__real@3daaaaab (0000)
+00245504 0004:
+	__real@bf000000 (0000)
+00245508 0019:
+	??_C@_0BJ@MLAKEMMB@evasion_vector?5?$CG?$CG?5result?$AA@ (0000)
+00245524 0021:
+	??_C@_0CB@NNMAEIGB@c?3?2halo?2SOURCE?2ai?2actor_moving?4c@ (0000)
+00245548 0038:
+	??_C@_0DI@MLEEHIMI@alignment_vector?5?$CG?$CG?5evade_direct@ (0000)
+00245580 000c:
+	??_C@_0M@LILBOJLP@collision_t?$AA@ (0000)
+0024558C 001c:
+	??_C@_0BM@PBPJGODL@ray_origin?5?$CG?$CG?5ray_direction?$AA@ (0000)
+002455A8 0020:
+	??_C@_0CA@DELIOAJE@avoidance_data?5?$CG?$CG?5avoidance_ray?$AA@ (0000)
+002455C8 002a:
+	??_C@_0CK@ELKMJFEA@?$CIangle?5?$DO?$DN?50?40f?$CJ?5?$CG?$CG?5?$CIangle?5?$DM?5_ful@ (0000)
+002455F4 0004:
+	__real@40c90fdb (0000)
+002455F8 0054:
+	??_C@_0FE@HKFOPCHI@warning?3?5actor_move_get_avoidanc@ (0000)
+0024564C 0016:
+	??_C@_0BG@BFFHAOOA@desired_facing_vector?$AA@ (0000)
+00245664 0014:
+	??_C@_0BE@NFPBALFN@facing_direction?9?$DOk?$AA@ (0000)
+00245678 0025:
+	??_C@_0CF@KDINJLFK@?$CFs?0?5?$CFs?3?5assert_valid_realcmp?$CI?$CFf?0@ (0000)
+002456A0 0016:
+	??_C@_0BG@DNKOIPNK@movement_direction?9?$DOk?$AA@ (0000)
+002456B8 0005:
+	??_C@_04MPNNEBNI@0?40f?$AA@ (0000)
+002456C0 0023:
+	??_C@_0CD@NOAIDOJA@?$CIreal_vector2d?5?$CK?$CJ?5facing_directi@ (0000)
+002456E4 0025:
+	??_C@_0CF@IPKJEDPE@?$CIreal_vector2d?5?$CK?$CJ?5movement_direc@ (0000)
+0024570C 0011:
+	??_C@_0BB@CEGHPIDG@facing_direction?$AA@ (0000)
+00245720 0013:
+	??_C@_0BD@FPDMFHB@movement_direction?$AA@ (0000)
+00245734 0004:
+	__real@3f860a92 (0000)
+00245738 0004:
+	__real@3f44ec4f (0000)
+0024573C 0004:
+	__real@3fa66666 (0000)
+00245740 0004:
+	__real@3b23d70b (0000)
+00245744 0004:
+	__real@be4ccccd (0000)
+00245748 0004:
+	__real@40200001 (0000)
+00245750 0080:
+	??_C@_0IA@DPLAEGLA@?$CImovement_direction_approximatio@ (0000)
+002457D0 0066:
+	??_C@_0GG@CIIOBGBO@?$CIbest_avoidance_direction?5?$DO?$DN?50?$CJ?5@ (0000)
+00245838 0004:
+	__real@ff7fffff (0000)
+0024583C 0004:
+	__real@41480000 (0000)
+00245840 0004:
+	__real@3ca3d70a (0000)
+00245844 0004:
+	__real@42960000 (0000)
+00245848 0027:
+	??_C@_0CH@FHDECA@avoidance_rotation?5?$CG?$CG?5emergency_@ (0000)
+00245870 004a:
+	??_C@_0EK@EPCHDGAN@actor?9?$DOcontrol?4path?4destination_@ (0000)
+002458BC 0004:
+	__real@3c23d70b (0000)
+002458C0 002e:
+	??_C@_0CO@CIMGKAKP@pathfinding?5is?5attempting?5to?5wal@ (0000)
+002458F0 0004:
+	__real@49742400 (0000)
+002458F4 002a:
+	??_C@_0CK@FMFBKFJI@?$CFs?3?5fell?5off?5end?5of?5unfinished?5p@ (0000)
+00245920 000b:
+	??_C@_0L@DMJIGJL@final_step?$AA@ (0000)
+0024592C 0004:
+	__real@3cb851ec (0000)
+00245930 0004:
+	__real@3d800000 (0000)
+00245934 000c:
+	??_C@_0M@BLMAJMLK@destination?$AA@ (0000)
+00245940 0058:
+	??_C@_0FI@KHOOINPJ@?$CIfacing_direction?5?$DN?$DN?5_actor_faci@ (0000)
+00245998 0021:
+	??_C@_0CB@CFOCDAMI@adjust?5angle?5?$CF?44f?5?9?$DO?5?$CF?44f?5?$CI?$CF?44f?$CJ@ (0000)
+002459BC 001f:
+	??_C@_0BP@KEBEJPIO@steer?5?$CF?44f?5?9?5oversteer?5to?5?$CF?44f?$AA@ (0000)
+002459DC 0029:
+	??_C@_0CJ@GAOIDHOG@steer?5?$CF?44f?5?$DM?5?$CF?44f?5?9?5clear?5overst@ (0000)
+00245A08 000b:
+	??_C@_0L@KHLHAIBH@steer?5?$CF?44f?$AA@ (0000)
+00245A14 0020:
+	??_C@_0CA@KJFKJOKH@steer?5?$CF?44f?5?$CIset?5oversteer?5?$CF?44f?$CJ?$AA@ (0000)
+00245A34 0004:
+	__real@bf800000 (0000)
+00245A38 0039:
+	??_C@_0DJ@NBFPGAMC@?$CImaximum_throttle?5?$DO?$DN?50?40f?$CJ?5?$CG?$CG?5?$CIm@ (0000)
+00245A74 0004:
+	__real@3f733333 (0000)
+00245A78 000f:
+	??_C@_0P@JJNKCIHG@?$CGfacing_vector?$AA@ (0000)
+00245A88 000f:
+	??_C@_0P@NHABDOCD@?$CB?$CCunreachable?$CC?$AA@ (0000)
+00245A98 0004:
+	__real@3a83126f (0000)
+00245A9C 001c:
+	??_C@_0BM@IMMKLGND@?$CGactor?9?$DOinput?4facing_vector?$AA@ (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

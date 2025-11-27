@@ -1,0 +1,322 @@
+/*
+SAVED_GAME_FILES.C
+
+symbols in this file:
+001B2330 0050:
+	_saved_game_files_dispose (0000)
+001B2380 0110:
+	_saved_game_file_close (0000)
+001B2490 0010:
+	_saved_game_file_get_type (0000)
+001B24A0 0010:
+	_saved_game_files_notify_memory_units_changed (0000)
+001B24B0 0130:
+	_saved_game_file_get_useable_untitled_profile_name (0000)
+001B25E0 0020:
+	_saved_game_files_take_mutex (0000)
+001B2600 0010:
+	_saved_game_files_release_mutex (0000)
+001B2610 00d0:
+	_saved_game_perform_file_system_checks (0000)
+001B26E0 0060:
+	_saved_game_file_name_unique (0000)
+001B2740 00d0:
+	_saved_game_file_remember_player1_last_used_profile_directory (0000)
+001B2810 00e0:
+	_saved_game_file_retrieve_player1_last_used_profile_directory (0000)
+001B28F0 00d0:
+	_saved_game_file_remember_last_used_multiplayer_variant_directory (0000)
+001B29C0 00e0:
+	_saved_game_file_retrieve_last_used_multiplayer_variant_directory (0000)
+001B2AA0 00d0:
+	_saved_game_file_remember_last_used_multiplayer_map (0000)
+001B2B70 00e0:
+	_saved_game_file_retrieve_last_used_multiplayer_map (0000)
+001B2C50 0090:
+	_saved_game_file_generate_checksum (0000)
+001B2CE0 0060:
+	_code_001b2ce0 (0000)
+001B2D40 00d0:
+	_code_001b2d40 (0000)
+001B2E10 0090:
+	_code_001b2e10 (0000)
+001B2EA0 0080:
+	_code_001b2ea0 (0000)
+001B2F20 00d0:
+	_code_001b2f20 (0000)
+001B2FF0 00a0:
+	_code_001b2ff0 (0000)
+001B3090 0070:
+	_code_001b3090 (0000)
+001B3100 00d0:
+	_code_001b3100 (0000)
+001B31D0 0020:
+	_code_001b31d0 (0000)
+001B31F0 0010:
+	_code_001b31f0 (0000)
+001B3200 0040:
+	_code_001b3200 (0000)
+001B3240 0180:
+	_saved_game_files_initialize (0000)
+001B33C0 0160:
+	_saved_game_file_find_profile_index_for_directory_path (0000)
+001B3520 0210:
+	_code_001b3520 (0000)
+001B3730 0200:
+	_code_001b3730 (0000)
+001B3930 01f0:
+	_code_001b3930 (0000)
+001B3B20 01e0:
+	_code_001b3b20 (0000)
+001B3D00 01e0:
+	_code_001b3d00 (0000)
+001B3EE0 0210:
+	_code_001b3ee0 (0000)
+001B40F0 00c0:
+	_saved_game_file_get_display_name (0000)
+001B41B0 0190:
+	_delete_enumerated_saved_game_file (0000)
+001B4340 0140:
+	_saved_game_file_open (0000)
+001B4480 0410:
+	_synchronize_metadata_display_name_with_profile_name (0000)
+001B4890 0170:
+	_saved_game_file_get_path_to_enclosing_directory (0000)
+001B4A00 0020:
+	_code_001b4a00 (0000)
+001B4A20 00e0:
+	_saved_game_files_delete_all_custom_profiles (0000)
+001B4B00 03e0:
+	_code_001b4b00 (0000)
+001B4EE0 0170:
+	_saved_game_files_enumerate_available_to_local_player_index (0000)
+001B5050 0390:
+	_create_enumerated_saved_game_file (0000)
+001B53E0 0010:
+	_enumerate_memory_units_test (0000)
+002A8D84 0012:
+	??_C@_0BC@BLJJLBEA@z?3?2saved?2hdmu?4map?$AA@ (0000)
+002A8D98 0008:
+	??_C@_17FKFHCLLD@?$AAu?$AA?3?$AA?2?$AA?$AA@ (0000)
+002A8DA0 004f:
+	??_C@_0EP@JOKBKMKA@?$CIn?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIn?5?$DM?5MAXIMUM_ENUMERA@ (0000)
+002A8DF0 003d:
+	??_C@_0DN@CMOABJFE@?$CImemory_unit?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CImemory_un@ (0000)
+002A8E30 0038:
+	??_C@_0DI@BLCHBGML@?$CItype?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CItype?5?$DM?5NUMBER_OF@ (0000)
+002A8E68 0010:
+	??_C@_0BA@MBMMLDEH@saved_game_file?$AA@ (0000)
+002A8E78 0025:
+	??_C@_0CF@CEEMDCJB@memory_unit?$DN?$DN_memory_unit_hard_d@ (0000)
+002A8EA0 002e:
+	??_C@_0CO@BCKNNIIL@c?3?2halo?2SOURCE?2saved?5games?2saved@ (0000)
+002A8ED0 0027:
+	??_C@_0CH@CABJEKBN@unicode?5string?5lis?5tag?5?8?$CFs?8?5not?5@ (0000)
+002A8EF8 0034:
+	??_C@_0DE@CCNCBHIA@?$CFd?5untitled?5saved?5games?$CB?5clean?5u@ (0000)
+002A8F2C 000d:
+	??_C@_0N@MFJAINNC@display_name?$AA@ (0000)
+002A8F3C 0014:
+	??_C@_0BE@IECHMDLN@XFindClose?$CI?$CJ?5failed?$AA@ (0000)
+002A8F50 0014:
+	??_C@_0BE@CGBFGEE@failed?5to?5open?5?8?$CFs?8?$AA@ (0000)
+002A8F64 0018:
+	??_C@_0BI@MCDBLMHO@failed?5to?5write?5to?5?8?$CFs?8?$AA@ (0000)
+002A8F7C 0010:
+	??_C@_0BA@BHIDMPPN@z?3?2lastprof?4txt?$AA@ (0000)
+002A8F8C 000f:
+	??_C@_0P@PDDLANDF@directory_path?$AA@ (0000)
+002A8F9C 0019:
+	??_C@_0BJ@ILDCNDOH@failed?5to?5read?5from?5?8?$CFs?8?$AA@ (0000)
+002A8FB8 0010:
+	??_C@_0BA@GCCIPEDG@z?3?2lastmpvr?4txt?$AA@ (0000)
+002A8FC8 0010:
+	??_C@_0BA@EKDJJNAJ@z?3?2lastmpmp?4txt?$AA@ (0000)
+002A8FD8 0022:
+	??_C@_0CC@DICJHHNG@XCalculateSignatureBegin?$CI?$CJ?5faile@ (0000)
+002A8FFC 0020:
+	??_C@_0CA@BGPLEIOJ@XCalculateSignatureEnd?$CI?$CJ?5failed?$AA@ (0000)
+002A901C 0023:
+	??_C@_0CD@OOPOLAPI@XCalculateSignatureUpdate?$CI?$CJ?5fail@ (0000)
+002A9040 003e:
+	??_C@_0DO@OBENHPBA@failed?5to?5create?1open?5memory?5uni@ (0000)
+002A9080 0032:
+	??_C@_0DC@DCDLAELL@?$CBsaved_game_files_globals?4enumer@ (0000)
+002A90B4 0038:
+	??_C@_0DI@CJIBOJAO@failed?5to?5close?5memory?5unit?5mapf@ (0000)
+002A90EC 0031:
+	??_C@_0DB@KHEBAFBL@saved_game_files_globals?4enumera@ (0000)
+002A9120 0075:
+	??_C@_0HF@NCILHCBD@the?5maximum?5number?5of?5game?5files@ (0000)
+002A9198 0074:
+	??_C@_0HE@GEFEBPLI@?$CIsaved_game_files_globals?4enumer@ (0000)
+002A920C 0037:
+	??_C@_0DH@DJMMBFFB@failed?5to?5open?5memory?5unit?5mapfi@ (0000)
+002A9244 003c:
+	??_C@_0DM@EFLKMKHM@memory?5unit?5mapfile?5for?5memory?5u@ (0000)
+002A9280 002b:
+	??_C@_0CL@MMBPEKOF@memory_unit_index?$DN?$DN_memory_unit_@ (0000)
+002A92AC 0030:
+	??_C@_0DA@KEOPEIAD@enumerate_mapfile_end?5FAILED?5on?5@ (0000)
+002A92DC 002b:
+	??_C@_0CL@FKDAGGDC@memory_unit_index?5?$DM?5NUMBER_OF_ME@ (0000)
+002A9308 0026:
+	??_C@_0CG@FDNENFMO@failed?5to?5initialize?5saved?5game?5@ (0000)
+002A9330 0023:
+	??_C@_0CD@KMFKMCGK@z?3?2saved?2recordings?2last_recordi@ (0000)
+002A9354 0014:
+	??_C@_0BE@MAHLJIHA@z?3?2saved?2recordings?$AA@ (0000)
+002A9368 0024:
+	??_C@_0CE@CPPICPII@z?3?2saved?2playlists?2default_playl@ (0000)
+002A938C 0013:
+	??_C@_0BD@CHHCNEEE@z?3?2saved?2playlists?$AA@ (0000)
+002A93A0 0029:
+	??_C@_0CJ@KMIGNJIF@z?3?2saved?2player_profiles?2default@ (0000)
+002A93CC 0019:
+	??_C@_0BJ@MMFOMMHB@z?3?2saved?2player_profiles?$AA@ (0000)
+002A93E8 0025:
+	??_C@_0CF@DJNNNPAO@failed?5to?5find?1create?5?8?$CFs?8?5direc@ (0000)
+002A9410 0009:
+	??_C@_08KEDOBHNG@z?3?2saved?$AA@ (0000)
+002A941C 0025:
+	??_C@_0CF@EDJJLFDE@failed?5to?5take?5save?5game?5files?5m@ (0000)
+002A9444 001d:
+	??_C@_0BN@JFILGBOA@failed?5to?5take?5mapfile?5mutex?$AA@ (0000)
+002A9468 005d:
+	??_C@_0FN@JDPEKHN@failed?5to?5enumerate?5default?5play@ (0000)
+002A94C8 002f:
+	??_C@_0CP@HLIMDDAD@failed?5to?5enumerate?5default?5play@ (0000)
+002A94F8 003a:
+	??_C@_0DK@DJADJHI@failed?5to?5open?5saved?5game?5varian@ (0000)
+002A9538 0041:
+	??_C@_0EB@JGOFDCAH@failed?5to?5close?5saved?5game?5varia@ (0000)
+002A957C 003a:
+	??_C@_0DK@BMBCBOB@failed?5to?5read?5saved?5game?5varian@ (0000)
+002A95B8 0024:
+	??_C@_0CE@HBJEEKCP@checksum?5validation?5failed?5for?5?8@ (0000)
+002A95DC 0032:
+	??_C@_0DC@DDLLOFGC@z?3?2saved?2playlists?2default_playl@ (0000)
+002A9610 0063:
+	??_C@_0GD@NCNJDMEJ@failed?5to?5enumerate?5default?5play@ (0000)
+002A9674 0035:
+	??_C@_0DF@BKMKBGOO@failed?5to?5enumerate?5default?5play@ (0000)
+002A96B0 0041:
+	??_C@_0EB@LOHPMMKC@failed?5to?5open?5saved?5game?5player@ (0000)
+002A96F8 0048:
+	??_C@_0EI@MMPCHKBD@failed?5to?5close?5saved?5game?5playe@ (0000)
+002A9740 0041:
+	??_C@_0EB@IENAFBEL@failed?5to?5read?5saved?5game?5player@ (0000)
+002A9784 003b:
+	??_C@_0DL@BFKEJFIL@invalid?5profile?5index?5?$CI?$CD?$CFd?$CJ?5into@ (0000)
+002A97C0 003c:
+	??_C@_0DM@OADCLPDL@failed?5to?5retrieve?5entry?5?$CD?$CFd?5fro@ (0000)
+002A97FC 003f:
+	??_C@_0DP@DLGHLKCC@?$CImemory_unit_index?5?$DM?5NUMBER_OF_M@ (0000)
+002A983C 003a:
+	??_C@_0DK@OGOOCDBN@failed?5to?5update?5entry?5?$CD?$CFd?5from?5@ (0000)
+002A9878 006a:
+	??_C@_0GK@FLDAFANG@can?8t?5add?5new?5entry?5to?5memory?5un@ (0000)
+002A98E4 0034:
+	??_C@_0DE@BOBAHLH@failed?5to?5append?5entry?5to?5memory@ (0000)
+002A9918 005a:
+	??_C@_0FK@CBLOIFBL@?$CImemory_unit_index?5?$DM?5NUMBER_OF_M@ (0000)
+002A9974 0025:
+	??_C@_0CF@ICMEKOH@failed?5to?5close?5memory?5unit?5map?5@ (0000)
+002A99A0 0047:
+	??_C@_0EH@EHGNFLBB@failed?5to?5update?5memory?5unit?5map@ (0000)
+002A99E8 001e:
+	??_C@_0BO@DMCNAIOL@invalid?5saved?5game?5file?5index?$AA@ (0000)
+002A9A08 0053:
+	??_C@_0FD@OFFAAIOM@delete_enumerated_saved_game_fil@ (0000)
+002A9A60 0049:
+	??_C@_0EJ@CPHOBEMG@get_nth_entry_in_mapfile?$CI?$CJ?5faile@ (0000)
+002A9AAC 0020:
+	??_C@_0CA@PLOMKDDI@failed?5to?5mount?5memory?5unit?5?$CD?$CFd?$AA@ (0000)
+002A9ACC 001e:
+	??_C@_0BO@JHLCGEHJ@failed?5to?5unmount?5memory?5unit?$AA@ (0000)
+002A9AEC 0025:
+	??_C@_0CF@GEKEHDDN@remove_nth_entry_in_mapfile?$CI?$CJ?5fa@ (0000)
+002A9B14 0033:
+	??_C@_0DD@FHIHHPPI@XDeleteSaveGame?$CI?$CJ?5failed?4?4?4?5ghos@ (0000)
+002A9B48 0051:
+	??_C@_0FB@LLIKIIKK@failed?5to?5delete?5saved?5game?5file@ (0000)
+002A9B9C 0022:
+	??_C@_0CC@MOHEDOPG@get_nth_entry_in_mapfile?$CI?$CJ?5faile@ (0000)
+002A9BC0 0076:
+	??_C@_0HG@JEIAKKMC@XCreateSaveGame?$CI?$CJ?5failed?5in?5sync@ (0000)
+002A9C38 005f:
+	??_C@_0FP@OGGBMOOA@XDeleteSaveGame?$CI?$CJ?5failed?5to?5dele@ (0000)
+002A9C98 0048:
+	??_C@_0EI@PCDMOOIF@failed?5to?5update?5memory?5unit?5map@ (0000)
+002A9CE0 005d:
+	??_C@_0FN@JIPDDLNC@XDeleteSaveGame?$CI?$CJ?5failed?5to?5dele@ (0000)
+002A9D40 0009:
+	??_C@_08ECIHENCC@blam?4sav?$AA@ (0000)
+002A9D4C 0009:
+	??_C@_08GHGJBPHH@blam?4lst?$AA@ (0000)
+002A9D58 0020:
+	??_C@_0CA@NCAMAIFN@?$CB?$CCunknown?5enumerated?5file?5type?$CC?$AA@ (0000)
+002A9D78 003a:
+	??_C@_0DK@HNEGMBMN@ustrlen?$CIgame_display_name?$CJ?$DMMAXIM@ (0000)
+002A9DB8 004a:
+	??_C@_0EK@BBJPGEHI@unable?5to?5locate?5the?5specified?5p@ (0000)
+002A9E04 0033:
+	??_C@_0DD@BNFHLJIE@player?5profile?5pathname?5doesn?8t?5@ (0000)
+002A9E38 001d:
+	??_C@_0BN@JKJBLCOL@unknown?5saved?5game?5file?5type?$AA@ (0000)
+002A9E58 000a:
+	??_C@_09MIKGBNOJ@full_path?$AA@ (0000)
+002A9E64 002b:
+	??_C@_0CL@HFLHDNAO@XDeleteSaveGame?$CI?$CJ?5failed?5to?5dele@ (0000)
+002A9E90 0032:
+	??_C@_0DC@OIGHCDPJ@failed?5to?5open?5saved?5game?5file?5t@ (0000)
+002A9EC4 0039:
+	??_C@_0DJ@PLOPDBP@failed?5to?5close?5saved?5game?5file?5@ (0000)
+002A9F00 0032:
+	??_C@_0DC@NINLIEHA@failed?5to?5read?5saved?5game?5file?5t@ (0000)
+002A9F38 0049:
+	??_C@_0EJ@PPGMEHMB@checksum?5validation?5matched?5old?9@ (0000)
+002A9F88 0092:
+	??_C@_1JC@CCAHEHH@?$AAr?$AAa?$AAn?$AAd?$AAo?$AAm?$AA?5?$AAc?$AAr?$AAa?$AAp?$AA?5?$AAf?$AAo?$AAu?$AAn?$AAd?$AA?5?$AAb?$AAy@ (0000)
+002AA01C 0026:
+	??_C@_0CG@NOPIBAJM@failed?5to?5take?5saved?5game?5files?5@ (0000)
+002AA048 00cf:
+	??_C@_0MP@HJJDKJOC@?$CI?$CIplayer_index?$DN?$DNNONE?$CJ?5?$HM?$HM?5?$CI?$CIplaye@ (0000)
+002AA118 0072:
+	??_C@_0HC@GCPOIKMM@failed?5to?5create?5new?5saved?5game?5@ (0000)
+002AA190 0047:
+	??_C@_0EH@OCBAJOLB@XCreateSaveGame?$CI?$CJ?5failed?5to?5crea@ (0000)
+002AA1D8 002c:
+	??_C@_0CM@MKDBIJMP@failed?5to?5create?5empty?5saved?5gam@ (0000)
+002AA208 0043:
+	??_C@_0ED@GALBJMAL@append_entry_to_mapfile?$CI?$CJ?5failed@ (0000)
+002AA24C 001c:
+	??_C@_0BM@GNDIHMNA@profile_index?5?$DN?$DN?5file?4index?$AA@ (0000)
+002AA268 0034:
+	??_C@_0DE@CHNKGDLO@failed?5to?5write?5blank?5saved?5game@ (0000)
+002AA29C 003b:
+	??_C@_0DL@KDHECAOO@file_close?$CI?$CJ?5failed?5in?5create_en@ (0000)
+002AA2D8 009a:
+	??_C@_0JK@CBLIPINF@?$CIsaved_game_file_type?$DMNUMBER_OF_@ (0000)
+00316934 0008:
+	_data_00316934 (0000)
+004D28D0 021c:
+	_bss_004d28d0 (0000)
+	_saved_game_files_globals (0100)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

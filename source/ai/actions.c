@@ -1,0 +1,242 @@
+/*
+ACTIONS.C
+
+symbols in this file:
+0000A880 0090:
+	_encounter_get_squad (0000)
+0000A910 0070:
+	_actor_action_perform (0000)
+0000A980 0070:
+	_actor_action_update (0000)
+0000A9F0 0070:
+	_actor_action_control (0000)
+0000AA60 0070:
+	_actor_action_replace_prop (0000)
+0000AAD0 0070:
+	_actor_action_flush_position_indices (0000)
+0000AB40 0070:
+	_actor_action_flush_structure_indices (0000)
+0000ABB0 00c0:
+	_actor_action_handle_panic_from_surprise (0000)
+0000AC70 00f0:
+	_actor_action_handle_panic_from_damage (0000)
+0000AD60 00a0:
+	_actor_action_handle_panic_from_burning_to_death (0000)
+0000AE00 0090:
+	_actor_action_handle_panic_from_attached_projectiles (0000)
+0000AE90 0050:
+	_actor_action_handle_panic_from_attached_melee_attackers (0000)
+0000AEE0 0070:
+	_actor_action_handle_berserking_from_attacking_mode (0000)
+0000AF50 00c0:
+	_actor_action_handle_berserking_from_proximity (0000)
+0000B010 0090:
+	_actor_action_handle_berserking_from_damage (0000)
+0000B0A0 00a0:
+	_actor_action_deny_transition (0000)
+0000B140 0040:
+	_code_0000b140 (0000)
+0000B180 0150:
+	_actor_action_handle_vehicle_exit (0000)
+0000B2D0 00e0:
+	_actor_action_allow_cover_seeking (0000)
+0000B3B0 0170:
+	_code_0000b3b0 (0000)
+0000B520 0090:
+	_actor_action_can_stop_guarding (0000)
+0000B5B0 0090:
+	_actor_action_can_stop_conversing (0000)
+0000B640 0150:
+	_actor_action_change (0000)
+0000B790 01d0:
+	_actor_action_test_grenade (0000)
+0000B960 0070:
+	_actor_action_try_to_seek_cover (0000)
+0000B9D0 0060:
+	_actor_action_try_to_panic (0000)
+0000BA30 00d0:
+	_actor_action_try_to_enter_vehicle (0000)
+0000BB00 0040:
+	_actor_get_pursuit_location (0000)
+0000BB40 0090:
+	_code_0000bb40 (0000)
+0000BBD0 0030:
+	_actor_action_name (0000)
+0000BC00 0030:
+	_actor_mode_name (0000)
+0000BC30 00b0:
+	_actor_action_debug_color (0000)
+0000BCE0 0060:
+	_actor_action_class (0000)
+0000BD40 0030:
+	_actor_action_get_default_state (0000)
+0000BD70 0020:
+	_set_real_vector2d (0000)
+0000BD90 0020:
+	_set_real_vector3d (0000)
+0000BDB0 0020:
+	_point_to_line_distance3d (0000)
+0000BDD0 02f0:
+	_actor_action_set_default_state (0000)
+0000C0C0 0040:
+	_actor_action_handle_initial_action (0000)
+0000C100 00a0:
+	_actor_action_handle_pending_command_list (0000)
+0000C1A0 01b0:
+	_actor_action_handle_surprise (0000)
+0000C350 0160:
+	_actor_action_handle_panic_transition (0000)
+0000C4B0 0100:
+	_actor_action_handle_berserking_from_attached_projectiles (0000)
+0000C5B0 03c0:
+	_actor_action_handle_vehicle_entry (0000)
+0000C970 03a0:
+	_code_0000c970 (0000)
+0000CD10 01a0:
+	_actor_action_handle_active_cover_seeking (0000)
+0000CEB0 06f0:
+	_actor_action_handle_combat_selection (0000)
+0000D5A0 0750:
+	_actor_action_handle_lost_contact (0000)
+0000DCF0 0090:
+	_actor_action_handle_done_fleeing (0000)
+0000DD80 01b0:
+	_actor_action_handle_combat_status (0000)
+0000DF30 0080:
+	_actor_action_handle_combat_failure (0000)
+0000DFB0 00c0:
+	_actor_action_handle_exit_pursuit (0000)
+0000E070 0120:
+	_actor_action_try_to_throw_grenade (0000)
+0000E190 0120:
+	_actor_action_consider_grenade (0000)
+0000E2B0 01d0:
+	_actor_action_try_to_evade (0000)
+0000E480 02d0:
+	_actor_action_try_to_dive (0000)
+0000E750 0140:
+	_actors_searching_same_position (0000)
+0000E890 01f0:
+	_actor_pursuit_find_nearby_actors (0000)
+0000EA80 0080:
+	_actor_action_handle_berserk_transition (0000)
+0000EB00 00b0:
+	_actor_action_handle_combat_transition (0000)
+0000EBB0 00d0:
+	_actor_action_handle_grenade_throwing (0000)
+0000EC80 0320:
+	_actor_action_handle_evasion (0000)
+0000EFA0 05f0:
+	_actor_action_handle_danger_avoidance (0000)
+00243B40 0378:
+	_global_action_functions (0000)
+	_global_dive_animation_table (0310)
+	_global_state_move_position_orders (0348)
+	_global_default_states (0360)
+00243EB8 0006:
+	??_C@_05NONFCOJF@avoid?$AA@ (0000)
+00243EC0 0009:
+	??_C@_08KNPIOEIC@converse?$AA@ (0000)
+00243ECC 0005:
+	??_C@_04DHBBMIC@obey?$AA@ (0000)
+00243ED4 0007:
+	??_C@_06MBMIPGD@charge?$AA@ (0000)
+00243EDC 0008:
+	??_C@_07CJDNLGID@vehicle?$AA@ (0000)
+00243EE4 0005:
+	??_C@_04PNOAOIAG@wait?$AA@ (0000)
+00243EEC 0007:
+	??_C@_06GFPLNGOC@search?$AA@ (0000)
+00243EF4 0006:
+	??_C@_05LPIAIMPK@guard?$AA@ (0000)
+00243EFC 0008:
+	??_C@_07CNKHPIEN@uncover?$AA@ (0000)
+00243F04 0005:
+	??_C@_04IMJFEJN@flee?$AA@ (0000)
+00243F0C 0006:
+	??_C@_05KPNEEOPH@fight?$AA@ (0000)
+00243F14 0006:
+	??_C@_05MBIJBPBC@alert?$AA@ (0000)
+00243F1C 0006:
+	??_C@_05PCJCMMHD@sleep?$AA@ (0000)
+00243F24 0005:
+	??_C@_04CGFJFPFD@none?$AA@ (0000)
+00243F30 0047:
+	??_C@_0EH@CGNGLHPB@squad_absolute_index?$DO?$DN0?5?$CG?$CG?5squad@ (0000)
+00243F78 0061:
+	??_C@_0GB@EMHNKODG@squad_index?$DO?$DN0?5?$CG?$CG?5squad_index?$DMMA@ (0000)
+00243FDC 001f:
+	??_C@_0BP@NJNCCKKA@c?3?2halo?2source?2ai?2encounters?4h?$AA@ (0000)
+00244000 004e:
+	??_C@_0EO@IKFFOKNJ@?$CIactor?9?$DOstate?4action?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIa@ (0000)
+00244050 001c:
+	??_C@_0BM@GPCMGMOB@c?3?2halo?2SOURCE?2ai?2actions?4c?$AA@ (0000)
+00244070 0054:
+	??_C@_0FE@KHFDCMPI@?$CIactor?9?$DOstimuli?4panic_type?5?$DN?$DN?50?$CJ@ (0000)
+002440C4 0028:
+	??_C@_0CI@KJFLMANP@actor?9?$DOtarget?4target_prop_index?5@ (0000)
+002440EC 002b:
+	??_C@_0CL@GADKCBCF@actor?9?$DOstate?4action?5?$DN?$DN?5_actor_ac@ (0000)
+00244118 0043:
+	??_C@_0ED@CKGDDGIN@global_action_functions?$FLnew_acti@ (0000)
+00244160 0046:
+	??_C@_0EG@OMPPNNLA@?$CInew_action_type?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CInew_a@ (0000)
+002441A8 0008:
+	??_C@_07CIFAGBMG@unknown?$AA@ (0000)
+002441B0 002e:
+	??_C@_0CO@OBMELGHJ@actor?9?$DOstimuli?4panic_prop_index?5@ (0000)
+002441E0 0004:
+	__real@40c00000 (0000)
+002441E4 0004:
+	__real@40400000 (0000)
+002441E8 0056:
+	??_C@_0FG@OAJOJGLC@escape_direction_reference?5?$CG?$CG?5es@ (0000)
+00244240 0004:
+	__real@be99999a (0000)
+00244244 0004:
+	__real@3d088889 (0000)
+00244248 0039:
+	??_C@_0DJ@MMBFFLAI@actor?9?$DOdanger_zone?4danger_type?5?$DO@ (0000)
+00244284 002b:
+	??_C@_0CL@HAGOODCI@actor?9?$DOstate?4action?5?$DN?$DN?5_actor_ac@ (0000)
+002442B0 00a6:
+	??_C@_0KG@MODGEEMN@?$CBactor?9?$DOstate?4action_data?4charge@ (0000)
+00244358 0033:
+	??_C@_0DD@BHCNCEDG@?$CBactor?9?$DOstate?4action_data?4charge@ (0000)
+0024438C 002c:
+	??_C@_0CM@BKKPPKIL@actor?9?$DOstate?4action?5?$DN?$DN?5_actor_ac@ (0000)
+002443B8 0008:
+	??_C@_07IPNMCAN@success?$AA@ (0000)
+002443C0 0046:
+	??_C@_0EG@EGFAACLG@handled?5?$HM?$HM?5?$CIactor_action_class?$CIa@ (0000)
+00244408 000a:
+	??_C@_09FGCFOJPF@encounter?$AA@ (0000)
+00244414 0025:
+	??_C@_0CF@BPNEOJLI@evade_direction?5?$DN?$DN?5_actor_evade_@ (0000)
+00244440 0052:
+	??_C@_0FC@DABHPCKC@?$CIpossibility?9?$DOanimation_directio@ (0000)
+00244494 0004:
+	__real@40e00000 (0000)
+00244498 0004:
+	__real@42340000 (0000)
+0024449C 0004:
+	__real@7f7fffff (0000)
+002B6AD0 0010:
+	_global_actor_mode_names (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

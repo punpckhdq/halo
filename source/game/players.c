@@ -1,0 +1,242 @@
+/*
+PLAYERS.C
+
+symbols in this file:
+000A9470 0070:
+	_players_initialize (0000)
+000A94E0 00b0:
+	_players_initialize_for_new_map (0000)
+000A9590 0020:
+	_players_dispose_from_old_map (0000)
+000A95B0 0030:
+	_players_dispose (0000)
+000A95E0 0020:
+	_machine_get_player_list (0000)
+000A9600 0050:
+	_code_000a9600 (0000)
+000A9650 0060:
+	_local_player_exists (0000)
+000A96B0 0050:
+	_find_unused_local_player_index (0000)
+000A9700 0020:
+	_player_delete (0000)
+000A9720 0010:
+	_players_get_respawn_failure (0000)
+000A9730 0050:
+	_local_player_get_player_index (0000)
+000A9780 00a0:
+	_local_player_set_player_index (0000)
+000A9820 0010:
+	_local_player_count (0000)
+000A9830 0040:
+	_local_player_get_next (0000)
+000A9870 0050:
+	_player_index_from_unit_index (0000)
+000A98C0 0090:
+	_player_died (0000)
+000A9950 0010:
+	_players_are_all_dead (0000)
+000A9960 00c0:
+	_players_set_local_player_unit (0000)
+000A9A20 0010:
+	_players_get_combined_pvs_local (0000)
+000A9A30 0010:
+	_players_get_combined_pvs (0000)
+000A9A40 0020:
+	_player_input_enable (0000)
+000A9A60 0020:
+	_player_input_enabled (0000)
+000A9A80 00f0:
+	_any_player_is_in_the_air (0000)
+000A9B70 0050:
+	_any_player_is_dead (0000)
+000A9BC0 0040:
+	_code_000a9bc0 (0000)
+000A9C00 00e0:
+	_code_000a9c00 (0000)
+000A9CE0 0120:
+	_player_control_fix_for_loaded_game_state (0000)
+000A9E00 0050:
+	_player_get_starting_location_count (0000)
+000A9E50 00c0:
+	_player_get_starting_location (0000)
+000A9F10 0070:
+	_placement_data_set_change_color (0000)
+000A9F80 0070:
+	_code_000a9f80 (0000)
+000A9FF0 0170:
+	_code_000a9ff0 (0000)
+000AA160 0020:
+	_code_000aa160 (0000)
+000AA180 0010:
+	_code_000aa180 (0000)
+000AA190 0090:
+	_unit_should_autopick_weapon (0000)
+000AA220 0020:
+	_code_000aa220 (0000)
+000AA240 00c0:
+	_code_000aa240 (0000)
+000AA300 00b0:
+	_code_000aa300 (0000)
+000AA3B0 00b0:
+	_code_000aa3b0 (0000)
+000AA460 0090:
+	_code_000aa460 (0000)
+000AA4F0 0040:
+	_code_000aa4f0 (0000)
+000AA530 0030:
+	_code_000aa530 (0000)
+000AA560 0030:
+	_code_000aa560 (0000)
+000AA590 0070:
+	_players_handle_deleted_object (0000)
+000AA600 0020:
+	_random_direction3d (0000)
+000AA620 0040:
+	_valid_real_vector2d (0000)
+000AA660 0120:
+	_player_new (0000)
+000AA780 0150:
+	_player_add_equipment (0000)
+000AA8D0 0110:
+	_player_aiming_vector_from_facing (0000)
+000AA9E0 0510:
+	_code_000aa9e0 (0000)
+000AAEF0 0060:
+	_player_teleport (0000)
+000AAF50 00d0:
+	_find_best_starting_location_index (0000)
+000AB020 0330:
+	_code_000ab020 (0000)
+000AB350 00f0:
+	_code_000ab350 (0000)
+000AB440 0250:
+	_code_000ab440 (0000)
+000AB690 00f0:
+	_player_handle_powerup (0000)
+000AB780 00a0:
+	_player_handle_powerup_minor (0000)
+000AB820 0070:
+	_code_000ab820 (0000)
+000AB890 01a0:
+	_players_debug_render (0000)
+000ABA30 0090:
+	_debug_player_teleport (0000)
+000ABAC0 01d0:
+	_players_respawn_coop (0000)
+000ABC90 0140:
+	_code_000abc90 (0000)
+000ABDD0 02e0:
+	_players_reconnect_to_structure_bsp (0000)
+000AC0B0 01c0:
+	_code_000ac0b0 (0000)
+000AC270 00b0:
+	_code_000ac270 (0000)
+000AC320 0150:
+	_code_000ac320 (0000)
+000AC470 06e0:
+	_players_update_before_game (0000)
+000ACB50 0320:
+	_code_000acb50 (0000)
+000ACE70 00f0:
+	_code_000ace70 (0000)
+000ACF60 0330:
+	_players_update_after_game (0000)
+0025CED8 006c:
+	_rdata_0025ced8 (0000)
+0025CF44 001a:
+	??_C@_0BK@OOAKICCI@players_update_after_game?$AA@ (0000)
+0025CF60 001b:
+	??_C@_0BL@FKGHDGFM@players_update_before_game?$AA@ (0000)
+0025CF7C 0010:
+	??_C@_0BA@CEEHCBBD@players?5globals?$AA@ (0000)
+0025CF8C 0006:
+	??_C@_05EINLALJG@teams?$AA@ (0000)
+0025CF94 0008:
+	??_C@_07BCGOFIOM@players?$AA@ (0000)
+0025CF9C 001a:
+	??_C@_0BK@CGPNFENM@failed?5to?5create?5a?5player?$AA@ (0000)
+0025CFB8 001e:
+	??_C@_0BO@IAEAGICD@c?3?2halo?2SOURCE?2game?2players?4c?$AA@ (0000)
+0025CFD8 004f:
+	??_C@_0EP@PCIBAKOM@local_player_index?$DO?$DNNONE?5?$CG?$CG?5loca@ (0000)
+0025D028 009b:
+	??_C@_0JL@EEPEKCFO@tried?5to?5fix?5broken?5player?5contr@ (0000)
+0025D0C8 0069:
+	??_C@_0GJ@LOLKJFPO@failed?5to?5correct?5player?5control@ (0000)
+0025D134 0031:
+	??_C@_0DB@FKMNJOMP@corrected?5player?5control?5for?5res@ (0000)
+0025D168 0070:
+	??_C@_0HA@DONIDEOA@?$CI?$CIlocal_player_index?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIloc@ (0000)
+0025D1D8 002b:
+	??_C@_0CL@OKOJEGMM@Could?5not?5attach?5starting?5weapon@ (0000)
+0025D204 0021:
+	??_C@_0CB@EBNMJKAL@player?9?$DOlocal_player_index?$CB?$DNNONE@ (0000)
+0025D228 002f:
+	??_C@_0CP@BNOOKFKL@couldn?8t?5teleport?5player?5into?5a?5@ (0000)
+0025D258 0019:
+	??_C@_0BJ@LHNHGGK@player?9?$DOunit_index?$CB?$DNNONE?$AA@ (0000)
+0025D274 0006:
+	??_C@_05MHMEBBGO@scale?$AA@ (0000)
+0025D27C 0025:
+	??_C@_0CF@PKKNMABJ@magnitude3d?$CI?$CGbest_adjustment_vec@ (0000)
+0025D2A4 0032:
+	??_C@_0DC@CLGKJEDK@source_unit_index?$DN?$DNNONE?5?$HM?$HM?5local@ (0000)
+0025D2D8 0008:
+	__real@3fe6a09e60000000 (0000)
+0025D2E0 003a:
+	??_C@_0DK@GFFNPIMP@powerup_type?$DO?$DN0?5?$CG?$CG?5powerup_type?$DM@ (0000)
+0025D31C 0016:
+	??_C@_0BG@HMDKOAOM@no?5players?5in?5the?5bsp?$AA@ (0000)
+0025D334 0013:
+	??_C@_0BD@ELAHGGCE@seat_index?5?$CB?$DN?5NONE?$AA@ (0000)
+0025D348 0046:
+	??_C@_0EG@POGHKPOA@?$CINONE?5?$DN?$DN?5control_data?4zoom_level@ (0000)
+0025D390 008c:
+	??_C@_0IM@DKBPHNBM@?$CINONE?5?$DN?$DN?5control_data?4grenade_in@ (0000)
+0025D420 0085:
+	??_C@_0IF@OCHKLACI@?$CINONE?5?$DN?$DN?5control_data?4weapon_ind@ (0000)
+0025D4A8 004c:
+	??_C@_0EM@ECBIAFIL@?$CINONE?5?$DN?$DN?5action?9?$DOdesired_zoom_le@ (0000)
+0025D4F8 0095:
+	??_C@_0JF@HCBNBPOG@?$CINONE?5?$DN?$DN?5action?9?$DOdesired_grenade@ (0000)
+0025D590 008e:
+	??_C@_0IO@DMKDCDID@?$CINONE?5?$DN?$DN?5action?9?$DOdesired_weapon_@ (0000)
+0025D620 0018:
+	??_C@_0BI@GKAKFFBF@action?9?$DOprimary_trigger?$AA@ (0000)
+0025D638 0027:
+	??_C@_0CH@OILDLPCJ@?$CFs?3?5assert_valid_real_vector2d?$CI?$CF@ (0000)
+0025D660 0012:
+	??_C@_0BC@MPDBBHIH@?$CGaction?9?$DOthrottle?$AA@ (0000)
+0025D674 001b:
+	??_C@_0BL@PMBMFGJI@action?9?$DOdesired_facing?4yaw?$AA@ (0000)
+0025D690 001d:
+	??_C@_0BN@NJOPCJPO@action?9?$DOdesired_facing?4pitch?$AA@ (0000)
+0025D6B0 0042:
+	??_C@_0EC@JMPLFNIK@action_index?$DO?$DN0?5?$CG?$CG?5action_index?$DM@ (0000)
+0025D6F4 003b:
+	??_C@_0DL@NOPAIALJ@?$CB?$CB?$CBWARNING?$CB?$CB?$CB?5teleported?5player?5@ (0000)
+0025D730 0004:
+	__real@3c360b61 (0000)
+002DEE08 0c18:
+	_data_002dee08 (0000)
+00453408 005d:
+	_bss_00453408 (0000)
+	_debug_render_player_teleport (005c)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

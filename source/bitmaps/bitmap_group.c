@@ -1,0 +1,313 @@
+/*
+BITMAP_GROUP.C
+
+symbols in this file:
+00065210 0010:
+	_code_00065210 (0000)
+00065220 0020:
+	_code_00065220 (0000)
+00065240 0420:
+	_code_00065240 (0000)
+00065660 0050:
+	_bitmap_group_try_and_get_bitmap (0000)
+000656B0 00e0:
+	_bitmap_group_get_bitmap_from_sequence (0000)
+00065790 03f0:
+	_bitmap_group_add_bitmap (0000)
+002523E0 0009:
+	??_C@_08PODLPFBP@bitmaps?$CK?$AA@ (0000)
+002523EC 000b:
+	??_C@_0L@MHNIOAFC@sequences?$CK?$AA@ (0000)
+002523F8 0010:
+	??_C@_0BA@IDLEJNDG@sprite?5spacing?$CK?$AA@ (0000)
+00252408 000d:
+	??_C@_0N@JBKPDNJN@sprite?5usage?$AA@ (0000)
+00252418 003d:
+	??_C@_0DN@LIABDKDH@Sprite?5usage?5controls?5the?5backgr@ (0000)
+00252458 001a:
+	??_C@_0BK@PEJHLPMF@?4?4?4more?5sprite?5processing?$AA@ (0000)
+00252474 002d:
+	??_C@_0CN@MNMFNJEI@mipmap?5count?3levels?$CD0?5defaults?5t@ (0000)
+002524A4 0032:
+	??_C@_0DC@IOGOKMGM@alpha?5bias?3?$FL?91?01?$FN?$CDaffects?5alpha?5@ (0000)
+002524D8 004a:
+	??_C@_0EK@LGHFBHCF@blur?5filter?5size?3?$FL0?010?$FN?5pixels?$CDb@ (0000)
+00252524 000e:
+	??_C@_0O@HHLKLECM@miscellaneous?$AA@ (0000)
+00252534 0016:
+	??_C@_0BG@DPOLDEKM@processed?5pixel?5data?$CK?$AA@ (0000)
+0025254C 002e:
+	??_C@_0CO@DGGLDMI@Pixel?5data?5after?5being?5processed@ (0000)
+0025257C 0015:
+	??_C@_0BF@IFIJLIHA@processed?5pixel?5data?$AA@ (0000)
+00252594 001d:
+	??_C@_0BN@KONKDNNH@compressed?5color?5plate?5data?$CK?$AA@ (0000)
+002525B4 001b:
+	??_C@_0BL@DFHBBBIO@color?5plate?5height?$CK?3pixels?$AA@ (0000)
+002525D0 001a:
+	??_C@_0BK@DBGDBACB@color?5plate?5width?$CK?3pixels?$AA@ (0000)
+002525EC 0038:
+	??_C@_0DI@PNMNMEDC@The?5original?5TIFF?5file?5used?5to?5i@ (0000)
+00252624 000c:
+	??_C@_0M@OOALLIOJ@color?5plate?$AA@ (0000)
+00252630 0014:
+	??_C@_0BE@LBDABFMB@sprite?5budget?5count?$AA@ (0000)
+00252644 0013:
+	??_C@_0BD@MBLHAGLG@sprite?5budget?5size?$AA@ (0000)
+00252658 00c0:
+	??_C@_0MA@NPOIOCI@When?5creating?5a?5sprite?5group?0?5sp@ (0000)
+00252718 0012:
+	??_C@_0BC@FOKLDGHM@sprite?5processing?$AA@ (0000)
+00252730 00a7:
+	??_C@_0KH@FAIFDBCJ@bump?5height?3repeats?$CDthe?5apparent@ (0000)
+002527D8 0038:
+	??_C@_0DI@CCFOOEFG@sharpen?5amount?3?$FL0?01?$FN?$CDsharpens?5mi@ (0000)
+00252810 0063:
+	??_C@_0GD@GEAGIEIP@detail?5fade?5factor?3?$FL0?01?$FN?$CD0?5means@ (0000)
+00252874 0039:
+	??_C@_0DJ@BEENCLGA@These?5properties?5control?5how?5mip@ (0000)
+002528B0 0010:
+	??_C@_0BA@KFPIBANN@post?9processing?$AA@ (0000)
+002528C0 0006:
+	??_C@_05GECEPKB@flags?$AA@ (0000)
+002528C8 029e:
+	??_C@_0CJO@FGMDBDDK@Usage?5controls?5how?5mipmaps?5are?5g@ (0000)
+00252B68 0006:
+	??_C@_05HNCIIKBA@usage?$AA@ (0000)
+00252B70 0550:
+	??_C@_0FFA@NKBLAKLE@Format?5controls?5how?5pixels?5will?5@ (0000)
+002530C0 0007:
+	??_C@_06DLEPGFEF@format?$AA@ (0000)
+002530C8 0246:
+	??_C@_0CEG@CAJOMHCD@Type?5controls?5bitmap?5?8geometry?8?4@ (0000)
+00253310 0005:
+	??_C@_04GPMDFGEJ@type?$AA@ (0000)
+00253318 0007:
+	??_C@_06PCHFJCOP@bitmap?$AA@ (0000)
+00253320 0011:
+	??_C@_0BB@FKJKINHO@color_plate_data?$AA@ (0000)
+00253334 0012:
+	??_C@_0BC@EJFOKKAM@bitmap_pixel_data?$AA@ (0000)
+00253348 0010:
+	??_C@_0BA@HOHDIMNA@double?5multiply?$AA@ (0000)
+00253358 000d:
+	??_C@_0N@KKNPCJNO@multiply?1min?$AA@ (0000)
+00253368 0017:
+	??_C@_0BH@PLGFAMGD@blend?1add?1subtract?1max?$AA@ (0000)
+00253380 0008:
+	??_C@_07NGNIANIE@512x512?$AA@ (0000)
+00253388 0008:
+	??_C@_07ENHBDHPJ@256x256?$AA@ (0000)
+00253390 0008:
+	??_C@_07LFCKPLAB@128x128?$AA@ (0000)
+00253398 0006:
+	??_C@_05PNPIEGAM@64x64?$AA@ (0000)
+002533A0 0006:
+	??_C@_05HCOEEHHC@32x32?$AA@ (0000)
+002533A8 000b:
+	??_C@_0L@FEJFGKNE@monochrome?$AA@ (0000)
+002533B4 000d:
+	??_C@_0N@IHCHFFCJ@32?9bit?5color?$AA@ (0000)
+002533C4 000d:
+	??_C@_0N@OEHNNLBN@16?9bit?5color?$AA@ (0000)
+002533D4 0023:
+	??_C@_0CD@OMBPPCAE@compressed?5with?5interpolated?5alp@ (0000)
+002533F8 001f:
+	??_C@_0BP@DINLCHDL@compressed?5with?5explicit?5alpha?$AA@ (0000)
+00253418 0027:
+	??_C@_0CH@NDOHNPCP@compressed?5with?5color?9key?5transp@ (0000)
+00253440 000b:
+	??_C@_0L@KNGGHDGB@vector?5map?$AA@ (0000)
+0025344C 000a:
+	??_C@_09LLANHIEE@light?5map?$AA@ (0000)
+00253458 000b:
+	??_C@_0L@PNAKEIEN@detail?5map?$AA@ (0000)
+00253464 000b:
+	??_C@_0L@CFACPNGJ@height?5map?$AA@ (0000)
+00253470 000c:
+	??_C@_0M@JIBEDIPA@alpha?9blend?$AA@ (0000)
+0025347C 0012:
+	??_C@_0BC@LGCCEBL@interface?5bitmaps?$AA@ (0000)
+00253490 0008:
+	??_C@_07CIPBMLAN@sprites?$AA@ (0000)
+00253498 000a:
+	??_C@_09GCKGAOCN@cube?5maps?$AA@ (0000)
+002534A4 000c:
+	??_C@_0M@OCLHNBC@3D?5textures?$AA@ (0000)
+002534B0 000c:
+	??_C@_0M@JFIODBHN@2D?5textures?$AA@ (0000)
+002534BC 0016:
+	??_C@_0BG@BOBOGCPF@filthy?5sprite?5bug?5fix?$AA@ (0000)
+002534D4 0019:
+	??_C@_0BJ@MGIDJLPC@uniform?5sprite?5sequences?$AA@ (0000)
+002534F0 001f:
+	??_C@_0BP@GKLFCFJP@disable?5height?5map?5compression?$AA@ (0000)
+00253510 001b:
+	??_C@_0BL@LJMPIHHF@enable?5diffusion?5dithering?$AA@ (0000)
+0025352C 0009:
+	??_C@_08BBPCEBFO@sprites?$CK?$AA@ (0000)
+00253538 000e:
+	??_C@_0O@NEMJLKKP@bitmap?5count?$CK?$AA@ (0000)
+00253548 0014:
+	??_C@_0BE@IAPINFEM@first?5bitmap?5index?$CK?$AA@ (0000)
+0025355C 0006:
+	??_C@_05HLPJDIEE@name?$FO?$AA@ (0000)
+00253564 001c:
+	??_C@_0BM@FLKAGKOE@bitmap_group_sequence_block?$AA@ (0000)
+00253580 0008:
+	??_C@_07KFCNMBIK@bottom?$CK?$AA@ (0000)
+00253588 0005:
+	??_C@_04GNFAANMA@top?$CK?$AA@ (0000)
+00253590 0007:
+	??_C@_06NPIMMHAE@right?$CK?$AA@ (0000)
+00253598 0006:
+	??_C@_05ECAHMNDL@left?$CK?$AA@ (0000)
+002535A0 000e:
+	??_C@_0O@DIHOPGBD@bitmap?5index?$CK?$AA@ (0000)
+002535B0 001a:
+	??_C@_0BK@HODJICEH@bitmap_group_sprite_block?$AA@ (0000)
+002535CC 000f:
+	??_C@_0P@CIKFOMOO@pixels?5offset?$CK?$AA@ (0000)
+002535DC 000e:
+	??_C@_0O@IBFLDFCG@mipmap?5count?$CK?$AA@ (0000)
+002535EC 0014:
+	??_C@_0BE@DBBAACBH@registration?5point?$CK?$AA@ (0000)
+00253600 0007:
+	??_C@_06MOLMBNBJ@flags?$CK?$AA@ (0000)
+00253608 0039:
+	??_C@_0DJ@DPDJDOCI@format?$CK?$CDdetermines?5how?5pixels?5ar@ (0000)
+00253644 0023:
+	??_C@_0CD@BFJPHNAO@type?$CK?$CDdetermines?5bitmap?5?8geometr@ (0000)
+00253668 0037:
+	??_C@_0DH@NPAEDGFL@depth?$CK?3pixels?$CDdepth?5is?51?5for?52D?5@ (0000)
+002536A0 000f:
+	??_C@_0P@CNDIOOOJ@height?$CK?3pixels?$AA@ (0000)
+002536B0 000e:
+	??_C@_0O@MPNLAAPG@width?$CK?3pixels?$AA@ (0000)
+002536C0 000b:
+	??_C@_0L@EPCIMBHC@signature?$CK?$AA@ (0000)
+002536CC 0012:
+	??_C@_0BC@DEJOGKGO@bitmap_data_block?$AA@ (0000)
+002536E0 0007:
+	??_C@_06PMDIBCMC@v16u16?$AA@ (0000)
+002536E8 0007:
+	??_C@_06HPJICMPM@linear?$AA@ (0000)
+002536F0 0009:
+	??_C@_08EPMFLMOE@swizzled?$AA@ (0000)
+002536FC 000b:
+	??_C@_0L@CBJKOGIC@palettized?$AA@ (0000)
+00253708 000b:
+	??_C@_0L@NHGFHLFK@compressed?$AA@ (0000)
+00253714 0018:
+	??_C@_0BI@DGLMAALD@power?5of?5two?5dimensions?$AA@ (0000)
+0025372C 0008:
+	??_C@_07MGBABJNN@p8?9bump?$AA@ (0000)
+00253734 0005:
+	??_C@_04KCNFDCG@dxt5?$AA@ (0000)
+0025373C 0005:
+	??_C@_04FMHHPEKA@dxt3?$AA@ (0000)
+00253744 0005:
+	??_C@_04GOEBJGCC@dxt1?$AA@ (0000)
+0025374C 0008:
+	??_C@_07KBGOCIMM@unused5?$AA@ (0000)
+00253754 0008:
+	??_C@_07LIHFBJIN@unused4?$AA@ (0000)
+0025375C 0009:
+	??_C@_08NFFJKKBK@a8r8g8b8?$AA@ (0000)
+00253768 0009:
+	??_C@_08NFDKFODA@x8r8g8b8?$AA@ (0000)
+00253774 0009:
+	??_C@_08BDFHIPJK@a4r4g4b4?$AA@ (0000)
+00253780 0009:
+	??_C@_08DBEMAEHP@a1r5g5b5?$AA@ (0000)
+0025378C 0008:
+	??_C@_07PHDEIPEK@unused3?$AA@ (0000)
+00253794 0007:
+	??_C@_06FKODKGEF@r5g6b5?$AA@ (0000)
+0025379C 0008:
+	??_C@_07OOCPLOAL@unused2?$AA@ (0000)
+002537A4 0008:
+	??_C@_07MFACONMI@unused1?$AA@ (0000)
+002537AC 0005:
+	??_C@_04OEKPGJHF@a8y8?$AA@ (0000)
+002537B4 0004:
+	??_C@_03BBJOFPKB@ay8?$AA@ (0000)
+002537B8 0003:
+	??_C@_02EMABMJMJ@y8?$AA@ (0000)
+002537BC 0003:
+	??_C@_02FODEDLAB@a8?$AA@ (0000)
+002537C0 0009:
+	??_C@_08LCBPNCNK@cube?5map?$AA@ (0000)
+002537CC 000b:
+	??_C@_0L@DJPJAAIO@3D?5texture?$AA@ (0000)
+002537D8 000b:
+	??_C@_0L@PIHHNPEO@2D?5texture?$AA@ (0000)
+002537E8 0049:
+	??_C@_0EJ@OLILMBBF@?$CB?$CBMUST?5BE?5FIXED?3?5bitmap?5group?5?8?$CF@ (0000)
+00253838 0051:
+	??_C@_0FB@JLLAHNBC@?$CB?$CBMUST?5BE?5FIXED?3?5bitmap?5group?5?8?$CF@ (0000)
+0025388C 003f:
+	??_C@_0DP@LJKAEFNF@?$CB?$CBMUST?5BE?5FIXED?3?5bitmap?5group?5?8?$CF@ (0000)
+002538D0 004e:
+	??_C@_0EO@OAADPGCE@?$CB?$CBMUST?5BE?5FIXED?3?5bitmap?5group?5?8?$CF@ (0000)
+00253920 005e:
+	??_C@_0FO@FOOFPLKF@?$CB?$CBMUST?5BE?5FIXED?3?5bitmap?5group?5?8?$CF@ (0000)
+00253980 0023:
+	??_C@_0CD@BILOFJCH@bitmap?5group?5?8?$CFs?8?5has?5?$CFd?5sequenc@ (0000)
+002539A4 0012:
+	??_C@_0BC@BFAICBN@?$CB?$CBMUST?5BE?5FIXED?3?5?$AA@ (0000)
+002539B8 0021:
+	??_C@_0CB@DBDAHEOF@bitmap?5group?5?8?$CFs?8?5has?5?$CFd?5bitmaps@ (0000)
+002539E0 0045:
+	??_C@_0EF@JJMMADOM@?$CB?$CBMUST?5BE?5FIXED?3?5bitmap?5?$CD?$CFd?5of?5g@ (0000)
+00253A28 003a:
+	??_C@_0DK@IPFAJPOP@?$CB?$CBMUST?5BE?5FIXED?3?5bitmap?5?$CD?$CFd?5of?5g@ (0000)
+00253A64 0030:
+	??_C@_0DA@OHKFJKNL@?$CD?$CD?$CD?5FATAL_ERROR?5failed?5to?5fix?5bi@ (0000)
+00253A94 0024:
+	??_C@_0CE@BCHDGFBI@sequence_index?$DO?$DN0?5?$CG?$CG?5frame_index@ (0000)
+00253AB8 0026:
+	??_C@_0CG@LLBBNHEP@c?3?2halo?2SOURCE?2bitmaps?2bitmap_gr@ (0000)
+00253AE0 003c:
+	??_C@_0DM@LBADMOEL@?$CD?$CD?$CD?5ERROR?5failed?5to?5add?5bitmap?5t@ (0000)
+00253B1C 000b:
+	??_C@_0L@CJDGMBAB@new_bitmap?$AA@ (0000)
+00253B28 0030:
+	??_C@_0DA@KJFOMJIA@?$CD?$CD?$CD?5WARNING?5bitmap?5group?5pixel?5d@ (0000)
+00253B58 0011:
+	??_C@_0BB@PIAKKBNN@space_between?$DO?$DN0?$AA@ (0000)
+00253B70 007e:
+	??_C@_0HO@CGGNING@?$CIbyte?$CK?$CJbitmap?9?$DObase_address?5?$CL?5bi@ (0000)
+00253BF0 003e:
+	??_C@_0DO@OLLHEHHP@?$CIbyte?$CK?$CJbitmap?9?$DObase_address?$DO?$DN?$CIby@ (0000)
+00253C30 0019:
+	??_C@_0BJ@ICGOMECA@?$CBbitmap?9?$DOhardware_format?$AA@ (0000)
+00253C4C 003d:
+	??_C@_0DN@DEAHHMKK@skipping?5bitmap?5with?5non?5power?9o@ (0000)
+00253C90 0040:
+	??_C@_0EA@IKDHKBOI@skipping?5bitmap?5with?5non?9power?9o@ (0000)
+00253CD0 0034:
+	??_C@_0DE@FKIMOKAO@skipping?5cube?5map?5with?5non?9squar@ (0000)
+002DC0D0 0590:
+	_global_bitmap_reference (0000)
+	_global_bitmap_reference_optional (000c)
+	_bitmap_pixel_data (035c)
+	_color_plate_data (036c)
+	_bitmap_group (0530)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

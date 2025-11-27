@@ -1,0 +1,423 @@
+/*
+HS_COMPILE.C
+
+symbols in this file:
+000B46B0 02c0:
+	_code_000b46b0 (0000)
+000B4970 00b0:
+	_code_000b4970 (0000)
+000B4A20 00b0:
+	_hs_compile_initialize (0000)
+000B4AD0 0070:
+	_code_000b4ad0 (0000)
+000B4B40 0030:
+	_hs_verify_source_offset (0000)
+000B4B70 0050:
+	_code_000b4b70 (0000)
+000B4BC0 0020:
+	_code_000b4bc0 (0000)
+000B4BE0 0120:
+	_code_000b4be0 (0000)
+000B4D00 00c0:
+	_code_000b4d00 (0000)
+000B4DC0 0130:
+	_code_000b4dc0 (0000)
+000B4EF0 00f0:
+	_code_000b4ef0 (0000)
+000B4FE0 0120:
+	_code_000b4fe0 (0000)
+000B5100 0080:
+	_code_000b5100 (0000)
+000B5180 00b0:
+	_code_000b5180 (0000)
+000B5230 00d0:
+	_code_000b5230 (0000)
+000B5300 01d0:
+	_code_000b5300 (0000)
+000B54D0 0100:
+	_code_000b54d0 (0000)
+000B55D0 0070:
+	_code_000b55d0 (0000)
+000B5640 0070:
+	_code_000b5640 (0000)
+000B56B0 0070:
+	_code_000b56b0 (0000)
+000B5720 0070:
+	_code_000b5720 (0000)
+000B5790 0070:
+	_code_000b5790 (0000)
+000B5800 0070:
+	_code_000b5800 (0000)
+000B5870 00b0:
+	_code_000b5870 (0000)
+000B5920 0070:
+	_code_000b5920 (0000)
+000B5990 0070:
+	_code_000b5990 (0000)
+000B5A00 0070:
+	_code_000b5a00 (0000)
+000B5A70 0140:
+	_code_000b5a70 (0000)
+000B5BB0 00a0:
+	_code_000b5bb0 (0000)
+000B5C50 0090:
+	_code_000b5c50 (0000)
+000B5CE0 0090:
+	_code_000b5ce0 (0000)
+000B5D70 0060:
+	_code_000b5d70 (0000)
+000B5DD0 0040:
+	_code_000b5dd0 (0000)
+000B5E10 0090:
+	_code_000b5e10 (0000)
+000B5EA0 0290:
+	_code_000b5ea0 (0000)
+000B6130 0430:
+	_code_000b6130 (0000)
+000B6560 00f0:
+	_code_000b6560 (0000)
+000B6650 00f0:
+	_code_000b6650 (0000)
+000B6740 0120:
+	_code_000b6740 (0000)
+000B6860 0380:
+	_code_000b6860 (0000)
+000B6BE0 02d0:
+	_hs_compile_postprocess (0000)
+000B6EB0 00d0:
+	_code_000b6eb0 (0000)
+000B6F80 00c0:
+	_code_000b6f80 (0000)
+000B7040 00e0:
+	_code_000b7040 (0000)
+000B7120 00d0:
+	_hs_parse (0000)
+000B71F0 0120:
+	_hs_macro_function_parse (0000)
+000B7310 01b0:
+	_hs_parse_begin (0000)
+000B74C0 01c0:
+	_hs_parse_if (0000)
+000B7680 00a0:
+	_hs_parse_cond (0000)
+000B7720 0230:
+	_hs_parse_set (0000)
+000B7950 0170:
+	_hs_parse_logical (0000)
+000B7AC0 0190:
+	_hs_parse_arithmetic (0000)
+000B7C50 0110:
+	_hs_parse_equality (0000)
+000B7D60 01d0:
+	_hs_parse_inequality (0000)
+000B7F30 00c0:
+	_hs_parse_sleep (0000)
+000B7FF0 00e0:
+	_hs_parse_sleep_until (0000)
+000B80D0 00d0:
+	_hs_parse_wake (0000)
+000B81A0 00c0:
+	_hs_parse_inspect (0000)
+000B8260 0080:
+	_hs_parse_object_cast_up (0000)
+000B82E0 0110:
+	_hs_parse_debug_string (0000)
+000B83F0 0260:
+	_hs_compile_expression (0000)
+000B8650 0140:
+	_hs_compile (0000)
+000B8790 0100:
+	_code_000b8790 (0000)
+000B8890 00d0:
+	_hs_compile_dispose (0000)
+00269F98 00cc:
+	_whitespace_characters (0000)
+	_eol_characters (0004)
+	_hs_type_primitive_parsers (0008)
+0026A064 0038:
+	??_C@_0DI@FFMILLMF@this?5argument?5to?5cond?5should?5be?5@ (0000)
+0026A09C 0026:
+	??_C@_0CG@CKIGEJPJ@this?5argument?5to?5cond?5needs?5a?5re@ (0000)
+0026A0C4 0023:
+	??_C@_0CD@IJMPPEHP@i?5couldn?8t?5allocate?5a?5syntax?5nod@ (0000)
+0026A0E8 0023:
+	??_C@_0CD@CMPGDOHG@the?5?$CFs?5call?5requires?5?$CFd?5argument@ (0000)
+0026A10C 0020:
+	??_C@_0CA@FLDPLDBJ@?$CBhs_compile_globals?4initialized?$AA@ (0000)
+0026A12C 001f:
+	??_C@_0BP@MLCFIFLN@c?3?2halo?2SOURCE?2hs?2hs_compile?4c?$AA@ (0000)
+0026A14C 002b:
+	??_C@_0CL@GBEGGBNG@bad?5source?5offset?5?$CIyou?5need?5to?5r@ (0000)
+0026A178 0023:
+	??_C@_0CD@EFKPEBIG@this?5is?5not?5a?5valid?5variable?5nam@ (0000)
+0026A19C 003f:
+	??_C@_0DP@PEGJCBIB@i?5expected?5a?5value?5of?5type?5?$CFs?0?5b@ (0000)
+0026A1E0 0042:
+	??_C@_0EC@IIFEBBHH@hs_type_valid?$CIexpression?9?$DOtype?$CJ?5@ (0000)
+0026A224 0020:
+	??_C@_0CA@DKEMPFLD@predicate?9?$DOfunction_index?$CB?$DNNONE?$AA@ (0000)
+0026A244 001e:
+	??_C@_0BO@OIGMDMNN@i?5expected?5?$CCtrue?$CC?5or?5?$CCfalse?$CC?4?$AA@ (0000)
+0026A264 0002:
+	??_C@_01HIHLOKLC@1?$AA@ (0000)
+0026A268 0002:
+	??_C@_01GBGANLPD@0?$AA@ (0000)
+0026A26C 002c:
+	??_C@_0CM@LMJJMGPB@expression?9?$DOconstant_type?$DN?$DNexpre@ (0000)
+0026A298 0023:
+	??_C@_0CD@PDJAANOA@expression?9?$DOtype?$DN?$DN_hs_type_boole@ (0000)
+0026A2BC 0021:
+	??_C@_0CB@OIAINLCH@this?5is?5not?5a?5valid?5real?5number?4@ (0000)
+0026A2E0 0020:
+	??_C@_0CA@FDCELDHN@expression?9?$DOtype?$DN?$DN_hs_type_real?$AA@ (0000)
+0026A300 002d:
+	??_C@_0CN@PNJHLLDG@shorts?5must?5be?5in?5the?5range?5?$FL?932@ (0000)
+0026A330 001d:
+	??_C@_0BN@MIAGNDJA@this?5is?5not?5a?5valid?5integer?4?$AA@ (0000)
+0026A350 0054:
+	??_C@_0FE@HAABGHID@expression?9?$DOtype?$DN?$DN_hs_type_short@ (0000)
+0026A3A4 0022:
+	??_C@_0CC@NOGPGKAJ@expression?9?$DOtype?$DN?$DN_hs_type_strin@ (0000)
+0026A3C8 0021:
+	??_C@_0CB@PILDPBCN@this?5is?5not?5a?5valid?5script?5name?4@ (0000)
+0026A3EC 0022:
+	??_C@_0CC@LHOLJHMC@expression?9?$DOtype?$DN?$DN_hs_type_scrip@ (0000)
+0026A410 002b:
+	??_C@_0CL@GNGCJOIJ@HS_TYPE_IS_TAG_REFERENCE?$CIexpress@ (0000)
+0026A43C 0003:
+	??_C@_02DAHALNEP@?$CC?4?$AA@ (0000)
+0026A440 0004:
+	??_C@_03HPAPFPCK@or?5?$AA@ (0000)
+0026A444 0004:
+	??_C@_03HAFDNMHA@?$CC?0?5?$AA@ (0000)
+0026A448 0002:
+	??_C@_01BJJEKLCA@?$CC?$AA@ (0000)
+0026A44C 000c:
+	??_C@_0M@KDPMODNJ@?$CFs?5must?5be?5?$AA@ (0000)
+0026A458 0017:
+	??_C@_0BH@KAIIDDCD@enum_definition?9?$DOcount?$AA@ (0000)
+0026A470 0022:
+	??_C@_0CC@MAMGKIFK@HS_TYPE_IS_ENUM?$CIexpression?9?$DOtype@ (0000)
+0026A494 001c:
+	??_C@_0BM@LLFLMGFD@this?5is?5not?5a?5valid?5?$CFs?5name?$AA@ (0000)
+0026A4B0 0026:
+	??_C@_0CG@KJHDFGKE@offset?$CLTAG_STRING_LENGTH?$DMelement@ (0000)
+0026A4D8 0018:
+	??_C@_0BI@DDGKIDCA@element_size?$DM?$DNSHORT_MAX?$AA@ (0000)
+0026A4F0 003f:
+	??_C@_0DP@DDIGGJCL@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A530 003e:
+	??_C@_0DO@KIKHDLLO@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A570 0046:
+	??_C@_0EG@OIMEONBP@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A5B8 003f:
+	??_C@_0DP@NJJHMCPO@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A5F8 0043:
+	??_C@_0ED@MFJLLEIG@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A63C 003d:
+	??_C@_0DN@ENBCEMCP@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A67C 002b:
+	??_C@_0CL@GHINNEMH@this?5is?5not?5a?5valid?5ai?5encounter@ (0000)
+0026A6A8 0033:
+	??_C@_0DD@BFEBGH@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A6E0 0040:
+	??_C@_0EA@CLIOJMOJ@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A720 0041:
+	??_C@_0EB@LFKOHNHB@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A764 003d:
+	??_C@_0DN@KMDNBPLF@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A7A4 0021:
+	??_C@_0CB@NGOPBJNH@this?5is?5not?5a?5valid?5object?5name?4@ (0000)
+0026A7C8 0022:
+	??_C@_0CC@PHOMBDHG@this?5is?5not?5an?5object?5of?5type?5?$CFs@ (0000)
+0026A7EC 0027:
+	??_C@_0CH@BODOHPOD@object_name?9?$DOruntime_object_type@ (0000)
+0026A814 0029:
+	??_C@_0CJ@IEEDGBAJ@HS_TYPE_IS_OBJECT_NAME?$CIexpressio@ (0000)
+0026A840 0024:
+	??_C@_0CE@OBCLMFIJ@HS_TYPE_IS_OBJECT?$CIexpression?9?$DOty@ (0000)
+0026A864 0039:
+	??_C@_0DJ@MLDFNHMP@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A8A0 003c:
+	??_C@_0DM@NDFNDKDO@hs_syntax_get?$CIexpression_index?$CJ?9@ (0000)
+0026A8DC 0027:
+	??_C@_0CH@KPEEOMPJ@expression?9?$DOtype?$DN?$DN_hs_type_objec@ (0000)
+0026A904 0029:
+	??_C@_0CJ@MJLOCEH@ran?5out?5of?5script?5string?5constan@ (0000)
+0026A930 0031:
+	??_C@_0DB@KNNKPLIC@i?5expected?5?$CIglobal?$DMtype?$DO?5?$DMname?$DO?5@ (0000)
+0026A964 003b:
+	??_C@_0DL@HEBOLCPD@i?5expected?5a?5global?5variable?5nam@ (0000)
+0026A9A0 002a:
+	??_C@_0CK@ILPHLOJN@there?5is?5already?5a?5variable?5by?5t@ (0000)
+0026A9CC 002b:
+	??_C@_0CL@FLFKBOAG@i?5couldn?8t?5allocate?5space?5for?5th@ (0000)
+0026A9F8 001a:
+	??_C@_0BK@IKPJOEIK@this?5is?5not?5a?5valid?5type?4?$AA@ (0000)
+0026AA14 0032:
+	??_C@_0DC@LIKMAGAH@i?5expected?5?$CIscript?5?$DMtype?$DO?5?$DMname?$DO@ (0000)
+0026AA48 0037:
+	??_C@_0DH@HLEPKBGC@i?5expected?5?$CIscript?5stub?5?$DMtype?$DO?5?$DM@ (0000)
+0026AA80 0039:
+	??_C@_0DJ@ICFJDLL@i?5expected?5?$CIscript?5static?5?$DMtype?$DO@ (0000)
+0026AABC 0032:
+	??_C@_0DC@KKMNLEGD@i?5expected?5a?5script?5name?5less?5th@ (0000)
+0026AAF0 0040:
+	??_C@_0EA@JEODPONE@only?5static?5scripts?5of?5the?5same?5@ (0000)
+0026AB30 001e:
+	??_C@_0BO@DIEOOMIB@i?5couldn?8t?5allocate?5a?5script?4?$AA@ (0000)
+0026AB50 0039:
+	??_C@_0DJ@KPBLJMAG@i?5expected?5?$CIscript?5local?5?$DMtype?$DO?5@ (0000)
+0026AB8C 0021:
+	??_C@_0CB@IMBMFBPE@this?5is?5not?5a?5valid?5return?5type?4@ (0000)
+0026ABB0 0045:
+	??_C@_0EF@HPGCPNKB@script?5type?5must?5be?5?$CCstartup?$CC?0?5?$CC@ (0000)
+0026ABF8 0026:
+	??_C@_0CG@DLDLACEH@this?5quoted?5constant?5is?5untermin@ (0000)
+0026AC20 0016:
+	??_C@_0BG@OBOCFOLJ@unterminated?5comment?4?$AA@ (0000)
+0026AC38 0032:
+	??_C@_0DC@DNDDDIBA@expressions?5of?5type?5?$CFs?5are?5curre@ (0000)
+0026AC70 0043:
+	??_C@_0ED@BCCOKIBI@the?5value?5of?5this?5expression?5?$CIin@ (0000)
+0026ACB4 002c:
+	??_C@_0CM@DJEKPL@i?5expected?5a?5script?5or?5variable?5@ (0000)
+0026ACE0 0068:
+	??_C@_0GI@BHJPJIIC@hs_type_valid?$CIexpression?9?$DOtype?$CJ?5@ (0000)
+0026AD48 0028:
+	??_C@_0CI@NKPOIECC@i?5expected?5?$CFs?0?5but?5i?5got?5an?5expr@ (0000)
+0026AD70 0010:
+	??_C@_0BA@PAKINOFK@a?5function?5name?$AA@ (0000)
+0026AD80 0015:
+	??_C@_0BF@IBMEIANF@?$CCscript?$CC?5or?5?$CCglobal?$CC?$AA@ (0000)
+0026AD98 002d:
+	??_C@_0CN@EDPOFKO@this?5is?5not?5a?5valid?5function?5or?5@ (0000)
+0026ADC8 0010:
+	??_C@_0BA@LKPMJEGC@function?9?$DOparse?$AA@ (0000)
+0026ADD8 003d:
+	??_C@_0DN@MBGBMIIG@it?5is?5illegal?5to?5set?5the?5value?5o@ (0000)
+0026AE18 0028:
+	??_C@_0CI@LEFIJLGP@it?5is?5illegal?5to?5block?5in?5this?5c@ (0000)
+0026AE40 0031:
+	??_C@_0DB@FJPDKKBL@i?5expected?5a?5?$CFs?0?5but?5this?5functi@ (0000)
+0026AE74 002f:
+	??_C@_0CP@EBGMPNCK@i?5expected?5a?5?$CFs?0?5but?5this?5script@ (0000)
+0026AEA4 001d:
+	??_C@_0BN@IHENCGGJ@this?5is?5not?5a?5static?5script?4?$AA@ (0000)
+0026AEC4 0021:
+	??_C@_0CB@IAHJHNPF@i?5expected?5?$CCscript?$CC?5or?5?$CCglobal?$CC?4@ (0000)
+0026AEE8 002e:
+	??_C@_0CO@BFGOLJBG@missing?5type?5?$CIyou?5need?5to?5recomp@ (0000)
+0026AF18 0041:
+	??_C@_0EB@EJKNFGEH@type?5is?5inconsistent?5with?5usage?5@ (0000)
+0026AF5C 0035:
+	??_C@_0DF@DBAKANGN@corrupt?5syntax?5tree?5?$CIyou?5need?5to@ (0000)
+0026AF94 0032:
+	??_C@_0DC@LGOKBIPD@missing?5function?5?$CIyou?5need?5to?5re@ (0000)
+0026AFC8 002a:
+	??_C@_0CK@DLLKHDNE@bad?5script?5index?5?$CIyou?5need?5to?5re@ (0000)
+0026AFF4 001a:
+	??_C@_0BK@BFLBDCPG@?$CBhs_compile_globals?4error?$AA@ (0000)
+0026B010 001a:
+	??_C@_0BK@NAGDEHOO@this?5expression?5is?5empty?4?$AA@ (0000)
+0026B02C 0024:
+	??_C@_0CE@GGGJMCLA@this?5left?5parenthesis?5is?5unmatch@ (0000)
+0026B050 005f:
+	??_C@_0FP@FAMPHEFE@hs_type_valid?$CIexpected_type?$CJ?5?$HM?$HM?5@ (0000)
+0026B0B0 002d:
+	??_C@_0CN@KIPPILAN@the?5?$CC?$CFs?$CC?5call?5requires?5exactly?5?$CF@ (0000)
+0026B0E0 0027:
+	??_C@_0CH@HOBBAFGG@hs_type_valid?$CIdefinition?9?$DOreturn@ (0000)
+0026B108 004a:
+	??_C@_0EK@BFPAJKIG@begin_random?5can?5take?5a?5maximum?5@ (0000)
+0026B154 0036:
+	??_C@_0DG@ILKKMIFN@a?5statement?5block?5must?5contain?5a@ (0000)
+0026B190 0050:
+	??_C@_0FA@MLNKNPCC@function_index?$DN?$DN_hs_function_beg@ (0000)
+0026B1E0 0030:
+	??_C@_0DA@FDDIOHDH@c?3?2halo?2source?2hs?2hs_library_int@ (0000)
+0026B210 002d:
+	??_C@_0CN@FFHDLAIG@i?5expected?5?$CIif?5?$DMcondition?$DO?5?$DMthen@ (0000)
+0026B240 0020:
+	??_C@_0CA@JPNHPBMJ@function_index?$DN?$DN_hs_function_if?$AA@ (0000)
+0026B260 002a:
+	??_C@_0CK@FOEIDHHM@i?5expected?5a?5variable?5to?5set?5and@ (0000)
+0026B28C 0020:
+	??_C@_0CA@PGGJICDP@i?5expected?5an?5assignment?5value?4?$AA@ (0000)
+0026B2AC 001f:
+	??_C@_0BP@FENPFJFI@i?5didn?8t?5expect?5this?5argument?4?$AA@ (0000)
+0026B2CC 0025:
+	??_C@_0CF@JLOHFOAN@this?5is?5not?5a?5valid?5global?5varia@ (0000)
+0026B2F4 0009:
+	??_C@_08NNEKJPJG@asserted?$AA@ (0000)
+0026B300 0055:
+	??_C@_0FF@OKNDBCCJ@you?5cannot?5pass?5the?5result?5of?5th@ (0000)
+0026B358 002b:
+	??_C@_0CL@HLGBMAID@the?5?$CFs?5call?5requires?5at?5least?52?5@ (0000)
+0026B388 0044:
+	??_C@_0EE@DJKKNFEH@function_index?$DN?$DN_hs_function_and@ (0000)
+0026B3CC 0024:
+	??_C@_0CE@JPJPEJGL@the?5?$CFs?5call?5requires?5?$CFs2?5argumen@ (0000)
+0026B3F0 000a:
+	??_C@_09HJOCAFJB@at?5least?5?$AA@ (0000)
+0026B400 0046:
+	??_C@_0EG@NCMDIGON@function_index?$DO?$DN_hs_function_plu@ (0000)
+0026B448 004d:
+	??_C@_0EN@LKLJPEDN@function_index?$DN?$DN_hs_function_equ@ (0000)
+0026B498 0044:
+	??_C@_0EE@DBJLFPAO@function_index?$DO?$DN_hs_function_gt?5@ (0000)
+0026B4DC 003f:
+	??_C@_0DP@OBLOAKOC@the?5sleep?5call?5requires?5a?5time?5a@ (0000)
+0026B51C 0023:
+	??_C@_0CD@OEIHEIL@function_index?$DN?$DN_hs_function_sle@ (0000)
+0026B540 0045:
+	??_C@_0EF@ONCEJGKM@the?5sleep_until?5call?5requires?5a?5@ (0000)
+0026B588 0029:
+	??_C@_0CJ@OOHINAAD@function_index?$DN?$DN_hs_function_sle@ (0000)
+0026B5B4 0027:
+	??_C@_0CH@LDNCEPBK@this?5static?5script?5cannot?5be?5awa@ (0000)
+0026B5DC 0022:
+	??_C@_0CC@MOINJLCD@function_index?$DN?$DN_hs_function_wak@ (0000)
+0026B600 0048:
+	??_C@_0EI@PCGFDELO@this?5is?5not?5a?5global?5variable?5re@ (0000)
+0026B648 0025:
+	??_C@_0CF@OOHBFBHF@function_index?$DN?$DN_hs_function_ins@ (0000)
+0026B670 005b:
+	??_C@_0FL@GHADBDBJ@function_index?$DO?$DN_hs_function_obj@ (0000)
+0026B6D0 0068:
+	??_C@_0GI@HCJMIFHN@?$CIfunction_index?$DO?$DN_hs_function_de@ (0000)
+0026B738 0052:
+	??_C@_0FC@BMHAGKNK@hs_compile_globals?4error_offset?$DO@ (0000)
+0026B78C 0023:
+	??_C@_0CD@IOHANEHH@hs_compile_globals?4compiled_sour@ (0000)
+0026B7B0 0056:
+	??_C@_0FG@HHFCBJJH@global_scenario_get?$CI?$CJ?9?$DOhs_string@ (0000)
+0026B808 002e:
+	??_C@_0CO@JFMALCKF@couldn?8t?5allocate?5memory?5for?5com@ (0000)
+0026B838 0057:
+	??_C@_0FH@BKGDNNEC@hs_compile_globals?4error_offset?$DO@ (0000)
+0026B890 0044:
+	??_C@_0EE@JNFGKPCH@tell?5matt?5that?5somebody?5failed?5t@ (0000)
+0026B8D4 002d:
+	??_C@_0CN@CMJJHKPH@increase?5MAXIMUM_HS_STRING_DATA_@ (0000)
+0026B904 001f:
+	??_C@_0BP@OAFEJCHM@hs_compile_globals?4initialized?$AA@ (0000)
+00453480 012c:
+	_bss_00453480 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

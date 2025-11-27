@@ -1,0 +1,249 @@
+/*
+SOUND_DSOUND_XBOX.C
+
+symbols in this file:
+001B8BD0 0050:
+	_sound_samples_per_second (0000)
+001B8C20 0090:
+	_code_001b8c20 (0000)
+001B8CB0 0070:
+	_dsound_frequency_from_pitch (0000)
+001B8D20 0020:
+	_dsound_angle_from_angle (0000)
+001B8D40 0020:
+	_dsound_occlusion_from_occlusion (0000)
+001B8D60 0020:
+	_dsound_obstruction_from_obstruction (0000)
+001B8D80 0060:
+	_code_001b8d80 (0000)
+001B8DE0 0060:
+	_code_001b8de0 (0000)
+001B8E40 0050:
+	_code_001b8e40 (0000)
+001B8E90 0050:
+	_code_001b8e90 (0000)
+001B8EE0 00c0:
+	_code_001b8ee0 (0000)
+001B8FA0 0020:
+	_dsound_get (0000)
+001B8FC0 0100:
+	_code_001b8fc0 (0000)
+001B90C0 0030:
+	_code_001b90c0 (0000)
+001B90F0 0060:
+	_code_001b90f0 (0000)
+001B9150 0010:
+	_code_001b9150 (0000)
+001B9160 0280:
+	_code_001b9160 (0000)
+001B93E0 00b0:
+	_code_001b93e0 (0000)
+001B9490 01a0:
+	_code_001b9490 (0000)
+001B9630 00a0:
+	_code_001b9630 (0000)
+001B96D0 0010:
+	_code_001b96d0 (0000)
+001B96E0 0090:
+	_code_001b96e0 (0000)
+001B9770 0070:
+	_code_001b9770 (0000)
+001B97E0 00f0:
+	_code_001b97e0 (0000)
+001B98D0 0040:
+	_code_001b98d0 (0000)
+001B9910 0310:
+	_code_001b9910 (0000)
+001B9C20 0180:
+	_code_001b9c20 (0000)
+001B9DA0 0330:
+	_code_001b9da0 (0000)
+001BA0D0 0320:
+	_code_001ba0d0 (0000)
+001BA3F0 0070:
+	_code_001ba3f0 (0000)
+001BA460 0110:
+	_code_001ba460 (0000)
+001BA570 0030:
+	_code_001ba570 (0000)
+001BA5A0 0320:
+	_code_001ba5a0 (0000)
+001BA8C0 02f0:
+	_code_001ba8c0 (0000)
+001BABB0 00e0:
+	_code_001babb0 (0000)
+001BAC90 0030:
+	_code_001bac90 (0000)
+001BACC0 0040:
+	_code_001bacc0 (0000)
+001BAD00 02b0:
+	_code_001bad00 (0000)
+001BAFB0 02d0:
+	_code_001bafb0 (0000)
+002AB2A8 3a5c:
+	_rdata_002ab2a8 (0000)
+002AED04 003b:
+	??_C@_0DL@CJGAHKPC@sample_rate?$DO?$DN0?5?$CG?$CG?5sample_rate?$DMNU@ (0000)
+002AED40 0029:
+	??_C@_0CJ@BGDGGGNK@c?3?2halo?2source?2sound?2sound_defin@ (0000)
+002AED70 0008:
+	__real@409f400000000000 (0000)
+002AED78 0017:
+	??_C@_0BH@KJDIIFNO@gain?$DO?$DN0?4f?5?$CG?$CG?5gain?$DM?$DN1?4f?$AA@ (0000)
+002AED90 0024:
+	??_C@_0CE@OMDHHHNB@c?3?2halo?2source?2sound?2sound_dsoun@ (0000)
+002AEDB4 0004:
+	__real@483b7bc0 (0000)
+002AEDB8 0004:
+	__real@433c0000 (0000)
+002AEDBC 0037:
+	??_C@_0DH@DHIJBKOD@samples_per_second?$DN?$DN22050?5?$HM?$HM?5sam@ (0000)
+002AEDF4 001d:
+	??_C@_0BN@GDAFHNCG@index?$DMMAXIMUM_SOUND_CHANNELS?$AA@ (0000)
+002AEE14 0036:
+	??_C@_0DG@KCJEJDFD@index?$DO?$DN0?5?$CG?$CG?5index?$DMdsound_globals@ (0000)
+002AEE4C 0029:
+	??_C@_0CJ@EODOBOLA@c?3?2halo?2SOURCE?2sound?2sound_dsoun@ (0000)
+002AEE78 0037:
+	??_C@_0DH@MALNFJIA@index?$DO?$DN0?5?$CG?$CG?5index?$DMdsound_globals@ (0000)
+002AEEB0 003a:
+	??_C@_0DK@OGGOHHDH@type_index?$DO?$DN0?5?$CG?$CG?5type_index?$DMNUMB@ (0000)
+002AEEEC 0012:
+	??_C@_0BC@DKCJIMBN@channel?9?$DOstopping?$AA@ (0000)
+002AEF00 0029:
+	??_C@_0CJ@MBIOLAHG@trying?5to?5queue?5sound?5but?5sound?5@ (0000)
+002AEF2C 002b:
+	??_C@_0CL@OHHAHKOE@trying?5to?5queue?5sound?5but?5sample@ (0000)
+002AEF58 0041:
+	??_C@_0EB@HDLICNI@trying?5to?5queue?5sound?5?$CFs?5but?5it?8@ (0000)
+002AEF9C 001d:
+	??_C@_0BN@JMHKJEPD@couldn?8t?5queue?5sound?5packet?4?$AA@ (0000)
+002AEFBC 001b:
+	??_C@_0BL@KDBFJFMO@DirectSound?3?5?5?8?$CFs?8?5?$CI?$CFs?$CD?$CFd?$CJ?$AA@ (0000)
+002AEFD8 0015:
+	??_C@_0BF@KBGGCPDE@DSERR_CONTROLUNAVAIL?$AA@ (0000)
+002AEFF0 0012:
+	??_C@_0BC@NMCDDLDP@DSERR_INVALIDCALL?$AA@ (0000)
+002AF004 000f:
+	??_C@_0P@HJFILJLC@DSERR_NODRIVER?$AA@ (0000)
+002AF014 0012:
+	??_C@_0BC@KCMPJMLN@DSERR_OUTOFMEMORY?$AA@ (0000)
+002AF028 0012:
+	??_C@_0BC@IMOOOGNJ@DSERR_UNSUPPORTED?$AA@ (0000)
+002AF03C 000e:
+	??_C@_0O@PDIJJBF@DSERR_GENERIC?$AA@ (0000)
+002AF04C 0014:
+	??_C@_0BE@FNFJCFJP@DSERR_NOAGGREGATION?$AA@ (0000)
+002AF060 0035:
+	??_C@_0DF@DMCKPCJN@WARNING?3?5ran?5out?5of?5actual?5sound@ (0000)
+002AF098 004e:
+	??_C@_0EO@BLJBNNDN@vchannel?9?$DOtype_index?$DO?$DN0?5?$CG?$CG?5vchan@ (0000)
+002AF0E8 001e:
+	??_C@_0BO@GPEIBELN@vchannel?9?$DOchannel_index?$DN?$DNNONE?$AA@ (0000)
+002AF108 0074:
+	??_C@_0HE@KICHCGNB@vchannel?9?$DOchannel_index?$DN?$DNNONE?5?$HM?$HM@ (0000)
+002AF180 0082:
+	??_C@_0IC@DKPBPAOL@vchannel?9?$DOchannel_index?$DN?$DNNONE?5?$HM?$HM@ (0000)
+002AF208 0053:
+	??_C@_0FD@FNKNNOIG@channel_get?$CIvchannel?9?$DOchannel_in@ (0000)
+002AF25C 0026:
+	??_C@_0CG@CGNCOINB@failed?5to?5create?5the?5inanity?5cha@ (0000)
+002AF284 0025:
+	??_C@_0CF@HKJLCDEB@failed?5to?5start?5the?5inanity?5chan@ (0000)
+002AF2AC 0016:
+	??_C@_0BG@OEGLAIJJ@?$CFd?5?$CF1?42f?5?$CF1?42f?5?$CFs?$CI?$CFs?$CJ?$AA@ (0000)
+002AF2C8 0008:
+	__real@3fc3333333333333 (0000)
+002AF2D0 003f:
+	??_C@_0DP@KHFIPKOP@dsound_globals?4pause_gain?$DO?$DN0?5?$CG?$CG?5@ (0000)
+002AF310 0023:
+	??_C@_0CD@IEBJGBO@couldn?8t?5commit?5deferred?5setting@ (0000)
+002AF338 0046:
+	??_C@_0EG@HBENPCMC@DirectSound?3?5you?8re?5screwed?5if?5y@ (0000)
+002AF380 0039:
+	??_C@_0DJ@DAEFOODM@channel?9?$DOstopping?5?$HM?$HM?5channel?9?$DOst@ (0000)
+002AF3BC 0020:
+	??_C@_0CA@DFAIBINP@couldn?8t?5set?5listener?5velocity?4?$AA@ (0000)
+002AF3DC 0023:
+	??_C@_0CD@HICDBJIJ@couldn?8t?5set?5listener?5orientatio@ (0000)
+002AF400 0020:
+	??_C@_0CA@OLNBKDPD@couldn?8t?5set?5listener?5position?4?$AA@ (0000)
+002AF420 0022:
+	??_C@_0CC@MGIFJJJE@couldn?8t?5set?5channel?5cone?5volume@ (0000)
+002AF444 0022:
+	??_C@_0CC@MMKEFIAP@couldn?8t?5set?5channel?5cone?5angles@ (0000)
+002AF468 0008:
+	__real@3fa1df46a0000000 (0000)
+002AF470 0023:
+	??_C@_0CD@CNIMDPAP@couldn?8t?5set?5channel?5min?5distanc@ (0000)
+002AF494 0023:
+	??_C@_0CD@JEKKKEHO@couldn?8t?5set?5channel?5max?5distanc@ (0000)
+002AF4B8 001c:
+	??_C@_0BM@LFAEPFJI@couldn?8t?5set?5channel?5pitch?4?$AA@ (0000)
+002AF4D4 001d:
+	??_C@_0BN@BLONFKNF@couldn?8t?5set?5channel?5volume?4?$AA@ (0000)
+002AF4F4 0010:
+	??_C@_0BA@PIOAHMCB@channel?9?$DOstream?$AA@ (0000)
+002AF504 002f:
+	??_C@_0CP@EGGPIMBN@properties?9?$DOgain?$DO?$DN0?4f?5?$CG?$CG?5propert@ (0000)
+002AF534 001d:
+	??_C@_0BN@JEAHEGCF@couldn?8t?5get?5channel?5status?4?$AA@ (0000)
+002AF554 002a:
+	??_C@_0CK@POPNLGKC@trying?5to?5queue?5sound?5to?5invalid@ (0000)
+002AF580 0015:
+	??_C@_0BF@LBDNLMMN@status?5is?5undefined?4?$AA@ (0000)
+002AF598 0013:
+	??_C@_0BD@GHHGLPBO@status?5is?5pending?4?$AA@ (0000)
+002AF5AC 0013:
+	??_C@_0BD@KJEJHADG@status?5is?5failure?4?$AA@ (0000)
+002AF5C0 001e:
+	??_C@_0BO@LFFKJNPG@paused?$CB?$DNdsound_globals?4paused?$AA@ (0000)
+002AF5E0 001f:
+	??_C@_0BP@CKBMOCAH@couldn?8t?5set?5channel?5velocity?4?$AA@ (0000)
+002AF600 0022:
+	??_C@_0CC@PDAKAFE@couldn?8t?5set?5channel?5orientation@ (0000)
+002AF624 0028:
+	??_C@_0CI@NNBBAJBO@valid_real_normal3d?$CI?$CGlocation?9?$DOf@ (0000)
+002AF64C 001f:
+	??_C@_0BP@PEMFFJCL@couldn?8t?5set?5channel?5position?4?$AA@ (0000)
+002AF66C 0025:
+	??_C@_0CF@JDPGHIHK@couldn?8t?5set?5channel?5spatializat@ (0000)
+002AF694 0036:
+	??_C@_0DG@OCJCHNGN@TEST_FLAG?$CIchannel?9?$DOtype_flags?0?5_@ (0000)
+002AF6CC 001f:
+	??_C@_0BP@HAMAPHEB@bad?5DirectSound?5channel?5state?4?$AA@ (0000)
+002AF6EC 0017:
+	??_C@_0BH@DBFGAOCB@?$CBdsound_globals?4paused?$AA@ (0000)
+002AF704 001e:
+	??_C@_0BO@KGINAIN@couldn?8t?5create?5sound?5stream?4?$AA@ (0000)
+002AF724 0025:
+	??_C@_0CF@OBCOFKPB@could?5not?5create?5direct?5sound?5ob@ (0000)
+002AF74C 0023:
+	??_C@_0CD@NBILCGJC@could?5not?5get?5caps?5for?5sound?5car@ (0000)
+002AF770 0021:
+	??_C@_0CB@EMGFGEPG@could?5not?5adjust?5distance?5factor@ (0000)
+002AF794 0020:
+	??_C@_0CA@LNMCNOND@could?5not?5adjust?5rolloff?5factor?$AA@ (0000)
+002AF7B4 0022:
+	??_C@_0CC@PADFBKKH@could?5not?5download?5effects?5image@ (0000)
+0031743C 003c:
+	_platform_sound_dsound (0000)
+004D2C58 0101:
+	_bss_004d2c58 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

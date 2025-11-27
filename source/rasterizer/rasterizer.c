@@ -1,0 +1,313 @@
+/*
+RASTERIZER.C
+
+symbols in this file:
+0016BFE0 0040:
+	_rasterizer_initialize (0000)
+0016C020 0010:
+	_rasterizer_reset_state (0000)
+0016C030 00e0:
+	_rasterizer_frame_begin (0000)
+0016C110 0010:
+	_rasterizer_windows_begin (0000)
+0016C120 0010:
+	_rasterizer_window_begin (0000)
+0016C130 0010:
+	_rasterizer_window_get_fog (0000)
+0016C140 0010:
+	_rasterizer_window_set_fog (0000)
+0016C150 0010:
+	_rasterizer_window_end (0000)
+0016C160 0010:
+	_rasterizer_windows_end (0000)
+0016C170 0010:
+	_rasterizer_frame_end (0000)
+0016C180 0010:
+	_rasterizer_present (0000)
+0016C190 0010:
+	_rasterizer_dispose (0000)
+0016C1A0 0010:
+	_rasterizer_set_vblank_callback (0000)
+0016C1B0 0010:
+	_rasterizer_profile_enable (0000)
+0016C1C0 0010:
+	_rasterizer_dynamic_triangles_new (0000)
+0016C1D0 0010:
+	_rasterizer_dynamic_triangles_lock (0000)
+0016C1E0 0010:
+	_rasterizer_dynamic_triangles_unlock (0000)
+0016C1F0 0010:
+	_rasterizer_dynamic_triangles_delete (0000)
+0016C200 0010:
+	_rasterizer_dynamic_vertices_new (0000)
+0016C210 0010:
+	_rasterizer_dynamic_vertices_get_type (0000)
+0016C220 0010:
+	_rasterizer_dynamic_vertices_lock (0000)
+0016C230 0010:
+	_rasterizer_dynamic_vertices_unlock (0000)
+0016C240 0010:
+	_rasterizer_dynamic_vertices_delete (0000)
+0016C250 0010:
+	_rasterizer_debug_immediate_begin (0000)
+0016C260 0010:
+	_rasterizer_debug_immediate_line (0000)
+0016C270 0010:
+	_rasterizer_debug_immediate_triangle (0000)
+0016C280 0010:
+	_rasterizer_debug_immediate_end (0000)
+0016C290 0010:
+	_rasterizer_debug_immediate_begin_screenspace (0000)
+0016C2A0 0010:
+	_rasterizer_debug_immediate_line_screenspace (0000)
+0016C2B0 0010:
+	_rasterizer_debug_immediate_linestrip_screenspace (0000)
+0016C2C0 0010:
+	_rasterizer_debug_immediate_end_screenspace (0000)
+0016C2D0 0010:
+	_rasterizer_decals_initialize (0000)
+0016C2E0 0010:
+	_rasterizer_decals_update_function_pointers (0000)
+0016C2F0 0010:
+	_rasterizer_decals_initialize_for_new_map (0000)
+0016C300 0010:
+	_rasterizer_decals_dispose_from_old_map (0000)
+0016C310 0010:
+	_rasterizer_decals_flush (0000)
+0016C320 0010:
+	_rasterizer_decals_dispose (0000)
+0016C330 0010:
+	_rasterizer_decal_vertices_new (0000)
+0016C340 0010:
+	_rasterizer_decal_vertices_lock (0000)
+0016C350 0010:
+	_rasterizer_decal_vertices_unlock (0000)
+0016C360 0010:
+	_rasterizer_decal_vertices_delete (0000)
+0016C370 0010:
+	_rasterizer_decals_begin (0000)
+0016C380 0010:
+	_rasterizer_decals_draw (0000)
+0016C390 0010:
+	_rasterizer_decals_end (0000)
+0016C3A0 0010:
+	_rasterizer_detail_objects_begin (0000)
+0016C3B0 0010:
+	_rasterizer_detail_objects_rebuild_vertices (0000)
+0016C3C0 0010:
+	_rasterizer_detail_objects_draw (0000)
+0016C3D0 0010:
+	_rasterizer_detail_objects_end (0000)
+0016C3E0 0010:
+	_rasterizer_screen_effect (0000)
+0016C3F0 0010:
+	_rasterizer_screen_flash (0000)
+0016C400 0010:
+	_rasterizer_model_begin (0000)
+0016C410 0010:
+	_rasterizer_model_draw (0000)
+0016C420 0010:
+	_rasterizer_model_transparent_geometry_submit (0000)
+0016C430 0010:
+	_rasterizer_model_end (0000)
+0016C440 0010:
+	_rasterizer_models_end (0000)
+0016C450 0010:
+	_rasterizer_environment_lightmaps_begin (0000)
+0016C460 0010:
+	_rasterizer_environment_lightmap_begin (0000)
+0016C470 0010:
+	_rasterizer_environment_lightmap_draw (0000)
+0016C480 0010:
+	_rasterizer_environment_lightmap_end (0000)
+0016C490 0010:
+	_rasterizer_environment_lightmaps_end (0000)
+0016C4A0 0010:
+	_rasterizer_environment_diffuse_lights_begin (0000)
+0016C4B0 0010:
+	_rasterizer_environment_diffuse_light_begin (0000)
+0016C4C0 0010:
+	_rasterizer_environment_diffuse_light_draw (0000)
+0016C4D0 0010:
+	_rasterizer_environment_diffuse_light_end (0000)
+0016C4E0 0010:
+	_rasterizer_environment_diffuse_lights_end (0000)
+0016C4F0 0010:
+	_rasterizer_environment_shadows_begin (0000)
+0016C500 0010:
+	_rasterizer_environment_shadow_begin (0000)
+0016C510 0010:
+	_rasterizer_environment_shadow_model_begin (0000)
+0016C520 0010:
+	_rasterizer_environment_shadow_model_draw (0000)
+0016C530 0010:
+	_rasterizer_environment_shadow_model_end (0000)
+0016C540 0010:
+	_rasterizer_environment_shadow_draw (0000)
+0016C550 0010:
+	_rasterizer_environment_shadow_end (0000)
+0016C560 0010:
+	_rasterizer_environment_shadows_end (0000)
+0016C570 0010:
+	_rasterizer_environment_diffuse_textures_begin (0000)
+0016C580 0010:
+	_rasterizer_environment_diffuse_texture_draw (0000)
+0016C590 0010:
+	_rasterizer_environment_diffuse_textures_end (0000)
+0016C5A0 0010:
+	_rasterizer_environment_specular_lights_begin (0000)
+0016C5B0 0010:
+	_rasterizer_environment_specular_light_begin (0000)
+0016C5C0 0010:
+	_rasterizer_environment_specular_light_draw (0000)
+0016C5D0 0010:
+	_rasterizer_environment_specular_light_end (0000)
+0016C5E0 0010:
+	_rasterizer_environment_specular_lights_end (0000)
+0016C5F0 0010:
+	_rasterizer_environment_specular_lightmaps_begin (0000)
+0016C600 0010:
+	_rasterizer_environment_specular_lightmap_begin (0000)
+0016C610 0010:
+	_rasterizer_environment_specular_lightmap_draw (0000)
+0016C620 0010:
+	_rasterizer_environment_specular_lightmap_end (0000)
+0016C630 0010:
+	_rasterizer_environment_specular_lightmaps_end (0000)
+0016C640 0010:
+	_rasterizer_environment_reflection_lightmap_masks_begin (0000)
+0016C650 0010:
+	_rasterizer_environment_reflection_lightmap_mask_begin (0000)
+0016C660 0010:
+	_rasterizer_environment_reflection_lightmap_mask_draw (0000)
+0016C670 0010:
+	_rasterizer_environment_reflection_lightmap_mask_end (0000)
+0016C680 0010:
+	_rasterizer_environment_reflection_lightmap_masks_end (0000)
+0016C690 0010:
+	_rasterizer_environment_reflection_mirrors_begin (0000)
+0016C6A0 0010:
+	_rasterizer_environment_reflection_mirror_draw (0000)
+0016C6B0 0010:
+	_rasterizer_environment_reflection_mirrors_end (0000)
+0016C6C0 0010:
+	_rasterizer_environment_reflections_begin (0000)
+0016C6D0 0010:
+	_rasterizer_environment_reflection_draw (0000)
+0016C6E0 0010:
+	_rasterizer_environment_reflections_end (0000)
+0016C6F0 0010:
+	_rasterizer_environment_transparent_geometry_begin (0000)
+0016C700 0010:
+	_rasterizer_environment_transparent_geometry_submit (0000)
+0016C710 0010:
+	_rasterizer_environment_transparent_geometry_end (0000)
+0016C720 0010:
+	_rasterizer_environment_fog_begin (0000)
+0016C730 0010:
+	_rasterizer_environment_fog_draw (0000)
+0016C740 0010:
+	_rasterizer_environment_fog_end (0000)
+0016C750 0010:
+	_rasterizer_environment_fog_screen_wind_get_vector (0000)
+0016C760 0010:
+	_rasterizer_environment_fog_screen_begin (0000)
+0016C770 0010:
+	_rasterizer_environment_fog_screen_draw (0000)
+0016C780 0010:
+	_rasterizer_environment_fog_screen_end (0000)
+0016C790 0010:
+	_rasterizer_hud_begin (0000)
+0016C7A0 0010:
+	_rasterizer_hud_end (0000)
+0016C7B0 0010:
+	_rasterizer_dynamic_unlit_geometry_draw (0000)
+0016C7C0 0010:
+	_rasterizer_dynamic_lit_geometry_draw (0000)
+0016C7D0 0010:
+	_rasterizer_dynamic_screen_geometry_draw (0000)
+0016C7E0 0010:
+	_rasterizer_dynamic_screen_geometry_add_multitexture_params_to_base (0000)
+0016C7F0 0010:
+	_rasterizer_psuedo_dynamic_screen_quad_draw (0000)
+0016C800 0010:
+	_rasterizer_widget_submit (0000)
+0016C810 0010:
+	_rasterizer_widget_begin (0000)
+0016C820 0010:
+	_rasterizer_widget_set_texture (0000)
+0016C830 0010:
+	_rasterizer_widget_set_tint_factor (0000)
+0016C840 0010:
+	_rasterizer_widget_set_zbuffer_enable (0000)
+0016C850 0010:
+	_rasterizer_widget_draw_sprite2d (0000)
+0016C860 0010:
+	_rasterizer_widget_draw_sprite3d (0000)
+0016C870 0010:
+	_rasterizer_widget_end (0000)
+0016C880 0010:
+	_rasterizer_widget_submit_occlusion_test (0000)
+0016C890 0010:
+	_rasterizer_widget_get_occlusion_test_result (0000)
+0016C8A0 0010:
+	_rasterizer_hud_motion_sensor_blip_begin (0000)
+0016C8B0 0010:
+	_rasterizer_hud_motion_sensor_blip_draw (0000)
+0016C8C0 0010:
+	_rasterizer_hud_motion_sensor_blip_end (0000)
+0016C8D0 00d0:
+	_rasterizer_debug_immediate_point (0000)
+0016C9A0 0050:
+	_rasterizer_debug_immediate_vector (0000)
+0016C9F0 0110:
+	_rasterizer_models_begin (0000)
+0016CB00 0640:
+	_rasterizer_debug_model_vertices (0000)
+0029D6DC 0010:
+	_rasterizer_global_defaults (0000)
+0029D6EC 0030:
+	??_C@_0DA@KMFNEIAD@global_rasterizer_model_ambient_@ (0000)
+0029D71C 0027:
+	??_C@_0CH@FLEENNB@c?3?2halo?2SOURCE?2rasterizer?2raster@ (0000)
+0029D744 0029:
+	??_C@_0CJ@KNCEBLOJ@rasterizer?5model?5ambient?5reflect@ (0000)
+0029D770 0004:
+	__real@461c4000 (0000)
+0029D774 0004:
+	??_C@_03LDNPNKDL@?6V?$DN?$AA@ (0000)
+0029D778 0005:
+	??_C@_04PEOOHEKN@?$CFd?$CFc?$AA@ (0000)
+0029D780 0003:
+	??_C@_02BFBNNIBM@I?$DN?$AA@ (0000)
+0029D784 0029:
+	??_C@_0CJ@NGJFILME@node_weight0?$DO?$DN0?40f?5?$CG?$CG?5node_weigh@ (0000)
+0029D7B0 0028:
+	??_C@_0CI@MOEBMMIG@node_index1?$DMskinning?9?$DOnode_matri@ (0000)
+0029D7D8 0028:
+	??_C@_0CI@PCCBCPIO@node_index0?$DMskinning?9?$DOnode_matri@ (0000)
+0029D800 0044:
+	??_C@_0EE@KEGACHLN@part?9?$DOtriangle_buffer?4type?$DN?$DN_tri@ (0000)
+0030D3D8 00f4:
+	_rasterizer_globals (0000)
+	_rasterizer_debug_options (0068)
+004662EC 0008:
+	_bss_004662ec (0000)
+	_global_rasterizer_model_ambient_reflection_tint (0004)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

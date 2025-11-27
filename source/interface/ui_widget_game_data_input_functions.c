@@ -1,0 +1,349 @@
+/*
+UI_WIDGET_GAME_DATA_INPUT_FUNCTIONS.C
+
+symbols in this file:
+000E01B0 0060:
+	_ui_widget_game_data_function_invoke (0000)
+000E0210 0010:
+	_code_000e0210 (0000)
+000E0220 0110:
+	_code_000e0220 (0000)
+000E0330 00b0:
+	_code_000e0330 (0000)
+000E03E0 00b0:
+	_code_000e03e0 (0000)
+000E0490 0080:
+	_code_000e0490 (0000)
+000E0510 0110:
+	_code_000e0510 (0000)
+000E0620 0090:
+	_code_000e0620 (0000)
+000E06B0 07e0:
+	_code_000e06b0 (0000)
+000E0E90 07c0:
+	_code_000e0e90 (0000)
+000E1650 04c0:
+	_code_000e1650 (0000)
+000E1B10 0120:
+	_code_000e1b10 (0000)
+000E1C30 00b0:
+	_code_000e1c30 (0000)
+000E1CE0 0130:
+	_code_000e1ce0 (0000)
+000E1E10 0090:
+	_code_000e1e10 (0000)
+000E1EA0 0130:
+	_code_000e1ea0 (0000)
+000E1FD0 0090:
+	_code_000e1fd0 (0000)
+000E2060 00b0:
+	_code_000e2060 (0000)
+000E2110 00b0:
+	_code_000e2110 (0000)
+000E21C0 00c0:
+	_code_000e21c0 (0000)
+000E2280 0090:
+	_code_000e2280 (0000)
+000E2310 01c0:
+	_code_000e2310 (0000)
+000E24D0 0110:
+	_code_000e24d0 (0000)
+000E25E0 0070:
+	_code_000e25e0 (0000)
+000E2650 0090:
+	_code_000e2650 (0000)
+000E26E0 00b0:
+	_code_000e26e0 (0000)
+000E2790 01c0:
+	_code_000e2790 (0000)
+000E2950 00b0:
+	_code_000e2950 (0000)
+000E2A00 00a0:
+	_code_000e2a00 (0000)
+000E2AA0 00b0:
+	_code_000e2aa0 (0000)
+000E2B50 0030:
+	_code_000e2b50 (0000)
+000E2B80 0140:
+	_code_000e2b80 (0000)
+000E2CC0 0050:
+	_code_000e2cc0 (0000)
+000E2D10 00b0:
+	_code_000e2d10 (0000)
+000E2DC0 0050:
+	_code_000e2dc0 (0000)
+000E2E10 00b0:
+	_code_000e2e10 (0000)
+000E2EC0 0110:
+	_code_000e2ec0 (0000)
+000E2FD0 0110:
+	_code_000e2fd0 (0000)
+000E30E0 0030:
+	_code_000e30e0 (0000)
+000E3110 0030:
+	_code_000e3110 (0000)
+000E3140 02c0:
+	_code_000e3140 (0000)
+000E3400 0590:
+	_code_000e3400 (0000)
+000E3990 04d0:
+	_code_000e3990 (0000)
+000E3E60 0480:
+	_code_000e3e60 (0000)
+000E42E0 0190:
+	_code_000e42e0 (0000)
+000E4470 01b0:
+	_code_000e4470 (0000)
+00276E0C 0018:
+	_rdata_00276e0c (0000)
+00276E24 002b:
+	??_C@_0CL@DNDKGOAJ@invalid?5game_data_input_referenc@ (0000)
+00276E50 003f:
+	??_C@_0DP@OKLHFPEA@c?3?2halo?2SOURCE?2interface?2ui_widg@ (0000)
+00276E90 0052:
+	??_C@_0FC@OBGFIFIH@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00276EE8 0052:
+	??_C@_0FC@LKBMLMHJ@expected?5a?5container?5widget?5for?5@ (0000)
+00276F3C 0038:
+	??_C@_0DI@JCPEOBOE@this?5doesn?8t?5look?5like?5the?5setti@ (0000)
+00276F74 003e:
+	??_C@_0DO@LONIMMNH@invalid?5widget?5trying?5to?5update?5@ (0000)
+00276FB8 005e:
+	??_C@_0FO@FDLMAEGD@expected?5a?5container?5widget?5w?1?52@ (0000)
+00277018 004d:
+	??_C@_0EN@HLAAGDPF@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277068 004d:
+	??_C@_0EN@KLLFONFN@expected?5a?5container?5widget?5for?5@ (0000)
+002770B8 003a:
+	??_C@_0DK@ENICFAKO@this?5doesn?8t?5look?5like?5the?5diffi@ (0000)
+002770F4 000e:
+	??_C@_0O@JEJFBGJL@01?401?414?42342?$AA@ (0000)
+00277104 0008:
+	??_C@_07GIJHABND@longest?$AA@ (0000)
+0027710C 0007:
+	??_C@_06KLBAJMAC@putput?$AA@ (0000)
+00277114 0007:
+	??_C@_06CLLOKCD@wizard?$AA@ (0000)
+0027711C 000b:
+	??_C@_0L@BAHFJNLA@bloodgulch?$AA@ (0000)
+00277128 000f:
+	??_C@_0P@NBJBBIIG@boardingaction?$AA@ (0000)
+00277138 0009:
+	??_C@_08CNOAMHDF@carousel?$AA@ (0000)
+00277144 0009:
+	??_C@_08DIOAEAHJ@chillout?$AA@ (0000)
+00277150 000b:
+	??_C@_0L@GMPBGCHN@hangemhigh?$AA@ (0000)
+0027715C 0009:
+	??_C@_08HDGLKCD@prisoner?$AA@ (0000)
+00277168 0008:
+	??_C@_07JLEJHHKP@ratrace?$AA@ (0000)
+00277170 000a:
+	??_C@_09COCHMMPL@damnation?$AA@ (0000)
+0027717C 000b:
+	??_C@_0L@IAKJCANM@sidewinder?$AA@ (0000)
+00277188 000c:
+	??_C@_0M@PGDPDJHM@beavercreek?$AA@ (0000)
+00277194 0024:
+	??_C@_0CE@OEFEPJGP@expected?5?8score?5limit?5type?8?5text@ (0000)
+002771B8 001f:
+	??_C@_0BP@DNJAOFEP@expected?5?8score?5limit?8?5textbox?$AA@ (0000)
+002771D8 0025:
+	??_C@_0CF@KNIJBDBO@expected?5?8number?5of?5players?8?5tex@ (0000)
+00277200 0020:
+	??_C@_0CA@LGKDOIEO@expected?5?8teams?5on?1off?8?5textbox?$AA@ (0000)
+00277220 001b:
+	??_C@_0BL@BDLKAALE@expected?5?8ruleset?8?5textbox?$AA@ (0000)
+0027723C 001c:
+	??_C@_0BM@CJHKAJCC@expected?5?8map?5name?8?5textbox?$AA@ (0000)
+00277258 0024:
+	??_C@_0CE@DLEPIMAK@expected?5?8open?1closed?5game?8?5text@ (0000)
+00277280 0043:
+	??_C@_0ED@MOEHAAMO@this?5doesn?8t?5look?5like?5the?5serve@ (0000)
+002772C4 000c:
+	??_C@_1M@MOFLFCEC@?$AA?$CF?$AAs?$AA?5?$AA?$CF?$AAs?$AA?$AA@ (0000)
+002772D0 0037:
+	??_C@_0DH@HCIIGMBA@this?5doesn?8t?5look?5like?5the?5net?5g@ (0000)
+00277308 0024:
+	??_C@_0CE@ICIOPGOK@j?$DM?$CIMAXIMUM_NETWORK_MACHINE_COUNT@ (0000)
+0027732C 0036:
+	??_C@_0DG@MINPNJCD@expected?5a?5spinner?5list?5for?5loca@ (0000)
+00277364 0030:
+	??_C@_0DA@DJJOFFI@expected?5a?5text?5box?5for?5local?5pl@ (0000)
+00277394 003d:
+	??_C@_0DN@HELEDMHI@expected?5container?5widget?5for?5lo@ (0000)
+002773D4 0004:
+	??_C@_13HGPDMIBE@?$AA?$DP?$AA?$AA@ (0000)
+002773D8 001a:
+	??_C@_1BK@JLDDOLFH@?$AA?$CF?$AAd?$AA?3?$AA?$CF?$AA0?$AA2?$AAd?$AA?3?$AA?$CF?$AA0?$AA2?$AAd?$AA?$AA@ (0000)
+002773F4 0014:
+	??_C@_1BE@HOCBODIC@?$AA?$CF?$AA0?$AA2?$AAd?$AA?3?$AA?$CF?$AA0?$AA2?$AAd?$AA?$AA@ (0000)
+00277408 000e:
+	??_C@_1O@KKMDEBPC@?$AA0?$AA?3?$AA?$CF?$AA0?$AA2?$AAd?$AA?$AA@ (0000)
+00277418 000a:
+	??_C@_19FLLBDBFH@?$AA?9?$AA?3?$AA?9?$AA?9?$AA?$AA@ (0000)
+00277424 003b:
+	??_C@_0DL@IGDJEBKB@this?5doesn?8t?5look?5like?5the?5net?5p@ (0000)
+00277460 0069:
+	??_C@_0GJ@GDGAOPKB@expected?5a?5container?5widget?5w?1?52@ (0000)
+002774D0 005c:
+	??_C@_0FM@EACADPLD@expected?5a?5spinner?5list?5somewher@ (0000)
+0027752C 003c:
+	??_C@_0DM@MLIDECNJ@expected?5some?5list?5items?5for?5mul@ (0000)
+00277568 004b:
+	??_C@_0EL@PGAPPADO@expected?5a?5text?5box?5for?5multipla@ (0000)
+002775B4 0037:
+	??_C@_0DH@NAJMEKMA@expected?5column?5list?5for?5multipl@ (0000)
+002775EC 0027:
+	??_C@_0CH@OMEIFLEC@expected?5a?5text?5box?5for?5objectiv@ (0000)
+00277614 0030:
+	??_C@_0DA@MCJKJCJL@expected?5some?5list?5items?5for?5gam@ (0000)
+00277648 004a:
+	??_C@_0EK@NOJLKNLA@expected?5a?5picture?5?$CIcontainer?$CJ?5f@ (0000)
+00277694 002b:
+	??_C@_0CL@LGIIOMBB@expected?5column?5list?5for?5game?5op@ (0000)
+002776C0 004f:
+	??_C@_0EP@BOHIHIIA@expected?5a?5picture?5?$CIcontainer?$CJ?5f@ (0000)
+00277710 0030:
+	??_C@_0DA@GGNAKDLF@expected?5column?5list?5for?5main?5me@ (0000)
+00277740 0039:
+	??_C@_0DJ@NEPMGIAE@profile?5display?5name?5requires?5a?5@ (0000)
+0027777C 0034:
+	??_C@_0DE@IDFNJNLE@expected?5a?5text?5box?5widget?5for?5p@ (0000)
+002777B0 0025:
+	??_C@_0CF@LGDBPHO@not?5currently?5editing?5a?5game?5var@ (0000)
+002777D8 003a:
+	??_C@_0DK@DJCOLPLF@profile?5color?5picture?5requires?5a@ (0000)
+00277814 0010:
+	??_C@_0BA@NMGAHKFN@no?5network?5game?$AA@ (0000)
+00277824 0033:
+	??_C@_0DD@GEABDGEJ@expected?5text?5box?5widget?5for?5mp?5@ (0000)
+00277858 0036:
+	??_C@_0DG@FJNIMEAA@expected?5container?5widget?5for?5mp@ (0000)
+00277890 0043:
+	??_C@_0ED@NCOLLMLO@expected?5a?5text?5box?5widget?5for?5m@ (0000)
+002778D4 001e:
+	??_C@_0BO@DGGONLGF@network?5connection?5went?5down?$CB?$AA@ (0000)
+002778F4 0032:
+	??_C@_0DC@LKBOPPAG@expected?5text?5box?5widget?5for?5tea@ (0000)
+00277928 0039:
+	??_C@_0DJ@NJMHKDFJ@expected?5a?5container?5bitmap?5for?5@ (0000)
+00277968 004e:
+	??_C@_0EO@HIEOEPPB@this?5doesn?8t?5look?5like?5the?5diffi@ (0000)
+002779B8 0032:
+	??_C@_0DC@GEEGOIHG@this?5doesn?8t?5look?5like?5the?5diffi@ (0000)
+002779EC 003a:
+	??_C@_0DK@NIBNNGB@expected?5a?5text?5box?5widget?5for?5s@ (0000)
+00277A28 001f:
+	??_C@_0BP@PBNOOFFO@failed?5to?5cache?5player?5profile?$AA@ (0000)
+00277A48 001a:
+	??_C@_0BK@NPAODFGK@not?5enough?5cache?5profiles?$AA@ (0000)
+00277A64 0021:
+	??_C@_0CB@DCGNELO@failed?5to?5cache?5playlist?5profile@ (0000)
+00277A88 0059:
+	??_C@_0FJ@HDIOHFBC@?$CIdisplayed_item_index?$FLi?$FN?$DO?$DN0?$CJ?5?$CG?$CG?5@ (0000)
+00277AE8 004d:
+	??_C@_0EN@KBJCFCDK@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277B38 0047:
+	??_C@_0EH@BMDDKENI@expected?5a?5container?5widget?5for?5@ (0000)
+00277B80 0046:
+	??_C@_0EG@BILAIBJ@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277BC8 003e:
+	??_C@_0DO@GFLPMCBB@expected?53?5children?5in?5solo?5leve@ (0000)
+00277C08 003b:
+	??_C@_0DL@JGGBBFAD@expected?53?5children?5?$CIlist?5items?$CJ@ (0000)
+00277C44 0032:
+	??_C@_0DC@NCJBNPIM@expected?5a?5spinner?5list?5for?5?8lev@ (0000)
+00277C78 0045:
+	??_C@_0EF@FMFFIBMC@ui?2shell?2main_menu?2player_profil@ (0000)
+00277CC0 0048:
+	??_C@_0EI@ELIPCFPI@expected?53?5children?5in?5multiplay@ (0000)
+00277D08 004a:
+	??_C@_0EK@HCEDFOBE@expected?53?5children?5?$CIlist?5items?$CJ@ (0000)
+00277D58 0041:
+	??_C@_0EB@FBEKHKKG@expected?5a?5spinner?5list?5for?5?8mul@ (0000)
+00277D9C 002b:
+	??_C@_0CL@JILCPJHH@ui?2shell?2strings?2game_variant_de@ (0000)
+00277DC8 002e:
+	??_C@_0CO@INDPLGAP@ui?2shell?2strings?2default_player_@ (0000)
+00277DF8 0037:
+	??_C@_0DH@NLJJIMJD@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277E30 0032:
+	??_C@_0DC@JNCAIEDE@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277E68 004c:
+	??_C@_0EM@BLNIGFHJ@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277EB4 003d:
+	??_C@_0DN@HCKJKMCH@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277EF4 003c:
+	??_C@_0DM@MHGJENJN@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277F30 0037:
+	??_C@_0DH@MMEDOPKB@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277F68 0039:
+	??_C@_0DJ@ONHHKFOO@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00277FA4 003f:
+	??_C@_0DP@NCMBAOPB@expected?5a?5container?5widget?5for?5@ (0000)
+00277FE4 003a:
+	??_C@_0DK@BBPFDPKF@expected?5a?5container?5widget?5for?5@ (0000)
+00278020 002c:
+	??_C@_0CM@DEIEIGNN@expected?5a?5text?5box?5widget?5for?5p@ (0000)
+0027804C 0033:
+	??_C@_0DD@FHDLHMLN@expected?5profile?5item?5descriptio@ (0000)
+00278080 0045:
+	??_C@_0EF@EGDOMIGB@expected?53?5children?5?$CIlist?5items?$CJ@ (0000)
+002780C8 003c:
+	??_C@_0DM@DDPGFGBL@expected?5a?5spinner?5list?5for?5?8pla@ (0000)
+00278108 0048:
+	??_C@_0EI@EBGMHFNB@ui?2shell?2main_menu?2player_profil@ (0000)
+00278150 004a:
+	??_C@_0EK@KOGGNIM@ui?2shell?2main_menu?2player_profil@ (0000)
+0027819C 0010:
+	??_C@_1BA@KGLKGBLH@?$AA?$CF?$AAs?$AA?$CF?$AAh?$AAs?$AA?$CF?$AAs?$AA?$AA@ (0000)
+002781B0 0047:
+	??_C@_0EH@KIGMJNHF@ui?2shell?2main_menu?2player_profil@ (0000)
+002781F8 004d:
+	??_C@_0EN@HFOKHEMO@ui?2shell?2main_menu?2player_profil@ (0000)
+00278248 0018:
+	??_C@_0BI@NPNPHOJO@invalid?5list?5item?5index?$AA@ (0000)
+00278260 0034:
+	??_C@_0DE@PLLADONH@qtr?9screen?5profile?5list?5has?5inva@ (0000)
+00278298 0074:
+	??_C@_0HE@COKMIIBF@expected?5qtr?9screen?5profile?5sele@ (0000)
+00278310 004c:
+	??_C@_0EM@MHFANJGA@expected?50?5children?5?$CI1?9wide?5spin@ (0000)
+0027835C 003f:
+	??_C@_0DP@KPGPKHEI@expected?5a?5spinner?5list?5for?5?8mp?5@ (0000)
+002783A0 004c:
+	??_C@_0EM@HDAEPJAF@expected?5qtr?9screen?5profile?5sele@ (0000)
+002783F0 0049:
+	??_C@_0EJ@GDOHFLDE@expected?5a?5container?5widget?5for?5@ (0000)
+00278440 0048:
+	??_C@_0EI@LGHFKCIE@expected?5a?5text?5box?5widget?5for?5t@ (0000)
+00278488 0041:
+	??_C@_0EB@BNHDKAMN@expected?52?5children?5in?5player?5co@ (0000)
+002784D0 0042:
+	??_C@_0EC@LDEDNGKC@expected?53?5children?5?$CIlist?5items?$CJ@ (0000)
+00278514 0039:
+	??_C@_0DJ@CBCMOOFM@expected?5a?5spinner?5list?5for?5?8pla@ (0000)
+00278550 002c:
+	??_C@_0CM@CMCNFHCF@no?5list?5items?5associated?5with?5co@ (0000)
+00306288 00a4:
+	_data_00306288 (0000)
+00454C60 00a8:
+	_bss_00454c60 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

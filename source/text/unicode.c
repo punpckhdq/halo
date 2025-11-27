@@ -1,0 +1,257 @@
+/*
+UNICODE.C
+
+symbols in this file:
+0018CCD0 0070:
+	_umemchr (0000)
+0018CD40 00a0:
+	_umemcpy (0000)
+0018CDE0 0070:
+	_umemcmp (0000)
+0018CE50 0070:
+	_umemmove (0000)
+0018CEC0 0070:
+	_umemset (0000)
+0018CF30 0080:
+	_ustrcpy (0000)
+0018CFB0 00b0:
+	_ustrcat (0000)
+0018D060 00b0:
+	_ustrcmp (0000)
+0018D110 0070:
+	_ustrlen (0000)
+0018D180 0080:
+	_ustrnlen (0000)
+0018D200 0070:
+	_ustrchr (0000)
+0018D270 00b0:
+	_ustrcoll (0000)
+0018D320 00b0:
+	_ustrcspn (0000)
+0018D3D0 00a0:
+	_ustrncat (0000)
+0018D470 0070:
+	_ustrncmp (0000)
+0018D4E0 0070:
+	_ustrncpy (0000)
+0018D550 00b0:
+	_ustrpbrk (0000)
+0018D600 0070:
+	_ustrrchr (0000)
+0018D670 00b0:
+	_ustrspn (0000)
+0018D720 00b0:
+	_ustrstr (0000)
+0018D7D0 0070:
+	_ustrtok (0000)
+0018D840 00d0:
+	_ustrxfrm (0000)
+0018D910 0070:
+	_ustrlwr (0000)
+0018D980 0070:
+	_ustrupr (0000)
+0018D9F0 00b0:
+	_ustrnlwr (0000)
+0018DAA0 00b0:
+	_ustrnupr (0000)
+0018DB50 00b0:
+	_ustrcasecmp (0000)
+0018DC00 00b0:
+	_ustrncasecmp (0000)
+0018DCB0 0020:
+	_uisalpha (0000)
+0018DCD0 0020:
+	_uisupper (0000)
+0018DCF0 0020:
+	_uislower (0000)
+0018DD10 0020:
+	_uisdigit (0000)
+0018DD30 0020:
+	_uisxdigit (0000)
+0018DD50 0020:
+	_uisspace (0000)
+0018DD70 0020:
+	_uispunct (0000)
+0018DD90 0020:
+	_uisalnum (0000)
+0018DDB0 0020:
+	_uisprint (0000)
+0018DDD0 0020:
+	_uisgraph (0000)
+0018DDF0 0020:
+	_uiscntrl (0000)
+0018DE10 0020:
+	_utoupper (0000)
+0018DE30 0020:
+	_utolower (0000)
+0018DE50 0040:
+	_ufgetc (0000)
+0018DE90 0040:
+	_ufputc (0000)
+0018DED0 0040:
+	_uungetc (0000)
+0018DF10 00a0:
+	_ufgets (0000)
+0018DFB0 00a0:
+	_ufputs (0000)
+0018E050 0070:
+	_ugets (0000)
+0018E0C0 0070:
+	_uputs (0000)
+0018E130 00a0:
+	_ufprintf (0000)
+0018E1D0 0070:
+	_uprintf (0000)
+0018E240 00b0:
+	_usnprintf (0000)
+0018E2F0 00b0:
+	_usprintf (0000)
+0018E3A0 0080:
+	_uvfprintf (0000)
+0018E420 0070:
+	_uvprintf (0000)
+0018E490 00b0:
+	_uvsnprintf (0000)
+0018E540 00b0:
+	_uvsprintf (0000)
+0018E5F0 00a0:
+	_ufdopen (0000)
+0018E690 00a0:
+	_ufopen (0000)
+0018E730 0040:
+	_ufclose (0000)
+0018E770 00b0:
+	_ufreopen (0000)
+0018E820 0070:
+	_uperror (0000)
+0018E890 00a0:
+	_upopen (0000)
+0018E930 0070:
+	_uremove (0000)
+0018E9A0 0010:
+	_utmpnam (0000)
+0018E9B0 0070:
+	_ustrtol (0000)
+0018EA20 0070:
+	_ustrtoul (0000)
+0018EA90 0070:
+	_ustrtod (0000)
+0018EB00 0070:
+	_uatoi (0000)
+0018EB70 0040:
+	_uctime (0000)
+0018EBB0 0040:
+	_uasctime (0000)
+0018EBF0 00b0:
+	_wide_to_ascii (0000)
+0018ECA0 00a0:
+	_ascii_to_wide (0000)
+0018ED40 0040:
+	_ustrerror (0000)
+002A2AC8 001c:
+	??_C@_0BM@KPIDJFLK@count?5?$DM?5MAXIMUM_MEMCMP_SIZE?$AA@ (0000)
+002A2AE4 001e:
+	??_C@_0BO@BBLLNEKE@c?3?2halo?2SOURCE?2text?2unicode?4c?$AA@ (0000)
+002A2B08 004f:
+	??_C@_0EP@IPHIOENI@?$CI?$CI?$CIchar?5?$CK?$CJsrc?$CLcount?$CJ?5?$DM?$DN?5?$CIchar?5?$CK?$CJ@ (0000)
+002A2B58 0036:
+	??_C@_0DG@FFFMCJHE@?$CIcount?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIcount?5?$DM?5MAXIMUM@ (0000)
+002A2B90 000c:
+	??_C@_0M@BLMMNECI@dest?5?$CG?$CG?5src?$AA@ (0000)
+002A2B9C 002f:
+	??_C@_0CP@GDKCICIK@?$CIcount?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIcount?5?$DM?$DN?5MAXIMU@ (0000)
+002A2BCC 0013:
+	??_C@_0BD@ONBNFFHL@buffer1?5?$CG?$CG?5buffer2?$AA@ (0000)
+002A2BE0 0037:
+	??_C@_0DH@FKHPLIFK@?$CIcount?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIcount?5?$DM?$DN?5MAXIMU@ (0000)
+002A2C18 002f:
+	??_C@_0CP@HLJOKPIA@?$CIcount?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIcount?5?$DM?$DN?5MAXIMU@ (0000)
+002A2C48 003b:
+	??_C@_0DL@ILIANHOG@?$CI?$CIsrc?$CLsource_size?$CJ?5?$DM?5dest?$CJ?5?$HM?$HM?5?$CI?$CI@ (0000)
+002A2C84 003a:
+	??_C@_0DK@DPCFBKKM@?$CIsource_size?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIsource_si@ (0000)
+002A2CC0 0022:
+	??_C@_0CC@EMHAMOOL@wcslen?$CIsrc?$CJ?5?$DM?5MAXIMUM_STRING_SIZ@ (0000)
+002A2CE4 0023:
+	??_C@_0CD@MCFPOAN@wcslen?$CIdest?$CJ?5?$DM?5MAXIMUM_STRING_SI@ (0000)
+002A2D08 0026:
+	??_C@_0CG@JFACIFPH@wcslen?$CIstring2?$CJ?5?$DM?5MAXIMUM_STRING@ (0000)
+002A2D30 0026:
+	??_C@_0CG@KAOPDDKE@wcslen?$CIstring1?$CJ?5?$DM?5MAXIMUM_STRING@ (0000)
+002A2D58 0013:
+	??_C@_0BD@NBCEHOHI@string1?5?$CG?$CG?5string2?$AA@ (0000)
+002A2D6C 001b:
+	??_C@_0BL@PMAHACJJ@size?5?$DM?5MAXIMUM_STRING_SIZE?$AA@ (0000)
+002A2D88 0025:
+	??_C@_0CF@FCJMMMOO@wcslen?$CIstring?$CJ?5?$DM?5MAXIMUM_STRING_@ (0000)
+002A2DB0 002c:
+	??_C@_0CM@OEHOFCJH@wcslen?$CIcharacter_set?$CJ?5?$DM?5MAXIMUM_@ (0000)
+002A2DDC 0018:
+	??_C@_0BI@CNAFLGLG@string?5?$CG?$CG?5character_set?$AA@ (0000)
+002A2DF4 002e:
+	??_C@_0CO@JBLCAJEF@?$CIcount?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIcount?5?$DM?5MAXIMUM@ (0000)
+002A2E24 0029:
+	??_C@_0CJ@CFPGNFCG@wcslen?$CIdelimiters?$CJ?5?$DM?5MAXIMUM_STR@ (0000)
+002A2E50 000b:
+	??_C@_0L@KABPAJDP@delimiters?$AA@ (0000)
+002A2E5C 001c:
+	??_C@_0BM@EKKPEFAL@count?5?$DM?5MAXIMUM_STRING_SIZE?$AA@ (0000)
+002A2E78 0007:
+	??_C@_06DJAMKFID@stream?$AA@ (0000)
+002A2E80 0025:
+	??_C@_0CF@ODNOBAON@wcslen?$CIformat?$CJ?5?$DM?5MAXIMUM_STRING_@ (0000)
+002A2EA8 002c:
+	??_C@_0CM@INOIICAC@?$CIsize?5?$DO?50?$CJ?5?$CG?$CG?5?$CIsize?5?$DM?$DN?5MAXIMUM_S@ (0000)
+002A2ED4 0011:
+	??_C@_0BB@LLHJAMON@string?5?$CG?$CG?5format?$AA@ (0000)
+002A2EE8 0011:
+	??_C@_0BB@FMMLKAJE@stream?5?$CG?$CG?5format?$AA@ (0000)
+002A2EFC 0007:
+	??_C@_06CPKOMEJH@fd?5?$DO?50?$AA@ (0000)
+002A2F04 0023:
+	??_C@_0CD@CHIODFOI@wcslen?$CIpath?$CJ?5?$DM?5MAXIMUM_STRING_SI@ (0000)
+002A2F28 0005:
+	??_C@_04LNEJFJGI@path?$AA@ (0000)
+002A2F30 0028:
+	??_C@_0CI@OMCNEDMK@wcslen?$CImode?$CJ?5?$DM?5MAXIMUM_MODE_STRI@ (0000)
+002A2F58 000d:
+	??_C@_0N@DGNJMIDO@path?5?$CG?$CG?5mode?$AA@ (0000)
+002A2F68 0026:
+	??_C@_0CG@IBGAHBIE@wcslen?$CIcommand?$CJ?5?$DM?5MAXIMUM_STRING@ (0000)
+002A2F90 0010:
+	??_C@_0BA@ENEADPPF@command?5?$CG?$CG?5mode?$AA@ (0000)
+002A2FA0 0023:
+	??_C@_0CD@OAEACAAO@wcslen?$CInptr?$CJ?5?$DM?5MAXIMUM_STRING_SI@ (0000)
+002A2FC4 0005:
+	??_C@_04DKBBLKKK@nptr?$AA@ (0000)
+002A2FCC 0006:
+	??_C@_05NAPFDJNG@timer?$AA@ (0000)
+002A2FD4 0008:
+	??_C@_07GMJPCJBH@timeptr?$AA@ (0000)
+002A2FDC 001d:
+	??_C@_0BN@GMFKDIGL@length?5?$DM?5MAXIMUM_STRING_SIZE?$AA@ (0000)
+002A2FFC 0011:
+	??_C@_0BB@LBAPFJHB@unicode?5?$CG?$CG?5ascii?$AA@ (0000)
+002A3010 0011:
+	??_C@_0BB@IALIJFPB@ascii?5?$CG?$CG?5unicode?$AA@ (0000)
+002A3024 0008:
+	??_C@_17LGGGMOOB@?$AA?$CF?$AAh?$AAs?$AA?$AA@ (0000)
+004C1A08 0200:
+	_bss_004c1a08 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

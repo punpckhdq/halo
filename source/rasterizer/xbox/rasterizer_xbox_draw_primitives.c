@@ -1,0 +1,227 @@
+/*
+RASTERIZER_XBOX_DRAW_PRIMITIVES.C
+
+symbols in this file:
+0014C870 0020:
+	_code_0014c870 (0000)
+0014C890 0020:
+	_code_0014c890 (0000)
+0014C8B0 01e0:
+	_rasterizer_dynamic_geometry_initialize (0000)
+0014CA90 0100:
+	_rasterizer_dynamic_geometry_begin (0000)
+0014CB90 0010:
+	_rasterizer_dynamic_geometry_end (0000)
+0014CBA0 0130:
+	__rasterizer_dynamic_triangles_new (0000)
+0014CCD0 0030:
+	_code_0014ccd0 (0000)
+0014CD00 0030:
+	_code_0014cd00 (0000)
+0014CD30 0010:
+	__rasterizer_dynamic_triangles_delete (0000)
+0014CD40 0170:
+	__rasterizer_dynamic_vertices_new (0000)
+0014CEB0 0010:
+	_code_0014ceb0 (0000)
+0014CEC0 0010:
+	_code_0014cec0 (0000)
+0014CED0 00b0:
+	__rasterizer_dynamic_vertices_get_type (0000)
+0014CF80 0050:
+	_code_0014cf80 (0000)
+0014CFD0 0010:
+	__rasterizer_dynamic_vertices_delete (0000)
+0014CFE0 0300:
+	_rasterizer_draw_dynamic_vertices (0000)
+0014D2E0 0360:
+	_rasterizer_draw_dynamic_triangles_dynamic_vertices (0000)
+0014D640 0250:
+	_rasterizer_draw_dynamic_triangles_static_vertices (0000)
+0014D890 0290:
+	_rasterizer_draw_dynamic_triangles_static_vertices2 (0000)
+0014DB20 0340:
+	_rasterizer_draw_static_triangles_dynamic_vertices (0000)
+0014DE60 0220:
+	_rasterizer_draw_static_triangles_static_vertices (0000)
+0014E080 0100:
+	_rasterizer_draw (0000)
+0014E180 0010:
+	_code_0014e180 (0000)
+0014E190 0010:
+	_code_0014e190 (0000)
+0014E1A0 0020:
+	_code_0014e1a0 (0000)
+0014E1C0 0010:
+	_code_0014e1c0 (0000)
+0014E1D0 0010:
+	_code_0014e1d0 (0000)
+0014E1E0 0010:
+	_code_0014e1e0 (0000)
+0014E1F0 0010:
+	_code_0014e1f0 (0000)
+0014E200 0020:
+	_code_0014e200 (0000)
+0014E220 0010:
+	_code_0014e220 (0000)
+0014E230 0090:
+	_rasterizer_dynamic_geometry_dispose (0000)
+0014E2C0 0120:
+	__rasterizer_dynamic_triangles_lock (0000)
+0014E3E0 00c0:
+	__rasterizer_dynamic_triangles_unlock (0000)
+0014E4A0 0230:
+	__rasterizer_dynamic_vertices_lock (0000)
+0014E6D0 0170:
+	__rasterizer_dynamic_vertices_unlock (0000)
+0028E5C8 0008:
+	_rdata_0028e5c8 (0000)
+0028E5D0 003b:
+	??_C@_0DL@CELKICBI@?$CD?$CD?$CD?5ERROR?5failed?5to?5initialize?5r@ (0000)
+0028E610 0108:
+	??_C@_0BAI@KPMMDAFJ@IDirect3DDevice8_CreateVertexBuf@ (0000)
+0028E718 0031:
+	??_C@_0DB@BDEPEHPB@?$CD?$CD?$CD?5ERROR?5failed?5to?5create?5dynam@ (0000)
+0028E750 00ce:
+	??_C@_0MO@NNKIDHAK@IDirect3DDevice8_CreateVertexBuf@ (0000)
+0028E820 0033:
+	??_C@_0DD@DGAAKPDJ@?$CD?$CD?$CD?5ERROR?5failed?5to?5create?5dynam@ (0000)
+0028E858 00f5:
+	??_C@_0PF@HNDKCKHM@IDirect3DDevice8_CreateIndexBuff@ (0000)
+0028E950 0041:
+	??_C@_0EB@ELGFMDMN@c?3?2halo?2SOURCE?2rasterizer?2xbox?2r@ (0000)
+0028E994 003e:
+	??_C@_0DO@JAKNBBDM@global_window_parameters?4window_@ (0000)
+0028E9D4 0029:
+	??_C@_0CJ@NAALOHDD@global_window_parameters?4window_@ (0000)
+0028EA00 003f:
+	??_C@_0DP@NDEFKOOC@?$CD?$CD?$CD?5ERROR?5too?5many?5dynamic?5trian@ (0000)
+0028EA40 0023:
+	??_C@_0CD@BPIHCHPB@dynamic_triangles?4d3d_index_buff@ (0000)
+0028EA64 003e:
+	??_C@_0DO@NOLGOALP@?$CD?$CD?$CD?5ERROR?5too?5many?5dynamic?5verti@ (0000)
+0028EAA4 0030:
+	??_C@_0DA@MBLFDOKH@dynamic_vertices?4groups?$FLtype?$FN?4d3@ (0000)
+0028EAD4 0032:
+	??_C@_0DC@IPENNEHA@type?$DO?$DN0?5?$CG?$CG?5type?$DMNUMBER_OF_RASTER@ (0000)
+0028EB08 003c:
+	??_C@_0DM@OMAKFPPI@?$CD?$CD?$CD?5WARNING?5tried?5to?5query?5dynam@ (0000)
+0028EB44 003a:
+	??_C@_0DK@ENLGGOJG@dynamic_vertex_buffer_index?$DMdyna@ (0000)
+0028EB80 001f:
+	??_C@_0BP@NMOHOGOD@dynamic_vertex_buffer_index?$DO?$DN0?$AA@ (0000)
+0028EBA0 0032:
+	??_C@_0DC@MPKCLDML@?$CD?$CD?$CD?5ERROR?5rasterizer_draw_dynami@ (0000)
+0028EBD8 00b7:
+	??_C@_0LH@LEHMDFDB@IDirect3DDevice8_DrawPrimitive?$CIg@ (0000)
+0028EC90 0057:
+	??_C@_0FH@DGOGOCFO@IDirect3DDevice8_SetStreamSource@ (0000)
+0028ECE8 0065:
+	??_C@_0GF@IGFCMPHA@dynamic_vertex_buffer?9?$DOvertex_st@ (0000)
+0028ED50 002d:
+	??_C@_0CN@JAOPPACH@dynamic_vertex_buffer?9?$DOvertex_st@ (0000)
+0028ED80 0012:
+	??_C@_0BC@ECCKCAEM@d3d_vertex_buffer?$AA@ (0000)
+0028ED98 0047:
+	??_C@_0EH@BMCFJFIF@vertices_per_primitive?$DM?$DNRASTERIZ@ (0000)
+0028EDE0 0019:
+	??_C@_0BJ@HJFIBNF@first_primitive_index?$DN?$DN0?$AA@ (0000)
+0028EDFC 0013:
+	??_C@_0BD@FLKJIAHN@primitive_count?$DN?$DN1?$AA@ (0000)
+0028EE10 0044:
+	??_C@_0EE@EHIDBKHF@?$CD?$CD?$CD?5ERROR?5rasterizer_draw_dynami@ (0000)
+0028EE58 00f3:
+	??_C@_0PD@FKLCELCE@IDirect3DDevice8_DrawIndexedPrim@ (0000)
+0028EF50 007e:
+	??_C@_0HO@GCKEEN@IDirect3DDevice8_SetIndices?$CIglob@ (0000)
+0028EFD0 004f:
+	??_C@_0EP@GAJKNBBD@triangle_count?$DM?$DNdynamic_triangle@ (0000)
+0028F020 0012:
+	??_C@_0BC@IKIJOHPO@triangle_count?$DO?$DN0?$AA@ (0000)
+0028F034 0031:
+	??_C@_0DB@DOCIGMNG@dynamic_triangle_buffer?9?$DOtriangl@ (0000)
+0028F068 003d:
+	??_C@_0DN@OKLMDHBI@dynamic_triangle_buffer_index?$DMdy@ (0000)
+0028F0A8 0021:
+	??_C@_0CB@EKNJFJNK@dynamic_triangle_buffer_index?$DO?$DN0@ (0000)
+0028F0D0 0043:
+	??_C@_0ED@EAFLJMAP@?$CD?$CD?$CD?5ERROR?5rasterizer_draw_dynami@ (0000)
+0028F118 00e4:
+	??_C@_0OE@NBCLOAD@IDirect3DDevice8_DrawIndexedPrim@ (0000)
+0028F200 0056:
+	??_C@_0FG@JGGFLPHO@IDirect3DDevice8_SetIndices?$CIglob@ (0000)
+0028F258 007d:
+	??_C@_0HN@NBKGBBDO@IDirect3DDevice8_SetStreamSource@ (0000)
+0028F2D8 0044:
+	??_C@_0EE@GBHEFPBN@?$CD?$CD?$CD?5ERROR?5rasterizer_draw_dynami@ (0000)
+0028F320 00e5:
+	??_C@_0OF@JAHJLHMJ@IDirect3DDevice8_DrawIndexedPrim@ (0000)
+0028F408 007f:
+	??_C@_0HP@MAAHNDOB@IDirect3DDevice8_SetStreamSource@ (0000)
+0028F488 007f:
+	??_C@_0HP@BJBJCPHN@IDirect3DDevice8_SetStreamSource@ (0000)
+0028F508 0043:
+	??_C@_0ED@CBPECNKE@?$CD?$CD?$CD?5ERROR?5rasterizer_draw_static@ (0000)
+0028F54C 002b:
+	??_C@_0CL@FELLKCJH@?$CD?$CD?$CD?5ERROR?5unsupported?5triangle?5b@ (0000)
+0028F578 00ce:
+	??_C@_0MO@FMCJIMIE@IDirect3DDevice8_DrawIndexedPrim@ (0000)
+0028F648 0094:
+	??_C@_0JE@MNLLMNOP@IDirect3DDevice8_SetIndices?$CIglob@ (0000)
+0028F6E0 0052:
+	??_C@_0FC@DDHAOBEG@triangle_buffer?9?$DOtype?$DO?$DN0?5?$CG?$CG?5tria@ (0000)
+0028F734 0018:
+	??_C@_0BI@JFHBJMGO@first_triangle_index?$DN?$DN0?$AA@ (0000)
+0028F750 0042:
+	??_C@_0EC@DBFHIHNF@?$CD?$CD?$CD?5ERROR?5rasterizer_draw_static@ (0000)
+0028F798 00bf:
+	??_C@_0LP@EAHLBOCI@IDirect3DDevice8_DrawIndexedPrim@ (0000)
+0028F858 006c:
+	??_C@_0GM@KCNAAGCP@IDirect3DDevice8_SetIndices?$CIglob@ (0000)
+0028F8C4 0034:
+	??_C@_0DE@KFDCDPDN@?$CBvertex_buffer?5?$HM?$HM?5dynamic_vertex@ (0000)
+0028F8F8 0033:
+	??_C@_0DD@NMEMNAIC@vertex_buffer?5?$HM?$HM?5dynamic_vertex_@ (0000)
+0028F92C 0038:
+	??_C@_0DI@CPHBLNOJ@?$CBtriangle_buffer?5?$HM?$HM?5dynamic_tria@ (0000)
+0028F964 0037:
+	??_C@_0DH@FECJEJOO@triangle_buffer?5?$HM?$HM?5dynamic_trian@ (0000)
+0028F99C 003c:
+	??_C@_0DM@HAIAHPBC@?$CD?$CD?$CD?5WARNING?5tried?5to?5lock?5dynami@ (0000)
+0028F9D8 002a:
+	??_C@_0CK@EDKGDKFP@dynamic_triangle_buffer?9?$DOtriangl@ (0000)
+0028FA04 003e:
+	??_C@_0DO@CLOHIDOP@?$CD?$CD?$CD?5WARNING?5tried?5to?5unlock?5dyna@ (0000)
+0028FA44 003b:
+	??_C@_0DL@JJHBALOA@?$CD?$CD?$CD?5WARNING?5tried?5to?5lock?5dynami@ (0000)
+0028FA80 0026:
+	??_C@_0CG@LANOLHLK@dynamic_vertex_buffer?9?$DOvertex_co@ (0000)
+0028FAA8 003e:
+	??_C@_0DO@NJMFIKPL@dynamic_vertex_buffer?9?$DOtype?$DMNUMB@ (0000)
+0028FAE8 001f:
+	??_C@_0BP@BIHBIPAP@dynamic_vertex_buffer?9?$DOtype?$DO?$DN0?$AA@ (0000)
+0028FB08 0050:
+	??_C@_0FA@LIAANCOP@?$CD?$CD?$CD?5WARNING?3?5tried?5to?5lock?5dynam@ (0000)
+0028FB58 003d:
+	??_C@_0DN@CACDOLFP@?$CD?$CD?$CD?5WARNING?5tried?5to?5unlock?5dyna@ (0000)
+0028FB98 0042:
+	??_C@_0EC@DAPJAHND@buffer?9?$DOtype?$DO?$DN0?5?$CG?$CG?5buffer?9?$DOtype?$DM@ (0000)
+0045E908 710e:
+	_bss_0045e908 (0000)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */

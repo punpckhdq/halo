@@ -1,0 +1,398 @@
+/*
+RASTERIZER_XBOX.C
+
+symbols in this file:
+001448F0 0010:
+	_code_001448f0 (0000)
+00144900 0010:
+	_code_00144900 (0000)
+00144910 0020:
+	_code_00144910 (0000)
+00144930 0010:
+	_code_00144930 (0000)
+00144940 0010:
+	_code_00144940 (0000)
+00144950 0010:
+	_code_00144950 (0000)
+00144960 0020:
+	_code_00144960 (0000)
+00144980 01b0:
+	_code_00144980 (0000)
+00144B30 0050:
+	_code_00144b30 (0000)
+00144B80 0010:
+	_code_00144b80 (0000)
+00144B90 0010:
+	_code_00144b90 (0000)
+00144BA0 0020:
+	_code_00144ba0 (0000)
+00144BC0 0010:
+	_code_00144bc0 (0000)
+00144BD0 0020:
+	_code_00144bd0 (0000)
+00144BF0 0030:
+	_code_00144bf0 (0000)
+00144C20 0020:
+	_code_00144c20 (0000)
+00144C40 0010:
+	_code_00144c40 (0000)
+00144C50 0010:
+	_code_00144c50 (0000)
+00144C60 0120:
+	_rasterizer_preinitialize__fill_you_up_with_the_devils_cock (0000)
+00144D80 0010:
+	_code_00144d80 (0000)
+00144D90 0010:
+	_code_00144d90 (0000)
+00144DA0 0010:
+	_code_00144da0 (0000)
+00144DB0 0020:
+	_code_00144db0 (0000)
+00144DD0 0010:
+	_code_00144dd0 (0000)
+00144DE0 00a0:
+	_rasterizer_get_bitmap_default_hardware_format (0000)
+00144E80 0220:
+	_code_00144e80 (0000)
+001450A0 0010:
+	_code_001450a0 (0000)
+001450B0 0010:
+	_code_001450b0 (0000)
+001450C0 0010:
+	_code_001450c0 (0000)
+001450D0 0020:
+	_code_001450d0 (0000)
+001450F0 0060:
+	_code_001450f0 (0000)
+00145150 0010:
+	_code_00145150 (0000)
+00145160 0010:
+	_code_00145160 (0000)
+00145170 0010:
+	_code_00145170 (0000)
+00145180 0010:
+	_code_00145180 (0000)
+00145190 0010:
+	_code_00145190 (0000)
+001451A0 0010:
+	_code_001451a0 (0000)
+001451B0 0010:
+	_code_001451b0 (0000)
+001451C0 0010:
+	_code_001451c0 (0000)
+001451D0 0010:
+	_code_001451d0 (0000)
+001451E0 0010:
+	_code_001451e0 (0000)
+001451F0 0010:
+	__rasterizer_reset_state (0000)
+00145200 0010:
+	_rasterizer_spin_begin (0000)
+00145210 0010:
+	_rasterizer_spin_end (0000)
+00145220 0030:
+	__rasterizer_windows_begin (0000)
+00145250 0040:
+	__rasterizer_window_get_fog (0000)
+00145290 0010:
+	_code_00145290 (0000)
+001452A0 0030:
+	__rasterizer_windows_end (0000)
+001452D0 00d0:
+	__rasterizer_frame_end (0000)
+001453A0 0010:
+	_code_001453a0 (0000)
+001453B0 0020:
+	_code_001453b0 (0000)
+001453D0 0010:
+	_code_001453d0 (0000)
+001453E0 0010:
+	_code_001453e0 (0000)
+001453F0 0070:
+	__rasterizer_dispose (0000)
+00145460 0010:
+	__rasterizer_set_vblank_callback (0000)
+00145470 0020:
+	_code_00145470 (0000)
+00145490 0010:
+	_code_00145490 (0000)
+001454A0 00a0:
+	_rasterizer_set_texture_bitmap_data (0000)
+00145540 00b0:
+	_rasterizer_set_texture_direct (0000)
+001455F0 0010:
+	_code_001455f0 (0000)
+00145600 00d0:
+	_rasterizer_set_texture_direct_non_blocking (0000)
+001456D0 01f0:
+	_rasterizer_set_texture (0000)
+001458C0 0020:
+	_code_001458c0 (0000)
+001458E0 0010:
+	_code_001458e0 (0000)
+001458F0 01b0:
+	_rasterizer_set_texture_non_blocking (0000)
+00145AA0 01c0:
+	_rasterizer_get_target (0000)
+00145C60 0010:
+	_code_00145c60 (0000)
+00145C70 0010:
+	_code_00145c70 (0000)
+00145C80 0010:
+	_code_00145c80 (0000)
+00145C90 00d0:
+	_rasterizer_set_vertex_shader (0000)
+00145D60 0200:
+	_rasterizer_set_pixel_shader (0000)
+00145F60 0140:
+	_rasterizer_set_model_skinning (0000)
+001460A0 0010:
+	_code_001460a0 (0000)
+001460B0 0010:
+	_code_001460b0 (0000)
+001460C0 0180:
+	_rasterizer_set_model_lighting_point_light (0000)
+00146240 0010:
+	_code_00146240 (0000)
+00146250 0020:
+	_code_00146250 (0000)
+00146270 0010:
+	_code_00146270 (0000)
+00146280 0090:
+	_rasterizer_set_model_lighting_distant_light (0000)
+00146310 0170:
+	_rasterizer_set_model_lighting (0000)
+00146480 0140:
+	_rasterizer_set_frustum_z (0000)
+001465C0 0010:
+	_rasterizer_get_stencil_mode (0000)
+001465D0 0080:
+	_SetupSmartStates (0000)
+00146650 0210:
+	_code_00146650 (0000)
+00146860 0930:
+	__rasterizer_initialize (0000)
+00147190 0090:
+	__rasterizer_frame_begin (0000)
+00147220 0470:
+	__rasterizer_window_set_fog (0000)
+00147690 0270:
+	__rasterizer_present (0000)
+00147900 0090:
+	_rasterizer_set_framebuffer_blend_function (0000)
+00147990 03b0:
+	_rasterizer_set_target (0000)
+00147D40 0310:
+	_rasterizer_set_target_as_texture (0000)
+00148050 02e0:
+	_rasterizer_secondary_render_target_debug (0000)
+00148330 0310:
+	_rasterizer_set_stencil_mode (0000)
+00148640 01a0:
+	__rasterizer_window_begin (0000)
+001487E0 00e0:
+	__rasterizer_window_end (0000)
+0028BFAC 006c:
+	_rdata_0028bfac (0000)
+0028C018 0026:
+	??_C@_0CG@LJAEJIHF@?$CD?$CD?$CD?5ERROR?5failed?5to?5create?5D3D?5d@ (0000)
+0028C040 0096:
+	??_C@_0JG@IMPKLFMH@IDirect3D8_CreateDevice?$CId3d?0?5D3D@ (0000)
+0028C0D8 002a:
+	??_C@_0CK@BAHPPAHK@?$CD?$CD?$CD?5ERROR?5rasterizer_preinitiali@ (0000)
+0028C104 0026:
+	??_C@_0CG@BKBJBKBM@?$CD?$CD?$CD?5ERROR?5failed?5to?5create?5D3D?5o@ (0000)
+0028C12C 0010:
+	??_C@_0BA@JHICOLCK@hardware_format?$AA@ (0000)
+0028C13C 0031:
+	??_C@_0DB@JJEKAJPN@c?3?2halo?2SOURCE?2rasterizer?2xbox?2r@ (0000)
+0028C170 0012:
+	??_C@_0BC@EFLMEHLA@global_d3d_device?$AA@ (0000)
+0028C184 0004:
+	??_C@_03KJMBPJEB@fog?$AA@ (0000)
+0028C188 0026:
+	??_C@_0CG@NPEGNFPM@?$CD?$CD?$CD?5ERROR?5rasterizer_frame_end?5f@ (0000)
+0028C1B0 0038:
+	??_C@_0DI@NKBECBMF@IDirect3DDevice8_SetIndices?$CIglob@ (0000)
+0028C1E8 0044:
+	??_C@_0EE@INAFMGG@IDirect3DDevice8_SetStreamSource@ (0000)
+0028C22C 003c:
+	??_C@_0DM@KKBOLCEG@IDirect3DDevice8_SetTexture?$CIglob@ (0000)
+0028C268 002e:
+	??_C@_0CO@PIHPEPNJ@?$CD?$CD?$CD?5ERROR?5direct?5texture?5not?5fou@ (0000)
+0028C298 0039:
+	??_C@_0DJ@JNBDDJC@?$CD?$CD?$CD?5YOU?5GOT?5FUCKED?5in?5rasterizer@ (0000)
+0028C2D4 0034:
+	??_C@_0DE@DLDFMINL@stage?$DO?$DN0?5?$CG?$CG?5stage?$DMRASTERIZER_MAX@ (0000)
+0028C308 0034:
+	??_C@_0DE@GGIKLJDM@?$CD?$CD?$CD?5YOU?5GOT?5FUCKED?5in?5rasterizer@ (0000)
+0028C340 0041:
+	??_C@_0EB@GOLEKMDL@?$CD?$CD?$CD?5YOU?5GOT?5FUCKED?5in?5rasterizer@ (0000)
+0028C388 0042:
+	??_C@_0EC@FMMEOKHO@?$CD?$CD?$CD?5ERROR?5default?5texture?5not?5fo@ (0000)
+0028C3CC 002d:
+	??_C@_0CN@IOHLPNGJ@?$CD?$CD?$CD?5YOU?5GOT?5FUCKED?5in?5rasterizer@ (0000)
+0028C400 0040:
+	??_C@_0EA@HGCGAPCF@?$CD?$CD?$CD?5ERROR?5incompatible?5bitmap?5ty@ (0000)
+0028C440 002a:
+	??_C@_0CK@MLIKKFDL@usage?$DO?$DN0?5?$CG?$CG?5usage?$DMNUMBER_OF_BITM@ (0000)
+0028C46C 003a:
+	??_C@_0DK@CFAMFBPP@?$CD?$CD?$CD?5YOU?5GOT?5FUCKED?5in?5rasterizer@ (0000)
+0028C4A8 0028:
+	??_C@_0CI@BKEJFOIK@?$CD?$CD?$CD?5ERROR?5unsupported?5rasterizer@ (0000)
+0028C4D0 004a:
+	??_C@_0EK@HBEOONOJ@mipmap_index?$DO?$DN0?5?$CG?$CG?5mipmap_index?$DM@ (0000)
+0028C51C 0010:
+	??_C@_0BA@JLAODHOH@mipmap_index?$DN?$DN0?$AA@ (0000)
+0028C52C 002e:
+	??_C@_0CO@GMABMPEH@?$CD?$CD?$CD?5ERROR?5rasterizer_set_vertex_@ (0000)
+0028C55C 0028:
+	??_C@_0CI@HGAJFNDH@?$CD?$CD?$CD?5ERROR?5vertex?5shader?5not?5vali@ (0000)
+0028C584 002d:
+	??_C@_0CN@PDDKNFOD@vertex_shader_index?$DMNUMBER_OF_VE@ (0000)
+0028C5B4 0017:
+	??_C@_0BH@OHPPDPJE@vertex_shader_index?$DO?$DN0?$AA@ (0000)
+0028C5CC 000d:
+	??_C@_0N@MANOBHKP@pixel_shader?$AA@ (0000)
+0028C5E0 0060:
+	??_C@_0GA@PLGEEOOC@skinning?9?$DOnode_matrix_count?$DO0?5?$CG?$CG@ (0000)
+0028C640 0018:
+	??_C@_0BI@KLHPEHGN@skinning?9?$DOnode_matrices?$AA@ (0000)
+0028C658 0009:
+	??_C@_08HJFAKFFP@skinning?$AA@ (0000)
+0028C664 0013:
+	??_C@_0BD@CDNJLMOL@light?9?$DOradius?$DO0?40f?$AA@ (0000)
+0028C678 002e:
+	??_C@_0CO@JMCGDDGD@?$CD?$CD?$CD?5ERROR?5invalid?5light?5index?5?$CD?$CF@ (0000)
+0028C6A8 0013:
+	??_C@_0BD@FMHEBCEM@lighting_constants?$AA@ (0000)
+0028C6C0 0063:
+	??_C@_0GD@MJAJPLGF@lighting?9?$DOdistant_light_count?$DO?$DN0@ (0000)
+0028C728 005d:
+	??_C@_0FN@EEGDNJMA@lighting?9?$DOpoint_light_count?$DO?$DN0?5?$CG@ (0000)
+0028C788 003d:
+	??_C@_0DN@INGBFNFC@?$CD?$CD?$CD?5ERROR?5rasterizer_filthy_bitm@ (0000)
+0028C7C8 0064:
+	??_C@_0GE@KICHIBFL@IDirect3DCubeTexture8_UnlockRect@ (0000)
+0028C830 007d:
+	??_C@_0HN@CBGCAOMO@IDirect3DCubeTexture8_LockRect?$CI?$CI@ (0000)
+0028C8B0 0096:
+	??_C@_0JG@KLNJKKPK@IDirect3DDevice8_CreateCubeTextu@ (0000)
+0028C948 00a0:
+	??_C@_0KA@OJCDNDGA@IDirect3DDevice8_CreateVolumeTex@ (0000)
+0028C9E8 0091:
+	??_C@_0JB@COIPALPH@IDirect3DDevice8_CreateTexture?$CIg@ (0000)
+0028CA7C 002a:
+	??_C@_0CK@OCJFMEEI@?$CD?$CD?$CD?5ERROR?5failed?5to?5initialize?5r@ (0000)
+0028CAA8 0030:
+	??_C@_0DA@NKLNBECC@?$CD?$CD?$CD?5ERROR?5failed?5to?5create?5offsc@ (0000)
+0028CAD8 0074:
+	??_C@_0HE@PLFBFJHA@IDirect3DTexture8_GetSurfaceLeve@ (0000)
+0028CB50 00d8:
+	??_C@_0NI@ECMBGJIH@IDirect3DDevice8_CreateTexture?$CIg@ (0000)
+0028CC28 0070:
+	??_C@_0HA@HPJNNEKC@IDirect3DTexture8_GetSurfaceLeve@ (0000)
+0028CC98 00d6:
+	??_C@_0NG@BODHHAEB@IDirect3DDevice8_CreateTexture?$CIg@ (0000)
+0028CD70 0070:
+	??_C@_0HA@KNPKGEEK@IDirect3DTexture8_GetSurfaceLeve@ (0000)
+0028CDE0 00e4:
+	??_C@_0OE@NPLOEEFK@IDirect3DDevice8_CreateTexture?$CIg@ (0000)
+0028CEC8 006c:
+	??_C@_0GM@HCLFIPDH@IDirect3DTexture8_GetSurfaceLeve@ (0000)
+0028CF38 00de:
+	??_C@_0NO@IJKJNOPC@IDirect3DDevice8_CreateTexture?$CIg@ (0000)
+0028D018 0073:
+	??_C@_0HD@KCKBKMOK@IDirect3DTexture8_GetSurfaceLeve@ (0000)
+0028D090 00ed:
+	??_C@_0ON@JBHMAKFG@IDirect3DDevice8_CreateTexture?$CIg@ (0000)
+0028D180 0070:
+	??_C@_0HA@PPPDGAKM@IDirect3DTexture8_GetSurfaceLeve@ (0000)
+0028D1F0 00ed:
+	??_C@_0ON@OCIPEHEH@IDirect3DDevice8_CreateTexture?$CIg@ (0000)
+0028D2E0 0061:
+	??_C@_0GB@BKAODOLK@IDirect3DDevice8_GetDepthStencil@ (0000)
+0028D344 003f:
+	??_C@_0DP@GDNFIFCJ@IDirect3DDevice8_SetPalette?$CIglob@ (0000)
+0028D384 003f:
+	??_C@_0DP@MNLNBELI@IDirect3DDevice8_SetPalette?$CIglob@ (0000)
+0028D3C4 003f:
+	??_C@_0DP@OEHFKAEK@IDirect3DDevice8_SetPalette?$CIglob@ (0000)
+0028D404 003f:
+	??_C@_0DP@EKBNDBNL@IDirect3DDevice8_SetPalette?$CIglob@ (0000)
+0028D444 0026:
+	??_C@_0CG@PPAJCKHN@IDirect3DPalette8_Unlock?$CId3d_pal@ (0000)
+0028D46C 0036:
+	??_C@_0DG@BMBIAMGI@IDirect3DPalette8_Lock?$CId3d_palet@ (0000)
+0028D4A8 0050:
+	??_C@_0FA@MCEBCHKA@IDirect3DDevice8_CreatePalette?$CIg@ (0000)
+0028D4F8 0040:
+	??_C@_0EA@CKHOOLOE@?$CD?$CD?$CD?5ERROR?5unsupported?5refresh?5ra@ (0000)
+0028D538 0037:
+	??_C@_0DH@HCIDBGAJ@global_window_parameters?4fog?4pla@ (0000)
+0028D570 003a:
+	??_C@_0DK@EDEGCCAG@global_window_parameters?4fog?4pla@ (0000)
+0028D5B0 0075:
+	??_C@_0HF@ELMEMOH@global_window_parameters?4fog?4atm@ (0000)
+0028D628 003b:
+	??_C@_0DL@PAKIILIC@global_window_parameters?4fog?4pla@ (0000)
+0028D664 0024:
+	??_C@_0CE@HPCABBCB@?$CD?$CD?$CD?5ERROR?5rasterizer_present?5fai@ (0000)
+0028D688 0060:
+	??_C@_0GA@CPCOJECG@IDirect3DDevice8_Present?$CIglobal_@ (0000)
+0028D6E8 002d:
+	??_C@_0CN@JAPEKLEM@?$CD?$CD?$CD?5ERROR?5rasterizer_present?3?5in@ (0000)
+0028D718 003f:
+	??_C@_0DP@EGFJOLCI@?$CD?$CD?$CD?5ERROR?5rasterizer_present?3?5fa@ (0000)
+0028D758 0040:
+	??_C@_0EA@KEPBNAO@?$CD?$CD?$CD?5ERROR?5rasterizer_present?3?5fa@ (0000)
+0028D798 006a:
+	??_C@_0GK@ICFOLFDN@d3d_locked_rect?4Pitch?$DN?$DNbitmap_fo@ (0000)
+0028D808 0069:
+	??_C@_0GJ@JMGDDDIM@framebuffer_blend_function?$DO?$DN0?5?$CG?$CG@ (0000)
+0028D874 0018:
+	??_C@_0BI@DJIILGGH@?$CBzbuffer?$HM?$HMd3d_surface_z?$AA@ (0000)
+0028D88C 000c:
+	??_C@_0M@HGIHFEHC@d3d_surface?$AA@ (0000)
+0028D898 0032:
+	??_C@_0DC@MKHBJDNL@?$CD?$CD?$CD?5ERROR?5rasterizer_set_target_@ (0000)
+0028D8D0 005b:
+	??_C@_0FL@EKIAGOAJ@IDirect3DDevice8_SetTexture?$CIglob@ (0000)
+0028D930 0047:
+	??_C@_0EH@LPKMMGNL@max_mipmap?$DO?$DN0?5?$CG?$CG?5max_mipmap?$DM?$DNRAS@ (0000)
+0028D978 000c:
+	??_C@_0M@GCLICPKO@d3d_texture?$AA@ (0000)
+0028D984 002a:
+	??_C@_0CK@FOODOHFI@IDirect3DSurface8_Release?$CId3d_ba@ (0000)
+0028D9B0 000e:
+	??_C@_0O@FGCAPMIP@max_mipmap?$DN?$DN0?$AA@ (0000)
+0028D9C0 0023:
+	??_C@_0CD@FEAAOJEM@?$CD?$CD?$CD?5ERROR?5unsupported?5stencil?5mo@ (0000)
+0028D9E4 0020:
+	??_C@_0CA@FGDHOGNI@parameters?9?$DOcamera?4z_near?$CB?$DN0?40f?$AA@ (0000)
+0028DA04 003c:
+	??_C@_0DM@KDAIMIHM@?$CD?$CD?$CD?5ERROR?5unsupported?5rasterizer@ (0000)
+0028DA40 000b:
+	??_C@_0L@HHPOFMCB@parameters?$AA@ (0000)
+0030CEEC 0006:
+	_data_0030ceec (0000)
+0045E028 08b6:
+	_bss_0045e028 (0000)
+	_global_d3d_device (08a8)
+*/
+
+/* ---------- headers */
+
+/* ---------- constants */
+
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
+
+/* ---------- public code */
+
+/* ---------- private code */
