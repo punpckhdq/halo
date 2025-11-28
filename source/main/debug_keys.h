@@ -14,7 +14,11 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/DEBUG_KEYS.C */
+
+void debug_keys_initialize(void);
+void debug_keys_dispose(void);
+void debug_keys_update(void);
 
 /* ---------- globals */
 
