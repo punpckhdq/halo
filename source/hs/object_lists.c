@@ -174,6 +174,7 @@ void object_list_remove_reference(long object_list_index)
 	{
 		struct object_list_header_datum *list= object_list_header_get(object_list_index);
 		match_assert("c:\\halo\\SOURCE\\hs\\object_lists.c", 165, list->reference_count>0);
+
 		--list->reference_count;
 	}
 
@@ -221,6 +222,7 @@ long object_list_get_first(
 	if (object_list_index!=NONE)
 	{
 		struct object_list_header_datum *list= object_list_header_get(object_list_index);
+
 		*reference_index= list->first_reference_index;
 		if (list->first_reference_index!=NONE)
 		{

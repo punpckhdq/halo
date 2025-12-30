@@ -41,39 +41,22 @@ struct datum_header
 /* ---------- prototypes/DATA.C */
 
 long data_allocation_size(short maximum_count, short size);
-
 void data_initialize(struct data_array *data, char const *name, short maximum_count, short size);
-
 void *datum_try_and_get(struct data_array *data, long index);
-
 void data_verify(struct data_array *data);
-
 void *datum_get(struct data_array *data, long index);
-
 struct data_array *data_new(char const *name, short maximum_count, short size);
-
 void data_dispose(struct data_array *data);
-
 void data_make_invalid(struct data_array *data);
-
 long datum_new_at_index(struct data_array *data, long index);
-
 long datum_new(struct data_array *data);
-
 void datum_delete(struct data_array *data, long index);
-
 void data_delete_all(struct data_array *data);
-
 void data_iterator_new(struct data_iterator *iterator, struct data_array *data);
-
 void *data_iterator_next(struct data_iterator *iterator);
-
 long data_next_index(struct data_array *data, long index);
-
 long data_prev_index(struct data_array *data, long index);
-
 void data_compact(struct data_array *data);
-
 void data_make_valid(struct data_array *data);
 
 
