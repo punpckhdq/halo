@@ -10,6 +10,11 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	TAG_STRING_LENGTH= 31,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

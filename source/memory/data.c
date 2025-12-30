@@ -70,6 +70,8 @@ symbols in this file:
 
 /* ---------- prototypes */
 
+static void datum_initialize(struct data_array *data, struct datum_header *header);
+
 /* ---------- globals */
 
 /* ---------- public code */
