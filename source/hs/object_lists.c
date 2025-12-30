@@ -147,35 +147,37 @@ void object_list_add(
 {
 	struct object_list_header_datum *list= object_list_header_get(object_list_index);
 	reference_list_add(object_list_header_data, &list->first_reference_index, object_index);
-	++list->count;
-
+	list->count++;
 	return;
 }
 
-long object_list_get_next(long object_list_index, long *reference_index)
+long object_list_get_next(
+	long object_list_index,
+	long *reference_index)
 {
 	return reference_list_get_next_datum_index(object_list_data, reference_index);
 }
 
-void object_list_add_reference(long object_list_index)
+void object_list_add_reference(
+	long object_list_index)
 {
 	if (object_list_index!=NONE)
 	{
 		struct object_list_header_datum *list= object_list_header_get(object_list_index);
-		++list->reference_count;
+		list->reference_count++;
 	}
 
 	return;
 }
 
-void object_list_remove_reference(long object_list_index)
+void object_list_remove_reference(
+	long object_list_index)
 {
 	if (object_list_index!=NONE)
 	{
 		struct object_list_header_datum *list= object_list_header_get(object_list_index);
 		match_assert("c:\\halo\\SOURCE\\hs\\object_lists.c", 165, list->reference_count>0);
-
-		--list->reference_count;
+		list->reference_count--;
 	}
 
 	return;
