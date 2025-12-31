@@ -41,11 +41,11 @@ struct datum_header
 /* ---------- prototypes/DATA.C */
 
 long data_allocation_size(short maximum_count, short size);
-void data_initialize(struct data_array *data, char const *name, short maximum_count, short size);
+void data_initialize(struct data_array *data, const char *name, short maximum_count, short size);
 void *datum_try_and_get(struct data_array *data, long index);
 void data_verify(struct data_array *data);
 void *datum_get(struct data_array *data, long index);
-struct data_array *data_new(char const *name, short maximum_count, short size);
+struct data_array *data_new(const char *name, short maximum_count, short size);
 void data_dispose(struct data_array *data);
 void data_make_invalid(struct data_array *data);
 long datum_new_at_index(struct data_array *data, long index);

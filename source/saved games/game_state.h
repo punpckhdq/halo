@@ -18,7 +18,7 @@ header included in hcex build.
 
 void game_state_initialize(void);
 
-struct data_array *game_state_data_new(char const *name, short maximum_count, short size);
+struct data_array *game_state_data_new(const char *name, short maximum_count, short size);
 
 /* ---------- globals */
 
