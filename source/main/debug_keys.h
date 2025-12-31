@@ -10,9 +10,28 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_debug_key_no_modifier = 0,
+	_debug_key_shift,
+	_debug_key_ctrl,
+	_debug_key_shift_ctrl,
+	NUMBER_OF_DEBUG_KEY_MODIFIERS,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct debug_key
+{
+	const char *name;
+	short key_code;
+	short modifier;
+	void(*function)(boolean);
+	boolean toggle_variable;
+	boolean *variable;
+};
 
 /* ---------- prototypes/DEBUG_KEYS.C */
 
