@@ -10,7 +10,7 @@ jobs:
 
     # This is a *private* build container.
     # See docs/github_actions.md for more information.
-    container: ghcr.io/my/halo-build:main
+    container: ghcr.io/punpckhdq/halo-build:main
 
     runs-on: ubuntu-latest
     strategy:
