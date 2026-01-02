@@ -114,7 +114,7 @@ class SolutionConfig:
         self.objdiff_tag: Optional[str] = None  # Git tag
         self.objdiff_path: Optional[Path] = None  # If None, download
         self.wibo_tag: Optional[str] = None # Git tag
-        self.wibo_path: Optional[Path] = None # If None, download
+        self.wrapper: Optional[Path] = None  # If None, download wibo on Linux
         
         # Project config
         self.baserom: Optional[Path] = None
