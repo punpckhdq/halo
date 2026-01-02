@@ -28,7 +28,7 @@ struct debug_key
 	const char *name;
 	short key_code;
 	short modifier;
-	void(*function)(boolean down);
+	void (*function)(boolean down);
 	boolean toggle_variable;
 	boolean *variable;
 };

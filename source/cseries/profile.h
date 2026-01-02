@@ -16,6 +16,7 @@ PROFILE.H
 
 /* ---------- globals */
 
+/* comm */
 boolean profile_global_enable;
 
 /* ---------- public code */

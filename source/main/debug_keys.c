@@ -119,7 +119,7 @@ void debug_keys_initialize(
 		}
 	}
 
-	global_debug_key_down= (long*)match_malloc("c:\\halo\\SOURCE\\main\\debug_keys.c", 88, BIT_VECTOR_SIZE_IN_BYTES(key_count));
+	global_debug_key_down= (long *)match_malloc("c:\\halo\\SOURCE\\main\\debug_keys.c", 88, BIT_VECTOR_SIZE_IN_BYTES(key_count));
 	match_assert("c:\\halo\\SOURCE\\main\\debug_keys.c", 89, global_debug_key_down);
 	memset(global_debug_key_down, 0, BIT_VECTOR_SIZE_IN_BYTES(key_count));
 
