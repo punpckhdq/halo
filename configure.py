@@ -27,6 +27,7 @@ from tools.project_x86 import (
     SolutionConfig,
     calculate_progress,
     generate_build,
+    is_windows,
 )
 import os
 # arguments
@@ -56,6 +57,13 @@ parser.add_argument(
     type=Path,
     help="path to ninja binary (optional)",
 )
+if not is_windows():
+    parser.add_argument(
+        "--wrapper",
+        metavar="BINARY",
+        type=Path,
+        help="path to wibo or wine (optional)",
+    )
 
 args = parser.parse_args()
 
@@ -105,10 +113,13 @@ sln.baserom = build_config["baserom"]
 sln.objdiff_path = args.objdiff
 sln.csplit_path = args.csplit
 sln.ninja_path = args.ninja
+if not is_windows():
+    sln.wrapper = args.wrapper
 
 # Tool versions
 sln.objdiff_tag = "v3.3.1"
 sln.csplit_tag = "v0.0.1"
+sln.wibo_tag = "v1.0.0"
 
 sln.projects = []
 for build_project in build_config["projects"]:
