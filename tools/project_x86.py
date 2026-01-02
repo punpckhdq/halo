@@ -286,9 +286,6 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         name="cl",
         command=f"{wrapper_cmd}xbox/bin/vc7/CL.Exe /nologo /c $cflags /Fo$out $in",
         description="CL $out",
-        implicit=[
-            wrapper_implicit
-        ],
     )
     n.newline()
     
@@ -317,6 +314,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
                     rule="cl",
                     variables={"cflags": cflags},
                     inputs=obj.file_path,
+                    implicit=wrapper_implicit
                 )
         base_object_targets.extend(proj_base_object_targets)
         n.build(
