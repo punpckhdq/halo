@@ -20,9 +20,7 @@ INTEGER_MATH.C
 static point2d integer_origin2d= {{ 0, 0 }};
 
 short direction_delta_x[9]= {1, 1, -1, -1, 0, 1, 0, -1, 0};
-
 short direction_delta_y[9]= {1, -1, -1, 1, 1, 0, -1, 0, 0};
-
 short reversed_directions[9]= {2, 3, 0, 1, 6, 7, 4, 5, 8};
 
 point2d *global_integer_origin2d= &integer_origin2d;
@@ -35,6 +33,7 @@ rectangle2d *set_rectangle2d(rectangle2d *rectangle, short x0, short y0, short x
 	rectangle->y0= y0;
 	rectangle->x1= x1;
 	rectangle->y1= y1;
+
 	return rectangle;
 }
 
@@ -42,6 +41,7 @@ point2d *set_point2d(point2d *point, short x, short y)
 {
 	point->n[0]= x;
 	point->n[1]= y;
+
 	return point;
 }
 
@@ -49,6 +49,7 @@ point2d *offset_point2d(point2d *point, short dx, short dy)
 {
 	point->n[0]+= dx;
 	point->n[1]+= dy;
+
 	return point;
 }
 
@@ -68,6 +69,7 @@ rectangle2d *inset_rectangle2d(rectangle2d *rectangle, short dx, short dy)
 	rectangle->x1-= dx;
 	rectangle->y0+= dy;
 	rectangle->y1-= dy;
+
 	return rectangle;
 }
 
@@ -77,6 +79,7 @@ rectangle2d *offset_rectangle2d(rectangle2d *rectangle, short dx, short dy)
 	rectangle->x1+= dx;
 	rectangle->y0+= dy;
 	rectangle->y1+= dy;
+
 	return rectangle;
 }
 
@@ -121,12 +124,13 @@ rectangle2d* adjust_rectangle2d(
 			"c:\\halo\\SOURCE\\math\\integer_math.c",
 			173,
 			FALSE,
-			csprintf(temporary, __FUNCTION__"() can't handle mode #%d", mode)
+			csprintf(temporary, "adjust_rectangle2d() can't handle mode #%d", mode)
 		);
 		break;
 	}
 
 	*destination= new_rectangle;
+
 	return destination;
 }
 
@@ -150,6 +154,7 @@ boolean intersect_rectangles2d(rectangle2d const *r1, rectangle2d const *r2, rec
 		*intersection= new_rectangle;
 		result= TRUE;
 	}
+
 	return result;
 }
 
@@ -163,6 +168,7 @@ rectangle2d *rectangle2d_hull_from_rectangles2d(
 	hull->x1= MAX(r1->x1, r2->x1);
 	hull->y0= MIN(r1->y0, r2->y0);
 	hull->y1= MAX(r1->y1, r2->y1);
+
 	return hull;
 }
 
@@ -176,6 +182,7 @@ boolean point2d_in_rectangle2d(rectangle2d const *rectangle, const point2d *poin
 			result= TRUE;
 		}
 	}
+
 	return result;
 }
 
@@ -196,8 +203,8 @@ boolean equal_point2d(point2d const *p1, point2d const *p2)
 
 short floor_log2(unsigned long k)
 {
-	unsigned int counter= k;
-	int result= 0;
+	unsigned long counter= k;
+	long result= 0;
 
 	if (k > 0)
 	{
@@ -206,13 +213,14 @@ short floor_log2(unsigned long k)
 			counter>>= 1;
 		}
 	}
+
 	return result;
 }
 
 short ceiling_log2(unsigned long k)
 {
-	unsigned int counter;
-	int result= 0;
+	unsigned long counter;
+	long result= 0;
 
 	if (k > 0)
 	{
@@ -222,22 +230,24 @@ short ceiling_log2(unsigned long k)
 			counter >>= 1;
 		}
 	}
+
 	return result + 1;
 }
 
 unsigned long floor_power2(unsigned short x)
 {
-	int result= 1;
+	long result= 1;
 	while (result*2<= x)
 	{
 		result*= 2;
 	}
+
 	return result;
 }
 
 unsigned long ceiling_power2(unsigned short x)
 {
-	int result= 1;
+	long result= 1;
 	while (result < x)
 	{
 		result<<= 1;
@@ -248,9 +258,9 @@ unsigned long ceiling_power2(unsigned short x)
 
 unsigned long integer_square_root(unsigned long k)
 {
-	unsigned int sum;
-	unsigned int result= 0;
-	unsigned int magic= 0x40000000;
+	unsigned long sum;
+	unsigned long result= 0;
+	unsigned long magic= 0x40000000;
 
 	do
 	{
@@ -269,6 +279,7 @@ unsigned long integer_square_root(unsigned long k)
 	{
 		result++;
 	}
+
 	return result;
 }
 
@@ -306,6 +317,7 @@ void bit_vector_or(short count, unsigned long const *v0, unsigned long const *v1
 	{
 		result[i]= v0[i] | v1[i];
 	}
+
 	return;
 }
 
@@ -319,6 +331,7 @@ void bit_vector_not(short count, unsigned long const *vector, unsigned long *res
 	{
 		result[i]= ~vector[i];
 	}
+
 	return;
 }
 
@@ -353,6 +366,7 @@ rectangle2d *scale_rectangle2d(rectangle2d const *bounds, rectangle2d const *sou
 		bounds->y0 + (bounds_height - new_height) / 2
 	);
 	*destination= new_rectangle;
+
 	return destination;
 }
 

@@ -178,4 +178,9 @@ void debug_dump_memory(void);
 #define realloc(ptr, size) match_realloc(__FILE__, __LINE__, ptr, size)
 #endif
 
+/* ---------- globals */
+
+/* comm */
+char temporary[256];
+
 #endif // __CSERIES_H
