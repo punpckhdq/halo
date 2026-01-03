@@ -85,14 +85,18 @@ enum
 #define TEST_FLAG(flags, bit) ((flags)&(unsigned)FLAG(bit))
 #define SET_FLAG(f, b, v) ((v) ? ((f)|=(unsigned)FLAG(b)) : ((f)&=(unsigned)~FLAG(b)))
 
-#define BIT_VECTOR_SIZE_IN_LONGS(bit_count) (((bit_count) + (LONG_BITS - 1)) / LONG_BITS)
+#define BIT_VECTOR_SIZE_IN_LONGS(bit_count) (((bit_count) + (LONG_BITS - 1)) >> LONG_BITS_BITS)
 #define BIT_VECTOR_SIZE_IN_BYTES(bit_count) (sizeof(long) * BIT_VECTOR_SIZE_IN_LONGS(bit_count))
-#define BIT_VECTOR_TEST_FLAG(bit_vector, bit) (TEST_FLAG(bit_vector[(bit) / LONG_BITS], ((bit) & (LONG_BITS - 1))))
-#define BIT_VECTOR_SET_FLAG(bit_vector, bit, enable) (SET_FLAG(bit_vector[(bit) / LONG_BITS], ((bit) & (LONG_BITS - 1)), enable))
+#define BIT_VECTOR_TEST_FLAG(bit_vector, bit) (TEST_FLAG(bit_vector[(bit) >> LONG_BITS_BITS], ((bit) & (LONG_BITS - 1))))
+#define BIT_VECTOR_SET_FLAG(bit_vector, bit, enable) (SET_FLAG(bit_vector[(bit) >> LONG_BITS_BITS], ((bit) & (LONG_BITS - 1)), enable))
 
 #define VALID_FLAGS(flags, bits) (!((flags)>>bits))
 
 #define NUMBEROF(array) (sizeof(array) / sizeof(array[0]))
+
+/* ---------- fixed math */
+
+#define SHORT_FIXED_TO_LONG(f) ((f)>>CHAR_BITS)
 
 /* ---------- types */
 
@@ -177,5 +181,10 @@ void debug_dump_memory(void);
 #define free(ptr) match_free(__FILE__, __LINE__, ptr)
 #define realloc(ptr, size) match_realloc(__FILE__, __LINE__, ptr, size)
 #endif
+
+/* ---------- globals */
+
+/* comm */
+char temporary[256];
 
 #endif // __CSERIES_H

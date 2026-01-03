@@ -22451,7 +22451,7 @@
 { "file_offset": 4546088, "flags": 0, "name": "_global_screenshot_count" },
 { "file_offset": 4546995, "flags": 0, "name": "_bss_004561b3" },
 { "file_offset": 4546996, "flags": 0, "name": "_bss_004561b4" },
-{ "file_offset": 4547000, "flags": 0, "name": "_bss_004561b8" },
+{ "file_offset": 4547000, "flags": 0, "name": "_integer_origin2d" },
 { "file_offset": 4547004, "flags": 0, "name": "_bss_004561bc" },
 { "file_offset": 4547080, "flags": 0, "name": "_bss_00456208" },
 { "file_offset": 4547104, "flags": 0, "name": "_bss_00456220" },
