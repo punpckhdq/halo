@@ -3543,7 +3543,7 @@
 { "file_offset": 849920, "flags": 32, "name": "_interface_draw_bitmap_modulated_p32" },
 { "file_offset": 850272, "flags": 32, "name": "_xbox_demos_available" },
 { "file_offset": 850368, "flags": 32, "name": "_IDirect3DDevice8_PersistDisplay@4" },
-{ "file_offset": 850384, "flags": 32, "name": "clean_up_for_image_launch" },
+{ "file_offset": 850384, "flags": 32, "name": "_clean_up_for_image_launch" },
 { "file_offset": 850480, "flags": 32, "name": "_xbox_demos_launch" },
 { "file_offset": 850592, "flags": 32, "name": "_xbox_dashboard_launch" },
 { "file_offset": 850720, "flags": 32, "name": "_overhead_map_initialize" },
