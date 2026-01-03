@@ -5,14 +5,12 @@ MARKETING_AND_STRATEGIC_BUSINESS_DEVELOPMENT.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "cseries_windows.h"
 #include "marketing_and_strategic_business_development.h"
 #include "errors.h"
 #include "files.h"
 #include "ui_widget.h"
 #include "cache_files.h"
 #include "saved_game_files.h"
-#include "rasterizer/xbox/rasterizer_xbox.h"
 
 /* ---------- prototypes */
 
@@ -45,6 +43,10 @@ boolean xbox_demos_available(
 
 	return bss_00453ccc;
 }
+
+/* must include here to preserve order */
+#include "cseries_windows.h"
+#include "rasterizer/xbox/rasterizer_xbox.h"
 
 void xbox_demos_launch(
 	void)
