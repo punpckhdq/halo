@@ -140,7 +140,7 @@ boolean game_time_initialized(
 void game_time_initialize(
 	void)
 {
-	game_time_globals= game_state_malloc("game time globals", NULL, sizeof(*game_time_globals));
+	game_time_globals= (game_time_globals_struct *)game_state_malloc("game time globals", NULL, sizeof(*game_time_globals));
 	memset(game_time_globals, 0, sizeof(*game_time_globals));
 
 	return;
@@ -290,7 +290,15 @@ void game_time_set_speed(
 	return;
 }
 
-//code_000a50c0
+static void code_000a50c0(
+	void)
+{
+	game_time_statistics.first_line= TRUE;
+	game_time_statistics.active= FALSE;
+
+	return;
+}
+
 //code_000a50d0
 
 void game_time_start(
