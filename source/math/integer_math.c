@@ -9,6 +9,13 @@ INTEGER_MATH.C
 
 /* ---------- constants */
 
+enum
+{
+	_adjust_rectangle_center = 0,
+	_adjust_rectangle_alert,
+	NUMBER_OF_ADJUST_RECTANGLE_MODES,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -101,7 +108,7 @@ rectangle2d* adjust_rectangle2d(
 
 	switch (mode)
 	{
-	case 0:
+	case _adjust_rectangle_center:
 		adjust_height= bounds->y0 + bounds_height/2 - source_height/2 - source->y0;
 		adjust_width= bounds->x0 + bounds_width/2 - source_width/2 - source->x0;
 
@@ -110,7 +117,7 @@ rectangle2d* adjust_rectangle2d(
 		new_rectangle.y0+= adjust_height;
 		new_rectangle.y1+= adjust_height;
 		break;
-	case 1:
+	case _adjust_rectangle_alert:
 		adjust_height= (bounds_height - source_height)/3 - source->y0 + bounds->y0;
 		adjust_width= (bounds_width - source_width)/2 - source->x0 + bounds->x0;
 
