@@ -187,4 +187,40 @@ void debug_dump_memory(void);
 /* comm */
 char temporary[256];
 
+extern const union real_argb_color *const global_real_argb_white;
+extern const union real_argb_color *const global_real_argb_grey;
+extern const union real_argb_color *const global_real_argb_black;
+extern const union real_argb_color *const global_real_argb_red;
+extern const union real_argb_color *const global_real_argb_green;
+extern const union real_argb_color *const global_real_argb_blue;
+extern const union real_argb_color *const global_real_argb_cyan;
+extern const union real_argb_color *const global_real_argb_yellow;
+extern const union real_argb_color *const global_real_argb_magenta;
+extern const union real_argb_color *const global_real_argb_pink;
+extern const union real_argb_color *const global_real_argb_lightblue;
+extern const union real_argb_color *const global_real_argb_orange;
+extern const union real_argb_color *const global_real_argb_purple;
+extern const union real_argb_color *const global_real_argb_aqua;
+extern const union real_argb_color *const global_real_argb_darkgreen;
+extern const union real_argb_color *const global_real_argb_salmon;
+extern const union real_argb_color *const global_real_argb_violet;
+
+extern const union real_rgb_color *const global_real_rgb_white;
+extern const union real_rgb_color *const global_real_rgb_grey;
+extern const union real_rgb_color *const global_real_rgb_black;
+extern const union real_rgb_color *const global_real_rgb_red;
+extern const union real_rgb_color *const global_real_rgb_green;
+extern const union real_rgb_color *const global_real_rgb_blue;
+extern const union real_rgb_color *const global_real_rgb_cyan;
+extern const union real_rgb_color *const global_real_rgb_yellow;
+extern const union real_rgb_color *const global_real_rgb_magenta;
+extern const union real_rgb_color *const global_real_rgb_pink;
+extern const union real_rgb_color *const global_real_rgb_lightblue;
+extern const union real_rgb_color *const global_real_rgb_orange;
+extern const union real_rgb_color *const global_real_rgb_purple;
+extern const union real_rgb_color *const global_real_rgb_aqua;
+extern const union real_rgb_color *const global_real_rgb_darkgreen;
+extern const union real_rgb_color *const global_real_rgb_salmon;
+extern const union real_rgb_color *const global_real_rgb_violet;
+
 #endif // __CSERIES_H

@@ -14121,7 +14121,7 @@
 { "file_offset": 2454092, "flags": 0, "name": "_rdata_0025724c" },
 { "file_offset": 2454112, "flags": 0, "name": "??_C@_0CI@JLFPHGKF@c?3?2halo?2SOURCE?2camera?2orbiting_c@" },
 { "file_offset": 2454152, "flags": 0, "name": "??_C@_0CG@CBDIIJJN@c?3?2halo?2SOURCE?2camera?2static_cam@" },
-{ "file_offset": 2454192, "flags": 0, "name": "_rdata_002572b0" },
+{ "file_offset": 2454192, "flags": 0, "name": "_global_real_argb_color_table" },
 { "file_offset": 2454464, "flags": 0, "name": "??_C@_0BL@GHNPBCKH@EXCEPTION?5?$CFs?5in?5?$CFs?0?$CD?$CFd?3?5?$CFs?$AA@" },
 { "file_offset": 2454492, "flags": 0, "name": "??_C@_04FNLOFOEM@warn?$AA@" },
 { "file_offset": 2454500, "flags": 0, "name": "??_C@_04BJJLCKLO@halt?$AA@" },
