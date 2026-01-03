@@ -14,6 +14,8 @@ PROFILE.H
 
 /* ---------- prototypes/PROFILE.C */
 
+void profile_initialize(void);
+
 /* ---------- globals */
 
 /* comm */
