@@ -38,7 +38,9 @@ struct tag_data
 	struct tag_data_definition *definition;
 };
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/TAG_GROUPS.C */
+
+void *tag_get(long group_tag, long tag_index);
 
 /* ---------- globals */
 

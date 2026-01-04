@@ -16,8 +16,6 @@ header included in hcex build.
 
 /* ---------- prototypes/CACHE_FILES.C */
 
-void *tag_get(long group_tag, long tag_index);
-
 unsigned long cache_files_get_checksum(void);
 
 /* ---------- prototypes/CACHE_FILES_WINDOWS.C */
