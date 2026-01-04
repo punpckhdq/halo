@@ -14,7 +14,11 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/HS.C */
+
+boolean hs_compile_and_evaluate(const char *expression);
+
+short hs_tokens_enumerate(char const *substring, long type_flags, char const **results, short maximum_count);
 
 /* ---------- globals */
 

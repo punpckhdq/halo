@@ -83,6 +83,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "structure_render.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

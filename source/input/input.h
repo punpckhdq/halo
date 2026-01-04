@@ -6,11 +6,15 @@ INPUT.H
 #define __INPUT_H
 #pragma once
 
+/* ---------- headers */
+
+#include "math/integer_math.h"
+
 /* ---------- constants */
 
 enum
 {
-	MAXIMUM_GAMEPADS = 4,
+	MAXIMUM_GAMEPADS= 4,
 	MEMORY_UNIT_SLOTS_PER_GAMEPAD= 2,
 	MAXIMUM_GAMEPAD_MEMORY_UNITS= 8,
 
@@ -28,7 +32,7 @@ enum
 
 enum
 {
-	_key_escape = 0,
+	_key_escape= 0,
 	_key_f1,
 	_key_f2,
 	_key_f3,
@@ -180,21 +184,21 @@ enum
 
 struct key_stroke
 {
-	unsigned char modifier_flags;
-	unsigned char ascii_code;
+	byte modifier_flags;
+	byte ascii_code;
 	short key_code;
 };
 
 struct vibrate_data
 {
-	unsigned short left_frequency;
-	unsigned short right_frequency;
+	word left_frequency;
+	word right_frequency;
 };
 
 struct gamepad_state
 {
-	unsigned char analog_buttons[NUMBER_OF_GAMEPAD_ANALOG_BUTTONS];
-	unsigned char analog_button_thresholds[NUMBER_OF_GAMEPAD_ANALOG_BUTTONS];
+	byte analog_buttons[NUMBER_OF_GAMEPAD_ANALOG_BUTTONS];
+	byte analog_button_thresholds[NUMBER_OF_GAMEPAD_ANALOG_BUTTONS];
 	byte buttons[NUMBER_OF_GAMEPAD_BUTTONS];
 	point2d sticks[NUMBER_OF_GAMEPAD_STICKS];
 };

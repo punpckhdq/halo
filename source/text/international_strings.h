@@ -27,7 +27,19 @@ enum
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/INTERNATIONAL_STRINGS.C */
+
+void set_language_code(short language_code);
+
+unsigned short get_next_character(unsigned char *string, short *index);
+
+unsigned short get_previous_character(unsigned char *string, short *index);
+
+void align_to_character(unsigned char *string, short *index);
+
+boolean double_byte_character(unsigned char *string);
+
+boolean character_in_pattern(unsigned short character, char *pattern);
 
 /* ---------- globals */
 

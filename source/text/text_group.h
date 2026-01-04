@@ -10,6 +10,16 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_text_style_plain= NONE,
+	_text_style_bold= 0,
+	_text_style_italic,
+	_text_style_condense,
+	_text_style_underline,
+	NUMBER_OF_TEXT_STYLES
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

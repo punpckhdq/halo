@@ -27,7 +27,7 @@ struct file_reference *file_reference_create(
 	struct file_reference *reference,
 	short location)
 {
-	struct file_reference_info *info = (struct file_reference_info *)reference;
+	struct file_reference_info *info= (struct file_reference_info *)reference;
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 91, info);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 92, location>=NONE && location<NUMBER_OF_FILE_REFERENCE_LOCATIONS);
 
@@ -178,7 +178,7 @@ char *file_reference_get_name(
 {
 	struct file_reference_info *info= file_reference_get_info((struct file_reference *)reference);
 
-	char full_path[256] = { 0 };
+	char full_path[256]= { 0 };
 	char *filename;
 	char *directory;
 	char *parent_directory;
@@ -193,7 +193,7 @@ char *file_reference_get_name(
 	file_location_get_full_path(info->location, info->path, full_path);
 	file_path_split(full_path, &directory, &parent_directory, &filename, &extension, TEST_FLAG(info->flags, _has_filename_bit));
 
-	name[0] = '\0';
+	name[0]= '\0';
 
 	if (TEST_FLAG(flags, _name_directory_bit))
 	{

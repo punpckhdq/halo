@@ -59,6 +59,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "render.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
