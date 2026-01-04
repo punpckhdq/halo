@@ -70,6 +70,7 @@ struct render_globals
 
 /* ---------- globals */
 
+/* comm */
 struct render_globals render;
 
 /* ---------- public code */

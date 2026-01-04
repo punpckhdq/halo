@@ -25,9 +25,11 @@ void console_printf(boolean clear, const char *format, ...);
 void console_warning(const char *format, ...);
 void console_startup(void);
 void console_dispose(void);
-boolean console_update();
+boolean console_update(void);
 
 /* ---------- globals */
+
+extern boolean console_dump_to_file;
 
 /* ---------- public code */
 

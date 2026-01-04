@@ -23,6 +23,17 @@ enum
 	NUMBER_OF_SUPPORTED_LANGUAGES,
 };
 
+enum
+{
+	_language_roman= 0,
+	_language_japanese,
+	_language_simple_chinese,
+	_language_traditional_chinese,
+	_language_korean_wansung,
+	_language_korean_johab,
+	NUMBER_OF_LANGUAGE_CODES,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
