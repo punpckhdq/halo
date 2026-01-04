@@ -89,7 +89,21 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "real_math.h"
+#include "motion_sensor.h"
+
 /* ---------- constants */
+
+const real_rgb_color blip_colors[] = {
+	{1.0f, 0.5f, 0.0f},
+	{1.0f, 1.0f, 0.0f},
+	{1.0f, 0.0f, 0.0f},
+	{1.0f, 1.0f, 0.0f},
+	{1.0f, 0.0f, 0.0f},
+	{0.5f, 0.5f, 1.0f},
+	{0.0f, 0.0f, 0.0f}
+};
 
 /* ---------- macros */
 
@@ -99,6 +113,30 @@ symbols in this file:
 
 /* ---------- globals */
 
+float scale = 1.0f;
+
+static struct motion_sensor_globals_definition* motion_sensor_globals;
+
 /* ---------- public code */
 
-/* ---------- private code */
+void* motion_sensor_initialize(void)
+{
+	motion_sensor_globals = game_state_malloc("motion sensor (radar)", "sensor data", 5544);
+
+	if (motion_sensor_globals)
+	{
+		return motion_sensor_globals;
+	}
+	
+	match_assert("c:\\halo\\SOURCE\\interface\\motion_sensor.c", 298, motion_sensor_globals);
+}
+
+void motion_sensor_dispose(void)
+{
+
+}
+
+void motion_sensor_dispose_from_old_map(void)
+{
+
+}

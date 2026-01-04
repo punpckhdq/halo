@@ -22422,6 +22422,7 @@
 { "file_offset": 4537024, "flags": 0, "name": "_bss_00453ac0" },
 { "file_offset": 4537028, "flags": 0, "name": "_bss_00453ac4" },
 { "file_offset": 4537032, "flags": 0, "name": "_next_vertex_index" },
+{ "file_offset": 4537036, "flags": 0, "name": "_motion_sensor_globals" },
 { "file_offset": 4537044, "flags": 0, "name": "_debug_motion_sensor_draw_all_units" },
 { "file_offset": 4537048, "flags": 0, "name": "_bss_00453ad8" },
 { "file_offset": 4537184, "flags": 0, "name": "_event_manager_globals" },

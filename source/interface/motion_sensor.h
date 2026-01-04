@@ -14,7 +14,11 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/motion_sensor.c */
+
+void* motion_sensor_initialize(void);
+void motion_sensor_dispose_from_old_map(void);
+void motion_sensor_dispose(void);
 
 /* ---------- globals */
 
