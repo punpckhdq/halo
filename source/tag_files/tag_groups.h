@@ -40,6 +40,8 @@ struct tag_data
 
 /* ---------- prototypes/TAG_GROUPS.C */
 
+/* ---------- prototypes/CACHE_FILES.C */
+
 void *tag_get(long group_tag, long tag_index);
 
 /* ---------- globals */

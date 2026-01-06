@@ -112,7 +112,7 @@ static long terminal_new_line(void);
 
 boolean terminal_render_enable= TRUE;
 
-static const short terminal_tab_stops []= {160, 320, 470};
+static const short terminal_tab_stops[]= {160, 320, 470};
 
 static struct terminal_globals terminal_globals;
 

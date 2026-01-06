@@ -75,7 +75,9 @@ symbols in this file:
 
 /* ---------- public code */
 
-void write_to_error_file(char *string, boolean date)
+void write_to_error_file(
+	char *string,
+	boolean date)
 {
 	static unsigned char first_line= TRUE;
 
