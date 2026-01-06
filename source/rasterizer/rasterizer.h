@@ -21,6 +21,11 @@ void rasterizer_dispose(void);
 
 void rasterizer_decals_update_function_pointers(void);
 
+
+/* ---------- prototypes/RASTERIZER_TEXT.C */
+
+void rasterizer_draw_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, char const *string);
+
 /* ---------- globals */
 
 /* ---------- public code */

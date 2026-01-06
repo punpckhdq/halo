@@ -14,7 +14,11 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/DRAW_STRING.C */
+
+void draw_string_set_tab_stops(short const *tab_stops, short count);
+
+void draw_string_set_draw_mode(long font_index, short style, short justification, unsigned long flags, union real_argb_color const *color);
 
 /* ---------- globals */
 

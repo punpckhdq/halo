@@ -298,6 +298,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "rasterizer.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
