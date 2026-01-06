@@ -52,8 +52,16 @@ symbols in this file:
 #include "bink_playback.h"
 #include "ui_widget.h"
 #include "sound_manager.h"
+#include "international_strings.h"
+#include "files.h"
 
 /* ---------- constants */
+
+enum
+{
+	ATTRACT_MODE_COUNTDOWN= 75000,
+	MUSIC_FADE_TIME= 1500
+};
 
 /* ---------- macros */
 
@@ -72,6 +80,8 @@ extern unsigned long event_manager_time_of_last_event(void);
 /* ---------- globals */
 
 static unsigned long bss_00453ad8;
+
+static char bss_00453ad8_8[128];
 
 short data_002e4c84= NONE;
 
@@ -101,7 +111,7 @@ boolean attract_mode_should_start(
 		time_since_last_event= MAX(bss_00453ad8, time_since_last_event);
 		time_elapsed= current_time-time_since_last_event;
 	
-		if (time_elapsed>=73500)
+		if (time_elapsed>=ATTRACT_MODE_COUNTDOWN-MUSIC_FADE_TIME)
 		{
 			if (ui_main_menu_music_active())
 			{
@@ -116,7 +126,7 @@ boolean attract_mode_should_start(
 			}
 		}
 
-		if (time_elapsed>=75000)
+		if (time_elapsed>=ATTRACT_MODE_COUNTDOWN)
 		{
 			should_start= TRUE;
 		}
@@ -131,6 +141,80 @@ void attract_mode_reset_timer(
 	bss_00453ad8= system_milliseconds();
 
 	return;
+}
+
+const char *attract_mode_get_localized_movie_path(
+	short movie)
+{
+	unsigned long language= 0;
+	const char *movie_format= "";
+	const char *language_suffixes[]=
+	{
+		"_de",
+		"_fr",
+		"_es",
+		"_it",
+		"",
+		"",
+		""
+	};
+	struct file_reference movie_file;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\attract_mode.c", 163, movie>=0 && movie<NUMBER_OF_BINK_MOVIES);
+
+	switch (XGetLanguage())
+	{
+	case XC_LANGUAGE_ENGLISH:
+		language= _english;
+		break;
+	case XC_LANGUAGE_JAPANESE:
+		language= _japanese;
+		break;
+	case XC_LANGUAGE_GERMAN:
+		language= _german;
+		break;
+	case XC_LANGUAGE_FRENCH:
+		language= _french;
+		break;
+	case XC_LANGUAGE_SPANISH:
+		language= _spanish;
+		break;
+	case XC_LANGUAGE_ITALIAN:
+		language= _italian;
+		break;
+	default:
+		language= _unknown;
+		break;
+	}
+
+	switch (movie)
+	{
+	case _bink_attract1_movie:
+		_snprintf(bss_00453ad8_8, NUMBEROF(bss_00453ad8_8), "d:\\bink\\attract1%s.bik", language_suffixes[language]);
+		break;
+	case _bink_attract2_movie:
+		_snprintf(bss_00453ad8_8, NUMBEROF(bss_00453ad8_8), "d:\\bink\\attract2%s.bik", language_suffixes[language]);
+		break;
+	case _bink_attract3_movie:
+		_snprintf(bss_00453ad8_8, NUMBEROF(bss_00453ad8_8), "d:\\bink\\attract3%s.bik", language_suffixes[language]);
+		break;
+	case _bink_intro_movie:
+		_snprintf(bss_00453ad8_8, NUMBEROF(bss_00453ad8_8), "d:\\bink\\intro%s.bik", language_suffixes[language]);
+		break;
+	case _bink_outro_movie:
+		_snprintf(bss_00453ad8_8, NUMBEROF(bss_00453ad8_8), "d:\\bink\\outro%s.bik", language_suffixes[language]);
+		break;
+	default:
+		match_vassert("c:\\halo\\SOURCE\\interface\\attract_mode.c", 198, FALSE, "unreachable");
+		break;
+	}
+
+	if (file_exists(file_reference_create_from_path(&movie_file, bss_00453ad8_8, FALSE)))
+	{
+
+	}
+
+	return bss_00453ad8_8;
 }
 
 void attract_mode_start(

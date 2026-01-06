@@ -19,7 +19,6 @@ enum
 
 	_bink_intro_movie= 3,
 	_bink_outro_movie,
-	_bink_teaser_movie,
 	NUMBER_OF_BINK_MOVIES
 };
 
@@ -31,7 +30,7 @@ enum
 
 boolean attract_mode_should_start(void);
 void attract_mode_reset_timer(void);
-const char *attract_mode_get_localized_movie_path(short);
+const char *attract_mode_get_localized_movie_path(short movie);
 void attract_mode_start(void);
 void game_end_credits_start(void);
 
