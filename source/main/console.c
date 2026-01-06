@@ -207,6 +207,109 @@ void console_warning(
 	return;
 }
 
+static boolean console_process_command(
+	const char *command)
+{
+	boolean valid;
+	short previous_command_count;
+	short newest_previous_command_index= (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
+
+	console_globals.newest_previous_command_index= newest_previous_command_index;
+	strcpy(console_globals.previous_commands[newest_previous_command_index], command);
+
+
+	console_globals.previous_command_count= MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
+	console_globals.selected_previous_command_index= NONE;
+
+	return hs_compile_and_evaluate(command);
+}
+
+static char *console_get_text_to_autocomplete(
+	void)
+{
+	char *result= console_globals.input_state.result;
+	char *result_after_space= strrchr(console_globals.input_state.result, ' ') + 1;
+	char *result_after_parenthesis= strrchr(console_globals.input_state.result, '(') + 1;
+	char *result_after_quote= strrchr(console_globals.input_state.result, '"') + 1;
+
+	if (result <= result_after_space)
+	{
+		result= result_after_space;
+	}
+	if (result <= result_after_parenthesis)
+	{
+		result= result_after_parenthesis;
+	}
+	if (result <= result_after_quote)
+	{
+		result= result_after_quote;
+	}
+
+	return result;
+}
+
+static void console_complete(
+	void)
+{
+	char *matching_items[256];
+	char print_buffer[1024];
+
+	char *token= console_get_text_to_autocomplete();
+	short count= hs_tokens_enumerate(token, NONE, matching_items, NUMBEROF(matching_items));
+
+	if (count)
+	{
+		short token_num;
+
+		short last_similar_character_index= SHORT_MAX;
+		boolean print_second_column= count > 16;
+
+		print_buffer[0]= '\0';
+		console_printf(FALSE, "");
+
+		for (token_num= 0; token_num<count; token_num++)
+		{
+			short size= MIN(last_similar_character_index, strlen(matching_items[token_num]) - 1);
+			short index;
+
+			for (index= 0; ; ++index)
+			{
+				if (tolower(matching_items[token_num][index]) != tolower(matching_items[0][index]) || index > size)
+				{
+					break;
+				}
+			}
+			last_similar_character_index= index - 1;
+
+			if (print_second_column)
+			{
+				csstrcat(print_buffer, matching_items[token_num]);
+				csstrcat(print_buffer, "|t");
+				if (token_num % 4 == 3)
+				{
+					console_printf(FALSE, print_buffer);
+					print_buffer[0]= '\0';
+				}
+			}
+			else
+			{
+				console_printf(FALSE, matching_items[token_num]);
+			}
+		}
+
+		if (print_second_column && (token_num - 1) % 4 != 3)
+		{
+			console_printf(FALSE, print_buffer);
+		}
+
+		strncpy(token, matching_items[0], last_similar_character_index + 1);
+		token[last_similar_character_index + 1]= '\0';
+		console_globals.input_state.edit.insertion_point_index= &token[last_similar_character_index + 1] - console_globals.input_state.result;
+	}
+
+	return;
+}
+
 void console_startup(
 	void)
 {
@@ -327,109 +430,4 @@ boolean console_update(
 	}
 
 	return console_globals.active;
-}
-
-/* ---------- private code */
-
-static boolean console_process_command(
-	const char *command)
-{
-	boolean valid;
-	short previous_command_count;
-	short newest_previous_command_index= (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
-	
-	console_globals.newest_previous_command_index= newest_previous_command_index;
-	strcpy(console_globals.previous_commands[newest_previous_command_index], command);
-	
-	
-	console_globals.previous_command_count= MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
-	console_globals.selected_previous_command_index= NONE;
-
-	return hs_compile_and_evaluate(command);
-}
-
-static char* console_get_text_to_autocomplete(
-	void)
-{
-	char *result= console_globals.input_state.result;
-	char *result_after_space= strrchr(console_globals.input_state.result, ' ') + 1;
-	char *result_after_parenthesis= strrchr(console_globals.input_state.result, '(') + 1;
-	char *result_after_quote= strrchr(console_globals.input_state.result, '"') + 1;
-
-	if (result <= result_after_space)
-	{
-		result= result_after_space;
-	}
-	if (result <= result_after_parenthesis)
-	{
-		result= result_after_parenthesis;
-	}
-	if (result <= result_after_quote)
-	{
-		result= result_after_quote;
-	}
-
-	return result;
-}
-
-static void console_complete(
-	void)
-{
-	char *matching_items[256];
-	char print_buffer[1024];
-
-	char *token= console_get_text_to_autocomplete();
-	short count= hs_tokens_enumerate(token, NONE, matching_items, NUMBEROF(matching_items));
-
-	if (count)
-	{
-		short token_num;
-
-		short last_similar_character_index= SHORT_MAX;
-		boolean print_second_column= count > 16;
-
-		print_buffer[0]= '\0';
-		console_printf(FALSE, "");
-
-		for (token_num= 0; token_num<count; token_num++)
-		{
-			short index;
-			short size= MIN(last_similar_character_index, strlen(matching_items[token_num]) - 1);
-
-			for (index= 0; ; ++index)
-			{
-				if (tolower(matching_items[token_num][index]) != tolower(matching_items[0][index]) || index > size)
-				{
-					break;
-				}
-			}
-			last_similar_character_index= index - 1;
-
-			if (print_second_column)
-			{
-				csstrcat(print_buffer, matching_items[token_num]);
-				csstrcat(print_buffer, "|t");
-				if (token_num % 4 == 3)
-				{
-					console_printf(FALSE, print_buffer);
-					print_buffer[0]= '\0';
-				}
-			}
-			else
-			{
-				console_printf(FALSE, matching_items[token_num]);
-			}
-		}
-
-		if (print_second_column && (token_num - 1) % 4 != 3)
-		{
-			console_printf(FALSE, print_buffer);
-		}
-
-		strncpy(token, matching_items[0], last_similar_character_index + 1);
-		token[last_similar_character_index + 1]= '\0';
-		console_globals.input_state.edit.insertion_point_index= &token[last_similar_character_index + 1] - console_globals.input_state.result;
-	}
-
-	return;
 }
