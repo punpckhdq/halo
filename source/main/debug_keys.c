@@ -71,7 +71,7 @@ void debug_keys_dispose(
 {
 	if (global_debug_key_down)
 	{
-		debug_free(global_debug_key_down, "c:\\halo\\SOURCE\\main\\debug_keys.c", 100);
+		match_free("c:\\halo\\SOURCE\\main\\debug_keys.c", 100, global_debug_key_down);
 		global_debug_key_down= NULL;
 	}
 

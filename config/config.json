@@ -463,7 +463,7 @@
 				{ "name": "source/rasterizer/rasterizer_transparent_geometry.c", "index": 91, "status": "NonMatching" },
 				{ "name": "source/rasterizer/rasterizer_text.c", "index": 92, "status": "NonMatching" },
 				{ "name": "source/rasterizer/rasterizer_swizzle.c", "index": 93, "status": "NonMatching" },
-				{ "name": "source/rasterizer/rasterizer_memory_pool.c", "index": 94, "status": "NonMatching" },
+				{ "name": "source/rasterizer/rasterizer_memory_pool.c", "index": 94, "status": "Matching" },
 				{ "name": "source/rasterizer/rasterizer_lights.c", "index": 95, "status": "NonMatching" },
 				{ "name": "source/rasterizer/rasterizer_geometry.c", "index": 96, "status": "NonMatching" },
 				{ "name": "source/rasterizer/rasterizer_frame_statistics.c", "index": 97, "status": "NonMatching" },
