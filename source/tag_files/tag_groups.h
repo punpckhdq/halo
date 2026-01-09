@@ -12,6 +12,8 @@ header included in hcex build.
 
 /* ---------- macros */
 
+#define TAG_BLOCK_GET_ELEMENT(block_address, index, type) ((type *)tag_block_get_element_with_size((block_address), (index), sizeof(type)))
+
 /* ---------- structures */
 
 struct tag_block
@@ -39,6 +41,9 @@ struct tag_data
 };
 
 /* ---------- prototypes/TAG_GROUPS.C */
+
+void *tag_data_get_pointer(struct tag_data const *data, long offset, long size);
+void *tag_block_get_element_with_size(struct tag_block const *block, long index, long element_size);
 
 /* ---------- prototypes/CACHE_FILES.C */
 
