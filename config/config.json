@@ -498,7 +498,7 @@
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_debug.c", "index": 126, "status": "NonMatching" },
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_active_camouflage.c", "index": 127, "status": "NonMatching" },
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox.c", "index": 128, "status": "NonMatching" },
-				{ "name": "source/rasterizer/common/rasterizer_common.c", "index": 129, "status": "NonMatching" },
+				{ "name": "source/rasterizer/common/rasterizer_common.c", "index": 129, "status": "Matching" },
 				{ "name": "source/physics/terrain_definitions.c", "index": 130, "status": "Matching" },
 				{ "name": "source/physics/point_physics.c", "index": 131, "status": "NonMatching" },
 				{ "name": "source/physics/physics_variables.c", "index": 132, "status": "NonMatching" },
