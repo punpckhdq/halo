@@ -16,6 +16,26 @@ header included in hcex build.
 
 /* ---------- structures */
 
+typedef void (*byte_swap_block_proc)(void *);
+typedef boolean (*postprocess_block_proc)(void *, boolean);
+typedef byte *(*format_block_proc)(long, struct tag_block *, long, byte *);
+typedef void (*delete_block_proc)(struct tag_block *, long);
+
+struct tag_block_definition
+{
+    char *name;
+    unsigned long flags;
+    long maximum_element_count;
+    long element_size;
+    void *default_element;
+    struct tag_field *fields;
+	byte_swap_block_proc byte_swap_block;
+	postprocess_block_proc postprocess_block;
+	format_block_proc format_block;
+	delete_block_proc delete_block;
+    byte_swap_code *byte_swap_codes;
+};
+
 struct tag_block
 {
 	long count;
@@ -46,6 +66,8 @@ void *tag_data_get_pointer(struct tag_data const *data, long offset, long size);
 void *tag_block_get_element_with_size(struct tag_block const *block, long index, long element_size);
 
 /* ---------- prototypes/CACHE_FILES.C */
+
+long tag_loaded(long group_tag, const char *name);
 
 void *tag_get(long group_tag, long tag_index);
 

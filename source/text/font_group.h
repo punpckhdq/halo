@@ -8,12 +8,6 @@ header included in hcex build.
 #define __FONT_GROUP_H
 #pragma once
 
-/* ---------- headers */
-
-#include "text_group.h"
-
-#include "tag_files/tag_groups.h"
-
 /* ---------- constants */
 
 enum
