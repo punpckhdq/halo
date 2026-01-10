@@ -28,6 +28,8 @@ const char *tag_name_strip_path(char const *name);
 
 char *tag_get_name(long tag_index);
 
+long tag_loaded(long group_tag, const char *name);
+
 /* ---------- globals */
 
 /* ---------- public code */

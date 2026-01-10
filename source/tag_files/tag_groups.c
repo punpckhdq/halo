@@ -1,41 +1,65 @@
 /*
 TAG_GROUPS.C
-
-symbols in this file:
-0018A970 0080:
-	_verify_tag_reference (0000)
-0018A9F0 0070:
-	_tag_data_get_pointer (0000)
-0018AA60 0110:
-	_tag_block_get_element_with_size (0000)
-002A25B8 004f:
-	??_C@_0EP@BABKPBBN@tag?5reference?5?$CC?$CFs?$CC?5and?5actual?5in@ (0000)
-002A2608 0026:
-	??_C@_0CG@NBGMCGPG@c?3?2halo?2SOURCE?2tag_files?2tag_gro@ (0000)
-002A2630 0025:
-	??_C@_0CF@MEMCPCNI@offset?$DO?$DN0?5?$CG?$CG?5offset?$CLsize?$DM?$DNdata?9?$DO@ (0000)
-002A2658 000f:
-	??_C@_0P@BAMEOIJM@block?9?$DOaddress?$AA@ (0000)
-002A2668 0028:
-	??_C@_0CI@GFFJLLNP@?$CD?$CFd?5is?5not?5a?5valid?5?$CFs?5index?5in?5?$FL@ (0000)
-002A2690 0044:
-	??_C@_0EE@FPBMLNMK@?$CBblock?9?$DOdefinition?5?$HM?$HM?5block?9?$DOdef@ (0000)
-002A26D4 0010:
-	??_C@_0BA@KODENCCG@block?9?$DOcount?$DO?$DN0?$AA@ (0000)
 */
 
 /* ---------- headers */
 
-/* ---------- constants */
-
-/* ---------- macros */
+#include "cseries.h"
+#include "tag_files.h"
+#include "tag_groups.h"
 
 /* ---------- structures */
 
-/* ---------- prototypes */
-
-/* ---------- globals */
+struct tag_block_definition 
+{
+	long count;
+	char* unk4;
+	long pad8;
+	long element_size;
+};
 
 /* ---------- public code */
 
-/* ---------- private code */
+long verify_tag_reference(
+	struct tag_reference const* reference) 
+{
+	int index;
+
+	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3055, reference)
+	index = tag_loaded(reference->group_tag, reference->name);
+	match_vassert(
+		"c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3061, reference->index==index, 
+		csprintf(temporary, 
+			"tag reference \"%s\" and actual index do not match: is %08lX but should be %08lX", 
+			reference->name, 
+			reference->index, 
+			index));
+	return index;
+}
+
+void* tag_data_get_pointer(
+	struct tag_data const *data, 
+	long offset, 
+	long size) 
+{
+	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3073, size>=0);
+	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3074, offset>=0 && offset+size<=data->size);
+	return (void*)((char*)data->address + offset);
+}
+
+void *tag_block_get_element_with_size(
+	struct tag_block const *block, 
+	long index, 
+	long element_size) 
+{
+	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3084, block);
+	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3085, block->count>=0);
+	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3086, !block->definition || block->definition->element_size==element_size);
+	match_vassert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3089, index>=0 && index<block->definition->count, 
+		csprintf(temporary, 
+			"#%d is not a valid %s index in [#0,#%d)", 
+			index, 
+			!block->definition->unk4 ? "unknown" : block->definition->unk4, block->definition->count));
+	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3090, block->address);
+	return (void*)((char*)block->address + (index * element_size));
+}
