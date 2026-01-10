@@ -23,17 +23,17 @@ typedef void (*delete_block_proc)(struct tag_block *, long);
 
 struct tag_block_definition
 {
-    char *name;
-    unsigned long flags;
-    long maximum_element_count;
-    long element_size;
-    void *default_element;
-    struct tag_field *fields;
+	char *name;
+	unsigned long flags;
+	long maximum_element_count;
+	long element_size;
+	void *default_element;
+	struct tag_field *fields;
 	byte_swap_block_proc byte_swap_block;
 	postprocess_block_proc postprocess_block;
 	format_block_proc format_block;
 	delete_block_proc delete_block;
-    byte_swap_code *byte_swap_codes;
+	byte_swap_code *byte_swap_codes;
 };
 
 struct tag_block

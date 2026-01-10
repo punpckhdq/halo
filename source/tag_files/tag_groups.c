@@ -20,11 +20,11 @@ long verify_tag_reference(
 	index = tag_loaded(reference->group_tag, reference->name);
 	
 	match_vassert(
-		"c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3061, reference->index==index, 
-		csprintf(temporary, 
-			"tag reference \"%s\" and actual index do not match: is %08lX but should be %08lX", 
-			reference->name, 
-			reference->index, 
+		"c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3061, reference->index==index,
+		csprintf(temporary,
+			"tag reference \"%s\" and actual index do not match: is %08lX but should be %08lX",
+			reference->name,
+			reference->index,
 			index));
 
 	return index;
@@ -50,11 +50,11 @@ void *tag_block_get_element_with_size(
 	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3085, block->count>=0);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3086, !block->definition || block->definition->element_size==element_size);
 
-	match_vassert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3089, index>=0 && index<block->definition->maximum_element_count,
-		csprintf(temporary, 
-			"#%d is not a valid %s index in [#0,#%d)", 
-			index, 
-			!block->definition->name ? "unknown" : block->definition->name, block->definition->maximum_element_count));
+	match_vassert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3089, index>=0 && index<block->count,
+		csprintf(temporary,
+			"#%d is not a valid %s index in [#0,#%d)",
+			index,
+			block->definition->name ? block->definition->name : "unknown", block->count));
 	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_groups.c", 3090, block->address);
 
 	return (void *)((byte *)block->address + (index * element_size));
