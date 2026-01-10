@@ -47,4 +47,14 @@ enum
 	_object_mask_remove_on_bsp_switch=		(FLAG(_object_type_scenery)|FLAG(_object_type_light_fixture))
 };
 
+/* ---------- structures */
+
+struct object_type_definition {
+	char* name;
+	unsigned long group_tag;
+	short datum_size;
+	byte padc_pad9c[0x90];
+	struct object_type_definition* next;
+};
+
 #endif // __OBJECT_TYPES_H
