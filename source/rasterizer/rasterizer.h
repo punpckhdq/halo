@@ -36,6 +36,12 @@ enum
 
 /* ---------- structures */
 
+struct rasterizer_frame_begin_parameters
+{
+	real game_time_sec;
+	real dt;
+};
+
 /* ---------- prototypes/RASTERIZER.C */
 
 boolean rasterizer_initialize(void);
@@ -56,7 +62,20 @@ const void *rasterizer_memory_alloc_const(const void *src, unsigned long size);
 void rasterizer_memory_pool_end(void);
 void rasterizer_memory_pool_dispose(void);
 
+/* ---------- prototypes/RASTERIZER_LIGHTS.C */
+
+void rasterizer_lights_reset_for_new_map(void);
+
+/* ---------- prototypes/RASTERIZER_TEXT.C */
+
+void rasterizer_text_cache_flush(void);
+
 /* ---------- globals */
+
+extern real_argb_color *global_rasterizer_model_ambient_reflection_tint;
+
+/* comm. not sure where this should be */
+struct rasterizer_frame_begin_parameters global_frame_parameters;
 
 /* ---------- public code */
 

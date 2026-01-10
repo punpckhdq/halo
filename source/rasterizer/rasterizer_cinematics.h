@@ -14,7 +14,12 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/RASTERIZER_CINEMATICS.C */
+
+void rasterizer_screen_effects_initialize_for_new_map(void);
+void rasterizer_screen_effects_dispose_from_old_map(void);
+
+void rasterizer_set_near_clip_distance(real near_clip_distance);
 
 /* ---------- globals */
 

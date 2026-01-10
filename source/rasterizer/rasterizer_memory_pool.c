@@ -6,6 +6,7 @@ RASTERIZER_MEMORY_POOL.C
 
 #include "cseries.h"
 #include "errors.h"
+#include "real_math.h"
 #include "rasterizer.h"
 
 /* ---------- globals */
