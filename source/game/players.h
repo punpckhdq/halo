@@ -16,6 +16,9 @@ header included in hcex build.
 
 /* ---------- prototypes/PLAYERS.C */
 
+unsigned long const *players_get_combined_pvs_local(void);
+unsigned long const *players_get_combined_pvs(void);
+
 void player_control_fix_for_loaded_game_state(void);
 
 /* ---------- prototypes/PLAYER_QUEUES_NEW.C */

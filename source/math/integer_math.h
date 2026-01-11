@@ -33,6 +33,14 @@ union rectangle2d
 };
 typedef union rectangle2d rectangle2d;
 
+union byte_rectangle3d
+{
+	byte n[6];
+	struct { byte x0, x1, y0, y1, z0, z1; };
+};
+typedef union byte_rectangle3d byte_rectangle3d;
+
+
 typedef unsigned long pixel32;
 
 /* ---------- prototypes/INTEGER_MATH.C */

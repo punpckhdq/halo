@@ -213,7 +213,7 @@ void terminal_draw(
 
 	if (terminal_globals.initialized)
 	{
-		struct font_header *font= (struct font_header *)tag_get(FONT_GROUP_TAG, font_tag_index);
+		struct font_header *font= font_definition_get(font_tag_index);
 		short line_height= font->ascending_height + font->descending_height + font->leading_height;
 		if (terminal_globals.input_state)
 		{

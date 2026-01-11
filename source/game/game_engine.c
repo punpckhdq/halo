@@ -536,6 +536,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "game_engine.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

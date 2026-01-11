@@ -8,13 +8,87 @@ header included in hcex build.
 #define __OBJECT_DEFINITIONS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "math/real_math.h"
+#include "tag_files/tag_files.h"
+#include "tag_files/tag_groups.h"
+
 /* ---------- constants */
+
+enum
+{
+	OBJECT_DEFINITION_TAG= 'obje',
+	OBJECT_DEFINITION_VERSION= 1,
+	NUMBER_OF_OUTGOING_OBJECT_FUNCTIONS= 4,
+	NUMBER_OF_INCOMING_OBJECT_FUNCTIONS= 4,
+	MAXIMUM_NUMBER_OF_ATTACHMENTS_PER_OBJECT= 8,
+	MAXIMUM_REGIONS_PER_OBJECT= 8,
+};
+
+enum
+{
+	_object_does_not_cast_shadow_bit= 0,
+	_object_transparency_self_occludes_bit,
+	_object_artificially_bright_bit,
+	_object_not_pathfinding_obstacle_bit,
+	NUMBER_OF_OBJECT_DEFINITION_FLAGS,
+};
+
 
 /* ---------- macros */
 
+#define object_definition_get(index) ((struct object_definition *)tag_get(OBJECT_DEFINITION_TAG, index))
+
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+struct object_attachment_definition
+{
+	struct tag_reference type;
+	char marker_name[TAG_STRING_LENGTH+1];
+	short primary_scale_function_reference;
+	short secondary_scale_function_reference;
+	short change_color_reference;
+	word pad;
+	long unused[4];
+};
+
+
+struct _object_definition
+{
+	short type;
+	word flags;
+	real bounding_radius;
+	real_point3d bounding_offset;
+	real_point3d origin_offset;
+	real acceleration_scale;
+	unsigned long runtime_flags;
+	struct tag_reference model;
+	struct tag_reference animation_graph;
+	long unused3[10];
+	struct tag_reference collision_model;
+	struct tag_reference physics;
+	struct tag_reference modifier_shader;
+	struct tag_reference creation_effect;
+	long unused1[21];
+	real render_bounding_radius;
+	short function_modes[4];
+	long unused2[11];
+	short icon_text_index;
+	short forced_shader_permutation_index;
+	struct tag_block attachments;			// object_attachment_definition
+	struct tag_block widgets;
+	struct tag_block functions;
+	struct tag_block change_colors;
+	struct tag_block predicted_resources;
+};
+
+struct object_definition
+{
+	struct _object_definition object;
+};
+
+/* ---------- prototypes/OBJECT_DEFINITIONS.C */
 
 /* ---------- globals */
 

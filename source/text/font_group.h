@@ -17,6 +17,8 @@ enum
 
 /* ---------- macros */
 
+#define font_definition_get(index) ((struct font_header *)tag_get(FONT_GROUP_TAG, index))
+
 /* ---------- structures */
 
 struct font_header

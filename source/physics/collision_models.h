@@ -14,7 +14,19 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+struct collision_model_instance
+{
+	long object_index;
+	const struct collision_model *model;
+	const byte *region_permutation_indices;
+	const struct real_matrix4x3 *matrices;
+};
+
+/* ---------- prototypes/COLLISION_MODELS.C */
+
+boolean collision_model_instance_new(struct collision_model_instance *instance, long object_index);
+
+void render_debug_collision_model(struct collision_model_instance *instance);
 
 /* ---------- globals */
 

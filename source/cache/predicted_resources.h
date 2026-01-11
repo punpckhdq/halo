@@ -14,7 +14,10 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/PREDICTED_RESOURCES.C */
+
+void predicted_resources_precache(struct tag_block *predicted_resources);
+void predicted_resources_sound_precache(long sound_definition_index);
 
 /* ---------- globals */
 

@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/CONTRAILS.C */
+
+void contrail_owner_collision(long contrail_index, unsigned char object_dying, real dt);
 
 /* ---------- globals */
 

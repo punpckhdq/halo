@@ -86,6 +86,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "real_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -97,5 +100,20 @@ symbols in this file:
 /* ---------- globals */
 
 /* ---------- public code */
+
+real_vector3d *matrix4x3_transform_normal(
+	real_matrix4x3 const *matrix,
+	real_vector3d const *normal,
+	real_vector3d *result)
+{
+	real i= normal->i;
+	real j= normal->j;
+	real k= normal->k;
+
+	result->i = i*matrix->forward.i + j*matrix->left.i + k*matrix->up.i;
+	result->j = i*matrix->forward.j + j*matrix->left.j + k*matrix->up.j;
+	result->k = i*matrix->forward.k + j*matrix->left.k + k*matrix->up.k;
+	return result;
+}
 
 /* ---------- private code */

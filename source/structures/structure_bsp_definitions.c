@@ -34,6 +34,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "structure_bsp_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -45,5 +48,23 @@ symbols in this file:
 /* ---------- globals */
 
 /* ---------- public code */
+
+unsigned long *structure_bsp_get_cluster_pvs(
+	struct structure_bsp *structure_bsp,
+	short cluster_index)
+{
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 36, VALID_INDEX(cluster_index, structure_bsp->clusters.count));
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c",
+		37,
+		(cluster_index+1)*BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count)<=structure_bsp->cluster_data.size
+	);
+
+	// Get pointer to bitvector starting at the cluster index
+	return (unsigned long *)(
+		(byte *)structure_bsp->cluster_data.address +
+		sizeof(unsigned long) * cluster_index *
+		BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count)	
+	);
+}
 
 /* ---------- private code */

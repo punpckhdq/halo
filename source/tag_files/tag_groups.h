@@ -8,6 +8,10 @@ header included in hcex build.
 #define __TAG_GROUPS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "memory/byte_swapping.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
