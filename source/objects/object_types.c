@@ -10,10 +10,46 @@ OBJECT_TYPES.C
 
 /* ---------- constants */
 
+/* ---------- macros */
+
+/* ---------- structures */
+
+/* ---------- prototypes */
+
+/* ---------- globals */
 struct object_type_definition object_data_definition = {
 	"object",
 	'obje',
 	420,
+	{0xFF,0xFF,0xFF,0xFF,0xFF,0xFF},
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	&object_export_function_values,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	&object_render_debug,
+	{&object_data_definition},
+	{0},
+	0
+};
+
+struct object_type_definition unit_data_definition = {
+	"unit",
+	'unit',
+	1060,
 	{0xFF,0xFF,0xFF,0xFF,0xFF,0xFF},
 	0,
 	0,
@@ -33,26 +69,18 @@ struct object_type_definition object_data_definition = {
 	0,
 	0,
 	0,
-	&object_render_debug,
 	0,
+	{&object_data_definition, &unit_data_definition},
 	{0},
 	0
 };
 
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
-/* ---------- globals */
-
-struct object_type_definition* object_type_definitions[NUMBER_OF_OBJECT_TYPES];
+struct object_type_definition* object_type_definitions[NUMBER_OF_OBJECT_TYPES] = {0};
 
 /* ---------- public code */
 
 void* object_type_definition_get(
-	short object_type) 
+	short object_type)
 {
 	match_vassert(
 		"c:\\halo\\SOURCE\\objects\\object_types.c", 
