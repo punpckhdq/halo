@@ -1937,6 +1937,22 @@ long object_index_from_name_index(
 void objects_disconnect_from_structure_bsp(
 	void)
 {
+	struct object_datum *object;
+	struct object_iterator iterator;
+
+	object_iterator_new(&iterator, _object_mask_all, 0);
+	while (object= (struct object_datum *)object_iterator_next(&iterator))
+	{
+		if (TEST_FLAG(object->object.flags, 11) && object->object.parent_object_index==NONE)
+		{
+			object_disconnect_from_map(iterator.index);
+
+			SET_FLAG(object->object.flags, 11, TRUE);
+		}
+
+		object_type_disconnect_from_structure_bsp(iterator.index);
+	}
+
 	return;
 }
 
