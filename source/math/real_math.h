@@ -312,6 +312,16 @@ __inline real magnitude_squared3d(
 	return vector->i*vector->i + vector->j*vector->j + vector->k*vector->k;
 }
 
+__inline real_vector3d *negate_vector3d(
+	real_vector3d const *a,
+	real_vector3d *result)
+{
+	result->i= -a->i;
+	result->j= -a->j;
+	result->k= -a->k;
+	return result;
+}
+
 __inline boolean valid_real(
 	real n)
 {

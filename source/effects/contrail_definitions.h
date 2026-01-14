@@ -10,6 +10,13 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	CONTRAIL_DEFINITION_TAG= 'cont',
+	CONTRAIL_DEFINITION_VERSION= 3,
+	MAXIMUM_CONTRAIL_POINT_STATES_PER_CONTRAIL= 16,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

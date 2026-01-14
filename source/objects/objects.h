@@ -262,7 +262,7 @@ struct _object_datum
 	char parent_node_index;
 	byte pad[1];
 	boolean force_shield_update;
-	boolean functions_active_flags;
+	byte functions_active_flags;
 	real incoming_function_values[NUMBER_OF_INCOMING_OBJECT_FUNCTIONS];
 	real outgoing_function_values[NUMBER_OF_OUTGOING_OBJECT_FUNCTIONS];
 	char attachment_types[MAXIMUM_NUMBER_OF_ATTACHMENTS_PER_OBJECT];

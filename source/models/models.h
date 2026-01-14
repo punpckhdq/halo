@@ -21,7 +21,7 @@ void model_get_node_orientations(struct model const *model, real_orientation *no
 short model_get_marker_by_name(
 	long model_index,
 	char const *name,
-	unsigned char const *region_permutations,
+	byte const *region_permutations,
 	short const *node_remapping_table,
 	short node_count, 
 	real_matrix4x3 const *node_matrices,

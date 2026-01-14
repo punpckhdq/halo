@@ -453,6 +453,7 @@ symbols in this file:
 #include "objects.h"
 
 #include "damage.h"
+#include "light_definitions.h"
 #include "object_lights.h"
 #include "object_types.h"
 
@@ -462,8 +463,11 @@ symbols in this file:
 #include "devices/device_definitions.h"
 #include "devices/devices.h"
 #include "editor/editor_stubs.h"
+#include "effects/contrail_definitions.h"
 #include "effects/contrails.h"
+#include "effects/effect_definitions.h"
 #include "effects/effects.h"
+#include "effects/particle_system_definitions.h"
 #include "effects/particle_systems.h"
 #include "game/game.h"
 #include "game/game_engine.h"
@@ -482,6 +486,7 @@ symbols in this file:
 #include "saved games/game_state.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_definitions.h"
+#include "sound/sound_definitions.h"
 #include "sound/game_sound.h"
 #include "structures/structure_bsp_definitions.h"
 
@@ -1072,7 +1077,7 @@ static void object_header_delete(
 	struct data_array *data,
 	long object_index)
 {
-	struct object_header_datum *object_header= object_header_get(object_index);
+	struct object_header_datum *object_header= (struct object_header_datum *)datum_get(data, object_index);
 
 	if (object_header->datum)
 	{
@@ -1604,11 +1609,11 @@ void object_disconnect_from_map(
 	struct object_datum *object= header->datum;
 
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 957, DATUM_INDEX_TO_IDENTIFIER(object_index));
-	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 957, TEST_FLAG(object->object.flags, _object_connected_to_map_bit));
+	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 958, TEST_FLAG(object->object.flags, _object_connected_to_map_bit));
 
-	if (object->object.parent_object_index==NONE)
+	if (object->object.parent_object_index!=NONE)
 	{
-		object_remove_from_list(&object_get(object_index)->object.first_child_object_index, object_index);
+		object_remove_from_list(&object_get(object->object.parent_object_index)->object.first_child_object_index, object_index);
 	}
 	else
 	{
@@ -1623,15 +1628,12 @@ void object_disconnect_from_map(
 
 		if (TEST_FLAG(header->flags, _object_header_automatically_deactivate_bit))
 		{
-			struct object_header_datum *deactivated_header= object_header_get(object_index);
-			object_get(object_index);
-
-			if (TEST_FLAG(deactivated_header->flags, _object_header_active_bit))
-			{
-				SET_FLAG(deactivated_header->flags, _object_header_active_bit, FALSE);
-			}
+			object_deactivate(object_index);
 		}
 	}
+
+	SET_FLAG(object->object.flags, _object_connected_to_map_bit, FALSE);
+	SET_FLAG(header->flags, _object_header_connected_to_map_bit, FALSE);
 
 	return;
 }
@@ -1902,20 +1904,25 @@ boolean object_get_function_value(
 	short function_index,
 	real *value_reference)
 {
+	boolean result;
 	struct object_datum *object= object_get(object_index);
 
+	
 	if (function_index==NONE)
 	{
 		*value_reference= 1.f;
-		return TRUE;
+		result= TRUE;
 	}
 	else
 	{
-		match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1654, VALID_INDEX(function_index, NUMBER_OF_OUTGOING_OBJECT_FUNCTIONS));
+		match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1654, function_index>=0 && function_index<NUMBER_OF_OUTGOING_OBJECT_FUNCTIONS);
 
 		*value_reference= object->object.outgoing_function_values[function_index];
-		return TEST_FLAG(object->object.functions_active_flags, function_index);
+		
+		result= TEST_FLAG(object->object.functions_active_flags, function_index);
 	}
+	
+	return result;
 }
 
 short objects_in_clusters_by_indices(
@@ -1943,11 +1950,12 @@ void objects_disconnect_from_structure_bsp(
 	object_iterator_new(&iterator, _object_mask_all, 0);
 	while (object= (struct object_datum *)object_iterator_next(&iterator))
 	{
-		if (TEST_FLAG(object->object.flags, 11) && object->object.parent_object_index==NONE)
+		if (TEST_FLAG(object->object.flags, _object_connected_to_map_bit) &&
+			object->object.parent_object_index==NONE)
 		{
 			object_disconnect_from_map(iterator.index);
 
-			SET_FLAG(object->object.flags, 11, TRUE);
+			SET_FLAG(object->object.flags, _object_connected_to_map_bit, TRUE);
 		}
 
 		object_type_disconnect_from_structure_bsp(iterator.index);
@@ -2138,19 +2146,18 @@ short object_get_marker_by_name(
 {
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object->definition_index);
-	real_matrix4x3 *nodes= (real_matrix4x3 *)object_header_block_get(object_index, &object_get(object_index)->object.node_matrices);
-	boolean mirrored= TEST_FLAG(object->object.flags, _object_mirrored_bit);
+	const long model_index= object_definition->object.model.index;
 
 	short marker= model_get_marker_by_name(
-			 object_definition->object.model.index,
-			 name,
-			 object->object.region_permutations,
-			 FALSE,
-			 NONE,
-			 nodes,
-			 mirrored,
-			 markers,
-			 maximum_marker_count
+		model_index,
+		name,
+		object->object.region_permutations,
+		FALSE,
+		NONE,
+		object_get_node_matrices(object_index),
+		TEST_FLAG(object->object.flags, _object_mirrored_bit),
+		markers,
+		maximum_marker_count
 	);
 
 	if (!marker)
@@ -2159,14 +2166,11 @@ short object_get_marker_by_name(
 		
 		markers->node_index= 0;
 		matrix4x3_identity(&markers->node_matrix);
-	
 		markers->matrix= *object_get_node_matrix(object_index, 0);
 
 		if (TEST_FLAG(object->object.flags, _object_mirrored_bit))
 		{
-			markers->matrix.n[1][0]= -markers->matrix.n[1][0];
-			markers->matrix.n[1][1]= -markers->matrix.n[1][1];
-			markers->matrix.n[1][2]= -markers->matrix.n[1][2];
+			negate_vector3d(&markers->matrix.left, &markers->matrix.left);
 		}
 
 		if (name && name[0]=='\0')
@@ -2832,6 +2836,90 @@ void object_render_debug(
 	return;
 }
 
+static void attachments_new(long object_index)
+{
+	long i;
+
+	struct object_datum *object= object_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
+
+	for (i= 0; i<object_definition->object.attachments.count; i++)
+	{
+		long attachment_index;
+
+		struct object_attachment_definition* attachment= TAG_BLOCK_GET_ELEMENT(
+			&object_definition->object.attachments,
+			i,
+			struct object_attachment_definition
+		);
+
+		short attachment_type= NONE;
+		if (attachment->type.index!=NONE)
+		{
+			switch (attachment->type.group_tag)
+			{
+			case LIGHT_DEFINITION_TAG:
+				attachment_type= _object_attachment_type_light;
+				break;
+			case LOOPING_SOUND_DEFINITION_TAG:
+				attachment_type= _object_attachment_type_looping_sound;
+				break;
+			case EFFECT_DEFINITION_TAG:
+				attachment_type= _object_attachment_type_effect;
+				break;
+			case CONTRAIL_DEFINITION_TAG:
+				attachment_type= _object_attachment_type_contrail;
+				break;
+			case PARTICLE_SYSTEM_DEFINITION_TAG:
+				attachment_type= _object_attachment_type_particle_system;
+				break;
+			}
+		}
+
+		switch (attachment_type)
+		{
+		case _object_attachment_type_light:
+			attachment_index= light_new(
+				attachment->type.index,
+				object_index,
+				i,
+				attachment->primary_scale_function_reference-1,
+				attachment->change_color_reference-1
+			);
+			break;
+		case _object_attachment_type_looping_sound:
+			attachment_index= game_looping_sound_new(
+				object_index,
+				attachment->type.index,
+				attachment->marker_name,
+				attachment->primary_scale_function_reference-1
+			);
+			break;
+		case _object_attachment_type_effect:
+			attachment_index = effect_new_looping(
+				attachment->type.index,
+				object_index,
+				attachment->primary_scale_function_reference-1,
+				attachment->secondary_scale_function_reference-1,
+				attachment->change_color_reference-1
+			);
+			break;
+		case _object_attachment_type_contrail:
+			attachment_index= contrail_new(attachment->type.index, object_index, i);
+			break;
+		case _object_attachment_type_particle_system:
+			attachment_index = particle_system_new_attached(attachment->type.index, object_index, i);
+			break;
+		}
+
+		object->object.attachment_types[i]= attachment_type;
+		object->object.attachment_indices[i]= attachment_index;
+	}
+
+	return;
+}
+
+// TODO: match
 void object_set_position(
 	long object_index,
 	real_point3d const *position,
@@ -3457,10 +3545,10 @@ static void object_connect_lights(
 
 	if (TEST_FLAG(object->object.flags, _object_has_attached_lights_bit))
 	{
-		long i;
+		short i;
 		struct object_definition *object_definition= object_definition_get(object->definition_index);
 		
-		for (i=0; i<object_definition->object.attachments.count; i++)
+		for (i=0; i<object_definition->object.attachments.count; ++i)
 		{
 			if (!object->object.attachment_types[i] && object->object.attachment_indices[i]!=NONE)
 			{
@@ -3757,11 +3845,11 @@ static short object_determine_variant_number(
 	long object_index,
 	struct model *model)
 {
-	long region_index;
-	short result;
+	short region_index;
 
 	struct object_datum *object= object_get(object_index);
-	
+	short result= 0;
+
 	for (region_index=0; region_index<model->regions.count&& !result; region_index++)
 	{
 		struct model_region* region= TAG_BLOCK_GET_ELEMENT(&model->regions, region_index, struct model_region);
@@ -3818,7 +3906,7 @@ static void object_remove_from_list(
 {
 	while (*first_object_reference!=NONE)
 	{
-		struct object_datum *object= object_get(object_index);
+		struct object_datum *object= object_get(*first_object_reference);
 
 		if (*first_object_reference==object_index)
 		{
@@ -3827,7 +3915,7 @@ static void object_remove_from_list(
 			break;
 		}
 
-		*first_object_reference= object->object.next_object_index;
+		first_object_reference= &object->object.next_object_index;
 
 		match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 3179, *first_object_reference!=NONE);
 	}
@@ -3838,13 +3926,14 @@ static void object_remove_from_list(
 static void attachments_delete(
 	long object_index)
 {
-	long attachment_index;
+	short attachment_index;
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object_index);
 
-	for (attachment_index=0; attachment_index<object_definition->object.attachments.count; attachment_index++)
+	for (attachment_index=0; attachment_index<object_definition->object.attachments.count; ++attachment_index)
 	{
-		if (object->object.attachment_types[attachment_index]!=NONE && object->object.attachment_indices[attachment_index]!=NONE)
+		if (object->object.attachment_types[attachment_index]!=NONE &&
+			object->object.attachment_indices[attachment_index]!=NONE)
 		{
 			switch (object->object.attachment_types[attachment_index])
 			{

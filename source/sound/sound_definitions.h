@@ -10,6 +10,15 @@ file has inline function assertions.
 
 /* ---------- constants */
 
+enum 
+{
+	LOOPING_SOUND_DEFINITION_TAG= 'lsnd',
+	LOOPING_SOUND_DEFINITION_VERSION= 3,
+	CUSTOM_MUSIC_PLAY_ID= 'mply',
+	MAXIMUM_TRACKS_PER_LOOPING_SOUND= 4,
+	MAXIMUM_DETAIL_SOUNDS_PER_LOOPING_SOUND= 32,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

@@ -110,7 +110,7 @@ enum
 #define PIN(n,floor,ceiling) ((n)<(floor) ? (floor) : CEILING(n,ceiling))
 
 #define FLAG(b) (1<<(b))
-#define TEST_FLAG(flags, bit) ((flags)&(unsigned)FLAG(bit))
+#define TEST_FLAG(flags, bit) (((flags)&(unsigned)FLAG(bit))!=0)
 #define SET_FLAG(f, b, v) ((v) ? ((f)|=(unsigned)FLAG(b)) : ((f)&=(unsigned)~FLAG(b)))
 
 #define BIT_VECTOR_SIZE_IN_LONGS(bit_count) (((bit_count) + (LONG_BITS - 1)) >> LONG_BITS_BITS)

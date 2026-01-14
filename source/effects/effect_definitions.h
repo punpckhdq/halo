@@ -10,6 +10,16 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	EFFECT_DEFINITION_TAG= 'effe',
+	EFFECT_DEFINITION_VERSION= 4,
+	MAXIMUM_EFFECT_PARTICLES_PER_EVENT= 32,
+	MAXIMUM_EFFECT_PARTS_PER_EVENT= 32,
+	MAXIMUM_EFFECT_LOCATIONS= 32,
+	MAXIMUM_EFFECT_EVENTS= 32,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

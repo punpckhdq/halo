@@ -10,6 +10,12 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	LIGHT_DEFINITION_TAG= 'ligh',
+	LIGHT_DEFINITION_VERSION= 3,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
