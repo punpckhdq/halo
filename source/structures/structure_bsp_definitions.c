@@ -53,7 +53,7 @@ unsigned long *structure_bsp_get_cluster_pvs(
 	struct structure_bsp *structure_bsp,
 	short cluster_index)
 {
-	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 36, VALID_INDEX(cluster_index, structure_bsp->clusters.count));
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 36, cluster_index>=0 && cluster_index<structure_bsp->clusters.count);
 	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c",
 		37,
 		(cluster_index+1)*BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count)<=structure_bsp->cluster_data.size

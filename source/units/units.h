@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/UNITS.C */
+
+void unit_get_head_position(long unit_index, union real_point3d *head_position);
 
 /* ---------- globals */
 

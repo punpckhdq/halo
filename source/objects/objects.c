@@ -458,6 +458,7 @@ symbols in this file:
 #include "object_types.h"
 
 #include "ai/ai_debug.h"
+#include "bitmaps/bitmaps.h"
 #include "cache/predicted_resources.h"
 #include "cseries/errors.h"
 #include "devices/device_definitions.h"
@@ -489,6 +490,7 @@ symbols in this file:
 #include "sound/sound_definitions.h"
 #include "sound/game_sound.h"
 #include "structures/structure_bsp_definitions.h"
+#include "units/units.h"
 
 /* ---------- constants */
 
@@ -567,6 +569,8 @@ static void attachments_delete(long object_index);
 static void object_create_attachments(long object_index);
 static void object_delete_attachments(long object_index);
 static void object_delete_recursive(long object_index, boolean delete_siblings);
+static void object_compute_function_values(long object_index);
+static void object_compute_change_colors(long object_index);
 
 /* ---------- globals */
 
@@ -1861,17 +1865,18 @@ void object_permute_region(
 	boolean active_flag)
 {
 	struct object_datum *object= object_get(object_index);
-	long model_index= object_definition_get(object_index)->object.model.index;
-	if (model_index!=NONE)
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
+
+	if (object_definition->object.model.index!=NONE)
 	{
-		long region_index;
-		struct model* model= model_definition_get(model_index);
+		short region_index;
+		struct model* model= model_definition_get(object_definition->object.model.index);
 		
 		for (region_index= 0; region_index<model->regions.count; region_index++)
 		{
 			if (desired_region_index==NONE || desired_region_index==region_index)
 			{
-				long permutation_index;
+				short permutation_index;
 				struct model_region *region= TAG_BLOCK_GET_ELEMENT(
 					&model->regions,
 					region_index,
@@ -1888,7 +1893,7 @@ void object_permute_region(
 					
 					if (!_stricmp(permutation->name, permutation_name))
 					{
-						object->object.region_permutations[region_index]= active_flag ? region_index : 0;
+						object->object.region_permutations[region_index]= active_flag ? permutation_index : 0;
 						break;
 					}
 				}
@@ -1932,7 +1937,71 @@ short objects_in_clusters_by_indices(
 	short maximum_object_count,
 	long *object_indices)
 {
-	return NONE;
+	short cluster_index;
+
+	short object_count= 0;
+
+	if (!class_flags)
+	{
+		class_flags= NONE;
+	}
+
+	object_marker_begin();
+
+	for (cluster_index = 0; cluster_index<cluster_count; ++cluster_index)
+	{
+		short cluster_num= cluster_indices[cluster_index];
+		if (TEST_FLAG(class_flags, 0))
+		{
+			long reference;
+			long object_index;
+
+			for (
+				object_index= cluster_get_first_collideable_object(&reference, cluster_num);
+				object_index!=NONE;
+				object_index= cluster_get_next_collideable_object(&reference)
+			)
+			{
+				boolean res= object_mark_function(object_index);
+				if (res)
+				{
+					if (object_count >= maximum_object_count)
+					{
+						goto objects_in_clusters_by_indices_end;
+					}
+					object_indices[object_count++] = object_index;
+				}
+			}
+		}
+
+		if (TEST_FLAG(class_flags, 1))
+		{
+			long reference;
+			long object_index;
+
+			for (
+				object_index= cluster_get_first_noncollideable_object(&reference, cluster_num);
+				object_index!=NONE;
+				object_index= cluster_get_next_noncollideable_object(&reference)
+			)
+			{
+				boolean res= object_mark_function(object_index);
+				if (res)
+				{
+					if (object_count >= maximum_object_count)
+					{
+						goto objects_in_clusters_by_indices_end;
+					}
+					object_indices[object_count++] = object_index;
+				}
+			}
+		}
+	}
+
+objects_in_clusters_by_indices_end:
+	object_marker_end();
+
+	return object_count;
 }
 
 long object_index_from_name_index(
@@ -1976,21 +2045,56 @@ boolean object_visible_to_any_player(
 		if (TEST_FLAG(object->object.flags, _object_connected_to_map_bit) &&
 			!TEST_FLAG(object->object.flags, _object_outside_of_map_bit))
 		{
+			short i;
+			struct object_cluster_iterator iterator;
+
 			const unsigned long* combined_pvs= players_get_combined_pvs();
+		
+			for (
+				i= object_get_first_cluster(&iterator, object_index);
+				i!=NONE && !BIT_VECTOR_TEST_FLAG(combined_pvs, i);
+				i= object_get_next_cluster(&iterator)
+			)
+			{
+				;
+			}
+
+			if (i!=NONE)
+			{
+				long player_index;
+				const real bounding_area= object->object.bounding_sphere_radius*object->object.bounding_sphere_radius;
+				for (
+					player_index= data_next_index(player_data, NONE);
+					player_index!=NONE;
+					player_index= data_next_index(player_data, player_index)
+				)
+				{
+					struct player_datum *player= player_get(i);
+					if (player->unit_index!=NONE)
+					{
+						real_point3d position;
+						unit_get_head_position(player->unit_index, &position);
+					}
+				}
+			}
 		}
 	}
 
 	return result;
 }
 
-void object_pvs_activate(long object_index)
+void object_pvs_activate(
+	long object_index)
 {
 	object_pvs_set_object(object_index);
 
 	return;
 }
 
-void objects_scripting_set_scale(long object_index, real scale, short interpolation_frame_count)
+void objects_scripting_set_scale(
+	long object_index,
+	real scale,
+	short interpolation_frame_count)
 {
 	if (object_index!=NONE)
 	{
@@ -2005,7 +2109,9 @@ void objects_scripting_set_scale(long object_index, real scale, short interpolat
 	return;
 }
 
-static void object_delete_initial_recursive(long object_index, boolean delete_siblings)
+static void object_delete_initial_recursive(
+	long object_index,
+	boolean delete_siblings)
 {
 	struct object_header_datum *header= object_header_get(object_index);
 	struct object_datum *object= object_get(object_index);
@@ -2044,14 +2150,17 @@ static void object_delete_initial_recursive(long object_index, boolean delete_si
 	return;
 }
 
-void object_delete(long object_index)
+void object_delete(
+	long object_index)
 {
 	object_delete_initial_recursive(object_index, FALSE);
 
 	return;
 }
 
-void object_reconnect_to_map(long object_index, struct location const *location)
+void object_reconnect_to_map(
+	long object_index,
+	struct location const *location)
 {
 	struct object_header_datum *header= object_header_get(object_index);
 	struct object_datum *object= header->datum;
@@ -2131,7 +2240,9 @@ void object_reconnect_to_map(long object_index, struct location const *location)
 	return;
 }
 
-real_matrix4x3 *object_get_node_matrix(long object_index, short node_index)
+real_matrix4x3 *object_get_node_matrix(
+	long object_index,
+	short node_index)
 {
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1060, object_has_node(object_index, node_index));
 
@@ -2584,6 +2695,16 @@ static void object_choose_random_change_colors(
 	for (i=0; i<NUMBEROF(object->object.base_change_colors); i++)
 	{
 		object->object.base_change_colors[i]= placement_change_colors[i];
+
+		if (i<object_definition->object.change_colors.count)
+		{
+			struct object_change_color_definition *cc= TAG_BLOCK_GET_ELEMENT(
+				&object_definition->object.change_colors,
+				i,
+				struct object_change_color_definition
+			);
+		}
+
 	}
 
 	return;
@@ -2836,7 +2957,8 @@ void object_render_debug(
 	return;
 }
 
-static void attachments_new(long object_index)
+static void attachments_new(
+	long object_index)
 {
 	long i;
 
@@ -2952,63 +3074,56 @@ void object_translate(
 long object_new(
 	struct object_placement_data *data)
 {
-	long definition_index;
-
 	long object_index= NONE;
+	long definition_index= data->definition_index;
+
 
 	match_assert_valid_real_point3d("c:\\halo\\SOURCE\\objects\\objects.c", 618, &data->position)
 	match_assert_valid_real_vector3d_axes2("c:\\halo\\SOURCE\\objects\\objects.c", 619, &data->forward, &data->up);
 	match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\objects\\objects.c", 620, &data->angular_velocity);
 	match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\objects\\objects.c", 621, &data->translational_velocity);
 
-	definition_index= data->definition_index;
-	if (game_engine_running())
+	if (game_engine_running() && definition_index!=NONE)
 	{
-		if (definition_index!=NONE)
-		{
-			definition_index= game_engine_remap_object_definition(definition_index);
-		}
+		definition_index= game_engine_remap_object_definition(definition_index);
 	}
 
 	if (definition_index!=NONE)
 	{
-		struct object_definition *object_definition;
-		struct object_type_definition *type_definition;
+		struct object_definition *object_definition= object_definition_get(definition_index);
+		struct object_type_definition *type_definition= object_type_definition_get(object_definition->object.type);
 
-		
-
-		object_definition= object_definition_get(definition_index);
-		type_definition= object_type_definition_get(object_definition->object.type);
 		object_index= object_header_new(object_header_data, NONE, type_definition->game_datum_size);
-	
+
 		if (object_index!=NONE)
 		{
-			boolean can_create_object;
 			short node_count;
 
 			struct object_header_datum *header= object_header_get(object_index);
 			struct object_datum *object= object_get(object_index);
+			boolean can_create_object= TRUE;
 
 			SET_FLAG(header->flags, _object_header_being_created_bit, TRUE);
 			SET_FLAG(header->flags, _object_header_automatically_deactivate_bit, TRUE);
-			
+
 			header->type= object_definition->object.type;
 			object->definition_index= definition_index;
-		
-			can_create_object= TRUE;
-
 			object->object.type= object_definition->object.type;
+			
 			object_type_adjust_placement(object_index, data);
+			
 			object->object.position= data->position;
 			object->object.forward= data->forward;
 			object->object.up= data->up;
 			object->object.translational_velocity= data->translational_velocity;
 			object->object.angular_velocity= data->angular_velocity;
-
-			// TODO: real math function here to calculate new position
-			object->object.position.x+= data->height* object->object.up.i;
-			object->object.position.y+= data->height* object->object.up.j;
-			object->object.position.z+= data->height* object->object.up.k;
+			
+			point_from_line3d(
+				&object->object.position,
+				&object->object.up,
+				data->height,
+				&object->object.position
+			);
 
 			SET_FLAG(object->object.flags, _object_mirrored_bit, TEST_FLAG(data->flags, _new_object_mirrored_bit));
 
@@ -3032,7 +3147,7 @@ long object_new(
 				SET_FLAG(object->object.flags, _object_shadowless_bit, TRUE);
 			}
 
-			SET_FLAG(object->object.flags, _object_no_collisions_bit, object_definition->object.collision_model.index!=NONE);
+			SET_FLAG(object->object.flags, _object_has_collision_model_bit, object_definition->object.collision_model.index!=NONE);
 
 			object_set_visibility(object_index, object_definition->object.model.index!=NONE);
 			object->object.owner_team_index= data->owner_team_index;
@@ -3040,7 +3155,7 @@ long object_new(
 			object->object.owner_object_index= data->owner_object_index;
 			object->object.variant_number= data->variant_number;
 			object->object.forced_shader_permutation_index= object_definition->object.forced_shader_permutation_index;
-		
+
 			if (object_definition->object.model.index==NONE)
 			{
 				node_count=1;
@@ -3050,20 +3165,30 @@ long object_new(
 				node_count= model_definition_get(object_definition->object.model.index)->nodes.count;
 			}
 
-			if (!object_header_block_allocate(
-					object_index,
-					offsetof(struct object_datum, object.node_matrices),
-					sizeof(struct real_matrix4x3) * node_count) ||
-				TEST_FLAG(_object_mask_cannot_interpolate, object_definition->object.type) && 
-				!object_header_block_allocate(
-					object_index,
-					offsetof(struct object_datum, object.node_orientations),
-					sizeof(struct real_orientation) * node_count)
-				|| !object_header_block_allocate(
-						object_index,
-						offsetof(struct object_datum, object.original_node_orientations),
-						sizeof(struct real_orientation) * node_count)
+			if (object_header_block_allocate(
+				object_index,
+				offsetof(struct object_datum, object.node_matrices),
+				sizeof(struct real_matrix4x3) * node_count))
+			{
+				if (!TEST_FLAG(_object_mask_cannot_interpolate, object_definition->object.type) &&
+					(
+						!object_header_block_allocate(
+							object_index,
+							offsetof(struct object_datum, object.node_orientations),
+							sizeof(struct real_orientation) * node_count
+						) ||
+						!object_header_block_allocate(
+							object_index,
+							offsetof(struct object_datum, object.original_node_orientations),
+							sizeof(struct real_orientation) * node_count
+						)
+					)
 				)
+				{
+					can_create_object= FALSE;
+				}
+			}
+			else	
 			{
 				can_create_object= FALSE;
 			}
@@ -3074,7 +3199,8 @@ long object_new(
 			if (can_create_object && object_type_new(object_index))
 			{
 				boolean original_deleted_when_deactivated= TEST_FLAG(object->object.flags, _object_deleted_when_deactivated_bit);
-				if (TEST_FLAG(object->object.flags, _object_deleted_when_deactivated_bit) &&
+
+				if (original_deleted_when_deactivated &&
 					TEST_FLAG(data->flags, _new_object_never_automatically_delete_bit))
 				{
 					SET_FLAG(object->object.flags, _object_deleted_when_deactivated_bit, FALSE);
@@ -3087,21 +3213,37 @@ long object_new(
 				object_reconnect_to_map(object_index, NULL);
 				object_postprocess_node_matrices(object_index);
 				object_type_export_function_values(object_index);
-				object_compute_function_values();
-				object_compute_change_colors();
+				object_compute_function_values(object_index);
+				object_compute_change_colors(object_index);
 
 				object_create_attachments(object_index);
 
-				SET_FLAG(object->object.flags, _object_deleted_when_deactivated_bit, original_deleted_when_deactivated);	// Restore value
+				// Restore value
+				SET_FLAG(object->object.flags, _object_deleted_when_deactivated_bit, original_deleted_when_deactivated);
 
 				if (!TEST_FLAG(header->flags, _object_header_active_bit) &&
-					TEST_FLAG(object->object.flags, _object_deleted_when_deactivated_bit) &&
-					!TEST_FLAG(data->flags, _new_object_never_automatically_delete_bit) ||
-					object->object.location.cluster_index!=NONE)
+					TEST_FLAG(object->object.flags, _object_deleted_when_deactivated_bit))
 				{
-					object_delete(object_index);
+					if (TEST_FLAG(data->flags, _new_object_never_automatically_delete_bit))
+					{
+						if (object->object.location.cluster_index!=NONE)
+						{
+							object_delete(object_index);
+						}
+					}
+					else
+					{
+						object_delete(object_index);
+					}
 				}
+			}
+			else
+			{
+				can_create_object= FALSE;
+			}
 
+			if (can_create_object)
+			{
 				if (object_definition->object.creation_effect.index!=NONE)
 				{
 					effect_new_from_object(
@@ -3123,14 +3265,14 @@ long object_new(
 				object_index= NONE;
 			}
 		}
+	}
 
-		if (object_index==NONE)
-		{
-			char string[512];
-			sprintf(string, "OUT OF OBJECTS: cannot create %s", tag_name_strip_path(tag_get_name(definition_index)));
-			console_printf(FALSE, "%s", string);
-			error(_error_log, "%s", string);
-		}
+	if (object_index==NONE && definition_index!=NONE)
+	{
+		char string[512];
+		sprintf(string, "OUT OF OBJECTS: cannot create %s", tag_name_strip_path(tag_get_name(definition_index)));
+		console_printf(FALSE, "%s", string);
+		error(_error_log, "%s", string);
 	}
 	
 	return object_index;
@@ -3576,19 +3718,23 @@ static void object_name_list_allocate(
 	return;
 }
 
-static void object_name_list_free(void)
+static void object_name_list_free(
+	void)
 {
 
 	return;
 }
 
-static void object_name_list_clear(void)
+static void object_name_list_clear(
+	void)
 {
 
 	return;
 }
 
-static void object_name_list_new(long object_index, short name_index)
+static void object_name_list_new(
+	long object_index,
+	short name_index)
 {
 	struct object_datum *object= object_get(object_index);
 
@@ -3638,7 +3784,8 @@ static void object_name_list_delete(
 	return;
 }
 
-static long object_name_list_lookup(short name_index)
+static long object_name_list_lookup(
+	short name_index)
 {
 	return VALID_INDEX(name_index, MAXIMUM_OBJECT_NAMES_PER_SCENARIO) ? object_name_list[name_index] : NONE;
 }
@@ -4024,6 +4171,90 @@ static void object_delete_recursive(
 	
 	object_type_delete(object_index);
 	object_header_delete(object_header_data, object_index);
+
+	return;
+}
+
+// TODO: match
+static void object_compute_function_values(
+	long object_index)
+{
+	long function_index;
+
+	struct object_datum *object= object_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object_index);
+
+	for (function_index= 0; function_index<object_definition->object.functions.count; ++function_index)
+	{
+		struct object_function_definition* function= TAG_BLOCK_GET_ELEMENT(
+			&object_definition->object.functions,
+			function_index,
+			struct object_function_definition
+		);
+
+		if (function->scale_period_by_function_index)
+		{
+
+		}
+	}
+
+	return;
+}
+
+// TODO: match
+static void object_compute_change_colors(
+	long object_index)
+{
+	struct object_datum *object= object_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object_index);
+
+	if (TEST_FLAG(object_definition->object.runtime_flags, _object_runtime_scaled_change_colors_bit))
+	{
+		long cc_index;
+		for (cc_index= 0; cc_index<object_definition->object.change_colors.count; cc_index++)
+		{
+			struct object_change_color_definition *change_color= TAG_BLOCK_GET_ELEMENT(
+				&object_definition->object.change_colors,
+				cc_index,
+				struct object_change_color_definition
+			);
+
+			if (change_color->scaled_by)
+			{
+				rgb_colors_interpolate(
+					&object->object.outgoing_change_colors[cc_index],
+					change_color->scale_flags,
+					&change_color->color_lower_bound,
+					&change_color->color_upper_bound,
+					object->object.incoming_function_values[change_color->scaled_by]
+				);
+			}
+
+			if (change_color->darken_by)
+			{
+				const real scale= object->object.incoming_function_values[change_color->scaled_by];
+				object->object.outgoing_change_colors[cc_index].red*= scale;
+				object->object.outgoing_change_colors[cc_index].green*= scale;
+				object->object.outgoing_change_colors[cc_index].blue*= scale;
+			}
+
+			object->object.outgoing_change_colors[cc_index].red= PIN(
+				object->object.outgoing_change_colors[cc_index].red, 
+				0.f,
+				1.f
+			);
+			object->object.outgoing_change_colors[cc_index].green= PIN(
+				object->object.outgoing_change_colors[cc_index].green,
+				0.f,
+				1.f
+			);
+			object->object.outgoing_change_colors[cc_index].blue= PIN(
+				object->object.outgoing_change_colors[cc_index].blue,
+				0.f,
+				1.f
+			);
+		}
+	}
 
 	return;
 }

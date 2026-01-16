@@ -35,6 +35,12 @@ enum
 	NUMBER_OF_OBJECT_DEFINITION_FLAGS,
 };
 
+enum
+{
+	_object_runtime_scaled_change_colors_bit= 0,
+	NUMBER_OF_OBJECT_DEFINITION_RUNTIME_FLAGS,
+};
+
 
 /* ---------- macros */
 
@@ -53,6 +59,46 @@ struct object_attachment_definition
 	long unused[4];
 };
 
+struct object_function_definition
+{
+	unsigned long flags;
+	real period;
+	short scale_period_by_function_index;
+	short function_type;
+	short scale_function_by_function_index;
+	short wobble_function_type;
+	real wobble_period;
+	real wobble_magnitude;
+	real square_wave_threshold;
+	short step_count;
+	short map_result_to_transition_function;
+	short sawtooth_count;
+	short add_function_index;
+	short scale_result_by_function_index;
+	short bounds_mode;
+	real lower_bound;
+	real upper_bound;
+	real pad2;
+	word pad3;
+	short turn_off_with_function_index;
+	real scale_by;
+	int unused1[63];
+	real runtime_reciprocal_bounds_range;
+	real runtime_reciprocal_sawtooth_count;
+	real runtime_reciprocal_step_count;
+	real runtime_one_over_period;
+	char usage[TAG_STRING_LENGTH+1];
+};
+
+struct object_change_color_definition
+{
+	short darken_by;
+	short scaled_by;
+	unsigned long scale_flags;
+	real_rgb_color color_lower_bound;
+	real_rgb_color color_upper_bound;
+	struct tag_block permutations;
+};
 
 struct _object_definition
 {
@@ -78,8 +124,8 @@ struct _object_definition
 	short forced_shader_permutation_index;
 	struct tag_block attachments;			// object_attachment_definition
 	struct tag_block widgets;
-	struct tag_block functions;
-	struct tag_block change_colors;
+	struct tag_block functions;				// object_function_definition
+	struct tag_block change_colors;			// object_change_color_definition
 	struct tag_block predicted_resources;
 };
 

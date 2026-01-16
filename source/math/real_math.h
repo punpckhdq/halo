@@ -299,6 +299,14 @@ extern const real_vector3d *const global_down3d;
 
 /* ---------- public code */
 
+__inline real_point3d *point_from_line3d(real_point3d const *p, real_vector3d const *v, real t, real_point3d *result)
+{
+	result->x= (v->i*t) + p->x;
+	result->y= (v->j*t) + p->y;
+	result->z= (v->k*t) + p->z;
+	return result;
+}
+
 __inline real dot_product3d(
 	real_vector3d const *a,
 	real_vector3d const *b)
