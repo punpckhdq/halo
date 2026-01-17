@@ -270,14 +270,19 @@ static void console_complete(
 		for (token_num= 0; token_num<count; token_num++)
 		{
 			short size= MIN(last_similar_character_index, strlen(matching_items[token_num]) - 1);
-			short index;
 
-			for (index= 0; ; ++index)
+			short index= 0;
+			if(tolower(matching_items[token_num][0]) == tolower(matching_items[0][0]))
 			{
-				if (tolower(matching_items[token_num][index]) != tolower(matching_items[0][index]) || index > size)
+				do
 				{
-					break;
+					if(index > size)
+					{
+						break;
+					}
+					++index;
 				}
+				while(tolower(matching_items[token_num][index]) == tolower(matching_items[0][index]) );
 			}
 			last_similar_character_index= index - 1;
 
