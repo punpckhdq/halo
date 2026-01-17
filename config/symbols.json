@@ -6465,7 +6465,7 @@
 { "file_offset": 1575552, "flags": 32, "name": "_shell_screen_pause" },
 { "file_offset": 1575568, "flags": 32, "name": "_shell_get_command_line" },
 { "file_offset": 1575584, "flags": 32, "name": "_shell_idle" },
-{ "file_offset": 1575600, "flags": 32, "name": "_code_00180ab0" },
+{ "file_offset": 1575600, "flags": 32, "name": "_stack_walk_initialize" },
 { "file_offset": 1575808, "flags": 32, "name": "_main" },
 { "file_offset": 1575952, "flags": 32, "name": "_reference_list_remove" },
 { "file_offset": 1576080, "flags": 32, "name": "_reference_list_copy" },

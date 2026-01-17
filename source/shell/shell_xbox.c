@@ -15,7 +15,7 @@ symbols in this file:
 00180AA0 0010:
 	_shell_idle (0000)
 00180AB0 00d0:
-	_code_00180ab0 (0000)
+	_stack_walk_initialize (0000)
 00180B80 0090:
 	_main (0000)
 002A0A78 0007:
@@ -39,7 +39,7 @@ symbols in this file:
 
 /* ---------- prototypes */
 
-static void code_00180ab0(void);
+static void stack_walk_initialize(void);
 
 /* ---------- globals */
 
@@ -99,7 +99,7 @@ void shell_idle(
 int main(
 	void)
 {
-	code_00180ab0();
+	stack_walk_initialize();
 	rasterizer_preinitialize__fill_you_up_with_the_devils_cock();
 	physical_memory_allocate();
 
@@ -121,9 +121,11 @@ int main(
 
 /* ---------- private code */
 
-static void code_00180ab0(
+static void stack_walk_initialize(
 	void)
 {
+	DWORD flOldProtect;
+
 	PDM_WALK_MODSECT walk_modsect= NULL;
 	DMN_SECTIONLOAD section_load;
 
@@ -132,18 +134,16 @@ static void code_00180ab0(
 
 	while (DmWalkLoadedModules(&walk_modules, &module_load)!=XBDM_ENDOFLIST)
 	{
-		DWORD flOldProtect= 0;
-
+		walk_modsect= NULL;
 		while (DmWalkModuleSections(&walk_modsect, module_load.Name, &section_load)!=XBDM_ENDOFLIST)
 		{
-			if (section_load.BaseAddress>=code_00180ab0 || code_00180ab0<(void *)((byte *)section_load.BaseAddress + section_load.Size))
+			if (stack_walk_initialize>section_load.BaseAddress && stack_walk_initialize<(void *)((byte *)section_load.BaseAddress + section_load.Size))
 			{
 				VirtualProtect(section_load.BaseAddress, section_load.Size, PAGE_READONLY, &flOldProtect);
-
+				
+				DmCloseModuleSections(walk_modsect);
 				break;
 			}
 		}
-
-		DmCloseModuleSections(walk_modsect);
 	}
 }
