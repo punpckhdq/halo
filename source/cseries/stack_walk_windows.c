@@ -106,7 +106,7 @@ symbols in this file:
 
 /* ---------- headers */
 
-#include "cseries/stack_walk_windows.h"
+#include "cseries.h"
 
 /* ---------- constants */
 
@@ -114,41 +114,71 @@ symbols in this file:
 
 /* ---------- structures */
 
+struct debug_symbol_table
+{
+	long number_of_symbols;
+	char *string_storage;
+	struct debug_symbol *symbols;
+};
+
+struct debug_symbol
+{
+	unsigned long address;
+	unsigned long rva_base;
+	unsigned long name_string_offset;
+	unsigned long library_object_string_offset;
+};
+
+struct _stack_walk_globals
+{
+	long fixup;
+	boolean disregard_symbol_names;
+	struct debug_symbol_table symbol_table;
+};
+
 /* ---------- prototypes */
 
 /* ---------- globals */
 
-_stack_walk_globals stack_walk_globals = { /* fixup */ NONE };
+struct _stack_walk_globals stack_walk_globals=
+{
+	NONE,
+	FALSE
+};
 
 /* ---------- public code */
 
-void stack_walk_disregard_symbol_names(boolean disregard)
+void stack_walk_disregard_symbol_names(
+	boolean disregard)
 {
 	stack_walk_globals.disregard_symbol_names = disregard;
 }
 
-void free_symbol_table(debug_symbol_table *symbol_table)
+void free_symbol_table(
+	struct debug_symbol_table *symbol_table)
 {
 	match_assert("c:\\halo\\SOURCE\\cseries\\stack_walk_windows.c", 549, symbol_table);
 
-	if(symbol_table->string_storage)
+	if (symbol_table->string_storage)
 	{
 		debug_free(symbol_table->string_storage, "c:\\halo\\SOURCE\\cseries\\stack_walk_windows.c", 551);
 	}
-	if(symbol_table->symbols)
+
+	if (symbol_table->symbols)
 	{
 		debug_free(symbol_table->symbols, "c:\\halo\\SOURCE\\cseries\\stack_walk_windows.c", 552);
 	}
 
-	symbol_table->number_of_symbols = 0;
-	symbol_table->string_storage = NULL;
-	symbol_table->symbols = NULL;
+	symbol_table->number_of_symbols= 0;
+	symbol_table->string_storage= NULL;
+	symbol_table->symbols= NULL;
 }
 
-void stack_walk_dispose()
+void stack_walk_dispose(
+	void)
 {
-	stack_walk_globals.fixup = NONE;
-	stack_walk_globals.disregard_symbol_names = FALSE;
+	stack_walk_globals.fixup= NONE;
+	stack_walk_globals.disregard_symbol_names= FALSE;
 	free_symbol_table(&stack_walk_globals.symbol_table);
 }
 

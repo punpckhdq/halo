@@ -157,6 +157,10 @@ void debug_free(void *, const char *, long);
 void *debug_realloc(void *, unsigned int, boolean, const char *, long);
 void debug_dump_memory(void);
 
+/* ---------- prototypes/STACK_WALK_WINDOWS.C */
+
+void stack_walk_disregard_symbol_names(boolean disregard);
+
 /* ---------- macros */
 
 #ifndef BUILDING_CSERIES
