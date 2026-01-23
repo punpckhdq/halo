@@ -101,6 +101,28 @@ symbols in this file:
 
 /* ---------- public code */
 
+real_point3d *matrix4x3_transform_point(
+	real_matrix4x3 const *matrix,
+	real_point3d const *point,
+	real_point3d *result)
+{
+	real x= point->x;
+	real y= point->y;
+	real z= point->z;
+
+	if (matrix->scale != 1.f)
+	{
+		x *= matrix->scale;
+		y *= matrix->scale;
+		z *= matrix->scale;
+	}
+
+	result->x = matrix->up.i*z + matrix->left.i*y + matrix->forward.i*x + matrix->position.x;
+	result->y = matrix->up.j*z + matrix->left.j*y + matrix->forward.j*x + matrix->position.y;
+	result->z = matrix->up.k*z + matrix->left.k*y + matrix->forward.k*x + matrix->position.z;
+	return result;
+}
+
 real_vector3d *matrix4x3_transform_normal(
 	real_matrix4x3 const *matrix,
 	real_vector3d const *normal,
