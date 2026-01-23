@@ -131,7 +131,10 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries/cseries.h"
+#include "cseries/profile.h"
 #include "math/real_math.h"
+#include "memory/crc.h"
 
 /* ---------- constants */
 
@@ -140,6 +143,40 @@ symbols in this file:
 /* ---------- structures */
 
 /* ---------- prototypes */
+
+void cseries_initialize(void)
+{
+	debug_memory_manager_initialize();
+	profile_initialize();
+	profile_global_enable = FALSE;
+};
+
+void cseries_dispose(void)
+{
+	debug_dump_memory();
+};
+
+tag string_to_tag(const char *s)
+{
+	tag t= *(tag*)s;
+	return BYTESWAP32(t);
+}
+
+char *tag_to_string(tag t, char *s)
+{
+	*(tag*)s= BYTESWAP32(t);
+	s[sizeof(tag)] = 0;
+	return s;
+}
+
+unsigned long string_hash(char const *string)
+{
+	unsigned long hash;
+	crc_new(&hash);
+	crc_checksum_buffer(&hash, string, csstrlen(string));
+
+	return hash;
+}
 
 /* ---------- globals */
 

@@ -94,6 +94,8 @@ enum
 
 #define NUMBEROF(array) (sizeof(array) / sizeof(array[0]))
 
+#define BYTESWAP32(VALUE) (((VALUE) >> 24) | (((VALUE) & 0x00FF0000) >> 8) | (((VALUE) & 0x0000FF00) << 8) | ((VALUE) << 24))
+
 /* ---------- fixed math */
 
 #define SHORT_FIXED_TO_LONG(f) ((f)>>CHAR_BITS)
