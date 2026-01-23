@@ -131,19 +131,39 @@ symbols in this file:
 
 /* ---------- headers */
 
-#include "math/real_math.h"
+#define BUILDING_CSERIES
+
+#include "cseries.h"
+#include "profile.h"
+#include "errors.h"
+#include "real_math.h"
+#include "byte_swapping.h"
+#include "crc.h"
 
 /* ---------- constants */
 
+enum
+{
+	MAXIMUM_MEMCPY_MEMMOVE_SIZE= 0x10000000,
+	MAXIMUM_MEMSET_SIZE= 0x10000000,
+	MAXIMUM_MEMCMP_SIZE= 0x10000000,
+	MAXIMUM_STRING_SIZE= 0x2000,
+};
+
 /* ---------- macros */
+
+#define cseries_match_assert(file, line, expr) if (!(expr)) { stack_walk(FALSE); error(_error_silent, "EXCEPTION %s in %s,#%d: %s", "halt", MATCH_FILE(file), MATCH_LINE(line), STRINGIFY(expr)); system_exit(-1); }
+#define cseries_assert(expr) cseries_match_assert(__FILE__, __LINE__, expr)
 
 /* ---------- structures */
 
 /* ---------- prototypes */
 
+extern void stack_walk(boolean);
+
 /* ---------- globals */
 
-static const real_argb_color global_real_argb_color_table[17] =
+static const real_argb_color global_real_argb_color_table[17]=
 {
 	{ 1.f, 1.f,		1.f,	1.f  },
 	{ 1.f, .5f,		.5f,	.5f  },
@@ -201,5 +221,264 @@ const real_rgb_color *const global_real_rgb_salmon= &global_real_argb_color_tabl
 const real_rgb_color *const global_real_rgb_violet= &global_real_argb_color_table[16].rgb;
 
 /* ---------- public code */
+
+void cseries_initialize(
+	void)
+{
+	debug_memory_manager_initialize();
+	profile_initialize();
+	profile_global_enable= FALSE;
+
+	return;
+};
+
+void cseries_dispose(
+	void)
+{
+	debug_dump_memory();
+
+	return;
+};
+
+tag string_to_tag(
+	const char *s)
+{
+	tag t= *(tag*)s;
+	
+	return SWAP4(t);
+}
+
+char *tag_to_string(
+	tag t,
+	char *s)
+{
+	*(unsigned long *)s= SWAP4(t);
+	s[4]= '\0';
+
+	return s;
+}
+
+
+char *strnupr(
+	char *string,
+	long n)
+{
+	unsigned char *p;
+	
+	for (p= (unsigned char *)string; *p && n-->0; p++)
+	{
+		*p= toupper(*p);
+	}
+	
+	return string;
+}
+
+char *strnlwr(
+	char *string,
+	long n)
+{
+	unsigned char *p;
+	
+	for (p= (unsigned char *)string; *p && n-->0; p++)
+	{
+		*p= tolower(*p);
+	}
+	
+	return string;
+}
+
+char *strupr(
+	char *string)
+{
+	unsigned char *p;
+	
+	for (p= (unsigned char *)string; *p; p++)
+	{
+		*p= toupper(*p);
+	}
+	
+	return string;
+}
+
+char *strlwr(
+	char *string)
+{
+	unsigned char *p;
+	
+	for (p= (unsigned char *)string; *p; p++)
+	{
+		*p= tolower(*p);
+	}
+	
+	return string;
+}
+
+char *csprintf(
+	char *buffer,
+	char *format,
+	...)
+{
+	va_list arglist;
+	
+	va_start(arglist, format);
+	vsprintf(buffer, format, arglist);
+	
+	return buffer;
+}
+
+void display_assert(
+	char *information,
+	char *file,
+	long line,
+	boolean fatal)
+{
+	if (fatal)
+	{
+		stack_walk(FALSE);
+	}
+	
+	error(_error_silent, "EXCEPTION %s in %s,#%d: %s", fatal ? "halt" : "warn", file, line, information ? information : "<no reason given>");
+}
+
+long csmemcmp(
+	const void *p1,
+	const void *p2,
+	unsigned long size)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 255, p1 && p2);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 256, size>=0 && size<=MAXIMUM_MEMCMP_SIZE);
+
+	return memcmp(p1, p2, size);
+}
+
+void *csmemmove(
+	void *destination,
+	const void *source,
+	unsigned long size)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 267, destination && source);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 268, size>=0 && size<=MAXIMUM_MEMCPY_MEMMOVE_SIZE);
+
+	return memmove(destination, source, size);
+}
+
+void *csmemset(
+	void *buffer,
+	long c,
+	unsigned long size)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 279, buffer);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 280, size>=0 && size<=MAXIMUM_MEMSET_SIZE);
+
+	return memset(buffer, c, size);
+}
+
+char *csstrcat(
+	char *s1,
+	const char *s2)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 290, s1 && s2);
+
+	return strcat(s1, s2);
+}
+
+long csstrcmp(
+	const char *s1,
+	const char *s2)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 300, s1 && s2);
+
+	return strcmp(s1, s2);
+}
+
+char *csstrncat(
+	char *s1,
+	const char *s2,
+	unsigned long size)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 311, s1 && s2);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 312, size>=0 && size<MAXIMUM_STRING_SIZE);
+
+	return strncat(s1, s2, size);
+}
+
+long csstrncmp(
+	const char *s1,
+	const char *s2,
+	unsigned long size)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 323, s1 && s2);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 324, size>=0 && size<MAXIMUM_STRING_SIZE);
+
+	return strncmp(s1, s2, size);
+}
+
+char *csstrncpy(
+	char *s1,
+	const char *s2,
+	unsigned long size)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 335, s1 && s2);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 336, size>=0 && size<MAXIMUM_STRING_SIZE);
+
+	return strncpy(s1, s2, size);
+}
+
+char *csstrtok(
+	char *s1,
+	const char *s2)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 346, s2);
+
+	return strtok(s1, s2);
+}
+
+unsigned long csstrlen(
+	const char *s1)
+{
+	long size;
+	
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 357, s1);
+	size= strlen(s1);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 359, size>=0 && size<MAXIMUM_STRING_SIZE);
+	
+	return size;
+}
+
+char *csstrcpy(
+	char *destination,
+	const char *source)
+{
+	long source_size= strlen(source);
+	long destination_size= strlen(destination);
+	
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 371, source_size>=0 && source_size<MAXIMUM_STRING_SIZE);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 372, source+source_size<destination || destination+source_size<source);
+	
+	return strcpy(destination, source);
+}
+
+void *csmemcpy(
+	void *destination,
+	const void *source,
+	unsigned long size)
+{
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 383, destination && source);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 384, size>=0 && size<MAXIMUM_MEMCPY_MEMMOVE_SIZE);
+	cseries_match_assert("c:\\halo\\SOURCE\\cseries\\cseries.c", 385, (byte *)source+size<=(byte *)destination || (byte *)destination+size<=(byte *)source);
+	
+	return memcpy(destination, source, size);
+}
+
+unsigned long string_hash(
+	const char *string)
+{
+	unsigned long hash;
+	
+	crc_new(&hash);
+	crc_checksum_buffer(&hash, string, csstrlen(string));
+	
+	return hash;
+}
 
 /* ---------- private code */
