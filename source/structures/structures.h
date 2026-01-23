@@ -54,6 +54,10 @@ enum
 
 void structure_detail_objects_flush(void);
 
+/* ---------- prototypes/STRUCTURE_RUNTIME_DECALS.C */
+
+void structure_decals_update(unsigned long *old_combined_pvs, unsigned long *new_combined_pvs, short cluster_count);
+
 /* ---------- globals */
 
 /* ---------- public code */

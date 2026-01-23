@@ -416,6 +416,7 @@ void object_translate(long object_index, real_point3d const *new_position, struc
 long object_new(struct object_placement_data *data);
 void object_attach_to_node(long parent_object_index, long child_object_index, short parent_node_index);
 boolean object_force_inside_bsp(long object_index, long ignore_object_index, real_point3d const *known_good_point);
+boolean object_update(long object_index);
 void object_compute_node_matrices_recursive(long object_index);
 long object_new_from_scenario(struct scenario_object_datum *scenario_object, struct tag_block *palette);
 void object_attach_to_marker(long parent_object_index, char const *parent_marker_name, long child_object_index, char const *child_marker_name);

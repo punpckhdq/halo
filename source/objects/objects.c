@@ -461,6 +461,7 @@ symbols in this file:
 #include "bitmaps/bitmaps.h"
 #include "cache/predicted_resources.h"
 #include "cseries/errors.h"
+#include "cseries/profile.h"
 #include "devices/device_definitions.h"
 #include "devices/devices.h"
 #include "editor/editor_stubs.h"
@@ -578,6 +579,7 @@ static long *object_name_list;
 static struct memory_pool *object_memory_pool;
 static struct object_globals *object_globals;
 boolean debug_objects_position_velocity;
+
 
 /* ---------- public code */
 
@@ -3347,6 +3349,15 @@ boolean object_force_inside_bsp(
 	return FALSE;
 }
 
+
+/*
+boolean object_update(
+	long object_index)
+{
+	return;
+}
+*/
+
 void object_compute_node_matrices_recursive(
 	long object_index)
 {
@@ -3665,6 +3676,122 @@ void objects_garbage_collection(
 void objects_update(
 	void)
 {
+	unsigned long *last_active_cluster_bits;
+	unsigned long *active_cluster_bits;
+	short cluster_count;
+	short i;
+	struct object_header_datum *object_header;
+
+	boolean dont_update_object= ((game_time_get()&1)!=0) && game_players_are_double_speed();
+
+	profile_enter();
+
+	object_globals->active_garbage_object_count= 0;
+	
+	last_active_cluster_bits= object_globals->last_active_cluster_bits;
+	active_cluster_bits= object_globals->active_cluster_bits;
+	cluster_count= global_structure_bsp_get()->clusters.count;
+
+	memcpy(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count));
+	memcpy(active_cluster_bits, players_get_combined_pvs(), BIT_VECTOR_SIZE_IN_BYTES(cluster_count));
+
+	if (csmemcmp(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count)))
+	{
+		object_header= (struct object_header_datum *)object_header_data->data;
+		for (i= 0; i<object_header_data->count; ++object_header)
+		{
+			if (object_header->identifier)
+			{
+				if (TEST_FLAG(object_header->flags, _object_header_automatically_deactivate_bit) &&
+					TEST_FLAG(object_header->flags, _object_header_connected_to_map_bit))
+				{
+					if (TEST_FLAG(object_header->flags, _object_header_active_bit))
+					{
+						match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 369, object_header->cluster_index!=NONE);
+						if (!BIT_VECTOR_TEST_FLAG(active_cluster_bits, object_header->cluster_index))
+						{
+							if (TEST_FLAG(object_header->datum->object.flags, _object_deleted_when_deactivated_bit))
+							{
+								object_delete_initial_recursive(i, FALSE);
+							}
+							else
+							{
+								object_deactivate(i);
+							}
+						}
+					}
+					else if (
+						!TEST_FLAG(object_header->flags, _object_header_child_bit) &&
+						object_header->cluster_index != NONE &&
+						BIT_VECTOR_TEST_FLAG(active_cluster_bits, object_header->cluster_index)
+					)
+					{
+						object_activate(i);
+					}
+				}
+			}
+			++i;
+		}
+
+		structure_decals_update(
+			last_active_cluster_bits,
+			active_cluster_bits,
+			BIT_VECTOR_SIZE_IN_BYTES(cluster_count)
+		);
+	}
+
+	object_header= (struct object_header_datum *)object_header_data->data;
+	for (i= 0; i<object_header_data->count; ++object_header)
+	{
+		if (object_header->identifier)
+		{
+			if (TEST_FLAG(object_header->flags, _object_header_active_bit) &&
+				TEST_FLAG(object_header->flags, _object_header_being_created_bit))
+			{
+				long object_index= DATUM_INDEX_NEW(i, object_header->identifier);
+				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 416, object_get(object_index)->object.parent_object_index==NONE);
+				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 417, object_get(object_index)->object.next_object_index==NONE);
+			
+				if (!dont_update_object ||
+					TEST_FLAG(_object_mask_unit, object_header->type) &&
+					unit_get(object_index)->unit.player_index!=NONE)
+				{
+					object_update(object_index);
+				}
+			}
+		}
+		++i;
+	}
+
+	object_header= (struct object_header_datum *)object_header_data->data;
+	for (i= 0; i<object_header_data->count; ++object_header)
+	{
+		if (object_header->identifier)
+		{
+			SET_FLAG(object_header->flags, _object_header_do_not_update_bit, FALSE);
+
+			if (TEST_FLAG(object_header->flags, _object_header_being_created_bit))
+			{
+				SET_FLAG(
+					object_header->flags,
+					_object_header_being_created_bit,
+					FALSE
+				);
+				object_update(DATUM_INDEX_NEW(i, object_header->identifier));
+			}
+
+			if (TEST_FLAG(object_header->flags, _object_header_being_deleted_bit))
+			{
+				object_delete_recursive(DATUM_INDEX_NEW(i, object_header->identifier), FALSE);
+			}
+		}
+		++i;
+	}
+
+	objects_garbage_collection();
+
+	profile_exit();
+
 	return;
 }
 
