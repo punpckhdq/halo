@@ -483,6 +483,8 @@ symbols in this file:
 #include "objects/widgets/widgets.h"
 #include "physics/collision_model_definitions.h"
 #include "physics/collision_models.h"
+#include "physics/collision_usage.h"
+#include "physics/collisions.h"
 #include "physics/physics.h"
 #include "render/render_debug.h"
 #include "saved games/game_state.h"
@@ -1282,17 +1284,19 @@ void objects_dump_memory(
 	struct dump_datum dumps[MAXIMUM_DUMPS];
 	struct dump_datum dumps_by_type[NUMBER_OF_OBJECT_TYPES];
 	struct object_iterator iterator;
-	long type;
+	struct objects_information information;
+
+	short type;
 	struct object_datum *object;
 	FILE *file;
 
-	long object_count= 0;
-	long overflowed_object_count= 0;
+	short object_count= 0;
+	short overflowed_object_count= 0;
 
 	memset(dumps, 0, sizeof(dumps));
 	memset(dumps_by_type, 0, sizeof(dumps_by_type));
 	
-	for (type= 0; type < NUMBER_OF_OBJECT_TYPES; type++)
+	for (type= 0; type<NUMBER_OF_OBJECT_TYPES; ++type)
 	{
 		dumps_by_type[type].object_type= type;
 		dumps_by_type[type].definition_index= NONE;
@@ -1302,8 +1306,8 @@ void objects_dump_memory(
 	
 	while (object= (struct object_datum *)object_iterator_next(&iterator))
 	{
-		long object_num;
-		struct object_header_datum * header;
+		struct object_header_datum *header;
+		short object_num;
 		short index= NONE;
 		
 		for (object_num= 0; object_num<object_count; object_num++)
@@ -1317,7 +1321,7 @@ void objects_dump_memory(
 
 		if (index==NONE)
 		{
-			if (object_count<NUMBEROF(dumps))
+			if (object_count<(short)NUMBEROF(dumps))
 			{
 				index= object_count++;
 				dumps[index].object_type= NONE;
@@ -1336,7 +1340,7 @@ void objects_dump_memory(
 			object_add_to_dump(iterator.index, &dumps[index]);
 		}
 
-		match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 4905, VALID_INDEX(header->type, NUMBER_OF_OBJECT_TYPES));
+		match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 4905, (header->type >= 0) && (header->type < NUMBER_OF_OBJECT_TYPES));
 		object_add_to_dump(iterator.index, &dumps_by_type[header->type]);
 	}
 
@@ -1356,8 +1360,7 @@ void objects_dump_memory(
 	file= fopen("d:\\object_memory.txt", "a+b");
 	if (file)
 	{
-		long object_num;
-		struct objects_information information;
+		short object_num;
 		
 		objects_information_get(&information);
 		fprintf(
@@ -1365,7 +1368,7 @@ void objects_dump_memory(
 			"#%d objects (#%d active) using %3.2f%% of available memory\n\n",
 			information.object_count,
 			information.active_object_count,
-			information.used_memory * 100.f
+			100.f * information.used_memory
 		);
 		
 		fprintf(file, "OBJECTS BY TYPE\n");
@@ -1375,6 +1378,7 @@ void objects_dump_memory(
 			object_dump_write(file, &dumps_by_type[type]);
 		}
 
+		fprintf(file, "\n");
 		fprintf(file, "OBJECTS BY DEFINITION\n");
 		fprintf(file, "number (active) [garbage/   dead/outside/at-rest] maxsize totsize\n");
 		for (object_num= 0; object_num<object_count; object_num++)
@@ -1397,7 +1401,6 @@ void objects_dump_memory(
 		fprintf(file, "\n");
 		fclose(file);
 	}
-
 
 	return;
 }
@@ -1950,7 +1953,7 @@ short objects_in_clusters_by_indices(
 
 	object_marker_begin();
 
-	for (cluster_index = 0; cluster_index<cluster_count; ++cluster_index)
+	for (cluster_index= 0; cluster_index<cluster_count; ++cluster_index)
 	{
 		short cluster_num= cluster_indices[cluster_index];
 		if (TEST_FLAG(class_flags, 0))
@@ -1964,14 +1967,13 @@ short objects_in_clusters_by_indices(
 				object_index= cluster_get_next_collideable_object(&reference)
 			)
 			{
-				boolean res= object_mark_function(object_index);
-				if (res)
+				if (object_mark_function(object_index))
 				{
-					if (object_count >= maximum_object_count)
+					if (object_count>=maximum_object_count)
 					{
 						goto objects_in_clusters_by_indices_end;
 					}
-					object_indices[object_count++] = object_index;
+					object_indices[object_count++]= object_index;
 				}
 			}
 		}
@@ -1987,14 +1989,13 @@ short objects_in_clusters_by_indices(
 				object_index= cluster_get_next_noncollideable_object(&reference)
 			)
 			{
-				boolean res= object_mark_function(object_index);
-				if (res)
+				if (object_mark_function(object_index))
 				{
-					if (object_count >= maximum_object_count)
+					if (object_count>=maximum_object_count)
 					{
 						goto objects_in_clusters_by_indices_end;
 					}
-					object_indices[object_count++] = object_index;
+					object_indices[object_count++]= object_index;
 				}
 			}
 		}
@@ -2009,7 +2010,7 @@ objects_in_clusters_by_indices_end:
 long object_index_from_name_index(
 	short name_index)
 {
-	return NONE;
+	return name_index>=0 && name_index<MAXIMUM_OBJECT_NAMES_PER_SCENARIO ? object_name_list[name_index] : NONE;
 }
 
 void objects_disconnect_from_structure_bsp(
@@ -2076,6 +2077,28 @@ boolean object_visible_to_any_player(
 					{
 						real_point3d position;
 						unit_get_head_position(player->unit_index, &position);
+						if (distance_squared3d(&position, &object->object.bounding_sphere_center)>bounding_area)
+						{
+							real_vector3d test;
+							real test1;
+							real v4;
+							real v3;
+
+							struct unit_datum* unit= unit_get(player->unit_index);
+							
+							vector_from_points3d(&position, &object->object.bounding_sphere_center, &test);
+							test1 = normalize3d(&test);
+							v4 = dot_product3d(&test, &unit->unit.desired_aiming_vector);
+							v3 = arctangent(object->object.bounding_sphere_radius, test1) + 0.7853982f;
+							if (cosine(v3) < v4)
+							{
+								result= TRUE;
+							}
+						}
+						else
+						{
+							result= TRUE;
+						}
 					}
 				}
 			}
@@ -2138,15 +2161,7 @@ static void object_delete_initial_recursive(
 
 	SET_FLAG(header->flags, _object_header_being_deleted_bit, TRUE);
 
-	if (object_definition_get(object->definition_index)->object.model.index!=NONE &&
-		!TEST_FLAG(object->object.flags, _object_invisible_bit))
-	{
-		object_connect_lights(object_index, TRUE, FALSE);
-	}
-
-	header= object_header_get(object_index);
-	SET_FLAG(header->flags, _object_header_active_bit, TRUE);
-	SET_FLAG(header->flags, _object_header_visible_bit, FALSE);
+	object_set_visibility(object_index, FALSE);
 	object_name_list_delete(object_index);
 
 	return;
@@ -2259,10 +2274,9 @@ short object_get_marker_by_name(
 {
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object->definition_index);
-	const long model_index= object_definition->object.model.index;
 
 	short marker= model_get_marker_by_name(
-		model_index,
+		object_definition->object.model.index,
 		name,
 		object->object.region_permutations,
 		FALSE,
@@ -3020,7 +3034,7 @@ static void attachments_new(
 			);
 			break;
 		case _object_attachment_type_effect:
-			attachment_index = effect_new_looping(
+			attachment_index= effect_new_looping(
 				attachment->type.index,
 				object_index,
 				attachment->primary_scale_function_reference-1,
@@ -3032,7 +3046,7 @@ static void attachments_new(
 			attachment_index= contrail_new(attachment->type.index, object_index, i);
 			break;
 		case _object_attachment_type_particle_system:
-			attachment_index = particle_system_new_attached(attachment->type.index, object_index, i);
+			attachment_index= particle_system_new_attached(attachment->type.index, object_index, i);
 			break;
 		}
 
@@ -3131,6 +3145,7 @@ long object_new(
 
 			object->object.location.cluster_index= NONE;
 			header->cluster_index= NONE;
+
 			object->object.magic_number= global_object_marker-1;
 			object->object.umbrella_shield_object_index= NONE;
 			object->object.first_cluster_reference_index= NONE;
@@ -3288,10 +3303,8 @@ void object_attach_to_node(
 {
 	long object_index;
 	struct object_datum *object;
-	struct object_datum *child_object;
-	struct object_datum *parent_object;
-	boolean connected_to_map;
-	real_matrix4x3 inverse_node_matrix;
+
+	boolean valid= TRUE;
 
 	for (
 		object_index= parent_object_index;
@@ -3299,56 +3312,95 @@ void object_attach_to_node(
 		object_index= object->object.parent_object_index)
 	{
 		object= object_get(object_index);
+		if (object_index == child_object_index)
+		{
+			valid= FALSE;
+			break;
+		}
+	}
+
+	if (valid)
+	{
+		real_matrix4x3 inverse_node_matrix;
+
+		struct object_datum *child_object= object_get(child_object_index);
+		struct object_datum *parent_object= object_get(parent_object_index);
+		boolean connected_to_map= TEST_FLAG(child_object->object.flags, _object_connected_to_map_bit);
+
+		match_assert(
+			"c:\\halo\\SOURCE\\objects\\objects.c",
+			1235,
+			object_has_node(parent_object_index, parent_node_index)
+		);
+
+		if (connected_to_map)
+		{
+			object_disconnect_from_map(child_object_index);
+		}
+
+		matrix4x3_inverse(object_get_node_matrix(parent_object_index, parent_node_index), &inverse_node_matrix);
+		matrix4x3_transform_point(&inverse_node_matrix, &child_object->object.position, &child_object->object.position);
+		matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.forward, &child_object->object.forward);
+		matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.up, &child_object->object.up);
+		child_object->object.parent_object_index= parent_object_index;
+		child_object->object.parent_node_index= parent_node_index;
+
+		if (connected_to_map)
+		{
+			object_reconnect_to_map(child_object_index, NULL);
+		}
+
+		object_deactivate(child_object_index);
+
+		SET_FLAG(object_header_get(child_object_index)->flags, _object_header_do_not_update_bit, TRUE);
+
+		object_compute_node_matrices(child_object_index);
+	}
+	else
+	{
 		match_vassert(
 			"c:\\halo\\SOURCE\\objects\\objects.c",
 			1225,
-			object_index != child_object_index,
+			valid,
 			"cannot attach an object to one of its children"
 		);
 	}
-
-	child_object= object_get(child_object_index);
-	parent_object= object_get(parent_object_index);
-
-	connected_to_map= TEST_FLAG(child_object->object.flags, _object_connected_to_map_bit);
-
-	match_assert(
-		"c:\\halo\\SOURCE\\objects\\objects.c",
-		1235,
-		object_has_node(parent_object_index, parent_node_index)
-	);
-
-	if (connected_to_map)
-	{
-		object_disconnect_from_map(child_object_index);
-	}
-
-	matrix4x3_inverse(object_get_node_matrix(parent_object_index, parent_node_index), &inverse_node_matrix);
-	matrix4x3_transform_point(&inverse_node_matrix, &child_object->object.position, &child_object->object.position);
-	matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.forward, &child_object->object.forward);
-	matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.up, &child_object->object.up);
-	child_object->object.parent_object_index= parent_object_index;
-	child_object->object.parent_node_index= parent_node_index;
-
-	if (connected_to_map)
-	{
-		object_reconnect_to_map(child_object_index, NULL);
-	}
 	
-	object_deactivate(child_object_index);
-	object_compute_node_matrices(child_object_index);
-
 	return;
 }
 
 boolean object_force_inside_bsp(
 	long object_index,
-	long ignore_object_index,
 	real_point3d const *known_good_point)
 {
-	return FALSE;
-}
+	struct collision_result collision;
 
+	struct object_datum *object= object_get(object_index);
+	boolean result= FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2365, global_current_collision_user_depth < MAXIMUM_COLLISION_USER_STACK_DEPTH);
+	global_current_collision_users[global_current_collision_user_depth++]= 19;
+	
+	if (collision_test_line(_collision_test_for_projectiles_flags, known_good_point, &object->object.position, NONE, &collision) ||
+		object->object.location.cluster_index==NONE)
+	{
+		if (collision.location.cluster_index!=NONE)
+		{
+			object_translate(object_index, &collision.point, &collision.location);
+			object_compute_node_matrices(object_index);
+			result= TRUE;
+		}
+	}
+	else
+	{
+		result= TRUE;
+	}
+
+	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2387, global_current_collision_user_depth > 1);
+	--global_current_collision_user_depth;
+
+	return result;
+}
 
 /*
 boolean object_update(
@@ -4067,7 +4119,27 @@ static short object_find_region_permutations_available_with_variant(
 	short variant_number,
 	short *available_indices)
 {
-	return 0;
+	short i;
+	short result= 0;
+
+	for (i= 0; i<region->permutations.count; i++)
+	{
+		struct model_region_permutation* permutation= TAG_BLOCK_GET_ELEMENT(
+			&region->permutations,
+			i,
+			struct model_region_permutation
+		);
+		if (!TEST_FLAG(permutation->flags, _model_region_permutation_cannot_be_chosen_randomly_bit))
+		{
+			if (permutation->variant_number==variant_number ||
+				variant_number==NONE && permutation->variant_number< 100)
+			{
+				available_indices[result++] = i;
+			}
+		}
+	}
+
+	return result;
 }
 
 static boolean object_select_random_region_permutations_by_variant(

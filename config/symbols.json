@@ -7976,7 +7976,6 @@
 { "file_offset": 1870665, "flags": 32, "name": "__fpmath" },
 { "file_offset": 1870680, "flags": 32, "name": "__ftol2" },
 { "file_offset": 1870800, "flags": 32, "name": "__chkstk" },
-{ "file_offset": 1870800, "flags": 32, "name": "__alloca_probe" },
 { "file_offset": 1870816, "flags": 32, "name": "_sprintf" },
 { "file_offset": 1870904, "flags": 32, "name": "__scprintf" },
 { "file_offset": 1870953, "flags": 32, "name": "__snprintf" },

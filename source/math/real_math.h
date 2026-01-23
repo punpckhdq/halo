@@ -299,6 +299,41 @@ extern const real_vector3d *const global_down3d;
 
 /* ---------- public code */
 
+__inline real sine(
+	real angle)
+{
+	return sin(angle);
+}
+
+__inline real cosine(
+	real angle)
+{
+	return cos(angle);
+}
+
+__inline real tangent(
+	real angle)
+{
+	return tan(angle);
+}
+
+__inline real arctangent(
+	real y,
+	real x)
+{
+	return atan2(y, x);
+}
+
+__inline float arccosine(real x)
+{
+	return acos(x);
+}
+
+__inline float arcsine(real x)
+{
+	return asin(x);
+}
+
 __inline real_point3d *point_from_line3d(real_point3d const *p, real_vector3d const *v, real t, real_point3d *result)
 {
 	result->x= (v->i*t) + p->x;
@@ -314,10 +349,31 @@ __inline real dot_product3d(
 	return (a->i*b->i) + (a->j*b->j) + (a->k*b->k);
 }
 
+__inline real_vector3d *vector_from_points3d(
+	real_point3d const *a,
+	real_point3d const *b,
+	real_vector3d *result)
+{
+	result->i= b->x-a->x;
+	result->j= b->y-a->y;
+	result->k= b->z-a->z;
+	return result;
+}
+
 __inline real magnitude_squared3d(
 	real_vector3d const *vector)
 {
 	return vector->i*vector->i + vector->j*vector->j + vector->k*vector->k;
+}
+
+__inline real distance_squared3d(
+	real_point3d const *a,
+	real_point3d const *b)
+{
+	real z= b->z-a->z;
+	real y= b->y-a->y;
+	real x= b->x-a->x;
+	return z*z + x*x + y*y;
 }
 
 __inline real_vector3d *negate_vector3d(

@@ -67,14 +67,14 @@ struct object_type_definition
 	void (*initialize_for_new_map)();
 	void (*dispose_from_old_map)();
 	void (*datum_adjust_placement)(long, struct object_placement_data *);
-	unsigned char (*datum_new)(long);
+	boolean (*datum_new)(long);
 	void (*datum_place)(long, void *);
 	void (*datum_delete)(long);
-	unsigned char (*datum_update)(long);
+	boolean(*datum_update)(long);
 	void (*datum_export_function_values)(long);
 	void (*handle_deleted_object)(long, long);
 	void (*handle_region_destroyed)(long, short, unsigned long);
-	unsigned char (*handle_parent_destroyed)(long);
+	boolean(*handle_parent_destroyed)(long);
 	void (*datum_preprocess_node_orientations)(long, struct real_orientation *);
 	void (*datum_postprocess_node_matrices)(long, struct real_matrix4x3 *);
 	void (*reset)(long);

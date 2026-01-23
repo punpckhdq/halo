@@ -36,6 +36,12 @@ enum
 	MAXIMUM_CHANGE_COLORS_PER_MODEL= 4,
 };
 
+enum
+{
+	_model_region_permutation_cannot_be_chosen_randomly_bit= 0,
+	NUMBER_OF_MODEL_REGION_PERMUTATION_FLAGS,
+};
+
 /* ---------- macros */
 
 #define model_definition_get(index) ((struct model *)tag_get(MODELS_GROUP_TAG, index))

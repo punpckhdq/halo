@@ -42,6 +42,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "actions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

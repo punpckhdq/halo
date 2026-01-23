@@ -10,6 +10,11 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	MAXIMUM_COLLISION_USER_STACK_DEPTH= 32,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -17,6 +22,9 @@ header included in hcex build.
 /* ---------- prototypes/EXAMPLE.C */
 
 /* ---------- globals */
+
+extern short global_current_collision_user_depth;
+extern short global_current_collision_users[MAXIMUM_COLLISION_USER_STACK_DEPTH];
 
 /* ---------- public code */
 
