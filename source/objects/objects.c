@@ -2703,24 +2703,58 @@ static void object_choose_random_change_colors(
 	long object_index,
 	real_rgb_color *placement_change_colors)
 {
-	long i;
+	short cc_index;
 
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object->definition_index);
 
-	for (i=0; i<NUMBEROF(object->object.base_change_colors); i++)
+	for (cc_index=0; cc_index<NUMBEROF(object->object.base_change_colors); cc_index++)
 	{
-		object->object.base_change_colors[i]= placement_change_colors[i];
+		object->object.base_change_colors[cc_index]= placement_change_colors[cc_index];
 
-		if (i<object_definition->object.change_colors.count)
+		if (cc_index<object_definition->object.change_colors.count)
 		{
+			short permutation_index;
+
 			struct object_change_color_definition *cc= TAG_BLOCK_GET_ELEMENT(
 				&object_definition->object.change_colors,
-				i,
+				cc_index,
 				struct object_change_color_definition
 			);
+			real weight= fmod(
+				fabs(
+					object->object.position.x*315.89313f +
+					object->object.position.y*587.12946f +
+					object->object.position.z*744.12415f +
+					(real)cc_index*431.12894f
+				), 
+				1.f
+			);
+
+			for (permutation_index=0; permutation_index<cc->permutations.count; permutation_index++)
+			{
+				struct object_change_color_permutation *permutation= TAG_BLOCK_GET_ELEMENT(
+					&cc->permutations,
+					permutation_index,
+					struct object_change_color_permutation
+				);
+				if (weight<=permutation->weight)
+				{
+					rgb_colors_interpolate(
+						&object->object.base_change_colors[cc_index],
+						1,
+						&permutation->color_lower_bound,
+						&permutation->color_upper_bound,
+						fmod(fabs(object->object.position.y) + cc_index*0.71211f, 1.f)
+					);
+					break;
+				}
+			}
 		}
 
+		object->object.outgoing_change_colors[cc_index].red= PIN(object->object.base_change_colors[cc_index].red, 0.f, 1.f);
+		object->object.outgoing_change_colors[cc_index].green= PIN(object->object.base_change_colors[cc_index].green, 0.f, 1.f);
+		object->object.outgoing_change_colors[cc_index].blue= PIN(object->object.base_change_colors[cc_index].blue, 0.f, 1.f);
 	}
 
 	return;

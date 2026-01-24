@@ -90,6 +90,13 @@ struct object_function_definition
 	char usage[TAG_STRING_LENGTH+1];
 };
 
+struct object_change_color_permutation
+{
+	real weight;
+	real_rgb_color color_lower_bound;
+	real_rgb_color color_upper_bound;
+};
+
 struct object_change_color_definition
 {
 	short darken_by;
@@ -97,7 +104,7 @@ struct object_change_color_definition
 	unsigned long scale_flags;
 	real_rgb_color color_lower_bound;
 	real_rgb_color color_upper_bound;
-	struct tag_block permutations;
+	struct tag_block permutations;		// object_change_color_permutation
 };
 
 struct _object_definition
