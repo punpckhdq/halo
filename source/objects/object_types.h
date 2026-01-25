@@ -102,7 +102,7 @@ void object_type_place(long object_index, struct scenario_object_datum *scenario
 void object_type_handle_deleted_object(long object_index, long deleted_object_index);
 
 void object_type_delete(long object_index);
-
+boolean object_type_update(long object_index);
 void object_type_export_function_values(long object_index);
 
 void object_type_preprocess_node_orientations(long object_index, struct real_orientation *node_orientations);

@@ -1,450 +1,5 @@
 /*
 OBJECTS.C
-
-symbols in this file:
-0012CDC0 0020:
-	_cluster_get_first_noncollideable_object (0000)
-0012CDE0 0020:
-	_cluster_get_next_noncollideable_object (0000)
-0012CE00 0020:
-	_cluster_get_first_collideable_object (0000)
-0012CE20 0020:
-	_cluster_get_next_collideable_object (0000)
-0012CE40 0050:
-	_object_get_next_cluster (0000)
-0012CE90 0040:
-	_object_try_and_get_and_verify_type (0000)
-0012CED0 0070:
-	_object_get_and_verify_type (0000)
-0012CF40 0040:
-	_object_iterator_new (0000)
-0012CF80 00c0:
-	_object_iterator_next (0000)
-0012D040 0080:
-	_object_get_ultimate_parent (0000)
-0012D0C0 0010:
-	_object_add_scenario_permutation (0000)
-0012D0D0 0030:
-	_object_set_object_index_for_name_index (0000)
-0012D100 0070:
-	_objects_fix_for_deleted_object (0000)
-0012D170 0230:
-	_object_set_garbage (0000)
-0012D3A0 0010:
-	_garbage_collect_now (0000)
-0012D3B0 0080:
-	_objects_information_get (0000)
-0012D430 0030:
-	_object_pvs_set_object (0000)
-0012D460 00a0:
-	_object_pvs_set_camera_point (0000)
-0012D500 0010:
-	_object_pvs_clear (0000)
-0012D510 00e0:
-	_objects_get_activating_cluster_index (0000)
-0012D5F0 0030:
-	_object_definition_predict (0000)
-0012D620 00b0:
-	_object_predict (0000)
-0012D6D0 0050:
-	_object_beautify (0000)
-0012D720 00a0:
-	_code_0012d720 (0000)
-0012D7C0 0050:
-	_code_0012d7c0 (0000)
-0012D810 0090:
-	_object_header_block_get (0000)
-0012D8A0 0150:
-	_object_header_block_allocate (0000)
-0012D9F0 0050:
-	_code_0012d9f0 (0000)
-0012DA40 0200:
-	_code_0012da40 (0000)
-0012DC40 0070:
-	_code_0012dc40 (0000)
-0012DCB0 0090:
-	_code_0012dcb0 (0000)
-0012DD40 0020:
-	_code_0012dd40 (0000)
-0012DD60 00c0:
-	_code_0012dd60 (0000)
-0012DE20 01e0:
-	_code_0012de20 (0000)
-0012E000 0380:
-	_code_0012e000 (0000)
-0012E380 0040:
-	_object_scripting_set_collideable (0000)
-0012E3C0 0050:
-	_object_marker_begin (0000)
-0012E410 0040:
-	_object_marker_end (0000)
-0012E450 0050:
-	_object_unmarked_function (0000)
-0012E4A0 0060:
-	_object_mark_function (0000)
-0012E500 01b0:
-	_code_0012e500 (0000)
-0012E6B0 00a0:
-	_code_0012e6b0 (0000)
-0012E750 0040:
-	_code_0012e750 (0000)
-0012E790 0010:
-	_code_0012e790 (0000)
-0012E7A0 0020:
-	_code_0012e7a0 (0000)
-0012E7C0 0080:
-	_code_0012e7c0 (0000)
-0012E840 0050:
-	_code_0012e840 (0000)
-0012E890 0020:
-	_code_0012e890 (0000)
-0012E8B0 0020:
-	_objects_place (0000)
-0012E8D0 00a0:
-	_code_0012e8d0 (0000)
-0012E970 0260:
-	_find_objects_from_point_vector (0000)
-0012EBD0 0030:
-	_code_0012ebd0 (0000)
-0012EC00 0090:
-	_code_0012ec00 (0000)
-0012EC90 0070:
-	_code_0012ec90 (0000)
-0012ED00 0360:
-	_objects_dump_memory (0000)
-0012F060 0140:
-	_objects_initialize (0000)
-0012F1A0 00a0:
-	_objects_initialize_for_new_map (0000)
-0012F240 00d0:
-	_objects_dispose_from_old_map (0000)
-0012F310 0070:
-	_objects_dispose (0000)
-0012F380 0050:
-	_object_activate (0000)
-0012F3D0 0040:
-	_object_deactivate (0000)
-0012F410 0060:
-	_object_reset (0000)
-0012F470 00e0:
-	_object_placement_data_new (0000)
-0012F550 0110:
-	_object_disconnect_from_map (0000)
-0012F660 0060:
-	_object_get_first_cluster (0000)
-0012F6C0 0030:
-	_object_get_node_matrices (0000)
-0012F6F0 0050:
-	_object_get_attachment_marker_name (0000)
-0012F740 0060:
-	_object_has_node (0000)
-0012F7A0 0070:
-	_object_set_automatic_deactivation (0000)
-0012F810 00b0:
-	_object_set_visibility (0000)
-0012F8C0 00c0:
-	_object_get_velocities (0000)
-0012F980 0030:
-	_object_get_location (0000)
-0012F9B0 00d0:
-	_object_start_interpolation (0000)
-0012FA80 0090:
-	_object_offset_interpolation (0000)
-0012FB10 00e0:
-	_object_permute_region (0000)
-0012FBF0 0080:
-	_object_get_function_value (0000)
-0012FC70 0300:
-	_objects_in_clusters_by_indices (0000)
-0012FF70 0030:
-	_object_index_from_name_index (0000)
-0012FFA0 0090:
-	_objects_disconnect_from_structure_bsp (0000)
-00130030 01f0:
-	_object_visible_to_any_player (0000)
-00130220 0030:
-	_object_pvs_activate (0000)
-00130250 00d0:
-	_code_00130250 (0000)
-00130320 0080:
-	_code_00130320 (0000)
-001303A0 0030:
-	_code_001303a0 (0000)
-001303D0 0040:
-	_objects_scripting_set_scale (0000)
-00130410 0100:
-	_code_00130410 (0000)
-00130510 0020:
-	_object_delete (0000)
-00130530 01d0:
-	_object_reconnect_to_map (0000)
-00130700 0060:
-	_object_get_node_matrix (0000)
-00130760 0110:
-	_object_get_marker_by_name (0000)
-00130870 01a0:
-	_object_align_marker_to_matrix (0000)
-00130A10 0130:
-	_object_detach (0000)
-00130B40 0070:
-	_object_get_origin (0000)
-00130BB0 0120:
-	_object_get_orientation (0000)
-00130CD0 0060:
-	_object_get_world_matrix (0000)
-00130D30 0110:
-	_object_inverse_kinematics (0000)
-00130E40 01d0:
-	_objects_in_sphere (0000)
-00131010 0140:
-	_objects_reconnect_to_structure_bsp (0000)
-00131150 0070:
-	_objects_paparazzi (0000)
-001311C0 0200:
-	_object_export_function_values (0000)
-001313C0 19a0:
-	_object_compute_node_matrices (0000)
-00132D60 0040:
-	_objects_scripting_detach (0000)
-00132DA0 04b0:
-	_object_render_debug (0000)
-00133250 00e0:
-	_code_00133250 (0000)
-00133330 0100:
-	_object_set_position (0000)
-00133430 00a0:
-	_object_translate (0000)
-001334D0 05c0:
-	_object_new (0000)
-00133A90 01b0:
-	_object_attach_to_node (0000)
-00133C40 0100:
-	_object_force_inside_bsp (0000)
-00133D40 01b0:
-	_code_00133d40 (0000)
-00133EF0 0090:
-	_object_compute_node_matrices_recursive (0000)
-00133F80 0040:
-	_code_00133f80 (0000)
-00133FC0 00f0:
-	_object_new_from_scenario (0000)
-001340B0 00e0:
-	_object_attach_to_marker (0000)
-00134190 0070:
-	_object_new_by_name (0000)
-00134200 0130:
-	_code_00134200 (0000)
-00134330 0050:
-	_objects_scripting_attach (0000)
-00134380 0020:
-	_object_delete_immediately (0000)
-001343A0 0620:
-	_objects_garbage_collection (0000)
-001349C0 0320:
-	_objects_update (0000)
-00134CE0 0020:
-	_objects_memory_compact (0000)
-00289D98 0018:
-	_rdata_00289d98 (0000)
-00289DB0 000f:
-	??_C@_0P@LFOALBOL@objects_update?$AA@ (0000)
-00289DC0 008c:
-	??_C@_0IM@GHLCLNJO@iterator?9?$DOcluster_partition?$DN?$DN?$CGco@ (0000)
-00289E4C 0021:
-	??_C@_0CB@HJEGKKGJ@c?3?2halo?2SOURCE?2objects?2objects?4c@ (0000)
-00289E70 004a:
-	??_C@_0EK@DDHBGNFK@got?5an?5object?5type?5we?5didn?8t?5exp@ (0000)
-00289EBC 0038:
-	??_C@_0DI@NJFAJKCK@uninitialized?5iterator?5passed?5to@ (0000)
-00289EF4 003d:
-	??_C@_0DN@LIGLDCO@TEST_FLAG?$CIgarbage_object?9?$DOobject@ (0000)
-00289F34 0004:
-	__real@35800000 (0000)
-00289F38 0040:
-	??_C@_0EA@MOANJMN@object_pvs_set_camera_point?3?5cam@ (0000)
-00289F78 008b:
-	??_C@_0IL@PJOKFAFE@parent_object?9?$DOobject?4location?4c@ (0000)
-0028A004 003c:
-	??_C@_0DM@FAGPPIPE@reference?9?$DOoffset?$CLreference?9?$DOsiz@ (0000)
-0028A040 0014:
-	??_C@_0BE@CMKNCLBJ@reference?9?$DOoffset?$DO0?$AA@ (0000)
-0028A058 005e:
-	??_C@_0FO@DFFLELNG@block_reference_offset?$CLsizeof?$CIst@ (0000)
-0028A0B8 001a:
-	??_C@_0BK@GCHGANBE@block_reference_offset?$DO?$DN0?$AA@ (0000)
-0028A0D4 0029:
-	??_C@_0CJ@KJGPJOHH@object_header?9?$DOdata_size?$CLsize?$DM?$DNS@ (0000)
-0028A100 0004:
-	__real@3f364cd7 (0000)
-0028A104 0004:
-	__real@43d79081 (0000)
-0028A108 0004:
-	__real@4412c849 (0000)
-0028A10C 0004:
-	__real@439df252 (0000)
-0028A110 0004:
-	__real@443a07f2 (0000)
-0028A114 001e:
-	??_C@_0BO@OPMGCPJ@?$CKfirst_object_reference?$CB?$DNNONE?$AA@ (0000)
-0028A134 002b:
-	??_C@_0CL@FNFNCGNP@?$CBobject_globals?9?$DOobject_marker_i@ (0000)
-0028A160 002a:
-	??_C@_0CK@IJOLKBMD@object_globals?9?$DOobject_marker_in@ (0000)
-0028A18C 0011:
-	??_C@_0BB@IDGMLLCF@object_name_list?$AA@ (0000)
-0028A1A0 0011:
-	??_C@_0BB@BEMCKCAE@object?5name?5list?$AA@ (0000)
-0028A1B4 002d:
-	??_C@_0CN@BNDNJDAG@an?5object?5with?5the?5name?5?8?$CFs?8?5alr@ (0000)
-0028A1E4 003e:
-	??_C@_0DO@EEADIGAP@name_index?$DO?$DN0?5?$CG?$CG?5name_index?$DMMAXI@ (0000)
-0028A224 0031:
-	??_C@_0DB@KFCPDNIH@?$CF?56d?5?$CI?$CF?56d?$CJ?5?$FL?$CF?57d?1?$CF?57d?1?$CF?57d?1?$CF?57d@ (0000)
-0028A258 0063:
-	??_C@_0GD@CPALGMGH@WARNING?3?5overflowed?5MAXIMUM_DUMP@ (0000)
-0028A2BC 0017:
-	??_C@_0BH@PBBFFOC@OBJECTS?5BY?5DEFINITION?6?$AA@ (0000)
-0028A2D8 0043:
-	??_C@_0ED@BEMDNONK@number?5?$CIactive?$CJ?5?$FLgarbage?1?5?5?5dead@ (0000)
-0028A31C 0011:
-	??_C@_0BB@GNMAIFEG@OBJECTS?5BY?5TYPE?6?$AA@ (0000)
-0028A330 003d:
-	??_C@_0DN@LIBJGINJ@?$CD?$CFd?5objects?5?$CI?$CD?$CFd?5active?$CJ?5using?5?$CF@ (0000)
-0028A370 0015:
-	??_C@_0BF@MGBBKKEM@d?3?2object_memory?4txt?$AA@ (0000)
-0028A388 003f:
-	??_C@_0DP@CAHEHEJH@?$CIheader?9?$DOtype?5?$DO?$DN?50?$CJ?5?$CG?$CG?5?$CIheader?9?$DO@ (0000)
-0028A3C8 0016:
-	??_C@_0BG@KNAIILHO@noncollideable?5object?$AA@ (0000)
-0028A3E0 0013:
-	??_C@_0BD@EPIKGCAI@collideable?5object?$AA@ (0000)
-0028A3F4 000f:
-	??_C@_0P@GCGFDHI@object_globals?$AA@ (0000)
-0028A404 000f:
-	??_C@_0P@CJDMFPHM@object?5globals?$AA@ (0000)
-0028A414 0029:
-	??_C@_0CJ@MPENCKAI@object_header_data?5?$CG?$CG?5object_mem@ (0000)
-0028A440 0008:
-	??_C@_07JPLKJBI@objects?$AA@ (0000)
-0028A448 003e:
-	??_C@_0DO@BAPNCPID@TEST_FLAG?$CIobject?9?$DOobject?4flags?0?5@ (0000)
-0028A488 0028:
-	??_C@_0CI@CPMOGOIB@DATUM_INDEX_TO_IDENTIFIER?$CIobject@ (0000)
-0028A4B0 0041:
-	??_C@_0EB@MPFJDMPL@?$CBTEST_FLAG?$CI_object_mask_cannot_i@ (0000)
-0028A4F8 0048:
-	??_C@_0EI@JLAEJIFD@function_index?$DO?$DN0?5?$CG?$CG?5function_in@ (0000)
-0028A540 0020:
-	??_C@_0CA@BCPJMOMG@?$CB?$CIweapon_is_flag?$CIobject_index?$CJ?$CJ?$AA@ (0000)
-0028A560 003f:
-	??_C@_0DP@KDEDEENE@?$CBTEST_FLAG?$CIobject?9?$DOobject?4flags?0@ (0000)
-0028A5A0 002a:
-	??_C@_0CK@OPKDPNPM@object_has_node?$CIobject_index?0?5no@ (0000)
-0028A5CC 0017:
-	??_C@_0BH@NBICGHKL@maximum_marker_count?$DO0?$AA@ (0000)
-0028A5E4 0029:
-	??_C@_0CJ@HEAMOBGB@valid_real_matrix4x3?$CIdestination@ (0000)
-0028A610 0013:
-	??_C@_0BD@EIOHMDGK@destination_matrix?$AA@ (0000)
-0028A624 000d:
-	??_C@_0N@BFMOEIFC@child_marker?$AA@ (0000)
-0028A634 000f:
-	??_C@_0P@DMPMGCLF@object_indices?$AA@ (0000)
-0028A644 0009:
-	??_C@_08CBBFJFMD@location?$AA@ (0000)
-0028A650 0004:
-	__real@3e22f983 (0000)
-0028A658 0008:
-	__real@3fefd70a40000000 (0000)
-0028A660 002e:
-	??_C@_0CO@LMCMMCPP@object_compute_node_matrices?5roo@ (0000)
-0028A690 0019:
-	??_C@_0BJ@DILLIKA@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5scale?5?$CFf?$AA@ (0000)
-0028A6AC 001e:
-	??_C@_0BO@GOPFPFFJ@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5posn?5?$CFf?5?$CFf?5?$CFf?$AA@ (0000)
-0028A6CC 001e:
-	??_C@_0BO@LGPKFCMO@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5up?5?5?5?$CFf?5?$CFf?5?$CFf?$AA@ (0000)
-0028A6EC 001e:
-	??_C@_0BO@MAAPDIJN@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5left?5?$CFf?5?$CFf?5?$CFf?$AA@ (0000)
-0028A70C 001e:
-	??_C@_0BO@NCBDHGGN@computed?5matrix?5fwd?5?5?$CFf?5?$CFf?5?$CFf?$AA@ (0000)
-0028A72C 0011:
-	??_C@_0BB@FAFHKCNL@?5?5no?5parent?5node?$AA@ (0000)
-0028A740 0034:
-	??_C@_0DE@DOJKDEHM@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5scale?5?$CIjaso@ (0000)
-0028A774 0023:
-	??_C@_0CD@OGEIOHJN@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5posn?5?$CFf?5?$CFf?5@ (0000)
-0028A798 0023:
-	??_C@_0CD@DOEHEAAK@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5up?5?5?5?$CFf?5?$CFf?5@ (0000)
-0028A7BC 0023:
-	??_C@_0CD@EILCCKFJ@?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5?5left?5?$CFf?5?$CFf?5@ (0000)
-0028A7E0 0023:
-	??_C@_0CD@LAKOFIJF@?5?5parent?9node?5matrix?5fwd?5?5?$CFf?5?$CFf?5@ (0000)
-0028A804 0019:
-	??_C@_0BJ@GEKCHFFM@?5?5origin?9offset?5?$CFf?5?$CFf?5?$CFf?$AA@ (0000)
-0028A820 0026:
-	??_C@_0CG@BFFOPNJD@?5?5center?9of?9mass?5translation?5?$CFf?5@ (0000)
-0028A848 0032:
-	??_C@_0DC@GBFDLHME@?5?5object?3?5pos?5?$CFf?5?$CFf?5?$CFf?0?5fwd?5?$CFf?5?$CF@ (0000)
-0028A87C 0038:
-	??_C@_0DI@HJPDAFKC@object_compute_node_matrices?5FAI@ (0000)
-0028A8B4 0018:
-	??_C@_0BI@DIJPGKII@?$CFs?5as?5parent?5node?5of?5?$CFs?$AA@ (0000)
-0028A8D0 004f:
-	??_C@_0EP@NMLLJPBP@?$CFs?5had?5a?5bad?5forward?5and?5up?5befo@ (0000)
-0028A920 003e:
-	??_C@_0DO@KBCIODOG@?$CFs?5had?5a?5bad?5position?5before?5com@ (0000)
-0028A960 000f:
-	??_C@_0P@HHCPIEKG@frame_index?$DO?$DN0?$AA@ (0000)
-0028A970 000d:
-	??_C@_0N@NCPDDPGK@new_position?$AA@ (0000)
-0028A980 0021:
-	??_C@_0CB@KICDPCDH@OUT?5OF?5OBJECTS?3?5cannot?5create?5?$CFs@ (0000)
-0028A9A4 001e:
-	??_C@_0BO@GAJHNFGD@?$CGdata?9?$DOtranslational_velocity?$AA@ (0000)
-0028A9C4 0018:
-	??_C@_0BI@EDEMGAJJ@?$CGdata?9?$DOangular_velocity?$AA@ (0000)
-0028A9DC 000f:
-	??_C@_0P@JNFNPCBA@?$CGdata?9?$DOforward?$AA@ (0000)
-0028A9EC 000a:
-	??_C@_09MMNHALDO@?$CGdata?9?$DOup?$AA@ (0000)
-0028A9F8 002f:
-	??_C@_0CP@KPEIPFOB@cannot?5attach?5an?5object?5to?5one?5o@ (0000)
-0028AA28 0038:
-	??_C@_0DI@OBHOMKDM@object_has_node?$CIparent_object_in@ (0000)
-0028AA60 0020:
-	??_C@_0CA@POCDJJBP@garbage?5collection?5warning?5?$CI?$CFs?$CJ?$AA@ (0000)
-0028AA80 0015:
-	??_C@_0BF@NBHLMPKH@removing?5objects?3?5?$CFs?$AA@ (0000)
-0028AA98 0023:
-	??_C@_0CD@DCKJKCF@garbage?5collection?5?$CFscritical?5?$CI?$CF@ (0000)
-0028AABC 0007:
-	??_C@_06BODLOOIB@still?5?$AA@ (0000)
-0028AAC4 000e:
-	??_C@_0O@ONNNEJPN@?$CFd?5slots?5free?$AA@ (0000)
-0028AAD4 0014:
-	??_C@_0BE@LODKOAIM@?$CF4?42f?$CF?$CF?5memory?5free?$AA@ (0000)
-0028AAE8 0031:
-	??_C@_0DB@GPANNPOD@compacted?5to?5?$CD?$CFd?5with?50x?$CFx?5conti@ (0000)
-0028AB1C 002f:
-	??_C@_0CP@FJGNMMGE@WARNING?3?5garbage?5collecting?5a?5li@ (0000)
-0028AB4C 002d:
-	??_C@_0CN@JMJCMKCA@garbage_object_count?$DMMAXIMUM_OBJ@ (0000)
-0028AB7C 0034:
-	??_C@_0DE@KFENFAAJ@?$CD?$CFd?5objects?5using?50x?$CFx?5bytes?5?$CI0x@ (0000)
-0028ABB0 0039:
-	??_C@_0DJ@NOLFDCHG@object_get?$CIobject_index?$CJ?9?$DOobject@ (0000)
-0028ABEC 003b:
-	??_C@_0DL@CLCAHNEH@object_get?$CIobject_index?$CJ?9?$DOobject@ (0000)
-0028AC28 0023:
-	??_C@_0CD@JHKFHGNF@object_header?9?$DOcluster_index?$CB?$DNNO@ (0000)
-0030C3C0 05fa:
-	_data_0030c3c0 (0000)
-	_debug_objects_bounding_spheres (05f8)
-	_debug_objects_collision_models (05f9)
-00456E9C 000d:
-	_bss_00456e9c (0000)
-	_debug_objects_position_velocity (000c)
 */
 
 /* ---------- headers */
@@ -582,6 +137,8 @@ static struct memory_pool *object_memory_pool;
 static struct object_globals *object_globals;
 boolean debug_objects_position_velocity;
 
+boolean debug_objects_bounding_spheres= TRUE;
+boolean debug_objects_collision_models= TRUE;
 
 /* ---------- public code */
 
@@ -3436,13 +2993,77 @@ boolean object_force_inside_bsp(
 	return result;
 }
 
-/*
 boolean object_update(
 	long object_index)
 {
-	return;
+	struct object_header_datum *header= object_header_get(object_index);
+	struct object_datum *object= object_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
+
+	boolean result= TRUE;
+	if (!TEST_FLAG(header->flags, _object_header_do_not_update_bit))
+	{
+		if (TEST_FLAG(object->object.flags, _object_garbage_bit))
+		{
+			++object_globals->active_garbage_object_count;
+		}
+
+		if (object->object.animation.interpolation_frame_count)
+		{
+			match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2508, !TEST_FLAG(_object_mask_cannot_interpolate, object->object.type));
+			if (++object->object.animation.interpolation_frame_index>=
+				object->object.animation.interpolation_frame_count)
+			{
+				object->object.animation.interpolation_frame_count= 0;
+			}
+		}
+
+		object_type_update(object_index);
+		if (object_definition->object.collision_model.index!=NONE)
+		{
+			object_damage_update(object_index);
+		}
+
+		object_type_export_function_values(object_index);
+
+		if (!TEST_FLAG(object->object.flags, _object_do_not_recompute_node_matrices_bit))
+		{
+			object_compute_node_matrices(object_index);
+		}
+
+		object_compute_function_values(object_index);
+		object_compute_change_colors(object_index);
+
+		if (
+			TEST_FLAG(object->object.flags, _object_dynamic_lighting_recompute_bit) &&
+			(
+				!TEST_FLAG(object->object.flags, _object_invisible_bit) ||
+				object_definition_get(object->definition_index)->object.model.index==NONE
+			)
+		)
+		{
+			object_connect_lights(object_index, TRUE, TRUE);
+		}
+
+		// Update children (if we have any)
+		if (object->object.first_child_object_index!=NONE)
+		{
+			object_update(object->object.first_child_object_index);
+		}
+
+		if (object->object.parent_object_index!=NONE)
+		{
+			if (object->object.next_object_index!=NONE)
+			{
+				object_update(object->object.next_object_index);
+			}
+		}
+
+		object_postprocess_node_matrices(object_index);
+	}
+
+	return result;
 }
-*/
 
 void object_compute_node_matrices_recursive(
 	long object_index)

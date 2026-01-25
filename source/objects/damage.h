@@ -23,6 +23,8 @@ void damage_dispose_from_old_map(void);
 void damage_render_debug(void);
 void object_initialize_vitality(long object_index, real *custom_body_vitality, real *custom_shield_vitality);
 
+void object_damage_update(long object_index);
+
 /* ---------- globals */
 
 /* ---------- public code */

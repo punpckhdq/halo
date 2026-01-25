@@ -439,8 +439,6 @@ boolean debug_objects_names;
 boolean debug_objects_pathfinding_spheres;
 boolean debug_objects_physics;
 boolean debug_objects_root_node;
-boolean debug_objects_bounding_spheres;
-boolean debug_objects_collision_models;
 
 /* comm */
 long global_object_marker;
