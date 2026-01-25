@@ -12,6 +12,7 @@ header included in hcex build.
 /* ---------- headers */
 
 #include "tag_files/tag_files.h"
+#include "tag_files/tag_groups.h"
 
 /* ---------- constants */
 
@@ -47,6 +48,23 @@ enum
 #define model_definition_get(index) ((struct model *)tag_get(MODELS_GROUP_TAG, index))
 
 /* ---------- structures */
+
+struct model_marker_instance
+{
+	byte region_index;
+	byte permutation_index;
+	byte node_index;
+	byte pad;
+	real_point3d translation;
+	real_quaternion rotation;
+};
+
+struct model_marker
+{
+	char name[32];
+	long unused[5];
+	struct tag_block instances;		// model_marker_instance
+};
 
 struct model_node
 {
@@ -91,7 +109,7 @@ struct model
 	long unused1[2];
 	real_vector2d base_map_scale;
 	long unused2[29];
-	struct tag_block markers;
+	struct tag_block markers;			// model_marker
 	struct tag_block nodes;				// model_node
 	struct tag_block regions;			// model_region
 	struct tag_block geometries;

@@ -471,4 +471,12 @@ __inline real_vector3d *cross_product3d(
 	return result;
 }
 
+
+__inline short random_range(
+	short lower_bound,
+	short upper_bound)
+{
+	return seed_random_range(get_global_random_seed_address(), lower_bound, upper_bound);
+}
+
 #endif // __REAL_MATH_H

@@ -8,6 +8,10 @@ header included in hcex build.
 #define __CACHE_FILES_H
 #pragma once
 
+/* ---------- headers */
+
+#include "real_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

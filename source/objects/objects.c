@@ -655,8 +655,8 @@ static void object_header_delete(
 	}
 
 	datum_delete(data, object_index);
-	object_header->flags= 0;
 	object_header->datum= NULL;
+	object_header->flags= 0;
 
 	return;
 }
@@ -1838,6 +1838,8 @@ short object_get_marker_by_name(
 {
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object->definition_index);
+	boolean mirrored= TEST_FLAG(object->object.flags, _object_mirrored_bit);
+	real_matrix4x3 *matrices= object_get_node_matrices(object_index);
 
 	short marker= model_get_marker_by_name(
 		object_definition->object.model.index,
@@ -1845,8 +1847,8 @@ short object_get_marker_by_name(
 		object->object.region_permutations,
 		FALSE,
 		NONE,
-		object_get_node_matrices(object_index),
-		TEST_FLAG(object->object.flags, _object_mirrored_bit),
+		matrices,
+		mirrored,
 		markers,
 		maximum_marker_count
 	);
@@ -3992,32 +3994,23 @@ static boolean object_select_random_region_permutations_by_variant(
 
 	for (region_index=0; region_index<model->regions.count && !result; region_index++)
 	{
-		short permutation_index;
 		struct model_region *region= TAG_BLOCK_GET_ELEMENT(&model->regions, region_index, struct model_region);
+		short permutation_index= object_find_region_permutations_available_with_variant(region, variant_number, available_permutation_indices);
 		
-		permutation_index= object_find_region_permutations_available_with_variant(region, variant_number, available_permutation_indices);
-		if (permutation_index || variant_number!=NONE)
+		if (permutation_index==0 && variant_number!=NONE)
 		{
 			permutation_index= object_find_region_permutations_available_with_variant(region, 0, available_permutation_indices);
 		}
 
-		if (permutation_index)
-		{
-			short permutation_num;
-			if (permutation_index==1)
-			{
-				permutation_num= 0;
-			}
-			else
-			{
-				permutation_num= seed_random_range(get_global_random_seed_address(), 0, permutation_index);
-			}
-			object->object.region_permutations[region_index]= available_permutation_indices[permutation_num];
-		}
-		else
+		if (!permutation_index)
 		{
 			object->object.region_permutations[region_index]= 0;
 			result= FALSE;
+		}
+		else
+		{
+			short permutation_num= permutation_index==1 ? 0 :random_range(0, permutation_index);
+			object->object.region_permutations[region_index]= available_permutation_indices[permutation_num];
 		}
 	}
 
@@ -4111,7 +4104,7 @@ static void attachments_delete(
 {
 	short attachment_index;
 	struct object_datum *object= object_get(object_index);
-	struct object_definition *object_definition= object_definition_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
 
 	for (attachment_index=0; attachment_index<object_definition->object.attachments.count; ++attachment_index)
 	{
@@ -4161,7 +4154,7 @@ static void object_delete_attachments(
 	long object_index)
 {
 	struct object_datum *object= object_get(object_index);
-	struct object_definition *object_definition= object_definition_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
 
 	object_type_definition_get(object->object.type);
 	widgets_delete(object_index);
@@ -4175,8 +4168,7 @@ static void object_delete_recursive(
 	boolean delete_siblings)
 {
 	struct object_datum *object= object_get(object_index);
-	struct object_definition *object_definition= object_definition_get(object_index);
-
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
 
 	if (TEST_FLAG(object->object.flags, _object_garbage_bit))
 	{
@@ -4189,12 +4181,9 @@ static void object_delete_recursive(
 		object_delete_recursive(object->object.first_child_object_index, TRUE);
 	}
 
-	if (delete_siblings)
+	if (delete_siblings && object->object.next_object_index!=NONE)
 	{
-		if (object->object.next_object_index!=NONE)
-		{
-			object_delete_recursive(object->object.next_object_index, TRUE);
-		}
+		object_delete_recursive(object->object.next_object_index, TRUE);
 	}
 
 	object_deactivate(object_index);
@@ -4218,7 +4207,7 @@ static void object_compute_function_values(
 	long function_index;
 
 	struct object_datum *object= object_get(object_index);
-	struct object_definition *object_definition= object_definition_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
 
 	for (function_index= 0; function_index<object_definition->object.functions.count; ++function_index)
 	{
@@ -4242,7 +4231,7 @@ static void object_compute_change_colors(
 	long object_index)
 {
 	struct object_datum *object= object_get(object_index);
-	struct object_definition *object_definition= object_definition_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
 
 	if (TEST_FLAG(object_definition->object.runtime_flags, _object_runtime_scaled_change_colors_bit))
 	{
