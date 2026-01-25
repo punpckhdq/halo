@@ -2655,13 +2655,44 @@ static void attachments_new(
 	return;
 }
 
-// TODO: match
 void object_set_position(
 	long object_index,
 	real_point3d const *position,
 	real_vector3d const *forward,
 	real_vector3d const *up)
 {
+	struct object_datum *object= object_get(object_index);
+
+	object_disconnect_from_map(object_index);
+
+	if (position)
+	{
+		object->object.position= *position;
+	}
+
+	if (forward)
+	{
+		object->object.forward= *forward;
+		if (up)
+		{
+			object->object.up= *up;
+		}
+		else
+		{
+			real_vector3d right= {forward->j, -forward->i, 0.f};
+			if (normalize3d(&right)==0.f)
+			{
+				right.i= 1.f;
+				right.k= 0.f;
+				right.j= 0.f;
+			}
+			cross_product3d(&right, forward, &object->object.up);
+		}
+	}
+
+	object_compute_node_matrices(object_index);
+	object_reconnect_to_map(object_index, NULL);
+
 	return;
 }
 
