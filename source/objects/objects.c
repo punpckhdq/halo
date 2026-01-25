@@ -1838,17 +1838,15 @@ short object_get_marker_by_name(
 {
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object->definition_index);
-	boolean mirrored= TEST_FLAG(object->object.flags, _object_mirrored_bit);
-	real_matrix4x3 *matrices= object_get_node_matrices(object_index);
-
+	
 	short marker= model_get_marker_by_name(
 		object_definition->object.model.index,
 		name,
 		object->object.region_permutations,
 		FALSE,
 		NONE,
-		matrices,
-		mirrored,
+		object_get_node_matrices(object_index),
+		TEST_FLAG(object->object.flags, _object_mirrored_bit),
 		markers,
 		maximum_marker_count
 	);
@@ -3591,43 +3589,42 @@ void objects_update(
 		object_header= (struct object_header_datum *)object_header_data->data;
 		for (i= 0; i<object_header_data->count; ++object_header)
 		{
-			if (object_header->identifier)
+			if (object_header->identifier &&
+				TEST_FLAG(object_header->flags, _object_header_automatically_deactivate_bit) &&
+				TEST_FLAG(object_header->flags, _object_header_connected_to_map_bit))
 			{
-				if (TEST_FLAG(object_header->flags, _object_header_automatically_deactivate_bit) &&
-					TEST_FLAG(object_header->flags, _object_header_connected_to_map_bit))
+				if (TEST_FLAG(object_header->flags, _object_header_active_bit))
 				{
-					if (TEST_FLAG(object_header->flags, _object_header_active_bit))
+					match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 369, object_header->cluster_index!=NONE);
+					if (!BIT_VECTOR_TEST_FLAG(active_cluster_bits, object_header->cluster_index))
 					{
-						match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 369, object_header->cluster_index!=NONE);
-						if (!BIT_VECTOR_TEST_FLAG(active_cluster_bits, object_header->cluster_index))
+						if (TEST_FLAG(object_header->datum->object.flags, _object_deleted_when_deactivated_bit))
 						{
-							if (TEST_FLAG(object_header->datum->object.flags, _object_deleted_when_deactivated_bit))
-							{
-								object_delete_initial_recursive(i, FALSE);
-							}
-							else
-							{
-								object_deactivate(i);
-							}
+							object_delete_initial_recursive(i, FALSE);
+						}
+						else
+						{
+							object_deactivate(i);
 						}
 					}
-					else if (
-						!TEST_FLAG(object_header->flags, _object_header_child_bit) &&
-						object_header->cluster_index != NONE &&
-						BIT_VECTOR_TEST_FLAG(active_cluster_bits, object_header->cluster_index)
-					)
-					{
-						object_activate(i);
-					}
+				}
+				else if (
+					!TEST_FLAG(object_header->flags, _object_header_child_bit) &&
+					object_header->cluster_index != NONE &&
+					BIT_VECTOR_TEST_FLAG(active_cluster_bits, object_header->cluster_index)
+				)
+				{
+					object_activate(i);
 				}
 			}
+
 			++i;
 		}
 
 		structure_decals_update(
 			last_active_cluster_bits,
 			active_cluster_bits,
-			BIT_VECTOR_SIZE_IN_BYTES(cluster_count)
+			cluster_count
 		);
 	}
 
@@ -3637,7 +3634,7 @@ void objects_update(
 		if (object_header->identifier)
 		{
 			if (TEST_FLAG(object_header->flags, _object_header_active_bit) &&
-				TEST_FLAG(object_header->flags, _object_header_being_created_bit))
+				!TEST_FLAG(object_header->flags, _object_header_being_created_bit))
 			{
 				long object_index= DATUM_INDEX_NEW(i, object_header->identifier);
 				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 416, object_get(object_index)->object.parent_object_index==NONE);

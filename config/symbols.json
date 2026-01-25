@@ -22154,7 +22154,7 @@
 { "file_offset": 3195472, "flags": 0, "name": "_light_fixture_data_definition" },
 { "file_offset": 3195632, "flags": 0, "name": "_placeholder_data_definition" },
 { "file_offset": 3195792, "flags": 0, "name": "_object_type_definitions" },
-{ "file_offset": 3195840, "flags": 0, "name": "_data_0030c3c0" },
+{ "file_offset": 3195840, "flags": 0, "name": "?section@?1??objects_update@@9@9" },
 { "file_offset": 3197368, "flags": 0, "name": "_debug_objects_bounding_spheres" },
 { "file_offset": 3197376, "flags": 0, "name": "_data_0030c9c0" },
 { "file_offset": 3197369, "flags": 0, "name": "_debug_objects_collision_models" },
