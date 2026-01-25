@@ -77,11 +77,10 @@ struct object_globals
 	} pvs_activation;
 };
 
-
 struct object_memory_release_function
 {
-	void(__cdecl *init_function)(unsigned __int8 *, __int16);
-	boolean(__cdecl *function)(char *, unsigned __int8 *, unsigned __int8 *, __int16);
+	void(*init_function)(unsigned char *, short);
+	boolean(*function)(char *, unsigned char *, unsigned char *, short);
 };
 
 struct dump_datum
@@ -132,9 +131,15 @@ static void object_compute_change_colors(long object_index);
 
 /* ---------- globals */
 
-static long *object_name_list;
-static struct memory_pool *object_memory_pool;
+static const struct object_memory_release_function object_memory_release_procs[3] =
+{
+	{ NULL, ai_release_inactive_swarms },
+	{ ai_find_inactive_encounters, ai_release_inactive_encounters },
+	{ NULL, NULL }
+};
 static struct object_globals *object_globals;
+static struct memory_pool *object_memory_pool;
+static long *object_name_list;
 boolean debug_objects_position_velocity;
 
 boolean debug_objects_bounding_spheres= TRUE;
@@ -1636,18 +1641,20 @@ boolean object_visible_to_any_player(
 						unit_get_head_position(player->unit_index, &position);
 						if (distance_squared3d(&position, &object->object.bounding_sphere_center)>bounding_area)
 						{
-							real_vector3d test;
-							real test1;
-							real v4;
+							real_vector3d head_to_bounding_sphere_vector;
+							real normalized_head_to_bounding_sphere_vector;
+							real dp_v;
+							real at_bs;
 							real v3;
 
 							struct unit_datum* unit= unit_get(player->unit_index);
 							
-							vector_from_points3d(&position, &object->object.bounding_sphere_center, &test);
-							test1 = normalize3d(&test);
-							v4 = dot_product3d(&test, &unit->unit.desired_aiming_vector);
-							v3 = arctangent(object->object.bounding_sphere_radius, test1) + 0.7853982f;
-							if (cosine(v3) < v4)
+							vector_from_points3d(&position, &object->object.bounding_sphere_center, &head_to_bounding_sphere_vector);
+							normalized_head_to_bounding_sphere_vector= normalize3d(&head_to_bounding_sphere_vector);
+							dp_v= dot_product3d(&head_to_bounding_sphere_vector, &unit->unit.desired_aiming_vector);
+							at_bs= arctangent(object->object.bounding_sphere_radius, normalized_head_to_bounding_sphere_vector);
+							v3= cosine(at_bs + 0.7853982f);
+							if (dp_v>v3)
 							{
 								result= TRUE;
 							}
@@ -3237,7 +3244,6 @@ void objects_garbage_collection(
 	long garbage_object_indices[MAXIMUM_OBJECTS_PER_MAP];
 	char warningbuf[512];
 	unsigned char release_proc_working_memory[4096];
-	char tempbuffer[512];
 	char released_resultbuf[512];
 
 	long garbage_collect_mode= NONE;
@@ -3246,9 +3252,9 @@ void objects_garbage_collection(
 	{
 		garbage_collect_mode= _garbage_collect_everything;
 	}
-	else if (memory_pool_get_contiguous_free_size(object_memory_pool) > GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
+	else if (memory_pool_get_contiguous_free_size(object_memory_pool)>GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
 	{
-		if (MAXIMUM_OBJECTS_PER_MAP - object_header_data->actual_count > GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
+		if (MAXIMUM_OBJECTS_PER_MAP-object_header_data->actual_count>GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
 		{
 			if (object_globals->active_garbage_object_count>=GARBAGE_LIMIT_ACTIVE_GARBAGE_TRIGGER)
 			{
@@ -3279,7 +3285,7 @@ void objects_garbage_collection(
 		struct object_datum *object;
 
 		short garbage_object_count= 0;
-		boolean more_to_release= FALSE;
+		boolean should_collect= FALSE;
 
 		if (debug_object_garbage_collection)
 		{
@@ -3299,40 +3305,50 @@ void objects_garbage_collection(
 		{
 			object= object_get(garbage_object_index);
 		
-			match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 4289, garbage_object_index<MAXIMUM_OBJECTS_PER_MAP);
+			match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 4289, garbage_object_count<MAXIMUM_OBJECTS_PER_MAP);
 
-			garbage_object_indices[garbage_object_count]= garbage_object_index;
-			++garbage_object_count;
+			garbage_object_indices[garbage_object_count++]= garbage_object_index;
 		}
 
 		while (TRUE)
 		{
+			boolean garbage_collect;
 			long object_index;
 			struct object_header_datum *header;
 
 			switch (garbage_collect_mode)
 			{
 			case _garbage_collect_everything:
-				more_to_release= FALSE;
+				should_collect= FALSE;
 				break;
 			case _garbage_collect_active_objects:
-				more_to_release= object_globals->active_garbage_object_count<=GARBAGE_LIMIT_ACTIVE_GARBAGE_TARGET;
+				should_collect= object_globals->active_garbage_object_count<=GARBAGE_LIMIT_ACTIVE_GARBAGE_TARGET;
 				break;
 			case _garbage_collect_for_space:
-				more_to_release= TRUE;
+				should_collect= TRUE;
 				break;
 			}
 
-			if (more_to_release || !garbage_object_count)
+			if (should_collect || !garbage_object_count)
 			{
 				break;
 			}
 
-
 			object_index= garbage_object_indices[--garbage_object_count];
 			header= object_header_get(object_index);
 
-			if (!object_visible_to_any_player(object_index) && garbage_collect_mode==_garbage_collect_active_objects)
+			garbage_collect= TRUE;
+			if (garbage_collect_mode==_garbage_collect_active_objects)
+			{
+				garbage_collect= TEST_FLAG(header->flags, _object_header_active_bit);
+			}
+
+			if (object_visible_to_any_player(object_index))
+			{
+				garbage_collect= FALSE;
+			}
+
+			if (garbage_collect)
 			{
 				struct object_datum *object= object_get(object_index);
 
@@ -3367,12 +3383,147 @@ void objects_garbage_collection(
 			);
 		}
 
-		if (!more_to_release)
+		if (!should_collect)
 		{
+			boolean update_time;
 
+			const struct object_memory_release_function *current_release_procs= object_memory_release_procs;
+			boolean v0= FALSE;
+			boolean garbage_collection_after_first_attempt= FALSE;
+			boolean garbage_should_warn= TRUE;
+		
+			if (object_globals->last_garbage_warn_time!=NONE)
+			{
+				if (object_globals->last_garbage_warn_time+150>=game_time_get())
+				{
+					garbage_should_warn= FALSE;
+				}
+			}
+
+			update_time= FALSE;
+			while (TRUE)
+			{
+				boolean debug_garbage_collection= FALSE;
+				boolean status_still_critical= FALSE;
+				if (garbage_collect_mode==_garbage_collect_for_space)
+				{
+					long free_size= memory_pool_get_contiguous_free_size(object_memory_pool);
+					long free_objects= MAXIMUM_OBJECTS_PER_MAP-object_header_data->count;
+					boolean debug_slots_free= FALSE;
+
+					if (free_size>GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
+					{
+						if (free_objects>GARBAGE_LIMIT_FREE_OBJECTS_CRITICAL)
+						{
+							if (free_size>GARBAGE_LIMIT_FREE_MEMORY_TRIGGER)
+							{
+								if (free_objects<=GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
+								{
+									debug_garbage_collection= TRUE;
+									debug_slots_free= TRUE;
+								}
+							}
+							else
+							{
+								debug_garbage_collection= TRUE;
+							}
+						}
+						else
+						{
+							status_still_critical= TRUE;
+							debug_garbage_collection= TRUE;
+							debug_slots_free= TRUE;
+						}
+					}
+					else
+					{
+						status_still_critical= TRUE;
+						debug_garbage_collection= TRUE;
+					}
+
+					if (debug_slots_free)
+					{
+						sprintf(warningbuf, "%d slots free", free_objects);
+					}
+					else
+					{
+						sprintf(warningbuf, "%4.2f%% memory free", ((free_size * 100.f) / 2097152.f));
+					}
+				}
+
+				if (status_still_critical || garbage_collection_after_first_attempt)
+				{
+					char tempbuffer[512];
+
+					const char *status;
+					if (garbage_collection_after_first_attempt)
+					{
+						status= status_still_critical ? "still " : "not ";
+					}
+					else
+					{
+						status= "";
+					}
+					sprintf(tempbuffer, "garbage collection %scritical (%s)", status, warningbuf);
+					console_printf(FALSE, "%s", tempbuffer);
+					error(_error_log, "%s", tempbuffer);
+					update_time= TRUE;
+				}
+				else if (debug_garbage_collection && garbage_should_warn)
+				{
+					error(_error_silent, "garbage collection warning (%s)", warningbuf);
+					update_time= TRUE;
+				}
+
+				if (status_still_critical)
+				{
+					boolean result= FALSE;
+					while (current_release_procs->function && !result)
+					{
+						boolean more_to_release= FALSE;
+						if (!v0 && current_release_procs->init_function)
+						{
+							current_release_procs->init_function(
+								release_proc_working_memory,
+								sizeof(release_proc_working_memory)
+							);
+							v0= 1;
+						}
+						result= current_release_procs->function(
+							released_resultbuf,
+							&more_to_release,
+							release_proc_working_memory,
+							sizeof(release_proc_working_memory)
+						);
+						if (result)
+						{
+							char tempbuffer[512];
+
+							sprintf(tempbuffer, "removing objects: %s", released_resultbuf);
+							console_printf(FALSE, "%s", tempbuffer);
+							error(_error_log, "%s", tempbuffer);
+						}
+						if (!more_to_release)
+						{
+							++current_release_procs;
+							v0= FALSE;
+						}
+					}
+					
+					if (!result)
+					{
+						if (update_time)
+						{
+							object_globals->last_garbage_warn_time= game_time_get();
+						}
+						break;
+					}
+					garbage_collection_after_first_attempt= TRUE;
+					memory_pool_compact(object_memory_pool);
+				}
+			}
 		}
 	}
-
 
 	object_globals->force_garbage_collection= FALSE;
 
@@ -3789,7 +3940,7 @@ static short object_find_region_permutations_available_with_variant(
 			if (permutation->variant_number==variant_number ||
 				variant_number==NONE && permutation->variant_number< 100)
 			{
-				available_indices[result++] = i;
+				available_indices[result++]= i;
 			}
 		}
 	}

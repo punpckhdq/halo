@@ -75,7 +75,11 @@ struct ai_information_packet
 	struct ai_information_data information_data;
 };
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/AI.C */
+
+boolean ai_release_inactive_swarms(char *result_description, unsigned char *more_to_release, unsigned char *working_memory, short working_memory_size);
+void ai_find_inactive_encounters(unsigned char *working_memory, short working_memory_size);
+boolean ai_release_inactive_encounters(char *result_description, unsigned char *more_to_release, unsigned char *working_memory, short working_memory_size);
 
 /* ---------- globals */
 

@@ -18941,7 +18941,7 @@
 { "file_offset": 2661600, "flags": 0, "name": "??_C@_0IC@DHNDHHAP@definition?9?$DOpalette_tag_block_of@" },
 { "file_offset": 2661732, "flags": 0, "name": "??_C@_0CL@LMPCIGEO@definition?9?$DOpalette_tag_block_of@" },
 { "file_offset": 2661776, "flags": 0, "name": "??_C@_07OBIJJHNE@?$CGmatrix?$AA@" },
-{ "file_offset": 2661784, "flags": 0, "name": "_rdata_00289d98" },
+{ "file_offset": 2661784, "flags": 0, "name": "_object_memory_release_procs" },
 { "file_offset": 2661808, "flags": 0, "name": "??_C@_0P@LFOALBOL@objects_update?$AA@" },
 { "file_offset": 2661824, "flags": 0, "name": "??_C@_0IM@GHLCLNJO@iterator?9?$DOcluster_partition?$DN?$DN?$CGco@" },
 { "file_offset": 2661964, "flags": 0, "name": "??_C@_0CB@HJEGKKGJ@c?3?2halo?2SOURCE?2objects?2objects?4c@" },

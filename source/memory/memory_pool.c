@@ -70,6 +70,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "memory_pool.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -81,5 +84,23 @@ symbols in this file:
 /* ---------- globals */
 
 /* ---------- public code */
+
+long memory_pool_get_free_size(
+	struct memory_pool *pool)
+{
+	return pool->free_size;
+}
+
+long memory_pool_get_used_size(
+	struct memory_pool *pool)
+{
+	return !pool->last_block ? 0 : (unsigned long)pool->last_block + pool->last_block->size - (unsigned long)pool->base_address;
+}
+
+long memory_pool_get_contiguous_free_size(
+	struct memory_pool *pool)
+{
+	return pool->size - memory_pool_get_used_size(pool);
+}
 
 /* ---------- private code */
