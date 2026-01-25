@@ -4547,7 +4547,7 @@
 { "file_offset": 1084048, "flags": 32, "name": "_datum_try_and_get" },
 { "file_offset": 1084224, "flags": 32, "name": "_datum_get" },
 { "file_offset": 1084432, "flags": 32, "name": "_data_verify" },
-{ "file_offset": 1084608, "flags": 32, "name": "_code_00108cc0" },
+{ "file_offset": 1084608, "flags": 32, "name": "_datum_initialize" },
 { "file_offset": 1084656, "flags": 32, "name": "_data_new" },
 { "file_offset": 1084736, "flags": 32, "name": "_data_dispose" },
 { "file_offset": 1084784, "flags": 32, "name": "_data_make_invalid" },

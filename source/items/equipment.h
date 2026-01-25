@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/EQUIPMENT.C */
+
+void equipment_place(long object_index, void* scenario_object);
 
 /* ---------- globals */
 

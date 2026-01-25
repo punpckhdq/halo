@@ -1,126 +1,12 @@
 /*
 OBJECT_TYPES.C
-
-symbols in this file:
-0012B950 00b0:
-	_object_type_definition_get (0000)
-0012BA00 00a0:
-	_object_type_get_datum_size (0000)
-0012BAA0 0090:
-	_object_type_get_name (0000)
-0012BB30 00c0:
-	_object_types_initialize (0000)
-0012BBF0 0030:
-	_object_types_dispose (0000)
-0012BC20 0030:
-	_object_types_initialize_for_new_map (0000)
-0012BC50 0030:
-	_object_types_dispose_from_old_map (0000)
-0012BC80 0060:
-	_object_type_adjust_placement (0000)
-0012BCE0 0070:
-	_object_type_new (0000)
-0012BD50 0060:
-	_object_type_place (0000)
-0012BDB0 0060:
-	_object_type_delete (0000)
-0012BE10 0060:
-	_object_type_update (0000)
-0012BE70 0060:
-	_object_type_export_function_values (0000)
-0012BED0 0060:
-	_object_type_handle_deleted_object (0000)
-0012BF30 0060:
-	_object_type_handle_region_destroyed (0000)
-0012BF90 0060:
-	_object_type_handle_parent_destroyed (0000)
-0012BFF0 0060:
-	_object_type_preprocess_node_orientations (0000)
-0012C050 0060:
-	_object_type_postprocess_node_matrices (0000)
-0012C0B0 0060:
-	_object_type_reset (0000)
-0012C110 0060:
-	_object_type_disconnect_from_structure_bsp (0000)
-0012C170 0060:
-	_object_type_render_debug (0000)
-0012C1D0 0060:
-	_object_type_notify_impulse_sound (0000)
-0012C230 0050:
-	_object_definition_index_to_object_type (0000)
-0012C280 0080:
-	_scenario_get_object_type_scenario_datums (0000)
-0012C300 0080:
-	_scenario_get_object_type_scenario_palette (0000)
-0012C380 0050:
-	_object_types_disconnect_from_structure_bsp (0000)
-0012C3D0 0250:
-	_object_types_place_objects (0000)
-0012C620 00c0:
-	_object_types_place_all (0000)
-0012C6E0 00a0:
-	_object_names_postprocess (0000)
-0012C780 0020:
-	_object_types_reconnect_to_structure_bsp (0000)
-0012C7A0 0620:
-	_object_type_synchronize (0000)
-00289B14 000c:
-	??_C@_0M@MDAGJHMB@placeholder?$AA@ (0000)
-00289B20 000e:
-	??_C@_0O@BFAJALOO@light_fixture?$AA@ (0000)
-00289B30 000e:
-	??_C@_0O@BJKPJAME@sound_scenery?$AA@ (0000)
-00289B40 000b:
-	??_C@_0L@BOMCPGNF@projectile?$AA@ (0000)
-00289B4C 0008:
-	??_C@_07BOKCJEKD@garbage?$AA@ (0000)
-00289B54 0005:
-	??_C@_04NHONDGDE@item?$AA@ (0000)
-00289B5C 0006:
-	??_C@_05LLJBOCMF@biped?$AA@ (0000)
-00289B64 0030:
-	??_C@_0DA@OHBPFGNG@object_type_definitions?$FLobject_t@ (0000)
-00289B94 0025:
-	??_C@_0CF@PNDIAODE@object_type_definitions?$FLobject_t@ (0000)
-00289BBC 002a:
-	??_C@_0CK@MHJDNGCD@?$CD?$CFd?5isn?8t?5a?5valid?5object?5type?5in@ (0000)
-00289BE8 0026:
-	??_C@_0CG@OKCLKJ@c?3?2halo?2SOURCE?2objects?2object_ty@ (0000)
-00289C10 0012:
-	??_C@_0BC@OEEHPIIN@?$CBdefinition?9?$DOnext?$AA@ (0000)
-00289C28 0086:
-	??_C@_0IG@INCFIBJJ@definition?9?$DOplacement_tag_block_@ (0000)
-00289CB0 002d:
-	??_C@_0CN@EBIFNKGJ@definition?9?$DOplacement_tag_block_@ (0000)
-00289CE0 0082:
-	??_C@_0IC@DHNDHHAP@definition?9?$DOpalette_tag_block_of@ (0000)
-00289D64 002b:
-	??_C@_0CL@LMPCIGEO@definition?9?$DOpalette_tag_block_of@ (0000)
-00289D90 0008:
-	??_C@_07OBIJJHNE@?$CGmatrix?$AA@ (0000)
-0030B990 0a30:
-	_object_data_definition (0000)
-	_unit_data_definition (00a0)
-	_biped_data_definition (0140)
-	_vehicle_data_definition (01e0)
-	_item_data_definition (0280)
-	_weapon_data_definition (0320)
-	_equipment_data_definition (03c0)
-	_garbage_data_definition (0460)
-	_projectile_data_definition (0500)
-	_scenery_data_definition (05a0)
-	_sound_scenery_data_definition (0640)
-	_device_data_definition (06e0)
-	_machine_data_definition (0780)
-	_control_data_definition (0820)
-	_light_fixture_data_definition (08c0)
-	_placeholder_data_definition (0960)
-	_object_type_definitions (0a00)
-00456E98 0002:
-	_bss_00456e98 (0000)
 */
 
 /* ---------- headers */
+
+#include "cseries.h"
+#include "items/equipment.h"
+#include "object_types.h"
 
 /* ---------- constants */
 
@@ -132,6 +18,800 @@ symbols in this file:
 
 /* ---------- globals */
 
+short bss_00456e98 = 0;
+
+extern struct object_type_definition* first_object_type_definition;
+
+struct object_type_definition object_data_definition = {
+	"object",
+	'obje',
+	420,
+	-1,
+	-1,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition},
+	0
+};
+
+struct object_type_definition unit_data_definition = {
+	"unit",
+	'unit',
+	1060,
+	-1,
+	-1,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &unit_data_definition},
+	0
+};
+
+struct object_type_definition biped_data_definition = {
+	"biped",
+	'bipd',
+	1152,
+	552,
+	564,
+	120,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &unit_data_definition, &biped_data_definition},
+	0
+};
+
+struct object_type_definition vehicle_data_definition = {
+	"vehicle",
+	'vehi',
+	1148,
+	576,
+	588,
+	120,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &unit_data_definition, &vehicle_data_definition},
+	0
+};
+
+struct object_type_definition item_data_definition = {
+	"item",
+	'item',
+	476,
+	-1,
+	-1,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &item_data_definition},
+	0
+};
+
+struct object_type_definition weapon_data_definition = {
+	"weapon",
+	'weap',
+	636,
+	624,
+	636,
+	92,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &item_data_definition, &weapon_data_definition},
+	0
+};
+
+struct object_type_definition equipment_data_definition = {
+	"equipment",
+	'eqip',
+	500,
+	600,
+	612,
+	40,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	equipment_place,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &item_data_definition, &equipment_data_definition},
+	0
+};
+
+struct object_type_definition garbage_data_definition = {
+	"garbage",
+	'garb',
+	500,
+	-1,
+	-1,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &item_data_definition, &garbage_data_definition},
+	0
+};
+
+struct object_type_definition projectile_data_definition = {
+	"projectile",
+	'proj',
+	552,
+	-1,
+	-1,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &projectile_data_definition},
+	0
+};
+
+struct object_type_definition scenery_data_definition = {
+	"scenery",
+	'scen',
+	424,
+	528,
+	540,
+	72,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &scenery_data_definition},
+	0
+};
+
+struct object_type_definition sound_scenery_data_definition = {
+	"sound_scenery",
+	'ssce',
+	424,
+	732,
+	744,
+	40,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &sound_scenery_data_definition},
+	0
+};
+
+struct object_type_definition device_data_definition = {
+	"device",
+	'devi',
+	452,
+	-1,
+	-1,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &device_data_definition},
+	0
+};
+
+struct object_type_definition machine_data_definition = {
+	"machine",
+	'mach',
+	472,
+	660,
+	672,
+	64,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &device_data_definition, &machine_data_definition},
+	0
+};
+
+struct object_type_definition control_data_definition = {
+	"control",
+	'ctrl',
+	460,
+	684,
+	696,
+	64,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &device_data_definition, &control_data_definition},
+	0
+};
+
+struct object_type_definition light_fixture_data_definition = {
+	"light_fixture",
+	'lifi',
+	476,
+	708,
+	720,
+	88,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &device_data_definition, &light_fixture_data_definition},
+	0
+};
+
+struct object_type_definition placeholder_data_definition = {
+	"placeholder",
+	'plac',
+	508,
+	-1,
+	-1,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	{&object_data_definition, &placeholder_data_definition},
+	0
+};
+
+
+struct object_type_definition* object_type_definitions[NUMBER_OF_OBJECT_TYPES] = {
+	&biped_data_definition, 
+	&vehicle_data_definition, 
+	&weapon_data_definition,
+	&equipment_data_definition,
+	&garbage_data_definition,
+	&projectile_data_definition,
+	&scenery_data_definition,
+	&machine_data_definition,
+	&control_data_definition,
+	&light_fixture_data_definition,
+	&placeholder_data_definition,
+	&sound_scenery_data_definition,
+};
+
 /* ---------- public code */
+
+struct object_type_definition* object_type_definition_get(
+	short object_type)
+{
+	match_vassert(
+		"c:\\halo\\SOURCE\\objects\\object_types.c", 
+		631, 
+		object_type>=0 && object_type<NUMBER_OF_OBJECT_TYPES, 
+		csprintf(temporary, "#%d isn't a valid object type in [#0,#%d)", object_type, NUMBER_OF_OBJECT_TYPES));
+	match_assert("c:\\halo\\SOURCE\\objects\\object_types.c", 632, object_type_definitions[object_type]);
+	match_assert("c:\\halo\\SOURCE\\objects\\object_types.c", 633, object_type_definitions[object_type]->group_tag);
+	return object_type_definitions[object_type];
+}
+
+short object_type_get_datum_size(
+	short object_type)
+{
+	match_vassert(
+		"c:\\halo\\SOURCE\\objects\\object_types.c",
+		642,
+		object_type>=0 && object_type<NUMBER_OF_OBJECT_TYPES,
+		csprintf(temporary, "#%d isn't a valid object type in [#0,#%d)", object_type, NUMBER_OF_OBJECT_TYPES));
+	match_assert("c:\\halo\\SOURCE\\objects\\object_types.c", 643, object_type_definitions[object_type]);
+	return object_type_definitions[object_type]->game_datum_size;
+}
+
+const char* object_type_get_name(
+	short object_type)
+{
+	match_vassert(
+		"c:\\halo\\SOURCE\\objects\\object_types.c",
+		652,
+		object_type>=0 && object_type<NUMBER_OF_OBJECT_TYPES,
+		csprintf(temporary, "#%d isn't a valid object type in [#0,#%d)", object_type, NUMBER_OF_OBJECT_TYPES));
+	match_assert("c:\\halo\\SOURCE\\objects\\object_types.c", 653, object_type_definitions[object_type]);
+	return object_type_definitions[object_type]->name;
+}
+
+void object_types_initialize() 
+{
+
+}
+
+void object_types_dispose() 
+{
+	struct object_type_definition* definition = first_object_type_definition;
+	while (definition != 0) {
+		if (definition->dispose)
+			definition->dispose();
+		definition = definition->next;
+	}
+}
+
+void object_types_initialize_for_new_map() 
+{
+	struct object_type_definition* definition = first_object_type_definition;
+	bss_00456e98 = 0;
+	while (definition != 0) {
+		if (definition->initialize_for_new_map)
+			definition->initialize_for_new_map();
+		definition = definition->next;
+	}
+}
+
+void object_types_dispose_from_old_map() 
+{
+	struct object_type_definition* definition = first_object_type_definition;
+	while (definition != 0) {
+		if (definition->dispose_from_old_map)
+			definition->dispose_from_old_map();
+		definition = definition->next;
+	}
+}
+
+/* // uncomment this block when pr 12 gets merged
+
+void object_type_adjust_placement(long object_index, void* unk) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->adjust_placement) {
+			(*typelist)->adjust_placement(object_index, unk);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+byte object_type_new(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->new) {
+			int ret = (*typelist)->new(object_index);
+			if (ret == 0) return 0;
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+	return 1;
+}
+
+void object_type_place(long object_index, void* unk) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->place) {
+			(*typelist)->place(object_index, unk);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_delete(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->delete) {
+			(*typelist)->delete(object_index);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+byte object_type_update(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	byte ret = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->update) {
+			if ((*typelist)->update(object_index) != 0) ret = 1;
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+	return ret;
+}
+
+void object_type_export_function_values(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->export_function_values) {
+			(*typelist)->export_function_values(object_index);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_handle_deleted_object(long object_index, void* unk) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->handle_deleted_object) {
+			(*typelist)->handle_deleted_object(object_index, unk);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_handle_region_destroyed(long object_index, void* unk, void* unk2) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->handle_region_destroyed) {
+			(*typelist)->handle_region_destroyed(object_index, unk, unk2);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+byte object_type_handle_parent_destroyed(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	byte ret = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->handle_parent_destroyed) {
+			if ((*typelist)->handle_parent_destroyed(object_index) != 0) ret = 1;
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+	return ret;
+}
+
+
+void object_type_preprocess_node_orientations(long object_index, void* unk) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->preprocess_node_orientations) {
+			(*typelist)->preprocess_node_orientations(object_index, unk);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_postprocess_node_matrices(long object_index, void* unk) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->postprocess_node_matrices) {
+			(*typelist)->postprocess_node_matrices(object_index, unk);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_reset(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->reset) {
+			(*typelist)->reset(object_index);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_disconnect_from_structure_bsp(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->disconnect_from_structure_bsp) {
+			(*typelist)->disconnect_from_structure_bsp(object_index);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_render_debug(long object_index) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->render_debug) {
+			(*typelist)->render_debug(object_index);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+void object_type_notify_impulse_sound(long object_index, void* unk, void* unk2) {
+	struct object* o = object_get_and_verify_type(object_index, _object_mask_all);
+	struct object_type_definition* basetype = object_type_definition_get(o->type_id);
+	struct object_type_definition** typelist = basetype->inheritance;
+	short type_index = 0;
+	while ((*typelist)->inheritance[type_index] != 0) {
+		if ((*typelist)->notify_impulse_sound) {
+			(*typelist)->notify_impulse_sound(object_index, unk, unk2);
+		}
+		type_index++;
+		typelist = &basetype->inheritance[type_index];
+	}
+}
+
+*/
 
 /* ---------- private code */
