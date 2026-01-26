@@ -31,6 +31,7 @@ OBJECTS.C
 #include "game/players.h"
 #include "items/weapons.h"
 #include "main/console.h"
+#include "math/periodic_functions.h"
 #include "memory/memory_pool.h"
 #include "models/model_animation_definitions.h"
 #include "models/model_definitions.h"
@@ -56,6 +57,13 @@ OBJECTS.C
 /* ---------- macros */
 
 #define MAXIMUM_DUMPS 1024
+
+
+// This is dangerous, bungie returns the same value regardless of whether the index is valid
+#define OBJECT_INCOMING_FUNCTION_GET_VALUE(object, index)	\
+((index)>=NUMBER_OF_INCOMING_OBJECT_FUNCTIONS+1 ?			\
+(object)->object.incoming_function_values[(index)-1] :		\
+(object)->object.incoming_function_values[(index)-1])
 
 /* ---------- structures */
 
@@ -790,23 +798,24 @@ long find_objects_from_point_vector(
 		if (cluster_index!=NONE)
 		{
 			unsigned long* cluster_pvs;
-			long i;
-			long bit_vector_size;
+			short i;
+			short bit_vector_size;
 
 			object_marker_begin();
 
 			cluster_pvs= structure_bsp_get_cluster_pvs(global_structure_bsp_get(), cluster_index);
-
 			bit_vector_size= BIT_VECTOR_SIZE_IN_LONGS(global_structure_bsp_get()->clusters.count);
 
 			for (i=0; i<bit_vector_size; ++i)
 			{
 				if (cluster_pvs[i])
 				{
-					long j;
-					long size= MIN((LONG_BITS * i) + LONG_BITS, global_structure_bsp_get()->clusters.count);
+					short j;
 
-					for (j= LONG_BITS*i; j<size; ++j)
+					short offset= (LONG_BITS * i);
+					short size= MIN(offset + LONG_BITS, global_structure_bsp_get()->clusters.count);
+
+					for (j= offset; j<size; ++j)
 					{
 						if (BIT_VECTOR_TEST_FLAG(cluster_pvs, j))
 						{
@@ -4201,23 +4210,127 @@ static void object_delete_recursive(
 static void object_compute_function_values(
 	long object_index)
 {
-	long function_index;
+	short function_index;
 
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object->definition_index);
+	real huh= (57 * DATUM_INDEX_TO_ABSOLUTE_INDEX(object_index) + game_time_get()) * 0.033333335f;
 
 	for (function_index= 0; function_index<object_definition->object.functions.count; ++function_index)
 	{
+		real value;
+		real output;
+
 		struct object_function_definition* function= TAG_BLOCK_GET_ELEMENT(
 			&object_definition->object.functions,
 			function_index,
 			struct object_function_definition
 		);
+		boolean function_is_active= TRUE;
+		real period= function->runtime_one_over_period;
 
 		if (function->scale_period_by_function_index)
 		{
-
+			real function_value= OBJECT_INCOMING_FUNCTION_GET_VALUE(object, function->scale_period_by_function_index);
+			if (function_value>0.f)
+			{
+				period= period/function_value;
+			}
 		}
+
+		value= periodic_function_evaluate(function->function_type, huh*period);
+
+		if (function->scale_function_by_function_index)
+		{
+			value*= OBJECT_INCOMING_FUNCTION_GET_VALUE(object, function->scale_function_by_function_index);
+		}
+
+		if (TEST_FLAG(function->flags, _object_function_invert_function_bit))
+		{
+			value= 1.f-value;
+		}
+
+		if (function->wobble_magnitude!=0.f)
+		{
+			real val= periodic_function_evaluate(function->wobble_function_type, huh*function->wobble_period);
+			value+= (2.f*function->wobble_magnitude * (val-0.5f));
+		}
+
+		if (function->square_wave_threshold!=0.f)
+		{
+			value= value>function->square_wave_threshold ? 1.f : 0.f ;
+		}
+
+		if (function->step_count>1)
+		{
+			real floor_value= floor(function->step_count*value);
+			value= floor_value*function->runtime_reciprocal_step_count;
+		}
+
+		if (function->runtime_reciprocal_sawtooth_count>0.f)
+		{
+			value= fmod(value, function->runtime_reciprocal_sawtooth_count);
+		}
+
+		if (function->add_function_index)
+		{
+			value+= OBJECT_INCOMING_FUNCTION_GET_VALUE(object, function->add_function_index);
+			value= MIN(value, 1.f);
+		}
+
+		if (function->scale_result_by_function_index)
+		{
+			value*= OBJECT_INCOMING_FUNCTION_GET_VALUE(object, function->scale_result_by_function_index);
+		}
+
+		output= transition_function_evaluate(function->map_result_to_transition_function, value);
+
+		if (function->scale_by>0.f)
+		{
+			output*= function->scale_by;
+		}
+
+		if (function->bounds_mode==_object_function_scale_to_fit_bounds)
+		{
+			output*= (function->upper_bound-function->lower_bound);
+			output+= function->lower_bound;
+
+			if (function->lower_bound+_real_epsilon>=output)
+			{
+				function_is_active= TEST_FLAG(function->flags, _object_function_does_not_deactivate_below_lower_bound_bit);
+			}
+		}
+		else
+		{
+			if (function->lower_bound+_real_epsilon>=output)
+			{
+				function_is_active= TEST_FLAG(function->flags, _object_function_does_not_deactivate_below_lower_bound_bit);
+			}
+
+			if (function->upper_bound<output)
+			{
+				output= function->upper_bound;
+			}
+
+			if (function->bounds_mode==_object_function_clip_to_bounds_and_normalize)
+			{
+				output= (output-function->lower_bound)*function->runtime_reciprocal_bounds_range;
+			}
+		}
+
+		if (function->turn_off_with_function_index!=NONE &&
+			!TEST_FLAG(object->object.functions_active_flags, function->turn_off_with_function_index))
+		{
+			function_is_active= FALSE;
+		}
+
+		if (TEST_FLAG(function->flags, _object_function_clip_to_bounds_and_normalize))
+		{
+			output= fmod(output+object->object.outgoing_function_values[function_index], 1.f);
+		}
+
+		object->object.outgoing_function_values[function_index]= output;
+		SET_FLAG(object->object.functions_active_flags, function_index, function_is_active);
 	}
 
 	return;

@@ -60,6 +60,13 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "models.h"
+
+#include "model_definitions.h"
+
+#include "math/real_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -71,5 +78,41 @@ symbols in this file:
 /* ---------- globals */
 
 /* ---------- public code */
+
+// TODO: finish
+short model_get_marker_by_name(
+	long model_index,
+	char const *name,
+	byte const *region_permutations,
+	short const *node_remapping_table,
+	short node_count,
+	real_matrix4x3 const *node_matrices,
+	boolean mirrored_flag,
+	struct object_marker *markers,
+	short maximum_marker_count)
+{
+	short result= 0;
+	short marker_index= model_find_marker(model_index, name);
+
+	match_assert("c:\\halo\\SOURCE\\models\\models.c", 760, node_matrices);
+	match_assert("c:\\halo\\SOURCE\\models\\models.c", 761, markers);
+
+	if (marker_index!=NONE)
+	{
+		short i;
+
+		struct model *model= model_definition_get(model_index);
+		struct model_marker* marker= TAG_BLOCK_GET_ELEMENT(&model->markers, marker_index, struct model_marker);
+
+
+		for (i=0; i<marker->instances.count; i++)
+		{
+			struct model_marker_instance* instance= TAG_BLOCK_GET_ELEMENT(&marker->instances, i, struct model_marker_instance);
+
+		}
+	}
+
+	return result;
+}
 
 /* ---------- private code */

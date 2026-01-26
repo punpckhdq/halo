@@ -16,7 +16,7 @@ header included in hcex build.
 
 /* ---------- prototypes/MODELS.C */
 
-void model_get_node_orientations(struct model const *model, real_orientation *node_orientations);
+void model_get_node_orientations(struct model const *model, struct real_orientation *node_orientations);
 
 short model_get_marker_by_name(
 	long model_index,
@@ -24,10 +24,10 @@ short model_get_marker_by_name(
 	byte const *region_permutations,
 	short const *node_remapping_table,
 	short node_count, 
-	real_matrix4x3 const *node_matrices,
+	struct real_matrix4x3 const *node_matrices,
 	boolean mirrored_flag,
 	struct object_marker *markers,
-	short);
+	short maximum_marker_count);
 
 /* ---------- globals */
 

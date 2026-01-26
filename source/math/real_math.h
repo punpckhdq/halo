@@ -10,6 +10,8 @@ file has inline function assertions.
 
 /* ---------- constants */
 
+#define _real_epsilon 0.0001f
+
 /* ---------- macros */
 
 #define assert_valid_real_point3d(point)\

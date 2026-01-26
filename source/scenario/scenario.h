@@ -8,6 +8,11 @@ header included in hcex build.
 #define __SCENARIO_H
 #pragma once
 
+
+/* ---------- headers */
+
+#include "real_math.h"
+
 /* ---------- constants */
 
 enum
@@ -100,6 +105,9 @@ extern short global_structure_bsp_index;
 
 /* comm */
 struct scenario *global_scenario;
+
+/* comm */
+struct bsp3d *global_bsp3d;
 
 /* ---------- public code */
 

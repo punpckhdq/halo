@@ -41,6 +41,21 @@ enum
 	NUMBER_OF_OBJECT_DEFINITION_RUNTIME_FLAGS,
 };
 
+enum
+{
+	_object_function_invert_function_bit= 0,
+	_object_function_additive_bit,
+	_object_function_does_not_deactivate_below_lower_bound_bit,
+	NUMBER_OF_OBJECT_FUNCTION_DEFINITION_FLAGS,
+};
+
+enum
+{
+	_object_function_clip_to_bounds= 0,
+	_object_function_clip_to_bounds_and_normalize,
+	_object_function_scale_to_fit_bounds,
+	NUMBER_OF_OBJECT_FUNCTION_BOUNDS_MODES,
+};
 
 /* ---------- macros */
 

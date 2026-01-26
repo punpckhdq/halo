@@ -39,7 +39,7 @@ struct structure_bsp
 	struct render_lighting default_lighting;
 	long lonely_unused;
 	struct tag_block collision_materials;
-	struct tag_block collision_bsp;
+	struct tag_block collision_bsp;			// collision_bsp
 	struct tag_block nodes;
 	real_rectangle3d world_bounds;
 	struct tag_block leaves;				// structure_leaf

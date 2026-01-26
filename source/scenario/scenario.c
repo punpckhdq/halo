@@ -161,6 +161,11 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "scenario.h"
+
+#include "physics/bsp3d.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -172,5 +177,13 @@ symbols in this file:
 /* ---------- globals */
 
 /* ---------- public code */
+
+long scenario_leaf_index_from_point(
+	const union real_point3d *point)
+{
+	match_assert("c:\\halo\\SOURCE\\scenario\\scenario.c", 213, global_bsp3d);
+	
+	return bsp3d_test_point(global_bsp3d, 0, point);
+}
 
 /* ---------- private code */

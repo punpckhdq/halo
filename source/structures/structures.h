@@ -54,6 +54,10 @@ enum
 
 void structure_detail_objects_flush(void);
 
+/* ---------- prototypes/STRUCTURE_LENS_FLARES.C */
+
+long cluster_index_from_point(struct structure_bsp const *structure_bsp, union real_point3d const *point);
+
 /* ---------- prototypes/STRUCTURE_RUNTIME_DECALS.C */
 
 void structure_decals_update(unsigned long *old_combined_pvs, unsigned long *new_combined_pvs, short cluster_count);
