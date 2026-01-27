@@ -1018,8 +1018,8 @@ void objects_initialize_for_new_map(
 
 	cluster_partition_make_valid(&collideable_object_cluster_partition);
 	cluster_partition_make_valid(&noncollideable_object_cluster_partition);
-	memset(object_globals->last_active_cluster_bits, 0, 0x40u);
-	memset(object_globals->active_cluster_bits, 0, 0x40u);
+	memset(object_globals->last_active_cluster_bits, 0, sizeof(object_globals->last_active_cluster_bits));
+	memset(object_globals->active_cluster_bits, 0, sizeof(object_globals->active_cluster_bits));
 	object_globals->pvs_activation_type= 0;
 	object_globals->object_marker_initialized= FALSE;
 	global_object_marker= 0;
@@ -2121,10 +2121,11 @@ short objects_in_sphere(
 	{
 		struct object_datum *object= object_get(temporary_object_indices[object_index]);
 		if (TEST_FLAG(type_flags, object->object.type) &&
-			point_in_sphere(center, &object->object.position, radius+object->object.bounding_sphere_radius))
+			point_in_sphere(center, &object->object.bounding_sphere_center, (object->object.bounding_sphere_radius)+radius))
 		{
 			object_indices[result++]= temporary_object_indices[object_index];
 		}
+		
 	}
 
 	return result;
