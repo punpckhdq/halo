@@ -430,7 +430,7 @@
 				{ "name": "source/structures/structure_render.c", "index": 58, "status": "NonMatching" },
 				{ "name": "source/structures/structure_lens_flares.c", "index": 59, "status": "NonMatching" },
 				{ "name": "source/structures/structure_detail_objects.c", "index": 60, "status": "NonMatching" },
-				{ "name": "source/structures/structure_bsp_definitions.c", "index": 61, "status": "NonMatching" },
+				{ "name": "source/structures/structure_bsp_definitions.c", "index": 61, "status": "Matching" },
 				{ "name": "source/structures/leaf_map.c", "index": 62, "status": "NonMatching" },
 				{ "name": "source/structures/detail_object_definitions.c", "index": 63, "status": "Matching" },
 				{ "name": "source/structures/cluster_partitions.c", "index": 64, "status": "NonMatching" },

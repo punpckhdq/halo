@@ -1,35 +1,5 @@
 /*
 STRUCTURE_BSP_DEFINITIONS.C
-
-symbols in this file:
-00182DA0 00a0:
-	_structure_bsp_get_cluster_pvs (0000)
-00182E40 01b0:
-	_structure_bsp_find_material_for_surface (0000)
-00182FF0 0030:
-	_vertex_type_from_shader_tag (0000)
-00183020 00a0:
-	_structure_bsp_get_cluster_encoded_sound_data (0000)
-001830C0 00a0:
-	_structure_bsp_get_cluster_encoded_sound_distance (0000)
-002A1078 006c:
-	??_C@_0GM@IEBDGEJL@?$CIcluster_index?$CL1?$CJ?$CKBIT_VECTOR_SIZ@ (0000)
-002A10E8 0040:
-	??_C@_0EA@EIICKPGK@cluster_index?$DO?$DN0?5?$CG?$CG?5cluster_inde@ (0000)
-002A1128 0036:
-	??_C@_0DG@NELJLNPJ@c?3?2halo?2SOURCE?2structures?2struct@ (0000)
-002A1160 0044:
-	??_C@_0EE@GCNBGNLI@surface_index?$DMmaterial?9?$DOfirst_su@ (0000)
-002A11A4 002d:
-	??_C@_0CN@DMFHEBIB@surface_index?$DO?$DNmaterial?9?$DOfirst_s@ (0000)
-002A11D4 003b:
-	??_C@_0DL@PINMBEBG@offset?$DO?$DN0?5?$CG?$CG?5offset?$DMstructure_bs@ (0000)
-002A1210 0017:
-	??_C@_0BH@FKLIMEJG@row_index?$DMcolumn_index?$AA@ (0000)
-002A1228 0046:
-	??_C@_0EG@FIKJDFNH@to_cluster_index?$DO?$DN0?5?$CG?$CG?5to_cluste@ (0000)
-002A1270 004a:
-	??_C@_0EK@GPLJLDED@from_cluster_index?$DO?$DN0?5?$CG?$CG?5from_cl@ (0000)
 */
 
 /* ---------- headers */
@@ -66,5 +36,153 @@ unsigned long *structure_bsp_get_cluster_pvs(
 		BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count)	
 	);
 }
+
+void structure_bsp_find_material_for_surface(
+	struct structure_bsp *structure,
+	long surface_index,
+	short *lightmap_index,
+	short *material_index)
+{
+	struct structure_lightmap *lightmap;
+	struct structure_material *material;
+	short lightmap_last_index;
+	short material_last_index;
+	short i;
+
+	i=0;
+	*lightmap_index= 0;
+	lightmap_last_index= structure->lightmaps.count-1;
+
+	while (lightmap_last_index>i)
+	{
+		struct structure_lightmap *curr_lightmap;
+
+		*lightmap_index= (lightmap_last_index-i) / 2+i;
+		curr_lightmap= TAG_BLOCK_GET_ELEMENT(&structure->lightmaps, *lightmap_index, struct structure_lightmap);
+
+		if (surface_index<TAG_BLOCK_GET_ELEMENT(&curr_lightmap->materials, 0, struct structure_material)->first_surface_index)
+		{
+			lightmap_last_index= *lightmap_index-1;
+			*lightmap_index= lightmap_last_index;
+		}
+		else
+		{
+			if (surface_index<
+				TAG_BLOCK_GET_ELEMENT(&curr_lightmap->materials, curr_lightmap->materials.count-1, struct structure_material)->surface_count+
+				TAG_BLOCK_GET_ELEMENT(&curr_lightmap->materials, curr_lightmap->materials.count-1, struct structure_material)->first_surface_index)
+			{
+				break;
+			}
+
+			i= *lightmap_index+1;
+			*lightmap_index= i;
+		}
+	}
+
+	lightmap= TAG_BLOCK_GET_ELEMENT(&structure->lightmaps, *lightmap_index, struct structure_lightmap);
+
+	i=0;
+	*material_index= 0;
+	material_last_index= lightmap->materials.count;
+
+	while (i<material_last_index)
+	{
+		const struct structure_material *curr_material;
+
+		*material_index= (material_last_index-i) / 2+i;
+		curr_material= TAG_BLOCK_GET_ELEMENT(&lightmap->materials, *material_index, struct structure_material);
+
+		if (surface_index<curr_material->first_surface_index)
+		{
+			material_last_index= *material_index-1;
+			*material_index= material_last_index;
+		}
+		else
+		{
+			if (surface_index<curr_material->first_surface_index+curr_material->surface_count)
+			{
+				break;
+			}
+
+			i= *material_index+1;
+			*material_index= i;
+		}
+		
+	}
+
+	material= TAG_BLOCK_GET_ELEMENT(&lightmap->materials, *material_index, struct structure_material);
+
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 102, surface_index>=material->first_surface_index);
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 103, surface_index<material->first_surface_index+material->surface_count);
+
+	return;
+}
+
+void vertex_type_from_shader_tag(
+	unsigned long group_tag,
+	short *vertex_type,
+	short *lightmap_vertex_type,
+	boolean compressed)
+{
+	if (compressed)
+	{
+		*vertex_type= _rasterizer_vertex_type_environment_compressed;
+		*lightmap_vertex_type= _rasterizer_vertex_type_environment_lightmap_compressed;
+	}
+	else
+	{
+		*vertex_type= _rasterizer_vertex_type_environment_uncompressed;
+		*lightmap_vertex_type= _rasterizer_vertex_type_environment_lightmap_uncompressed;
+	}
+	
+	return;
+}
+
+byte *structure_bsp_get_cluster_encoded_sound_data(
+	struct structure_bsp *structure_bsp,
+	short row_index,
+	short column_index)
+{
+	short offset= row_index * (structure_bsp->clusters.count-1)-row_index*(row_index+1)/2+column_index-1;
+
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 1202, row_index<column_index);
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 1203, offset>=0 && offset<structure_bsp->sound_cluster_data.size);
+
+	return &((byte *)structure_bsp->sound_cluster_data.address)[offset];
+}
+
+byte structure_bsp_get_cluster_encoded_sound_distance(
+	struct structure_bsp *structure_bsp,
+	short from_cluster_index,
+	short to_cluster_index)
+{
+	byte result;
+
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 1215, from_cluster_index>=0 && from_cluster_index<structure_bsp->clusters.count);
+	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 1216, to_cluster_index>=0 && to_cluster_index<structure_bsp->clusters.count);
+
+	if (from_cluster_index!=to_cluster_index)
+	{
+		if (from_cluster_index>to_cluster_index)
+		{
+			short temp= from_cluster_index;
+			from_cluster_index= to_cluster_index;
+			to_cluster_index= temp;
+		}
+
+		result= *structure_bsp_get_cluster_encoded_sound_data(
+			structure_bsp, 
+			from_cluster_index,
+			to_cluster_index
+		);
+	}
+	else
+	{
+		result= 0;
+	}
+
+	return result;
+}
+
 
 /* ---------- private code */
