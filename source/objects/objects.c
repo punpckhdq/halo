@@ -1014,7 +1014,7 @@ void objects_initialize_for_new_map(
 	lights_initialize_for_new_map();
 	
 	data_make_valid(object_header_data);
-	memset(object_name_list, NONE, MAXIMUM_OBJECT_NAMES_PER_SCENARIO*sizeof(*object_name_list));
+	object_name_list_clear();
 
 	cluster_partition_make_valid(&collideable_object_cluster_partition);
 	cluster_partition_make_valid(&noncollideable_object_cluster_partition);
@@ -1091,6 +1091,7 @@ void objects_dispose(
 		object_memory_pool= NULL;
 	}
 
+	object_name_list_free();
 	cluster_partition_delete(&collideable_object_cluster_partition);
 	cluster_partition_delete(&noncollideable_object_cluster_partition);
 
@@ -3786,6 +3787,7 @@ static void object_name_list_allocate(
 static void object_name_list_free(
 	void)
 {
+	// Bungie never free'd this properly
 
 	return;
 }
@@ -3793,6 +3795,7 @@ static void object_name_list_free(
 static void object_name_list_clear(
 	void)
 {
+	memset(object_name_list, NONE, MAXIMUM_OBJECT_NAMES_PER_SCENARIO * sizeof(*object_name_list));
 
 	return;
 }
