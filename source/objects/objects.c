@@ -855,11 +855,12 @@ void objects_dump_memory(
 	struct dump_datum dumps[MAXIMUM_DUMPS];
 	struct dump_datum dumps_by_type[NUMBER_OF_OBJECT_TYPES];
 	struct object_iterator iterator;
-	struct objects_information information;
 
-	short type;
 	struct object_datum *object;
+	struct object_header_datum *header;
 	FILE *file;
+	short type;
+	short object_num;
 
 	short object_count= 0;
 	short overflowed_object_count= 0;
@@ -872,16 +873,14 @@ void objects_dump_memory(
 		dumps_by_type[type].object_type= type;
 		dumps_by_type[type].definition_index= NONE;
 	}
-
+	
 	object_iterator_new(&iterator, _object_mask_all, 0);
 	
 	while (object= (struct object_datum *)object_iterator_next(&iterator))
 	{
-		struct object_header_datum *header;
-		short object_num;
 		short index= NONE;
 		
-		for (object_num= 0; object_num<object_count; object_num++)
+		for (object_num= 0; object_num<object_count; ++object_num)
 		{
 			if (dumps[object_num].definition_index==object->definition_index)
 			{
@@ -931,9 +930,10 @@ void objects_dump_memory(
 	file= fopen("d:\\object_memory.txt", "a+b");
 	if (file)
 	{
-		short object_num;
+		struct objects_information information;
 		
 		objects_information_get(&information);
+
 		fprintf(
 			file,
 			"#%d objects (#%d active) using %3.2f%% of available memory\n\n",
@@ -1542,7 +1542,8 @@ short objects_in_clusters_by_indices(
 				{
 					if (object_count>=maximum_object_count)
 					{
-						goto objects_in_clusters_by_indices_end;
+						object_marker_end();
+						return object_count;
 					}
 					object_indices[object_count++]= object_index;
 				}
@@ -1564,7 +1565,8 @@ short objects_in_clusters_by_indices(
 				{
 					if (object_count>=maximum_object_count)
 					{
-						goto objects_in_clusters_by_indices_end;
+						object_marker_end();
+						return object_count;
 					}
 					object_indices[object_count++]= object_index;
 				}
@@ -1572,7 +1574,6 @@ short objects_in_clusters_by_indices(
 		}
 	}
 
-objects_in_clusters_by_indices_end:
 	object_marker_end();
 
 	return object_count;
@@ -1980,6 +1981,7 @@ void object_get_orientation(
 	real_vector3d *up)
 {
 	struct object_datum *object= object_get(object_index);
+	
 
 	if (object->object.parent_object_index==NONE)
 	{
@@ -1994,7 +1996,7 @@ void object_get_orientation(
 	}
 	else
 	{
-		const real_matrix4x3 *node_matrix= object_get_node_matrix(
+		real_matrix4x3 *node_matrix= object_get_node_matrix(
 			object->object.parent_object_index,
 			object->object.parent_node_index
 		);
