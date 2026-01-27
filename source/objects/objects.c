@@ -3993,12 +3993,12 @@ static boolean object_select_random_region_permutations_by_variant(
 	short variant_number)
 {
 	short available_permutation_indices[32];
-	long region_index;
+	short region_index;
 
 	struct object_datum *object= object_get(object_index);
 	boolean result= TRUE;
 
-	for (region_index=0; region_index<model->regions.count && !result; region_index++)
+	for (region_index=0; region_index<model->regions.count; region_index++)
 	{
 		struct model_region *region= TAG_BLOCK_GET_ELEMENT(&model->regions, region_index, struct model_region);
 		short permutation_index= object_find_region_permutations_available_with_variant(region, variant_number, available_permutation_indices);
@@ -4015,7 +4015,7 @@ static boolean object_select_random_region_permutations_by_variant(
 		}
 		else
 		{
-			short permutation_num= permutation_index==1 ? 0 :random_range(0, permutation_index);
+			short permutation_num= permutation_index==1 ? 0 : random_range(0, permutation_index);
 			object->object.region_permutations[region_index]= available_permutation_indices[permutation_num];
 		}
 	}
