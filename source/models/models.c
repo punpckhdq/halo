@@ -66,6 +66,7 @@ symbols in this file:
 #include "model_definitions.h"
 
 #include "math/real_math.h"
+#include "objects/objects.h"
 
 /* ---------- constants */
 
@@ -108,7 +109,31 @@ short model_get_marker_by_name(
 		for (i=0; i<marker->instances.count; i++)
 		{
 			struct model_marker_instance* instance= TAG_BLOCK_GET_ELEMENT(&marker->instances, i, struct model_marker_instance);
+			if (!region_permutations ||
+				region_permutations[instance->region_index]==instance->permutation_index)
+			{
+				struct object_marker *object_marker;
 
+				if (result>=maximum_marker_count)
+				{
+					break;
+				}
+
+				object_marker= &markers[result++];
+				object_marker->node_index= node_remapping_table ? node_remapping_table[instance->node_index] : instance->node_index;
+				matrix4x3_from_point_and_quaternion(&object_marker->node_matrix, &instance->translation, &instance->rotation);
+				match_assert(
+					"c:\\halo\\SOURCE\\models\\models.c",
+					785,
+					object_marker->node_index>=0 && object_marker->node_index<(node_remapping_table ? node_count : model->nodes.count)
+				);
+				
+				matrix4x3_multiply(&node_matrices[object_marker->node_index], &object_marker->node_matrix, &object_marker->matrix);
+				if (mirrored_flag)
+				{
+					negate_vector3d(&object_marker->matrix.left, &object_marker->matrix.left);
+				}
+			}
 		}
 	}
 
