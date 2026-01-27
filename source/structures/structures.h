@@ -50,6 +50,8 @@ enum
 
 /* ---------- prototypes/STRUCTURES.C */
 
+short structure_clusters_in_sphere(short cluster_index, real_point3d const *position, real radius, short maximum_count, short *intersected_indices);
+
 /* ---------- prototypes/STRUCTURE_DETAIL_OBJECTS.C */
 
 void structure_detail_objects_flush(void);

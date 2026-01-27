@@ -372,10 +372,9 @@ __inline real distance_squared3d(
 	real_point3d const *a,
 	real_point3d const *b)
 {
-	real z= b->z-a->z;
-	real y= b->y-a->y;
-	real x= b->x-a->x;
-	return z*z + x*x + y*y;
+	real_vector3d v;
+
+	return magnitude_squared3d(vector_from_points3d(a, b, &v));
 }
 
 __inline real_vector3d *negate_vector3d(
@@ -473,6 +472,14 @@ __inline real_vector3d *cross_product3d(
 	return result;
 }
 
+
+__inline boolean point_in_sphere(
+	real_point3d const *point,
+	real_point3d const *center,
+	real radius)
+{
+	return distance_squared3d(point, center)<=(radius*radius);
+}
 
 __inline short random_range(
 	short lower_bound,

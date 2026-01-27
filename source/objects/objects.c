@@ -1433,7 +1433,6 @@ void object_offset_interpolation(
 	return;
 }
 
-// TODO: match
 void object_permute_region(
 	long object_index,
 	char *permutation_name,
@@ -2085,7 +2084,49 @@ short objects_in_sphere(
 	long *object_indices,
 	short maximum_count)
 {
-	return NONE;
+	long temporary_object_indices[MAXIMUM_OBJECTS_PER_MAP];
+	short cluster_indices[MAXIMUM_CLUSTERS_PER_STRUCTURE];
+
+	short cluster_count;
+	short object_count_in_clusters;
+	short object_index;
+	
+	short result= 0;
+
+	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1779, location);
+	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1780, center);
+	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1781, object_indices);
+
+	if (!type_flags)
+	{
+		type_flags= NONE;
+	}
+
+	cluster_count = structure_clusters_in_sphere(
+		location->cluster_index,
+		center,
+		radius,
+		NUMBEROF(cluster_indices),
+		cluster_indices
+	);
+	object_count_in_clusters= objects_in_clusters_by_indices(
+		class_flags,
+		cluster_count,
+		cluster_indices,
+		NUMBEROF(temporary_object_indices),
+		temporary_object_indices
+	);
+	for (object_index= 0; object_index<object_count_in_clusters && result<maximum_count; ++object_index)
+	{
+		struct object_datum *object= object_get(temporary_object_indices[object_index]);
+		if (TEST_FLAG(type_flags, object->object.type) &&
+			point_in_sphere(center, &object->object.position, radius+object->object.bounding_sphere_radius))
+		{
+			object_indices[result++]= temporary_object_indices[object_index];
+		}
+	}
+
+	return result;
 }
 
 void objects_reconnect_to_structure_bsp(
