@@ -359,6 +359,7 @@ void object_marker_begin(void);
 void object_marker_end(void);
 boolean object_unmarked_function(long object_index);
 boolean object_mark_function(long object_index);
+void objects_place(void);
 long find_objects_from_point_vector(
 	real_point3d const *position,
 	real_vector3d const *direction,

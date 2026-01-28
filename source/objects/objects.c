@@ -37,6 +37,7 @@ OBJECTS.C
 #include "models/model_definitions.h"
 #include "models/models.h"
 #include "objects/widgets/widgets.h"
+#include "physics/collision_bsp.h"
 #include "physics/collision_model_definitions.h"
 #include "physics/collision_models.h"
 #include "physics/collision_usage.h"
@@ -774,6 +775,16 @@ boolean object_mark_function(
 	}
 
 	return result;
+}
+
+void objects_place(
+	void)
+{
+	object_globals->initial_placement= TRUE;
+	object_types_place_all(global_scenario_get());
+	object_globals->initial_placement= FALSE;
+
+	return;
 }
 
 // TODO: match
@@ -1615,65 +1626,67 @@ boolean object_visible_to_any_player(
 	struct object_datum *object= object_get(object_index);
 	boolean result= FALSE;
 
-	if (TEST_FLAG(header->flags, _object_header_active_bit))
+	if (TEST_FLAG(header->flags, _object_header_active_bit) &&
+		TEST_FLAG(object->object.flags, _object_connected_to_map_bit) &&
+		!TEST_FLAG(object->object.flags, _object_outside_of_map_bit))
 	{
-		if (TEST_FLAG(object->object.flags, _object_connected_to_map_bit) &&
-			!TEST_FLAG(object->object.flags, _object_outside_of_map_bit))
-		{
-			short i;
-			struct object_cluster_iterator iterator;
+		short cluster_index;
+		struct object_cluster_iterator iterator;
 
-			const unsigned long* combined_pvs= players_get_combined_pvs();
+		const unsigned long* combined_pvs= players_get_combined_pvs();
 		
+		for (
+			cluster_index= object_get_first_cluster(&iterator, object_index);
+			cluster_index!=NONE && !BIT_VECTOR_TEST_FLAG(combined_pvs, cluster_index);
+			cluster_index= object_get_next_cluster(&iterator)
+		)
+		{
+			;
+		}
+
+		if (cluster_index!=NONE)
+		{
+			long player_index;
+			const real bounding_area= object->object.bounding_sphere_radius*object->object.bounding_sphere_radius;
 			for (
-				i= object_get_first_cluster(&iterator, object_index);
-				i!=NONE && !BIT_VECTOR_TEST_FLAG(combined_pvs, i);
-				i= object_get_next_cluster(&iterator)
+				player_index= data_next_index(player_data, NONE);
+				player_index!=NONE;
+				player_index= data_next_index(player_data, player_index)
 			)
 			{
-				;
-			}
-
-			if (i!=NONE)
-			{
-				long player_index;
-				const real bounding_area= object->object.bounding_sphere_radius*object->object.bounding_sphere_radius;
-				for (
-					player_index= data_next_index(player_data, NONE);
-					player_index!=NONE;
-					player_index= data_next_index(player_data, player_index)
-				)
+				struct player_datum *player= player_get(player_index);
+				
+				if (player->unit_index!=NONE)
 				{
-					struct player_datum *player= player_get(i);
-					if (player->unit_index!=NONE)
+					real_point3d position;
+					unit_get_head_position(player->unit_index, &position);
+					if (distance_squared3d(&position, &object->object.bounding_sphere_center)<bounding_area)
 					{
-						real_point3d position;
-						unit_get_head_position(player->unit_index, &position);
-						if (distance_squared3d(&position, &object->object.bounding_sphere_center)>bounding_area)
-						{
-							real_vector3d head_to_bounding_sphere_vector;
-							real normalized_head_to_bounding_sphere_vector;
-							real dp_v;
-							real at_bs;
-							real v3;
-
-							struct unit_datum* unit= unit_get(player->unit_index);
-							
-							vector_from_points3d(&position, &object->object.bounding_sphere_center, &head_to_bounding_sphere_vector);
-							normalized_head_to_bounding_sphere_vector= normalize3d(&head_to_bounding_sphere_vector);
-							dp_v= dot_product3d(&head_to_bounding_sphere_vector, &unit->unit.desired_aiming_vector);
-							at_bs= arctangent(object->object.bounding_sphere_radius, normalized_head_to_bounding_sphere_vector);
-							v3= cosine(at_bs + 0.7853982f);
-							if (dp_v>v3)
-							{
-								result= TRUE;
-							}
-						}
-						else
+						result= TRUE;
+						break;
+					}
+					else
+					{
+						real_vector3d head_to_bounding_sphere_vector;
+						if (
+							dot_product3d(&unit_get(player->unit_index)->unit.desired_aiming_vector, &head_to_bounding_sphere_vector)>
+							cosine(
+								(real)atan2(
+									object->object.bounding_sphere_radius,
+									normalize3d(
+										vector_from_points3d(
+											&position,
+											&object->object.bounding_sphere_center,
+											&head_to_bounding_sphere_vector)
+									)
+								) + 0.7853982f
+							)
+						)
 						{
 							result= TRUE;
+							break;
 						}
-					}
+					}					
 				}
 			}
 		}
@@ -2136,6 +2149,62 @@ short objects_in_sphere(
 void objects_reconnect_to_structure_bsp(
 	void)
 {
+	struct object_datum *object;
+
+	struct object_iterator iterator;
+
+	object_iterator_new(&iterator, _object_mask_all, 0);
+	
+	while(object = (struct object_datum *)object_iterator_next(&iterator))
+	{
+		if (TEST_FLAG(object->object.flags, _object_connected_to_map_bit) &&
+			object->object.parent_object_index==NONE)
+		{
+			struct location scenario_location;
+
+			SET_FLAG(object->object.flags, _object_connected_to_map_bit, FALSE);
+			
+			object->object.location.cluster_index= NONE;
+			object_header_get(iterator.index)->cluster_index= NONE;
+		
+			scenario_location_from_point(&scenario_location, &object->object.bounding_sphere_center);
+			if (scenario_location.cluster_index==NONE)
+			{
+				struct collision_bsp_test_sphere_result result;
+				collision_bsp_test_sphere(
+					global_collision_bsp_get(),
+					0,
+					NULL,
+					&object->object.bounding_sphere_center,
+					object->object.bounding_sphere_radius,
+					&result
+				);
+
+				if (result.leaf_count)
+				{
+					scenario_location.leaf_index = result.leaf_indices[0];
+					if (result.leaf_indices[0] == -1)
+					{
+						scenario_location.cluster_index = -1;
+					}
+					else
+					{
+						scenario_location.cluster_index = TAG_BLOCK_GET_ELEMENT(
+							&global_structure_bsp_get()->leaves,
+							result.leaf_indices[0] & LONG_MAX,
+							struct structure_leaf
+						)->cluster_index;
+					}
+				}
+				else
+				{
+					scenario_location_from_point(&scenario_location, (int)&object->object.position);
+				}
+			}
+			object_reconnect_to_map(iterator.index, &scenario_location);
+		}
+	}
+	
 	return;
 }
 
