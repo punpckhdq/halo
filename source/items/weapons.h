@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/WEAPONS.C */
+
+boolean weapon_is_flag(long weapon_index);
 
 /* ---------- globals */
 

@@ -237,6 +237,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "real_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -246,6 +249,42 @@ symbols in this file:
 /* ---------- prototypes */
 
 /* ---------- globals */
+
+static const real_matrix4x3 private_identity4x3 =
+{
+	1.f,
+	{
+		{ 1.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f }
+	},
+};
+
+static const real_matrix4x3 private_negative_identity4x3 =
+{
+	1.f,
+	{
+		{ -1.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, 0.f }
+	},
+};
+
+
+const real_point3d *const global_origin3d = (const real_point3d *const)&private_identity4x3.position;
+
+const real_point3d *const global_x_axis3d = (const real_point3d *const)&private_identity4x3.forward;
+const real_point3d *const global_y_axis3d = (const real_point3d *const)&private_identity4x3.left;
+const real_point3d *const global_z_axis3d = (const real_point3d *const)&private_identity4x3.up;
+const real_point3d *const global_negative_x_axis3d = (const real_point3d *const)&private_negative_identity4x3.forward;
+const real_point3d *const global_negative_y_axis3d = (const real_point3d *const)&private_negative_identity4x3.left;
+const real_point3d *const global_negative_z_axis3d = (const real_point3d *const)&private_negative_identity4x3.up;
+
+const real_vector3d *const global_zero_vector3d = (const real_vector3d *const)&private_identity4x3.position;
+
+const real_vector3d *const global_forward3d = (const real_vector3d *const)&private_identity4x3.forward;
+const real_vector3d *const global_left3d = (const real_vector3d *const)&private_identity4x3.left;
+const real_vector3d *const global_up3d = (const real_vector3d *const)&private_identity4x3.up;
+
+const real_vector3d *const global_backward3d = (const real_vector3d *const)&private_negative_identity4x3.forward;
+const real_vector3d *const global_right3d = (const real_vector3d *const)&private_negative_identity4x3.left;
+const real_vector3d *const global_down3d = (const real_vector3d *const)&private_negative_identity4x3.up;
 
 /* ---------- public code */
 

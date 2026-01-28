@@ -10,6 +10,12 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	PARTICLE_SYSTEM_DEFINITION_TAG= 'pctl',
+	PARTICLE_SYSTEM_DEFINITION_VERSION= 4,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

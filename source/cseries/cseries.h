@@ -6,6 +6,7 @@ CSERIES.H
 #define __CSERIES_H
 #pragma once
 
+#include <StdDef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -41,6 +42,33 @@ enum
 	CHAR_BITS= 8,
 	CHAR_BITS_BITS= 3
 };
+
+enum
+{
+	_x= 0,
+	_y,
+	_z,
+	NUMBER_OF_RECTANGLE2D_COMPONENTS= 4,
+	NUMBER_OF_RECTANGLE3D_COMPONENTS= 6,
+	NUMBER_OF_VERTICES_PER_LINE= 2,
+	NUMBER_OF_VERTICES_PER_TRIANGLE= 3,
+	NUMBER_OF_VERTICES_PER_QUADRALATERAL= 4,
+	NUMBER_OF_VERTICES_PER_QUADRILATERAL= 4,
+	NUMBER_OF_VERTICES_PER_HEXAGON= 6,
+	NUMBER_OF_VERTICES_PER_PYRAMID= 5,
+	NUMBER_OF_VERTICES_PER_CUBE= 8,
+	NUMBER_OF_TRIANGLES_PER_QUADRILATERAL= 2,
+	NUMBER_OF_EDGES_PER_TRIANGLE= 3,
+	NUMBER_OF_EDGES_PER_QUADRALATERAL= 4,
+	NUMBER_OF_EDGES_PER_HEXAGON= 6,
+	NUMBER_OF_FACES_PER_CUBE= 6,
+	_rectangle_top_left= 0,
+	_rectangle_bottom_left= 1,
+	_rectangle_top_right= 2,
+	_rectangle_bottom_right= 3,
+	NUMBER_OF_POINTS_PER_RECTANGLE= 4,
+};
+
 
 #define NONE -1
 
@@ -82,7 +110,7 @@ enum
 #define PIN(n,floor,ceiling) ((n)<(floor) ? (floor) : CEILING(n,ceiling))
 
 #define FLAG(b) (1<<(b))
-#define TEST_FLAG(flags, bit) ((flags)&(unsigned)FLAG(bit))
+#define TEST_FLAG(flags, bit) (((flags)&(unsigned)FLAG(bit))!=0)
 #define SET_FLAG(f, b, v) ((v) ? ((f)|=(unsigned)FLAG(b)) : ((f)&=(unsigned)~FLAG(b)))
 
 #define BIT_VECTOR_SIZE_IN_LONGS(bit_count) (((bit_count) + (LONG_BITS - 1)) >> LONG_BITS_BITS)
@@ -93,6 +121,12 @@ enum
 #define VALID_FLAGS(flags, bits) (!((flags)>>bits))
 
 #define NUMBEROF(array) (sizeof(array) / sizeof(array[0]))
+
+#define VALID_INDEX(index, count) (index>=0 && index<count)
+
+#define DATUM_INDEX_NEW(absolute_index, salt) ((absolute_index) | ((salt)<<SHORT_BITS))
+#define DATUM_INDEX_TO_ABSOLUTE_INDEX(datum_index) ((datum_index)&UNSIGNED_SHORT_MAX)
+#define DATUM_INDEX_TO_IDENTIFIER(datum_index) ((datum_index)>>SHORT_BITS)
 
 /* ---------- fixed math */
 

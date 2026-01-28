@@ -10,11 +10,42 @@ PROFILE.H
 
 /* ---------- macros */
 
+#define profile_enter()									\
+static struct profile_section section=					\
+{ __FUNCTION__, NONE, TRUE };							\
+if (profile_global_enable && section.profile_active)	\
+{														\
+	profile_enter_private(&section);					\
+}														\
+
+#define profile_exit()									\
+if (profile_global_enable && section.profile_active)	\
+{														\
+	profile_exit_private(&section);						\
+}														\
+
 /* ---------- structures */
+
+struct profile_section
+{
+	const char *name;
+	long section_index;
+	boolean profile_active;
+	short stack_depth;
+	long field_C;
+	unsigned __int64 field_10;
+	char __unknown18[1460];
+	long field_5CC;
+	char __unknown5D0[40];
+};
 
 /* ---------- prototypes/PROFILE.C */
 
 void profile_initialize(void);
+
+void profile_enter_private(struct profile_section *section);
+
+void profile_exit_private(struct profile_section *section);
 
 /* ---------- globals */
 

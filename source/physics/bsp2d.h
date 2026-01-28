@@ -8,11 +8,20 @@ header included in hcex build.
 #define __BSP2D_H
 #pragma once
 
+/* ---------- headers */
+
+#include "tag_files/tag_groups.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct bsp2d
+{
+	struct tag_block nodes;
+};
 
 /* ---------- prototypes/EXAMPLE.C */
 

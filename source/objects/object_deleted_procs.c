@@ -10,6 +10,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "objects.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -20,6 +23,23 @@ symbols in this file:
 
 /* ---------- globals */
 
+object_deleted_proc object_deleted_procs[3];
+
 /* ---------- public code */
+
+void object_deleted_procs_call(
+	long deleted_object_index)
+{
+	long i=0;
+
+	do
+	{
+		(object_deleted_procs[i])(deleted_object_index);
+		i++;
+	}
+	while (i<NUMBEROF(object_deleted_procs));
+
+	return;
+}
 
 /* ---------- private code */

@@ -14,7 +14,11 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/PARTICLE_SYSTEMS.C */
+
+long particle_system_new_attached(long definition_index, long object_index, short attachment_index);
+
+void particle_system_orphan(long system_index);
 
 /* ---------- globals */
 

@@ -29,6 +29,7 @@ void ai_debug_change_selected_encounter(boolean a1);
 
 void ai_debug_change_selected_actor(boolean a1);
 
+char *ai_debug_describe_actor(long actor_index, long unit_index, boolean include_squad, char *buffer, long bufsize);
 
 /* ---------- globals */
 

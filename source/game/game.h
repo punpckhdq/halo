@@ -32,6 +32,68 @@ enum
 
 /* ---------- structures */
 
+struct slayer_statistics
+{
+	short ignored;
+};
+
+struct ctf_statistics
+{
+	short flag_grabs;
+	short flag_returns;
+	short flag_scores;
+};
+
+struct oddball_statistics
+{
+	short time_with_the_ball;
+	short ball_carrier_kills;
+	short kills_as_ball_carrier;
+};
+
+struct king_statistics
+{
+	short time_on_hill;
+};
+
+struct race_statistics
+{
+	short last_lap_time;
+	short laps;
+	short best_lap_time;
+};
+
+union multiplayer_statistics
+{
+	struct slayer_statistics slayer_statistics;
+	struct ctf_statistics ctf_statistics;
+	struct oddball_statistics oddball_statistics;
+	struct king_statistics king_statistics;
+	struct race_statistics race_statistics;
+};
+
+struct game_statistics
+{
+	short sort_key;
+	short games_played;
+	short games_won;
+	short kills_in_a_row;
+	short multiple_kills;
+	short last_kill_time;
+	short kills[4];
+	short assists[4];
+	short friendly_fire_kills;
+	short deaths;
+	short suicides;
+	long shots_fired;
+	long shots_hit;
+	long seconds_online;
+	short killed_teammate_since_last_death;
+	short custom_data_size;
+	union multiplayer_statistics multiplayer_statistics;
+};
+
+
 /* ---------- prototypes/GAME.C */
 
 void game_initialize(void);
@@ -42,7 +104,7 @@ void game_unload(void);
 void game_dispose_from_old_map(void);
 void game_frame(real dt);
 void remove_quitting_players_from_game(void);
-void game_tick(int ticks_remaining_this_frame);
+void game_tick(long ticks_remaining_this_frame);
 void game_options_new(struct game_options *options);
 boolean game_options_verify(struct game_options *options);
 void game_initial_pulse(void);

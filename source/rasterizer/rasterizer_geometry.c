@@ -94,6 +94,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "rasterizer_geometry.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

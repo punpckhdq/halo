@@ -122,6 +122,11 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "object_types.h"
+
+#include "objects.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -133,5 +138,48 @@ symbols in this file:
 /* ---------- globals */
 
 /* ---------- public code */
+
+boolean object_type_new(
+	long object_index)
+{
+	short i;
+
+	struct object_type_definition* definition= object_type_definition_get(object_get(object_index)->object.type);
+	boolean result= TRUE;
+
+	for (i= 0; definition->part_definitions[i]; i++)
+	{
+		struct object_type_definition *current_definition= definition->part_definitions[i];
+
+		if (current_definition->datum_new && !current_definition->datum_new(object_index))
+		{
+			result= FALSE;
+			break;
+		}
+	}
+
+	return result;
+}
+
+void object_type_delete(
+	long object_index)
+{
+	short i;
+
+	struct object_type_definition *definition= object_type_definition_get(object_get(object_index)->object.type);
+	boolean result= TRUE;
+
+	for (i= 0; definition->part_definitions[i]; i++)
+	{
+		struct object_type_definition *current_definition= definition->part_definitions[i];
+		if (current_definition->datum_delete)
+		{
+			current_definition->datum_delete(object_index);
+		}
+	}
+
+	return;
+}
+
 
 /* ---------- private code */

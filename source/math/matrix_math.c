@@ -86,6 +86,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "real_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -97,5 +100,95 @@ symbols in this file:
 /* ---------- globals */
 
 /* ---------- public code */
+
+void matrix4x3_inverse(
+	real_matrix4x3 const *matrix,
+	real_matrix4x3 *result)
+{
+	if (matrix->scale!=0.f)
+	{
+		real temp;
+
+		real x= -matrix->position.x;
+		real y= -matrix->position.y;
+		real z= -matrix->position.z;
+
+		if (matrix->scale!=1.f)
+		{
+			real scale= 1.f / matrix->scale;
+			result->scale= scale;
+			x *= scale;
+			y *= scale;
+			z *= scale;
+		}
+		else
+		{
+			result->scale= 1.f;
+		}
+
+		result->n[0][0] = matrix->n[0][0];
+		result->n[1][1] = matrix->n[1][1];
+		result->n[2][2] = matrix->n[2][2];
+
+		temp= matrix->n[1][0];
+		result->n[1][0]= matrix->n[0][1];
+		result->n[0][1]= temp;
+
+		temp= matrix->n[2][0];
+		result->n[2][0]= matrix->n[0][2];
+		result->n[0][2]= temp;
+
+		temp= matrix->n[2][1];
+		result->n[2][1]= matrix->n[1][2];
+		result->n[1][2]= temp;
+
+		result->n[3][0] = (x*result->n[0][0]) + y*result->n[1][0] + (z*result->n[2][0]);
+		result->n[3][1] = (x*result->n[0][1]) + y*result->n[1][1] + (z*result->n[2][1]);
+		result->n[3][2] = (x*result->n[0][2]) + y*result->n[1][2] + (z*result->n[2][2]);
+	}
+	else
+	{
+		memset(result, 0, sizeof(*result));
+	}
+
+	return;
+}
+
+real_point3d *matrix4x3_transform_point(
+	real_matrix4x3 const *matrix,
+	real_point3d const *point,
+	real_point3d *result)
+{
+	real x= point->x;
+	real y= point->y;
+	real z= point->z;
+
+	if (matrix->scale != 1.f)
+	{
+		x *= matrix->scale;
+		y *= matrix->scale;
+		z *= matrix->scale;
+	}
+
+	result->x= matrix->up.i*z + matrix->left.i*y + matrix->forward.i*x + matrix->position.x;
+	result->y= matrix->up.j*z + matrix->left.j*y + matrix->forward.j*x + matrix->position.y;
+	result->z= matrix->up.k*z + matrix->left.k*y + matrix->forward.k*x + matrix->position.z;
+	return result;
+}
+
+real_vector3d *matrix4x3_transform_normal(
+	real_matrix4x3 const *matrix,
+	real_vector3d const *normal,
+	real_vector3d *result)
+{
+	real i= normal->i;
+	real j= normal->j;
+	real k= normal->k;
+
+	result->i= i*matrix->forward.i + j*matrix->left.i + k*matrix->up.i;
+	result->j= i*matrix->forward.j + j*matrix->left.j + k*matrix->up.j;
+	result->k= i*matrix->forward.k + j*matrix->left.k + k*matrix->up.k;
+	return result;
+}
 
 /* ---------- private code */

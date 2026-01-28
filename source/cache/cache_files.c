@@ -122,16 +122,64 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "cache_files.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
 
 /* ---------- structures */
 
+struct cache_file_tag_instance
+{
+	long group_tag;
+	long parent_group_tags[2];
+	long tag_index;
+	char *name;
+	void *base_address;
+	unsigned long unused[2];
+};
+
 /* ---------- prototypes */
+
+// TODO: 
+/*static*/ struct cache_file_tag_instance *cache_get_tag_instance(long tag_index);
 
 /* ---------- globals */
 
 /* ---------- public code */
+
+void *tag_get(
+	long group_tag,
+	long tag_index)
+{
+	char expected_group[16];
+	char returned_group[16];
+
+	struct cache_file_tag_instance *tag_instance= cache_get_tag_instance(tag_index);
+	match_vassert(
+		"c:\\halo\\SOURCE\\cache\\cache_files.c",
+		298,
+		tag_instance->group_tag == group_tag ||
+		tag_instance->parent_group_tags[0] == group_tag ||
+		tag_instance->parent_group_tags[1] == group_tag,
+		csprintf(
+			temporary,
+			"expected tag group '%s' but got '%s' for %08x",
+			tag_to_string(group_tag, expected_group),
+			tag_to_string(tag_instance->group_tag, returned_group),
+			tag_index
+		)
+	);
+	match_vassert(
+		"c:\\halo\\SOURCE\\cache\\cache_files.c",
+		302,
+		tag_instance->base_address,
+		csprintf(temporary, "can't get() a tag with a base address!")
+	);
+	
+	return tag_instance->base_address;
+}
 
 /* ---------- private code */
