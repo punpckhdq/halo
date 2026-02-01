@@ -27,12 +27,9 @@ struct edit_text
 
 /* ---------- prototypes/EDIT_TEXT.C */
 
-void edit_text_handle_key(struct edit_text *edit, struct key_stroke const *key);
-
-boolean edit_text_get_selection_indices(struct edit_text *edit, short *start_index, short *end_index);
-
 void edit_text_new(struct edit_text *edit);
-
+void edit_text_handle_key(struct edit_text *edit, struct key_stroke const *key);
+boolean edit_text_get_selection_indices(struct edit_text *edit, short *start_index, short *end_index);
 void edit_text_selection_reset(struct edit_text *edit);
 
 /* ---------- globals */

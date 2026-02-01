@@ -56,8 +56,8 @@ void set_language_code(short language_code)
 	return;
 }
 
-unsigned short get_next_character(
-	unsigned char *string,
+word get_next_character(
+	byte *string,
 	short *index)
 {
 	unsigned short result;
@@ -65,7 +65,7 @@ unsigned short get_next_character(
 	match_vassert(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		32,
-		*index >= 0 || *index <= (short)csstrlen((char *)string),
+		*index>=0 && *index<=csstrlen((char *)string),
 		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
 	);
 
@@ -73,75 +73,77 @@ unsigned short get_next_character(
 
 	if (double_byte_character(string))
 	{
-		result= string[0];
-		result|= string[1]<<8;
-		*index+=2;
+		result= _byteswap_ushort(*((word*)string));
+		*index= *index+2;
 	}
 	else
 	{
-		result= string[0];
-		++*index;
+		result= *string;
+		*index= *index+1;
 	}
+
 	return result;
 }
 
-unsigned short get_previous_character(
-	unsigned char *string,
+word get_previous_character(
+	byte *string,
 	short *index)
 {
-	long i;
+	short i;
+	word result;
 
 	match_vassert(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		55,
-		*index >= 0 || *index <= (short)csstrlen((char *)string),
+		VALID_INDEX(*index, (short)csstrlen((char *)string)),
 		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
 	);
 
-	for (i= 0; i < *index; i++)
+	i= 0;
+	do
 	{
-		get_next_character(string, index);
+		result= get_next_character(string, &i);
 	}
+	while (i<*index);
 
 
 	match_vwarn(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		67,
-		*index >= 0 || *index <= (short)csstrlen((char *)string),
+		i==*index,
 		csprintf(temporary, "index #%d is inbetween characters in string %p", *index, string)
 	);
 
+	*index= i;
 
+	return result;
 }
 
 void align_to_character(
 	unsigned char *string,
 	short *index)
 {
-	long i;
-	short indices[2];
+	short indices[4];
 
 	match_vassert(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		85,
-		*index >= 0 || *index <= (short)csstrlen((char *)string),
+		*index >= 0 || *index <= (short)strlen((char *)string),
 		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
 	);
 
 	indices[0]= 0;
-	indices[1]= 1;
-	for (i=0; i<*index; i++)
+	while (indices[0]<*index)
 	{
 		get_next_character(string, indices);
 	}
-
 	*index= indices[0];
 
 	return;
 }
 
 boolean double_byte_character(
-	unsigned char *string)
+	byte *string)
 {
 	boolean result= FALSE;
 	unsigned char character= string[0];

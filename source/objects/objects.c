@@ -2198,7 +2198,7 @@ void objects_reconnect_to_structure_bsp(
 				}
 				else
 				{
-					scenario_location_from_point(&scenario_location, (int)&object->object.position);
+					scenario_location_from_point(&scenario_location, &object->object.position);
 				}
 			}
 			object_reconnect_to_map(iterator.index, &scenario_location);
