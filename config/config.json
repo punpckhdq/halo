@@ -705,7 +705,7 @@
 				{ "name": "source/dialogs/picture_control.c", "index": 333, "status": "Matching" },
 				{ "name": "source/dialogs/list_control.c", "index": 334, "status": "Matching" },
 				{ "name": "source/dialogs/edit_text_control.c", "index": 335, "status": "Matching" },
-				{ "name": "source/dialogs/edit_text.c", "index": 336, "status": "NonMatching" },
+				{ "name": "source/dialogs/edit_text.c", "index": 336, "status": "Matching" },
 				{ "name": "source/dialogs/dialogs.c", "index": 337, "status": "Matching" },
 				{ "name": "source/dialogs/dialog_templates.c", "index": 338, "status": "Matching" },
 				{ "name": "source/dialogs/dialog_controls.c", "index": 339, "status": "Matching" },
