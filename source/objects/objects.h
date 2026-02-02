@@ -137,6 +137,25 @@ enum
 
 enum
 {
+	_object_function_none= 0,
+	_object_function_body_vitality,
+	_object_function_shield_vitality,
+	_object_function_recent_body_damage,
+	_object_function_recent_shield_damage,
+	_object_function_random_constant,
+	_object_function_umbrella_shield_vitality,
+	_object_function_shield_stun,
+	_object_function_recent_umbrella_shield_vitality,
+	_object_function_umbrella_shield_stun,
+	_object_function_first_region_damage,
+	_object_function_last_region_damage = 17,
+	_object_function_alive,
+	_object_function_compass,
+	NUMBER_OF_OBJECT_FUNCTION_MODES,
+};
+
+enum
+{
 	_object_change_color_a= 0,
 	_object_change_color_b,
 	_object_change_color_c,

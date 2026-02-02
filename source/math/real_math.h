@@ -278,6 +278,9 @@ unsigned long *get_global_random_seed_address(void);
 
 short seed_random_range(unsigned long *seed, short lower_bound, short upper_bound);
 
+real real_seed_random(unsigned long *seed);
+real real_seed_random_range(unsigned long *seed, real lower_bound, real upper_bound);
+
 /* ---------- globals */
 
 extern const real_point3d *const global_origin3d;
@@ -326,14 +329,33 @@ __inline real arctangent(
 	return atan2(y, x);
 }
 
-__inline float arccosine(real x)
+__inline real arccosine(real x)
 {
 	return acos(x);
 }
 
-__inline float arcsine(real x)
+__inline real arcsine(real x)
 {
 	return asin(x);
+}
+
+__inline real signed_angular_difference(
+	real angle1,
+	real angle2)
+{
+	real result= angle2-angle1;
+	
+	if (result>=M_PI)
+	{
+		result-= (M_PI*2.f);
+	}
+	
+	if (result<=(-M_PI))
+	{
+		result+= (M_PI*2.f);
+	}
+
+	return result;
 }
 
 __inline real_point3d *point_from_line3d(real_point3d const *p, real_vector3d const *v, real t, real_point3d *result)
@@ -486,6 +508,12 @@ __inline short random_range(
 	short upper_bound)
 {
 	return seed_random_range(get_global_random_seed_address(), lower_bound, upper_bound);
+}
+
+__inline real real_random(
+	void)
+{
+	return real_seed_random(get_global_random_seed_address());
 }
 
 #endif // __REAL_MATH_H

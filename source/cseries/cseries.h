@@ -6,6 +6,8 @@ CSERIES.H
 #define __CSERIES_H
 #pragma once
 
+#define _USE_MATH_DEFINES
+
 #include <StdDef.h>
 #include <stdio.h>
 #include <stdlib.h>

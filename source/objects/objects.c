@@ -2232,6 +2232,69 @@ void objects_paparazzi(
 void object_export_function_values(
 	long object_index)
 {
+	short i;
+
+	struct object_datum *object= object_get(object_index);
+	struct object_definition *object_definition= object_definition_get(object->definition_index);
+
+	for (i = 0; i<NUMBEROF(object->object.incoming_function_values); ++i)
+	{
+		if (object_definition->object.function_modes[i])
+		{
+			short region_index;
+			real_matrix4x3 *node_matrix;
+
+			real value= 0.f;
+
+			switch (object_definition->object.function_modes[i])
+			{
+			case _object_function_recent_body_damage:
+				value= object->object.current_body_damage;
+				break;
+			case _object_function_recent_shield_damage:
+				value= object->object.current_shield_damage;
+				break;
+			case _object_function_body_vitality:
+				value= object->object.body_vitality;
+				break;
+			case _object_function_shield_vitality:
+				value= object->object.shield_vitality;
+				value= MIN(value, 1.f);
+				break;
+		
+			case _object_function_random_constant:
+				if (object->object.incoming_function_values[i]==1.f)
+				{
+					value= real_random();
+				}
+				break;
+			case _object_function_alive:
+				value= TEST_FLAG(object->object.damage_flags, _object_dead_bit) ? 0.f : 1.f;
+				break;
+			case _object_function_compass:
+				node_matrix= object_get_node_matrix(object_index, 0);
+				if (fabs(node_matrix->forward.k) < 0.995f)
+				{
+					value= signed_angular_difference(global_scenario_get()->local_north, arctangent(node_matrix->forward.i, node_matrix->forward.j));
+					value= (0.15915494f * value) + 0.5f;
+					value= PIN(value, 0.f, 1.f);
+				}
+				else
+				{
+					value= object->object.incoming_function_values[i];
+				}
+				break;
+			default:
+				region_index= object_definition->object.function_modes[i]-_object_function_first_region_damage;
+				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2630, region_index>=0 && region_index<MAXIMUM_REGIONS_PER_OBJECT);
+				value = object->object.region_damage[region_index] / 255.f;
+				break;
+			}
+			object->object.incoming_function_values[i] = value;
+		}
+		
+	}
+
 	return;
 }
 
