@@ -4387,7 +4387,6 @@ static void object_delete_recursive(
 	return;
 }
 
-// TODO: match
 static void object_compute_function_values(
 	long object_index)
 {
@@ -4485,10 +4484,11 @@ static void object_compute_function_values(
 		{
 			if (function->lower_bound+_real_epsilon>=output)
 			{
+				output = function->lower_bound;
 				function_is_active= TEST_FLAG(function->flags, _object_function_does_not_deactivate_below_lower_bound_bit);
 			}
 
-			if (function->upper_bound<output)
+			if (output>function->upper_bound)
 			{
 				output= function->upper_bound;
 			}
