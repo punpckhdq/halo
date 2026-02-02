@@ -149,8 +149,10 @@ static const struct object_memory_release_function object_memory_release_procs[3
 static struct object_globals *object_globals;
 static struct memory_pool *object_memory_pool;
 static long *object_name_list;
-boolean debug_objects_position_velocity;
 
+static struct profile_section objects_update_section= {"objects_update", NONE, TRUE};
+
+boolean debug_objects_position_velocity= FALSE;
 boolean debug_objects_bounding_spheres= TRUE;
 boolean debug_objects_collision_models= TRUE;
 
@@ -3696,7 +3698,7 @@ void objects_update(
 
 	boolean dont_update_object= ((game_time_get()&1)!=0) && game_players_are_double_speed();
 
-	profile_enter();
+	profile_enter(objects_update_section);
 
 	object_globals->active_garbage_object_count= 0;
 	

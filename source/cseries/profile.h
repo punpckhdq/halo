@@ -10,18 +10,16 @@ PROFILE.H
 
 /* ---------- macros */
 
-#define profile_enter()									\
-static struct profile_section section=					\
-{ __FUNCTION__, NONE, TRUE };							\
-if (profile_global_enable && section.profile_active)	\
+#define profile_enter(objects_update_section)							\
+if (profile_global_enable && objects_update_section.profile_active)	\
 {														\
-	profile_enter_private(&section);					\
+	profile_enter_private(&objects_update_section);					\
 }														\
 
 #define profile_exit()									\
-if (profile_global_enable && section.profile_active)	\
+if (profile_global_enable && objects_update_section.profile_active)	\
 {														\
-	profile_exit_private(&section);						\
+	profile_exit_private(&objects_update_section);						\
 }														\
 
 /* ---------- structures */
@@ -43,9 +41,9 @@ struct profile_section
 
 void profile_initialize(void);
 
-void profile_enter_private(struct profile_section *section);
+void profile_enter_private(struct profile_section *objects_update_section);
 
-void profile_exit_private(struct profile_section *section);
+void profile_exit_private(struct profile_section *objects_update_section);
 
 /* ---------- globals */
 

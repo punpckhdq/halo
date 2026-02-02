@@ -45,7 +45,7 @@ word get_next_character(byte *string, short *index);
 word get_previous_character(byte *string, short *index);
 void align_to_character(unsigned char *string, short *index);
 boolean double_byte_character(byte *string);
-boolean character_in_pattern(unsigned short character, char *pattern);
+boolean character_in_pattern(word character, char *pattern);
 
 /* ---------- globals */
 

@@ -60,12 +60,12 @@ word get_next_character(
 	byte *string,
 	short *index)
 {
-	unsigned short result;
+	word result;
 
 	match_vassert(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		32,
-		*index>=0 && *index<=csstrlen((char *)string),
+		*index>=0 && *index<=strlen((char *)string),
 		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
 	);
 
@@ -73,13 +73,17 @@ word get_next_character(
 
 	if (double_byte_character(string))
 	{
-		result= _byteswap_ushort(*((word*)string));
-		*index= *index+2;
+		// Construct the wide character by byteswapping the two chars
+		result= 0;
+		result|= string[0]<<8;
+		result|= string[1]<<0;
+		
+		*index+= 2;
 	}
 	else
 	{
-		result= *string;
-		*index= *index+1;
+		result= string[0];
+		*index+= 1;
 	}
 
 	return result;
@@ -95,7 +99,7 @@ word get_previous_character(
 	match_vassert(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		55,
-		VALID_INDEX(*index, (short)csstrlen((char *)string)),
+		VALID_INDEX(*index, (short)strlen((char *)string)),
 		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
 	);
 
@@ -123,21 +127,21 @@ void align_to_character(
 	unsigned char *string,
 	short *index)
 {
-	short indices[4];
+	short i;
 
 	match_vassert(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		85,
-		*index >= 0 || *index <= (short)strlen((char *)string),
+		*index>0 || *index <=(short)strlen((char *)string),
 		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
 	);
 
-	indices[0]= 0;
-	while (indices[0]<*index)
+	i= 0;
+	while (i<*index)
 	{
-		get_next_character(string, indices);
+		get_next_character(string, &i);
 	}
-	*index= indices[0];
+	*index= i;
 
 	return;
 }
@@ -146,60 +150,125 @@ boolean double_byte_character(
 	byte *string)
 {
 	boolean result= FALSE;
-	unsigned char character= string[0];
+	byte character= string[0];
 
 	if (character!='\0')
 	{
-		unsigned char next_character= string[1];
-		if (character != 124 || next_character || !strchr("ibukprlctn", next_character))
+		byte next_character= string[1];
+		if (
+			character==(byte)('|') &&
+			next_character &&
+			strchr("ibukprlctn", next_character)
+		)
+		{
+			result= TRUE;
+		}
+		else
 		{
 			switch (global_language_code)
 			{
 			case _language_japanese:
 				if (
-					(character < 129u || character > 159u) &&
-					(character < 224u || character == 255) ||
-					next_character < 64u ||
-					next_character > 252u ||
-					next_character == 127)
-				{
-
-				}
-				else
+					(
+					character>=(byte)('\x81') && character<=(byte)('\x9F') ||
+					character>=(byte)('\xE0') && character!=(byte)('\xFE')
+					) &&
+					next_character>=(byte)('@') &&
+					next_character<=(byte)('\xFC') &&
+					next_character!=(byte)('\x7F')
+				)
 				{
 					result= TRUE;
 				}
 				break;
 			case _language_simple_chinese:
-				if (character < 0xA1u || character == 0xFF)
+				if (
+					character>=(byte)('\xA1') &&
+					character!=(byte)('\xFE') &&
+					next_character>=(byte)('\xA1') &&
+					next_character!=(byte)('\xFE')
+				)
 				{
-
+					result= TRUE;
 				}
-				else
+				break;
+			case _language_traditional_chinese:
+				if (
+					character>=(byte)('\x81') &&
+					character!=(byte)('\xFE') &&
+					(
+					next_character>=(byte)('@') && next_character<=(byte)('~') ||
+					next_character>=(byte)('\xA1') && next_character!=(byte)('\xFE')
+					)
+				)
 				{
+					result= TRUE;
 				}
+				break;
+			case _language_korean_wansung:
+				if (
+					character>=(byte)('\x81') &&
+					character!=(byte)('\xFE') &&
+					(
+					next_character>=(byte)('A') && next_character<=(byte)('Z') ||
+					next_character>=(byte)('a') && next_character<=(byte)('z') ||
+					next_character>=(byte)('\x81') && next_character!=(byte)('\xFE')
+					)
+				)
+				{
+					result= TRUE;
+				}
+				break;
+			case _language_korean_johab:
+				if (
+					(
+					character>=(byte)('\x84') && character<=(byte)('\xD3') ||
+					character>=(byte)('\xD8') && character<=(byte)('\xDE') ||
+					character>=(byte)('\xE0') && character<=(byte)('\xF9')
+					) &&
+					(
+					next_character>=(byte)('A') && next_character<=(byte)('~') ||
+					next_character>=(byte)('\x81') && next_character!=(byte)('\xFE')
+					)
+				)
+				{
+					result= TRUE;
+				}
+				break;
+			default:
+				break;
 			}
 		}
 	}
+
 	return result;
 }
 
 boolean character_in_pattern(
-	unsigned short character,
+	word character,
 	char *pattern)
 {
 	boolean result= FALSE;
-	short index[2] = { 0, 0 };
-	word next_character;
+	boolean found= FALSE;
+	short index = 0;
 
-
-	while (next_character = get_next_character((unsigned char *)pattern, index))
+	while (!found)
 	{
-		if (next_character==character)
+		word next_character = get_next_character((unsigned char *)pattern, &index);
+		if (next_character)
 		{
-			result= TRUE;
+			if (next_character==character)
+			{
+				found= TRUE;
+				result= TRUE;
+			}
+		}
+		else
+		{
+			found= TRUE;
 		}
 	}
+		
 	return result;
 }
 

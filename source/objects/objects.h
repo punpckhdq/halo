@@ -454,6 +454,10 @@ boolean debug_object_garbage_collection;
 /* comm */
 struct data_array *object_header_data;
 
+extern boolean debug_objects_position_velocity;
+extern boolean debug_objects_bounding_spheres;
+extern boolean debug_objects_collision_models;
+
 /* ---------- public code */
 
 __inline short object_get_type(

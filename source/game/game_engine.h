@@ -20,6 +20,10 @@ boolean game_engine_running(void);
 
 long game_engine_remap_object_definition(long definition_index);
 
+long game_engine_remap_vehicle(long vehicle_definition_index);
+long game_engine_remap_equipment(long equipment_definition_index);
+long game_engine_remap_weapon(long weapon_definition_index);
+
 /* ---------- globals */
 
 /* ---------- public code */
