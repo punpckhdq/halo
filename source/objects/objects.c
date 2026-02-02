@@ -1996,7 +1996,6 @@ void object_get_orientation(
 	real_vector3d *up)
 {
 	struct object_datum *object= object_get(object_index);
-	
 
 	if (object->object.parent_object_index==NONE)
 	{
@@ -2024,11 +2023,11 @@ void object_get_orientation(
 		{
 			matrix4x3_transform_normal(node_matrix, &object->object.up, up);
 		}
+	}
 
-		if (forward && up)
-		{
-			match_assert_valid_real_vector3d_axes2("c:\\halo\\SOURCE\\objects\\objects.c", 1462, forward, up);
-		}
+	if (forward && up)
+	{
+		match_assert_valid_real_vector3d_axes2("c:\\halo\\SOURCE\\objects\\objects.c", 1462, forward, up);
 	}
 
 	return;
