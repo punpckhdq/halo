@@ -58,13 +58,13 @@ enum
 		FLAG(_collision_test_structure_bit) |
 		FLAG(_collision_test_media_bit),
 	
-	_collision_test_for_projectiles_flags = 0x1000E9,
-	_collision_test_for_projectiles_fat_flags = 0x89,
-	_collision_test_for_line_of_sight_flags = 0xC2AD,
-	_collision_test_for_bipeds_living_flags = 0x20C3A0,
-	_collision_test_for_bipeds_passthrough_living_flags = 0xC2A0,
-	_collision_test_for_bipeds_dead_flags = 0xC0A0,
-	_collision_test_for_vehicles_flags = 0xC0A0,
+	_collision_test_for_projectiles_flags= 0x1000E9,
+	_collision_test_for_projectiles_fat_flags= 0x89,
+	_collision_test_for_line_of_sight_flags= 0xC2AD,
+	_collision_test_for_bipeds_living_flags= 0x20C3A0,
+	_collision_test_for_bipeds_passthrough_living_flags= 0xC2A0,
+	_collision_test_for_bipeds_dead_flags= 0xC0A0,
+	_collision_test_for_vehicles_flags= 0xC0A0,
 };
 
 /* ---------- macros */

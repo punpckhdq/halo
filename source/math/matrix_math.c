@@ -126,9 +126,9 @@ void matrix4x3_inverse(
 			result->scale= 1.f;
 		}
 
-		result->n[0][0] = matrix->n[0][0];
-		result->n[1][1] = matrix->n[1][1];
-		result->n[2][2] = matrix->n[2][2];
+		result->n[0][0]= matrix->n[0][0];
+		result->n[1][1]= matrix->n[1][1];
+		result->n[2][2]= matrix->n[2][2];
 
 		temp= matrix->n[1][0];
 		result->n[1][0]= matrix->n[0][1];
@@ -142,15 +142,43 @@ void matrix4x3_inverse(
 		result->n[2][1]= matrix->n[1][2];
 		result->n[1][2]= temp;
 
-		result->n[3][0] = (x*result->n[0][0]) + y*result->n[1][0] + (z*result->n[2][0]);
-		result->n[3][1] = (x*result->n[0][1]) + y*result->n[1][1] + (z*result->n[2][1]);
-		result->n[3][2] = (x*result->n[0][2]) + y*result->n[1][2] + (z*result->n[2][2]);
+		result->n[3][0]= (x*result->n[0][0]) + y*result->n[1][0] + (z*result->n[2][0]);
+		result->n[3][1]= (x*result->n[0][1]) + y*result->n[1][1] + (z*result->n[2][1]);
+		result->n[3][2]= (x*result->n[0][2]) + y*result->n[1][2] + (z*result->n[2][2]);
 	}
 	else
 	{
 		memset(result, 0, sizeof(*result));
 	}
 
+	return;
+}
+
+void matrix4x3_rotation_from_vectors(
+	real_matrix4x3 *matrix,
+	real_vector3d const *forward,
+	real_vector3d const *up)
+
+{
+	matrix->scale= 1.f;
+	matrix->forward= *forward;
+	cross_product3d(up, forward, &matrix->left);
+
+	matrix->up= *up;
+	set_real_point3d(&matrix->position, 0.f, 0.f, 0.f);
+
+	return;
+}
+
+void matrix4x3_from_point_and_vectors(
+	real_matrix4x3 *matrix,
+	real_point3d const *point,
+	real_vector3d const *forward,
+	real_vector3d const *up)
+{
+	matrix4x3_rotation_from_vectors(matrix, forward, up);
+	matrix->position= *point;
+	
 	return;
 }
 

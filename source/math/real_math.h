@@ -409,6 +409,19 @@ __inline real_vector3d *negate_vector3d(
 	return result;
 }
 
+__inline real_point3d *set_real_point3d(
+	real_point3d *p,
+	real x,
+	real y,
+	real z)
+{
+	p->x= x;
+	p->y= y;
+	p->z= z;
+
+	return p;
+}
+
 __inline boolean valid_real(
 	real n)
 {
@@ -419,7 +432,7 @@ __inline boolean valid_realcmp(
 	real a,
 	real b)
 {
-	real result = a - b;
+	real result= a - b;
 	return valid_real(result) && fabs(result) < 0.01f;
 }
 
@@ -445,13 +458,13 @@ __inline boolean valid_real_vector3d_axes2(
 	real_vector3d const *forward,
 	real_vector3d const *up)
 {
-	boolean result = FALSE;
+	boolean result= FALSE;
 	if (valid_real_normal3d(forward) && valid_real_normal3d(up))
 	{
-		real product = dot_product3d(forward, up);
+		real product= dot_product3d(forward, up);
 		if (valid_realcmp(product, 0.f))
 		{
-			result = TRUE;
+			result= TRUE;
 		}
 	}
 	return result;
@@ -491,6 +504,7 @@ __inline real_vector3d *cross_product3d(
 	result->i= i;
 	result->j= j;
 	result->k= k;
+
 	return result;
 }
 

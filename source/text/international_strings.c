@@ -250,11 +250,11 @@ boolean character_in_pattern(
 {
 	boolean result= FALSE;
 	boolean found= FALSE;
-	short index = 0;
+	short index= 0;
 
 	while (!found)
 	{
-		word next_character = get_next_character((unsigned char *)pattern, &index);
+		word next_character= get_next_character((unsigned char *)pattern, &index);
 		if (next_character)
 		{
 			if (next_character==character)

@@ -26,6 +26,8 @@ long game_engine_remap_weapon(long weapon_definition_index);
 
 /* ---------- globals */
 
+extern struct game_engine *game_engine;
+
 /* ---------- public code */
 
 #endif // __GAME_ENGINE_H

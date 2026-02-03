@@ -148,7 +148,7 @@ enum
 	_object_function_recent_umbrella_shield_vitality,
 	_object_function_umbrella_shield_stun,
 	_object_function_first_region_damage,
-	_object_function_last_region_damage = 17,
+	_object_function_last_region_damage= 17,
 	_object_function_alive,
 	_object_function_compass,
 	NUMBER_OF_OBJECT_FUNCTION_MODES,
@@ -173,7 +173,7 @@ enum
 
 enum
 {
-	_garbage_collect_everything = 0,
+	_garbage_collect_everything= 0,
 	_garbage_collect_active_objects,
 	_garbage_collect_for_space,
 	NUMBER_OF_GARBAGE_COLLECTION_MODES,

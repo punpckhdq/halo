@@ -16,7 +16,7 @@ header included in hcex build.
 
 enum
 {
-	DEVICE_DEFINITION_TAG = 'devi',
+	DEVICE_DEFINITION_TAG= 'devi',
 	DEVICE_DEFINITION_VERSION= 1,
 };
 

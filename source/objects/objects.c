@@ -2119,7 +2119,7 @@ short objects_in_sphere(
 		type_flags= NONE;
 	}
 
-	cluster_count = structure_clusters_in_sphere(
+	cluster_count= structure_clusters_in_sphere(
 		location->cluster_index,
 		center,
 		radius,
@@ -2156,7 +2156,7 @@ void objects_reconnect_to_structure_bsp(
 
 	object_iterator_new(&iterator, _object_mask_all, 0);
 	
-	while(object = (struct object_datum *)object_iterator_next(&iterator))
+	while(object= (struct object_datum *)object_iterator_next(&iterator))
 	{
 		if (TEST_FLAG(object->object.flags, _object_connected_to_map_bit) &&
 			object->object.parent_object_index==NONE)
@@ -2183,14 +2183,14 @@ void objects_reconnect_to_structure_bsp(
 
 				if (result.leaf_count)
 				{
-					scenario_location.leaf_index = result.leaf_indices[0];
+					scenario_location.leaf_index= result.leaf_indices[0];
 					if (result.leaf_indices[0] == -1)
 					{
-						scenario_location.cluster_index = -1;
+						scenario_location.cluster_index= -1;
 					}
 					else
 					{
-						scenario_location.cluster_index = TAG_BLOCK_GET_ELEMENT(
+						scenario_location.cluster_index= TAG_BLOCK_GET_ELEMENT(
 							&global_structure_bsp_get()->leaves,
 							result.leaf_indices[0] & LONG_MAX,
 							struct structure_leaf
@@ -2236,7 +2236,7 @@ void object_export_function_values(
 	struct object_datum *object= object_get(object_index);
 	struct object_definition *object_definition= object_definition_get(object->definition_index);
 
-	for (i = 0; i<NUMBEROF(object->object.incoming_function_values); ++i)
+	for (i= 0; i<NUMBEROF(object->object.incoming_function_values); ++i)
 	{
 		if (object_definition->object.function_modes[i])
 		{
@@ -2286,10 +2286,10 @@ void object_export_function_values(
 			default:
 				region_index= object_definition->object.function_modes[i]-_object_function_first_region_damage;
 				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2630, region_index>=0 && region_index<MAXIMUM_REGIONS_PER_OBJECT);
-				value = object->object.region_damage[region_index] / 255.f;
+				value= object->object.region_damage[region_index] / 255.f;
 				break;
 			}
-			object->object.incoming_function_values[i] = value;
+			object->object.incoming_function_values[i]= value;
 		}
 		
 	}
@@ -4483,7 +4483,7 @@ static void object_compute_function_values(
 		{
 			if (function->lower_bound+_real_epsilon>=output)
 			{
-				output = function->lower_bound;
+				output= function->lower_bound;
 				function_is_active= TEST_FLAG(function->flags, _object_function_does_not_deactivate_below_lower_bound_bit);
 			}
 

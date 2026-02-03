@@ -551,12 +551,19 @@ symbols in this file:
 
 /* ---------- globals */
 
+struct game_engine *game_engine;
+
 /* ---------- public code */
+
+boolean game_engine_running(
+	void)
+{
+	return game_engine!=NULL;
+}
 
 long game_engine_remap_object_definition(
 	long definition_index)
 {
-	
 	if (game_engine_running() && definition_index!=NONE)
 	{
 		switch (object_definition_get(definition_index)->object.type)

@@ -151,7 +151,7 @@ struct _stack_walk_globals stack_walk_globals=
 void stack_walk_disregard_symbol_names(
 	boolean disregard)
 {
-	stack_walk_globals.disregard_symbol_names = disregard;
+	stack_walk_globals.disregard_symbol_names= disregard;
 }
 
 void free_symbol_table(
