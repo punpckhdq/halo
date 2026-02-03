@@ -3865,7 +3865,7 @@ void objects_update(
 
 	objects_garbage_collection();
 
-	profile_exit();
+	profile_exit(objects_update_section);
 
 	return;
 }

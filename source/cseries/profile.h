@@ -10,16 +10,16 @@ PROFILE.H
 
 /* ---------- macros */
 
-#define profile_enter(objects_update_section)							\
-if (profile_global_enable && objects_update_section.profile_active)	\
+#define profile_enter(section)							\
+if (profile_global_enable && section.profile_active)	\
 {														\
-	profile_enter_private(&objects_update_section);					\
+	profile_enter_private(&section);					\
 }														\
 
-#define profile_exit()									\
-if (profile_global_enable && objects_update_section.profile_active)	\
+#define profile_exit(section)							\
+if (profile_global_enable && section.profile_active)	\
 {														\
-	profile_exit_private(&objects_update_section);						\
+	profile_exit_private(&section);						\
 }														\
 
 /* ---------- structures */
