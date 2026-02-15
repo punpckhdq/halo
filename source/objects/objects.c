@@ -165,8 +165,7 @@ long cluster_get_first_noncollideable_object(
 	return cluster_partition_get_first_datum(
 		&noncollideable_object_cluster_partition,
 		reference_index,
-		cluster_index
-	);
+		cluster_index);
 }
 
 long cluster_get_next_noncollideable_object(
@@ -174,8 +173,7 @@ long cluster_get_next_noncollideable_object(
 {
 	return cluster_partition_get_next_datum(
 		&noncollideable_object_cluster_partition,
-		reference_index
-	);
+		reference_index);
 }
 
 long cluster_get_first_collideable_object(
@@ -185,8 +183,7 @@ long cluster_get_first_collideable_object(
 	return cluster_partition_get_first_datum(
 		&collideable_object_cluster_partition,
 		reference_index,
-		cluster_index
-	);
+		cluster_index);
 }
 
 long cluster_get_next_collideable_object(
@@ -194,8 +191,7 @@ long cluster_get_next_collideable_object(
 {
 	return cluster_partition_get_next_datum(
 		&collideable_object_cluster_partition,
-		reference_index
-	);
+		reference_index);
 }
 
 short object_get_next_cluster(
@@ -204,8 +200,7 @@ short object_get_next_cluster(
 	match_assert(
 		"c:\\halo\\SOURCE\\objects\\objects.c",
 		1049,
-		iterator->cluster_partition==&collideable_object_cluster_partition || iterator->cluster_partition==&noncollideable_object_cluster_partition
-	);
+		iterator->cluster_partition==&collideable_object_cluster_partition || iterator->cluster_partition==&noncollideable_object_cluster_partition);
 
 	return cluster_partition_get_next_cluster(iterator->cluster_partition, &iterator->reference_index);
 }
@@ -242,9 +237,7 @@ void *object_get_and_verify_type(
 			temporary,
 			"got an object type we didn't expect (expected one of 0x%08x but got #%d).",
 			valid_type_flags,
-			result->object.type
-		)
-	);
+			result->object.type));
 
 	return result;
 }
@@ -275,17 +268,14 @@ void *object_iterator_next(
 		"c:\\halo\\SOURCE\\objects\\objects.c",
 		1720,
 		iterator->signature==OBJECT_ITERATOR_SIGNATURE,
-		"uninitialized iterator passed to object_iterator_next()"
-	);
+		"uninitialized iterator passed to object_iterator_next()");
 
 	data_verify(object_header_data);
 	
 	abs_index= iterator->absolute_index;
 
 	// The operation to get this header is inlined in the original code?
-	header= (struct object_header_datum *)(
-		(char*)object_header_data->data + sizeof(struct object_header_datum) * abs_index
-	);
+	header= (struct object_header_datum *)((char*)object_header_data->data + sizeof(struct object_header_datum) * abs_index);
 
 	while (abs_index<object_header_data->count)
 	{
@@ -348,11 +338,9 @@ void objects_fix_for_deleted_object(
 	struct object_iterator iterator;
 	object_iterator_new(&iterator, _object_mask_all, 0);
 
-	for (
-		object= (struct object_datum *)object_iterator_next(&iterator);
+	for (object= (struct object_datum *)object_iterator_next(&iterator);
 		object;
-		object= (struct object_datum *)object_iterator_next(&iterator)
-	)
+		object= (struct object_datum *)object_iterator_next(&iterator))
 	{
 		if (object->object.umbrella_shield_object_index==deleted_object_index)
 		{
@@ -372,18 +360,15 @@ void object_set_garbage(
 	struct object_datum* object= object_get(object_index);
 	
 	long garbage_object_index;
-	for (
-		garbage_object_index= object_globals->first_garbage_object_index;
+	for (garbage_object_index= object_globals->first_garbage_object_index;
 		garbage_object_index!=NONE;
-		garbage_object_index= garbage_object->object.next_garbage_object_index
-	)
+		garbage_object_index= garbage_object->object.next_garbage_object_index)
 	{
 		garbage_object= object_get(garbage_object_index);
 		match_assert(
 			"c:\\halo\\SOURCE\\objects\\objects.c",
 			1952,
-			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit)
-		);
+			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit));
 	}
 
 	if (garbage)
@@ -403,11 +388,9 @@ void object_set_garbage(
 		if (TEST_FLAG(object->object.flags, _object_garbage_bit))
 		{
 			long *garbage_object_index;
-			for (
-				garbage_object_index= &object_globals->first_garbage_object_index;
+			for (garbage_object_index= &object_globals->first_garbage_object_index;
 				*garbage_object_index!=object_index;
-				garbage_object_index= &object_get(*garbage_object_index)->object.next_garbage_object_index
-			)
+				garbage_object_index= &object_get(*garbage_object_index)->object.next_garbage_object_index)
 			{
 			}
 
@@ -417,18 +400,15 @@ void object_set_garbage(
 		}
 	}
 
-	for (
-		garbage_object_index= object_globals->first_garbage_object_index;
+	for (garbage_object_index= object_globals->first_garbage_object_index;
 		garbage_object_index!=NONE;
-		garbage_object_index= garbage_object->object.next_garbage_object_index
-	)
+		garbage_object_index= garbage_object->object.next_garbage_object_index)
 	{
 		garbage_object= object_get(garbage_object_index);
 		match_assert(
 			"c:\\halo\\SOURCE\\objects\\objects.c",
 			2006,
-			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit)
-		);
+			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit));
 	}
 
 	return;
@@ -499,8 +479,7 @@ void object_pvs_set_camera_point(
 		struct scenario_cutscene_camera_point *point= (struct scenario_cutscene_camera_point *)TAG_BLOCK_GET_ELEMENT(
 			&global_scenario_get()->cutscene_camera_points,
 			camera_point_index,
-			struct scenario_cutscene_camera_point
-		);
+			struct scenario_cutscene_camera_point);
 
 		scenario_location_from_point(&location, &point->position);
 		if (location.cluster_index==NONE)
@@ -508,8 +487,7 @@ void object_pvs_set_camera_point(
 			error(
 				_error_silent,
 				  "object_pvs_set_camera_point: camera point %s is outside the map",
-				  point->name
-			);
+				  point->name);
 			object_globals->pvs_activation_type= FALSE;
 		}
 		else
@@ -557,8 +535,7 @@ short objects_get_activating_cluster_index(
 						"c:\\halo\\SOURCE\\objects\\objects.c",
 						2279,
 						parent_object->object.location.cluster_index>=0 &&
-						parent_object->object.location.cluster_index<global_structure_bsp_get()->clusters.count
-					);
+						parent_object->object.location.cluster_index<global_structure_bsp_get()->clusters.count);
 					result= parent_object->object.location.cluster_index;
 				}
 			}
@@ -805,8 +782,7 @@ long find_objects_from_point_vector(
 		short cluster_index= TAG_BLOCK_GET_ELEMENT(
 			&global_structure_bsp_get()->leaves,
 			scenario_leaf_index_from_point(position) & LONG_MAX,
-			struct structure_leaf
-		)->cluster_index;
+			struct structure_leaf)->cluster_index;
 
 		if (cluster_index!=NONE)
 		{
@@ -834,8 +810,7 @@ long find_objects_from_point_vector(
 						{
 							long reference;
 							long k;
-							for (
-								k= cluster_get_first_collideable_object(&reference, j);
+							for (k= cluster_get_first_collideable_object(&reference, j);
 								k!=NONE;
 								k= cluster_get_next_collideable_object(&reference))
 							{
@@ -931,14 +906,12 @@ void objects_dump_memory(
 		dumps,
 		object_count,
 		sizeof(struct dump_datum),
-		(int(__cdecl *)(const void *, const void *))sort_dumps
-	);
+		(int(__cdecl *)(const void *, const void *))sort_dumps);
 	qsort(
 		dumps_by_type,
 		NUMBEROF(dumps_by_type),
 		sizeof(struct dump_datum),
-		(int(__cdecl *)(const void *, const void *))sort_dumps
-	);
+		(int(__cdecl *)(const void *, const void *))sort_dumps);
 
 	file= fopen("d:\\object_memory.txt", "a+b");
 	if (file)
@@ -952,8 +925,7 @@ void objects_dump_memory(
 			"#%d objects (#%d active) using %3.2f%% of available memory\n\n",
 			information.object_count,
 			information.active_object_count,
-			100.f * information.used_memory
-		);
+			100.f * information.used_memory);
 		
 		fprintf(file, "OBJECTS BY TYPE\n");
 		fprintf(file, "number (active) [garbage/   dead/outside/at-rest] maxsize totsize\n");
@@ -978,8 +950,7 @@ void objects_dump_memory(
 				file,
 				"WARNING: overflowed MAXIMUM_DUMPS (%d), this dump does not include %d objects that would not fit!\n",
 				MAXIMUM_DUMPS,
-				overflowed_object_count
-			);
+				overflowed_object_count);
 		}
 
 		fprintf(file, "\n");
@@ -1054,8 +1025,7 @@ void objects_dispose_from_old_map(
 	if (object_header_data->valid)
 	{
 		long i;
-		for (
-			i= data_next_index(object_header_data, NONE);
+		for (i= data_next_index(object_header_data, NONE);
 			i!=NONE;
 			i= data_next_index(object_header_data, i))
 		{
@@ -1217,8 +1187,7 @@ void object_disconnect_from_map(
 				&noncollideable_object_cluster_partition
 			),
 			object_index,
-			&object->object.first_cluster_reference_index
-		);
+			&object->object.first_cluster_reference_index);
 
 		if (TEST_FLAG(header->flags, _object_header_automatically_deactivate_bit))
 		{
@@ -1245,8 +1214,7 @@ short object_get_first_cluster(
 	return cluster_partition_get_first_cluster(
 		iterator->cluster_partition,
 		&iterator->reference_index,
-		object_get(ultimate_parent_index)->object.first_cluster_reference_index
-	);
+		object_get(ultimate_parent_index)->object.first_cluster_reference_index);
 }
 
 real_matrix4x3 *object_get_node_matrices(
@@ -1269,8 +1237,7 @@ char const *object_get_attachment_marker_name(
 		result= TAG_BLOCK_GET_ELEMENT(
 			&object_definition->object.attachments,
 			attachment_index,
-			struct object_attachment_definition
-		)->marker_name;
+			struct object_attachment_definition)->marker_name;
 	}
 	else
 	{
@@ -1411,8 +1378,7 @@ void object_start_interpolation(
 	memcpy(
 		object_header_block_get(object_index, &object->object.original_node_orientations),
 		object_header_block_get(object_index, &object->object.node_orientations),
-		sizeof(real_orientation)*node_count
-	);
+		sizeof(real_orientation)*node_count);
 	if (frame_count>=
 		object->object.animation.interpolation_frame_count-
 		object->object.animation.interpolation_frame_index
@@ -1437,8 +1403,7 @@ void object_offset_interpolation(
 	{
 		real_orientation* orientation= (real_orientation *)object_header_block_get(
 			object_index,
-			&object->object.original_node_orientations
-		);
+			&object->object.original_node_orientations);
 		orientation->translation.x+= offset->i;
 		orientation->translation.y+= offset->j;
 		orientation->translation.z+= offset->k;
@@ -1469,16 +1434,14 @@ void object_permute_region(
 				struct model_region *region= TAG_BLOCK_GET_ELEMENT(
 					&model->regions,
 					region_index,
-					struct model_region
-				);
+					struct model_region);
 
 				for (permutation_index= 0; permutation_index<region->permutations.count; permutation_index++)
 				{
 					struct model_region_permutation *permutation= TAG_BLOCK_GET_ELEMENT(
 						&region->permutations,
 						permutation_index,
-						struct model_region_permutation
-					);
+						struct model_region_permutation);
 					
 					if (!_stricmp(permutation->name, permutation_name))
 					{
@@ -1545,11 +1508,9 @@ short objects_in_clusters_by_indices(
 			long reference;
 			long object_index;
 
-			for (
-				object_index= cluster_get_first_collideable_object(&reference, cluster_num);
+			for (object_index= cluster_get_first_collideable_object(&reference, cluster_num);
 				object_index!=NONE;
-				object_index= cluster_get_next_collideable_object(&reference)
-			)
+				object_index= cluster_get_next_collideable_object(&reference))
 			{
 				if (object_mark_function(object_index))
 				{
@@ -1568,11 +1529,9 @@ short objects_in_clusters_by_indices(
 			long reference;
 			long object_index;
 
-			for (
-				object_index= cluster_get_first_noncollideable_object(&reference, cluster_num);
+			for (object_index= cluster_get_first_noncollideable_object(&reference, cluster_num);
 				object_index!=NONE;
-				object_index= cluster_get_next_noncollideable_object(&reference)
-			)
+				object_index= cluster_get_next_noncollideable_object(&reference))
 			{
 				if (object_mark_function(object_index))
 				{
@@ -1637,11 +1596,9 @@ boolean object_visible_to_any_player(
 
 		const unsigned long* combined_pvs= players_get_combined_pvs();
 		
-		for (
-			cluster_index= object_get_first_cluster(&iterator, object_index);
+		for (cluster_index= object_get_first_cluster(&iterator, object_index);
 			cluster_index!=NONE && !BIT_VECTOR_TEST_FLAG(combined_pvs, cluster_index);
-			cluster_index= object_get_next_cluster(&iterator)
-		)
+			cluster_index= object_get_next_cluster(&iterator))
 		{
 			;
 		}
@@ -1650,11 +1607,9 @@ boolean object_visible_to_any_player(
 		{
 			long player_index;
 			const real bounding_area= object->object.bounding_sphere_radius*object->object.bounding_sphere_radius;
-			for (
-				player_index= data_next_index(player_data, NONE);
+			for (player_index= data_next_index(player_data, NONE);
 				player_index!=NONE;
-				player_index= data_next_index(player_data, player_index)
-			)
+				player_index= data_next_index(player_data, player_index))
 			{
 				struct player_datum *player= player_get(player_index);
 				
@@ -1820,9 +1775,7 @@ void object_reconnect_to_map(
 			&object->object.first_cluster_reference_index,
 			&object->object.bounding_sphere_center,
 			object->object.bounding_sphere_radius,
-			&object->object.location
-		);
-
+			&object->object.location);
 
 		if (TEST_FLAG(header->flags, _object_header_automatically_deactivate_bit))
 		{
@@ -1873,8 +1826,7 @@ short object_get_marker_by_name(
 		object_get_node_matrices(object_index),
 		TEST_FLAG(object->object.flags, _object_mirrored_bit),
 		markers,
-		maximum_marker_count
-	);
+		maximum_marker_count);
 
 	if (!marker)
 	{
@@ -1957,8 +1909,7 @@ void object_detach(
 		&matrix,
 		&child_object->object.position,
 		&child_object->object.forward,
-		&child_object->object.up
-	);
+		&child_object->object.up);
 
 	child_object->object.translational_velocity= parent_object->object.translational_velocity;
 	child_object->object.angular_velocity= parent_object->object.angular_velocity;
@@ -2012,8 +1963,7 @@ void object_get_orientation(
 	{
 		real_matrix4x3 *node_matrix= object_get_node_matrix(
 			object->object.parent_object_index,
-			object->object.parent_node_index
-		);
+			object->object.parent_node_index);
 
 		if (forward)
 		{
@@ -2084,8 +2034,7 @@ void object_inverse_kinematics(
 				&desired_hand_matrix,
 				&node_matrices[desired_hand_index],
 				&node_matrices[hand_parent_node_index],
-				&node_matrices[hand_node_index]
-			);
+				&node_matrices[hand_node_index]);
 		}
 	}
 
@@ -2124,15 +2073,13 @@ short objects_in_sphere(
 		center,
 		radius,
 		NUMBEROF(cluster_indices),
-		cluster_indices
-	);
+		cluster_indices);
 	object_count_in_clusters= objects_in_clusters_by_indices(
 		class_flags,
 		cluster_count,
 		cluster_indices,
 		NUMBEROF(temporary_object_indices),
-		temporary_object_indices
-	);
+		temporary_object_indices);
 	for (object_index= 0; object_index<object_count_in_clusters && result<maximum_count; ++object_index)
 	{
 		struct object_datum *object= object_get(temporary_object_indices[object_index]);
@@ -2178,8 +2125,7 @@ void objects_reconnect_to_structure_bsp(
 					NULL,
 					&object->object.bounding_sphere_center,
 					object->object.bounding_sphere_radius,
-					&result
-				);
+					&result);
 
 				if (result.leaf_count)
 				{
@@ -2193,8 +2139,7 @@ void objects_reconnect_to_structure_bsp(
 						scenario_location.cluster_index= TAG_BLOCK_GET_ELEMENT(
 							&global_structure_bsp_get()->leaves,
 							result.leaf_indices[0] & LONG_MAX,
-							struct structure_leaf
-						)->cluster_index;
+							struct structure_leaf)->cluster_index;
 					}
 				}
 				else
@@ -2340,13 +2285,11 @@ void object_compute_node_matrices(
 			short frame_index;
 
 			struct animation_graph *animation_graph= animation_graph_definition_get(
-				object->object.animation.animation_graph_index
-			);
+				object->object.animation.animation_graph_index);
 			struct animation* animation= TAG_BLOCK_GET_ELEMENT(
 				&animation_graph->animations,
 				object->object.animation.state.index,
-				struct animation
-			);
+				struct animation);
 		
 			if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) &&
 				animation->frame_count>0)
@@ -2369,8 +2312,7 @@ void object_compute_node_matrices(
 		if (object_definition->object.animation_graph.index!=NONE)
 		{
 			struct animation_graph *animation_graph= animation_graph_definition_get(
-			   object->object.animation.animation_graph_index
-			);
+			   object->object.animation.animation_graph_index);
 		}
 
 		// Scale the object orientations
@@ -2393,8 +2335,7 @@ void object_compute_node_matrices(
 			match_assert(
 				"c:\\halo\\SOURCE\\objects\\objects.c",
 				2777,
-				!TEST_FLAG(_object_mask_cannot_interpolate, object->object.type)
-			);
+				!TEST_FLAG(_object_mask_cannot_interpolate, object->object.type));
 
 			interpolate_node_orientations(
 				model->nodes.count,
@@ -2404,8 +2345,7 @@ void object_compute_node_matrices(
 				),
 				node_orientations,
 				object->object.animation.interpolation_frame_index,
-				object->object.animation.interpolation_frame_count
-			);
+				object->object.animation.interpolation_frame_count);
 		}
 	}
 	else
@@ -2420,8 +2360,7 @@ void object_compute_node_matrices(
 	matrix4x3_transform_point(
 		object_nodes,
 		&object_definition->object.bounding_offset,
-		&object->object.bounding_sphere_center
-	);
+		&object->object.bounding_sphere_center);
 	object->object.bounding_sphere_radius= object_definition->object.bounding_radius;
 	if (object->object.scale > 0.f)
 	{
@@ -2442,8 +2381,7 @@ static void object_postprocess_node_matrices(
 	{
 		real_matrix4x3 *matrices= (real_matrix4x3 *)object_header_block_get(
 				object_index,
-				&object->object.node_matrices
-		);
+				&object->object.node_matrices);
 		object_type_postprocess_node_matrices(object_index, matrices);
 	}
 
@@ -2470,8 +2408,7 @@ static void object_choose_random_change_colors(
 			struct object_change_color_definition *cc= TAG_BLOCK_GET_ELEMENT(
 				&object_definition->object.change_colors,
 				cc_index,
-				struct object_change_color_definition
-			);
+				struct object_change_color_definition);
 			real weight= fmod(
 				fabs(
 					object->object.position.x*315.89313f +
@@ -2479,16 +2416,14 @@ static void object_choose_random_change_colors(
 					object->object.position.z*744.12415f +
 					(real)cc_index*431.12894f
 				), 
-				1.f
-			);
+				1.f);
 
 			for (permutation_index=0; permutation_index<cc->permutations.count; permutation_index++)
 			{
 				struct object_change_color_permutation *permutation= TAG_BLOCK_GET_ELEMENT(
 					&cc->permutations,
 					permutation_index,
-					struct object_change_color_permutation
-				);
+					struct object_change_color_permutation);
 				if (weight<=permutation->weight)
 				{
 					rgb_colors_interpolate(
@@ -2496,8 +2431,7 @@ static void object_choose_random_change_colors(
 						1,
 						&permutation->color_lower_bound,
 						&permutation->color_upper_bound,
-						fmod(fabs(object->object.position.y) + cc_index*0.71211f, 1.f)
-					);
+						fmod(fabs(object->object.position.y) + cc_index*0.71211f, 1.f));
 					break;
 				}
 			}
@@ -2545,8 +2479,7 @@ void object_render_debug(
 			struct scenario_object_name* object_name= TAG_BLOCK_GET_ELEMENT(
 				&global_scenario_get()->object_names,
 				object->object.name_index,
-				struct scenario_object_name
-			);
+				struct scenario_object_name);
 			object_get_origin(object_index, &origin);
 			render_debug_string_at_point(FALSE, &origin, object_name->name, global_real_argb_purple);
 		}
@@ -2593,8 +2526,7 @@ void object_render_debug(
 			TRUE,
 			&object->object.bounding_sphere_center,
 			object->object.bounding_sphere_radius>0.f ? object->object.bounding_sphere_radius : 1.f,
-			draw_color
-		);
+			draw_color);
 	}
 
 	if (debug_objects_collision_models)
@@ -2637,8 +2569,7 @@ void object_render_debug(
 					short sphere_index;
 
 					struct collision_model* collision_model= collision_model_definition_get(
-						object_definition->object.collision_model.index
-					);
+						object_definition->object.collision_model.index);
 					
 					object_get_world_matrix(object_index, &world_matrix);
 
@@ -2651,35 +2582,30 @@ void object_render_debug(
 						struct pathfinding_sphere *pathfinding_sphere= TAG_BLOCK_GET_ELEMENT(
 							&collision_model->pathfinding_spheres,
 							sphere_index,
-							struct pathfinding_sphere
-						);
+							struct pathfinding_sphere);
 
 						if (pathfinding_sphere->node_index!=NONE)
 						{
 							real_matrix4x3 *node_matrix= object_get_node_matrix(
 								object_index,
-								pathfinding_sphere->node_index
-							);
+								pathfinding_sphere->node_index);
 							matrix4x3_transform_point(
 								node_matrix,
 								&pathfinding_sphere->center,
-								&origin
-							);
+								&origin);
 						}
 						else
 						{
 							matrix4x3_transform_point(
 								&world_matrix,
 								&pathfinding_sphere->center,
-								&origin
-							);
+								&origin);
 						}
 						render_debug_sphere(
 							TRUE,
 							&origin,
 							pathfinding_sphere->radius,
-							global_real_argb_blue
-						);
+							global_real_argb_blue);
 					}
 
 
@@ -2704,8 +2630,7 @@ void object_render_debug(
 									matrix4x3_transform_point(
 										&world_matrix,
 										&line_points[i][j][k],
-										&line_points[i][j][k]
-									);
+										&line_points[i][j][k]);
 								}
 							}
 						}
@@ -2723,8 +2648,7 @@ void object_render_debug(
 											TRUE,
 											&line_points[0][j][k],
 											&line_points[1][j][k],
-											global_real_argb_blue
-										);
+											global_real_argb_blue);
 									}
 										
 									if (j==0)
@@ -2733,8 +2657,7 @@ void object_render_debug(
 											TRUE,
 											&line_points[i][0][k],
 											&line_points[i][1][k],
-											global_real_argb_blue
-										);
+											global_real_argb_blue);
 									}
 
 									if (k==0)
@@ -2743,8 +2666,7 @@ void object_render_debug(
 											TRUE,
 											&line_points[i][j][0],
 											&line_points[i][j][1],
-											global_real_argb_blue
-										);
+											global_real_argb_blue);
 									}
 								}
 							}
@@ -2773,8 +2695,7 @@ static void attachments_new(
 		struct object_attachment_definition* attachment= TAG_BLOCK_GET_ELEMENT(
 			&object_definition->object.attachments,
 			i,
-			struct object_attachment_definition
-		);
+			struct object_attachment_definition);
 
 		short attachment_type= NONE;
 		if (attachment->type.index!=NONE)
@@ -2807,16 +2728,14 @@ static void attachments_new(
 				object_index,
 				i,
 				attachment->primary_scale_function_reference-1,
-				attachment->change_color_reference-1
-			);
+				attachment->change_color_reference-1);
 			break;
 		case _object_attachment_type_looping_sound:
 			attachment_index= game_looping_sound_new(
 				object_index,
 				attachment->type.index,
 				attachment->marker_name,
-				attachment->primary_scale_function_reference-1
-			);
+				attachment->primary_scale_function_reference-1);
 			break;
 		case _object_attachment_type_effect:
 			attachment_index= effect_new_looping(
@@ -2824,8 +2743,7 @@ static void attachments_new(
 				object_index,
 				attachment->primary_scale_function_reference-1,
 				attachment->secondary_scale_function_reference-1,
-				attachment->change_color_reference-1
-			);
+				attachment->change_color_reference-1);
 			break;
 		case _object_attachment_type_contrail:
 			attachment_index= contrail_new(attachment->type.index, object_index, i);
@@ -2893,8 +2811,7 @@ void object_translate(
 	match_assert_valid_real_point3d(
 		"c:\\halo\\SOURCE\\objects\\objects.c",
 		562, 
-		new_position
-	);
+		new_position);
 
 	object_disconnect_from_map(object_index);
 	object->object.position= *new_position;
@@ -2954,8 +2871,7 @@ long object_new(
 				&object->object.position,
 				&object->object.up,
 				data->height,
-				&object->object.position
-			);
+				&object->object.position);
 
 			SET_FLAG(object->object.flags, _object_mirrored_bit, TEST_FLAG(data->flags, _new_object_mirrored_bit));
 
@@ -3087,8 +3003,7 @@ long object_new(
 						0.f,
 						0.f,
 						NULL,
-						NULL
-					);
+						NULL);
 				}
 			}
 			else
@@ -3146,8 +3061,7 @@ void object_attach_to_node(
 		match_assert(
 			"c:\\halo\\SOURCE\\objects\\objects.c",
 			1235,
-			object_has_node(parent_object_index, parent_node_index)
-		);
+			object_has_node(parent_object_index, parent_node_index));
 
 		if (connected_to_map)
 		{
@@ -3178,8 +3092,7 @@ void object_attach_to_node(
 			"c:\\halo\\SOURCE\\objects\\objects.c",
 			1225,
 			valid,
-			"cannot attach an object to one of its children"
-		);
+			"cannot attach an object to one of its children");
 	}
 	
 	return;
@@ -3341,8 +3254,7 @@ long object_new_from_scenario(
 				vectors3d_from_euler_angles3d(
 					&placement_data.forward,
 					&placement_data.up,
-					&scenario_object->rotation
-				);
+					&scenario_object->rotation);
 				placement_data.variant_number= scenario_object->variant_number;
 				
 				result= object_new(&placement_data);
@@ -3405,30 +3317,25 @@ long object_new_by_name(
 	struct scenario_object_name* name= TAG_BLOCK_GET_ELEMENT(
 		&scenario->object_names,
 		name_index,
-		struct scenario_object_name
-	);
+		struct scenario_object_name);
 
 	struct tag_block* datum= scenario_get_object_type_scenario_datums(
 		scenario,
 		name->runtime_object_type,
-		&placement_tag_block_element_size
-	);
+		&placement_tag_block_element_size);
 
 	struct tag_block *palette= scenario_get_object_type_scenario_palette(
 		scenario,
-		name->runtime_object_type
-	);
+		name->runtime_object_type);
 
 	struct scenario_object_datum *object= (struct scenario_object_datum *)tag_block_get_element_with_size(
 			datum,
 			name->runtime_scenario_datum_index,
-			placement_tag_block_element_size
-	);
+			placement_tag_block_element_size);
 
 	return object_new_from_scenario(
 		object,
-		palette
-	);
+		palette);
 }
 
 void objects_scripting_attach(
@@ -3512,8 +3419,7 @@ void objects_garbage_collection(
 				"#%d objects using 0x%x bytes (0x%x contiguous free)",
 				object_header_data->actual_count,
 				OBJECT_MEMORY_POOL_SIZE - memory_pool_get_free_size(object_memory_pool),
-				memory_pool_get_contiguous_free_size(object_memory_pool)
-			);
+				memory_pool_get_contiguous_free_size(object_memory_pool));
 		}
 
 		for (
@@ -3575,8 +3481,7 @@ void objects_garbage_collection(
 					error(
 						_error_silent,
 						"WARNING: garbage collecting a living unit (%s)",
-						ai_debug_describe_actor(NONE, object_index, TRUE, temporary, NUMBEROF(temporary))
-					);
+						ai_debug_describe_actor(NONE, object_index, TRUE, temporary, NUMBEROF(temporary)));
 				}
 
 
@@ -3597,8 +3502,7 @@ void objects_garbage_collection(
 				FALSE,
 				"compacted to #%d with 0x%x contiguous bytes free",
 				object_header_data->actual_count,
-				memory_pool_get_contiguous_free_size(object_memory_pool)
-			);
+				memory_pool_get_contiguous_free_size(object_memory_pool));
 		}
 
 		if (!should_collect)
@@ -3703,16 +3607,14 @@ void objects_garbage_collection(
 						{
 							current_release_procs->init_function(
 								release_proc_working_memory,
-								sizeof(release_proc_working_memory)
-							);
-							v0= 1;
+								sizeof(release_proc_working_memory));
+							v0= TRUE;
 						}
 						result= current_release_procs->function(
 							released_resultbuf,
 							&more_to_release,
 							release_proc_working_memory,
-							sizeof(release_proc_working_memory)
-						);
+							sizeof(release_proc_working_memory));
 						if (result)
 						{
 							char tempbuffer[512];
@@ -3811,8 +3713,7 @@ void objects_update(
 		structure_decals_update(
 			last_active_cluster_bits,
 			active_cluster_bits,
-			cluster_count
-		);
+			cluster_count);
 	}
 
 	object_header= (struct object_header_datum *)object_header_data->data;
@@ -3850,8 +3751,7 @@ void objects_update(
 				SET_FLAG(
 					object_header->flags,
 					_object_header_being_created_bit,
-					FALSE
-				);
+					FALSE);
 				object_update(DATUM_INDEX_NEW(i, object_header->identifier));
 			}
 
@@ -3945,8 +3845,7 @@ static void object_name_list_new(
 	match_assert(
 		"c:\\halo\\SOURCE\\objects\\objects.c",
 		4099,
-		name_index>=0 && name_index<MAXIMUM_OBJECT_NAMES_PER_SCENARIO
-	);
+		name_index>=0 && name_index<MAXIMUM_OBJECT_NAMES_PER_SCENARIO);
 
 	if (object_name_list[name_index]==NONE)
 	{
@@ -3958,8 +3857,7 @@ static void object_name_list_new(
 		error(
 			_error_silent,
 			"an object with the name '%s' already exists!", 
-			TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->object_names, name_index, struct scenario_object_name)->name
-		);
+			TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->object_names, name_index, struct scenario_object_name)->name);
 	}
 
 	return;
@@ -4019,8 +3917,7 @@ static long recursive_object_adder(
 					   custom_data,
 					   object_count,
 					   maximum_count,
-					   object_indices
-			);
+					   object_indices);
 		}
 
 		if (object->object.next_object_index!=NONE)
@@ -4031,8 +3928,7 @@ static long recursive_object_adder(
 				custom_data,
 				object_count,
 				maximum_count,
-				object_indices
-			);
+				object_indices);
 		}
 	}
 	return object_count;
@@ -4152,8 +4048,7 @@ static short object_find_region_permutations_available_with_variant(
 		struct model_region_permutation* permutation= TAG_BLOCK_GET_ELEMENT(
 			&region->permutations,
 			i,
-			struct model_region_permutation
-		);
+			struct model_region_permutation);
 		if (!TEST_FLAG(permutation->flags, _model_region_permutation_cannot_be_chosen_randomly_bit))
 		{
 			if (permutation->variant_number==variant_number ||
@@ -4403,8 +4298,7 @@ static void object_compute_function_values(
 		struct object_function_definition* function= TAG_BLOCK_GET_ELEMENT(
 			&object_definition->object.functions,
 			function_index,
-			struct object_function_definition
-		);
+			struct object_function_definition);
 		boolean function_is_active= TRUE;
 		real period= function->runtime_one_over_period;
 
@@ -4531,8 +4425,7 @@ static void object_compute_change_colors(
 			struct object_change_color_definition *change_color= TAG_BLOCK_GET_ELEMENT(
 				&object_definition->object.change_colors,
 				cc_index,
-				struct object_change_color_definition
-			);
+				struct object_change_color_definition);
 
 			if (change_color->scaled_by)
 			{
@@ -4541,8 +4434,7 @@ static void object_compute_change_colors(
 					change_color->scale_flags,
 					&change_color->color_lower_bound,
 					&change_color->color_upper_bound,
-					object->object.incoming_function_values[change_color->scaled_by]
-				);
+					object->object.incoming_function_values[change_color->scaled_by]);
 			}
 
 			if (change_color->darken_by)
@@ -4556,18 +4448,15 @@ static void object_compute_change_colors(
 			object->object.outgoing_change_colors[cc_index].red= PIN(
 				object->object.outgoing_change_colors[cc_index].red, 
 				0.f,
-				1.f
-			);
+				1.f);
 			object->object.outgoing_change_colors[cc_index].green= PIN(
 				object->object.outgoing_change_colors[cc_index].green,
 				0.f,
-				1.f
-			);
+				1.f);
 			object->object.outgoing_change_colors[cc_index].blue= PIN(
 				object->object.outgoing_change_colors[cc_index].blue,
 				0.f,
-				1.f
-			);
+				1.f);
 		}
 	}
 
