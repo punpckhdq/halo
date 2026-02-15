@@ -66,8 +66,7 @@ word get_next_character(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		32,
 		*index>=0 && *index<=strlen((char *)string),
-		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
-	);
+		csprintf(temporary, "#%d is out of range in string @%p", *index, string));
 
 	string= &string[*index];
 
@@ -100,8 +99,7 @@ word get_previous_character(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		55,
 		VALID_INDEX(*index, (short)strlen((char *)string)),
-		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
-	);
+		csprintf(temporary, "#%d is out of range in string @%p", *index, string));
 
 	i= 0;
 	do
@@ -115,8 +113,7 @@ word get_previous_character(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		67,
 		i==*index,
-		csprintf(temporary, "index #%d is inbetween characters in string %p", *index, string)
-	);
+		csprintf(temporary, "index #%d is inbetween characters in string %p", *index, string));
 
 	*index= i;
 
@@ -133,8 +130,7 @@ void align_to_character(
 		"c:\\halo\\SOURCE\\text\\international_strings.c",
 		85,
 		*index>0 || *index <=(short)strlen((char *)string),
-		csprintf(temporary, "#%d is out of range in string @%p", *index, string)
-	);
+		csprintf(temporary, "#%d is out of range in string @%p", *index, string));
 
 	i= 0;
 	while (i<*index)
@@ -155,8 +151,7 @@ boolean double_byte_character(
 	if (character!='\0')
 	{
 		byte next_character= string[1];
-		if (
-			character==(byte)('|') &&
+		if (character==(byte)('|') &&
 			next_character &&
 			strchr("ibukprlctn", next_character)
 		)
@@ -168,11 +163,8 @@ boolean double_byte_character(
 			switch (global_language_code)
 			{
 			case _language_japanese:
-				if (
-					(
-					character>=(byte)('\x81') && character<=(byte)('\x9F') ||
-					character>=(byte)('\xE0') && character!=(byte)('\xFE')
-					) &&
+				if ((character>=(byte)('\x81') && character<=(byte)('\x9F') ||
+					character>=(byte)('\xE0') && character!=(byte)('\xFE')) &&
 					next_character>=(byte)('@') &&
 					next_character<=(byte)('\xFC') &&
 					next_character!=(byte)('\x7F')
@@ -182,8 +174,7 @@ boolean double_byte_character(
 				}
 				break;
 			case _language_simple_chinese:
-				if (
-					character>=(byte)('\xA1') &&
+				if (character>=(byte)('\xA1') &&
 					character!=(byte)('\xFE') &&
 					next_character>=(byte)('\xA1') &&
 					next_character!=(byte)('\xFE')
@@ -193,21 +184,17 @@ boolean double_byte_character(
 				}
 				break;
 			case _language_traditional_chinese:
-				if (
-					character>=(byte)('\x81') &&
+				if (character>=(byte)('\x81') &&
 					character!=(byte)('\xFE') &&
-					(
-					next_character>=(byte)('@') && next_character<=(byte)('~') ||
-					next_character>=(byte)('\xA1') && next_character!=(byte)('\xFE')
-					)
+					(next_character>=(byte)('@') && next_character<=(byte)('~') ||
+					next_character>=(byte)('\xA1') && next_character!=(byte)('\xFE'))
 				)
 				{
 					result= TRUE;
 				}
 				break;
 			case _language_korean_wansung:
-				if (
-					character>=(byte)('\x81') &&
+				if (character>=(byte)('\x81') &&
 					character!=(byte)('\xFE') &&
 					(
 					next_character>=(byte)('A') && next_character<=(byte)('Z') ||
@@ -220,9 +207,7 @@ boolean double_byte_character(
 				}
 				break;
 			case _language_korean_johab:
-				if (
-					(
-					character>=(byte)('\x84') && character<=(byte)('\xD3') ||
+				if ((character>=(byte)('\x84') && character<=(byte)('\xD3') ||
 					character>=(byte)('\xD8') && character<=(byte)('\xDE') ||
 					character>=(byte)('\xE0') && character<=(byte)('\xF9')
 					) &&

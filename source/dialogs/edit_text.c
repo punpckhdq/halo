@@ -77,8 +77,7 @@ void edit_text_handle_key(
 			memmove(
 				&edit->buffer[selection_start],
 				&edit->buffer[selection_end],
-				strlen(&edit->buffer[selection_end])+1
-			);
+				strlen(&edit->buffer[selection_end])+1);
 			edit->insertion_point_index= selection_start;
 			edit->selection_start_index= NONE;
 		}
@@ -88,13 +87,11 @@ void edit_text_handle_key(
 			short src_index= edit->insertion_point_index;
 			get_previous_character(
 				(unsigned char *)edit->buffer,
-				&edit->insertion_point_index
-			);
+				&edit->insertion_point_index);
 			memmove(
 				&edit->buffer[edit->insertion_point_index],
 				&edit->buffer[src_index],
-				strlen(&edit->buffer[src_index])+1
-			);
+				strlen(&edit->buffer[src_index])+1);
 		}
 		else if (key->key_code == _key_delete)
 		{
@@ -108,8 +105,7 @@ void edit_text_handle_key(
 				memmove(
 					&edit->buffer[edit->insertion_point_index],
 					&edit->buffer[next_index],
-					strlen(&edit->buffer[next_index]) + 1
-				);
+					strlen(&edit->buffer[next_index])+1);
 			}
 		}
 	}
@@ -135,8 +131,7 @@ void edit_text_handle_key(
 			{
 				get_previous_character(
 					(unsigned char *)edit->buffer,
-					&edit->insertion_point_index
-				);
+					&edit->insertion_point_index);
 			}
 			else if (key->key_code==_key_right_arrow)
 			{
@@ -144,8 +139,7 @@ void edit_text_handle_key(
 				{
 					get_next_character(
 						(unsigned char *)edit->buffer,
-						&edit->insertion_point_index
-					);
+						&edit->insertion_point_index);
 				}
 			}
 
@@ -181,8 +175,7 @@ void edit_text_handle_key(
 			memmove(
 				&edit->buffer[selection_start+1],
 				&edit->buffer[selection_end],
-				strlen(&edit->buffer[selection_end])+1
-			);
+				strlen(&edit->buffer[selection_end])+1);
 
 			edit->insertion_point_index= selection_start;
 			edit->selection_start_index= NONE;
@@ -193,16 +186,14 @@ void edit_text_handle_key(
 			memmove(
 				&edit->buffer[edit->insertion_point_index+1],
 				&edit->buffer[edit->insertion_point_index],
-				strlen(&edit->buffer[edit->insertion_point_index])+1
-			);
+				strlen(&edit->buffer[edit->insertion_point_index])+1);
 			edit->buffer[edit->insertion_point_index++]= key->ascii_code;
 		}
 	}
 
 	align_to_character(
 		(unsigned char *)edit->buffer,
-		&edit->insertion_point_index
-	);
+		&edit->insertion_point_index);
 	
 	return;
 }

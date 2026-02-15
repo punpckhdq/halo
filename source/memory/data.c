@@ -96,8 +96,7 @@ void data_verify(
 		data->first_free_absolute_index<=data->maximum_count &&
 		data->actual_count>=0 &&
 		data->actual_count<=data->count,
-		csprintf(temporary, "%s data array @%p is bad or not allocated", data->name, data)
-	);
+		csprintf(temporary, "%s data array @%p is bad or not allocated", data->name, data));
 
 	return;
 }

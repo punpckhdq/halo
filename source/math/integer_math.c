@@ -265,7 +265,7 @@ short ceiling_log2(
 }
 
 unsigned long floor_power2(
-	unsigned short x)
+	word x)
 {
 	long result= 1;
 	while (result*2<= x)
@@ -277,7 +277,7 @@ unsigned long floor_power2(
 }
 
 unsigned long ceiling_power2(
-	unsigned short x)
+	word x)
 {
 	long result= 1;
 	while (result < x)

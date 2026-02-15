@@ -26,15 +26,13 @@ unsigned long *structure_bsp_get_cluster_pvs(
 	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c", 36, cluster_index>=0 && cluster_index<structure_bsp->clusters.count);
 	match_assert("c:\\halo\\SOURCE\\structures\\structure_bsp_definitions.c",
 		37,
-		(cluster_index+1)*BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count)<=structure_bsp->cluster_data.size
-	);
+		(cluster_index+1)*BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count)<=structure_bsp->cluster_data.size);
 
 	// Get pointer to bitvector starting at the cluster index
 	return (unsigned long *)(
 		(byte *)structure_bsp->cluster_data.address +
 		sizeof(unsigned long) * cluster_index *
-		BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count)	
-	);
+		BIT_VECTOR_SIZE_IN_LONGS(structure_bsp->clusters.count));
 }
 
 void structure_bsp_find_material_for_surface(
@@ -173,8 +171,7 @@ byte structure_bsp_get_cluster_encoded_sound_distance(
 		result= *structure_bsp_get_cluster_encoded_sound_data(
 			structure_bsp, 
 			from_cluster_index,
-			to_cluster_index
-		);
+			to_cluster_index);
 	}
 	else
 	{

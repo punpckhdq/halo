@@ -169,8 +169,7 @@ void *tag_get(
 			"expected tag group '%s' but got '%s' for %08x",
 			tag_to_string(group_tag, expected_group),
 			tag_to_string(tag_instance->group_tag, returned_group),
-			tag_index
-		)
+			tag_index)
 	);
 	match_vassert(
 		"c:\\halo\\SOURCE\\cache\\cache_files.c",

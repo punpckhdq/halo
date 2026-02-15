@@ -80,7 +80,6 @@ symbols in this file:
 
 /* ---------- public code */
 
-// TODO: finish
 short model_get_marker_by_name(
 	long model_index,
 	char const *name,
@@ -105,7 +104,6 @@ short model_get_marker_by_name(
 		struct model *model= model_definition_get(model_index);
 		struct model_marker* marker= TAG_BLOCK_GET_ELEMENT(&model->markers, marker_index, struct model_marker);
 
-
 		for (i=0; i<marker->instances.count; i++)
 		{
 			struct model_marker_instance* instance= TAG_BLOCK_GET_ELEMENT(&marker->instances, i, struct model_marker_instance);
@@ -125,8 +123,7 @@ short model_get_marker_by_name(
 				match_assert(
 					"c:\\halo\\SOURCE\\models\\models.c",
 					785,
-					object_marker->node_index>=0 && object_marker->node_index<(node_remapping_table ? node_count : model->nodes.count)
-				);
+					object_marker->node_index>=0 && object_marker->node_index<(node_remapping_table ? node_count : model->nodes.count));
 				
 				matrix4x3_multiply(&node_matrices[object_marker->node_index], &object_marker->node_matrix, &object_marker->matrix);
 				if (mirrored_flag)
