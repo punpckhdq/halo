@@ -486,8 +486,8 @@ void object_pvs_set_camera_point(
 		{
 			error(
 				_error_silent,
-				  "object_pvs_set_camera_point: camera point %s is outside the map",
-				  point->name);
+				"object_pvs_set_camera_point: camera point %s is outside the map",
+				point->name);
 			object_globals->pvs_activation_type= FALSE;
 		}
 		else
@@ -603,7 +603,7 @@ void *object_header_block_get(
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2443, reference->offset>0);
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2444, reference->offset+reference->size<=object_header->data_size);
 
-	return (char *)object + reference->offset;
+	return (byte *)object + reference->offset;
 }
 
 static long object_header_new(
@@ -986,6 +986,7 @@ void objects_initialize(
 	object_name_list_allocate();
 	cluster_partition_new(&collideable_object_cluster_partition, "collideable object");
 	cluster_partition_new(&noncollideable_object_cluster_partition, "noncollideable object");
+
 	return;
 }
 

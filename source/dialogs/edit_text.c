@@ -212,7 +212,6 @@ boolean edit_text_get_selection_indices(struct edit_text *edit, short *start_ind
 	}
 
 	return result;
-
 }
 
 void edit_text_selection_reset(
