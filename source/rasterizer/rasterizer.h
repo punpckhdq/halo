@@ -8,6 +8,10 @@ header included in hcex build.
 #define __RASTERIZER_H
 #pragma once
 
+/* ---------- headers */
+
+#include "real_math.h"
+
 /* ---------- constants */
 
 enum
@@ -31,6 +35,41 @@ enum
 	RASTERIZER_MAXIMUM_NODES_PER_MODEL= 44,
 	RASTERIZER_MAXIMUM_NEARBY_OPAQUE_MODEL_GEOMETRY_GROUPS_THAT_MIGHT_OBSCURE_THE_ENVIRONMENT_FOG_SCREEN_EFFECT= 1
 };
+
+enum
+{
+	_rasterizer_profile_clear= 0,
+	_rasterizer_profile_model_sky,
+	_rasterizer_profile_models,
+	_rasterizer_profile_environment_lightmaps,
+	_rasterizer_profile_environment_shadows,
+	_rasterizer_profile_environment_diffuse_lights,
+	_rasterizer_profile_environment_decals_light,
+	_rasterizer_profile_environment_decals_alpha_tested,
+	_rasterizer_profile_environment_textures,
+	_rasterizer_profile_environment_decals_primary,
+	_rasterizer_profile_environment_decals_secondary,
+	_rasterizer_profile_environment_specular_lights,
+	_rasterizer_profile_environment_specular_lightmaps,
+	_rasterizer_profile_environment_reflection_lightmap_masks,
+	_rasterizer_profile_environment_reflection_mirrors,
+	_rasterizer_profile_environment_reflections,
+	_rasterizer_profile_environment_transparents,
+	_rasterizer_profile_environment_fog,
+	_rasterizer_profile_environment_fog_screen,
+	_rasterizer_profile_water,
+	_rasterizer_profile_environment_decals_water,
+	_rasterizer_profile_detail_objects,
+	_rasterizer_profile_queued_transparents,
+	_rasterizer_profile_lens_flare_occlusion_submit,
+	_rasterizer_profile_lens_flare_occlusion_query,
+	_rasterizer_profile_lens_flares,
+	_rasterizer_profile_screen_effect,
+	_rasterizer_profile_hud,
+	_rasterizer_profile_screen_flash,
+	NUMBER_OF_RASTERIZER_PROFILES,
+};
+
 
 /* ---------- macros */
 

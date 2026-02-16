@@ -80,16 +80,61 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "rasterizer.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
 
 /* ---------- structures */
 
+struct lens_flare_occlusion_test_results
+{
+	short light_identifier;
+	byte data[8][4];
+};
+
+struct rasterizer_lens_flare_submit_parameters
+{
+	struct lens_flare_definition *definition;
+	real_point3d position;
+	unsigned long compressed_direction;
+	unsigned long compressed_up;
+	unsigned long compressed_light_color;
+	short light_identifier;
+	short light_index;
+	short lens_flare_index;
+	byte compressed_window_index;
+	byte compressed_light_scale;
+	long internal__occlusion_pixels;
+};
+
 /* ---------- prototypes */
 
 /* ---------- globals */
 
+static struct lens_flare_occlusion_test_results local_lens_flare_occlusion_test_results[896];
+static byte local_lens_flare_occlusion_test_results2[65544][4];
+static struct rasterizer_lens_flare_submit_parameters local_lens_flare_parameters[1024]= {0};
+static long local_lens_flare_count= 0;
+static boolean local_lens_flare_error_printed= FALSE;
+
 /* ---------- public code */
+
+void rasterizer_lights_reset_for_new_map(void)
+{
+	memset(local_lens_flare_occlusion_test_results, 0, sizeof(local_lens_flare_occlusion_test_results));
+	memset(local_lens_flare_occlusion_test_results2, 0, sizeof(local_lens_flare_occlusion_test_results2));
+	local_lens_flare_count= 0;
+
+	return;
+}
+
+static struct rasterizer_lens_flare_submit_parameters *lens_flare_submit_parameter_get(short lens_flare_index)
+{
+	match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c", 67, lens_flare_index>=0 && lens_flare_index<local_lens_flare_count);
+	return &local_lens_flare_parameters[lens_flare_index];
+}
 
 /* ---------- private code */
