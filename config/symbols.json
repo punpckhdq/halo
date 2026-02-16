@@ -22364,7 +22364,7 @@
 { "file_offset": 3268396, "flags": 0, "name": "_bss_0031df2c" },
 { "file_offset": 3268404, "flags": 0, "name": "_find_all_fucked_up_shit" },
 { "file_offset": 3268408, "flags": 0, "name": "_fucked_up_shit_count" },
-{ "file_offset": 3268416, "flags": 0, "name": "_bss_0031df40" },
+{ "file_offset": 3268416, "flags": 0, "name": "_profile_globals" },
 { "file_offset": 4398224, "flags": 0, "name": "_profile_timebase_ticks" },
 { "file_offset": 4398225, "flags": 0, "name": "_profile_global_enable" },
 { "file_offset": 4398226, "flags": 0, "name": "_profile_dump_frames" },

@@ -272,13 +272,47 @@ symbols in this file:
 
 /* ---------- constants */
 
+enum
+{
+	MAXIMUM_PROFILE_SECTIONS= 256,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
 
+struct profile_frame
+{
+	byte gap[4392];
+};
+
+struct profile_globals
+{
+	double gap__0;
+	short stack_depth;
+	boolean initialized;
+	long section;
+	short section_count;
+	long section_indices[MAXIMUM_PROFILE_SECTIONS];
+	FILE* framedump_file;
+	short compare_type;
+	long lost_frame_count;
+	boolean unk;
+	short current_frame_history_count;
+	short current_frame_history_index;
+	struct profile_frame frames[MAXIMUM_PROFILE_SECTIONS];
+	struct profile_frame current_frame;
+};
+
 /* ---------- prototypes */
 
 /* ---------- globals */
+
+static struct profile_globals profile_globals= {0};
+boolean profile_timebase_ticks= FALSE;
+boolean profile_global_enable= FALSE;
+boolean profile_dump_frames= FALSE;
+boolean profile_dump_lost_frames= FALSE;
 
 /* ---------- public code */
 

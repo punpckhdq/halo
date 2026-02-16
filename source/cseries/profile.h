@@ -11,13 +11,13 @@ PROFILE.H
 /* ---------- macros */
 
 #define profile_enter(section)							\
-if (profile_global_enable && section.profile_active)	\
+if (profile_global_enable && section.active)	\
 {														\
 	profile_enter_private(&section);					\
 }														\
 
 #define profile_exit(section)							\
-if (profile_global_enable && section.profile_active)	\
+if (profile_global_enable && section.active)	\
 {														\
 	profile_exit_private(&section);						\
 }														\
@@ -28,7 +28,7 @@ struct profile_section
 {
 	const char *name;
 	long section_index;
-	boolean profile_active;
+	boolean active;
 	short stack_depth;
 	long field_C;
 	unsigned __int64 field_10;
@@ -46,6 +46,11 @@ void profile_enter_private(struct profile_section *objects_update_section);
 void profile_exit_private(struct profile_section *objects_update_section);
 
 /* ---------- globals */
+
+extern boolean profile_timebase_ticks;
+extern boolean profile_global_enable;
+extern boolean profile_dump_frames;
+extern boolean profile_dump_lost_frames;
 
 /* comm */
 boolean profile_global_enable;
