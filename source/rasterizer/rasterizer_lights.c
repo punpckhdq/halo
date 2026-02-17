@@ -115,8 +115,8 @@ struct rasterizer_lens_flare_submit_parameters
 /* ---------- globals */
 
 static struct lens_flare_occlusion_test_results local_lens_flare_occlusion_test_results[896];
-static byte local_lens_flare_occlusion_test_results2[65544][4];
-static struct rasterizer_lens_flare_submit_parameters local_lens_flare_parameters[1024]= {0};
+static byte local_lens_flare_occlusion_test_results2[65544][MAXIMUM_WINDOWS];
+static struct rasterizer_lens_flare_submit_parameters local_lens_flare_parameters[MAXIMUM_LENS_FLARES_PER_FRAME]= {0};
 static long local_lens_flare_count= 0;
 static boolean local_lens_flare_error_printed= FALSE;
 
