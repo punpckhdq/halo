@@ -16,6 +16,13 @@ RASTERIZER_XBOX.H
 
 void rasterizer_preinitialize__fill_you_up_with_the_devils_cock(void);
 
+
+/* ---------- prototypes/RASTERIZER_XBOX_PROFILE.C */
+
+void rasterizer_profile_begin(short profile);
+
+void rasterizer_profile_end(short profile);
+
 /* ---------- globals */
 
 extern D3DDevice global_d3d_device;

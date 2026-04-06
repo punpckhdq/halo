@@ -28,7 +28,7 @@ void ui_widgets_set_fade_value(real value);
 void ui_widget_debug_show_path(boolean show);
 int widget_instance_count_children(struct widget_instance *widget);
 struct widget_instance *widget_instance_get_nth_child(struct widget_instance *widget, int n);
-void *ui_widget_realloc(void *ptr, unsigned short size);
+void *ui_widget_realloc(void *ptr, word size);
 void widget_free(void *ptr);
 boolean ui_widgets_active(void);
 boolean ui_widgets_active_for_local_player(short local_player_index);

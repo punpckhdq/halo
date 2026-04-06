@@ -20,6 +20,15 @@ void game_sound_clear(void);
 void game_sound_restore(void);
 long game_looping_sound_new(long object_index, long definition_index, char const *marker_name, short function_index);
 void game_looping_sound_delete(long looping_sound_index);
+long object_impulse_sound_new(
+	long object_index,
+	long definition_index,
+	short node_index,
+	real_point3d const *position,
+	real_vector3d const *forward,
+	real scale);
+long unattached_impulse_sound_new(long definition_index, struct sound_location const *location, real scale);
+long unspatialized_impulse_sound_new(long definition_index, real scale);
 
 /* ---------- globals */
 

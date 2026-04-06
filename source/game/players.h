@@ -8,6 +8,10 @@ header included in hcex build.
 #define __PLAYERS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "game/game.h"
+
 /* ---------- constants */
 
 enum
@@ -78,6 +82,8 @@ struct player_datum
 };
 
 /* ---------- prototypes/PLAYERS.C */
+
+long player_index_from_unit_index(long unit_index);
 
 unsigned long const *players_get_combined_pvs_local(void);
 unsigned long const *players_get_combined_pvs(void);

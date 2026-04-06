@@ -14,6 +14,16 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct aim_assist_parameters
+{
+	real autoaim_angle;
+	real autoaim_distance;
+	real magnetism_angle;
+	real magnetism_distance;
+	real deviation_angle;
+	real unused;
+};
+
 /* ---------- prototypes/EXAMPLE.C */
 
 /* ---------- globals */

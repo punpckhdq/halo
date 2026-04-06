@@ -14,7 +14,10 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/ACTORS.C */
+
+boolean actor_get_running_blind_vector(long actor_index, union real_vector3d *run_vector);
+boolean actor_has_unlimited_grenades(long actor_index);
 
 /* ---------- globals */
 

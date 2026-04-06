@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/BIPEDS.C */
+
+void biped_stop_limp_body_physics(long biped_index);
 
 /* ---------- globals */
 

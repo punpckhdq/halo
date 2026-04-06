@@ -57,4 +57,6 @@ boolean profile_global_enable;
 
 /* ---------- public code */
 
+void profile_initialize(void);
+
 #endif // __PROFILE_H

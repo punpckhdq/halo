@@ -270,6 +270,8 @@ symbols in this file:
 #include "cseries.h"
 #include "profile.h"
 
+#include "math/real_math.h"
+
 /* ---------- constants */
 
 enum
@@ -283,7 +285,7 @@ enum
 
 struct profile_frame
 {
-	byte gap[4392];
+	byte __unknown00[4392];
 };
 
 struct profile_globals
@@ -291,9 +293,9 @@ struct profile_globals
 	double gap__0;
 	short stack_depth;
 	boolean initialized;
-	long section;
+	struct profile_section *section;
 	short section_count;
-	long section_indices[MAXIMUM_PROFILE_SECTIONS];
+	struct profile_section* sections[MAXIMUM_PROFILE_SECTIONS];
 	FILE* framedump_file;
 	short compare_type;
 	long lost_frame_count;
@@ -316,4 +318,31 @@ boolean profile_dump_lost_frames= FALSE;
 
 /* ---------- public code */
 
+void profile_initialize(
+	void)
+{
+	short section_index= 0;
+
+	profile_globals.gap__0= DOUBLE_MIN;
+
+	while (section_index<profile_globals.section_count)
+	{
+		profile_globals.sections[section_index++]->section_index= NONE;
+	}
+
+	profile_global_enable= TRUE;
+	profile_globals.section_count= 0;
+	profile_globals.stack_depth= 0;
+	profile_globals.initialized= TRUE;
+	profile_globals.section= NULL;
+	profile_globals.current_frame_history_count= 0;
+	profile_globals.current_frame_history_index= 0;
+	profile_globals.lost_frame_count= 999;
+	profile_globals.framedump_file= NULL;
+
+	return;
+}
+
 /* ---------- private code */
+
+

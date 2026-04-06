@@ -36,6 +36,14 @@ enum
 	NUMBER_OF_ANIMATION_FLAGS,
 };
 
+enum
+{
+	_object_overlay_mode_frame= 0,
+	_object_overlay_mode_scale,
+	NUMBER_OF_OBJECT_OVERLAY_MODES,
+};
+
+
 /* ---------- macros */
 
 #define animation_graph_definition_get(index) ((struct animation_graph *)tag_get(ANIMATION_GRAPH_TAG, index))
@@ -75,10 +83,18 @@ struct animation
 	struct tag_data data;
 };
 
+struct animation_graph_object_overlay
+{
+	short animation_index;
+	short function_index;
+	short mode;
+	word pad;
+	long unused[3];
+};
 
 struct animation_graph
 {
-	struct tag_block object_overlays;
+	struct tag_block object_overlays;		// animation_graph_object_overlay
 	struct tag_block unit_seats;
 	struct tag_block weapon_animations;
 	struct tag_block vehicle_animations;
@@ -102,6 +118,23 @@ void animation_get_node_orientations(
 	struct animation const *animation,
 	short frame_index, 
 	struct real_orientation *node_orientations);
+void replacement_animation_apply(
+	struct animation const *animation,
+	short frame_index,
+	struct real_orientation *node_orientations);
+void overlay_animation_apply(
+	struct animation const *animation,
+	short frame_index,
+	struct real_orientation *node_orientations);
+void overlay_animation_apply_scaled(
+	struct animation const *animation,
+	short frame_index,
+	real animation_scale,
+	struct real_orientation *node_orientations);
+void overlay_animation_apply_continuous(
+	struct animation const *animation,
+	real real_frame_index,
+	struct real_orientation *node_orientations);
 
 void inverse_kinematics_adjust_matrices(
 	struct real_matrix4x3 *desired_hand_matrix,
@@ -115,6 +148,7 @@ void interpolate_node_orientations(
 	struct real_orientation *target_node_orientations,
 	short frame_index,
 	short frame_count);
+
 
 /* ---------- globals */
 

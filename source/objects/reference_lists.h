@@ -21,7 +21,7 @@ file has inline function assertions.
 struct data_reference
 {
 	short identifier;
-	unsigned short pad;
+	word pad;
 	long datum_index;
 	long next_reference_index;
 };

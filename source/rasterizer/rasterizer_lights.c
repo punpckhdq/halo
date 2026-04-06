@@ -92,7 +92,7 @@ symbols in this file:
 struct lens_flare_occlusion_test_results
 {
 	short light_identifier;
-	byte data[8][4];
+	byte data[8][MAXIMUM_WINDOWS];
 };
 
 struct rasterizer_lens_flare_submit_parameters

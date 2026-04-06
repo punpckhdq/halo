@@ -103,7 +103,7 @@ struct datastore
 struct file_reference_info
 {
 	unsigned long signature; // 0x0
-	unsigned short flags; // 0x4
+	word flags; // 0x4
 	short location; // 0x6
 	char path[256]; // 0x8
 #ifdef BUILDING_FILES_WINDOWS

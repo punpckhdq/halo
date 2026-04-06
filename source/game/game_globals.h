@@ -14,6 +14,16 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct game_globals_grenade
+{
+	short maximum_count;
+	short mp_spawn_default;
+	struct tag_reference throwing_effect;
+	struct tag_reference hud_interface;
+	struct tag_reference item;
+	struct tag_reference projectile;
+};
+
 struct game_globals_rasterizer_data
 {
 	struct tag_reference distance_attenuation;
@@ -29,13 +39,13 @@ struct game_globals_rasterizer_data
 	struct tag_reference screen_effect_video_scanline_map;
 	struct tag_reference screen_effect_video_noise_map;
 	long unused2[13];
-	unsigned short active_camouflage_flags;
-	unsigned short pad;
-	float active_camouflage_refraction_amount;
-	float active_camouflage_distance_falloff;
+	word active_camouflage_flags;
+	word pad;
+	real active_camouflage_refraction_amount;
+	real active_camouflage_distance_falloff;
 	real_rgb_color active_camouflage_tint_color;
-	float active_camouflage_hyper_stealth_refraction_amount;
-	float active_camouflage_hyper_stealth_distance_falloff;
+	real active_camouflage_hyper_stealth_refraction_amount;
+	real active_camouflage_hyper_stealth_distance_falloff;
 	real_rgb_color active_camouflage_hyper_stealth_tint_color;
 	struct tag_reference distance_attenuation_2d_for_the_pc;
 };
@@ -48,8 +58,8 @@ struct game_globals
 	struct tag_block camera;
 	struct tag_block player_control;
 	struct tag_block difficulty_information;
-	struct tag_block grenades;
-	struct tag_block rasterizer_data;
+	struct tag_block grenades;			// game_globals_grenade
+	struct tag_block rasterizer_data;	// game_globals_rasterizer_data
 	struct tag_block interface_tag_references;
 	struct tag_block weapon_list;
 	struct tag_block cheat_powerups;

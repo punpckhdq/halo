@@ -19,7 +19,7 @@ OBJECT_LISTS.H
 struct object_list_header_datum
 {
 	short identifier;
-	unsigned short pad;
+	word pad;
 	short reference_count;
 	short count;
 	long first_reference_index;

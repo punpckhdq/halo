@@ -218,7 +218,7 @@ void input_suppress(void);
 boolean input_mouse_button_is_down(short button_index);
 boolean input_has_gamepad(short gamepad_index);
 const struct gamepad_state *input_get_gamepad_state(short gamepad_index);
-void input_set_gamepad_rumbler_state(short gamepad_index, unsigned short left_speed, unsigned short right_speed);
+void input_set_gamepad_rumbler_state(short gamepad_index, word left_speed, word right_speed);
 void input_vertical_blank_interrupt(void);
 void input_get_raw_data_string(char *buffer, short size);
 void input_update(void);
