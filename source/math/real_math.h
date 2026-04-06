@@ -8,11 +8,30 @@ file has inline function assertions.
 #define __REAL_MATH_H
 #pragma once
 
+#include <float.h>
+
 /* ---------- constants */
 
 #define _real_epsilon 0.0001f
+#define _pi ((real)M_PI)
+
+#define DOUBLE_MIN 3.62314807E-315
 
 /* ---------- macros */
+
+#define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * _pi / 180.f))
+#define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / _pi))
+
+#define assert_valid_real(v)				\
+vassert(									\
+	valid_real(v),							\
+	csprintf(								\
+		temporary,							\
+		"%s: assert_valid_real(0x%08X %f)",	\
+		#v,									\
+		*((long*)&v), v						\
+	)										\
+)
 
 #define assert_valid_real_point3d(point)\
 vassert(												\
@@ -24,14 +43,24 @@ vassert(												\
 	)													\
 )
 
-#define assert_valid_real_vector3d(file, line, vector)	\
-vassert(														\
-	valid_real_vector3d(vector),								\
-	csprintf(													\
-		temporary,												\
-		"%s: assert_valid_real_vector2d(%f, %f, %f)",			\
-		#vector, (*vector).i, (*vector).j, (*vector).k			\
-	)															\
+#define assert_valid_real_vector3d(vector)				\
+vassert(												\
+	valid_real_vector3d(vector),						\
+	csprintf(											\
+		temporary,										\
+		"%s: assert_valid_real_vector2d(%f, %f, %f)",	\
+		#vector, (*vector).i, (*vector).j, (*vector).k	\
+	)													\
+)
+
+#define assert_valid_real_normal3d(vector)				\
+vassert(												\
+	valid_real_normal3d(vector),						\
+	csprintf(											\
+		temporary,										\
+		"%s: assert_valid_real_normal3d(%f, %f, %f)",	\
+		#vector, (*vector).i, (*vector).j, (*vector).k	\
+	)													\
 )
 
 #define assert_valid_real_vector3d_axes2(forward, up)						\
@@ -43,6 +72,64 @@ vassert(																	\
 		#forward, #up,														\
 		(*forward).i, (*forward).j, (*forward).k, (*up).i, (*up).j, (*up).k	\
 	)																		\
+)
+
+#define assert_valid_real_matrix4x3_internal(matrix, string)				\
+vassert(valid_real((*matrix).scale), csprintf(temporary, "%s had a bad scale %f", string, (*matrix).scale));	\
+vassert(valid_real_normal3d(&(*matrix).forward), csprintf(temporary, "%s had a bad forward (%f,%f,%f)", string, (*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k));		\
+vassert(valid_real_normal3d(&(*matrix).left), csprintf(temporary, "%s had a bad left (%f,%f,%f)", string, (*matrix).left.i, (*matrix).left.j, (*matrix).left.k));						\
+vassert(valid_real_normal3d(&(*matrix).up), csprintf(temporary, "%s had a bad up (%f,%f,%f)", string, (*matrix).up.i, (*matrix).up.j, (*matrix).up.k));								\
+vassert(valid_real_point3d(&(*matrix).position), csprintf(temporary, "%s had a bad position (%f,%f,%f)", string, (*matrix).position.x, (*matrix).position.y, (*matrix).position.z));	\
+match_vassert(																\
+	valid_realcmp(dot_product3d(&(*matrix).forward, &(*matrix).left), 0.f),	\
+	csprintf(																\
+		temporary,															\
+		"%s had a forward (%f,%f,%f) not perpendicular to left (%f,%f,%f)",	\
+		string,																\
+		(*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k,		\
+		(*matrix).left.i, (*matrix).left.j, (*matrix).left.k));				\
+vassert(																	\
+	valid_realcmp(dot_product3d(&(*matrix).up, &(*matrix).left), 0.f),		\
+	csprintf(																\
+		temporary,															\
+		"%s had a up (%f,%f,%f) not perpendicular to left (%f,%f,%f)",		\
+		string,																\
+		(*matrix).up.i, (*matrix).up.j, (*matrix).up.k,						\
+		(*matrix).left.i, (*matrix).left.j, (*matrix).left.k));				\
+vassert(																	\
+	valid_realcmp(dot_product3d(&(*matrix).forward, &(*matrix).up), 0.f),	\
+	csprintf(																\
+		temporary,															\
+		"%s had a forward (%f,%f,%f) not perpendicular to up (%f,%f,%f)",	\
+		string,																\
+		(*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k,		\
+		(*matrix).up.i, (*matrix).up.j, (*matrix).up.k));					\
+vassert(valid_real_matrix4x3(matrix), csprintf(temporary, "%s: assert_valid_real_matrix4x3", string));	\
+
+#define assert_valid_real_matrix4x3(file, line, matrix)								\
+if (!valid_real_matrix4x3(matrix))													\
+{																					\
+	assert_valid_real_matrix4x3_internal(file, line, matrix, STRINGIFY(matrix));	\
+}																					\
+
+#define assert_valid_real_matrix4x3_custom_string(matrix, custom_string)	\
+if (!valid_real_matrix4x3(matrix))											\
+{																			\
+	char* string= custom_string;											\
+	assert_valid_real_matrix4x3_internal(file, line, matrix, string);		\
+}																			\
+
+#define match_assert_valid_real(file, line, v)	\
+match_vassert(									\
+	file,										\
+	line,										\
+	valid_real(v),								\
+	csprintf(									\
+		temporary,								\
+		"%s: assert_valid_real(0x%08X %f)",		\
+		#v,										\
+		*((long*)&v), v							\
+	)											\
 )
 
 #define match_assert_valid_real_point3d(file, line, point)	\
@@ -69,6 +156,18 @@ match_vassert(													\
 	)															\
 )
 
+#define match_assert_valid_real_normal3d(file, line, vector)	\
+match_vassert(													\
+	file,														\
+	line,														\
+	valid_real_normal3d(vector),								\
+	csprintf(													\
+		temporary,												\
+		"%s: assert_valid_real_normal3d(%f, %f, %f)",			\
+		#vector, (*vector).i, (*vector).j, (*vector).k			\
+	)															\
+)
+
 #define match_assert_valid_real_vector3d_axes2(file, line, forward, up)		\
 match_vassert(																\
 	file,																\
@@ -81,6 +180,52 @@ match_vassert(																\
 		(*forward).i, (*forward).j, (*forward).k, (*up).i, (*up).j, (*up).k	\
 	)																		\
 )
+
+#define match_assert_valid_real_matrix4x3_internal(file, line, matrix, string)	\
+match_vassert(file, line, valid_real((*matrix).scale), csprintf(temporary, "%s had a bad scale %f", string, (*matrix).scale));	\
+match_vassert(file, line, valid_real_normal3d(&(*matrix).forward), csprintf(temporary, "%s had a bad forward (%f,%f,%f)", string, (*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k));		\
+match_vassert(file, line, valid_real_normal3d(&(*matrix).left), csprintf(temporary, "%s had a bad left (%f,%f,%f)", string, (*matrix).left.i, (*matrix).left.j, (*matrix).left.k));						\
+match_vassert(file, line, valid_real_normal3d(&(*matrix).up), csprintf(temporary, "%s had a bad up (%f,%f,%f)", string, (*matrix).up.i, (*matrix).up.j, (*matrix).up.k));								\
+match_vassert(file, line, valid_real_point3d(&(*matrix).position), csprintf(temporary, "%s had a bad position (%f,%f,%f)", string, (*matrix).position.x, (*matrix).position.y, (*matrix).position.z));	\
+match_vassert(file, line,													\
+	valid_realcmp(dot_product3d(&(*matrix).forward, &(*matrix).left), 0.f),	\
+	csprintf(																\
+		temporary,															\
+		"%s had a forward (%f,%f,%f) not perpendicular to left (%f,%f,%f)",	\
+		string,																\
+		(*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k,		\
+		(*matrix).left.i, (*matrix).left.j, (*matrix).left.k));				\
+match_vassert(file, line, 													\
+	valid_realcmp(dot_product3d(&(*matrix).up, &(*matrix).left), 0.f),		\
+	csprintf(																\
+		temporary,															\
+		"%s had a up (%f,%f,%f) not perpendicular to left (%f,%f,%f)",		\
+		string,																\
+		(*matrix).up.i, (*matrix).up.j, (*matrix).up.k,						\
+		(*matrix).left.i, (*matrix).left.j, (*matrix).left.k));				\
+match_vassert(file, line, 													\
+	valid_realcmp(dot_product3d(&(*matrix).forward, &(*matrix).up), 0.f),	\
+	csprintf(																\
+		temporary,															\
+		"%s had a forward (%f,%f,%f) not perpendicular to up (%f,%f,%f)",	\
+		string,																\
+		(*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k,		\
+		(*matrix).up.i, (*matrix).up.j, (*matrix).up.k));					\
+match_vassert(file, line, valid_real_matrix4x3(matrix), csprintf(temporary, "%s: assert_valid_real_matrix4x3", string));	\
+
+
+#define match_assert_valid_real_matrix4x3(file, line, matrix)							\
+if (!valid_real_matrix4x3(matrix))														\
+{																						\
+	match_assert_valid_real_matrix4x3_internal(file, line, matrix, STRINGIFY(matrix));	\
+}																						\
+
+#define match_assert_valid_real_matrix4x3_custom_string(file, line, matrix, custom_string)	\
+if (!valid_real_matrix4x3(matrix))															\
+{																							\
+	char* string= custom_string;															\
+	match_assert_valid_real_matrix4x3_internal(file, line, matrix, string);					\
+}
 
 /* ---------- structures */
 
@@ -239,9 +384,23 @@ typedef union real_argb_color real_argb_color;
 void real_math_initialize(void);
 void real_math_dispose(void);
 
-real normalize3d(real_vector3d *v);
+real angle_between_vectors3d(real_vector3d const *a, real_vector3d const *b);
 
+real_vector3d *perpendicular3d(real_vector3d const *a, real_vector3d *result);
+
+real_vector3d *rotate_vector_about_axis(real_vector3d *v, real_vector3d const *n, float sine, float cosine);
+
+real_euler_angles2d *euler_angles2d_from_vector3d(real_euler_angles2d *angles, real_vector3d const *vector);
 void vectors3d_from_euler_angles3d(real_vector3d *forward, real_vector3d *up, real_euler_angles3d const *angles);
+real_vector3d *vector3d_from_euler_angles2d(real_vector3d *vector, real_euler_angles2d const *angles);
+
+
+void angular_accelerate_to_position(
+	real_vector3d *position,
+	real_vector3d const *position_desired,
+	real_vector3d *angular_velocity,
+	real angular_velocity_magnitude_maximum,
+	real angular_acceleration_magnitude_maximum);
 
 /* ---------- prototypes/MATRIX_MATH.C */
 
@@ -345,17 +504,23 @@ __inline real signed_angular_difference(
 {
 	real result= angle2-angle1;
 	
-	if (result>=M_PI)
+	if (result>=_pi)
 	{
-		result-= (M_PI*2.f);
+		result-= (_pi*2.f);
 	}
 	
-	if (result<=(-M_PI))
+	if (result<=(-_pi))
 	{
-		result+= (M_PI*2.f);
+		result+= (_pi*2.f);
 	}
 
 	return result;
+}
+
+__inline real square_root(
+	real x)
+{
+	return sqrt(x);
 }
 
 __inline real_point3d *point_from_line3d(real_point3d const *p, real_vector3d const *v, real t, real_point3d *result)
@@ -381,6 +546,19 @@ __inline real_vector3d *vector_from_points3d(
 	result->i= b->x-a->x;
 	result->j= b->y-a->y;
 	result->k= b->z-a->z;
+
+	return result;
+}
+
+__inline real_vector3d *scale_vector3d(
+	real_vector3d const *a,
+	real c,
+	real_vector3d *result)
+{
+	result->i= c*a->i;
+	result->j= c*a->j;
+	result->k= c*a->k;
+
 	return result;
 }
 
@@ -388,6 +566,28 @@ __inline real magnitude_squared3d(
 	real_vector3d const *vector)
 {
 	return vector->i*vector->i + vector->j*vector->j + vector->k*vector->k;
+}
+
+__inline real magnitude3d(
+	real_vector3d const *v)
+{
+	return square_root(magnitude_squared3d(v));
+}
+
+__inline real normalize3d(
+	real_vector3d *v)
+{
+	real result= magnitude3d(v);
+	if (fabs(result-0.f)>=_real_epsilon)
+	{
+		scale_vector3d(v, 1.f / result, v);
+	}
+	else
+	{
+		result= 0.f;
+	}
+
+	return result;
 }
 
 __inline real distance_squared3d(
@@ -433,7 +633,7 @@ __inline boolean valid_realcmp(
 	real b)
 {
 	real result= a - b;
-	return valid_real(result) && fabs(result) < 0.01f;
+	return valid_real(result) && fabs(result) < 0.001f;
 }
 
 __inline boolean valid_real_point3d(
@@ -528,6 +728,13 @@ __inline real real_random(
 	void)
 {
 	return real_seed_random(get_global_random_seed_address());
+}
+
+__inline real real_random_range(
+	real lower_bound,
+	real upper_bound)
+{
+	return real_seed_random_range(get_global_random_seed_address(), lower_bound, upper_bound);
 }
 
 #endif // __REAL_MATH_H
