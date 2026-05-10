@@ -43,6 +43,7 @@ OBJECTS.C
 #include "physics/collision_usage.h"
 #include "physics/collisions.h"
 #include "physics/physics.h"
+#include "physics/physics_definitions.h"
 #include "render/render_debug.h"
 #include "saved games/game_state.h"
 #include "scenario/scenario.h"
@@ -2248,12 +2249,12 @@ void object_compute_node_matrices(
 {
 	real_orientation cannot_interpolate_node_orientations_storage[MAXIMUM_NODES_PER_MODEL];
 	short node_stack[MAXIMUM_NODES_PER_MODEL];
+	real_matrix4x3 center_matrix;
+	real_matrix4x3 offset_matrix;
 	real_matrix4x3 node_matrix;
 	real_matrix4x3 object_translation_matrix;
 	real_matrix4x3 object_rotation_matrix;
-	real_matrix4x3 center_matrix;
 	real_point3d center;
-	real_matrix4x3 offset_matrix;
 	real_matrix4x3 parent_node_matrix_no_scale_no_mirror;
 
 	struct object_datum *object = object_get(object_index);
@@ -2270,50 +2271,117 @@ void object_compute_node_matrices(
 		struct model *model;
 		real_matrix4x3 *object_node_matrix;
 		boolean world_relative;
+		long animation_index;
+
+		short node_count;
+		short node_index;
 
 		object_type_definition_get(object->object.type);
 		
-		model =  model_definition_get(object_definition->object.model.index);
+		model = model_definition_get(object_definition->object.model.index);
 		object_node_matrix =
 			object->object.parent_object_index!=NONE ?
 			object_get_node_matrix(object->object.parent_object_index, object->object.parent_node_index) :
 			0;
 
 		world_relative = FALSE;
-		if (object->object.animation.animation_graph_index!=NONE &&
-			object->object.animation.state.index!=NONE)
-		{
-			short frame_index;
 
-			struct animation_graph *animation_graph = animation_graph_definition_get(
-				object->object.animation.animation_graph_index);
-			struct animation* animation = TAG_BLOCK_GET_ELEMENT(
-				&animation_graph->animations,
-				object->object.animation.state.index,
-				struct animation);
-		
-			if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) &&
-				animation->frame_count>0)
+		if (object->object.animation.animation_graph_index!=NONE)
+		{
+			if (object->object.animation.state.index!=NONE)
 			{
-				frame_index = object->object.animation.state.frame_index;
+				short frame_index;
+
+				struct animation_graph *animation_graph = animation_graph_definition_get(
+					object->object.animation.animation_graph_index);
+				struct animation *animation = TAG_BLOCK_GET_ELEMENT(
+					&animation_graph->animations,
+					object->object.animation.state.index,
+					struct animation);
+
+				if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) &&
+					0<animation->frame_count)
+				{
+					unsigned int frame_count;
+
+					frame_index = (object_index + game_time_get());
+					frame_count = (unsigned int)animation->frame_count;
+
+					frame_index %= frame_count;
+
+					match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2704, frame_index>=0)
+				}
+				else
+				{
+					frame_index = object->object.animation.state.frame_index;
+				}
+
+				animation_get_node_orientations(model, animation, frame_index, node_orientations);
+				world_relative = TEST_FLAG(animation->flags, _animation_world_relative_bit);
 			}
 			else
 			{
-				frame_index = (object_index + game_time_get()) % animation->frame_count;
-				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2704, frame_index>=0)
+				model_get_node_orientations(model, node_orientations);
 			}
-			animation_get_node_orientations(model, animation, frame_index, node_orientations);
-			world_relative = TEST_FLAG(animation->flags, _animation_world_relative_bit);
 		}
 		else
 		{
 			model_get_node_orientations(model, node_orientations);
 		}
 
-		if (object_definition->object.animation_graph.index!=NONE)
+		animation_index = object_definition->object.animation_graph.index;
+
+		if (animation_index!=NONE)
 		{
-			struct animation_graph *animation_graph = animation_graph_definition_get(
-			   object->object.animation.animation_graph_index);
+			short overlay_index;
+
+			struct animation_graph *animation_graph= animation_graph_definition_get(animation_index);
+			
+			for (overlay_index = 0; overlay_index<animation_graph->object_overlays.count; ++overlay_index)
+			{
+				struct animation_graph_object_overlay* overlay = TAG_BLOCK_GET_ELEMENT(
+					&animation_graph->object_overlays,
+					overlay_index,
+					struct animation_graph_object_overlay);
+
+				if (overlay->animation_index!=NONE && overlay->function_index<object_definition->object.functions.count)
+				{
+					struct object_function_definition* function = TAG_BLOCK_GET_ELEMENT(
+						&object_definition->object.functions,
+						overlay->function_index,
+						struct object_function_definition);
+					struct animation *animation = TAG_BLOCK_GET_ELEMENT(
+						&animation_graph->animations,
+						object->object.animation.state.index,
+						struct animation);
+					real value= object->object.outgoing_function_values[overlay->function_index];
+
+					if (overlay->mode==_object_overlay_mode_frame)
+					{
+						real frame_index;
+						if (TEST_FLAG(function->flags, _object_function_additive_bit))
+						{
+							frame_index = animation->frame_count*value;
+						}
+						else
+						{
+							frame_index = (animation->frame_count-1) * value;
+						}
+
+						overlay_animation_apply_continuous(animation, frame_index, node_orientations);
+					}
+					else if (overlay->mode==_object_overlay_mode_scale)
+					{
+						short frame_index = (object_index + game_time_get()) % animation->frame_count;
+
+						overlay_animation_apply_scaled(
+							animation,
+							frame_index,
+							value,
+							node_orientations);
+					}
+				}
+			}
 		}
 
 		// Scale the object orientations
@@ -2348,6 +2416,245 @@ void object_compute_node_matrices(
 				object->object.animation.interpolation_frame_index,
 				object->object.animation.interpolation_frame_count);
 		}
+
+		if (!world_relative)
+		{
+			match_vassert(
+				"c:\\halo\\SOURCE\\objects\\objects.c",
+				2786,
+				valid_real_point3d(&object->object.position), 
+				csprintf(
+					temporary,
+					"%s had a bad position before compute_node_matrices (%f,%f,%f)",
+					tag_get_name(object->definition_index),
+					object->object.position.x,
+					object->object.position.y,
+					object->object.position.z));
+			match_vassert(
+				"c:\\halo\\SOURCE\\objects\\objects.c",
+				2787,
+				valid_real_vector3d_axes2(&object->object.forward, &object->object.up),
+				csprintf(
+					temporary,
+					"%s had a bad forward and up before compute_node_matrices (%f,%f,%f)x(%f,%f,%f)",
+					tag_get_name(object->definition_index),
+					object->object.forward.i,
+					object->object.forward.j,
+					object->object.forward.k,
+					object->object.up.i,
+					object->object.up.j,
+					object->object.up.k));
+		}
+
+		node_index = 0;
+		node_count = 1;
+		node_stack[0] = 0;
+
+		while (node_index!=node_count)
+		{
+			short node_stack_index = node_stack[node_index];
+			struct model_node* node = TAG_BLOCK_GET_ELEMENT(&model->nodes, node_stack_index, struct model_node);
+			
+			if (node_stack_index==0)
+			{
+				matrix4x3_from_orientation(&node_matrix, node_orientations);
+				
+				if (!world_relative)
+				{
+					matrix4x3_translation(&object_translation_matrix, &object->object.position);
+					matrix4x3_rotation_from_vectors(&object_rotation_matrix, &object->object.forward, &object->object.up);
+
+					if (TEST_FLAG(object->object.flags, _object_mirrored_bit))
+					{
+						object_rotation_matrix.left.i = -object_rotation_matrix.left.i;
+						object_rotation_matrix.left.j = -object_rotation_matrix.left.j;
+						object_rotation_matrix.left.k = -object_rotation_matrix.left.k;
+					}
+
+					if (object_definition->object.physics.index!=NONE)
+					{
+						struct physics_definition *physics_definition= physics_definition_get(object_definition->object.physics.index);
+						set_real_point3d(&center, -physics_definition->center_of_mass.x, -physics_definition->center_of_mass.y, -physics_definition->center_of_mass.z);
+						matrix4x3_translation(&center_matrix, &center);
+						matrix4x3_multiply(&object_rotation_matrix, &center_matrix, &object_rotation_matrix);
+					}
+
+					matrix4x3_translation(&offset_matrix, &object_definition->object.origin_offset);
+					matrix4x3_multiply(&object_rotation_matrix, &offset_matrix, &object_rotation_matrix);
+
+					if (object_node_matrix)
+					{
+						if (object_node_matrix->scale!=1.f)
+						{
+							object_translation_matrix.position.x *= object_node_matrix->scale;
+							object_translation_matrix.position.y *= object_node_matrix->scale;
+							object_translation_matrix.position.z *= object_node_matrix->scale;
+
+							parent_node_matrix_no_scale_no_mirror= *object_node_matrix;
+							object_node_matrix= &parent_node_matrix_no_scale_no_mirror;
+							parent_node_matrix_no_scale_no_mirror.scale= 1.f;
+						}
+
+						if (TEST_FLAG(object_get(object->object.parent_object_index)->object.flags, _object_mirrored_bit))
+						{
+							if (object_node_matrix!=&parent_node_matrix_no_scale_no_mirror)
+							{
+								parent_node_matrix_no_scale_no_mirror = *object_node_matrix;
+								object_node_matrix = &parent_node_matrix_no_scale_no_mirror;
+							}
+
+							negate_vector3d(&object_node_matrix->left, &object_node_matrix->left);
+						}
+
+						match_assert_valid_real_matrix4x3_custom_string(
+							"c:\\halo\\SOURCE\\objects\\objects.c",
+							2871,
+							object_node_matrix,
+							csprintf(
+							temporary,
+							"%s as parent node of %s",
+							tag_get_name(object_get(object->object.parent_object_index)->definition_index),
+							tag_get_name(object->definition_index)));
+
+
+						matrix4x3_multiply(object_node_matrix, &object_translation_matrix, &object_nodes[0]);
+						matrix4x3_multiply(&object_nodes[0], &object_rotation_matrix, &object_nodes[0]);
+						matrix4x3_multiply(&object_nodes[0], &node_matrix, &object_nodes[0]);
+					}
+					else
+					{
+						matrix4x3_multiply(&object_translation_matrix, &object_rotation_matrix, &object_nodes[0]);
+						matrix4x3_multiply(&object_nodes[0], &node_matrix, &object_nodes[0]);
+					}
+
+					if (!valid_real_matrix4x3(&object_nodes[node_stack_index]))
+					{
+						error(_error_silent, "object_compute_node_matrices FAILURE on root node of %s", tag_get_name(object->definition_index));
+						error(
+							_error_silent,
+							"  object: pos %f %f %f, fwd %f %f %f, up %f %f %f",
+							object->object.position.x,
+							object->object.position.y,
+							object->object.position.z,
+							object->object.forward.i,
+							object->object.forward.j,
+							object->object.forward.k,
+							object->object.up.i,
+							object->object.up.j,
+							object->object.up.k);
+
+						if (object_definition->object.physics.index!=NONE)
+						{
+							struct physics_definition *physics_definition= physics_definition_get(object_definition->object.physics.index);
+							error(
+								_error_silent,
+								"  center-of-mass translation %f %f %f",
+								-physics_definition->center_of_mass.x,
+								-physics_definition->center_of_mass.y,
+								-physics_definition->center_of_mass.z);
+						}
+						error(
+							_error_silent,
+							"  origin-offset %f %f %f",
+							object_definition->object.origin_offset.x,
+							object_definition->object.origin_offset.y,
+							object_definition->object.origin_offset.z);
+
+						if (object_node_matrix)
+						{
+							error(
+							  _error_silent,
+							  "  parent-node matrix fwd  %f %f %f",
+							  object_node_matrix->forward.i,
+							  object_node_matrix->forward.j,
+							  object_node_matrix->forward.k);
+							error(
+							  _error_silent,
+							  "                     left %f %f %f",
+							  object_node_matrix->left.i,
+							  object_node_matrix->left.j,
+							  object_node_matrix->left.k);
+							error(
+							  _error_silent,
+							  "                     up   %f %f %f",
+							  object_node_matrix->up.i,
+							  object_node_matrix->up.j,
+							  object_node_matrix->up.k);
+							error(
+							  _error_silent,
+							  "                     posn %f %f %f",
+							  object_node_matrix->position.x,
+							  object_node_matrix->position.y,
+							  object_node_matrix->position.z);
+							error(_error_silent, "                     scale (jason's ugly secret) %f", object_node_matrix->scale);
+						}
+						else
+						{
+							error(_error_silent, "  no parent node");
+						}
+
+						error(_error_silent, "");
+						error(
+							_error_silent,
+							"computed matrix fwd  %f %f %f",
+							object_nodes[node_stack_index].forward.i,
+							object_nodes[node_stack_index].forward.j,
+							object_nodes[node_stack_index].forward.k);
+						error(
+							_error_silent,
+							"                left %f %f %f",
+							object_nodes[node_stack_index].left.i,
+							object_nodes[node_stack_index].left.j,
+							object_nodes[node_stack_index].left.k);
+						error(
+							_error_silent,
+							"                up   %f %f %f",
+							object_nodes[node_stack_index].up.i,
+							object_nodes[node_stack_index].up.j,
+							object_nodes[node_stack_index].up.k);
+						error(_error_silent, "                posn %f %f %f",
+							object_nodes[node_stack_index].position.x,
+							object_nodes[node_stack_index].position.y,
+							object_nodes[node_stack_index].position.z);
+						error(_error_silent, "                scale %f", object_nodes[node_stack_index].scale);
+					}
+				}
+				else
+				{
+					object_nodes[node_stack_index] = node_matrix;
+				}
+
+				match_assert_valid_real_matrix4x3_custom_string(
+					"c:\\halo\\SOURCE\\objects\\objects.c",
+					2921,
+					&object_nodes[node_stack_index],
+					"object_compute_node_matrices root node matrix");
+			}
+			else
+			{
+				matrix4x3_from_orientation(&object_nodes[node_stack_index], &node_orientations[node_stack_index]);
+				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2929, node->parent_node_index!=NONE);
+				matrix4x3_multiply(&object_nodes[node->parent_node_index], &object_nodes[node_stack_index], &object_nodes[node_stack_index]);
+			}
+
+			if (node_stack_index==0)
+			{
+				match_assert_valid_real_matrix4x3_custom_string(
+					"c:\\halo\\SOURCE\\objects\\objects.c",
+					2935,
+					&object_nodes[node_stack_index],
+					tag_get_name(object->definition_index));
+
+				if (node->first_child_node_index!=NONE)
+				{
+					node_stack[node_count++] = node->first_child_node_index;
+				}
+				if (node->first_child_node_index!=NONE)
+				{
+					node_stack[node_count++] = node->first_child_node_index;
+				}
+			}
+		}
 	}
 	else
 	{
@@ -2358,14 +2665,12 @@ void object_compute_node_matrices(
 		object_nodes[0].position = object->object.position;
 	}
 
-	matrix4x3_transform_point(
-		object_nodes,
-		&object_definition->object.bounding_offset,
-		&object->object.bounding_sphere_center);
+	matrix4x3_transform_point(object_nodes, &object_definition->object.bounding_offset, &object->object.bounding_sphere_center);
 	object->object.bounding_sphere_radius = object_definition->object.bounding_radius;
+	
 	if (object->object.scale > 0.f)
 	{
-		object->object.bounding_sphere_radius*= object->object.scale;
+		object->object.bounding_sphere_radius *= object->object.scale;
 	}
 
 	return;
