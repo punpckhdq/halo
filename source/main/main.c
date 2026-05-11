@@ -469,7 +469,7 @@ struct _main_globals
 
 /* ---------- prototypes */
 
-extern void code_000ef8e0(void);
+extern void create_local_players(void);
 extern void code_000f1c20(void);
 extern void code_000f1ce0(void);
 
@@ -479,11 +479,11 @@ extern void main_present_frame(void);
 
 /* ---------- globals */
 
-static struct _main_globals bss_00455750;
+static struct _main_globals main_globals;
 
 /* ---------- public code */
 
-static void code_000f08f0(
+static void main_reset_map_private(
 	void)
 {
 	if (!game_time_get_paused())
@@ -492,13 +492,15 @@ static void code_000f08f0(
 		game_dispose_from_old_map();
 		input_flush();
 		game_initialize_for_new_map();
-		code_000ef8e0();
+		create_local_players();
 		game_time_start();
 		game_initial_pulse();
 		ui_widgets_disable_pause_game(30);
 
-		bss_00455750.reset_map = FALSE;
+		main_globals.reset_map = FALSE;
 	}
+
+	return;
 }
 
 void main_loop_of_death(
@@ -517,6 +519,8 @@ void main_loop_of_death(
 		main_present_frame();
 		input_frame_end();
 	}
+
+	return;
 }
 
 void main_loop(
@@ -524,13 +528,13 @@ void main_loop(
 {
 	if (!game_in_editor())
 	{
-		strncpy(bss_00455750.soloplayer_map_name, "levels\\b30\\b30", NUMBEROF(bss_00455750.soloplayer_map_name)-1);
-		bss_00455750.soloplayer_map_name[NUMBEROF(bss_00455750.soloplayer_map_name)-1] = '\0';
+		strncpy(main_globals.soloplayer_map_name, "levels\\b30\\b30", NUMBEROF(main_globals.soloplayer_map_name)-1);
+		main_globals.soloplayer_map_name[NUMBEROF(main_globals.soloplayer_map_name)-1] = '\0';
 	}
 
-	bss_00455750.want_to_be_at_main_menu = (game_in_editor()==FALSE);
-	bss_00455750.switch_to_structure_bsp_index = NONE;
-	bss_00455750.halt_time_scale = TRUE;
+	main_globals.want_to_be_at_main_menu = (game_in_editor()==FALSE);
+	main_globals.switch_to_structure_bsp_index = NONE;
+	main_globals.halt_time_scale = TRUE;
 
 	console_initialize();
 	debug_keys_initialize();
@@ -543,94 +547,94 @@ void main_loop(
 	{
 		if (game_in_editor())
 		{
-			if (bss_00455750.reset_map)
+			if (main_globals.reset_map)
 			{
-				code_000f08f0();
+				main_reset_map_private();
 			}
 		}
 		else
 		{
-			if (bss_00455750.switch_to_structure_bsp_index!=NONE)
+			if (main_globals.switch_to_structure_bsp_index!=NONE)
 			{
-				scenario_switch_structure_bsp(bss_00455750.switch_to_structure_bsp_index);
-				bss_00455750.switch_to_structure_bsp_index = NONE;
+				scenario_switch_structure_bsp(main_globals.switch_to_structure_bsp_index);
+				main_globals.switch_to_structure_bsp_index = NONE;
 				hud_load(0);
 			}
 
-			if (bss_00455750.lost_map)
+			if (main_globals.lost_map)
 			{
 
 			}
 
-			if (bss_00455750.won_map)
+			if (main_globals.won_map)
 			{
 
 			}
 
-			if (bss_00455750.respawn)
+			if (main_globals.respawn)
 			{
 
 			}
 
-			if (bss_00455750.saving_map)
+			if (main_globals.saving_map)
 			{
 
 			}
 
-			if (bss_00455750.rename_map)
+			if (main_globals.rename_map)
 			{
 
 			}
 
-			if (bss_00455750.revert_map)
+			if (main_globals.revert_map)
 			{
 
 			}
 
-			if (bss_00455750.skip_cinematic)
+			if (main_globals.skip_cinematic)
 			{
 
 			}
 
-			if (bss_00455750.reset_map)
+			if (main_globals.reset_map)
 			{
-				code_000f08f0();
+				main_reset_map_private();
 			}
 
-			if (bss_00455750.save_core)
-			{
-				//game_state_save_core(bss_00455750.__unknown125);
-				bss_00455750.save_core = FALSE;
-			}
-
-			if (bss_00455750.load_core)
+			if (main_globals.save_core)
 			{
 				//game_state_save_core(bss_00455750.__unknown125);
-				bss_00455750.load_core = FALSE;
+				main_globals.save_core = FALSE;
 			}
 
-			if (bss_00455750.want_to_be_at_main_menu)
+			if (main_globals.load_core)
+			{
+				//game_state_save_core(bss_00455750.__unknown125);
+				main_globals.load_core = FALSE;
+			}
+
+			if (main_globals.want_to_be_at_main_menu)
 			{
 				main_menu_load();
 			}
 
-			if (bss_00455750.__unknown117[1])
+			if (main_globals.__unknown117[1])
 			{
 				main_load_last_solo_map();
 			}
 
-			if (bss_00455750.run_xdemos)
+			if (main_globals.run_xdemos)
 			{
-				bss_00455750.run_xdemos = FALSE;
+				main_globals.run_xdemos = FALSE;
 				xbox_demos_launch();
 			}
 
-			if (bss_00455750.__unknown117[2])
+			if (main_globals.__unknown117[2])
 			{
 				code_000f05f0();
 			}
 
-			if (bss_00455750.queue_map)
+			if (main_globals.queue_map)
 			{
 				//bss_00455750.queue_map = FALSE;
 			}
@@ -646,7 +650,7 @@ void main_loop(
 
 		if (!shell_application_is_paused())
 		{
-			if (bss_00455750.connection==1)
+			if (main_globals.connection==1)
 			{
 
 			}
@@ -889,13 +893,13 @@ void main_loop(
 		profile_frame_end();
 		code_000f0940();
 		
-		if (bss_00455750.__unknown117[0])
+		if (main_globals.__unknown117[0])
 		{
 			//main_globals.__unknown117[0] = 0;
 			//*(_DWORD *)&main_globals.__unknown00[176] = system_milliseconds();
 			//*(_DWORD *)&main_globals.__unknown00[184] = dword_70D400;
 			//*(_DWORD *)&main_globals.__unknown00[188] = dword_70D404;
-			bss_00455750.halt_time_scale = TRUE;
+			main_globals.halt_time_scale = TRUE;
 		}
 	}
 
@@ -903,6 +907,8 @@ void main_loop(
 	game_dispose();
 	debug_keys_dispose();
 	console_dispose();
+
+	return;
 }
 
 /* ---------- private code */

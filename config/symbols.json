@@ -22449,7 +22449,7 @@
 { "file_offset": 4541824, "flags": 0, "name": "_console_globals" },
 { "file_offset": 4544324, "flags": 0, "name": "_console_dump_to_file" },
 { "file_offset": 4544328, "flags": 0, "name": "_global_debug_key_down" },
-{ "file_offset": 4544336, "flags": 0, "name": "_bss_00455750" },
+{ "file_offset": 4544336, "flags": 0, "name": "_main_globals" },
 { "file_offset": 4546080, "flags": 0, "name": "_debug_force_frame_rate_update" },
 { "file_offset": 4546081, "flags": 0, "name": "_debug_no_drawing" },
 { "file_offset": 4546082, "flags": 0, "name": "_debug_game_save" },
