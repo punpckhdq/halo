@@ -16,7 +16,7 @@ header included in hcex build.
 
 enum
 {
-	_scenario_device_initially_open_bit= 0,
+	_scenario_device_initially_open_bit = 0,
 	_scenario_device_initially_off_bit,
 	_scenario_device_changes_only_once_bit,
 	_scenario_device_position_reversed_bit,
@@ -26,7 +26,7 @@ enum
 
 enum
 {
-	_machine_does_not_operate_automatically_bit= 0,
+	_machine_does_not_operate_automatically_bit = 0,
 	_machine_one_sided_bit,
 	_machine_never_appears_locked_bit,
 	_machine_opened_by_melee_attack_bit,

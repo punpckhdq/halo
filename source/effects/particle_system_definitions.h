@@ -12,8 +12,8 @@ header included in hcex build.
 
 enum
 {
-	PARTICLE_SYSTEM_DEFINITION_TAG= 'pctl',
-	PARTICLE_SYSTEM_DEFINITION_VERSION= 4,
+	PARTICLE_SYSTEM_DEFINITION_TAG = 'pctl',
+	PARTICLE_SYSTEM_DEFINITION_VERSION = 4,
 };
 
 /* ---------- macros */

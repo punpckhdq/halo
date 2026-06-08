@@ -276,7 +276,7 @@ symbols in this file:
 
 enum
 {
-	MAXIMUM_PROFILE_SECTIONS= 256,
+	MAXIMUM_PROFILE_SECTIONS = 256,
 };
 
 /* ---------- macros */
@@ -310,35 +310,35 @@ struct profile_globals
 
 /* ---------- globals */
 
-static struct profile_globals profile_globals= {0};
-boolean profile_timebase_ticks= FALSE;
-boolean profile_global_enable= FALSE;
-boolean profile_dump_frames= FALSE;
-boolean profile_dump_lost_frames= FALSE;
+static struct profile_globals profile_globals = {0};
+boolean profile_timebase_ticks = FALSE;
+boolean profile_global_enable = FALSE;
+boolean profile_dump_frames = FALSE;
+boolean profile_dump_lost_frames = FALSE;
 
 /* ---------- public code */
 
 void profile_initialize(
 	void)
 {
-	short section_index= 0;
+	short section_index = 0;
 
-	profile_globals.gap__0= DOUBLE_MIN;
+	profile_globals.gap__0 = DOUBLE_MIN;
 
 	while (section_index<profile_globals.section_count)
 	{
-		profile_globals.sections[section_index++]->section_index= NONE;
+		profile_globals.sections[section_index++]->section_index = NONE;
 	}
 
-	profile_global_enable= TRUE;
-	profile_globals.section_count= 0;
-	profile_globals.stack_depth= 0;
-	profile_globals.initialized= TRUE;
-	profile_globals.section= NULL;
-	profile_globals.current_frame_history_count= 0;
-	profile_globals.current_frame_history_index= 0;
-	profile_globals.lost_frame_count= 999;
-	profile_globals.framedump_file= NULL;
+	profile_global_enable = TRUE;
+	profile_globals.section_count = 0;
+	profile_globals.stack_depth = 0;
+	profile_globals.initialized = TRUE;
+	profile_globals.section = NULL;
+	profile_globals.current_frame_history_count = 0;
+	profile_globals.current_frame_history_index = 0;
+	profile_globals.lost_frame_count = 999;
+	profile_globals.framedump_file = NULL;
 
 	return;
 }

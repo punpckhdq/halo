@@ -65,8 +65,8 @@ symbols in this file:
 
 enum
 {
-	MAXIMUM_OBJECT_LISTS_PER_MAP= 48,
-	MAXIMUM_LISTED_OBJECTS_PER_MAP= 128,
+	MAXIMUM_OBJECT_LISTS_PER_MAP = 48,
+	MAXIMUM_LISTED_OBJECTS_PER_MAP = 128,
 };
 
 /* ---------- macros */
@@ -82,8 +82,8 @@ enum
 void object_lists_initialize(
 	void)
 {
-	object_list_header_data= game_state_data_new("object list header", MAXIMUM_OBJECT_LISTS_PER_MAP, sizeof(struct object_list_header_datum));
-	object_list_data= reference_list_new("list object", sizeof(struct data_reference));
+	object_list_header_data = game_state_data_new("object list header", MAXIMUM_OBJECT_LISTS_PER_MAP, sizeof(struct object_list_header_datum));
+	object_list_data = reference_list_new("list object", sizeof(struct data_reference));
 
 	return;
 }
@@ -115,13 +115,13 @@ void object_lists_dispose_from_old_map(
 long object_list_new(
 	void)
 {
-	long list_index= datum_new(object_list_header_data);
+	long list_index = datum_new(object_list_header_data);
 
 	if (list_index != NONE)
 	{
-		struct object_list_header_datum* list= object_list_header_get(list_index);
-		list->count= 0;
-		list->first_reference_index= NONE;
+		struct object_list_header_datum* list = object_list_header_get(list_index);
+		list->count = 0;
+		list->first_reference_index = NONE;
 	}
 
 	return list_index;
@@ -132,7 +132,7 @@ void object_list_delete(
 {
 	if (list_index != NONE)
 	{
-		struct object_list_header_datum *list= object_list_header_get(list_index);
+		struct object_list_header_datum *list = object_list_header_get(list_index);
 		match_assert("c:\\halo\\SOURCE\\hs\\object_lists.c", 100, list->reference_count==0);
 		reference_list_delete(object_list_data, list->first_reference_index);
 		datum_delete(object_list_header_data, list_index);
@@ -145,7 +145,7 @@ void object_list_add(
 	long object_list_index,
 	long object_index)
 {
-	struct object_list_header_datum *list= object_list_header_get(object_list_index);
+	struct object_list_header_datum *list = object_list_header_get(object_list_index);
 	reference_list_add(object_list_data, &list->first_reference_index, object_index);
 	list->count++;
 
@@ -164,7 +164,7 @@ void object_list_add_reference(
 {
 	if (object_list_index!=NONE)
 	{
-		struct object_list_header_datum *list= object_list_header_get(object_list_index);
+		struct object_list_header_datum *list = object_list_header_get(object_list_index);
 		list->reference_count++;
 	}
 
@@ -176,7 +176,7 @@ void object_list_remove_reference(
 {
 	if (object_list_index!=NONE)
 	{
-		struct object_list_header_datum *list= object_list_header_get(object_list_index);
+		struct object_list_header_datum *list = object_list_header_get(object_list_index);
 		match_assert("c:\\halo\\SOURCE\\hs\\object_lists.c", 165, list->reference_count>0);
 		list->reference_count--;
 	}
@@ -190,9 +190,9 @@ void object_list_gc(
 	long i;
 
 	for (
-		i= data_next_index(object_list_header_data, NONE);
+		i = data_next_index(object_list_header_data, NONE);
 		i!=NONE; 
-		i= data_next_index(object_list_header_data, i))
+		i = data_next_index(object_list_header_data, i))
 	{
 		if (object_list_header_get(i)->reference_count==0)
 		{
@@ -206,11 +206,11 @@ void object_list_gc(
 short object_list_count(
 	long object_list_index)
 {
-	short result= 0;
+	short result = 0;
 
 	if (object_list_index!=NONE)
 	{
-		result= object_list_header_get(object_list_index)->count;
+		result = object_list_header_get(object_list_index)->count;
 	}
 
 	return result;
@@ -220,18 +220,18 @@ long object_list_get_first(
 	long object_list_index,
 	long *reference_index)
 {
-	long result= NONE;
+	long result = NONE;
 
 	if (object_list_index!=NONE)
 	{
-		struct object_list_header_datum *list= object_list_header_get(object_list_index);
+		struct object_list_header_datum *list = object_list_header_get(object_list_index);
 
-		*reference_index= list->first_reference_index;
+		*reference_index = list->first_reference_index;
 		if (list->first_reference_index!=NONE)
 		{
-			struct data_reference *reference= object_list_get(list->first_reference_index);
-			*reference_index= reference->next_reference_index;
-			result= reference->datum_index;
+			struct data_reference *reference = object_list_get(list->first_reference_index);
+			*reference_index = reference->next_reference_index;
+			result = reference->datum_index;
 		}
 	}
 

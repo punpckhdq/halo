@@ -19,18 +19,18 @@ header included in hcex build.
 
 enum
 {
-	ANIMATION_GRAPH_TAG= 'antr',
-	ANIMATION_GRAPH_VERSION= 4,
-	MAXIMUM_FRAMES_PER_ANIMATION= 2048,
-	MAXIMUM_NODES_PER_ANIMATION= 64,
-	MAXIMUM_ANIMATIONS_PER_GRAPH= 256,
-	MAXIMUM_SOUND_REFERENCES_PER_ANIMATION_GRAPH= 257,
-	MINIMUM_COMPRESSED_ANIMATION_FRAME_COUNT= 6,
+	ANIMATION_GRAPH_TAG = 'antr',
+	ANIMATION_GRAPH_VERSION = 4,
+	MAXIMUM_FRAMES_PER_ANIMATION = 2048,
+	MAXIMUM_NODES_PER_ANIMATION = 64,
+	MAXIMUM_ANIMATIONS_PER_GRAPH = 256,
+	MAXIMUM_SOUND_REFERENCES_PER_ANIMATION_GRAPH = 257,
+	MINIMUM_COMPRESSED_ANIMATION_FRAME_COUNT = 6,
 };
 
 enum
 {
-	_animation_compressed_bit= 0,
+	_animation_compressed_bit = 0,
 	_animation_world_relative_bit,
 	_animation_25Hz_bit,
 	NUMBER_OF_ANIMATION_FLAGS,
@@ -38,7 +38,7 @@ enum
 
 enum
 {
-	_object_overlay_mode_frame= 0,
+	_object_overlay_mode_frame = 0,
 	_object_overlay_mode_scale,
 	NUMBER_OF_OBJECT_OVERLAY_MODES,
 };

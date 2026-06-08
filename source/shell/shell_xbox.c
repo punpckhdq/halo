@@ -58,7 +58,7 @@ boolean shell_platform_initialize(
 		!strcmp((const char *)launch_data.Data, "XDEMOS"))
 	{
 		strncat(bss_004c08a8, "xdemo ", NUMBEROF(bss_004c08a8)-1);
-		bss_004c08a8[NUMBEROF(bss_004c08a8)-1]= '\0';
+		bss_004c08a8[NUMBEROF(bss_004c08a8)-1] = '\0';
 	}
 
 	return TRUE;
@@ -126,15 +126,15 @@ static void fuck_code_in_the_eye(
 {
 	DWORD flOldProtect;
 
-	PDM_WALK_MODSECT walk_modsect= NULL;
+	PDM_WALK_MODSECT walk_modsect = NULL;
 	DMN_SECTIONLOAD section_load;
 
-	PDM_WALK_MODULES walk_modules= NULL;
+	PDM_WALK_MODULES walk_modules = NULL;
 	DMN_MODLOAD module_load;
 
 	while (DmWalkLoadedModules(&walk_modules, &module_load)!=XBDM_ENDOFLIST)
 	{
-		walk_modsect= NULL;
+		walk_modsect = NULL;
 		while (DmWalkModuleSections(&walk_modsect, module_load.Name, &section_load)!=XBDM_ENDOFLIST)
 		{
 			if (fuck_code_in_the_eye>section_load.BaseAddress && fuck_code_in_the_eye<(void *)((byte *)section_load.BaseAddress + section_load.Size))

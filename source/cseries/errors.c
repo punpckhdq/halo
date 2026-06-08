@@ -79,14 +79,14 @@ void write_to_error_file(
 	char *string,
 	boolean date)
 {
-	static unsigned char first_line= TRUE;
+	static unsigned char first_line = TRUE;
 
 	char line[1024];
 	long time_value;
 
 	if (first_line)
 	{
-		first_line= FALSE;
+		first_line = FALSE;
 		write_to_error_file("\r\n\r\n", FALSE);
 		write_to_error_file("halobeta xbox 01.01.14.2342(CACHE) ----------------------------------------------\r\n", TRUE);
 		sprintf(line, "reference function: %s\r\n", "_write_to_error_file");
@@ -97,7 +97,7 @@ void write_to_error_file(
 
 	if (error_globals.output_to_debug_file)
 	{
-		FILE* handle= fopen("d:\\debug.txt", "a+b");
+		FILE* handle = fopen("d:\\debug.txt", "a+b");
 		if (handle)
 		{
 			if (date)
@@ -106,7 +106,7 @@ void write_to_error_file(
 				struct tm *_time;
 
 				time(&timeptr);
-				_time= localtime(&timeptr);
+				_time = localtime(&timeptr);
 				if (_time)
 				{
 					fprintf(

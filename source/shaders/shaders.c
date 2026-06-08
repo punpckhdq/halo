@@ -103,8 +103,8 @@ boolean shader_is_double_sided(struct shader *shader)
 
 void numeric_countdown_timer_set(long milliseconds, boolean auto_start)
 {
-	numeric_countdown_timer_milliseconds= milliseconds;
-	numeric_countdown_timer_on= auto_start;
+	numeric_countdown_timer_milliseconds = milliseconds;
+	numeric_countdown_timer_on = auto_start;
 }
 
 short numeric_countdown_timer_get(short digit_index)
@@ -114,34 +114,34 @@ short numeric_countdown_timer_get(short digit_index)
 	switch (digit_index)
 	{
 	case NONE:
-		digit= numeric_countdown_timer_milliseconds;
+		digit = numeric_countdown_timer_milliseconds;
 		break;
 	case 0:
-		digit= numeric_countdown_timer_milliseconds % 10;
+		digit = numeric_countdown_timer_milliseconds % 10;
 		break;
 	case 1:
-		digit= numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND/100) % 10;
+		digit = numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND/100) % 10;
 		break;
 	case 2:
-		digit= numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND/10) % 10;
+		digit = numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND/10) % 10;
 		break;
 	case 3:
-		digit= numeric_countdown_timer_milliseconds / MILLISECONDS_PER_SECOND % 10;
+		digit = numeric_countdown_timer_milliseconds / MILLISECONDS_PER_SECOND % 10;
 		break;
 	case 4:
-		digit= numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*10) % 6;
+		digit = numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*10) % 6;
 		break;
 	case 5:
-		digit= numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE) % 10;
+		digit = numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE) % 10;
 		break;
 	case 6:
-		digit= numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE*10) % 6;
+		digit = numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE*10) % 6;
 		break;
 	case 7:
-		digit= numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE*MINUTES_PER_HOUR) % 10;
+		digit = numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE*MINUTES_PER_HOUR) % 10;
 		break;
 	case 8:
-		digit= numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE*MINUTES_PER_HOUR*10) % 10;
+		digit = numeric_countdown_timer_milliseconds / (MILLISECONDS_PER_SECOND*SECONDS_PER_MINUTE*MINUTES_PER_HOUR*10) % 10;
 		break;
 	}
 
@@ -150,12 +150,12 @@ short numeric_countdown_timer_get(short digit_index)
 
 void numeric_countdown_timer_stop(void)
 {
-	numeric_countdown_timer_on= FALSE;
+	numeric_countdown_timer_on = FALSE;
 }
 
 void numeric_countdown_timer_restart(void)
 {
-	numeric_countdown_timer_on= TRUE;
+	numeric_countdown_timer_on = TRUE;
 }
 
 void numeric_countdown_timer_update(void)
@@ -164,19 +164,19 @@ void numeric_countdown_timer_update(void)
 
 	if (numeric_countdown_timer_on)
 	{
-		long game_time= MILLISECONDS_PER_SECOND * game_time_get() / TICKS_PER_SECOND;
+		long game_time = MILLISECONDS_PER_SECOND * game_time_get() / TICKS_PER_SECOND;
 
 		if (game_time >= previous_game_time)
 		{
-			numeric_countdown_timer_milliseconds= numeric_countdown_timer_milliseconds - game_time + previous_game_time;
+			numeric_countdown_timer_milliseconds = numeric_countdown_timer_milliseconds - game_time + previous_game_time;
 
 			if (numeric_countdown_timer_milliseconds < 0)
 			{
-				numeric_countdown_timer_milliseconds= 0;
+				numeric_countdown_timer_milliseconds = 0;
 			}
 		}
 
-		previous_game_time= game_time;
+		previous_game_time = game_time;
 	}
 }
 

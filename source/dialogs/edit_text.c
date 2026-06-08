@@ -60,7 +60,7 @@ void edit_text_handle_key(
 	
 	if (key->key_code==_key_backspace)
 	{
-		backspace= TRUE;
+		backspace = TRUE;
 	}
 
 	if (key->key_code==_key_backspace ||
@@ -78,13 +78,13 @@ void edit_text_handle_key(
 				&edit->buffer[selection_start],
 				&edit->buffer[selection_end],
 				strlen(&edit->buffer[selection_end])+1);
-			edit->insertion_point_index= selection_start;
-			edit->selection_start_index= NONE;
+			edit->insertion_point_index = selection_start;
+			edit->selection_start_index = NONE;
 		}
 		else if (key->key_code==_key_backspace &&
 				edit->insertion_point_index > 0)
 		{
-			short src_index= edit->insertion_point_index;
+			short src_index = edit->insertion_point_index;
 			get_previous_character(
 				(unsigned char *)edit->buffer,
 				&edit->insertion_point_index);
@@ -97,7 +97,7 @@ void edit_text_handle_key(
 		{
 			if (edit->insertion_point_index < strlen(edit->buffer))
 			{
-				short next_index= edit->insertion_point_index;
+				short next_index = edit->insertion_point_index;
 				get_next_character(
 					(unsigned char *)edit->buffer,
 					&next_index
@@ -124,7 +124,7 @@ void edit_text_handle_key(
 		{
 			if (TEST_FLAG(key->modifier_flags, 0) && edit->selection_start_index==NONE)
 			{
-				edit->selection_start_index= edit->insertion_point_index;
+				edit->selection_start_index = edit->insertion_point_index;
 			}
 
 			if (key->key_code==_key_left_arrow && edit->insertion_point_index>0)
@@ -145,20 +145,20 @@ void edit_text_handle_key(
 
 			if (edit->selection_start_index==edit->insertion_point_index)
 			{
-				edit->selection_start_index= NONE;
+				edit->selection_start_index = NONE;
 			}
 		}
 		else
 		{
 			if (key->key_code==_key_left_arrow)
 			{
-				edit->insertion_point_index= selection_start;
-				edit->selection_start_index= NONE;
+				edit->insertion_point_index = selection_start;
+				edit->selection_start_index = NONE;
 			}
 			else
 			{
-				edit->insertion_point_index= selection_end;
-				edit->selection_start_index= NONE;
+				edit->insertion_point_index = selection_end;
+				edit->selection_start_index = NONE;
 			}
 		}
 	}
@@ -177,9 +177,9 @@ void edit_text_handle_key(
 				&edit->buffer[selection_end],
 				strlen(&edit->buffer[selection_end])+1);
 
-			edit->insertion_point_index= selection_start;
-			edit->selection_start_index= NONE;
-			edit->buffer[edit->insertion_point_index++]= key->ascii_code;
+			edit->insertion_point_index = selection_start;
+			edit->selection_start_index = NONE;
+			edit->buffer[edit->insertion_point_index++] = key->ascii_code;
 		}
 		else if (strlen(edit->buffer)<edit->maximum_length)
 		{
@@ -187,7 +187,7 @@ void edit_text_handle_key(
 				&edit->buffer[edit->insertion_point_index+1],
 				&edit->buffer[edit->insertion_point_index],
 				strlen(&edit->buffer[edit->insertion_point_index])+1);
-			edit->buffer[edit->insertion_point_index++]= key->ascii_code;
+			edit->buffer[edit->insertion_point_index++] = key->ascii_code;
 		}
 	}
 
@@ -200,15 +200,15 @@ void edit_text_handle_key(
 
 boolean edit_text_get_selection_indices(struct edit_text *edit, short *start_index, short *end_index)
 {
-	boolean result= FALSE;
+	boolean result = FALSE;
 	match_assert("c:\\halo\\SOURCE\\dialogs\\edit_text.c", 174, valid_edit_text(edit));
 	edit_text_fix_selection(edit);
 
 	if (edit->selection_start_index != NONE)
 	{
-		*start_index= edit->selection_start_index > edit->insertion_point_index ? edit->insertion_point_index : edit->selection_start_index;
-		*end_index= edit->selection_start_index > edit->insertion_point_index ? edit->selection_start_index : edit->insertion_point_index;
-		result= TRUE;
+		*start_index = edit->selection_start_index > edit->insertion_point_index ? edit->insertion_point_index : edit->selection_start_index;
+		*end_index = edit->selection_start_index > edit->insertion_point_index ? edit->selection_start_index : edit->insertion_point_index;
+		result = TRUE;
 	}
 
 	return result;
@@ -219,8 +219,8 @@ void edit_text_selection_reset(
 {
 	match_assert("c:\\halo\\SOURCE\\dialogs\\edit_text.c", 159, valid_edit_text(edit));
 	edit_text_fix_selection(edit);
-	edit->insertion_point_index= (short)strlen(edit->buffer);
-	edit->selection_start_index= NONE;
+	edit->insertion_point_index = (short)strlen(edit->buffer);
+	edit->selection_start_index = NONE;
 
 	return;
 }
@@ -230,13 +230,13 @@ void edit_text_selection_reset(
 static void edit_text_fix_selection(
 	struct edit_text *edit)
 {
-	short length= (short)strlen(edit->buffer);
-	edit->insertion_point_index= PIN(edit->insertion_point_index, 0, length);
-	edit->selection_start_index= PIN(edit->selection_start_index, NONE, length);
+	short length = (short)strlen(edit->buffer);
+	edit->insertion_point_index = PIN(edit->insertion_point_index, 0, length);
+	edit->selection_start_index = PIN(edit->selection_start_index, NONE, length);
 
 	if (edit->insertion_point_index == edit->selection_start_index)
 	{
-		edit->selection_start_index= NONE;
+		edit->selection_start_index = NONE;
 	}
 
 	align_to_character((unsigned char *)edit->buffer, &edit->insertion_point_index);

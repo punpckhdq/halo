@@ -10,7 +10,7 @@ ERRORS.H
 
 enum
 {
-	_error_immediate= 0,
+	_error_immediate = 0,
 	_error_delayed,
 	_error_silent,
 	_error_log,
@@ -19,7 +19,7 @@ enum
 
 enum
 {
-	ERROR_MESSAGE_BUFFER_MAXIMUM_SIZE= 2048,
+	ERROR_MESSAGE_BUFFER_MAXIMUM_SIZE = 2048,
 };
 
 /* ---------- structures */

@@ -32,12 +32,12 @@ struct game_globals_rasterizer_data *global_rasterizer_data;
 void rasterizer_initialize_for_new_map(
 	void)
 {
-	struct game_globals *game_globals= NULL;
+	struct game_globals *game_globals = NULL;
 
-	game_globals= scenario_get_game_globals();
+	game_globals = scenario_get_game_globals();
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\common\\rasterizer_common.c", 24, game_globals);
-	global_rasterizer_data= game_globals->rasterizer_data.count!=0 ? TAG_BLOCK_GET_ELEMENT(&game_globals->rasterizer_data, 0, struct game_globals_rasterizer_data) : NULL;
+	global_rasterizer_data = game_globals->rasterizer_data.count!=0 ? TAG_BLOCK_GET_ELEMENT(&game_globals->rasterizer_data, 0, struct game_globals_rasterizer_data) : NULL;
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\common\\rasterizer_common.c", 26, global_rasterizer_data);
 
 	rasterizer_lights_reset_for_new_map();
@@ -59,7 +59,7 @@ void rasterizer_dispose_from_old_map(
 {
 	rasterizer_screen_effects_dispose_from_old_map();
 	rasterizer_text_cache_flush();
-	global_rasterizer_data= NULL;
+	global_rasterizer_data = NULL;
 
 	return;
 }
@@ -67,7 +67,7 @@ void rasterizer_dispose_from_old_map(
 void rasterizer_frame_update(
 	real dt)
 {
-	global_frame_parameters.dt= dt;
+	global_frame_parameters.dt = dt;
 
 	return;
 }

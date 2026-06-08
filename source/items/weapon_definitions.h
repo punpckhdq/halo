@@ -18,13 +18,13 @@ header included in hcex build.
 
 enum
 {
-	WEAPON_DEFINITION_TAG= 'weap',
-	WEAPON_DEFINITION_VERSION= 2,
+	WEAPON_DEFINITION_TAG = 'weap',
+	WEAPON_DEFINITION_VERSION = 2,
 };
 
 enum
 {
-	_weapon_vertical_heat_display_bit= 0,
+	_weapon_vertical_heat_display_bit = 0,
 	_weapon_mutually_exclusive_triggers_bit,
 	_weapon_attacks_on_bump_bit,
 	_weapon_must_be_readied_bit,

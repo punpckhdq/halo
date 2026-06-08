@@ -34,11 +34,11 @@ extern "C"
 inline bool check_device_interrupts(
 	void)
 {
-	bool success= true;
+	bool success = true;
 	if (D3D::g_Device.m_Miniport.m_InterruptsEnabled!=TRUE)
 	{
 		error(_error_silent, "### WARNING: direct3d context unreadable (interrupts 0x%08X != 0x00000001)...", D3D::g_Device.m_Miniport.m_InterruptsEnabled);
-		success= false;
+		success = false;
 	}
 	return success;
 }
@@ -46,11 +46,11 @@ inline bool check_device_interrupts(
 inline bool check_device_callback(
 	void)
 {
-	bool success= true;
+	bool success = true;
 	if (D3D::g_Device.m_Miniport.m_pVerticalBlankCallback!=main_vertical_blank_interrupt_handler)
 	{
 		error(_error_silent, "### WARNING: direct3d context unreadable (callback 0x%08X != 0x%08X)...", D3D::g_Device.m_Miniport.m_pVerticalBlankCallback, main_vertical_blank_interrupt_handler);
-		success= false;
+		success = false;
 	}
 	return success;
 }
@@ -58,11 +58,11 @@ inline bool check_device_callback(
 inline bool check_device_vblank(
 	void)
 {
-	bool success= true;
+	bool success = true;
 	if (D3D::g_Device.m_Miniport.m_GammaCurrentIndex>0x10000)
 	{
 		error(_error_silent, "### WARNING: direct3d context unreadable (vblank 0x%08X greater than 0x00010000)...", D3D::g_Device.m_Miniport.m_GammaCurrentIndex);
-		success= false;
+		success = false;
 	}
 	return success;
 }
@@ -70,11 +70,11 @@ inline bool check_device_vblank(
 extern "C" volatile unsigned int* d3d_find_flipcount(
 	void)
 {
-	volatile unsigned int *flipcount= NULL;
+	volatile unsigned int *flipcount = NULL;
 
 	if (check_device_interrupts()&&check_device_callback()&&check_device_vblank())
 	{
-		flipcount= &D3D::g_Device.m_Miniport.m_VBlankFlipCount;
+		flipcount = &D3D::g_Device.m_Miniport.m_VBlankFlipCount;
 	}
 	else
 	{

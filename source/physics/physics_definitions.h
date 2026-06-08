@@ -17,8 +17,8 @@ header included in hcex build.
 
 enum
 {
-	POINT_PHYSICS_DEFINITION_TAG= 'phys',
-	POINT_PHYSICS_DEFINITION_VERSION= 1,
+	POINT_PHYSICS_DEFINITION_TAG = 'phys',
+	POINT_PHYSICS_DEFINITION_VERSION = 1,
 };
 
 /* ---------- macros */

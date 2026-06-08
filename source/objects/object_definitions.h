@@ -18,17 +18,17 @@ header included in hcex build.
 
 enum
 {
-	OBJECT_DEFINITION_TAG= 'obje',
-	OBJECT_DEFINITION_VERSION= 1,
-	NUMBER_OF_OUTGOING_OBJECT_FUNCTIONS= 4,
-	NUMBER_OF_INCOMING_OBJECT_FUNCTIONS= 4,
-	MAXIMUM_NUMBER_OF_ATTACHMENTS_PER_OBJECT= 8,
-	MAXIMUM_REGIONS_PER_OBJECT= 8,
+	OBJECT_DEFINITION_TAG = 'obje',
+	OBJECT_DEFINITION_VERSION = 1,
+	NUMBER_OF_OUTGOING_OBJECT_FUNCTIONS = 4,
+	NUMBER_OF_INCOMING_OBJECT_FUNCTIONS = 4,
+	MAXIMUM_NUMBER_OF_ATTACHMENTS_PER_OBJECT = 8,
+	MAXIMUM_REGIONS_PER_OBJECT = 8,
 };
 
 enum
 {
-	_object_does_not_cast_shadow_bit= 0,
+	_object_does_not_cast_shadow_bit = 0,
 	_object_transparency_self_occludes_bit,
 	_object_artificially_bright_bit,
 	_object_not_pathfinding_obstacle_bit,
@@ -37,13 +37,13 @@ enum
 
 enum
 {
-	_object_runtime_scaled_change_colors_bit= 0,
+	_object_runtime_scaled_change_colors_bit = 0,
 	NUMBER_OF_OBJECT_DEFINITION_RUNTIME_FLAGS,
 };
 
 enum
 {
-	_object_function_invert_function_bit= 0,
+	_object_function_invert_function_bit = 0,
 	_object_function_additive_bit,
 	_object_function_does_not_deactivate_below_lower_bound_bit,
 	NUMBER_OF_OBJECT_FUNCTION_DEFINITION_FLAGS,
@@ -51,7 +51,7 @@ enum
 
 enum
 {
-	_object_function_clip_to_bounds= 0,
+	_object_function_clip_to_bounds = 0,
 	_object_function_clip_to_bounds_and_normalize,
 	_object_function_scale_to_fit_bounds,
 	NUMBER_OF_OBJECT_FUNCTION_BOUNDS_MODES,

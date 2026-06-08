@@ -69,12 +69,12 @@ long cluster_index_from_point(
 	struct structure_bsp const *structure_bsp,
 	real_point3d const *point)
 {
-	long test_result= bsp3d_test_point(&TAG_BLOCK_GET_ELEMENT(&structure_bsp->collision_bsp, 0, struct collision_bsp)->bsp3d, 0, point);
-	long result= NONE;
+	long test_result = bsp3d_test_point(&TAG_BLOCK_GET_ELEMENT(&structure_bsp->collision_bsp, 0, struct collision_bsp)->bsp3d, 0, point);
+	long result = NONE;
 	
 	if (test_result!=NONE)
 	{
-		result= TAG_BLOCK_GET_ELEMENT(&structure_bsp->leaves, test_result&LONG_MAX, struct structure_leaf)->cluster_index;
+		result = TAG_BLOCK_GET_ELEMENT(&structure_bsp->leaves, test_result&LONG_MAX, struct structure_leaf)->cluster_index;
 	}
 
 	return result;

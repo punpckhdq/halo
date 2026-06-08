@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	_interface_font_system= 0,
+	_interface_font_system = 0,
 	_interface_font_terminal,
 	_interface_color_table_screen,
 	_interface_color_table_hud,

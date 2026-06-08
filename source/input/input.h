@@ -14,11 +14,11 @@ INPUT.H
 
 enum
 {
-	MAXIMUM_GAMEPADS= 4,
-	MEMORY_UNIT_SLOTS_PER_GAMEPAD= 2,
-	MAXIMUM_GAMEPAD_MEMORY_UNITS= 8,
+	MAXIMUM_GAMEPADS = 4,
+	MEMORY_UNIT_SLOTS_PER_GAMEPAD = 2,
+	MAXIMUM_GAMEPAD_MEMORY_UNITS = 8,
 
-	_memory_unit_hard_drive= 0,
+	_memory_unit_hard_drive = 0,
 	_memory_unit_controller0_top,
 	_memory_unit_controller0_bottom,
 	_memory_unit_controller1_top,
@@ -32,7 +32,7 @@ enum
 
 enum
 {
-	_key_escape= 0,
+	_key_escape = 0,
 	_key_f1,
 	_key_f2,
 	_key_f3,
@@ -146,8 +146,8 @@ enum
 
 enum
 {
-	FIRST_GAMEPAD_ANALOG_BUTTON= 0,
-	_gamepad_analog_button_a= 0,
+	FIRST_GAMEPAD_ANALOG_BUTTON = 0,
+	_gamepad_analog_button_a = 0,
 	_gamepad_analog_button_b,
 	_gamepad_analog_button_x,
 	_gamepad_analog_button_y,
@@ -157,8 +157,8 @@ enum
 	_gamepad_analog_button_right_trigger,
 	NUMBER_OF_GAMEPAD_ANALOG_BUTTONS,
 
-	FIRST_GAMEPAD_BINARY_BUTTON= 8,
-	_gamepad_binary_button_dpad_up= 8,
+	FIRST_GAMEPAD_BINARY_BUTTON = 8,
+	_gamepad_binary_button_dpad_up = 8,
 	_gamepad_binary_button_dpad_down,
 	_gamepad_binary_button_dpad_left,
 	_gamepad_binary_button_dpad_right,
@@ -168,12 +168,12 @@ enum
 	_gamepad_binary_button_right_thumb,
 	NUMBER_OF_GAMEPAD_BUTTONS,
 
-	NUMBER_OF_GAMEPAD_BINARY_BUTTONS= (NUMBER_OF_GAMEPAD_BUTTONS-FIRST_GAMEPAD_BINARY_BUTTON)
+	NUMBER_OF_GAMEPAD_BINARY_BUTTONS = (NUMBER_OF_GAMEPAD_BUTTONS-FIRST_GAMEPAD_BINARY_BUTTON)
 };
 
 enum
 {
-	_gamepad_stick_left= 0,
+	_gamepad_stick_left = 0,
 	_gamepad_stick_right,
 	NUMBER_OF_GAMEPAD_STICKS
 };

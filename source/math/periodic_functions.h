@@ -16,7 +16,7 @@ header included in hcex build.
 
 enum
 {
-	_transition_function_linear= 0,
+	_transition_function_linear = 0,
 	_transition_function_early,
 	_transition_function_very_early,
 	_transition_function_late,

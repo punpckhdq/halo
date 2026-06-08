@@ -66,7 +66,7 @@ symbols in this file:
 
 enum
 {
-	MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS= 8,
+	MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS = 8,
 };
 
 /* ---------- macros */
@@ -94,9 +94,9 @@ static void console_complete(void);
 
 /* ---------- globals */
 
-boolean console_dump_to_file= FALSE;
+boolean console_dump_to_file = FALSE;
 
-static real_argb_color console_color= {1.f, 1.f, 0.3f, 1.f};	// Pink
+static real_argb_color console_color = {1.f, 1.f, 0.3f, 1.f};	// Pink
 
 static struct console_globals console_globals;
 
@@ -105,12 +105,12 @@ static struct console_globals console_globals;
 void console_initialize(
 	void)
 {
-	console_globals.input_state.color= console_color;
+	console_globals.input_state.color = console_color;
 	csstrcpy(console_globals.input_state.prompt, "halo( ");
-	console_globals.input_state.result[0]= 0;
-	console_globals.newest_previous_command_index= NONE;
-	console_globals.previous_command_count= 0;
-	console_globals.selected_previous_command_index= NONE;
+	console_globals.input_state.result[0] = 0;
+	console_globals.newest_previous_command_index = NONE;
+	console_globals.previous_command_count = 0;
+	console_globals.selected_previous_command_index = NONE;
 
 	return;
 }
@@ -126,9 +126,9 @@ void console_open(
 {
 	if (!console_globals.active)
 	{
-		console_globals.input_state.result[0]= '\0';
-		console_globals.active= terminal_gets_begin(&console_globals.input_state);
-		profile_global_enable= FALSE;
+		console_globals.input_state.result[0] = '\0';
+		console_globals.active = terminal_gets_begin(&console_globals.input_state);
+		profile_global_enable = FALSE;
 	}
 
 	return;
@@ -140,7 +140,7 @@ void console_close(
 	if (console_globals.active)
 	{
 		terminal_gets_end(&console_globals.input_state);
-		console_globals.active= FALSE;
+		console_globals.active = FALSE;
 	}
 
 	return;
@@ -168,7 +168,7 @@ void console_printf(
 	}
 	
 	vsprintf(buffer, format, arglist);
-	buffer[255]= '\0';
+	buffer[255] = '\0';
 	
 	terminal_printf(0, "%s", buffer);
 	if (console_dump_to_file)
@@ -193,7 +193,7 @@ void console_warning(
 
 
 	vsprintf(buffer, format, arglist);
-	buffer[255]= '\0';
+	buffer[255] = '\0';
 
 	terminal_printf(global_real_argb_red, "%s", buffer);
 	if (console_dump_to_file)
@@ -212,14 +212,14 @@ static boolean console_process_command(
 {
 	boolean valid;
 	short previous_command_count;
-	short newest_previous_command_index= (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
+	short newest_previous_command_index = (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
 
-	console_globals.newest_previous_command_index= newest_previous_command_index;
+	console_globals.newest_previous_command_index = newest_previous_command_index;
 	strcpy(console_globals.previous_commands[newest_previous_command_index], command);
 
 
-	console_globals.previous_command_count= MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
-	console_globals.selected_previous_command_index= NONE;
+	console_globals.previous_command_count = MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
+	console_globals.selected_previous_command_index = NONE;
 
 	return hs_compile_and_evaluate(command);
 }
@@ -227,22 +227,22 @@ static boolean console_process_command(
 static char *console_get_text_to_autocomplete(
 	void)
 {
-	char *result= console_globals.input_state.result;
-	char *result_after_space= strrchr(console_globals.input_state.result, ' ') + 1;
-	char *result_after_parenthesis= strrchr(console_globals.input_state.result, '(') + 1;
-	char *result_after_quote= strrchr(console_globals.input_state.result, '"') + 1;
+	char *result = console_globals.input_state.result;
+	char *result_after_space = strrchr(console_globals.input_state.result, ' ') + 1;
+	char *result_after_parenthesis = strrchr(console_globals.input_state.result, '(') + 1;
+	char *result_after_quote = strrchr(console_globals.input_state.result, '"') + 1;
 
 	if (result <= result_after_space)
 	{
-		result= result_after_space;
+		result = result_after_space;
 	}
 	if (result <= result_after_parenthesis)
 	{
-		result= result_after_parenthesis;
+		result = result_after_parenthesis;
 	}
 	if (result <= result_after_quote)
 	{
-		result= result_after_quote;
+		result = result_after_quote;
 	}
 
 	return result;
@@ -254,23 +254,23 @@ static void console_complete(
 	char *matching_items[256];
 	char print_buffer[1024];
 
-	char *token= console_get_text_to_autocomplete();
-	short count= hs_tokens_enumerate(token, NONE, matching_items, NUMBEROF(matching_items));
+	char *token = console_get_text_to_autocomplete();
+	short count = hs_tokens_enumerate(token, NONE, matching_items, NUMBEROF(matching_items));
 
 	if (count)
 	{
 		short token_num;
 
-		short last_similar_character_index= SHORT_MAX;
-		boolean print_second_column= count > 16;
+		short last_similar_character_index = SHORT_MAX;
+		boolean print_second_column = count > 16;
 
-		print_buffer[0]= '\0';
+		print_buffer[0] = '\0';
 		console_printf(FALSE, "");
 
-		for (token_num= 0; token_num<count; token_num++)
+		for (token_num = 0; token_num<count; token_num++)
 		{
-			short size= MIN(last_similar_character_index, strlen(matching_items[token_num]) - 1);
-			short index= 0;
+			short size = MIN(last_similar_character_index, strlen(matching_items[token_num]) - 1);
+			short index = 0;
 
 			/* likely fake match */
 			if (tolower(matching_items[token_num][0]) == tolower(matching_items[0][0]))
@@ -286,7 +286,7 @@ static void console_complete(
 				}
 				while (tolower(matching_items[token_num][index]) == tolower(matching_items[0][index]));
 			}
-			last_similar_character_index= index - 1;
+			last_similar_character_index = index - 1;
 
 			if (print_second_column)
 			{
@@ -295,7 +295,7 @@ static void console_complete(
 				if (token_num % 4 == 3)
 				{
 					console_printf(FALSE, print_buffer);
-					print_buffer[0]= '\0';
+					print_buffer[0] = '\0';
 				}
 			}
 			else
@@ -310,8 +310,8 @@ static void console_complete(
 		}
 
 		strncpy(token, matching_items[0], last_similar_character_index + 1);
-		token[last_similar_character_index + 1]= '\0';
-		console_globals.input_state.edit.insertion_point_index= &token[last_similar_character_index + 1] - console_globals.input_state.result;
+		token[last_similar_character_index + 1] = '\0';
+		console_globals.input_state.edit.insertion_point_index = &token[last_similar_character_index + 1] - console_globals.input_state.result;
 	}
 
 	return;
@@ -326,11 +326,11 @@ void console_startup(
 
 	if (!game_in_editor())
 	{
-		file= fopen("d:\\init.txt", "r");
+		file = fopen("d:\\init.txt", "r");
 	}
 	else
 	{
-		file= fopen("editor_d:\\init.txt", "r");
+		file = fopen("editor_d:\\init.txt", "r");
 	}
 
 	if (file)
@@ -338,14 +338,14 @@ void console_startup(
 		while (fgets(buffer, NUMBEROF(buffer)-1, file))
 		{
 			strtok(buffer, "\r\n\t");
-			newest_previous_command_index= (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
+			newest_previous_command_index = (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
 
-			console_globals.newest_previous_command_index= newest_previous_command_index;
+			console_globals.newest_previous_command_index = newest_previous_command_index;
 			strcpy(console_globals.previous_commands[newest_previous_command_index], buffer);
 
-			console_globals.previous_command_count= MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
+			console_globals.previous_command_count = MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
 
-			console_globals.selected_previous_command_index= NONE;
+			console_globals.selected_previous_command_index = NONE;
 			if (hs_compile_and_evaluate(buffer))
 			{
 				error(_error_log, "init: %s", buffer);
@@ -376,9 +376,9 @@ boolean console_update(
 
 	if (console_globals.active)
 	{
-		for (i= 0; i < console_globals.input_state.key_count; i++)
+		for (i = 0; i < console_globals.input_state.key_count; i++)
 		{
-			struct key_stroke *key= &console_globals.input_state.keys[i];
+			struct key_stroke *key = &console_globals.input_state.keys[i];
 			match_assert("c:\\halo\\SOURCE\\main\\console.c", 184, key->key_code!=NONE);
 			switch (key->key_code)
 			{
@@ -390,7 +390,7 @@ boolean console_update(
 				if (console_globals.input_state.result[0])
 				{
 					console_process_command(console_globals.input_state.result);
-					console_globals.input_state.result[0]= '\0';
+					console_globals.input_state.result[0] = '\0';
 				}
 				else
 				{
@@ -403,11 +403,11 @@ boolean console_update(
 			case _key_up_arrow:
 				console_globals.selected_previous_command_index += 2;
 			case _key_down_arrow:
-				last_command= --console_globals.selected_previous_command_index > 0;
-				console_globals.selected_previous_command_index= last_command ? console_globals.selected_previous_command_index : 0;
+				last_command = --console_globals.selected_previous_command_index > 0;
+				console_globals.selected_previous_command_index = last_command ? console_globals.selected_previous_command_index : 0;
 
-				prev_command_valid= console_globals.selected_previous_command_index>console_globals.previous_command_count-1;
-				console_globals.selected_previous_command_index= 
+				prev_command_valid = console_globals.selected_previous_command_index>console_globals.previous_command_count-1;
+				console_globals.selected_previous_command_index = 
 				(
 					prev_command_valid ? 
 					console_globals.previous_command_count-1 :
@@ -431,9 +431,9 @@ boolean console_update(
 	}
 	else if (input_key_is_down(_key_backquote) == TRUE && !console_globals.active)
 	{
-		console_globals.input_state.result[0]= '\0';
-		console_globals.active= terminal_gets_begin(&console_globals.input_state);
-		profile_global_enable= FALSE;
+		console_globals.input_state.result[0] = '\0';
+		console_globals.active = terminal_gets_begin(&console_globals.input_state);
+		profile_global_enable = FALSE;
 	}
 
 	return console_globals.active;

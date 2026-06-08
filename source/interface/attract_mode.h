@@ -12,12 +12,12 @@ header included in hcex build.
 
 enum
 {
-	_bink_attract1_movie= 0,
+	_bink_attract1_movie = 0,
 	_bink_attract2_movie,
 	_bink_attract3_movie,
 	NUMBER_OF_ATTRACT_MODE_MOVIES,
 
-	_bink_intro_movie= 3,
+	_bink_intro_movie = 3,
 	_bink_outro_movie,
 	NUMBER_OF_BINK_MOVIES
 };

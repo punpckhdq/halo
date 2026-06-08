@@ -16,26 +16,26 @@ header included in hcex build.
 
 enum
 {
-	DEVICE_DEFINITION_TAG= 'devi',
-	DEVICE_DEFINITION_VERSION= 1,
+	DEVICE_DEFINITION_TAG = 'devi',
+	DEVICE_DEFINITION_VERSION = 1,
 };
 
 enum
 {
-	_device_position_loops_bit= 0,
+	_device_position_loops_bit = 0,
 	_device_position_animation_not_interpolated_bit,
 	NUMBER_OF_DEVICE_DEFINITION_FLAGS,
 };
 
 enum
 {
-	MACHINE_DEFINITION_TAG= 'mach',
-	MACHINE_DEFINITION_VERSION= 1,
+	MACHINE_DEFINITION_TAG = 'mach',
+	MACHINE_DEFINITION_VERSION = 1,
 };
 
 enum
 {
-	_machine_is_pathfinding_obstacle_bit= 0,
+	_machine_is_pathfinding_obstacle_bit = 0,
 	_machine_is_not_pathfinding_obstacle_when_open_bit,
 	_machine_is_elevator_bit,
 	NUMBER_OF_MACHINE_FLAGS,

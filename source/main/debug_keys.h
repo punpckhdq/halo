@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	_debug_key_no_modifier= 0,
+	_debug_key_no_modifier = 0,
 	_debug_key_shift,
 	_debug_key_ctrl,
 	_debug_key_shift_ctrl,

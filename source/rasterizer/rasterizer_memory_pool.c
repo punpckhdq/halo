@@ -20,13 +20,13 @@ static long global_memory_index;
 boolean rasterizer_memory_pool_initialize(
 	void)
 {
-	boolean success= TRUE;
-	global_memory_pool= match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_memory_pool.c", 19, RASTERIZER_MEMORY_POOL_SIZE);
+	boolean success = TRUE;
+	global_memory_pool = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_memory_pool.c", 19, RASTERIZER_MEMORY_POOL_SIZE);
 
 	if (!global_memory_pool)
 	{
 		error(_error_silent, "### ERROR rasterizer failed to allocate global memory pool");
-		success= FALSE;
+		success = FALSE;
 	}
 
 	return success;
@@ -35,7 +35,7 @@ boolean rasterizer_memory_pool_initialize(
 void rasterizer_memory_pool_begin(
 	void)
 {
-	global_memory_index= 0;
+	global_memory_index = 0;
 
 	return;
 }
@@ -44,11 +44,11 @@ void *rasterizer_memory_alloc(
 	const void *src,
 	unsigned long size)
 {
-	void *pointer= NULL;
+	void *pointer = NULL;
 
 	if (global_memory_index+size <= RASTERIZER_MEMORY_POOL_SIZE)
 	{
-		pointer= (byte *)global_memory_pool+global_memory_index;
+		pointer = (byte *)global_memory_pool+global_memory_index;
 		global_memory_index+= size;
 
 		if (src)
@@ -86,8 +86,8 @@ void rasterizer_memory_pool_dispose(
 		match_free("c:\\halo\\SOURCE\\rasterizer\\rasterizer_memory_pool.c", 80, global_memory_pool);
 	}
 
-	global_memory_pool= NULL;
-	global_memory_index= 0;
+	global_memory_pool = NULL;
+	global_memory_index = 0;
 
 	return;
 }

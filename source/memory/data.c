@@ -105,19 +105,19 @@ void datum_delete(
 	struct data_array *data,
 	long index)
 {
-	struct datum_header *header= (struct datum_header *)datum_get(data, index);
-	header->identifier= 0;
+	struct datum_header *header = (struct datum_header *)datum_get(data, index);
+	header->identifier = 0;
 
 	if (((short)index)<data->first_free_absolute_index)
 	{
-		data->first_free_absolute_index= index;
+		data->first_free_absolute_index = index;
 	}
 
 	if (((short)index)+1==data->count)
 	{
 		do
 		{
-			header=(struct datum_header *)((byte *)header-data->size);
+			header =(struct datum_header *)((byte *)header-data->size);
 			data->count--;
 		}
 		while (data->count > 0 && !header->identifier);

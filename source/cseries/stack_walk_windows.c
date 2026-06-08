@@ -140,7 +140,7 @@ struct _stack_walk_globals
 
 /* ---------- globals */
 
-struct _stack_walk_globals stack_walk_globals=
+struct _stack_walk_globals stack_walk_globals =
 {
 	NONE,
 	FALSE
@@ -151,7 +151,7 @@ struct _stack_walk_globals stack_walk_globals=
 void stack_walk_disregard_symbol_names(
 	boolean disregard)
 {
-	stack_walk_globals.disregard_symbol_names= disregard;
+	stack_walk_globals.disregard_symbol_names = disregard;
 }
 
 void free_symbol_table(
@@ -169,16 +169,16 @@ void free_symbol_table(
 		debug_free(symbol_table->symbols, "c:\\halo\\SOURCE\\cseries\\stack_walk_windows.c", 552);
 	}
 
-	symbol_table->number_of_symbols= 0;
-	symbol_table->string_storage= NULL;
-	symbol_table->symbols= NULL;
+	symbol_table->number_of_symbols = 0;
+	symbol_table->string_storage = NULL;
+	symbol_table->symbols = NULL;
 }
 
 void stack_walk_dispose(
 	void)
 {
-	stack_walk_globals.fixup= NONE;
-	stack_walk_globals.disregard_symbol_names= FALSE;
+	stack_walk_globals.fixup = NONE;
+	stack_walk_globals.disregard_symbol_names = FALSE;
 	free_symbol_table(&stack_walk_globals.symbol_table);
 }
 

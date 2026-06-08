@@ -144,16 +144,16 @@ boolean object_type_new(
 {
 	short i;
 
-	struct object_type_definition* definition= object_type_definition_get(object_get(object_index)->object.type);
-	boolean result= TRUE;
+	struct object_type_definition* definition = object_type_definition_get(object_get(object_index)->object.type);
+	boolean result = TRUE;
 
-	for (i= 0; definition->part_definitions[i]; i++)
+	for (i = 0; definition->part_definitions[i]; i++)
 	{
-		struct object_type_definition *current_definition= definition->part_definitions[i];
+		struct object_type_definition *current_definition = definition->part_definitions[i];
 
 		if (current_definition->datum_new && !current_definition->datum_new(object_index))
 		{
-			result= FALSE;
+			result = FALSE;
 			break;
 		}
 	}
@@ -166,12 +166,12 @@ void object_type_delete(
 {
 	short i;
 
-	struct object_type_definition *definition= object_type_definition_get(object_get(object_index)->object.type);
-	boolean result= TRUE;
+	struct object_type_definition *definition = object_type_definition_get(object_get(object_index)->object.type);
+	boolean result = TRUE;
 
-	for (i= 0; definition->part_definitions[i]; i++)
+	for (i = 0; definition->part_definitions[i]; i++)
 	{
-		struct object_type_definition *current_definition= definition->part_definitions[i];
+		struct object_type_definition *current_definition = definition->part_definitions[i];
 		if (current_definition->datum_delete)
 		{
 			current_definition->datum_delete(object_index);

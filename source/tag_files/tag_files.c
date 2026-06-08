@@ -16,7 +16,7 @@ const char *tag_name_strip_path(
 
 	match_assert("c:\\halo\\SOURCE\\tag_files\\tag_files.c", 1374, name);
 
-	stripped= strrchr(name, '\\');
+	stripped = strrchr(name, '\\');
 
 	if (stripped!=NULL)
 	{

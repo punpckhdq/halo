@@ -51,15 +51,15 @@ void debug_keys_initialize(
 {
 	long key_count;
 
-	for (key_count= 0; global_debug_key_list[key_count].name; key_count++)
+	for (key_count = 0; global_debug_key_list[key_count].name; key_count++)
 	{
 		if (global_debug_key_list[key_count].variable)
 		{
-			*global_debug_key_list[key_count].variable= FALSE;
+			*global_debug_key_list[key_count].variable = FALSE;
 		}
 	}
 
-	global_debug_key_down= (long *)match_malloc("c:\\halo\\SOURCE\\main\\debug_keys.c", 88, BIT_VECTOR_SIZE_IN_BYTES(key_count));
+	global_debug_key_down = (long *)match_malloc("c:\\halo\\SOURCE\\main\\debug_keys.c", 88, BIT_VECTOR_SIZE_IN_BYTES(key_count));
 	match_assert("c:\\halo\\SOURCE\\main\\debug_keys.c", 89, global_debug_key_down);
 	memset(global_debug_key_down, 0, BIT_VECTOR_SIZE_IN_BYTES(key_count));
 
@@ -72,7 +72,7 @@ void debug_keys_dispose(
 	if (global_debug_key_down)
 	{
 		match_free("c:\\halo\\SOURCE\\main\\debug_keys.c", 100, global_debug_key_down);
-		global_debug_key_down= NULL;
+		global_debug_key_down = NULL;
 	}
 
 	return;
@@ -84,24 +84,24 @@ void debug_keys_update(
 	boolean modifier_down[NUMBER_OF_DEBUG_KEY_MODIFIERS];
 	long key_index;
 
-	const boolean shift_down= input_key_is_down(_key_shift);
-	const boolean control_down= input_key_is_down(_key_control);
-	modifier_down[_debug_key_no_modifier]= !shift_down && !control_down;
-	modifier_down[_debug_key_shift]= shift_down && !control_down;
-	modifier_down[_debug_key_ctrl]= !shift_down && control_down;
-	modifier_down[_debug_key_shift_ctrl]= shift_down && control_down;
+	const boolean shift_down = input_key_is_down(_key_shift);
+	const boolean control_down = input_key_is_down(_key_control);
+	modifier_down[_debug_key_no_modifier] = !shift_down && !control_down;
+	modifier_down[_debug_key_shift] = shift_down && !control_down;
+	modifier_down[_debug_key_ctrl] = !shift_down && control_down;
+	modifier_down[_debug_key_shift_ctrl] = shift_down && control_down;
 
 	
-	for (key_index= 0; global_debug_key_list[key_index].name; key_index++)
+	for (key_index = 0; global_debug_key_list[key_index].name; key_index++)
 	{
-		boolean down= 
+		boolean down = 
 			input_key_is_down(global_debug_key_list[key_index].key_code) && 
 			modifier_down[global_debug_key_list[key_index].modifier];
 
 		if (!global_debug_key_list[key_index].toggle_variable &&
 			global_debug_key_list[key_index].variable != NULL)
 		{
-			*global_debug_key_list[key_index].variable= down;
+			*global_debug_key_list[key_index].variable = down;
 		}
 
 		if (BIT_VECTOR_TEST_FLAG(global_debug_key_down, key_index))
@@ -112,7 +112,7 @@ void debug_keys_update(
 				if (global_debug_key_list[key_index].toggle_variable &&
 					global_debug_key_list[key_index].variable)
 				{
-					*global_debug_key_list[key_index].variable= *global_debug_key_list[key_index].variable == FALSE;
+					*global_debug_key_list[key_index].variable = *global_debug_key_list[key_index].variable == FALSE;
 				}
 
 				if (global_debug_key_list[key_index].function)
@@ -141,7 +141,7 @@ static void debug_key_select_actor(
 {
 	if (key_is_down)
 	{
-		ai_debug.select_actor= TRUE;
+		ai_debug.select_actor = TRUE;
 	}
 
 	return;

@@ -13,7 +13,7 @@ header included in hcex build.
 /* right placement? language.h doesn't exist */
 enum
 {
-	_german= 0,
+	_german = 0,
 	_french,
 	_spanish,
 	_italian,
@@ -25,7 +25,7 @@ enum
 
 enum
 {
-	_language_roman= 0,
+	_language_roman = 0,
 	_language_japanese,
 	_language_simple_chinese,
 	_language_traditional_chinese,

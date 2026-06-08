@@ -17,7 +17,7 @@ header included in hcex build.
 
 enum
 {
-	_scenario_object_placement_not_automatic_bit= 0,
+	_scenario_object_placement_not_automatic_bit = 0,
 	_scenario_object_placement_not_on_easy_bit,
 	_scenario_object_placement_not_on_normal_bit,
 	_scenario_object_placement_not_on_hard_bit,

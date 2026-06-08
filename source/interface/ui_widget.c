@@ -638,7 +638,7 @@ symbols in this file:
 
 /* ---------- globals */
 
-short dashboard_abort_error= NONE;
+short dashboard_abort_error = NONE;
 
 /* ---------- public code */
 

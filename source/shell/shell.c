@@ -24,11 +24,11 @@ static boolean bss_004c08a4;
 boolean shell_initialize(
 	void)
 {
-	boolean success= FALSE;
-	boolean platform_initialized= FALSE;
+	boolean success = FALSE;
+	boolean platform_initialized = FALSE;
 	
 	cseries_initialize();
-	platform_initialized= shell_platform_initialize();
+	platform_initialized = shell_platform_initialize();
 	
 	if (platform_initialized)
 	{
@@ -39,14 +39,14 @@ boolean shell_initialize(
 		real_math_initialize();
 		game_state_initialize();
 		
-		rasterizer_initialized= rasterizer_initialize();
+		rasterizer_initialized = rasterizer_initialize();
 		
 		if (rasterizer_initialized)
 		{
 			input_initialize();
 			sound_initialize();
 			
-			success= TRUE;
+			success = TRUE;
 		}
 			
 		shell_platform_verify();
@@ -81,7 +81,7 @@ void shell_application_pause(
 {
 	if (bss_004c08a4!=paused)
 	{
-		bss_004c08a4= paused;
+		bss_004c08a4 = paused;
 		shell_screen_pause(paused);
 	}
 

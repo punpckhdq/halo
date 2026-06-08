@@ -17,18 +17,18 @@ header included in hcex build.
 
 enum
 {
-	MAXIMUM_WEAPONS_PER_UNIT= 4,
-	NUMBER_OF_UNIT_USER_ANIMATIONS= 2,
+	MAXIMUM_WEAPONS_PER_UNIT = 4,
+	NUMBER_OF_UNIT_USER_ANIMATIONS = 2,
 };
 
 enum
 {
-	MAXIMUM_ATTACKERS_PER_UNIT= 4,
+	MAXIMUM_ATTACKERS_PER_UNIT = 4,
 };
 
 enum
 {
-	_unit_actively_controlled_bit= 0,
+	_unit_actively_controlled_bit = 0,
 	_unit_changed_aiming_angles_bit,
 	_unit_desired_weapon_invalid_bit,
 	_unit_exact_facing_bit,
@@ -63,7 +63,7 @@ enum
 
 enum
 {
-	_unit_control_crouch_modifier_bit= 0,
+	_unit_control_crouch_modifier_bit = 0,
 	_unit_control_jump_bit,
 	_unit_control_user_animation1_bit,
 	_unit_control_user_animation2_bit,
@@ -98,7 +98,7 @@ enum
 
 enum
 {
-	_unit_state_idle= 0,
+	_unit_state_idle = 0,
 	_unit_state_gesture,
 	_unit_state_turn_left,
 	_unit_state_turn_right,
@@ -147,7 +147,7 @@ enum
 
 enum
 {
-	_unit_animation_state_asleep= 0,
+	_unit_animation_state_asleep = 0,
 	_unit_animation_state_alert,
 	_unit_animation_state_suspicious,
 	_unit_animation_state_in_combat,
@@ -160,27 +160,27 @@ enum
 
 enum
 {
-	_unit_grenade_human_fragmentation= 0,
+	_unit_grenade_human_fragmentation = 0,
 	_unit_grenade_covenant_plasma,
 	NUMBER_OF_UNIT_GRENADE_TYPES
 };
 
 enum
 {
-	cause_for_camo_regrowth_default= 0,
+	cause_for_camo_regrowth_default = 0,
 	cause_for_camo_regrowth_shot_fired,
 };
 
 enum
 {
-	_unit_aiming_speed_alert= 0,
+	_unit_aiming_speed_alert = 0,
 	_unit_aiming_speed_casual,
 	NUMBER_OF_UNIT_AIMING_SPEEDS,
 };
 
 enum
 {
-	_unit_grenade_throw_idle= 0,
+	_unit_grenade_throw_idle = 0,
 	_unit_grenade_throw_wind_up,
 	_unit_grenade_throw_in_hand,
 	_unit_grenade_throw_ending,

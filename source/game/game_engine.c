@@ -569,13 +569,13 @@ long game_engine_remap_object_definition(
 		switch (object_definition_get(definition_index)->object.type)
 		{
 		case _object_type_vehicle:
-			definition_index= game_engine_remap_vehicle(definition_index);
+			definition_index = game_engine_remap_vehicle(definition_index);
 			break;
 		case _object_type_weapon:
-			definition_index= game_engine_remap_weapon(definition_index);
+			definition_index = game_engine_remap_weapon(definition_index);
 			break;
 		case _object_type_equipment:
-			definition_index= game_engine_remap_equipment(definition_index);
+			definition_index = game_engine_remap_equipment(definition_index);
 			break;
 		default:
 			break;

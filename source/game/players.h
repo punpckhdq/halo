@@ -16,7 +16,7 @@ header included in hcex build.
 
 enum
 {
-	_player_powerup_active_camouflage= 0,
+	_player_powerup_active_camouflage = 0,
 	_player_powerup_full_spectrum_vision,
 	NUMBER_OF_PLAYER_POWERUPS,
 };

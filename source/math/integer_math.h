@@ -10,7 +10,7 @@ INTEGER_MATH.H
 
 enum
 {
-	_adjust_rectangle_center= 0,
+	_adjust_rectangle_center = 0,
 	_adjust_rectangle_alert,
 	NUMBER_OF_ADJUST_RECTANGLE_MODES,
 };

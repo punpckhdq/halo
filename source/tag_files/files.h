@@ -12,13 +12,13 @@ header included in hcex build.
 
 enum
 {
-	FILE_REFERENCE_SIZE= 268,
-	MAXIMUM_FILENAME_LENGTH= 255
+	FILE_REFERENCE_SIZE = 268,
+	MAXIMUM_FILENAME_LENGTH = 255
 };
 
 enum
 {
-	_permission_read_bit= 0,
+	_permission_read_bit = 0,
 	_permission_write_bit,
 	_permission_append_bit,
 	NUMBER_OF_PERMISSION_FLAGS
@@ -26,7 +26,7 @@ enum
 
 enum
 {
-	_file_reference_application_relative= 0,
+	_file_reference_application_relative = 0,
 #ifndef xbox
 	_file_reference_cd_relative,
 #endif
@@ -37,12 +37,12 @@ enum
 
 enum
 {
-	FILE_REFERENCE_SIGNATURE= 'filo'
+	FILE_REFERENCE_SIGNATURE = 'filo'
 };
 
 enum
 {
-	_has_filename_bit= 0,
+	_has_filename_bit = 0,
 
 	NUMBER_OF_REFERENCE_INFO_FLAGS
 };
@@ -50,8 +50,8 @@ enum
 enum
 {
 	//NUMBER_OF_DATASTORE_ENTRIES
-	DATASTORE_MAX_DATA_SIZE= 255,
-	DATASTORE_MAX_FIELD_NAME_SIZE= 255
+	DATASTORE_MAX_DATA_SIZE = 255,
+	DATASTORE_MAX_FIELD_NAME_SIZE = 255
 };
 
 struct datastore_entry
@@ -67,25 +67,25 @@ struct datastore
 
 //enum
 //{
-//    _find_files_recursive_bit= 0,
+//    _find_files_recursive_bit = 0,
 //    _find_files_enumerate_directories_bit,
 //    NUMBER_OF_FIND_FILES_FLAGS,
 //};
 //windows version of the header below?
 //enum
 //{
-//    FIRST_DRIVE_LETTER= 65, // 0x0041 'A'
-//    LAST_DRIVE_LETTER= 90, // 0x005A 'Z'
-//    DRIVE_NAME_LENGTH= 4, // 0x0004
-//    DIRECTORY_SEPARATOR= 92, // 0x005C '\'
-//    EXTENSION_SEPARATOR= 46, // 0x002E '.'
-//    BAD_FILE= -1, // 0xFF
-//    MAXIMUM_SEARCH_DEPTH= 8, // 0x0008
+//    FIRST_DRIVE_LETTER = 65, // 0x0041 'A'
+//    LAST_DRIVE_LETTER = 90, // 0x005A 'Z'
+//    DRIVE_NAME_LENGTH = 4, // 0x0004
+//    DIRECTORY_SEPARATOR = 92, // 0x005C '\'
+//    EXTENSION_SEPARATOR = 46, // 0x002E '.'
+//    BAD_FILE = -1, // 0xFF
+//    MAXIMUM_SEARCH_DEPTH = 8, // 0x0008
 //};
 //
 //enum
 //{
-//    has_filename_bit= 0,
+//    has_filename_bit = 0,
 //    NUMBER_OF_REFERENCE_INFO_FLAGS,
 //};
 //
@@ -113,7 +113,7 @@ struct file_reference_info
 
 enum
 {
-	_name_directory_bit= 0,
+	_name_directory_bit = 0,
 	_name_parent_directory_bit,
 	_name_filename_bit,
 	_name_extension_bit,

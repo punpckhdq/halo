@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	FONT_GROUP_TAG= 'font',
+	FONT_GROUP_TAG = 'font',
 };
 
 /* ---------- macros */

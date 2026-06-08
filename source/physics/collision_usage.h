@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	MAXIMUM_COLLISION_USER_STACK_DEPTH= 32,
+	MAXIMUM_COLLISION_USER_STACK_DEPTH = 32,
 };
 
 /* ---------- macros */

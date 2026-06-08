@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	MAXIMUM_NUMBER_OF_LOCAL_PLAYERS= 4,
+	MAXIMUM_NUMBER_OF_LOCAL_PLAYERS = 4,
 };
 
 /* ---------- macros */

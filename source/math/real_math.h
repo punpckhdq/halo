@@ -115,7 +115,7 @@ if (!valid_real_matrix4x3(matrix))													\
 #define assert_valid_real_matrix4x3_custom_string(matrix, custom_string)	\
 if (!valid_real_matrix4x3(matrix))											\
 {																			\
-	char* string= custom_string;											\
+	char* string = custom_string;											\
 	assert_valid_real_matrix4x3_internal(file, line, matrix, string);		\
 }																			\
 
@@ -223,7 +223,7 @@ if (!valid_real_matrix4x3(matrix))														\
 #define match_assert_valid_real_matrix4x3_custom_string(file, line, matrix, custom_string)	\
 if (!valid_real_matrix4x3(matrix))															\
 {																							\
-	char* string= custom_string;															\
+	char* string = custom_string;															\
 	match_assert_valid_real_matrix4x3_internal(file, line, matrix, string);					\
 }
 
@@ -502,7 +502,7 @@ __inline real signed_angular_difference(
 	real angle1,
 	real angle2)
 {
-	real result= angle2-angle1;
+	real result = angle2-angle1;
 	
 	if (result>=_pi)
 	{
@@ -525,9 +525,9 @@ __inline real square_root(
 
 __inline real_point3d *point_from_line3d(real_point3d const *p, real_vector3d const *v, real t, real_point3d *result)
 {
-	result->x= (v->i*t) + p->x;
-	result->y= (v->j*t) + p->y;
-	result->z= (v->k*t) + p->z;
+	result->x = (v->i*t) + p->x;
+	result->y = (v->j*t) + p->y;
+	result->z = (v->k*t) + p->z;
 	return result;
 }
 
@@ -543,9 +543,9 @@ __inline real_vector3d *vector_from_points3d(
 	real_point3d const *b,
 	real_vector3d *result)
 {
-	result->i= b->x-a->x;
-	result->j= b->y-a->y;
-	result->k= b->z-a->z;
+	result->i = b->x-a->x;
+	result->j = b->y-a->y;
+	result->k = b->z-a->z;
 
 	return result;
 }
@@ -555,9 +555,9 @@ __inline real_vector3d *scale_vector3d(
 	real c,
 	real_vector3d *result)
 {
-	result->i= c*a->i;
-	result->j= c*a->j;
-	result->k= c*a->k;
+	result->i = c*a->i;
+	result->j = c*a->j;
+	result->k = c*a->k;
 
 	return result;
 }
@@ -577,14 +577,14 @@ __inline real magnitude3d(
 __inline real normalize3d(
 	real_vector3d *v)
 {
-	real result= magnitude3d(v);
+	real result = magnitude3d(v);
 	if (fabs(result-0.f)>=_real_epsilon)
 	{
 		scale_vector3d(v, 1.f / result, v);
 	}
 	else
 	{
-		result= 0.f;
+		result = 0.f;
 	}
 
 	return result;
@@ -603,9 +603,9 @@ __inline real_vector3d *negate_vector3d(
 	real_vector3d const *a,
 	real_vector3d *result)
 {
-	result->i= -a->i;
-	result->j= -a->j;
-	result->k= -a->k;
+	result->i = -a->i;
+	result->j = -a->j;
+	result->k = -a->k;
 	return result;
 }
 
@@ -615,9 +615,9 @@ __inline real_point3d *set_real_point3d(
 	real y,
 	real z)
 {
-	p->x= x;
-	p->y= y;
-	p->z= z;
+	p->x = x;
+	p->y = y;
+	p->z = z;
 
 	return p;
 }
@@ -632,7 +632,7 @@ __inline boolean valid_realcmp(
 	real a,
 	real b)
 {
-	real result= a - b;
+	real result = a - b;
 	return valid_real(result) && fabs(result) < 0.001f;
 }
 
@@ -658,13 +658,13 @@ __inline boolean valid_real_vector3d_axes2(
 	real_vector3d const *forward,
 	real_vector3d const *up)
 {
-	boolean result= FALSE;
+	boolean result = FALSE;
 	if (valid_real_normal3d(forward) && valid_real_normal3d(up))
 	{
-		real product= dot_product3d(forward, up);
+		real product = dot_product3d(forward, up);
 		if (valid_realcmp(product, 0.f))
 		{
-			result= TRUE;
+			result = TRUE;
 		}
 	}
 	return result;
@@ -698,12 +698,12 @@ __inline real_vector3d *cross_product3d(
 	real_vector3d const *b,
 	real_vector3d *result)
 {
-	real k= (a->i*b->j) - (a->j*b->i);
-	real j= (a->k*b->i) - (a->i*b->k);
-	real i= (a->j*b->k) - (a->k*b->j);
-	result->i= i;
-	result->j= j;
-	result->k= k;
+	real k = (a->i*b->j) - (a->j*b->i);
+	real j = (a->k*b->i) - (a->i*b->k);
+	real i = (a->j*b->k) - (a->k*b->j);
+	result->i = i;
+	result->j = j;
+	result->k = k;
 
 	return result;
 }

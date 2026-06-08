@@ -19,7 +19,7 @@ static void clean_up_for_image_launch(void);
 /* ---------- globals */
 
 static boolean bss_00453ccc;
-static boolean data_002fd5a0= TRUE;
+static boolean data_002fd5a0 = TRUE;
 
 /* ---------- public code */
 
@@ -34,11 +34,11 @@ boolean xbox_demos_available(
 		{
 			if (file_exists(&file))
 			{
-				bss_00453ccc= TRUE;
+				bss_00453ccc = TRUE;
 			}
 		}
 
-		data_002fd5a0= FALSE;
+		data_002fd5a0 = FALSE;
 	}
 
 	return bss_00453ccc;
@@ -53,7 +53,7 @@ void xbox_demos_launch(
 {
 	if (xbox_demos_available())
 	{
-		LAUNCH_DATA launch_data= {0};
+		LAUNCH_DATA launch_data = {0};
 
 		clean_up_for_image_launch();
 		XLaunchNewImageA("d:\\XDemos\\XDemos.xbe", &launch_data);
@@ -76,23 +76,23 @@ void xbox_demos_launch(
 void xbox_dashboard_launch(
 	void)
 {
-	LAUNCH_DATA launch_data= {0};
+	LAUNCH_DATA launch_data = {0};
 	long abort_error;
 
 	clean_up_for_image_launch();
 
-	abort_error= dashboard_abort_error;
+	abort_error = dashboard_abort_error;
 	switch (abort_error)
 	{
 	case 0x21:
 	case 0x22:
 	{
-		((PLD_LAUNCH_DASHBOARD)&launch_data)->dwReason= XLD_LAUNCH_DASHBOARD_MEMORY;
+		((PLD_LAUNCH_DASHBOARD)&launch_data)->dwReason = XLD_LAUNCH_DASHBOARD_MEMORY;
 		break;
 	}
 	case 0x23:
 	{
-		((PLD_LAUNCH_DASHBOARD)&launch_data)->dwReason= XLD_LAUNCH_DASHBOARD_MAIN_MENU;
+		((PLD_LAUNCH_DASHBOARD)&launch_data)->dwReason = XLD_LAUNCH_DASHBOARD_MAIN_MENU;
 		break;
 	}
 	}

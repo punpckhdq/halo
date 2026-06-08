@@ -14,13 +14,13 @@ UNIT_DEFINITIONS.H
 
 enum
 {
-	UNIT_DEFINITION_TAG= 'unit',
-	UNIT_DEFINITION_VERSION= 2,
+	UNIT_DEFINITION_TAG = 'unit',
+	UNIT_DEFINITION_VERSION = 2,
 };
 
 enum
 {
-	_unit_has_circular_aiming_angles_bit= 0,
+	_unit_has_circular_aiming_angles_bit = 0,
 	_unit_is_destroyed_after_dying_bit,
 	_unit_has_slow_animation_interpolation_bit,
 	_unit_fires_from_camera_bit,

@@ -75,7 +75,7 @@ symbols in this file:
 
 enum
 {
-	SOME_LARGE_NUMBER_OF_TICKS= 1000, // 0x03E8
+	SOME_LARGE_NUMBER_OF_TICKS = 1000, // 0x03E8
 };
 
 /* ---------- macros */
@@ -140,7 +140,7 @@ boolean game_time_initialized(
 void game_time_initialize(
 	void)
 {
-	game_time_globals= (struct game_time_globals_struct *)game_state_malloc("game time globals", NULL, sizeof(*game_time_globals));
+	game_time_globals = (struct game_time_globals_struct *)game_state_malloc("game time globals", NULL, sizeof(*game_time_globals));
 	memset(game_time_globals, 0, sizeof(*game_time_globals));
 
 	return;
@@ -151,7 +151,7 @@ void game_time_initialize_for_new_map(
 {
 	match_assert("c:\\halo\\SOURCE\\game\\game_time.c", 131, game_time_globals && !game_time_globals->initialized);
 	memset(game_time_globals, 0, sizeof(*game_time_globals));
-	game_time_globals->initialized= TRUE;
+	game_time_globals->initialized = TRUE;
 
 	return;
 }
@@ -161,8 +161,8 @@ void game_time_dispose_from_old_map(
 {
 	if (game_time_globals)
 	{
-		game_time_globals->initialized= FALSE;
-		game_time_globals->active= FALSE;
+		game_time_globals->initialized = FALSE;
+		game_time_globals->active = FALSE;
 	}
 
 	return;
@@ -178,7 +178,7 @@ void game_time_end(
 	void)
 {
 	match_assert("c:\\halo\\SOURCE\\game\\game_time.c", 196, game_time_globals);
-	game_time_globals->active= FALSE;
+	game_time_globals->active = FALSE;
 
 	return;
 }
@@ -264,10 +264,10 @@ void game_time_set_paused(
 
 	if (game_time_globals->initialized)
 	{
-		game_time_globals->active= !paused;
+		game_time_globals->active = !paused;
 	}
 
-	game_time_globals->paused= paused;
+	game_time_globals->paused = paused;
 
 	return;
 }
@@ -285,7 +285,7 @@ void game_time_set_speed(
 {
 	match_assert("c:\\halo\\SOURCE\\game\\game_time.c", 562, game_time_globals);
 
-	game_time_globals->speed= speed;
+	game_time_globals->speed = speed;
 
 	return;
 }
@@ -293,8 +293,8 @@ void game_time_set_speed(
 static void code_000a50c0(
 	void)
 {
-	game_time_statistics.first_line= TRUE;
-	game_time_statistics.active= FALSE;
+	game_time_statistics.first_line = TRUE;
+	game_time_statistics.active = FALSE;
 
 	return;
 }
@@ -311,14 +311,14 @@ void game_time_start(
 
 	match_assert("c:\\halo\\SOURCE\\game\\game_time.c", 562, game_time_globals);
 
-	game_time_globals->speed= 1.f;
-	game_time_globals->leftover_dt= 0;
-	game_time_globals->active= TRUE;
+	game_time_globals->speed = 1.f;
+	game_time_globals->leftover_dt = 0;
+	game_time_globals->active = TRUE;
 	
-	game_time_statistics.first_line= TRUE;
-	game_time_statistics.active= FALSE;
+	game_time_statistics.first_line = TRUE;
+	game_time_statistics.active = FALSE;
 
-	connection= game_connection();
+	connection = game_connection();
 
 	switch (connection)
 	{
@@ -346,7 +346,7 @@ void game_time_update(
 
 	if (game_time_globals->active)
 	{
-		real v31= game_time_globals->speed*30.;
+		real v31 = game_time_globals->speed*30.;
 
 		if (v31>.0f)
 		{
@@ -373,7 +373,7 @@ void game_time_update(
 	}
 	else
 	{
-		game_time_globals->last_local_time_elapsed= 0;
+		game_time_globals->last_local_time_elapsed = 0;
 	}
 
 	return;

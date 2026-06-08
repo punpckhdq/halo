@@ -36,15 +36,15 @@ void HATReadMain(
 {
 	if (GetFileAttributesA("d:\\write.xts")!=-1)
 	{
-		bss_004535b4.__unknown04= 0x03;
+		bss_004535b4.__unknown04 = 0x03;
 	}
 	else if (GetFileAttributesA("d:\\read.xts")!=-1)
 	{
-		bss_004535b4.__unknown04= 0x04;
+		bss_004535b4.__unknown04 = 0x04;
 	}
 	else if (GetFileAttributesA("d:\\loop.xts")!=-1)
 	{
-		bss_004535b4.__unknown04= 0x05;
+		bss_004535b4.__unknown04 = 0x05;
 	}
 
 	return;
@@ -53,7 +53,7 @@ void HATReadMain(
 void HATRawRead(
 	struct gamepad_state *gamepad)
 {
-	DWORD number_of_bytes_read= 0;
+	DWORD number_of_bytes_read = 0;
 	ReadFile(bss_004535b4.__unknown00, gamepad, 0x28, &number_of_bytes_read, 0);
 
 	return;
@@ -62,7 +62,7 @@ void HATRawRead(
 void HATRawLoopRead(
 	struct gamepad_state *gamepad)
 {
-	DWORD number_of_bytes_read= 0;
+	DWORD number_of_bytes_read = 0;
 	ReadFile(bss_004535b4.__unknown00, gamepad, 0x28, &number_of_bytes_read, 0);
 
 	if (number_of_bytes_read==0)
@@ -77,7 +77,7 @@ void HATRawLoopRead(
 void HATRawWrite(
 	struct gamepad_state *gamepad)
 {
-	DWORD number_of_bytes_written= 0;
+	DWORD number_of_bytes_written = 0;
 	WriteFile(bss_004535b4.__unknown00, gamepad, 0x28, &number_of_bytes_written, 0);
 
 	return;
@@ -90,7 +90,7 @@ void HATInit(
 
 	if (bss_004535b4.__unknown04==0x03)
 	{
-		bss_004535b4.__unknown00= CreateFileA(
+		bss_004535b4.__unknown00 = CreateFileA(
 			"d:\\state.data",
 			GENERIC_WRITE,
 			0,
@@ -101,7 +101,7 @@ void HATInit(
 	}
 	else if (bss_004535b4.__unknown04==0x04||bss_004535b4.__unknown04==0x05)
 	{
-		bss_004535b4.__unknown00= CreateFileA(
+		bss_004535b4.__unknown00 = CreateFileA(
 			"d:\\state.data",
 			GENERIC_READ,
 			0,
@@ -121,13 +121,13 @@ void HATRun(
 	{
 	case 0x03:
 	{
-		DWORD number_of_bytes_written= 0;
+		DWORD number_of_bytes_written = 0;
 		WriteFile(bss_004535b4.__unknown00, gamepad, 0x28, &number_of_bytes_written, 0);
 		break;
 	}
 	case 0x04:
 	{
-		DWORD number_of_bytes_read= 0;
+		DWORD number_of_bytes_read = 0;
 		ReadFile(bss_004535b4.__unknown00, gamepad, 0x28, &number_of_bytes_read, 0);
 		break;
 	}

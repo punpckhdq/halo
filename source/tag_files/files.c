@@ -18,7 +18,7 @@ void file_location_set_volume(
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 77, strlen(volume_name)<=MAXIMUM_FILENAME_LENGTH);
 
 	strncpy(file_location_volume_names[location], volume_name, NUMBEROF(*file_location_volume_names)-1);
-	file_location_volume_names[location][NUMBEROF(*file_location_volume_names)-1]= '\0';
+	file_location_volume_names[location][NUMBEROF(*file_location_volume_names)-1] = '\0';
 
 	return;
 }
@@ -27,14 +27,14 @@ struct file_reference *file_reference_create(
 	struct file_reference *reference,
 	short location)
 {
-	struct file_reference_info *info= (struct file_reference_info *)reference;
+	struct file_reference_info *info = (struct file_reference_info *)reference;
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 91, info);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 92, location>=NONE && location<NUMBER_OF_FILE_REFERENCE_LOCATIONS);
 
 	/* probably a macro */
 	memset(info, 0, FILE_REFERENCE_SIZE);
-	info->signature= FILE_REFERENCE_SIGNATURE;
-	info->location= location;
+	info->signature = FILE_REFERENCE_SIGNATURE;
+	info->location = location;
 
 	return reference;
 }
@@ -45,7 +45,7 @@ long find_files(
 	long maximum_count,
 	struct file_reference *references)
 {
-	long file_count= 0;
+	long file_count = 0;
 
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 257, maximum_count>0);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 258, references);
@@ -67,20 +67,20 @@ void *file_read_into_memory(
 	struct file_reference *reference,
 	unsigned long *size)
 {
-	void *buffer= NULL;
+	void *buffer = NULL;
 
 	if (file_open(reference, FLAG(_permission_read_bit)))
 	{
-		unsigned long eof= file_get_eof(reference);
-		*size= eof;
-		buffer= match_malloc("c:\\halo\\SOURCE\\tag_files\\files.c", 280, eof);
+		unsigned long eof = file_get_eof(reference);
+		*size = eof;
+		buffer = match_malloc("c:\\halo\\SOURCE\\tag_files\\files.c", 280, eof);
 
 		if (buffer)
 		{
 			if (!file_read(reference, *size, buffer))
 			{
 				match_free("c:\\halo\\SOURCE\\tag_files\\files.c", 286, buffer);
-				buffer= NULL;
+				buffer = NULL;
 			}
 		}
 
@@ -114,7 +114,7 @@ void file_printf(
 struct file_reference_info *file_reference_get_info(
 	struct file_reference *reference)
 {
-	struct file_reference_info *info= (struct file_reference_info *)reference;
+	struct file_reference_info *info = (struct file_reference_info *)reference;
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 508, info);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 509, info->signature==FILE_REFERENCE_SIGNATURE);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 510, VALID_FLAGS(info->flags, NUMBER_OF_REFERENCE_INFO_FLAGS));
@@ -127,7 +127,7 @@ struct file_reference *file_reference_copy(
 	struct file_reference *destination,
 	const struct file_reference *source)
 {
-	struct file_reference_info *info= file_reference_get_info((struct file_reference *)source);
+	struct file_reference_info *info = file_reference_get_info((struct file_reference *)source);
 	memcpy(destination, info, sizeof(*info));
 
 	return destination;
@@ -137,7 +137,7 @@ struct file_reference *file_reference_add_directory(
 	struct file_reference *reference,
 	const char *directory)
 {
-	struct file_reference_info *info= file_reference_get_info(reference);
+	struct file_reference_info *info = file_reference_get_info(reference);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 137, directory);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 138, !TEST_FLAG(info->flags, _has_filename_bit));
 
@@ -150,7 +150,7 @@ struct file_reference *file_reference_set_name(
 	struct file_reference *reference,
 	const char *name)
 {
-	struct file_reference_info *info= file_reference_get_info(reference);
+	struct file_reference_info *info = file_reference_get_info(reference);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 151, name);
 
 	if (TEST_FLAG(info->flags, _has_filename_bit))
@@ -167,7 +167,7 @@ struct file_reference *file_reference_set_name(
 short file_reference_get_location(
 	const struct file_reference *reference)
 {
-	struct file_reference_info *info= file_reference_get_info((struct file_reference *)reference);
+	struct file_reference_info *info = file_reference_get_info((struct file_reference *)reference);
 	return info->location;
 }
 
@@ -176,9 +176,9 @@ char *file_reference_get_name(
 	unsigned long flags,
 	char *name)
 {
-	struct file_reference_info *info= file_reference_get_info((struct file_reference *)reference);
+	struct file_reference_info *info = file_reference_get_info((struct file_reference *)reference);
 
-	char full_path[256]= { 0 };
+	char full_path[256] = { 0 };
 	char *filename;
 	char *directory;
 	char *parent_directory;
@@ -193,7 +193,7 @@ char *file_reference_get_name(
 	file_location_get_full_path(info->location, info->path, full_path);
 	file_path_split(full_path, &directory, &parent_directory, &filename, &extension, TEST_FLAG(info->flags, _has_filename_bit));
 
-	name[0]= '\0';
+	name[0] = '\0';
 
 	if (TEST_FLAG(flags, _name_directory_bit))
 	{
@@ -222,13 +222,13 @@ boolean file_references_equal(
 	const struct file_reference *reference0,
 	const struct file_reference *reference1)
 {
-	struct file_reference_info *info1= file_reference_get_info((struct file_reference *)reference0);
-	struct file_reference_info *info2= file_reference_get_info((struct file_reference *)reference1);
-	boolean equal= FALSE;
+	struct file_reference_info *info1 = file_reference_get_info((struct file_reference *)reference0);
+	struct file_reference_info *info2 = file_reference_get_info((struct file_reference *)reference1);
+	boolean equal = FALSE;
 
 	if (info1->location==info2->location && !strcmp(info1->path, info2->path))
 	{
-		equal= TRUE;
+		equal = TRUE;
 	}
 
 	return equal;
@@ -239,12 +239,12 @@ struct file_reference *file_reference_create_from_path(
 	const char *path,
 	boolean is_directory)
 {
-	struct file_reference_info *info= (struct file_reference_info *)reference;
+	struct file_reference_info *info = (struct file_reference_info *)reference;
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 91, info);
 
 	memset(info, 0, FILE_REFERENCE_SIZE);
-	info->signature= FILE_REFERENCE_SIGNATURE;
-	info->location= NONE;
+	info->signature = FILE_REFERENCE_SIGNATURE;
+	info->location = NONE;
 
 	if (is_directory)
 	{
@@ -263,11 +263,11 @@ void directory_create_or_delete_contents(
 {
 	struct file_reference directory;
 	struct file_reference file;
-	struct file_reference_info *info= (struct file_reference_info *)&directory;
+	struct file_reference_info *info = (struct file_reference_info *)&directory;
 
 	memset(info, 0, FILE_REFERENCE_SIZE);
-	info->signature= FILE_REFERENCE_SIGNATURE;
-	info->location= NONE;
+	info->signature = FILE_REFERENCE_SIGNATURE;
+	info->location = NONE;
 
 	file_reference_add_directory(&directory, directory_name);
 
@@ -294,9 +294,9 @@ boolean datastore_read(
 	void *data)
 {
 	struct file_reference file_ref;
-	boolean success= FALSE;
+	boolean success = FALSE;
 
-	struct file_reference_info *info= (struct file_reference_info *)&file_ref;
+	struct file_reference_info *info = (struct file_reference_info *)&file_ref;
 
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 369, NULL != file_name);
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 370, NULL != field_name);
@@ -306,15 +306,15 @@ boolean datastore_read(
 	match_assert("c:\\halo\\SOURCE\\tag_files\\files.c", 374, strlen(field_name) < DATASTORE_MAX_FIELD_NAME_SIZE);
 
 	memset(info, 0, FILE_REFERENCE_SIZE);
-	info->signature= FILE_REFERENCE_SIGNATURE;
-	info->location= NONE;
+	info->signature = FILE_REFERENCE_SIGNATURE;
+	info->location = NONE;
 
 	file_reference_set_name(&file_ref, file_name);
 
 	if (file_exists(&file_ref))
 	{
 		long datastore_size;
-		void *buffer= file_read_into_memory(&file_ref, (unsigned long *)&datastore_size);
+		void *buffer = file_read_into_memory(&file_ref, (unsigned long *)&datastore_size);
 
 		if (!buffer)
 		{
@@ -329,7 +329,7 @@ boolean datastore_read(
 
 		if (buffer)
 		{
-			long v10= 0;
+			long v10 = 0;
 
 		}
 	}

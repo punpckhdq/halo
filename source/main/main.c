@@ -497,7 +497,7 @@ static void code_000f08f0(
 		game_initial_pulse();
 		ui_widgets_disable_pause_game(30);
 
-		bss_00455750.reset_map= FALSE;
+		bss_00455750.reset_map = FALSE;
 	}
 }
 
@@ -525,12 +525,12 @@ void main_loop(
 	if (!game_in_editor())
 	{
 		strncpy(bss_00455750.soloplayer_map_name, "levels\\b30\\b30", NUMBEROF(bss_00455750.soloplayer_map_name)-1);
-		bss_00455750.soloplayer_map_name[NUMBEROF(bss_00455750.soloplayer_map_name)-1]= '\0';
+		bss_00455750.soloplayer_map_name[NUMBEROF(bss_00455750.soloplayer_map_name)-1] = '\0';
 	}
 
-	bss_00455750.want_to_be_at_main_menu= (game_in_editor()==FALSE);
-	bss_00455750.switch_to_structure_bsp_index= NONE;
-	bss_00455750.halt_time_scale= TRUE;
+	bss_00455750.want_to_be_at_main_menu = (game_in_editor()==FALSE);
+	bss_00455750.switch_to_structure_bsp_index = NONE;
+	bss_00455750.halt_time_scale = TRUE;
 
 	console_initialize();
 	debug_keys_initialize();
@@ -553,7 +553,7 @@ void main_loop(
 			if (bss_00455750.switch_to_structure_bsp_index!=NONE)
 			{
 				scenario_switch_structure_bsp(bss_00455750.switch_to_structure_bsp_index);
-				bss_00455750.switch_to_structure_bsp_index= NONE;
+				bss_00455750.switch_to_structure_bsp_index = NONE;
 				hud_load(0);
 			}
 
@@ -600,13 +600,13 @@ void main_loop(
 			if (bss_00455750.save_core)
 			{
 				//game_state_save_core(bss_00455750.__unknown125);
-				bss_00455750.save_core= FALSE;
+				bss_00455750.save_core = FALSE;
 			}
 
 			if (bss_00455750.load_core)
 			{
 				//game_state_save_core(bss_00455750.__unknown125);
-				bss_00455750.load_core= FALSE;
+				bss_00455750.load_core = FALSE;
 			}
 
 			if (bss_00455750.want_to_be_at_main_menu)
@@ -621,7 +621,7 @@ void main_loop(
 
 			if (bss_00455750.run_xdemos)
 			{
-				bss_00455750.run_xdemos= FALSE;
+				bss_00455750.run_xdemos = FALSE;
 				xbox_demos_launch();
 			}
 
@@ -632,7 +632,7 @@ void main_loop(
 
 			if (bss_00455750.queue_map)
 			{
-				//bss_00455750.queue_map= FALSE;
+				//bss_00455750.queue_map = FALSE;
 			}
 		}
 
@@ -895,7 +895,7 @@ void main_loop(
 			//*(_DWORD *)&main_globals.__unknown00[176] = system_milliseconds();
 			//*(_DWORD *)&main_globals.__unknown00[184] = dword_70D400;
 			//*(_DWORD *)&main_globals.__unknown00[188] = dword_70D404;
-			bss_00455750.halt_time_scale= TRUE;
+			bss_00455750.halt_time_scale = TRUE;
 		}
 	}
 

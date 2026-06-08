@@ -22,8 +22,8 @@ ATTRACT_MODE.C
 
 enum
 {
-	ATTRACT_MODE_COUNTDOWN= 75000,
-	MUSIC_FADE_TIME= 1500
+	ATTRACT_MODE_COUNTDOWN = 75000,
+	MUSIC_FADE_TIME = 1500
 };
 
 /* ---------- prototypes */
@@ -37,14 +37,14 @@ extern short seed_random_range(unsigned long *seed, short lower_bound, short upp
 static unsigned long bss_00453ad8;
 static char bss_00453ae8[128];
 
-short data_002e4c84= NONE;
+short data_002e4c84 = NONE;
 
 /* ---------- public code */
 
 boolean attract_mode_should_start(
 	void)
 {
-	boolean should_start= FALSE;
+	boolean should_start = FALSE;
 	real progress;
 
 	if (cache_files_precache_in_progress() &&
@@ -59,11 +59,11 @@ boolean attract_mode_should_start(
 		!bink_playback_active())
 	{
 		unsigned long time_elapsed;
-		unsigned long current_time= system_milliseconds();
-		unsigned long time_since_last_event= event_manager_time_of_last_event();
+		unsigned long current_time = system_milliseconds();
+		unsigned long time_since_last_event = event_manager_time_of_last_event();
 		
-		time_since_last_event= MAX(bss_00453ad8, time_since_last_event);
-		time_elapsed= current_time-time_since_last_event;
+		time_since_last_event = MAX(bss_00453ad8, time_since_last_event);
+		time_elapsed = current_time-time_since_last_event;
 	
 		if (time_elapsed>=ATTRACT_MODE_COUNTDOWN-MUSIC_FADE_TIME)
 		{
@@ -82,7 +82,7 @@ boolean attract_mode_should_start(
 
 		if (time_elapsed>=ATTRACT_MODE_COUNTDOWN)
 		{
-			should_start= TRUE;
+			should_start = TRUE;
 		}
 	}
 
@@ -92,7 +92,7 @@ boolean attract_mode_should_start(
 void attract_mode_reset_timer(
 	void)
 {
-	bss_00453ad8= system_milliseconds();
+	bss_00453ad8 = system_milliseconds();
 
 	return;
 }
@@ -100,10 +100,10 @@ void attract_mode_reset_timer(
 const char *attract_mode_get_localized_movie_path(
 	short movie)
 {
-	short attempted_languages= 0;
+	short attempted_languages = 0;
 	short language;
 
-	const char *language_suffixes[]=
+	const char *language_suffixes[] =
 	{
 		"_de",
 		"_fr",
@@ -119,25 +119,25 @@ const char *attract_mode_get_localized_movie_path(
 	switch (XGetLanguage())
 	{
 	case XC_LANGUAGE_GERMAN:
-		language= _german;
+		language = _german;
 		break;
 	case XC_LANGUAGE_FRENCH:
-		language= _french;
+		language = _french;
 		break;
 	case XC_LANGUAGE_SPANISH:
-		language= _spanish;
+		language = _spanish;
 		break;
 	case XC_LANGUAGE_ITALIAN:
-		language= _italian;
+		language = _italian;
 		break;
 	case XC_LANGUAGE_ENGLISH:
-		language= _english;
+		language = _english;
 		break;
 	case XC_LANGUAGE_JAPANESE:
-		language= _japanese;
+		language = _japanese;
 		break;
 	default:
-		language= _unknown;
+		language = _unknown;
 		break;
 	}
 
@@ -174,7 +174,7 @@ const char *attract_mode_get_localized_movie_path(
 
 		attempted_languages|= FLAG(language);
 
-		for (language= 0; language<NUMBER_OF_SUPPORTED_LANGUAGES; language++)
+		for (language = 0; language<NUMBER_OF_SUPPORTED_LANGUAGES; language++)
 		{
 			if (!TEST_FLAG(attempted_languages, language))
 			{
@@ -185,7 +185,7 @@ const char *attract_mode_get_localized_movie_path(
 		if (language==NUMBER_OF_SUPPORTED_LANGUAGES)
 		{
 			error(_error_silent, "unable to locate any movie for movie #%d (checked for all possible language variations)", movie);
-			bss_00453ae8[0]= '\0';
+			bss_00453ae8[0] = '\0';
 
 			break;
 		}
@@ -201,12 +201,12 @@ void attract_mode_start(
 
 	while (TRUE)
 	{
-		video_index= seed_random_range(get_global_local_random_seed_address(), 0, NUMBER_OF_ATTRACT_MODE_MOVIES);
-		video_index= PIN(video_index, 0, _bink_attract3_movie);
+		video_index = seed_random_range(get_global_local_random_seed_address(), 0, NUMBER_OF_ATTRACT_MODE_MOVIES);
+		video_index = PIN(video_index, 0, _bink_attract3_movie);
 
 		if (video_index!=data_002e4c84)
 		{
-			data_002e4c84= video_index;
+			data_002e4c84 = video_index;
 			break;
 		}
 	}
@@ -217,7 +217,7 @@ void attract_mode_start(
 
 	if (!bink_playback_active())
 	{
-		bss_00453ad8= system_milliseconds();
+		bss_00453ad8 = system_milliseconds();
 	}
 
 	return;

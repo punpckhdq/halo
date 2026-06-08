@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	_game_connection_local= 0,
+	_game_connection_local = 0,
 	_game_connection_network_client,
 	_game_connection_network_server,
 	_game_connection_film_playback,
@@ -21,7 +21,7 @@ enum
 
 enum
 {
-	_game_difficulty_level_easy= 0,
+	_game_difficulty_level_easy = 0,
 	_game_difficulty_level_normal,
 	_game_difficulty_level_hard,
 	_game_difficulty_level_impossible,

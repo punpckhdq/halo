@@ -30,7 +30,7 @@ object_deleted_proc object_deleted_procs[3];
 void object_deleted_procs_call(
 	long deleted_object_index)
 {
-	long i=0;
+	long i =0;
 
 	do
 	{

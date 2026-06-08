@@ -157,7 +157,7 @@ void *tag_get(
 	char expected_group[16];
 	char returned_group[16];
 
-	struct cache_file_tag_instance *tag_instance= cache_get_tag_instance(tag_index);
+	struct cache_file_tag_instance *tag_instance = cache_get_tag_instance(tag_index);
 	match_vassert(
 		"c:\\halo\\SOURCE\\cache\\cache_files.c",
 		298,

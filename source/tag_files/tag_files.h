@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	TAG_STRING_LENGTH= 31,
+	TAG_STRING_LENGTH = 31,
 };
 
 /* ---------- macros */

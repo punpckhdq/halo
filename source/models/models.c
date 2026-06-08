@@ -91,8 +91,8 @@ short model_get_marker_by_name(
 	struct object_marker *markers,
 	short maximum_marker_count)
 {
-	short result= 0;
-	short marker_index= model_find_marker(model_index, name);
+	short result = 0;
+	short marker_index = model_find_marker(model_index, name);
 
 	match_assert("c:\\halo\\SOURCE\\models\\models.c", 760, node_matrices);
 	match_assert("c:\\halo\\SOURCE\\models\\models.c", 761, markers);
@@ -101,12 +101,12 @@ short model_get_marker_by_name(
 	{
 		short i;
 
-		struct model *model= model_definition_get(model_index);
-		struct model_marker* marker= TAG_BLOCK_GET_ELEMENT(&model->markers, marker_index, struct model_marker);
+		struct model *model = model_definition_get(model_index);
+		struct model_marker* marker = TAG_BLOCK_GET_ELEMENT(&model->markers, marker_index, struct model_marker);
 
-		for (i=0; i<marker->instances.count; i++)
+		for (i =0; i<marker->instances.count; i++)
 		{
-			struct model_marker_instance* instance= TAG_BLOCK_GET_ELEMENT(&marker->instances, i, struct model_marker_instance);
+			struct model_marker_instance* instance = TAG_BLOCK_GET_ELEMENT(&marker->instances, i, struct model_marker_instance);
 			if (!region_permutations ||
 				region_permutations[instance->region_index]==instance->permutation_index)
 			{
@@ -117,8 +117,8 @@ short model_get_marker_by_name(
 					break;
 				}
 
-				object_marker= &markers[result++];
-				object_marker->node_index= node_remapping_table ? node_remapping_table[instance->node_index] : instance->node_index;
+				object_marker = &markers[result++];
+				object_marker->node_index = node_remapping_table ? node_remapping_table[instance->node_index] : instance->node_index;
 				matrix4x3_from_point_and_quaternion(&object_marker->node_matrix, &instance->translation, &instance->rotation);
 				match_assert(
 					"c:\\halo\\SOURCE\\models\\models.c",

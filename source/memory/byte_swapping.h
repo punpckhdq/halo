@@ -10,14 +10,14 @@ BYTE_SWAPPING.H
 
 enum
 {
-    _1byte= 1,
-    _2byte= -2,
-    _4byte= -4,
-    _8byte= -8,
-    _begin_bs_array= -100,
-    _end_bs_array= -101,
-    _extern_bs_definition= -102,
-    BYTE_SWAP_DEFINITION_SIGNATURE= 'bysw'
+    _1byte = 1,
+    _2byte = -2,
+    _4byte = -4,
+    _8byte = -8,
+    _begin_bs_array = -100,
+    _end_bs_array = -101,
+    _extern_bs_definition = -102,
+    BYTE_SWAP_DEFINITION_SIGNATURE = 'bysw'
 };
 
 /* ---------- macros */

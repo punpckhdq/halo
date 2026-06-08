@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	_bink_playback_loop_bit= 0,
+	_bink_playback_loop_bit = 0,
 	_bink_playback_button_click_stops_movie_bit,
 	_bink_playback_prevent_events_to_ui_bit,
 	_bink_playback_dont_render_ui_bit,

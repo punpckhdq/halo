@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	_rasterizer_vertex_type_environment_uncompressed= 0,
+	_rasterizer_vertex_type_environment_uncompressed = 0,
 	_rasterizer_vertex_type_environment_compressed,
 	_rasterizer_vertex_type_environment_lightmap_uncompressed,
 	_rasterizer_vertex_type_environment_lightmap_compressed,

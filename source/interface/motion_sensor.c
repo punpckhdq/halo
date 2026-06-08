@@ -104,7 +104,7 @@ symbols in this file:
 
 /* ---------- globals */
 
-const real_rgb_color blip_colors[]=
+const real_rgb_color blip_colors[] =
 {
 	{ 1.f, .5f, 0.f },
 	{ 1.f, 1.f, 0.f },
@@ -115,7 +115,7 @@ const real_rgb_color blip_colors[]=
 	{ 0.f, 0.f, 0.f }
 };
 
-real scale= 1.f;
+real scale = 1.f;
 
 static struct motion_sensor_globals_definition *motion_sensor_globals;
 
@@ -124,7 +124,7 @@ static struct motion_sensor_globals_definition *motion_sensor_globals;
 void motion_sensor_initialize(
 	void)
 {
-	motion_sensor_globals= (struct motion_sensor_globals_definition *)game_state_malloc("motion sensor (radar)", "sensor data", 5544);
+	motion_sensor_globals = (struct motion_sensor_globals_definition *)game_state_malloc("motion sensor (radar)", "sensor data", 5544);
 	match_assert("c:\\halo\\SOURCE\\interface\\motion_sensor.c", 298, motion_sensor_globals);
 
 	return;
