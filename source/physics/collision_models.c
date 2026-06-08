@@ -5,7 +5,6 @@ COLLISION_MODELS.C
 
 /* ---------- headers */
 #include "cseries.h"
-#include "cseries_windows.h" // LARGE_INTEGER
 #include "object_types.h"
 #include "objects.h"
 #include "tag_groups.h"
@@ -15,6 +14,7 @@ COLLISION_MODELS.C
 #include "collision_models.h"
 #include "collision_bsp_definitions.h"
 #include "collision_bsp.h"
+#include "collision_usage.h"
 
 /* ---------- constants */
 
@@ -23,11 +23,9 @@ COLLISION_MODELS.C
 /* ---------- structures */
 
 /* ---------- prototypes */
-void collision_log_usage(unsigned short a1);
 int bsp3d_test_point(const struct bsp3d *bsp, int node_index, const real_point3d *point);
 real_matrix4x3 *object_get_node_matrices(int object_index);
 void collision_log_start_time(union _LARGE_INTEGER *lpPerformanceCount);
-void __cdecl collision_log_end_time(short collision_function, __int64 end_time);
 boolean collision_bsp_test_vector(
 		unsigned int flags,
 		const struct collision_bsp *bsp,
@@ -157,7 +155,7 @@ boolean collision_model_test_point(
 	return FALSE;
 }
 
-static union _LARGE_INTEGER collision_model_test_vector_TIME;
+static __int64 collision_model_test_vector_TIME;
 
 boolean collision_model_test_vector(
 		const struct collision_model_instance *instance,
@@ -215,7 +213,7 @@ boolean collision_model_test_vector(
 		}
 	}
 
-	collision_log_end_time(3, collision_model_test_vector_TIME.QuadPart);
+	collision_log_end_time(3, collision_model_test_vector_TIME);
 
 	return return_value;
 }
