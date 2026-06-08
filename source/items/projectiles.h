@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/PROJECTILES.C */
+
+void projectile_accelerate(long projectile_index, union real_vector3d const *acceleration);
 
 /* ---------- globals */
 

@@ -708,6 +708,17 @@ __inline real_vector3d *cross_product3d(
 	return result;
 }
 
+__inline real_vector3d *subtract_vectors3d(
+	real_vector3d const *a,
+	real_vector3d const *b,
+	real_vector3d *result)
+{
+	result->i= a->i-b->i;
+	result->j= a->j-b->j;
+	result->k= a->k-b->k;
+
+	return result;
+}
 
 __inline boolean point_in_sphere(
 	real_point3d const *point,

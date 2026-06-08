@@ -64,6 +64,27 @@ struct unit_camera
 	struct tag_block unit_camera_tracks;
 };
 
+struct unit_seat
+{
+	unsigned long flags;
+	char label[TAG_STRING_LENGTH+1];
+	char marker_name[TAG_STRING_LENGTH+1];
+	long unused[8];
+	real_vector3d acceleration_scale;
+	long unused2[3];
+	real yaw_rate;
+	real pitch_rate;
+	struct unit_camera camera;
+	struct tag_block seat_huds;
+	long pad0;
+	short icon_text_index;
+	short pad;
+	real yaw_minimum;
+	real yaw_maximum;
+	struct tag_reference built_in_actor_reference;
+	long unused3[5];
+};
+
 struct _unit_definition
 {
 	unsigned long flags;
@@ -117,7 +138,7 @@ struct _unit_definition
 	short runtime_hard_ping_minimum_interrupt_ticks;
 	struct tag_block powered_seats;
 	struct tag_block initial_weapons;
-	struct tag_block seats;
+	struct tag_block seats;					// unit_seat
 };
 
 struct unit_definition
