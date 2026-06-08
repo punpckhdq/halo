@@ -583,7 +583,7 @@
 				{ "name": "source/memory/zlib/inflate.c", "index": 211, "status": "Matching" },
 				{ "name": "source/memory/zlib/inffast.c", "index": 212, "status": "Matching" },
 				{ "name": "source/memory/zlib/infcodes.c", "index": 213, "status": "Matching" },
-				{ "name": "source/memory/zlib/infblock.c", "index": 214, "status": "NonMatching" },
+				{ "name": "source/memory/zlib/infblock.c", "index": 214, "status": "Matching" },
 				{ "name": "source/memory/zlib/gzio.c", "index": 215, "status": "NonMatching" },
 				{ "name": "source/memory/zlib/deflate.c", "index": 216, "status": "NonMatching" },
 				{ "name": "source/memory/zlib/crc32.c", "index": 217, "status": "Matching" },
