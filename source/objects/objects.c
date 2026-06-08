@@ -67,6 +67,8 @@ OBJECTS.C
 (object)->object.incoming_function_values[(index)-1] :		\
 (object)->object.incoming_function_values[(index)-1])
 
+#define OBJECT_FRAME_INDEX_GET(object_index) ((object_index) + game_time_get())
+
 /* ---------- structures */
 
 struct object_globals
@@ -2302,10 +2304,10 @@ void object_compute_node_matrices(
 				if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) &&
 					0<animation->frame_count)
 				{
-					unsigned int frame_count;
+					unsigned long frame_count;
 
-					frame_index = (object_index + game_time_get());
-					frame_count = (unsigned int)animation->frame_count;
+					frame_index = OBJECT_FRAME_INDEX_GET(object_index);
+					frame_count = (unsigned long)animation->frame_count;
 
 					frame_index %= frame_count;
 
@@ -2372,7 +2374,7 @@ void object_compute_node_matrices(
 					}
 					else if (overlay->mode==_object_overlay_mode_scale)
 					{
-						short frame_index = (object_index + game_time_get()) % animation->frame_count;
+						short frame_index = OBJECT_FRAME_INDEX_GET(object_index) % animation->frame_count;
 
 						overlay_animation_apply_scaled(
 							animation,
@@ -2453,7 +2455,7 @@ void object_compute_node_matrices(
 		while (node_index!=node_count)
 		{
 			short node_stack_index = node_stack[node_index];
-			struct model_node* node = TAG_BLOCK_GET_ELEMENT(&model->nodes, node_stack_index, struct model_node);
+			struct model_node *node = TAG_BLOCK_GET_ELEMENT(&model->nodes, node_stack_index, struct model_node);
 			
 			if (node_stack_index==0)
 			{
