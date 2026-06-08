@@ -22496,7 +22496,7 @@
 { "file_offset": 4579292, "flags": 0, "name": "_collision_debug_height" },
 { "file_offset": 4579296, "flags": 0, "name": "_collision_debug_phantom_bsp" },
 { "file_offset": 4579297, "flags": 0, "name": "_collision_debug_phantom_bsp_found" },
-{ "file_offset": 4579304, "flags": 0, "name": "_bss_0045dfe8" },
+{ "file_offset": 4579304, "flags": 0, "name": "_collision_model_test_vector_time" },
 { "file_offset": 4579312, "flags": 0, "name": "_collision_log_render_enable" },
 { "file_offset": 4579313, "flags": 0, "name": "_collision_log_detailed" },
 { "file_offset": 4579314, "flags": 0, "name": "_collision_log_extended" },
