@@ -98,7 +98,7 @@ struct collision_node
 	short parent_node_index;
 	short next_sibling_node_index;
 	short first_child_node_index;
-	int unused[2];
+	long unused[2];
 	unsigned short pad;
 	short runtime_damage_part;
 	struct tag_block bsps;
