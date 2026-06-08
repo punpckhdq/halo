@@ -91,6 +91,19 @@ struct collision_result
 	short material_index;
 };
 
+struct collision_node
+{
+	char name[32];
+	short region_index;
+	short parent_node_index;
+	short next_sibling_node_index;
+	short first_child_node_index;
+	int unused[2];
+	unsigned short pad;
+	short runtime_damage_part;
+	struct tag_block bsps;
+};
+
 /* ---------- prototypes/COLLISIONS.C */
 
 boolean collision_test_vector(unsigned long flags, real_point3d const *point, real_vector3d const *vector, long ignore_object_index, struct collision_result *collision);
