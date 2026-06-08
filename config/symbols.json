@@ -4150,7 +4150,7 @@
 { "file_offset": 985168, "flags": 32, "name": "_code_000f0850" },
 { "file_offset": 985264, "flags": 32, "name": "_code_000f08b0" },
 { "file_offset": 985296, "flags": 32, "name": "_code_000f08d0" },
-{ "file_offset": 985328, "flags": 32, "name": "_code_000f08f0" },
+{ "file_offset": 985328, "flags": 32, "name": "_main_reset_map_private" },
 { "file_offset": 985392, "flags": 32, "name": "_code_000f0930" },
 { "file_offset": 985408, "flags": 32, "name": "_code_000f0940" },
 { "file_offset": 985952, "flags": 32, "name": "_code_000f0b60" },
