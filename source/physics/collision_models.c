@@ -1,6 +1,5 @@
 /*
 COLLISION_MODELS.C
-
 */
 
 /* ---------- headers */
