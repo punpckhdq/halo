@@ -135,7 +135,6 @@ void render_frame_pregame(
 {
 	struct rasterizer_frame_begin_parameters parameters;
 	struct rasterizer_window_begin_parameters rasterizer_parameters;
-	real progress;
 
 	render.frame_index++;
 
@@ -145,21 +144,24 @@ void render_frame_pregame(
 
 	memset(&rasterizer_parameters, 0, sizeof(rasterizer_parameters));
 
-	render.camera = window[0].render_camera;
+	render.camera = window->render_camera;
 	render_camera_build_frustum(&render.camera, NULL, &render.frustum, TRUE);
 
-	rasterizer_parameters.camera = window[1].render_camera;
+	rasterizer_parameters.camera = window->rasterizer_camera;
 	render_camera_build_frustum(&rasterizer_parameters.camera, NULL, &rasterizer_parameters.frustum, TRUE);
 
 	rasterizer_parameters.rasterizer_target = 0;
 	rasterizer_window_begin(&rasterizer_parameters);
 
-	render_ui_widgets(0, &window->render_camera.window_bounds);
+	render_ui_widgets(0, &window->rasterizer_camera.viewport_bounds);
 	bink_playback_render();
 
-	if (game_map_loading_in_progress(&progress))
 	{
-		progress_bar_display(progress);
+		real progress;
+		if (game_map_loading_in_progress(&progress))
+		{
+			progress_bar_display(progress);
+		}
 	}
 
 	rasterizer_window_end();
