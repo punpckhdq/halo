@@ -163,6 +163,8 @@ extern void stack_walk(boolean);
 
 /* ---------- globals */
 
+char temporary[256];
+
 static const real_argb_color global_real_argb_color_table[17] =
 {
 	{ 1.f, 1.f,		1.f,	1.f  },

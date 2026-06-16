@@ -176,6 +176,9 @@ symbols in this file:
 
 /* ---------- globals */
 
+struct scenario *global_scenario;
+struct bsp3d *global_bsp3d;
+
 /* ---------- public code */
 
 long scenario_leaf_index_from_point(

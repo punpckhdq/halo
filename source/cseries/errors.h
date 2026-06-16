@@ -46,8 +46,7 @@ void write_to_error_file(char *string, boolean date);
 
 /* ---------- globals */
 
-/* comm */
-struct error_global_data error_globals;
+extern struct error_global_data error_globals;
 
 /* ---------- public code */
 

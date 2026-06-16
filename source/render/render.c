@@ -81,6 +81,8 @@ symbols in this file:
 
 /* ---------- globals */
 
+struct render_globals render;
+
 boolean render_contrails_enabled = TRUE;
 boolean render_particles_enabled = TRUE;
 boolean render_particle_systems_enabled = TRUE;

@@ -155,6 +155,20 @@ static long *object_name_list;
 
 static struct profile_section objects_update_section = {"objects_update", NONE, TRUE};
 
+boolean debug_objects_names;
+boolean debug_objects_pathfinding_spheres;
+boolean debug_objects_physics;
+boolean debug_objects_root_node;
+
+long global_object_marker;
+
+struct cluster_partition noncollideable_object_cluster_partition;
+struct cluster_partition collideable_object_cluster_partition;
+
+boolean debug_object_garbage_collection;
+
+struct data_array *object_header_data;
+
 boolean debug_objects_position_velocity = FALSE;
 boolean debug_objects_bounding_spheres = TRUE;
 boolean debug_objects_collision_models = TRUE;

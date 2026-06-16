@@ -454,24 +454,19 @@ void object_deleted_procs_call(long deleted_object_index);
 
 /* ---------- globals */
 
-/* comm */
-boolean debug_objects_names;
-boolean debug_objects_pathfinding_spheres;
-boolean debug_objects_physics;
-boolean debug_objects_root_node;
+extern boolean debug_objects_names;
+extern boolean debug_objects_pathfinding_spheres;
+extern boolean debug_objects_physics;
+extern boolean debug_objects_root_node;
 
-/* comm */
-long global_object_marker;
+extern long global_object_marker;
 
-/* comm */
-struct cluster_partition noncollideable_object_cluster_partition;
-struct cluster_partition collideable_object_cluster_partition;
+extern struct cluster_partition noncollideable_object_cluster_partition;
+extern struct cluster_partition collideable_object_cluster_partition;
 
-/* comm */
-boolean debug_object_garbage_collection;
+extern boolean debug_object_garbage_collection;
 
-/* comm */
-struct data_array *object_header_data;
+extern struct data_array *object_header_data;
 
 extern boolean debug_objects_position_velocity;
 extern boolean debug_objects_bounding_spheres;

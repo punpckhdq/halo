@@ -108,8 +108,7 @@ void render_objects_dispose(void);
 
 /* ---------- globals */
 
-/* comm */
-struct render_globals render;
+extern struct render_globals render;
 
 /* ---------- public code */
 

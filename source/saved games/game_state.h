@@ -68,8 +68,7 @@ void game_state_create_persistent_storage(const char *path);
 
 /* ---------- globals */
 
-/* comm */
-boolean recover_saved_games_hack;
+extern boolean recover_saved_games_hack;
 
 /* ---------- public code */
 

@@ -33,8 +33,7 @@ char *ai_debug_describe_actor(long actor_index, long unit_index, boolean include
 
 /* ---------- globals */
 
-/* comm */
-struct ai_debug_state ai_debug;
+extern struct ai_debug_state ai_debug;
 
 /* ---------- public code */
 

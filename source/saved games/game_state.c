@@ -134,6 +134,8 @@ static void game_state_set_revert_time(void);
 
 /* ---------- globals */
 
+boolean recover_saved_games_hack;
+
 static FILE* bss_004d27b0;
 
 static struct

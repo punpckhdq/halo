@@ -73,6 +73,8 @@ symbols in this file:
 
 /* ---------- globals */
 
+struct error_global_data error_globals;
+
 /* ---------- public code */
 
 void write_to_error_file(

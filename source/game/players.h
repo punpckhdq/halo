@@ -96,8 +96,7 @@ void update_queues_reset_and_fill_with_lies(void);
 
 /* ---------- globals */
 
-/* comm */
-struct data_array* player_data;
+extern struct data_array *player_data;
 
 /* ---------- public code */
 

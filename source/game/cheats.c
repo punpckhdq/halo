@@ -48,6 +48,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "cheats.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -57,6 +60,8 @@ symbols in this file:
 /* ---------- prototypes */
 
 /* ---------- globals */
+
+struct cheat_globals cheat;
 
 /* ---------- public code */
 

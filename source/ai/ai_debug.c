@@ -804,6 +804,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "ai_debug.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -813,6 +816,8 @@ symbols in this file:
 /* ---------- prototypes */
 
 /* ---------- globals */
+
+struct ai_debug_state ai_debug;
 
 /* ---------- public code */
 

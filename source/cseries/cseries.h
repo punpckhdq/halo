@@ -238,8 +238,7 @@ void stack_walk_disregard_symbol_names(boolean disregard);
 
 /* ---------- globals */
 
-/* comm */
-char temporary[256];
+extern char temporary[256];
 
 extern const union real_argb_color *const global_real_argb_white;
 extern const union real_argb_color *const global_real_argb_grey;

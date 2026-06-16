@@ -103,11 +103,8 @@ void scenario_get_atmospheric_fog(short local_player_index, short sky_index, rea
 extern long global_scenario_index;
 extern short global_structure_bsp_index;
 
-/* comm */
-struct scenario *global_scenario;
-
-/* comm */
-struct bsp3d *global_bsp3d;
+extern struct scenario *global_scenario;
+extern struct bsp3d *global_bsp3d;
 
 /* ---------- public code */
 

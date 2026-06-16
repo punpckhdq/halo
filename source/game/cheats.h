@@ -32,8 +32,7 @@ struct cheat_globals
 
 /* ---------- globals */
 
-/* comm */
-struct cheat_globals cheat;
+extern struct cheat_globals cheat;
 
 /* ---------- public code */
 
