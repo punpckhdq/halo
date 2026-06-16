@@ -55,7 +55,7 @@ struct continuous_camera_shake_definition
 	real random_rotation_magnitude; 
 	long unused_motion_scales[3]; 
 	short periodic_function; 
-	unsigned short pad1; 
+	word pad1; 
 	real periodic_period; 
 	real periodic_weight; 
 	real zero_scale_factor; 
@@ -74,7 +74,7 @@ struct camera_impulse_definition
 {
 	real temporary_duration; 
 	short temporary_transition; 
-	unsigned short pad; 
+	word pad; 
 	real temporary_rotation; 
 	real temporary_translation; 
 	real temporary_jitter_lower_bound; 
@@ -90,12 +90,12 @@ struct camera_shake_definition
 {
 	real duration; 
 	short falloff_transition_function; 
-	unsigned short pad0; 
+	word pad0; 
 	real random_translation_magnitude; 
 	real random_rotation_magnitude; 
 	long unused_motion_scales[3]; 
 	short periodic_function; 
-	unsigned short pad1; 
+	word pad1; 
 	real periodic_period; 
 	real periodic_weight; 
 	real zero_scale_factor; 
@@ -116,7 +116,7 @@ struct screen_flash_definition
 	unsigned long unused1[3]; 
 	real duration; 
 	short fade_function; 
-	unsigned short pad; 
+	word pad; 
 	unsigned long unused2[2]; 
 	real max_intensity; 
 	real zero_scale_factor; 
@@ -180,7 +180,7 @@ struct vibrate_frequency_definition
 	real frequency; 
 	real duration; 
 	short fade_function; 
-	unsigned short pad; 
+	word pad; 
 	unsigned long unused[2]; 
 };
 

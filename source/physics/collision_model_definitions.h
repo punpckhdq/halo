@@ -45,7 +45,7 @@ struct collision_model
 struct structure_collision_material
 {
 	struct tag_reference shader;
-	unsigned short pad;
+	word pad;
 	short runtime_physics_material_type;
 };
 
