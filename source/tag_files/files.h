@@ -184,7 +184,7 @@ boolean find_files_next(struct file_reference *file, struct file_last_modificati
 
 /* ---------- globals */
 
-char file_location_volume_names[NUMBER_OF_FILE_REFERENCE_LOCATIONS-1][256];
+extern char file_location_volume_names[NUMBER_OF_FILE_REFERENCE_LOCATIONS-1][256];
 
 /* ---------- public code */
 
