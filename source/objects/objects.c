@@ -857,6 +857,7 @@ long find_objects_from_point_vector(
 void objects_dump_memory(
 	void)
 {
+	struct objects_information information;
 	struct dump_datum dumps[MAXIMUM_DUMPS];
 	struct dump_datum dumps_by_type[NUMBER_OF_OBJECT_TYPES];
 	struct object_iterator iterator;
@@ -864,19 +865,19 @@ void objects_dump_memory(
 	struct object_datum *object;
 	struct object_header_datum *header;
 	FILE *file;
-	short type;
+	short object_type;
 	short object_num;
 
-	short object_count = 0;
-	short overflowed_object_count = 0;
+	short dump_count = 0;
+	short overflowed_count = 0;
 
 	memset(dumps, 0, sizeof(dumps));
 	memset(dumps_by_type, 0, sizeof(dumps_by_type));
 	
-	for (type = 0; type<NUMBER_OF_OBJECT_TYPES; ++type)
+	for (object_type = 0; object_type<NUMBER_OF_OBJECT_TYPES; ++object_type)
 	{
-		dumps_by_type[type].object_type = type;
-		dumps_by_type[type].definition_index = NONE;
+		dumps_by_type[object_type].object_type = object_type;
+		dumps_by_type[object_type].definition_index = NONE;
 	}
 	
 	object_iterator_new(&iterator, _object_mask_all, 0);
@@ -885,7 +886,7 @@ void objects_dump_memory(
 	{
 		short index = NONE;
 		
-		for (object_num = 0; object_num<object_count; ++object_num)
+		for (object_num = 0; object_num<dump_count; ++object_num)
 		{
 			if (dumps[object_num].definition_index==object->definition_index)
 			{
@@ -896,15 +897,15 @@ void objects_dump_memory(
 
 		if (index==NONE)
 		{
-			if (object_count<(short)NUMBEROF(dumps))
+			if (dump_count<(short)NUMBEROF(dumps))
 			{
-				index = object_count++;
+				index = dump_count++;
 				dumps[index].object_type = NONE;
 				dumps[index].definition_index = object->definition_index;
 			}
 			else
 			{
-				++overflowed_object_count;
+				++overflowed_count;
 			}
 		}
 
@@ -921,7 +922,7 @@ void objects_dump_memory(
 
 	qsort(
 		dumps,
-		object_count,
+		dump_count,
 		sizeof(struct dump_datum),
 		(int(__cdecl *)(const void *, const void *))sort_dumps);
 	qsort(
@@ -933,41 +934,41 @@ void objects_dump_memory(
 	file = fopen("d:\\object_memory.txt", "a+b");
 	if (file)
 	{
-		struct objects_information information;
-		
-		objects_information_get(&information);
+		{
+			objects_information_get(&information);
 
-		fprintf(
-			file,
-			"#%d objects (#%d active) using %3.2f%% of available memory\n\n",
-			information.object_count,
-			information.active_object_count,
-			100.f * information.used_memory);
+			fprintf(
+				file,
+				"#%d objects (#%d active) using %3.2f%% of available memory\n\n",
+				information.object_count,
+				information.active_object_count,
+				100.f * information.used_memory);
+		}
 		
 		fprintf(file, "OBJECTS BY TYPE\n");
 		fprintf(file, "number (active) [garbage/   dead/outside/at-rest] maxsize totsize\n");
-		for (type = 0; type<NUMBER_OF_OBJECT_TYPES; type++)
+		for (object_type = 0; object_type<NUMBER_OF_OBJECT_TYPES; object_type++)
 		{
-			object_dump_write(file, &dumps_by_type[type]);
+			object_dump_write(file, &dumps_by_type[object_type]);
 		}
 
 		fprintf(file, "\n");
 		fprintf(file, "OBJECTS BY DEFINITION\n");
 		fprintf(file, "number (active) [garbage/   dead/outside/at-rest] maxsize totsize\n");
-		for (object_num = 0; object_num<object_count; object_num++)
+		for (object_num = 0; object_num<dump_count; object_num++)
 		{
 			object_dump_write(file, &dumps[object_num]);
 		}
 
 		fprintf(file, "\n");
 
-		if (overflowed_object_count>0)
+		if (overflowed_count>0)
 		{
 			fprintf(
 				file,
 				"WARNING: overflowed MAXIMUM_DUMPS (%d), this dump does not include %d objects that would not fit!\n",
 				MAXIMUM_DUMPS,
-				overflowed_object_count);
+				overflowed_count);
 		}
 
 		fprintf(file, "\n");
@@ -3365,12 +3366,19 @@ void object_attach_to_node(
 		object_index = object->object.parent_object_index)
 	{
 		object = object_get(object_index);
-		if (object_index == child_object_index)
+
+		if (object_index==child_object_index)
 		{
 			valid = FALSE;
 			break;
 		}
 	}
+
+	match_vassert(
+		"c:\\halo\\SOURCE\\objects\\objects.c",
+		1225,
+		valid,
+		"cannot attach an object to one of its children");
 
 	if (valid)
 	{
@@ -3389,11 +3397,12 @@ void object_attach_to_node(
 		{
 			object_disconnect_from_map(child_object_index);
 		}
-
+		
 		matrix4x3_inverse(object_get_node_matrix(parent_object_index, parent_node_index), &inverse_node_matrix);
 		matrix4x3_transform_point(&inverse_node_matrix, &child_object->object.position, &child_object->object.position);
 		matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.forward, &child_object->object.forward);
 		matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.up, &child_object->object.up);
+
 		child_object->object.parent_object_index = parent_object_index;
 		child_object->object.parent_node_index = parent_node_index;
 
@@ -3407,14 +3416,6 @@ void object_attach_to_node(
 		SET_FLAG(object_header_get(child_object_index)->flags, _object_header_do_not_update_bit, TRUE);
 
 		object_compute_node_matrices(child_object_index);
-	}
-	else
-	{
-		match_vassert(
-			"c:\\halo\\SOURCE\\objects\\objects.c",
-			1225,
-			valid,
-			"cannot attach an object to one of its children");
 	}
 	
 	return;
