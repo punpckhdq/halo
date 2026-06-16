@@ -131,8 +131,8 @@ enum
 
 #define BIT_VECTOR_SIZE_IN_LONGS(bit_count) (((bit_count) + (LONG_BITS - 1)) >> LONG_BITS_BITS)
 #define BIT_VECTOR_SIZE_IN_BYTES(bit_count) (sizeof(long) * BIT_VECTOR_SIZE_IN_LONGS(bit_count))
-#define BIT_VECTOR_TEST_FLAG(bit_vector, bit) (TEST_FLAG(bit_vector[(bit) >> LONG_BITS_BITS], ((bit) & (LONG_BITS - 1))))
-#define BIT_VECTOR_SET_FLAG(bit_vector, bit, enable) (SET_FLAG(bit_vector[(bit) >> LONG_BITS_BITS], ((bit) & (LONG_BITS - 1)), enable))
+#define BIT_VECTOR_TEST_FLAG(bit_vector, bit) (TEST_FLAG((bit_vector)[(bit) >> LONG_BITS_BITS], ((bit) & (LONG_BITS - 1))))
+#define BIT_VECTOR_SET_FLAG(bit_vector, bit, enable) (SET_FLAG((bit_vector)[(bit) >> LONG_BITS_BITS], ((bit) & (LONG_BITS - 1)), enable))
 
 #define VALID_FLAGS(flags, bits) (!((flags)>>bits))
 

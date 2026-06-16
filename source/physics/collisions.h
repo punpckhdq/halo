@@ -130,6 +130,20 @@ struct collision_vertex
 
 boolean collision_test_vector(unsigned long flags, real_point3d const *point, real_vector3d const *vector, long ignore_object_index, struct collision_result *collision);
 
+/* ---------- prototypes/BREAKABLE_SURFACES.C */
+
+struct breakable_surface_datum *breakable_surface_get(short breakable_surface_index);
+void breakable_surfaces_initialize(void);
+void breakable_surfaces_dispose(void);
+void breakable_surfaces_initialize_for_new_map(void);
+void breakable_surfaces_dispose_from_old_map(void);
+void breakable_surfaces_enable(boolean state);
+long breakable_surfaces_reset(void);
+byte *breakable_surface_flags_get(void);
+boolean breakable_surface_extant(short breakable_surface_index);
+void breakable_surface_damage(short breakable_surface_index, struct damage_data *damage_data, long seed_surface_index);
+void breakable_surface_damage_area_of_effect(const struct damage_data *damage_data);
+
 /* ---------- globals */
 
 /* ---------- public code */
