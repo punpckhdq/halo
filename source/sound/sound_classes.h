@@ -8,11 +8,22 @@ file has inline function assertions.
 #define __SOUND_CLASSES_H
 #pragma once
 
+#include "real_math.h"
+#include "objects.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct sound_location
+{
+	real_point3d position;
+	real_vector3d forward;
+	real_vector3d translational_velocity;
+	struct location game_location;
+};
 
 /* ---------- prototypes/EXAMPLE.C */
 

@@ -42,6 +42,14 @@ struct collision_model
 	struct tag_block nodes;
 };
 
+struct structure_collision_material
+{
+	struct tag_reference shader;
+	unsigned short pad;
+	short runtime_physics_material_type;
+};
+
+
 /* ---------- prototypes/COLLISION_MODEL_DEFINITIONS.C */
 
 /* ---------- globals */

@@ -104,6 +104,28 @@ struct collision_node
 	struct tag_block bsps;
 };
 
+struct collision_surface
+{
+	long plane_designator;
+	long first_edge_index;
+	unsigned char flags;
+	unsigned char breakable_surface_index;
+	short material_index;
+};
+
+struct collision_edge
+{
+    long vertex_indices[2];
+    long edge_indices[2];
+    long surface_indices[2];
+};
+
+struct collision_vertex
+{
+	real_point3d point; // 0x0
+	long first_edge_index; // 0xC
+};
+
 /* ---------- prototypes/COLLISIONS.C */
 
 boolean collision_test_vector(unsigned long flags, real_point3d const *point, real_vector3d const *vector, long ignore_object_index, struct collision_result *collision);
