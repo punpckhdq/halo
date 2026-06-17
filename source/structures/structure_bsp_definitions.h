@@ -102,6 +102,13 @@ struct structure_bsp
 	struct leaf_map leaf_map;
 };
 
+struct structure_collision_material
+{
+	struct tag_reference shader;
+	word pad;
+	short runtime_physics_material_type;
+};
+
 /* ---------- prototypes/STRUCTURE_BSP_DEFINITIONS.C */
 
 unsigned long *structure_bsp_get_cluster_pvs(struct structure_bsp *structure_bsp, short cluster_index);

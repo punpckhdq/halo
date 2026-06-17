@@ -3,39 +3,28 @@ BREAKABLE_SURFACES.C
 
 */
 
-#include "cseries.h"
-#include "collisions.h"
-
-#include "collision_bsp_definitions.h"
-#include "collision_model_definitions.h"
-
-#include "bitmaps/bitmaps.h"
-#include "cseries/errors.h"
-#include "effects/material_effect_definitions.h"
-#include "effects/particles.h"
-#include "game/game_globals.h"
-#include "structure_bsp_definitions.h"
-#include "math/real_math.h"
-#include "objects/damage_effect_definitions.h"
-#include "saved games/game_state.h"
-#include "scenario/scenario.h"
-#include "sound/game_sound.h"
-#include "sound/sound_classes.h"
-
 /* ---------- headers */
 
-/* ---------- constants */
-
-/* ---------- macros */
-#define MAXIMUM_BREAKABLE_SURFACES_PER_MAP	   256
-#define MAXIMUM_VERTICES_PER_COLLISION_SURFACE 8
-#define MAXIMUM_BREAKABLE_SURFACE_QUEUE_SIZE   1024
+#include "cseries.h"
+#include "errors.h"
+#include "real_math.h"
+#include "tag_groups.h"
+#include "breakable_surfaces.h"
+#include "collisions.h"
+#include "collision_bsp_definitions.h"
+#include "collision_model_definitions.h"
+#include "damage.h"
+#include "bitmaps.h"
+#include "material_effect_definitions.h"
+#include "particles.h"
+#include "game_globals.h"
+#include "structure_bsp_definitions.h"
+#include "damage_effect_definitions.h"
+#include "game_state.h"
+#include "scenario.h"
+#include "game_sound.h"
 
 /* ---------- structures */
-struct breakable_surface_datum
-{
-	real vitality;
-};
 
 struct breakable_surface_globals
 {
@@ -44,34 +33,8 @@ struct breakable_surface_globals
 	struct breakable_surface_datum breakable_surfaces[MAXIMUM_STRUCTURE_BSPS_PER_SCENARIO][MAXIMUM_BREAKABLE_SURFACES_PER_MAP];
 };
 
-struct structure_breakable_surface
-{
-	real_point3d centroid;
-	real bounding_radius;
-	long collision_surface_index;
-	long unused[7];
-};
-
-struct breakable_surface_particle_effect
-{
-	struct tag_reference particle; 
-	unsigned long flags; 
-	real density; 
-	real velocity_scale_lower_bound; 
-	real velocity_scale_upper_bound; 
-	real velocity_cone_angle; 
-	real angular_velocity_lower_bound; 
-	real angular_velocity_upper_bound; 
-	unsigned long unused1[2]; 
-	real radius_lower_bound; 
-	real radius_upper_bound; 
-	unsigned long unused2[2]; 
-	real_argb_color tint_lower_bound; 
-	real_argb_color tint_upper_bound; 
-	unsigned long unused3[7]; 
-};
-
 /* ---------- prototypes */
+
 static void breakable_surface_effect(
 	short breakable_surface_index,
 	const struct damage_data *damage_data,
@@ -79,7 +42,7 @@ static void breakable_surface_effect(
 
 /* ---------- globals */
 
-extern struct breakable_surface_globals *globals;
+struct breakable_surface_globals *globals;
 
 boolean breakable_surface_effect_enabled = TRUE;
 
@@ -152,7 +115,7 @@ void breakable_surfaces_enable(
 	return;
 }
 
-long breakable_surfaces_reset(
+void breakable_surfaces_reset(
 	void)
 {
 	breakable_surfaces_initialize_for_new_map();

@@ -17,14 +17,6 @@ file has inline function assertions.
 
 /* ---------- structures */
 
-struct sound_location
-{
-	real_point3d position;
-	real_vector3d forward;
-	real_vector3d translational_velocity;
-	struct location game_location;
-};
-
 /* ---------- prototypes/EXAMPLE.C */
 
 /* ---------- globals */

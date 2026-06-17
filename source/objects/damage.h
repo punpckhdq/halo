@@ -14,6 +14,24 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct damage_data
+{
+	long definition_index;
+	unsigned long flags;
+	long owner_player_index;
+	long owner_object_index;
+	short owner_team_index;
+	struct location location;
+	real_point3d origin;
+	real_point3d epicenter;
+	real_vector3d direction;
+	real scale;
+	real multiplier;
+	real material_effect_scale;
+	short material_type;
+	struct projectile_material_response_definition const *material_response;
+};
+
 /* ---------- prototypes/DAMAGE.C */
 
 void damage_initialize(void);

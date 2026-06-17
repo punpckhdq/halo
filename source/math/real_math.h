@@ -809,4 +809,5 @@ __inline real_plane3d *plane3d_from_points(
 
 	return plane;
 }
+
 #endif // __REAL_MATH_H

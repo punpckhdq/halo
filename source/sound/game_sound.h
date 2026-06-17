@@ -14,6 +14,14 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct sound_location
+{
+	real_point3d position;
+	real_vector3d forward;
+	real_vector3d translational_velocity;
+	struct location game_location;
+};
+
 /* ---------- prototypes/GAME_SOUND.C */
 
 void game_sound_clear(void);
