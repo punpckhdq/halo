@@ -22,6 +22,15 @@ enum
 	CONTINUOUS_DAMAGE_EFFECT_DEFINITION_VERSION = 1,
 };
 
+enum
+{
+	_vibrate_frequency_low = 0,
+	_vibrate_frequency_high = 1,
+	NUMBER_OF_vibrate_FREQUENCIES = 2,
+	_vibrate_frequency_left = 0,
+	_vibrate_frequency_right = 1,
+};
+
 /* ---------- macros */
 
 #define damage_effect_definition_get(index) ((struct damage_effect_definition *)tag_get(DAMAGE_EFFECT_DEFINITION_TAG, index))
@@ -46,7 +55,7 @@ struct damage_definition
 	real instantaneous_acceleration;
 	real instantaneous_acceleration_zero_scale_factor;
 	unsigned long instantaneous_acceleration_unused[1];
-	real material_modifiers[40];
+	real material_modifiers[MAXIMUM_NUMBER_OF_MATERIAL_TYPES];
 };
 
 struct continuous_camera_shake_definition
@@ -137,7 +146,7 @@ struct vibrate_frequency_definition
 
 struct vibrate_definition
 {
-	struct vibrate_frequency_definition vibrate_frequencies[2];
+	struct vibrate_frequency_definition vibrate_frequencies[NUMBER_OF_vibrate_FREQUENCIES];
 	real zero_scale_factor;
 	unsigned long unused[4];
 };
