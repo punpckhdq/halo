@@ -25,10 +25,11 @@ enum
 enum
 {
 	_vibrate_frequency_low = 0,
-	_vibrate_frequency_high = 1,
-	NUMBER_OF_vibrate_FREQUENCIES = 2,
+	_vibrate_frequency_high,
+	NUMBER_OF_vibrate_FREQUENCIES,
+
 	_vibrate_frequency_left = 0,
-	_vibrate_frequency_right = 1,
+	_vibrate_frequency_right,
 };
 
 /* ---------- macros */
