@@ -337,11 +337,17 @@ static void breakable_surface_effect(
 			az = fabs(surface_plane.n.k);
 
 			if (ax >= ay && ax >= az)
+			{
 				projection_axis = 0;
+			}
 			else if (ay >= az)
+			{
 				projection_axis = 1;
+			}
 			else
+			{
 				projection_axis = 2;
+			}
 
 			projection_sign = (surface_plane.n.n[projection_axis] > 0.0f);
 
@@ -436,7 +442,9 @@ static void breakable_surface_effect(
 				}
 
 				edge_index = collision_edge->edge_indices[reverse];
-				surface_vertex_index++;
+				{
+					surface_vertex_index++;
+				}
 			}
 			while (edge_index != surface->first_edge_index);
 
@@ -444,7 +452,9 @@ static void breakable_surface_effect(
 			{
 				contrail = TAG_BLOCK_GET_ELEMENT(&breakable_surface->particle_effects, contrail_index, struct breakable_surface_particle_effect);
 				if (contrail->particle.index == NONE)
+				{
 					continue;
+				}
 
 				if (contrail->density > 0.0f)
 				{
@@ -456,7 +466,9 @@ static void breakable_surface_effect(
 				else
 				{
 					if (surface_index != seed_surface_index)
+					{
 						continue;
+					}
 					s_min = s_max = t_min = t_max = 0;
 				}
 
@@ -475,7 +487,9 @@ static void breakable_surface_effect(
 						project_point3d(&position, projection_axis, projection_sign, &position_2d_test);
 
 						if (!convex_hull2d_test_point(surface_vertex_index, surface_vertices2d, &position_2d_test, FALSE))
+						{
 							continue;
+						}
 
 						velocity = *global_zero_vector3d;
 
@@ -502,7 +516,9 @@ static void breakable_surface_effect(
 							factor = PIN(1.0f - distance / breaking_effect->forward_radius, 0.0f, 1.0f);
 
 							if (breaking_effect->forward_exponent != 0.0f)
+							{
 								factor = (real)pow(factor, breaking_effect->forward_exponent);
+							}
 
 							factor *= breaking_effect->forward_velocity;
 
@@ -542,7 +558,9 @@ static void breakable_surface_effect(
 			}
 
 			if (surface_queue_read_index >= surface_queue_write_index)
+			{
 				break;
+			}
 		}
 
 		if (breakable_surface->sound.index != NONE && total_bounds_valid)
