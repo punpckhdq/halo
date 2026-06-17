@@ -489,7 +489,9 @@ static void breakable_surface_effect(
 							factor = PIN(1.0f - distance / breaking_effect->outward_radius, 0.0f, 1.0f);
 
 							if (breaking_effect->outward_exponent != 0.0f)
+							{
 								factor = (real)pow(factor, breaking_effect->outward_exponent);
+							}
 
 							factor *= breaking_effect->outward_velocity;
 
