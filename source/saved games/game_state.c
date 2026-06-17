@@ -104,6 +104,7 @@ symbols in this file:
 #include "cache_files.h"
 #include "scenario.h"
 #include "main.h"
+#include "objects.h"
 #include "game_sound.h"
 #include "sound_manager.h"
 #include "observer.h"
