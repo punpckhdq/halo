@@ -167,13 +167,13 @@ void console_printf(
 		terminal_clear();
 	}
 	
-	vsprintf(buffer, format, arglist);
-	buffer[255] = '\0';
+	vsnprintf(buffer, sizeof(buffer), format, arglist);
+	buffer[sizeof(buffer) - 1] = '\0';
 	
 	terminal_printf(0, "%s", buffer);
 	if (console_dump_to_file)
 	{
-		strncat(buffer, "\r\n", NUMBEROF(buffer));
+		csstrncat(buffer, "\r\n", NUMBEROF(buffer));
 		write_to_error_file(buffer, TRUE);
 	}
 
@@ -192,8 +192,8 @@ void console_warning(
 	va_start(arglist, format);
 
 
-	vsprintf(buffer, format, arglist);
-	buffer[255] = '\0';
+	vsnprintf(buffer, sizeof(buffer), format, arglist);
+	buffer[sizeof(buffer) - 1] = '\0';
 
 	terminal_printf(global_real_argb_red, "%s", buffer);
 	if (console_dump_to_file)
@@ -215,7 +215,7 @@ static boolean console_process_command(
 	short newest_previous_command_index = (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
 
 	console_globals.newest_previous_command_index = newest_previous_command_index;
-	strcpy(console_globals.previous_commands[newest_previous_command_index], command);
+	csstrcpy(console_globals.previous_commands[newest_previous_command_index], command);
 
 
 	console_globals.previous_command_count = MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
@@ -309,7 +309,7 @@ static void console_complete(
 			console_printf(FALSE, print_buffer);
 		}
 
-		strncpy(token, matching_items[0], last_similar_character_index + 1);
+		memcpy(token, matching_items[0], last_similar_character_index + 1);
 		token[last_similar_character_index + 1] = '\0';
 		console_globals.input_state.edit.insertion_point_index = &token[last_similar_character_index + 1] - console_globals.input_state.result;
 	}
@@ -337,11 +337,12 @@ void console_startup(
 	{
 		while (fgets(buffer, NUMBEROF(buffer)-1, file))
 		{
-			strtok(buffer, "\r\n\t");
+			char *saveptr;
+			strtok_r(buffer, "\r\n\t", &saveptr);
 			newest_previous_command_index = (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
 
 			console_globals.newest_previous_command_index = newest_previous_command_index;
-			strcpy(console_globals.previous_commands[newest_previous_command_index], buffer);
+			csstrcpy(console_globals.previous_commands[newest_previous_command_index], buffer);
 
 			console_globals.previous_command_count = MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
 
@@ -416,7 +417,7 @@ boolean console_update(
 
 				if (console_globals.selected_previous_command_index != NONE)
 				{
-					strcpy(
+					csstrcpy(
 						console_globals.input_state.result,
 						console_globals.previous_commands[
 							(console_globals.newest_previous_command_index - console_globals.selected_previous_command_index + MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS
