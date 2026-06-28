@@ -591,7 +591,7 @@ __inline real square_root(
 __inline real reciprocal_square_root(
 	real x)
 {
-	return 1.0 / square_root(x);
+	return 1.f / square_root(x);
 }
 
 __inline real power(
@@ -625,8 +625,8 @@ __inline real_point2d *point_from_line2d(
 	real t, 
 	real_point2d *result)
 {
-	result->x = (v->i*t) + p->x;
-	result->y = (v->j*t) + p->y;
+	result->x = t*v->i + p->x;
+	result->y = t*v->j + p->y;
 	return result;
 }
 
@@ -838,9 +838,9 @@ __inline real_point3d *point_from_line3d(
 	real t,
 	real_point3d *result)
 {
-	result->x = (v->i*t) + p->x;
-	result->y = (v->j*t) + p->y;
-	result->z = (v->k*t) + p->z;
+	result->x = (t*v->i) + p->x;
+	result->y = (t*v->j) + p->y;
+	result->z = (t*v->k) + p->z;
 	return result;
 }
 
