@@ -85,6 +85,14 @@ struct unit_seat
 	long unused3[5];
 };
 
+struct powered_seat_definition
+{
+	long pad;
+	real powerup_time;
+	real powerdown_time;
+	long unused[14];
+};
+
 struct _unit_definition
 {
 	unsigned long flags;
@@ -136,7 +144,7 @@ struct _unit_definition
 	short grenade_count;
 	short runtime_soft_ping_minimum_interrupt_ticks;
 	short runtime_hard_ping_minimum_interrupt_ticks;
-	struct tag_block powered_seats;
+	struct tag_block powered_seats;			// powered_seat_definition
 	struct tag_block initial_weapons;
 	struct tag_block seats;					// unit_seat
 };

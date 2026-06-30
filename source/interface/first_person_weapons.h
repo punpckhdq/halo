@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/FIRST_PERSON_WEAPONS.C */
+
+void first_person_weapon_message_from_weapon(long weapon_index, short message_type);
 
 /* ---------- globals */
 

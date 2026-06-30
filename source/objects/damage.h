@@ -42,6 +42,9 @@ void damage_render_debug(void);
 void object_initialize_vitality(long object_index, real *custom_body_vitality, real *custom_shield_vitality);
 
 void object_damage_update(long object_index);
+void damage_data_new(struct damage_data *damage_data, long definition_index);
+
+void object_cause_damage(struct damage_data *damage_data, long object_index, short node_index, short region_index, short material_index, real_vector3d const *object_normal);
 
 /* ---------- globals */
 

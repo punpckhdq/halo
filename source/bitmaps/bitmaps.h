@@ -18,6 +18,8 @@ header included in hcex build.
 
 /* ---------- prototypes/BITMAP_UTILITIES.C */
 
+real real_rgb_color_brightness(union real_rgb_color const *color);
+
 union real_rgb_color *rgb_colors_interpolate(
 	union real_rgb_color *rgb_result,
 	unsigned long flags,

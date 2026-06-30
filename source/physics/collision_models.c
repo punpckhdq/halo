@@ -5,16 +5,17 @@ COLLISION_MODELS.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "object_types.h"
-#include "objects.h"
-#include "tag_groups.h"
-
 #include "collisions.h"
+
+#include "collision_bsp.h"
+#include "collision_bsp_definitions.h"
 #include "collision_model_definitions.h"
 #include "collision_models.h"
-#include "collision_bsp_definitions.h"
-#include "collision_bsp.h"
 #include "collision_usage.h"
+
+#include "objects/object_types.h"
+#include "objects/objects.h"
+#include "tag_files/tag_groups.h"
 
 /* ---------- constants */
 
@@ -25,7 +26,6 @@ COLLISION_MODELS.C
 /* ---------- prototypes */
 
 long bsp3d_test_point(const struct bsp3d *bsp, long node_index, const real_point3d *point);
-real_matrix4x3 *object_get_node_matrices(long object_index);
 boolean collision_bsp_test_vector(
 		unsigned long flags,
 		const struct collision_bsp *bsp,
@@ -60,11 +60,10 @@ boolean collision_model_instance_new(
 	struct collision_model_instance *instance,
 	long object_index)
 {
-	struct object_datum *object;
-	struct object_definition *object_definition;
+	boolean result = FALSE;
 
-	object = object_get(object_index);
-	object_definition = object_definition_get(object->definition_index);
+	struct object_datum *object = object_get(object_index);
+	struct object_definition *object_definition = object_definition_get(object->definition_index);
 
 	if (object_definition->object.collision_model.index != NONE)
 	{
@@ -73,27 +72,27 @@ boolean collision_model_instance_new(
 		instance->region_permutation_indices = object->object.region_permutations;
 		instance->matrices = object_get_node_matrices(object_index);
 
-		return TRUE;
+		result = TRUE;
 	}
 
-	return FALSE;
+	return result;
 }
 
 boolean collision_model_test_sphere(
-	const struct collision_model_instance *instance,
-	const real_point3d *center,
+	struct collision_model_instance const *instance,
+	real_point3d const *center,
 	real radius)
 {
 	const struct collision_node *collision_node;
 	struct collision_bsp *collision_bsp;
-	short i;
+	short node_index;
 	short perm;
 	real_point3d transformed_center;
 	real_matrix4x3 inverted_matrix;
 
-	for (i = 0; i < instance->model->nodes.count; i++)
+	for (node_index = 0; node_index < instance->model->nodes.count; ++node_index)
 	{
-		collision_node = TAG_BLOCK_GET_ELEMENT(&instance->model->nodes, i, struct collision_node);
+		collision_node = TAG_BLOCK_GET_ELEMENT(&instance->model->nodes, node_index, struct collision_node);
 
 		if (collision_node->region_index != NONE)
 		{
@@ -107,7 +106,7 @@ boolean collision_model_test_sphere(
 
 				if (collision_bsp->bsp3d.nodes.count > 0)
 				{
-					matrix4x3_inverse(&instance->matrices[i], &inverted_matrix);
+					matrix4x3_inverse(&instance->matrices[node_index], &inverted_matrix);
 					matrix4x3_transform_point(&inverted_matrix, center, &transformed_center);
 				}
 			}
@@ -118,8 +117,8 @@ boolean collision_model_test_sphere(
 }
 
 boolean collision_model_test_point(
-	const struct collision_model_instance *instance,
-	const real_point3d *point)
+	struct collision_model_instance const *instance,
+	real_point3d const *point)
 {
 	const struct collision_node *collision_node;
 	struct collision_bsp *collision_bsp;
@@ -157,54 +156,52 @@ boolean collision_model_test_point(
 	return FALSE;
 }
 
-static __int64 collision_model_test_vector_time;
-
 boolean collision_model_test_vector(
-		const struct collision_model_instance *instance,
+		struct collision_model_instance const *instance,
 		unsigned long flags,
-		const real_point3d *point,
-		const real_vector3d *vector,
+		real_point3d const *point,
+		real_vector3d const *vector,
 		struct collision_model_test_vector_result *result)
 {
-	const struct collision_node *collision_node;
-	struct collision_bsp *collision_bsp;
-	short i;
-	short perm;
-	boolean return_value;
-	real_matrix4x3 inverted_matrix;
-	real_point3d transformed_point;
-	real_vector3d transformed_vector;
+	short node_index;
+	boolean return_value = FALSE;
 
-	return_value = FALSE;
+	static __int64 collision_model_test_vector_time;
 
 	collision_log_usage(3);
 	collision_log_start_time(&collision_model_test_vector_time);
 
 	result->bsp_result.t = FLT_MAX;
 
-	for (i = 0; i < instance->model->nodes.count; i++)
+	for (node_index = 0; node_index < instance->model->nodes.count; ++node_index)
 	{
-		collision_node = TAG_BLOCK_GET_ELEMENT(&instance->model->nodes, i, struct collision_node);
+		struct collision_node const *collision_node = TAG_BLOCK_GET_ELEMENT(&instance->model->nodes, node_index, struct collision_node);
 
 		if (collision_node->region_index != NONE)
 		{
-			perm = instance->region_permutation_indices[collision_node->region_index];
+			short perm = instance->region_permutation_indices[collision_node->region_index];
 
 			if (perm != NONE && collision_node->bsps.count > 0)
 			{
+				struct collision_bsp *collision_bsp;
+
 				perm = PIN(perm, 0, collision_node->bsps.count - 1);
 
 				collision_bsp = TAG_BLOCK_GET_ELEMENT(&collision_node->bsps, perm, struct collision_bsp);
 
 				if (collision_bsp->bsp3d.nodes.count > 0)
 				{
-					matrix4x3_inverse(&instance->matrices[i], &inverted_matrix);
+					real_matrix4x3 inverted_matrix;
+					real_point3d transformed_point;
+					real_vector3d transformed_vector;
+
+					matrix4x3_inverse(&instance->matrices[node_index], &inverted_matrix);
 					matrix4x3_transform_point(&inverted_matrix, point, &transformed_point);
 					matrix4x3_transform_vector(&inverted_matrix, vector, &transformed_vector);
 
-					if (collision_bsp_test_vector(flags, collision_bsp, 0, 0, &transformed_point, &transformed_vector, result->bsp_result.t, &result->bsp_result))
+					if (collision_bsp_test_vector(flags, collision_bsp, 0, NULL, &transformed_point, &transformed_vector, result->bsp_result.t, &result->bsp_result))
 					{
-						result->node_index = i;
+						result->node_index = node_index;
 						result->region_index = collision_node->region_index;
 						result->bsp_index = perm;
 
@@ -221,9 +218,9 @@ boolean collision_model_test_vector(
 }
 
 boolean collision_model_test_pill(
-		const struct collision_model_instance *instance,
-		const real_point3d *point,
-		const real_vector3d *vector,
+		struct collision_model_instance const *instance,
+		real_point3d const *point,
+		real_vector3d const *vector,
 		real radius,
 		struct collision_model_test_pill_result *result)
 {
@@ -355,7 +352,8 @@ boolean collision_model_get_features_in_sphere(
 	return return_val;
 }
 
-void render_debug_collision_model(const struct collision_model_instance *instance)
+void render_debug_collision_model(
+	struct collision_model_instance const *instance)
 {
 	const struct collision_node *collision_node;
 	struct collision_bsp *collision_bsp;

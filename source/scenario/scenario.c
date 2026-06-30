@@ -176,17 +176,31 @@ symbols in this file:
 
 /* ---------- globals */
 
+struct structure_bsp *global_structure_bsp;
 struct scenario *global_scenario;
 struct bsp3d *global_bsp3d;
 
 /* ---------- public code */
 
+struct structure_bsp *global_structure_bsp_get(
+	void)
+{
+	match_assert("c:\\halo\\SOURCE\\scenario\\scenario.c", 197, global_structure_bsp);
+
+	return global_structure_bsp;
+}
+
+struct bsp3d *global_bsp3d_get(void)
+{
+	match_assert("c:\\halo\\SOURCE\\scenario\\scenario.c", 213, global_bsp3d);
+
+	return global_bsp3d;
+}
+
 long scenario_leaf_index_from_point(
 	const union real_point3d *point)
 {
-	match_assert("c:\\halo\\SOURCE\\scenario\\scenario.c", 213, global_bsp3d);
-	
-	return bsp3d_test_point(global_bsp3d, 0, point);
+	return bsp3d_test_point(global_bsp3d_get(), 0, point);
 }
 
 /* ---------- private code */

@@ -212,7 +212,8 @@ long cluster_get_next_collideable_object(
 }
 
 short object_get_next_cluster(
-	struct object_cluster_iterator *iterator)
+	struct object_cluster_iterator *iterator,
+	long object_index)
 {
 	match_assert(
 		"c:\\halo\\SOURCE\\objects\\objects.c",
@@ -792,7 +793,7 @@ long find_objects_from_point_vector(
 	long maximum_object_count,
 	long *object_indices)
 {
-	long result = 0;
+	long state = 0;
 
 	if (scenario_leaf_index_from_point(position)!=NONE)
 	{
@@ -833,11 +834,11 @@ long find_objects_from_point_vector(
 							{
 								if (object_mark_function(k))
 								{
-									result = recursive_object_adder(
+									state = recursive_object_adder(
 										k,
 										add_object_function,
 										custom_data,
-										result,
+										state,
 										maximum_object_count,
 										object_indices);
 								}
@@ -851,7 +852,7 @@ long find_objects_from_point_vector(
 		}
 	}
 
-	return result;
+	return state;
 }
 
 void objects_dump_memory(
@@ -1604,7 +1605,7 @@ boolean object_visible_to_any_player(
 {
 	struct object_header_datum *header = object_header_get(object_index);
 	struct object_datum *object = object_get(object_index);
-	boolean result = FALSE;
+	boolean visible = FALSE;
 
 	if (TEST_FLAG(header->flags, _object_header_active_bit) &&
 		TEST_FLAG(object->object.flags, _object_connected_to_map_bit) &&
@@ -1613,11 +1614,11 @@ boolean object_visible_to_any_player(
 		short cluster_index;
 		struct object_cluster_iterator iterator;
 
-		const unsigned long* combined_pvs = players_get_combined_pvs();
-		
+		const unsigned long* pvs = players_get_combined_pvs();
+
 		for (cluster_index = object_get_first_cluster(&iterator, object_index);
-			cluster_index!=NONE && !BIT_VECTOR_TEST_FLAG(combined_pvs, cluster_index);
-			cluster_index = object_get_next_cluster(&iterator))
+			cluster_index!=NONE && !BIT_VECTOR_TEST_FLAG(pvs, cluster_index);
+			cluster_index = object_get_next_cluster(&iterator, object_index))
 		{
 			;
 		}
@@ -1625,7 +1626,8 @@ boolean object_visible_to_any_player(
 		if (cluster_index!=NONE)
 		{
 			long player_index;
-			const real bounding_area = object->object.bounding_sphere_radius*object->object.bounding_sphere_radius;
+			const real radius_squared = object->object.bounding_sphere_radius*object->object.bounding_sphere_radius;
+			
 			for (player_index = data_next_index(player_data, NONE);
 				player_index!=NONE;
 				player_index = data_next_index(player_data, player_index))
@@ -1634,32 +1636,28 @@ boolean object_visible_to_any_player(
 				
 				if (player->unit_index!=NONE)
 				{
-					real_point3d position;
-					unit_get_head_position(player->unit_index, &position);
-					if (distance_squared3d(&position, &object->object.bounding_sphere_center)<bounding_area)
+					real player_distance_squared;
+					real_point3d player_position;
+
+					unit_get_head_position(player->unit_index, &player_position);
+					player_distance_squared = distance_squared3d(&player_position, &object->object.bounding_sphere_center);
+					
+					if (player_distance_squared<radius_squared)
 					{
-						result = TRUE;
+						visible = TRUE;
 						break;
 					}
 					else
 					{
-						real_vector3d head_to_bounding_sphere_vector;
-						if (
-							dot_product3d(&unit_get(player->unit_index)->unit.desired_aiming_vector, &head_to_bounding_sphere_vector)>
-							cosine(
-								(real)atan2(
-									object->object.bounding_sphere_radius,
-									normalize3d(
-										vector_from_points3d(
-											&position,
-											&object->object.bounding_sphere_center,
-											&head_to_bounding_sphere_vector)
-									)
-								) + 0.7853982f
-							)
-						)
+						real_vector3d eye_to_point;
+						
+						real const sloppy_maximum_field_of_view = DEGREES_TO_RADIANS(45);
+						struct unit_datum const *unit = unit_get(player->unit_index);
+						real distance = normalize3d(vector_from_points3d(&player_position, &object->object.bounding_sphere_center, &eye_to_point));
+
+						if (dot_product3d(&unit->unit.desired_aiming_vector, &eye_to_point) > cosine(arctangent(object->object.bounding_sphere_radius, distance) + sloppy_maximum_field_of_view))
 						{
-							result = TRUE;
+							visible = TRUE;
 							break;
 						}
 					}					
@@ -1668,7 +1666,7 @@ boolean object_visible_to_any_player(
 		}
 	}
 
-	return result;
+	return visible;
 }
 
 void object_pvs_activate(
@@ -1833,31 +1831,36 @@ short object_get_marker_by_name(
 	struct object_marker *markers,
 	short maximum_marker_count)
 {
-	struct object_datum *object = object_get(object_index);
-	struct object_definition *object_definition = object_definition_get(object->definition_index);
+	short marker;
+
+	struct object_datum const *object = object_get(object_index);
+	struct object_definition const *object_definition = object_definition_get(object->definition_index);
 	
-	short marker = model_get_marker_by_name(
-		object_definition->object.model.index,
+	real_matrix4x3 const *matrices = object_get_node_matrices(object_index);
+	long const model_index = object_definition->object.model.index;
+
+	marker = model_get_marker_by_name(
+		model_index,
 		name,
 		object->object.region_permutations,
 		FALSE,
 		NONE,
-		object_get_node_matrices(object_index),
+		matrices,
 		TEST_FLAG(object->object.flags, _object_mirrored_bit),
 		markers,
 		maximum_marker_count);
 
-	if (!marker)
+	if (marker==0)
 	{
 		match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1113, maximum_marker_count>0);
 		
-		markers->node_index = 0;
+		markers[marker].node_index = 0;
 		matrix4x3_identity(&markers->node_matrix);
-		markers->matrix = *object_get_node_matrix(object_index, 0);
+		markers[marker].matrix = *object_get_node_matrix(object_index, 0);
 
 		if (TEST_FLAG(object->object.flags, _object_mirrored_bit))
 		{
-			negate_vector3d(&markers->matrix.left, &markers->matrix.left);
+			negate_vector3d(&markers[0].matrix.left, &markers[0].matrix.left);
 		}
 
 		if (name && name[0]=='\0')
@@ -2285,74 +2288,64 @@ void object_compute_node_matrices(
 
 	if (object_definition->object.model.index!=NONE)
 	{
-		struct model *model;
 		real_matrix4x3 *object_node_matrix;
 		boolean world_relative;
-		long animation_index;
 
 		short node_count;
 		short node_index;
+		long unknown_var;
 
-		object_type_definition_get(object->object.type);
+		struct object_type_definition *object_type_definition = object_type_definition_get(object->object.type);
 		
-		model = model_definition_get(object_definition->object.model.index);
-		object_node_matrix =
-			object->object.parent_object_index!=NONE ?
-			object_get_node_matrix(object->object.parent_object_index, object->object.parent_node_index) :
-			0;
+		struct model *model = model_definition_get(object_definition->object.model.index);
+
+		if (object->object.parent_object_index==NONE)
+		{
+			object_node_matrix = NULL;
+		}
+		else
+		{
+			object_node_matrix = object_get_node_matrix(object->object.parent_object_index, object->object.parent_node_index);
+		}
 
 		world_relative = FALSE;
 
-		if (object->object.animation.animation_graph_index!=NONE)
+		if (object->object.animation.animation_graph_index!=NONE && object->object.animation.state.index!=NONE)
 		{
-			if (object->object.animation.state.index!=NONE)
+			short frame_index;
+
+			struct animation_graph *animation_graph = animation_graph_definition_get(
+				object->object.animation.animation_graph_index);
+			struct animation *animation = TAG_BLOCK_GET_ELEMENT(
+				&animation_graph->animations,
+				object->object.animation.state.index,
+				struct animation);
+
+			if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) && animation->frame_count>0)
 			{
-				short frame_index;
 
-				struct animation_graph *animation_graph = animation_graph_definition_get(
-					object->object.animation.animation_graph_index);
-				struct animation *animation = TAG_BLOCK_GET_ELEMENT(
-					&animation_graph->animations,
-					object->object.animation.state.index,
-					struct animation);
+				frame_index = OBJECT_FRAME_INDEX_GET(object_index) % (unsigned long)animation->frame_count;
 
-				if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) &&
-					0<animation->frame_count)
-				{
-					unsigned long frame_count;
-
-					frame_index = OBJECT_FRAME_INDEX_GET(object_index);
-					frame_count = (unsigned long)animation->frame_count;
-
-					frame_index %= frame_count;
-
-					match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2704, frame_index>=0)
-				}
-				else
-				{
-					frame_index = object->object.animation.state.frame_index;
-				}
-
-				animation_get_node_orientations(model, animation, frame_index, node_orientations);
-				world_relative = TEST_FLAG(animation->flags, _animation_world_relative_bit);
+				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2704, frame_index>=0)
 			}
 			else
 			{
-				model_get_node_orientations(model, node_orientations);
+				frame_index = object->object.animation.state.frame_index;
 			}
+
+			animation_get_node_orientations(model, animation, frame_index, node_orientations);
+			world_relative = TEST_FLAG(animation->flags, _animation_world_relative_bit);
 		}
 		else
 		{
 			model_get_node_orientations(model, node_orientations);
 		}
 
-		animation_index = object_definition->object.animation_graph.index;
-
-		if (animation_index!=NONE)
+		if (object_definition->object.animation_graph.index!=NONE)
 		{
 			short overlay_index;
 
-			struct animation_graph *animation_graph= animation_graph_definition_get(animation_index);
+			struct animation_graph *animation_graph= animation_graph_definition_get(object_definition->object.animation_graph.index);
 			
 			for (overlay_index = 0; overlay_index<animation_graph->object_overlays.count; ++overlay_index)
 			{
@@ -2361,7 +2354,8 @@ void object_compute_node_matrices(
 					overlay_index,
 					struct animation_graph_object_overlay);
 
-				if (overlay->animation_index!=NONE && overlay->function_index<object_definition->object.functions.count)
+				if (overlay->animation_index!=NONE &&
+					overlay->function_index<object_definition->object.functions.count)
 				{
 					struct object_function_definition* function = TAG_BLOCK_GET_ELEMENT(
 						&object_definition->object.functions,
@@ -2369,7 +2363,7 @@ void object_compute_node_matrices(
 						struct object_function_definition);
 					struct animation *animation = TAG_BLOCK_GET_ELEMENT(
 						&animation_graph->animations,
-						object->object.animation.state.index,
+						overlay->animation_index,
 						struct animation);
 					real value= object->object.outgoing_function_values[overlay->function_index];
 
@@ -2389,7 +2383,7 @@ void object_compute_node_matrices(
 					}
 					else if (overlay->mode==_object_overlay_mode_scale)
 					{
-						short frame_index = OBJECT_FRAME_INDEX_GET(object_index) % animation->frame_count;
+						short frame_index = OBJECT_FRAME_INDEX_GET(object_index) % (unsigned long)animation->frame_count;
 
 						overlay_animation_apply_scaled(
 							animation,
@@ -2404,10 +2398,10 @@ void object_compute_node_matrices(
 		// Scale the object orientations
 		if (object->object.scale>0.f)
 		{
-			node_orientations->scale*= object->object.scale;
-			node_orientations->translation.x*= object->object.scale;
-			node_orientations->translation.y*= object->object.scale;
-			node_orientations->translation.z*= object->object.scale;
+			node_orientations[0].scale*= object->object.scale;
+			node_orientations[0].translation.x*= object->object.scale;
+			node_orientations[0].translation.y*= object->object.scale;
+			node_orientations[0].translation.z*= object->object.scale;
 		}
 
 
@@ -2418,10 +2412,7 @@ void object_compute_node_matrices(
 
 		if (object->object.animation.interpolation_frame_count>0)
 		{
-			match_assert(
-				"c:\\halo\\SOURCE\\objects\\objects.c",
-				2777,
-				!TEST_FLAG(_object_mask_cannot_interpolate, object->object.type));
+			match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2777, !TEST_FLAG(_object_mask_cannot_interpolate, object->object.type));
 
 			interpolate_node_orientations(
 				model->nodes.count,
@@ -2465,11 +2456,12 @@ void object_compute_node_matrices(
 
 		node_index = 0;
 		node_count = 1;
+		unknown_var = 0;
 		node_stack[0] = 0;
 
 		while (node_index!=node_count)
 		{
-			short node_stack_index = node_stack[node_index];
+			short node_stack_index = node_stack[node_index++];
 			struct model_node *node = TAG_BLOCK_GET_ELEMENT(&model->nodes, node_stack_index, struct model_node);
 			
 			if (node_stack_index==0)
@@ -2528,118 +2520,119 @@ void object_compute_node_matrices(
 							2871,
 							object_node_matrix,
 							csprintf(
-							temporary,
-							"%s as parent node of %s",
-							tag_get_name(object_get(object->object.parent_object_index)->definition_index),
-							tag_get_name(object->definition_index)));
+								temporary,
+								"%s as parent node of %s",
+								tag_get_name(object_get(object->object.parent_object_index)->definition_index),
+								tag_get_name(object->definition_index)));
 
 
-						matrix4x3_multiply(object_node_matrix, &object_translation_matrix, &object_nodes[0]);
-						matrix4x3_multiply(&object_nodes[0], &object_rotation_matrix, &object_nodes[0]);
-						matrix4x3_multiply(&object_nodes[0], &node_matrix, &object_nodes[0]);
+						matrix4x3_multiply(object_node_matrix, &object_translation_matrix, &object_nodes[node_stack_index]);
+						matrix4x3_multiply(&object_nodes[node_stack_index], &object_rotation_matrix, &object_nodes[node_stack_index]);
+						matrix4x3_multiply(&object_nodes[node_stack_index], &node_matrix, &object_nodes[node_stack_index]);
 					}
 					else
 					{
-						matrix4x3_multiply(&object_translation_matrix, &object_rotation_matrix, &object_nodes[0]);
-						matrix4x3_multiply(&object_nodes[0], &node_matrix, &object_nodes[0]);
-					}
-
-					if (!valid_real_matrix4x3(&object_nodes[node_stack_index]))
-					{
-						error(_error_silent, "object_compute_node_matrices FAILURE on root node of %s", tag_get_name(object->definition_index));
-						error(
-							_error_silent,
-							"  object: pos %f %f %f, fwd %f %f %f, up %f %f %f",
-							object->object.position.x,
-							object->object.position.y,
-							object->object.position.z,
-							object->object.forward.i,
-							object->object.forward.j,
-							object->object.forward.k,
-							object->object.up.i,
-							object->object.up.j,
-							object->object.up.k);
-
-						if (object_definition->object.physics.index!=NONE)
-						{
-							struct physics_definition *physics_definition= physics_definition_get(object_definition->object.physics.index);
-							error(
-								_error_silent,
-								"  center-of-mass translation %f %f %f",
-								-physics_definition->center_of_mass.x,
-								-physics_definition->center_of_mass.y,
-								-physics_definition->center_of_mass.z);
-						}
-						error(
-							_error_silent,
-							"  origin-offset %f %f %f",
-							object_definition->object.origin_offset.x,
-							object_definition->object.origin_offset.y,
-							object_definition->object.origin_offset.z);
-
-						if (object_node_matrix)
-						{
-							error(
-							  _error_silent,
-							  "  parent-node matrix fwd  %f %f %f",
-							  object_node_matrix->forward.i,
-							  object_node_matrix->forward.j,
-							  object_node_matrix->forward.k);
-							error(
-							  _error_silent,
-							  "                     left %f %f %f",
-							  object_node_matrix->left.i,
-							  object_node_matrix->left.j,
-							  object_node_matrix->left.k);
-							error(
-							  _error_silent,
-							  "                     up   %f %f %f",
-							  object_node_matrix->up.i,
-							  object_node_matrix->up.j,
-							  object_node_matrix->up.k);
-							error(
-							  _error_silent,
-							  "                     posn %f %f %f",
-							  object_node_matrix->position.x,
-							  object_node_matrix->position.y,
-							  object_node_matrix->position.z);
-							error(_error_silent, "                     scale (jason's ugly secret) %f", object_node_matrix->scale);
-						}
-						else
-						{
-							error(_error_silent, "  no parent node");
-						}
-
-						error(_error_silent, "");
-						error(
-							_error_silent,
-							"computed matrix fwd  %f %f %f",
-							object_nodes[node_stack_index].forward.i,
-							object_nodes[node_stack_index].forward.j,
-							object_nodes[node_stack_index].forward.k);
-						error(
-							_error_silent,
-							"                left %f %f %f",
-							object_nodes[node_stack_index].left.i,
-							object_nodes[node_stack_index].left.j,
-							object_nodes[node_stack_index].left.k);
-						error(
-							_error_silent,
-							"                up   %f %f %f",
-							object_nodes[node_stack_index].up.i,
-							object_nodes[node_stack_index].up.j,
-							object_nodes[node_stack_index].up.k);
-						error(_error_silent, "                posn %f %f %f",
-							object_nodes[node_stack_index].position.x,
-							object_nodes[node_stack_index].position.y,
-							object_nodes[node_stack_index].position.z);
-						error(_error_silent, "                scale %f", object_nodes[node_stack_index].scale);
+						matrix4x3_multiply(&object_translation_matrix, &object_rotation_matrix, &object_nodes[node_stack_index]);
+						matrix4x3_multiply(&object_nodes[node_stack_index], &node_matrix, &object_nodes[node_stack_index]);
 					}
 				}
 				else
 				{
 					object_nodes[node_stack_index] = node_matrix;
 				}
+
+				if (!valid_real_matrix4x3(&object_nodes[node_stack_index]))
+				{
+					error(_error_silent, "object_compute_node_matrices FAILURE on root node of %s", tag_get_name(object->definition_index));
+					error(
+						_error_silent,
+						"  object: pos %f %f %f, fwd %f %f %f, up %f %f %f",
+						object->object.position.x,
+						object->object.position.y,
+						object->object.position.z,
+						object->object.forward.i,
+						object->object.forward.j,
+						object->object.forward.k,
+						object->object.up.i,
+						object->object.up.j,
+						object->object.up.k);
+
+					if (object_definition->object.physics.index!=NONE)
+					{
+						struct physics_definition *physics_definition= physics_definition_get(object_definition->object.physics.index);
+						error(
+							_error_silent,
+							"  center-of-mass translation %f %f %f",
+							-physics_definition->center_of_mass.x,
+							-physics_definition->center_of_mass.y,
+							-physics_definition->center_of_mass.z);
+					}
+					error(
+						_error_silent,
+						"  origin-offset %f %f %f",
+						object_definition->object.origin_offset.x,
+						object_definition->object.origin_offset.y,
+						object_definition->object.origin_offset.z);
+
+					if (object_node_matrix)
+					{
+						error(
+							_error_silent,
+							"  parent-node matrix fwd  %f %f %f",
+							object_node_matrix->forward.i,
+							object_node_matrix->forward.j,
+							object_node_matrix->forward.k);
+						error(
+							_error_silent,
+							"                     left %f %f %f",
+							object_node_matrix->left.i,
+							object_node_matrix->left.j,
+							object_node_matrix->left.k);
+						error(
+							_error_silent,
+							"                     up   %f %f %f",
+							object_node_matrix->up.i,
+							object_node_matrix->up.j,
+							object_node_matrix->up.k);
+						error(
+							_error_silent,
+							"                     posn %f %f %f",
+							object_node_matrix->position.x,
+							object_node_matrix->position.y,
+							object_node_matrix->position.z);
+						error(_error_silent, "                     scale (jason's ugly secret) %f", object_node_matrix->scale);
+					}
+					else
+					{
+						error(_error_silent, "  no parent node");
+					}
+
+					error(_error_silent, "");
+					error(
+						_error_silent,
+						"computed matrix fwd  %f %f %f",
+						object_nodes[node_stack_index].forward.i,
+						object_nodes[node_stack_index].forward.j,
+						object_nodes[node_stack_index].forward.k);
+					error(
+						_error_silent,
+						"                left %f %f %f",
+						object_nodes[node_stack_index].left.i,
+						object_nodes[node_stack_index].left.j,
+						object_nodes[node_stack_index].left.k);
+					error(
+						_error_silent,
+						"                up   %f %f %f",
+						object_nodes[node_stack_index].up.i,
+						object_nodes[node_stack_index].up.j,
+						object_nodes[node_stack_index].up.k);
+					error(_error_silent, "                posn %f %f %f",
+						object_nodes[node_stack_index].position.x,
+						object_nodes[node_stack_index].position.y,
+						object_nodes[node_stack_index].position.z);
+					error(_error_silent, "                scale %f", object_nodes[node_stack_index].scale);
+				}
+				
 
 				match_assert_valid_real_matrix4x3_custom_string(
 					"c:\\halo\\SOURCE\\objects\\objects.c",
@@ -2649,27 +2642,27 @@ void object_compute_node_matrices(
 			}
 			else
 			{
-				matrix4x3_from_orientation(&object_nodes[node_stack_index], &node_orientations[node_stack_index]);
+				real_matrix4x3 *matrix = &object_nodes[node_stack_index];
+				real_orientation *orientation = &node_orientations[node_stack_index];
+
+				matrix4x3_from_orientation(matrix, orientation);
 				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2929, node->parent_node_index!=NONE);
-				matrix4x3_multiply(&object_nodes[node->parent_node_index], &object_nodes[node_stack_index], &object_nodes[node_stack_index]);
+				matrix4x3_multiply(&object_nodes[node->parent_node_index], matrix, matrix);
 			}
 
-			if (node_stack_index==0)
-			{
-				match_assert_valid_real_matrix4x3_custom_string(
-					"c:\\halo\\SOURCE\\objects\\objects.c",
-					2935,
-					&object_nodes[node_stack_index],
-					tag_get_name(object->definition_index));
+			match_assert_valid_real_matrix4x3_custom_string(
+				"c:\\halo\\SOURCE\\objects\\objects.c",
+				2935,
+				&object_nodes[node_stack_index],
+				tag_get_name(object->definition_index));
 
-				if (node->first_child_node_index!=NONE)
-				{
-					node_stack[node_count++] = node->first_child_node_index;
-				}
-				if (node->first_child_node_index!=NONE)
-				{
-					node_stack[node_count++] = node->first_child_node_index;
-				}
+			if (node->next_sibling_node_index!=NONE)
+			{
+				node_stack[node_count++] = node->next_sibling_node_index;
+			}
+			if (node->first_child_node_index!=NONE)
+			{
+				node_stack[node_count++] = node->first_child_node_index;
 			}
 		}
 	}
@@ -3149,7 +3142,6 @@ long object_new(
 	long object_index = NONE;
 	long definition_index = data->definition_index;
 
-
 	match_assert_valid_real_point3d("c:\\halo\\SOURCE\\objects\\objects.c", 618, &data->position)
 	match_assert_valid_real_vector3d_axes2("c:\\halo\\SOURCE\\objects\\objects.c", 619, &data->forward, &data->up);
 	match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\objects\\objects.c", 620, &data->angular_velocity);
@@ -3171,14 +3163,14 @@ long object_new(
 		{
 			short node_count;
 
-			struct object_header_datum *header = object_header_get(object_index);
+			struct object_header_datum *object_header = object_header_get(object_index);
 			struct object_datum *object = object_get(object_index);
-			boolean can_create_object = TRUE;
+			boolean success = TRUE;
 
-			SET_FLAG(header->flags, _object_header_being_created_bit, TRUE);
-			SET_FLAG(header->flags, _object_header_automatically_deactivate_bit, TRUE);
+			SET_FLAG(object_header->flags, _object_header_being_created_bit, TRUE);
+			SET_FLAG(object_header->flags, _object_header_automatically_deactivate_bit, TRUE);
 
-			header->type = object_definition->object.type;
+			object_header->type = object_definition->object.type;
 			object->definition_index = definition_index;
 			object->object.type = object_definition->object.type;
 			
@@ -3199,7 +3191,7 @@ long object_new(
 			SET_FLAG(object->object.flags, _object_mirrored_bit, TEST_FLAG(data->flags, _new_object_mirrored_bit));
 
 			object->object.location.cluster_index = NONE;
-			header->cluster_index = NONE;
+			object_header->cluster_index = NONE;
 
 			object->object.magic_number = global_object_marker-1;
 			object->object.umbrella_shield_object_index = NONE;
@@ -3257,18 +3249,18 @@ long object_new(
 					)
 				)
 				{
-					can_create_object = FALSE;
+					success = FALSE;
 				}
 			}
 			else	
 			{
-				can_create_object = FALSE;
+				success = FALSE;
 			}
 
 			// Get the object, we do this so we can verify that we're able to retrieve it in the future
 			object = object_get(object_index);
 
-			if (can_create_object && object_type_new(object_index))
+			if (success && object_type_new(object_index))
 			{
 				boolean original_deleted_when_deactivated = TEST_FLAG(object->object.flags, _object_deleted_when_deactivated_bit);
 
@@ -3293,7 +3285,7 @@ long object_new(
 				// Restore value
 				SET_FLAG(object->object.flags, _object_deleted_when_deactivated_bit, original_deleted_when_deactivated);
 
-				if (!TEST_FLAG(header->flags, _object_header_active_bit) &&
+				if (!TEST_FLAG(object_header->flags, _object_header_active_bit) &&
 					TEST_FLAG(object->object.flags, _object_deleted_when_deactivated_bit))
 				{
 					if (TEST_FLAG(data->flags, _new_object_never_automatically_delete_bit))
@@ -3311,10 +3303,10 @@ long object_new(
 			}
 			else
 			{
-				can_create_object = FALSE;
+				success = FALSE;
 			}
 
-			if (can_create_object)
+			if (success)
 			{
 				if (object_definition->object.creation_effect.index!=NONE)
 				{
@@ -4254,6 +4246,7 @@ static long recursive_object_adder(
 				object_indices);
 		}
 	}
+
 	return object_count;
 }
 

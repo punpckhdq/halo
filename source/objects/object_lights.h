@@ -24,6 +24,9 @@ boolean lights_enable(boolean enable);
 long light_new(long definition_index, long object_index, short object_attachment_index, short object_function_index, short object_change_color_index);
 void light_delete(long light_index);
 
+real object_get_self_illumination(long object_index);
+void lights_illumination_at_point(union real_point3d const *point, struct location const *location, union real_rgb_color *color);
+
 void light_disconnect_from_map(long light_index);
 void light_reconnect_to_map(long light_index);
 

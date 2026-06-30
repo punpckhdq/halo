@@ -81,6 +81,10 @@ struct player_datum
 	struct player_action action_input;
 };
 
+/* ---------- prototypes/PLAYER_CONTROL.C */
+
+void player_control_unzoom(long unit_index);
+
 /* ---------- prototypes/PLAYERS.C */
 
 long player_index_from_unit_index(long unit_index);

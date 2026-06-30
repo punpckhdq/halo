@@ -38,6 +38,15 @@ enum
 
 enum
 {
+	_animation_base = 0,
+	_animation_overlay,
+	_animation_replacement,
+	NUMBER_OF_ANIMATION_TYPES,
+};
+
+
+enum
+{
 	_object_overlay_mode_frame = 0,
 	_object_overlay_mode_scale,
 	NUMBER_OF_OBJECT_OVERLAY_MODES,
@@ -47,6 +56,8 @@ enum
 /* ---------- macros */
 
 #define animation_graph_definition_get(index) ((struct animation_graph *)tag_get(ANIMATION_GRAPH_TAG, index))
+
+#define animation_graph_animation_index_get(block)	((struct animation_graph_animation_index *)((block)->address))
 
 /* ---------- structures */
 
@@ -92,10 +103,62 @@ struct animation_graph_object_overlay
 	long unused[3];
 };
 
+struct animation_aiming_screen_bounds
+{
+	real negative_yaw_delta;
+	real positive_yaw_delta;
+	short negative_yaw_frame_count;
+	short positive_yaw_frame_count;
+	real negative_pitch_delta;
+	real positive_pitch_delta;
+	short negative_pitch_frame_count;
+	short positive_pitch_frame_count;
+};
+
+struct animation_graph_animation_index
+{
+	short animation_index;
+};
+
+struct animation_graph_ik_point
+{
+	char marker_name[TAG_STRING_LENGTH+1];
+	char attached_to_marker_name[TAG_STRING_LENGTH+1];
+};
+
+struct animation_graph_weapon_type
+{
+	char label[TAG_STRING_LENGTH+1];
+	long unused[4];
+	struct tag_block animations;
+};
+
+struct animation_graph_weapon_class
+{
+	char label[TAG_STRING_LENGTH+1];
+	char grip_marker_name[TAG_STRING_LENGTH+1];
+	char hand_marker_name[TAG_STRING_LENGTH+1];
+	struct animation_aiming_screen_bounds aiming_screen_bounds;
+	long unused[8];
+	struct tag_block animations;		// animation_graph_animation_index
+	struct tag_block ik_points;			// animation_graph_ik_point
+	struct tag_block weapon_types;		// animation_graph_weapon_type
+};
+
+struct animation_graph_unit_seat
+{
+	char label[TAG_STRING_LENGTH+1];
+	struct animation_aiming_screen_bounds looking_screen_bounds;
+	long unused[2];
+	struct tag_block animations;		// animation_graph_animation_index
+	struct tag_block ik_points;			// animation_graph_ik_point
+	struct tag_block weapon_classes;	// animation_graph_weapon_class
+};
+
 struct animation_graph
 {
 	struct tag_block object_overlays;		// animation_graph_object_overlay
-	struct tag_block unit_seats;
+	struct tag_block unit_seats;			// animation_graph_unit_seat
 	struct tag_block weapon_animations;
 	struct tag_block vehicle_animations;
 	struct tag_block device_animations;
@@ -106,7 +169,19 @@ struct animation_graph
 	word flags;
 	word pad;
 	struct tag_block nodes;
-	struct tag_block animations;						// animation
+	struct tag_block animations;			// animation
+};
+
+struct animation_list_entry
+{
+	char *name;
+	short type;
+};
+
+struct animation_list
+{
+	short count;
+	struct animation_list_entry *animations;
 };
 
 /* ---------- prototypes/MODEL_ANIMATION_DEFINITIONS.C */
@@ -151,6 +226,8 @@ void interpolate_node_orientations(
 
 
 /* ---------- globals */
+
+extern struct animation_list unit_seat_animation_list;
 
 /* ---------- public code */
 

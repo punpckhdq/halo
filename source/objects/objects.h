@@ -352,7 +352,7 @@ long cluster_get_first_noncollideable_object(long *reference_index, short cluste
 long cluster_get_next_noncollideable_object(long *reference_index);
 long cluster_get_first_collideable_object(long *reference_index, short cluster_index);
 long cluster_get_next_collideable_object(long *reference_index);
-short object_get_next_cluster(struct object_cluster_iterator *iterator);
+short object_get_next_cluster(struct object_cluster_iterator *iterator, long object_index);
 void *object_try_and_get_and_verify_type(long object_index, unsigned long valid_type_flags);
 void *object_get_and_verify_type(long object_index, unsigned long valid_type_flags);
 void object_iterator_new(struct object_iterator *iterator, unsigned long type_flags, byte flags);

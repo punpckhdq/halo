@@ -44,7 +44,10 @@ struct item_datum
 	struct _item_datum item;
 };
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/ITEMS.C */
+
+void item_in_unit_inventory(long item_index, long owner_unit_index);
+void item_accelerate(long item_index, real_vector3d const *acceleration, boolean detonates_explosives);
 
 /* ---------- globals */
 

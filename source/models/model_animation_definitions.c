@@ -275,6 +275,42 @@ symbols in this file:
 
 /* ---------- globals */
 
+static struct animation_list_entry unit_seat_animation_list_entries[] =
+{
+	{ "airborne-dead", _animation_base },
+	{ "landing-dead", _animation_base },
+	{ "acc-front-back", _animation_overlay },
+	{ "acc-left-right", _animation_overlay },
+	{ "acc-up-down", _animation_overlay },
+	{ "push", _animation_overlay },
+	{ "twist", _animation_overlay },
+	{ "enter", _animation_base },
+	{ "exit", _animation_base },
+	{ "look", _animation_overlay },
+	{ "talk", _animation_overlay },
+	{ "emotions", NONE },
+	{ "unused", NONE },
+	{ "user0", NONE },
+	{ "user1", NONE },
+	{ "user2", NONE },
+	{ "user3", NONE },
+	{ "user4", NONE },
+	{ "user5", NONE },
+	{ "user6", NONE },
+	{ "user7", NONE },
+	{ "user8", NONE },
+	{ "user9", NONE },
+	{ "flying-front", _animation_base },
+	{ "flying-back", _animation_base },
+	{ "flying-left", _animation_base },
+	{ "flying-right", _animation_base },
+	{ "opening", _animation_base },
+	{ "closing", _animation_base },
+	{ "hovering", _animation_base }
+};
+
+struct animation_list unit_seat_animation_list = {NUMBEROF(unit_seat_animation_list_entries), unit_seat_animation_list_entries };
+
 /* ---------- public code */
 
 /* ---------- private code */

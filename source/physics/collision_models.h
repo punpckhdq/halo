@@ -26,7 +26,40 @@ struct collision_model_instance
 
 boolean collision_model_instance_new(struct collision_model_instance *instance, long object_index);
 
-void render_debug_collision_model(struct collision_model_instance *instance);
+
+
+boolean collision_model_test_sphere(
+	struct collision_model_instance const *instance,
+	real_point3d const *center,
+	real radius);
+
+boolean collision_model_test_point(
+	struct collision_model_instance const *instance,
+	real_point3d const *point);
+
+boolean collision_model_test_vector(
+		struct collision_model_instance const *instance,
+		unsigned long flags,
+		real_point3d const *point,
+		real_vector3d const *vector,
+		struct collision_model_test_vector_result *result);
+
+boolean collision_model_test_pill(
+		struct collision_model_instance const *instance,
+		real_point3d const *point,
+		real_vector3d const *vector,
+		real radius,
+		struct collision_model_test_pill_result *result);
+
+boolean collision_model_get_features_in_sphere(
+		const struct collision_model_instance *instance,
+		const union real_point3d *center,
+		real radius,
+		real height,
+		real width,
+		struct collision_feature_list *features);
+
+void render_debug_collision_model(struct collision_model_instance const *instance);
 
 /* ---------- globals */
 

@@ -59,7 +59,7 @@ enum
 
 /* ---------- macros */
 
-#define object_definition_get(index) ((struct object_definition *)tag_get(OBJECT_DEFINITION_TAG, index))
+#define object_definition_get(index) ((struct object_definition *)tag_get(OBJECT_DEFINITION_TAG, (index)))
 
 /* ---------- structures */
 

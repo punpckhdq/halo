@@ -8,6 +8,10 @@ header included in hcex build.
 #define __GAME_H
 #pragma once
 
+/* ---------- headers */
+
+#include "real_math.h"
+
 /* ---------- constants */
 
 enum

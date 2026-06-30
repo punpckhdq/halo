@@ -8,6 +8,10 @@ header included in hcex build.
 #define __GAME_GLOBALS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "math/integer_math.h"
+
 /* ---------- constants */
 
 /* referenced in game_globals.c? */
@@ -123,6 +127,19 @@ struct game_globals_player_information
 	long unused2[11];
 };
 
+struct game_globals_first_person_interface
+{
+	struct tag_reference hands;
+	struct tag_reference hud_base;
+	struct tag_reference hud_shield_meter;
+	point2d hud_shield_meter_origin;
+	struct tag_reference hud_body_meter;
+	point2d hud_body_meter_origin;
+	struct tag_reference night_vision_off_on_effect;
+	struct tag_reference night_vision_on_off_effect;
+	unsigned long unused[22];
+};
+
 struct game_globals
 {
 	unsigned long flags;
@@ -138,7 +155,7 @@ struct game_globals
 	struct tag_block cheat_powerups;
 	struct tag_block multiplayer_information;
 	struct tag_block player_information;		// game_globals_player_information
-	struct tag_block first_person_interface;
+	struct tag_block first_person_interface;	// game_globals_first_person_interface
 	struct tag_block falling_damage;
 	struct tag_block materials;
 	struct tag_block playlist;

@@ -223,7 +223,7 @@ if (!valid_real_matrix4x3(matrix))														\
 #define match_assert_valid_real_matrix4x3_custom_string(file, line, matrix, custom_string)	\
 if (!valid_real_matrix4x3(matrix))															\
 {																							\
-	char* string = custom_string;															\
+	char const* string = (custom_string);													\
 	match_assert_valid_real_matrix4x3_internal(file, line, matrix, string);					\
 }
 
@@ -838,9 +838,9 @@ __inline real_point3d *point_from_line3d(
 	real t,
 	real_point3d *result)
 {
-	result->x = (t*v->i) + p->x;
-	result->y = (t*v->j) + p->y;
-	result->z = (t*v->k) + p->z;
+	result->x = (v->i*t) + p->x;
+	result->y = (v->j*t) + p->y;
+	result->z = (v->k*t) + p->z;
 	return result;
 }
 
@@ -1364,8 +1364,8 @@ __inline boolean valid_realcmp(
 	real a,
 	real b)
 {
-	real result = a - b;
-	return valid_real(result) && fabs(result) < 0.001f;
+	real y = a - b;
+	return valid_real(y) && fabs(y) < 0.001f;
 }
 
 __inline boolean valid_real_point2d(
@@ -1447,24 +1447,14 @@ __inline real_rectangle3d *dequantize_byte_to_real_rectangle3d(
 }
 */
 
-// TODO: this is wrong, maybe uses PIN macro?
 __inline void interpolate_scalar(
 	real *current, 
 	real desired,
 	real maximum_speed)
 {
-	real v3 = desired - *current;
-	if (v3 >= -maximum_speed)
-	{
-		if (v3 <= maximum_speed)
-			*current = *current + (desired - *current);
-		else
-			*current = *current + maximum_speed;
-	}
-	else
-	{
-		*current = *current + -maximum_speed;
-	}
+	real difference = desired - *current;
+	*current += PIN(difference, -maximum_speed, maximum_speed);
+	return;
 }
 
 #endif // __REAL_MATH_H

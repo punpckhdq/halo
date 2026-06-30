@@ -12,6 +12,7 @@ header included in hcex build.
 
 #include "item_definitions.h"
 
+#include "math/integer_math.h"
 #include "game/aim_assist.h"
 
 /* ---------- constants */
@@ -55,6 +56,86 @@ struct weapon_interface_definition
 	struct tag_reference first_person_animations;
 	long unused[1];
 	struct tag_reference hud_interface;
+};
+
+struct weapon_magazine_interface_definition
+{
+	long unused[2];
+	rectangle2d unused_rectangles[2];
+};
+
+struct weapon_magazine_definition
+{
+	unsigned long flags;
+	short rounds_recharged_per_second;
+	short rounds_total_initial;
+	short rounds_total_maximum;
+	short rounds_loaded_maximum;
+	short rounds_unused[4];
+	real reload_time;
+	short rounds_reloaded;
+	word pad;
+	real chamber_time;
+	struct weapon_magazine_interface_definition interface_definition;
+	struct tag_reference reloading_effect;
+	struct tag_reference chambering_effect;
+	long unused[3];
+	struct tag_block ammunition_objects;
+};
+
+struct weapon_trigger_definition
+{
+	unsigned long flags;
+	real initial_rate_of_fire;
+	real final_rate_of_fire;
+	real rate_of_fire_acceleration_time;
+	real rate_of_fire_deceleration_time;
+	real blurred_rate_of_fire;
+	real rate_of_fire_unused[2];
+	short magazine_index;
+	short rounds_per_shot;
+	short minimum_rounds_loaded_per_shot;
+	short rounds_between_tracers;
+	short ammunition_unused[3];
+	short firing_noise;
+	real initial_error;
+	real final_error;
+	real error_acceleration_time;
+	real error_deceleration_time;
+	real error_unused[2];
+	real charging_time;
+	real charged_time;
+	short overcharged_action;
+	word pad;
+	real charged_illumination;
+	real spew_time;
+	struct tag_reference charging_effect;
+	short projectile_distribution_function;
+	short projectiles_per_shot;
+	real projectile_distribution_angle;
+	real projectile_unused0[1];
+	real projectile_error_inner_cone_angle;
+	real projectile_error_angle_lower_bound;
+	real projectile_error_angle_upper_bound;
+	real_point3d first_person_weapon_offset;
+	real projectile_unused1[1];
+	struct tag_reference projectile;
+	real ejection_port_recovery_time;
+	real illumination_recovery_time;
+	real ejection_port_unused[3];
+	real heat_generated_per_round;
+	real age_generated_per_round;
+	real heat_unused[1];
+	real overloading_time;
+	long overloading_unused[2];
+	long unused[8];
+	real runtime_illumination_recovery_time;
+	real runtime_ejection_port_recovery_time;
+	real runtime_rate_of_fire_acceleration_time;
+	real runtime_rate_of_fire_deceleration_time;
+	real runtime_error_acceleration_time;
+	real runtime_error_deceleration_time;
+	struct tag_block firing_effects;
 };
 
 struct _weapon_definition
@@ -115,8 +196,8 @@ struct _weapon_definition
 	short unused5;
 	short weapon_type;
 	struct tag_block predicted_resources;
-	struct tag_block magazines;
-	struct tag_block triggers;
+	struct tag_block magazines;				// weapon_magazine_definition
+	struct tag_block triggers;				// weapon_trigger_definition
 };
 
 struct weapon_definition

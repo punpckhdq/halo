@@ -75,6 +75,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "units.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

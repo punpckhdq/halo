@@ -1,7 +1,5 @@
 /*
 UNITS.H
-
-header included in hcex build.
 */
 
 #ifndef __UNITS_H
@@ -147,6 +145,16 @@ enum
 
 enum
 {
+	_unit_animation_postpone_weapon_ik_until_interpolation_ends_bit = 0,
+	_unit_animation_showing_acceleration_bit,
+	_unit_animation_ignore_translation_bit,
+	_unit_animation_fallen_on_front_bit,
+	NUMBER_OF_UNIT_ANIMATION_FLAGS,
+};
+
+
+enum
+{
 	_unit_animation_state_asleep = 0,
 	_unit_animation_state_alert,
 	_unit_animation_state_suspicious,
@@ -155,6 +163,101 @@ enum
 	_unit_animation_state_flee,
 	_unit_animation_state_flaming,
 	NUMBER_OF_UNIT_ANIMATION_STATES,
+};
+
+enum
+{
+	_unit_seat_animation_airborne_dead = 0,
+	_unit_seat_animation_landing_dead,
+	_unit_seat_animation_acceleration_front_back,
+	_unit_seat_animation_acceleration_left_right,
+	_unit_seat_animation_acceleration_up_down,
+	_unit_seat_animation_push_impact,
+	_unit_seat_animation_twist_impact,
+	_unit_seat_animation_seat_enter,
+	_unit_seat_animation_seat_exit,
+	_unit_seat_animation_looking,
+	_unit_seat_animation_mouth_aperture,
+	_unit_seat_animation_emotions,
+	_unit_seat_animation_unused3,
+	_unit_seat_animation_user0,
+	_unit_seat_animation_user1,
+	_unit_seat_animation_user2,
+	_unit_seat_animation_user3,
+	_unit_seat_animation_user4,
+	_unit_seat_animation_user5,
+	_unit_seat_animation_user6,
+	_unit_seat_animation_user7,
+	_unit_seat_animation_user8,
+	_unit_seat_animation_user9,
+	_unit_seat_animation_flying_front,
+	_unit_seat_animation_flying_back,
+	_unit_seat_animation_flying_left,
+	_unit_seat_animation_flying_right,
+	_unit_seat_animation_opening,
+	_unit_seat_animation_closing,
+	_unit_seat_animation_hovering,
+	NUMBER_OF_UNIT_SEAT_ANIMATIONS,
+};
+
+enum
+{
+	_unit_weapon_class_animation_idle = 0,
+	_unit_weapon_class_animation_gesture,
+	_unit_weapon_class_animation_turning_left,
+	_unit_weapon_class_animation_turning_right,
+	_unit_weapon_class_animation_diving_front,
+	_unit_weapon_class_animation_diving_back,
+	_unit_weapon_class_animation_diving_left,
+	_unit_weapon_class_animation_diving_right,
+	_unit_weapon_class_animation_moving_front,
+	_unit_weapon_class_animation_moving_back,
+	_unit_weapon_class_animation_moving_left,
+	_unit_weapon_class_animation_moving_right,
+	_unit_weapon_class_animation_sliding_front,
+	_unit_weapon_class_animation_sliding_back,
+	_unit_weapon_class_animation_sliding_left,
+	_unit_weapon_class_animation_sliding_right,
+	_unit_weapon_class_animation_airborne,
+	_unit_weapon_class_animation_land_soft,
+	_unit_weapon_class_animation_land_hard,
+	_unit_weapon_class_animation_land_mine,
+	_unit_weapon_class_animation_throw_grenade,
+	_unit_weapon_class_animation_disarm,
+	_unit_weapon_class_animation_drop,
+	_unit_weapon_class_animation_ready,
+	_unit_weapon_class_animation_put_away,
+	_unit_weapon_class_animation_aiming_still,
+	_unit_weapon_class_animation_aiming_moving,
+	_unit_weapon_class_animation_surprise_front,
+	_unit_weapon_class_animation_surprise_back,
+	_unit_weapon_class_animation_berserk,
+	_unit_weapon_class_animation_evade_left,
+	_unit_weapon_class_animation_evade_right,
+	_unit_weapon_class_animation_signal_move,
+	_unit_weapon_class_animation_signal_attack,
+	_unit_weapon_class_animation_signal_warn,
+	_unit_weapon_class_animation_moving_wounded_front,
+	_unit_weapon_class_animation_moving_wounded_back,
+	_unit_weapon_class_animation_moving_wounded_left,
+	_unit_weapon_class_animation_moving_wounded_right,
+	_unit_weapon_class_animation_melee_attack,
+	_unit_weapon_class_animation_celebrate,
+	_unit_weapon_class_animation_panic,
+	_unit_weapon_class_animation_melee_airborne,
+	_unit_weapon_class_animation_flaming,
+	_unit_weapon_class_animation_resurrect_front,
+	_unit_weapon_class_animation_resurrect_back,
+	_unit_weapon_class_animation_melee_continuous,
+	_unit_weapon_class_animation_feeding,
+	_unit_weapon_class_animation_leap_start,
+	_unit_weapon_class_animation_leap_airborne,
+	_unit_weapon_class_animation_leap_melee,
+	_unit_weapon_class_animation_zapping,
+	_unit_weapon_class_animation_unused11,
+	_unit_weapon_class_animation_unused12,
+	_unit_weapon_class_animation_unused13,
+	NUMBER_OF_UNIT_WEAPON_CLASS_ANIMATIONS,
 };
 
 
@@ -185,6 +288,34 @@ enum
 	_unit_grenade_throw_in_hand,
 	_unit_grenade_throw_ending,
 	NUMBER_OF_UNIT_GRENADE_ATTACK_STATES,
+};
+
+enum
+{
+	_unit_base_seat_asleep = 0,
+	_unit_base_seat_alert,
+	_unit_base_seat_stand,
+	_unit_base_seat_crouch,
+	_unit_base_seat_flee,
+	_unit_base_seat_flaming,
+	NUMBER_OF_UNIT_BASE_SEATS,
+};
+
+enum
+{
+	_unit_base_weapon_none = 0,
+	NUMBER_OF_UNIT_BASE_WEAPONS,
+};
+
+enum
+{
+	_unit_scream_falling = 0,
+	_unit_scream_grenade_attached_to_us,
+	_unit_scream_burning_to_death,
+	_unit_scream_destroyed_limb,
+	_unit_scream_destroyed_head,
+	_unit_scream_resurrection,
+	NUMBER_OF_UNIT_SCREAM_TYPES
 };
 
 /* ---------- macros */
@@ -371,6 +502,8 @@ void unit_euler_aiming_update(
 	real angular_velocity_limit,
 	real angular_acceleration_limit);
 
+void unit_unzoom(long unit_index);
+
 void unit_died(long unit_index, boolean feigned);
 
 void unit_get_head_position(long unit_index, union real_point3d *head_position);
@@ -389,7 +522,23 @@ boolean unit_drop_current_weapon(long unit_index, boolean immediate);
 
 boolean unit_throw_grenade_begin(long unit_index, real_vector2d const *alignment_vector);
 
+
+/* ---------- prototypes/UNIT_DIALOGUE.C */
+
+boolean unit_scream(long unit_index, short scream_type);
+
+
 /* ---------- globals */
+
+extern short magic_base_animation_seat_index;
+extern boolean debug_objects_unit_mouth_apeture;
+extern boolean debug_objects_unit_seats;
+extern boolean debug_objects_unit_vectors;
+extern boolean stun_enable;
+extern boolean debug_damage_taken;
+extern boolean debug_unit_illumination;
+extern boolean debug_unit_animations;
+extern boolean debug_unit_all_animations;
 
 /* ---------- public code */
 

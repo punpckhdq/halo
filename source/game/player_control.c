@@ -180,6 +180,11 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "players.h"
+
+#include "real_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
