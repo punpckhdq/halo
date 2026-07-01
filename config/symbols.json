@@ -5243,6 +5243,7 @@
 { "file_offset": 1238096, "flags": 32, "name": "_object_unmarked_function" },
 { "file_offset": 1238176, "flags": 32, "name": "_object_mark_function" },
 { "file_offset": 1238272, "flags": 32, "name": "_attachments_new" },
+{ "file_offset": 1238684, "flags": 32, "name": "$L11841" },
 { "file_offset": 1238704, "flags": 32, "name": "_object_connect_lights" },
 { "file_offset": 1238864, "flags": 32, "name": "_object_name_list_allocate" },
 { "file_offset": 1238928, "flags": 32, "name": "_object_name_list_free" },

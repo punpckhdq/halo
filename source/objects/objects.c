@@ -2998,21 +2998,20 @@ void object_render_debug(
 static void attachments_new(
 	long object_index)
 {
-	long i;
+	short attachment_num;
 
 	struct object_datum *object = object_get(object_index);
 	struct object_definition *object_definition = object_definition_get(object->definition_index);
 
-	for (i = 0; i<object_definition->object.attachments.count; i++)
+	for (attachment_num = 0; attachment_num<object_definition->object.attachments.count; attachment_num++)
 	{
-		long attachment_index;
-
 		struct object_attachment_definition* attachment = TAG_BLOCK_GET_ELEMENT(
 			&object_definition->object.attachments,
-			i,
+			attachment_num,
 			struct object_attachment_definition);
-
 		short attachment_type = NONE;
+		long attachment_index = NONE;
+
 		if (attachment->type.index!=NONE)
 		{
 			switch (attachment->type.group_tag)
@@ -3041,9 +3040,14 @@ static void attachments_new(
 			attachment_index = light_new(
 				attachment->type.index,
 				object_index,
-				i,
+				attachment_num,
 				attachment->primary_scale_function_reference-1,
 				attachment->change_color_reference-1);
+
+			if (attachment_index!=NONE)
+			{
+				SET_FLAG(object->object.flags, _object_has_attached_lights_bit, TRUE);
+			}
 			break;
 		case _object_attachment_type_looping_sound:
 			attachment_index = game_looping_sound_new(
@@ -3051,6 +3055,11 @@ static void attachments_new(
 				attachment->type.index,
 				attachment->marker_name,
 				attachment->primary_scale_function_reference-1);
+
+			if (attachment_index!=NONE)
+			{
+				SET_FLAG(object->object.flags, _object_has_attached_looping_sounds_bit, TRUE);
+			}
 			break;
 		case _object_attachment_type_effect:
 			attachment_index = effect_new_looping(
@@ -3061,15 +3070,15 @@ static void attachments_new(
 				attachment->change_color_reference-1);
 			break;
 		case _object_attachment_type_contrail:
-			attachment_index = contrail_new(attachment->type.index, object_index, i);
+			attachment_index = contrail_new(attachment->type.index, object_index, attachment_num);
 			break;
 		case _object_attachment_type_particle_system:
-			attachment_index = particle_system_new_attached(attachment->type.index, object_index, i);
+			attachment_index = particle_system_new_attached(attachment->type.index, object_index, attachment_num);
 			break;
 		}
 
-		object->object.attachment_types[i] = attachment_type;
-		object->object.attachment_indices[i] = attachment_index;
+		object->object.attachment_types[attachment_num] = attachment_type;
+		object->object.attachment_indices[attachment_num] = attachment_index;
 	}
 
 	return;
