@@ -491,6 +491,7 @@ void matrix4x3_multiply(real_matrix4x3 const *a, real_matrix4x3 const *b, real_m
 /* ---------- prototypes/RANDOM_MATH.C */
 
 unsigned long *get_global_random_seed_address(void);
+unsigned long *get_global_local_random_seed_address(void);
 
 unsigned short seed_random(unsigned long *seed);
 short seed_random_range(unsigned long *seed, short lower_bound, short upper_bound);
@@ -743,22 +744,25 @@ __inline real_vector2d *negate_vector2d(
 __inline short projection_from_vector3d(
 	real_vector3d const *n)
 {
-	real i, j, k;
-	i = fabs(n->i);
-	j = fabs(n->j);
-	k = fabs(n->k);
+	real i = fabs(n->i);
+	real j = fabs(n->j);
+	real k = fabs(n->k);
 
-	// TODO: these comparisons likely don't match
 	if (k < j || k < i)
-		return j >= i;
+	{
+		return j < i;
+	}
 	else
-		return 2;
+	{
+		return _z;
+	}
 }
 
 __inline boolean projection_sign_from_vector3d(
 	real_vector3d const *n, 
 	short projection)
 {
+	match_assert("..\\math\\real_math.h", 848, projection>=_x && projection<=_z);
 	return n->n[projection] > 0.f;
 }
 
@@ -768,9 +772,10 @@ __inline real_point2d *project_point3d(
 	boolean sign,
 	real_point2d *p2d)
 {
-	int mapping = 2 * projection + sign;
-	p2d->x = p3d->n[global_projection3d_mappings[0][mapping][0]];
-	p2d->y = p3d->n[global_projection3d_mappings[0][mapping][1]];
+	match_assert("..\\math\\real_math.h", 859, projection>=_x && projection<=_z);
+	match_assert("..\\math\\real_math.h", 860, ~(sign&~1));
+
+	set_real_point2d(p2d, global_projection3d_mappings[projection][sign][0], global_projection3d_mappings[projection][sign][1]);
 	return p2d;
 }
 
@@ -781,22 +786,18 @@ __inline real_point3d *project_point2d(
 	boolean sign,
 	real_point3d *p3d)
 {
-	int mapping;
-	int x;
-	int y;
+	long x = global_projection3d_mappings[projection][sign][0];
+	long y = global_projection3d_mappings[projection][sign][1];
 
-	mapping = 2 * projection + sign;
-	x = global_projection3d_mappings[0][mapping][0];
-	y = global_projection3d_mappings[0][mapping][1];
+	match_assert("..\\math\\real_math.h", 879, projection>=_x && projection<=_z);
+	match_assert("..\\math\\real_math.h", 880, ~(sign&~1));
 
 	p3d->n[x] = p2d->x;
 	p3d->n[y] = p2d->y;
 
-	if (fabs(plane->n.n[projection]) >= _real_epsilon)
+	if (fabs(plane->n.n[projection])>=_real_epsilon)
 	{
-		// TODO: definitely doesn't match
-		p3d->n[projection] = -((p2d->y * plane->n.n[y]) + (p2d->x * plane->n.n[x] - plane->d))
-			/ plane->n.n[projection];
+		p3d->n[projection] = ((plane->d - (p2d->x * plane->n.n[x])) - (p2d->y * plane->n.n[y])) / plane->n.n[projection];
 	}
 	else
 	{
@@ -881,17 +882,18 @@ __inline real magnitude3d(
 __inline real normalize3d(
 	real_vector3d *v)
 {
-	real result = magnitude3d(v);
-	if (fabs(result-0.f)>=_real_epsilon)
+	real magnitude = magnitude3d(v);
+
+	if (!(_real_epsilon>fabs(magnitude-0.f)))
 	{
-		scale_vector3d(v, 1.f / result, v);
+		scale_vector3d(v, 1.f / magnitude, v);
 	}
 	else
 	{
-		result = 0.f;
+		magnitude = 0.f;
 	}
 
-	return result;
+	return magnitude;
 }
 
 __inline boolean limit3d(
@@ -1092,13 +1094,9 @@ __inline real_plane3d *plane3d_negate(
 
 __inline real plane3d_distance_to_point(
 	real_plane3d const *plane,
-	real_point3d const *point
-)
+	real_point3d const *point)
 {
-	return plane->n.i*point->x +
-		   plane->n.j*point->y +
-		   plane->n.k*point->z -
-		   plane->d;
+	return (dot_product3d((real_vector3d *)point, &plane->n) - plane->d);
 }
 
 __inline real vector_intersect_plane3d(
@@ -1156,7 +1154,8 @@ __inline void set_random_seed(
 	*get_global_random_seed_address() = seed;
 }
 
-__inline unsigned short random()
+__inline word random(
+	void)
 {
 	return seed_random(get_global_random_seed_address());
 }
@@ -1200,6 +1199,47 @@ __inline real_vector3d *random_vector_in_cone3d(
 	real_vector3d *result)
 {
 	return seed_random_vector_in_cone3d(get_global_random_seed_address(), axis, inner_cone_angle, outer_cone_angle, result);
+}
+
+__inline word local_random(
+	void)
+{
+	return seed_random(get_global_local_random_seed_address());
+}
+
+__inline short local_random_range(
+	short lower_bound,
+	short upper_bound)
+{
+	return seed_random_range(get_global_local_random_seed_address(), lower_bound, upper_bound);
+}
+
+__inline real real_local_random(
+	void)
+{
+	return real_seed_random(get_global_local_random_seed_address());
+}
+
+__inline real real_local_random_range(
+	real lower_bound,
+	real upper_bound)
+{
+	return real_seed_random_range(get_global_local_random_seed_address(), lower_bound, upper_bound);
+}
+
+__inline real_vector3d *local_random_direction3d(
+	real_vector3d *direction)
+{
+	return seed_random_direction3d(get_global_local_random_seed_address(), direction);
+}
+
+__inline real_vector3d *local_random_vector_in_cone3d(
+	real_vector3d const *axis,
+	real inner_cone_angle,
+	real outer_cone_angle,
+	real_vector3d *result)
+{
+	return seed_random_vector_in_cone3d(get_global_local_random_seed_address(), axis, inner_cone_angle, outer_cone_angle, result);
 }
 
 // TODO: doesn't match, needs cleanup

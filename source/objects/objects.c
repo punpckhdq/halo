@@ -1872,7 +1872,6 @@ short object_get_marker_by_name(
 	return marker;
 }
 
-// TODO: match
 void object_align_marker_to_matrix(
 	struct object_datum *object,
 	struct object_marker const *child_marker,

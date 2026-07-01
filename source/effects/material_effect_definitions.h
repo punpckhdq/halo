@@ -8,6 +8,8 @@ header included in hcex build.
 #define __MATERIAL_EFFECT_DEFINITIONS_H
 #pragma once
 
+/* ---------- headers */
+
 #include "real_math.h"
 #include "tag_groups.h"
 

@@ -33,4 +33,23 @@ long bsp3d_test_point(struct bsp3d const *bsp, long node_index, union real_point
 
 /* ---------- public code */
 
+__inline real_plane3d *bsp3d_get_plane_from_designator(
+	struct bsp3d const *bsp,
+	long plane_designator,
+	real_plane3d *result)
+{
+	real_plane3d* plane = TAG_BLOCK_GET_ELEMENT(&bsp->planes, plane_designator & LONG_MAX, real_plane3d);
+
+	if (plane_designator<0)
+	{
+		plane3d_negate(plane, result);
+	}
+	else
+	{
+		*result = *plane;
+	}
+
+	return result;
+}
+
 #endif // __BSP3D_H

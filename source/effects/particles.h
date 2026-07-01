@@ -35,7 +35,9 @@ struct new_particle_data
 	real_argb_color color;
 };
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/PARTICLES.C */
+
+void particle_new(struct new_particle_data const *data);
 
 /* ---------- globals */
 

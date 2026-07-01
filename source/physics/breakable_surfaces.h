@@ -8,6 +8,11 @@ header included in hcex build.
 #define __BREAKABLE_SURFACES_H
 #pragma once
 
+/* ---------- headers */
+
+#include "math/real_math.h"
+#include "tag_files/tag_groups.h"
+
 /* ---------- constants */
 
 enum
@@ -20,6 +25,14 @@ enum
 	MAXIMUM_BREAKABLE_SURFACES_PER_MAP = 256,
 	MAXIMUM_PARTICLE_EFFECTS_PER_BREAKABLE_SURFACE_DEFINITION = 8,
 };
+
+enum
+{
+	_breakable_surface_particle_effect_color_interpolate_in_hsv_bit = 0,
+	_breakable_surface_particle_effect_color_interpolate_along_farthest_hue_path_bit,
+	NUMBER_OF_BREAKABLE_SURFACE_PARTICLE_EFFECT_FLAGS,
+};
+
 
 /* ---------- macros */
 

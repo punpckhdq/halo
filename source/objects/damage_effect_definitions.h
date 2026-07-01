@@ -8,9 +8,9 @@ header included in hcex build.
 #define __DAMAGE_EFFECT_DEFINITIONS_H
 #pragma once
 
-#include "real_math.h"
-#include "objects.h"
+/* ---------- headers */
 
+#include "real_math.h"
 
 /* ---------- constants */
 

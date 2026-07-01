@@ -72,11 +72,11 @@ struct collision_edge
 
 struct collision_vertex
 {
-	real_point3d point; // 0x0
-	long first_edge_index; // 0xC
+	real_point3d point;
+	long first_edge_index;
 };
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/COLLISION_BSP_DEFINITIONS.C */
 
 /* ---------- globals */
 

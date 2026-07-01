@@ -6,23 +6,25 @@ BREAKABLE_SURFACES.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "errors.h"
-#include "real_math.h"
-#include "tag_groups.h"
 #include "breakable_surfaces.h"
-#include "collisions.h"
+
 #include "collision_bsp_definitions.h"
-#include "collision_model_definitions.h"
-#include "damage.h"
-#include "bitmaps.h"
-#include "material_effect_definitions.h"
-#include "particles.h"
-#include "game_globals.h"
-#include "structure_bsp_definitions.h"
-#include "damage_effect_definitions.h"
-#include "game_state.h"
-#include "scenario.h"
-#include "game_sound.h"
+
+#include "bitmaps/bitmaps.h"
+#include "cseries/errors.h"
+#include "effects/material_effect_definitions.h"
+#include "effects/particles.h"
+#include "game/game_globals.h"
+#include "math/geometry.h"
+#include "math/real_math.h"
+#include "objects/damage.h"
+#include "objects/damage_effect_definitions.h"
+#include "objects/objects.h"
+#include "saved games/game_state.h"
+#include "scenario/scenario.h"
+#include "sound/game_sound.h"
+#include "structures/structure_bsp_definitions.h"
+#include "tag_files/tag_groups.h"
 
 /* ---------- structures */
 
@@ -42,7 +44,7 @@ static void breakable_surface_effect(
 
 /* ---------- globals */
 
-struct breakable_surface_globals *globals;
+static struct breakable_surface_globals *globals;
 
 boolean breakable_surface_effect_enabled = TRUE;
 
@@ -82,18 +84,15 @@ void breakable_surfaces_initialize_for_new_map(
 
 	globals->enabled = TRUE;
 
-	for (bsp_index = 0; bsp_index < MAXIMUM_STRUCTURE_BSPS_PER_SCENARIO; ++bsp_index)
+	for (bsp_index = 0; bsp_index<MAXIMUM_STRUCTURE_BSPS_PER_SCENARIO; ++bsp_index)
 	{
 		short surface_index;
-		struct breakable_surface_datum *surface;
 
 		csmemset(globals->breakable_surface_flags[bsp_index], NONE, sizeof(globals->breakable_surface_flags[bsp_index]));
 
-		surface = globals->breakable_surfaces[bsp_index];
-		
-		for (surface_index = 0; surface_index < MAXIMUM_BREAKABLE_SURFACES_PER_MAP; surface_index++)
+		for (surface_index = 0; surface_index < MAXIMUM_BREAKABLE_SURFACES_PER_MAP; ++surface_index)
 		{
-			surface[surface_index].vitality = 1.0f;
+			globals->breakable_surfaces[bsp_index][surface_index].vitality = 1.f;
 		}
 	}
 
@@ -136,8 +135,7 @@ boolean breakable_surface_extant(
 {
 	boolean result;
 
-	match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 147,
-		breakable_surface_index==NONE || (breakable_surface_index>=0 && breakable_surface_index<MAXIMUM_BREAKABLE_SURFACES_PER_MAP));
+	match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 147, breakable_surface_index==NONE || (breakable_surface_index>=0 && breakable_surface_index<MAXIMUM_BREAKABLE_SURFACES_PER_MAP));
 
 	result = breakable_surface_index==NONE || BIT_VECTOR_TEST_FLAG((long *)breakable_surface_flags_get(), breakable_surface_index);
 	return result;
@@ -158,13 +156,13 @@ void breakable_surface_damage(
 		{
 			struct breakable_surface_datum *surface = breakable_surface_get(breakable_surface_index);
 
-			if (surface->vitality > 0.0f)
+			if (surface->vitality > 0.f)
 			{
 				struct material_definition *material = scenario_material_definition_get(damage_data->material_type);
 
 				if (material)
 				{
-					if (material->breakable_surface.maximum_vitality > 0.0f)
+					if (material->breakable_surface.maximum_vitality > 0.f)
 					{
 						struct damage_effect_definition *definition = damage_effect_definition_get(damage_data->definition_index);
 						struct damage_definition *damage = &definition->damage;
@@ -177,7 +175,7 @@ void breakable_surface_damage(
 
 						surface->vitality -= damage_fraction;
 
-						if (surface->vitality <= 0.0f)
+						if (surface->vitality <= 0.f)
 						{
 							BIT_VECTOR_SET_FLAG((long *)breakable_surface_flags_get(), breakable_surface_index, FALSE);
 
@@ -196,41 +194,32 @@ void breakable_surface_damage(
 void breakable_surface_damage_area_of_effect(
 	const struct damage_data *damage_data)
 {
-	struct structure_bsp *structure_bsp;
-	struct damage_effect_definition *damage_effect_def;
-	struct structure_breakable_surface *breakable_surface;
-	real_vector3d area;
-	real cutoff_radius;
-	real radius;
-	short i;
+	struct structure_bsp *structure_bsp = global_structure_bsp_get();
+	struct damage_effect_definition *damage_effect_definition = damage_effect_definition_get(damage_data->definition_index);
 
-	structure_bsp = global_structure_bsp_get();
-	damage_effect_def = damage_effect_definition_get(damage_data->definition_index);
-
-	if (globals->enabled
-		&& (damage_effect_def->damage.damage_lower_bound != 0.0f || damage_effect_def->damage.damage_upper_bound != 0.0f))
+	if (globals->enabled &&
+		(damage_effect_definition->damage.damage_lower_bound!= 0.f || damage_effect_definition->damage.damage_upper_bound!=0.f))
 	{
-		cutoff_radius = damage_effect_def->cutoff_radius;
+		short breakable_surface_index;
+
+		real cutoff_radius = damage_effect_definition->cutoff_radius;
 
 		if (cutoff_radius > 4.0f)
 		{
-			error(2, "WARNING: area of effect breakable surface damage with radius %d", cutoff_radius);
+			error(_error_silent, "WARNING: area of effect breakable surface damage with radius %d", cutoff_radius);
 		}
 
-		for (i = 0; i < structure_bsp->breakable_surfaces.count; i++)
+		for (breakable_surface_index = 0; breakable_surface_index < structure_bsp->breakable_surfaces.count; breakable_surface_index++)
 		{
-			if (breakable_surface_extant(i))
+			if (breakable_surface_extant(breakable_surface_index))
 			{
-				breakable_surface = TAG_BLOCK_GET_ELEMENT(&structure_bsp->breakable_surfaces, i, struct structure_breakable_surface);
-				radius = breakable_surface->bounding_radius + cutoff_radius;
+				struct structure_breakable_surface *breakable_surface = TAG_BLOCK_GET_ELEMENT(&structure_bsp->breakable_surfaces, breakable_surface_index, struct structure_breakable_surface);
 
-				vector_from_points3d(&breakable_surface->centroid, &damage_data->epicenter, &area);
-
-				if (magnitude_squared3d(&area) <= radius * radius)
+				if (point_in_sphere(&breakable_surface->centroid, &damage_data->epicenter, breakable_surface->bounding_radius + cutoff_radius))
 				{
-					breakable_surface_get(i)->vitality = 0.0f;
-					BIT_VECTOR_SET_FLAG((long *)breakable_surface_flags_get(), i, FALSE);
-					breakable_surface_effect(i, damage_data, breakable_surface->collision_surface_index);
+					breakable_surface_get(breakable_surface_index)->vitality = 0.f;
+					BIT_VECTOR_SET_FLAG((long *)breakable_surface_flags_get(), breakable_surface_index, FALSE);
+					breakable_surface_effect(breakable_surface_index, damage_data, breakable_surface->collision_surface_index);
 				}
 			}
 		}
@@ -257,7 +246,6 @@ static void breakable_surface_effect(
 	real_plane3d s_plane;
 	real_point3d origin;
 	real_plane3d surface_plane;
-	real_plane3d *plane;
 	real_rectangle2d surface_bounds;
 	real_plane3d t_plane;
 	real_point3d surface_vertices3d[MAXIMUM_VERTICES_PER_COLLISION_SURFACE];
@@ -268,32 +256,7 @@ static void breakable_surface_effect(
 	real_point2d position_2d_test;
 	real_vector3d velocity;
 	struct new_particle_data particle;
-	struct sound_location sound_location;
-	struct collision_surface const *surface;
-	struct collision_edge const *collision_edge;
-	struct collision_vertex const *vertex;
-	struct collision_vertex const *next_vertex;
-	struct collision_surface const *adjacent;
-	real_point2d projected_epicenter;
-	long edge_index;
-	long adjacent_surface_index;
-	boolean reverse;
-	short projection_axis;
-	boolean projection_sign;
-	short surface_vertex_index;
-	short i;
-	real s, t;
-	real ax, ay, az;
-	long material_type;
-	struct breakable_surface_particle_effect const *contrail;
-	struct damage_breaking_effect_definition const *breaking_effect;
-	real_vector3d outward;
-	real distance, factor, scale, s_offset, t_offset;
-	short contrail_index;
-	short s_min, s_max, t_min, t_max;
-	long s_index, t_index;
-	struct material_definition *material_def;
-
+	
 	struct structure_bsp *structure_bsp = global_structure_bsp_get();
 	struct collision_bsp *collision_bsp = global_collision_bsp_get();
 
@@ -301,6 +264,10 @@ static void breakable_surface_effect(
 
 	if (breakable_surface_effect_enabled)
 	{
+		short surface_queue_read_index;
+		long material_type;
+		struct material_definition *material_def;
+
 		collision_surface = TAG_BLOCK_GET_ELEMENT(&collision_bsp->surfaces, seed_surface_index, struct collision_surface);
 		material_type = TAG_BLOCK_GET_ELEMENT(&structure_bsp->collision_materials, collision_surface->material_index, struct structure_collision_material)->runtime_physics_material_type;
 		material_def = TAG_BLOCK_GET_ELEMENT(&scenario_get_game_globals()->materials, material_type, struct material_definition);
@@ -308,64 +275,45 @@ static void breakable_surface_effect(
 
 		total_bounds_valid = FALSE;
 		surface_queue_read_index = 0;
+		surface_queue_write_index = 0;
 
 		match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 266, collision_surface->breakable_surface_index==breakable_surface_index);
 
-		surface_queue[0] = seed_surface_index;
-		surface_queue_write_index = 1;
+		surface_queue[surface_queue_write_index++] = seed_surface_index;
 
-		while (TRUE)
+		while (surface_queue_read_index<surface_queue_write_index)
 		{
+			boolean projection_sign;
+			short projection_axis;
+			short particle_index;
+			struct collision_surface const *surface;
+			long edge_index;
+			word surface_vertex_index;
+
 			surface_index = surface_queue[surface_queue_read_index++];
 			surface = TAG_BLOCK_GET_ELEMENT(&collision_bsp->surfaces, surface_index, struct collision_surface);
-			plane = TAG_BLOCK_GET_ELEMENT(&collision_bsp->bsp3d.planes, surface->plane_designator & 0x7FFFFFFF, real_plane3d);
-
-			if (surface->plane_designator >= 0)
-			{
-				surface_plane = *plane;
-			}
-			else
-			{
-				surface_plane.n.i = -plane->n.i;
-				surface_plane.n.j = -plane->n.j;
-				surface_plane.n.k = -plane->n.k;
-				surface_plane.d = -plane->d;
-			}
-
-			ax = fabs(surface_plane.n.i);
-			ay = fabs(surface_plane.n.j);
-			az = fabs(surface_plane.n.k);
-
-			if (ax >= ay && ax >= az)
-			{
-				projection_axis = 0;
-			}
-			else if (ay >= az)
-			{
-				projection_axis = 1;
-			}
-			else
-			{
-				projection_axis = 2;
-			}
-
-			projection_sign = (surface_plane.n.n[projection_axis] > 0.0f);
-
-			surface_vertex_index = 0;
+			
 			edge_index = surface->first_edge_index;
+			surface_vertex_index = 0;
+
+			bsp3d_get_plane_from_designator(&collision_bsp->bsp3d, surface->plane_designator, &surface_plane);
+			projection_axis = projection_from_vector3d(&surface_plane.n);
+			projection_sign = projection_sign_from_vector3d(&surface_plane.n, projection_axis);
+			
 			do
 			{
-				collision_edge = TAG_BLOCK_GET_ELEMENT(&collision_bsp->edges, edge_index, struct collision_edge);
-				reverse = (collision_edge->surface_indices[1] == surface_index);
-				vertex = TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[!reverse], struct collision_vertex);
-				adjacent_surface_index = collision_edge->surface_indices[!reverse];
+				struct collision_edge const *collision_edge = TAG_BLOCK_GET_ELEMENT(&collision_bsp->edges, edge_index, struct collision_edge);
+				boolean reverse = (collision_edge->surface_indices[1] == surface_index);
+				struct collision_vertex const *vertex = TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[!reverse], struct collision_vertex);
+				long adjacent_surface_index = collision_edge->surface_indices[!reverse];
 
-				if (surface_vertex_index == 0)
+				if (surface_vertex_index==0)
 				{
-					next_vertex = TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[reverse], struct collision_vertex);
+					struct collision_vertex const *next_vertex = TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[reverse], struct collision_vertex);
 
-					if (surface_index == seed_surface_index)
+					if (surface_index==seed_surface_index)
 					{
+						real_point2d projected_epicenter;
 						project_point3d(&damage_data->epicenter, projection_axis, projection_sign, &projected_epicenter);
 						project_point2d(&projected_epicenter, &surface_plane, projection_axis, projection_sign, &origin);
 					}
@@ -382,196 +330,222 @@ static void breakable_surface_effect(
 					plane3d_from_point_and_normal(&s_plane, &origin, &s_normal);
 					plane3d_from_point_and_normal(&t_plane, &origin, &t_normal);
 
-					surface_bounds.x1 = dot_product3d((real_vector3d *)&vertex->point, &s_normal) - s_plane.d;
+					surface_bounds.x1 = plane3d_distance_to_point(&s_plane, &vertex->point);
 					surface_bounds.x0 = surface_bounds.x1;
-					surface_bounds.y1 = dot_product3d((real_vector3d *)&vertex->point, &t_normal) - t_plane.d;
+					surface_bounds.y1 = plane3d_distance_to_point(&t_plane, &vertex->point);
 					surface_bounds.y0 = surface_bounds.y1;
 				}
 				else
 				{
-					s = dot_product3d((real_vector3d *)&vertex->point, &s_plane.n) - s_plane.d;
-					t = dot_product3d((real_vector3d *)&vertex->point, &t_plane.n) - t_plane.d;
-					if (s <= surface_bounds.x0) surface_bounds.x0 = s;
-					if (t <= surface_bounds.y0) surface_bounds.y0 = t;
-					if (s >  surface_bounds.x1) surface_bounds.x1 = s;
-					if (t >  surface_bounds.y1) surface_bounds.y1 = t;
+					real s = plane3d_distance_to_point(&s_plane, &vertex->point);
+					real t = plane3d_distance_to_point(&t_plane, &vertex->point);
 
-					match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 348, surface_vertex_index < MAXIMUM_VERTICES_PER_COLLISION_SURFACE);
+					surface_bounds.x0 = MIN(s, surface_bounds.x0);
+					surface_bounds.y0 = MIN(t, surface_bounds.y0);
+					surface_bounds.x1 = MIN(s, surface_bounds.x1);
+					surface_bounds.y1 = MIN(t, surface_bounds.y1);
 				}
+				
+				match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 348, surface_vertex_index<MAXIMUM_VERTICES_PER_COLLISION_SURFACE);
 
 				surface_vertices3d[surface_vertex_index] = vertex->point;
 				project_point3d(&vertex->point, projection_axis, projection_sign, &surface_vertices2d[surface_vertex_index]);
 
 				if (total_bounds_valid)
 				{
-					if (vertex->point.x <= total_bounds.x0) total_bounds.x0 = vertex->point.x;
-					if (vertex->point.y <= total_bounds.y0) total_bounds.y0 = vertex->point.y;
-					if (vertex->point.z <= total_bounds.z0) total_bounds.z0 = vertex->point.z;
-					if (vertex->point.x >  total_bounds.x1) total_bounds.x1 = vertex->point.x;
-					if (vertex->point.y >  total_bounds.y1) total_bounds.y1 = vertex->point.y;
-					if (vertex->point.z >  total_bounds.z1) total_bounds.z1 = vertex->point.z;
+					total_bounds.x0 = MIN(total_bounds.x0, vertex->point.x);
+					total_bounds.y0 = MIN(total_bounds.y0, vertex->point.y);
+					total_bounds.z0 = MIN(total_bounds.z0, vertex->point.z);
+					total_bounds.x1 = MAX(total_bounds.x1, vertex->point.x);
+					total_bounds.y1 = MAX(total_bounds.y1, vertex->point.y);
+					total_bounds.z1 = MAX(total_bounds.z1, vertex->point.z);
 				}
 				else
 				{
-					total_bounds.x0 = total_bounds.x1 = vertex->point.x;
-					total_bounds.y0 = total_bounds.y1 = vertex->point.y;
-					total_bounds.z0 = total_bounds.z1 = vertex->point.z;
+					total_bounds.x1 = vertex->point.x;
+					total_bounds.x0 = total_bounds.x1;
+					total_bounds.y1 = vertex->point.y;
+					total_bounds.y0 = total_bounds.y1;
+					total_bounds.z1 = vertex->point.z;
+					total_bounds.z0 = total_bounds.z1;
 					total_bounds_valid = TRUE;
 				}
 
-				if (adjacent_surface_index != NONE)
+				for (surface_index = 0; adjacent_surface_index!=NONE && surface_index<surface_queue_write_index; surface_index++)
 				{
-					for (i = 0; i < surface_queue_write_index; i++)
+					if (surface_queue[surface_index]==adjacent_surface_index)
 					{
-						if (surface_queue[i] == adjacent_surface_index)
-						{
-							adjacent_surface_index = NONE;
-							break;
-						}
+						adjacent_surface_index = NONE;
 					}
-					if (adjacent_surface_index != NONE)
+				}
+
+				if (adjacent_surface_index!=NONE)
+				{
+					struct collision_surface const *adjacent = TAG_BLOCK_GET_ELEMENT(&collision_bsp->surfaces, adjacent_surface_index, struct collision_surface);
+
+					if (adjacent->breakable_surface_index==breakable_surface_index &&
+						adjacent->material_index==collision_surface->material_index)
 					{
-						adjacent = TAG_BLOCK_GET_ELEMENT(&collision_bsp->surfaces, adjacent_surface_index, struct collision_surface);
-						if (adjacent->breakable_surface_index == breakable_surface_index
-							&& adjacent->material_index == collision_surface->material_index)
-						{
-							match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 388, surface_queue_write_index < MAXIMUM_BREAKABLE_SURFACE_QUEUE_SIZE);
-							surface_queue[surface_queue_write_index++] = adjacent_surface_index;
-						}
+						match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 388, surface_queue_write_index<MAXIMUM_BREAKABLE_SURFACE_QUEUE_SIZE);
+						surface_queue[surface_queue_write_index++] = adjacent_surface_index;
 					}
 				}
 
 				edge_index = collision_edge->edge_indices[reverse];
-				{
-					surface_vertex_index++;
-				}
+				++surface_vertex_index;
 			}
-			while (edge_index != surface->first_edge_index);
+			while (edge_index!=surface->first_edge_index);
 
-			for (contrail_index = 0; contrail_index < breakable_surface->particle_effects.count; contrail_index++)
+			for (particle_index = 0; particle_index < breakable_surface->particle_effects.count; ++particle_index)
 			{
-				contrail = TAG_BLOCK_GET_ELEMENT(&breakable_surface->particle_effects, contrail_index, struct breakable_surface_particle_effect);
-				if (contrail->particle.index == NONE)
+				struct breakable_surface_particle_effect const *particle_effect = TAG_BLOCK_GET_ELEMENT(&breakable_surface->particle_effects, particle_index, struct breakable_surface_particle_effect);
+				
+				if (particle_effect->particle.index!=NONE)
 				{
-					continue;
-				}
+					word s_min;
+					word s_max;
+					word t_min;
+					word t_max;
+					word t_index;
 
-				if (contrail->density > 0.0f)
-				{
-					s_min = (short)ceil(PIN(surface_bounds.x0 / contrail->density, -1000.0f, 1000.0f));
-					t_min = (short)ceil(PIN(surface_bounds.y0 / contrail->density, -1000.0f, 1000.0f));
-					s_max = (short)floor(PIN(surface_bounds.x1 / contrail->density, -1000.0f, 1000.0f));
-					t_max = (short)floor(PIN(surface_bounds.y1 / contrail->density, -1000.0f, 1000.0f));
-				}
-				else
-				{
-					if (surface_index != seed_surface_index)
+					if (particle_effect->density==0.f)
 					{
-						continue;
+						s_min = (word)ceil(PIN(surface_bounds.x0 / particle_effect->density, -1000.f, 1000.f));
+						t_min = (word)ceil(PIN(surface_bounds.y0 / particle_effect->density, -1000.f, 1000.f));
+						s_max = (word)floor(PIN(surface_bounds.x1 / particle_effect->density, -1000.f, 1000.f));
+						t_max = (word)floor(PIN(surface_bounds.y1 / particle_effect->density, -1000.f, 1000.f));
 					}
-					s_min = s_max = t_min = t_max = 0;
-				}
-
-				for (t_index = t_min; t_index <= t_max; t_index++)
-				{
-					for (s_index = s_min; s_index <= s_max; s_index++)
+					else
 					{
-						s_offset = ((real)s_index + real_random_range(-0.75f, 0.75f)) * contrail->density;
-						t_offset = ((real)t_index + real_random_range(-0.75f, 0.75f)) * contrail->density;
-
-						position = origin;
-
-						point_from_line3d(&position, &s_plane.n, s_offset, &position);
-						point_from_line3d(&position, &t_plane.n, t_offset, &position);
-
-						project_point3d(&position, projection_axis, projection_sign, &position_2d_test);
-
-						if (!convex_hull2d_test_point(surface_vertex_index, surface_vertices2d, &position_2d_test, FALSE))
+						if (surface_index==seed_surface_index)
 						{
-							continue;
+							t_max = 0;
+							s_max = 0;
+							t_min = 0;
+							s_min = 0;
 						}
-
-						velocity = *global_zero_vector3d;
-
-						vector_from_points3d(&position, &damage_data->epicenter, &outward);
-						distance = normalize3d(&outward);
-
-						breaking_effect = &damage_effect_definition_get(damage_data->definition_index)->breaking_effect;
-
-						if (breaking_effect->outward_radius > 0.0f)
+						else
 						{
-							factor = PIN(1.0f - distance / breaking_effect->outward_radius, 0.0f, 1.0f);
+							t_min = 1;
+							s_min = 1;
+							t_max = 0;
+							s_max = 0;
+						}
+					}
 
-							if (breaking_effect->outward_exponent != 0.0f)
+					for (t_index = t_min; t_index<=t_max; ++t_index)
+					{
+						short s_index;
+
+						for (s_index = s_min; s_index<=s_max; ++s_index)
+						{
+							position = origin;
+
 							{
-								factor = (real)pow(factor, breaking_effect->outward_exponent);
+								real s_offset = ((real)s_index + real_local_random_range(-0.75f, 0.75f)) * particle_effect->density;
+								real t_offset = ((real)t_index + real_local_random_range(-0.75f, 0.75f)) * particle_effect->density;
+
+								point_from_line3d(&position, &s_plane.n, s_offset, &position);
+								point_from_line3d(&position, &t_plane.n, t_offset, &position);
 							}
 
-							factor *= breaking_effect->outward_velocity;
+							project_point3d(&position, projection_axis, projection_sign, &position_2d_test);
 
-							point_from_line3d((real_point3d *)&velocity, &outward, factor, (real_point3d *)&velocity);
-						}
-						if (breaking_effect->forward_radius > 0.0f)
-						{
-							factor = PIN(1.0f - distance / breaking_effect->forward_radius, 0.0f, 1.0f);
-
-							if (breaking_effect->forward_exponent != 0.0f)
+							if (convex_hull2d_test_point(surface_vertex_index, surface_vertices2d, &position_2d_test, 0.f))
 							{
-								factor = (real)pow(factor, breaking_effect->forward_exponent);
+								struct damage_breaking_effect_definition const *breaking_effect;
+								real_vector3d outward;
+								real distance;
+
+								velocity = *global_zero_vector3d;
+								breaking_effect = &damage_effect_definition_get(damage_data->definition_index)->breaking_effect;
+								vector_from_points3d(&position, &damage_data->epicenter, &outward);
+								distance = normalize3d(&outward);
+
+								if (breaking_effect->outward_radius>0.f)
+								{
+									real factor = PIN(1.f - distance / breaking_effect->outward_radius, 0.f, 1.f);
+
+									if (breaking_effect->outward_exponent != 0.f)
+									{
+										factor = power(factor, breaking_effect->outward_exponent);
+									}
+
+									factor *= breaking_effect->outward_velocity;
+
+									point_from_line3d((real_point3d *)&velocity, &outward, factor, (real_point3d *)&velocity);
+								}
+
+								if (breaking_effect->forward_radius > 0.f)
+								{
+									real factor = PIN(1.f - distance / breaking_effect->forward_radius, 0.f, 1.f);
+
+									if (breaking_effect->forward_exponent != 0.f)
+									{
+										factor = power(factor, breaking_effect->forward_exponent);
+									}
+
+									factor *= breaking_effect->forward_velocity;
+
+									point_from_line3d((real_point3d *)&velocity, &damage_data->direction, factor, (real_point3d *)&velocity);
+								}
+
+								if (particle_effect->velocity_scale_upper_bound > 0.f)
+								{
+									real scale = real_local_random_range(particle_effect->velocity_scale_lower_bound, particle_effect->velocity_scale_upper_bound);
+									scale_vector3d(&velocity, scale, &velocity);
+								}
+
+								particle.definition_index = particle_effect->particle.index;
+								particle.object_index = NONE;
+								particle.node_index = NONE;
+								particle.local_player_index = NONE;
+								particle.attached_to_local_player = FALSE;
+								particle.dont_draw_first_person = FALSE;
+								particle.dont_draw_third_person = FALSE;
+								particle.position = position;
+								particle.velocity = velocity;
+								particle.direction = velocity;
+								particle.initial_impulse = *global_zero_vector3d;
+								particle.rotation = real_local_random_range(0.f, 2*M_PI);
+								particle.angular_velocity = real_local_random_range(particle_effect->angular_velocity_lower_bound, particle_effect->angular_velocity_upper_bound);
+								particle.radius = real_local_random_range(particle_effect->radius_lower_bound, particle_effect->radius_upper_bound);
+
+								rgb_colors_interpolate(
+									&particle.color.rgb,
+									(particle_effect->flags &
+										FLAG(_breakable_surface_particle_effect_color_interpolate_in_hsv_bit) |
+										FLAG(_breakable_surface_particle_effect_color_interpolate_along_farthest_hue_path_bit)
+									) != 0,
+									&particle_effect->tint_lower_bound.rgb,
+									&particle_effect->tint_upper_bound.rgb,
+									real_local_random()
+								);
+
+								particle.color.alpha = PIN(particle_effect->tint_lower_bound.alpha + real_local_random() * (particle_effect->tint_upper_bound.alpha - particle_effect->tint_lower_bound.alpha), 0.f, 1.f);
+
+								if (normalize3d(&particle.direction)==0.f)
+								{
+									local_random_direction3d(&particle.direction);
+								}
+
+								particle_new(&particle);
 							}
-
-							factor *= breaking_effect->forward_velocity;
-
-							point_from_line3d((real_point3d *)&velocity, &damage_data->direction, factor, (real_point3d *)&velocity);
 						}
-						if (contrail->velocity_scale_upper_bound > 0.0f)
-						{
-							scale = real_random_range(contrail->velocity_scale_lower_bound, contrail->velocity_scale_upper_bound);
-							scale_vector3d(&velocity, scale, &velocity);
-						}
-
-						particle.definition_index = contrail->particle.index;
-						particle.object_index = NONE;
-						particle.node_index = NONE;
-						particle.local_player_index = NONE;
-						particle.attached_to_local_player = FALSE;
-						particle.dont_draw_first_person = FALSE;
-						particle.dont_draw_third_person = FALSE;
-						particle.position = position;
-						particle.direction = velocity;
-						particle.velocity = velocity;
-						particle.initial_impulse = *global_zero_vector3d;
-						particle.rotation = real_random_range(0.0f, M_PI * 2.0);
-						particle.angular_velocity = real_random_range(contrail->angular_velocity_lower_bound, contrail->angular_velocity_upper_bound);
-						particle.radius = real_random_range(contrail->radius_lower_bound, contrail->radius_upper_bound);
-						rgb_colors_interpolate(&particle.color.rgb, contrail->flags & 3, &contrail->tint_lower_bound.rgb, &contrail->tint_upper_bound.rgb, real_random());
-						particle.color.alpha = PIN(contrail->tint_lower_bound.alpha + real_random() * (contrail->tint_upper_bound.alpha - contrail->tint_lower_bound.alpha), 0.0f, 1.0f);
-
-						if (normalize3d(&particle.direction) == 0.0f)
-						{
-							seed_random_direction3d(get_global_local_random_seed_address(), &particle.direction);
-						}
-
-						particle_new(&particle);
 					}
 				}
-			}
-
-			if (surface_queue_read_index >= surface_queue_write_index)
-			{
-				break;
 			}
 		}
 
 		if (breakable_surface->sound.index != NONE && total_bounds_valid)
 		{
-			sound_location.position.x = (total_bounds.x0 + total_bounds.x1) * 0.5f;
-			sound_location.position.y = (total_bounds.y0 + total_bounds.y1) * 0.5f;
-			sound_location.position.z = (total_bounds.z0 + total_bounds.z1) * 0.5f;
+			struct sound_location sound_location;
+
+			set_real_point3d(&sound_location.position, (total_bounds.x0 + total_bounds.x1) * 0.5f, (total_bounds.y0 + total_bounds.y1) * 0.5f, (total_bounds.z0 + total_bounds.z1) * 0.5f);
 			sound_location.forward = *global_forward3d;
 			sound_location.translational_velocity = *global_zero_vector3d;
 			sound_location.game_location = damage_data->location;
-			unattached_impulse_sound_new(breakable_surface->sound.index, &sound_location, 1.0f);
+			unattached_impulse_sound_new(breakable_surface->sound.index, &sound_location, 1.f);
 		}
 	}
 

@@ -80,6 +80,11 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "actions.h"
+
+#include "math/real_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

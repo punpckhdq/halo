@@ -8,6 +8,10 @@ header included in hcex build.
 #define __DAMAGE_H
 #pragma once
 
+/* ---------- headers */
+
+#include "objects.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
