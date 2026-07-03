@@ -463,7 +463,7 @@ void objects_information_get(
 		i++;
 	}
 	
-	information->used_memory = 1.f - (real)memory_pool_get_contiguous_free_size(object_memory_pool) / 1048576.f;
+	information->used_memory = 1.f - (real)memory_pool_get_contiguous_free_size(object_memory_pool) / (real)OBJECT_MEMORY_POOL_SIZE;
 	
 	return;
 }
@@ -3700,23 +3700,10 @@ void objects_garbage_collection(
 	{
 		garbage_collect_mode = _garbage_collect_everything;
 	}
-	else if (memory_pool_get_contiguous_free_size(object_memory_pool)>GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
-	{
-		if (MAXIMUM_OBJECTS_PER_MAP-object_header_data->actual_count>GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
-		{
-			if (object_globals->active_garbage_object_count>=GARBAGE_LIMIT_ACTIVE_GARBAGE_TRIGGER)
-			{
-				garbage_collect_mode = _garbage_collect_active_objects;
-			}
-		}
-		else
-		{
-			garbage_collect_mode = _garbage_collect_for_space;
-		}
-	}
-	else
+	else if (memory_pool_get_contiguous_free_size(object_memory_pool)<=GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
 	{
 		memory_pool_compact(object_memory_pool);
+		
 		if (memory_pool_get_contiguous_free_size(object_memory_pool)<=GARBAGE_LIMIT_FREE_MEMORY_TRIGGER)
 		{
 			garbage_collect_mode = _garbage_collect_for_space;
@@ -3726,12 +3713,23 @@ void objects_garbage_collection(
 			object_globals->force_garbage_collection = FALSE;
 		}
 	}
+	else
+	{
+		if (MAXIMUM_OBJECTS_PER_MAP-object_header_data->actual_count<=GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
+		{
+			garbage_collect_mode = _garbage_collect_for_space;
+		}
+		else
+		{
+			if (object_globals->active_garbage_object_count>=GARBAGE_LIMIT_ACTIVE_GARBAGE_TRIGGER)
+			{
+				garbage_collect_mode = _garbage_collect_active_objects;
+			}
+		}
+	}
 	
 	if (garbage_collect_mode!=NONE)
 	{
-		long garbage_object_index;
-		struct object_datum *object;
-
 		short garbage_object_count = 0;
 		boolean should_collect = FALSE;
 
@@ -3745,23 +3743,28 @@ void objects_garbage_collection(
 				memory_pool_get_contiguous_free_size(object_memory_pool));
 		}
 
-		for (
-			garbage_object_index = object_globals->first_garbage_object_index;
-			garbage_object_index!=NONE;
-			garbage_object_index =object->object.next_garbage_object_index)
 		{
-			object = object_get(garbage_object_index);
-		
-			match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 4289, garbage_object_count<MAXIMUM_OBJECTS_PER_MAP);
+			long garbage_object_index;
+			struct object_datum *object;
 
-			garbage_object_indices[garbage_object_count++] = garbage_object_index;
+			for (
+				garbage_object_index = object_globals->first_garbage_object_index;
+				garbage_object_index!=NONE;
+				garbage_object_index = object->object.next_garbage_object_index)
+			{
+				object = object_get(garbage_object_index);
+
+				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 4289, garbage_object_count<MAXIMUM_OBJECTS_PER_MAP);
+
+				garbage_object_indices[garbage_object_count++] = garbage_object_index;
+			}
 		}
 
 		while (TRUE)
 		{
-			boolean garbage_collect;
 			long object_index;
 			struct object_header_datum *header;
+			boolean garbage_collect;
 
 			switch (garbage_collect_mode)
 			{
@@ -3772,34 +3775,41 @@ void objects_garbage_collection(
 				should_collect = object_globals->active_garbage_object_count<=GARBAGE_LIMIT_ACTIVE_GARBAGE_TARGET;
 				break;
 			case _garbage_collect_for_space:
-				should_collect = TRUE;
+				should_collect =
+					memory_pool_get_free_size(object_memory_pool)>=GARBAGE_LIMIT_FREE_MEMORY_TRIGGER &&
+					MAXIMUM_OBJECTS_PER_MAP-object_header_data->count>=GARBAGE_LIMIT_FREE_OBJECTS_TARGET;
+				break;
+			default:
+				match_vassert("c:\\halo\\SOURCE\\objects\\objects.c", 4314, FALSE, NULL);
 				break;
 			}
 
-			if (should_collect || !garbage_object_count)
+			if (should_collect || garbage_object_count==0)
 			{
 				break;
 			}
+			
 
 			object_index = garbage_object_indices[--garbage_object_count];
 			header = object_header_get(object_index);
-
 			garbage_collect = TRUE;
+
 			if (garbage_collect_mode==_garbage_collect_active_objects)
 			{
 				garbage_collect = TEST_FLAG(header->flags, _object_header_active_bit);
 			}
 
-			if (object_visible_to_any_player(object_index))
+			if (garbage_collect && object_visible_to_any_player(object_index))
 			{
 				garbage_collect = FALSE;
 			}
 
 			if (garbage_collect)
 			{
-				struct object_datum *object = object_get(object_index);
+				struct object_datum *garbage_object = object_get(object_index);
 
-				if (TEST_FLAG(_object_mask_unit, object->object.type) && !TEST_FLAG(object->object.damage_flags, _object_dead_bit))
+				if (TEST_FLAG(_object_mask_unit, garbage_object->object.type) &&
+					!TEST_FLAG(garbage_object->object.damage_flags, _object_dead_bit))
 				{
 					error(
 						_error_silent,
@@ -3812,6 +3822,7 @@ void objects_garbage_collection(
 				{
 					--object_globals->active_garbage_object_count;
 				}
+
 				object_set_garbage(object_index, FALSE);
 				object_delete_immediately(object_index);
 			}
@@ -3830,37 +3841,43 @@ void objects_garbage_collection(
 
 		if (!should_collect)
 		{
-			boolean update_time;
-
 			const struct object_memory_release_function *current_release_procs = object_memory_release_procs;
 			boolean v0 = FALSE;
 			boolean garbage_collection_after_first_attempt = FALSE;
-			boolean garbage_should_warn = TRUE;
-		
-			if (object_globals->last_garbage_warn_time!=NONE)
-			{
-				if (object_globals->last_garbage_warn_time+150>=game_time_get())
-				{
-					garbage_should_warn = FALSE;
-				}
-			}
+			boolean garbage_should_warn = object_globals->last_garbage_warn_time==NONE || object_globals->last_garbage_warn_time+150<game_time_get();
+			boolean update_time = FALSE;
 
-			update_time = FALSE;
 			while (TRUE)
 			{
 				boolean debug_garbage_collection = FALSE;
 				boolean status_still_critical = FALSE;
+
 				if (garbage_collect_mode==_garbage_collect_for_space)
 				{
 					long free_size = memory_pool_get_contiguous_free_size(object_memory_pool);
 					long free_objects = MAXIMUM_OBJECTS_PER_MAP-object_header_data->count;
 					boolean debug_slots_free = FALSE;
 
-					if (free_size>GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
+					if (free_size<=GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
 					{
-						if (free_objects>GARBAGE_LIMIT_FREE_OBJECTS_CRITICAL)
+						status_still_critical = TRUE;
+						debug_garbage_collection = TRUE;
+					}
+					else
+					{
+						if (free_objects<=GARBAGE_LIMIT_FREE_OBJECTS_CRITICAL)
 						{
-							if (free_size>GARBAGE_LIMIT_FREE_MEMORY_TRIGGER)
+							status_still_critical = TRUE;
+							debug_garbage_collection = TRUE;
+							debug_slots_free = TRUE;
+						}
+						else
+						{
+							if (free_size<=GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
+							{
+								debug_garbage_collection = TRUE;
+							}
+							else
 							{
 								if (free_objects<=GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
 								{
@@ -3868,22 +3885,7 @@ void objects_garbage_collection(
 									debug_slots_free = TRUE;
 								}
 							}
-							else
-							{
-								debug_garbage_collection = TRUE;
-							}
 						}
-						else
-						{
-							status_still_critical = TRUE;
-							debug_garbage_collection = TRUE;
-							debug_slots_free = TRUE;
-						}
-					}
-					else
-					{
-						status_still_critical = TRUE;
-						debug_garbage_collection = TRUE;
 					}
 
 					if (debug_slots_free)
@@ -3892,15 +3894,15 @@ void objects_garbage_collection(
 					}
 					else
 					{
-						sprintf(warningbuf, "%4.2f%% memory free", ((free_size * 100.f) / 2097152.f));
+						sprintf(warningbuf, "%4.2f%% memory free", ((free_size * 100.f) / (real)OBJECT_MEMORY_POOL_SIZE));
 					}
 				}
 
 				if (status_still_critical || garbage_collection_after_first_attempt)
 				{
 					char tempbuffer[512];
-
 					const char *status;
+					
 					if (garbage_collection_after_first_attempt)
 					{
 						status = status_still_critical ? "still " : "not ";
@@ -3909,6 +3911,7 @@ void objects_garbage_collection(
 					{
 						status = "";
 					}
+
 					sprintf(tempbuffer, "garbage collection %scritical (%s)", status, warningbuf);
 					console_printf(FALSE, "%s", tempbuffer);
 					error(_error_log, "%s", tempbuffer);
@@ -3923,33 +3926,41 @@ void objects_garbage_collection(
 				if (status_still_critical)
 				{
 					boolean result = FALSE;
-					while (current_release_procs->function && !result)
+
+					if (current_release_procs->function)
 					{
-						boolean more_to_release = FALSE;
-						if (!v0 && current_release_procs->init_function)
+						while (current_release_procs->function && !result)
 						{
-							current_release_procs->init_function(
+							boolean more_to_release = FALSE;
+
+							if (!v0 && current_release_procs->init_function)
+							{
+								current_release_procs->init_function(
+									release_proc_working_memory,
+									sizeof(release_proc_working_memory));
+								v0 = TRUE;
+							}
+
+							result = current_release_procs->function(
+								released_resultbuf,
+								&more_to_release,
 								release_proc_working_memory,
 								sizeof(release_proc_working_memory));
-							v0 = TRUE;
-						}
-						result = current_release_procs->function(
-							released_resultbuf,
-							&more_to_release,
-							release_proc_working_memory,
-							sizeof(release_proc_working_memory));
-						if (result)
-						{
-							char tempbuffer[512];
 
-							sprintf(tempbuffer, "removing objects: %s", released_resultbuf);
-							console_printf(FALSE, "%s", tempbuffer);
-							error(_error_log, "%s", tempbuffer);
-						}
-						if (!more_to_release)
-						{
-							++current_release_procs;
-							v0 = FALSE;
+							if (result)
+							{
+								char tempbuffer[512];
+
+								sprintf(tempbuffer, "removing objects: %s", released_resultbuf);
+								console_printf(FALSE, "%s", tempbuffer);
+								error(_error_log, "%s", tempbuffer);
+							}
+
+							if (!more_to_release)
+							{
+								++current_release_procs;
+								v0 = FALSE;
+							}
 						}
 					}
 					
@@ -3959,8 +3970,10 @@ void objects_garbage_collection(
 						{
 							object_globals->last_garbage_warn_time = game_time_get();
 						}
+
 						break;
 					}
+
 					garbage_collection_after_first_attempt = TRUE;
 					memory_pool_compact(object_memory_pool);
 				}
