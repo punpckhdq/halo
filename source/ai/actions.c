@@ -227,6 +227,12 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "actions.h"
+
+#include "actors.h"
+#include "ai_debug.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -237,6 +243,258 @@ symbols in this file:
 
 /* ---------- globals */
 
+struct action_specification const global_action_functions[NUMBER_OF_ACTOR_ACTIONS];
+/*=
+{
+
+	{
+		0,
+		"none",
+		&global_real_argb_black,
+		0u,
+		0,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		1,
+		"sleep",
+		&global_real_argb_lightblue,
+		0u,
+		0,
+		NULL,
+		NULL,
+		NULL,
+		&action_sleep_control,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		2,
+		"alert",
+		&global_real_argb_cyan,
+		92u,
+		0,
+		&action_alert_begin,
+		&action_alert_perform,
+		&action_alert_update,
+		&action_alert_control,
+		NULL,
+		NULL,
+		NULL,
+		&action_alert_flush_position_indices,
+		&action_alert_flush_structure_indices
+	},
+	{
+		3,
+		"fight",
+		&global_real_argb_white,
+		4u,
+		4,
+		&action_fight_begin,
+		&action_fight_perform,
+		&action_fight_update,
+		&action_fight_control,
+		&action_fight_end,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		4,
+		"flee",
+		&global_real_argb_yellow,
+		48u,
+		2,
+		&action_flee_begin,
+		&action_flee_perform,
+		&action_flee_update,
+		&action_flee_control,
+		&action_flee_end,
+		&action_flee_modify_color,
+		&action_flee_replace_prop,
+		&action_flee_flush_position_indices,
+		NULL
+		},
+		{
+		5,
+		"uncover",
+		&global_real_argb_blue,
+		52u,
+		3,
+		&action_uncover_begin,
+		&action_uncover_perform,
+		&action_uncover_update,
+		&action_uncover_control,
+		NULL,
+		&action_uncover_modify_color,
+		NULL,
+		&action_uncover_flush_position_indices,
+		NULL
+	},
+	{
+		6,
+		"guard",
+		&global_real_argb_salmon,
+		68u,
+		1,
+		&action_guard_begin,
+		&action_guard_perform,
+		&action_guard_update,
+		&action_guard_control,
+		&action_guard_end,
+		&action_guard_modify_color,
+		&action_guard_replace_prop,
+		&action_guard_flush_position_indices,
+		&action_guard_flush_structure_indices
+	},
+	{
+		7,
+		"search",
+		&global_real_argb_aqua,
+		44u,
+		3,
+		&action_search_begin,
+		&action_search_perform,
+		&action_search_update,
+		&action_search_control,
+		NULL,
+		NULL,
+		NULL,
+		&action_search_flush_position_indices,
+		NULL
+	},
+	{
+		8,
+		"wait",
+		&global_real_argb_magenta,
+		24u,
+		3,
+		&action_wait_begin,
+		&action_wait_perform,
+		&action_wait_update,
+		&action_wait_control,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		9,
+		"vehicle",
+		&global_real_argb_darkgreen,
+		76u,
+		2,
+		&action_vehicle_begin,
+		&action_vehicle_perform,
+		&action_vehicle_update,
+		&action_vehicle_control,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		10,
+		"charge",
+		&global_real_argb_red,
+		56u,
+		4,
+		&action_charge_begin,
+		&action_charge_perform,
+		&action_charge_update,
+		&action_charge_control,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		11,
+		"obey",
+		&global_real_argb_purple,
+		132u,
+		2,
+		&action_obey_begin,
+		&action_obey_perform,
+		&action_obey_update,
+		&action_obey_control,
+		&action_obey_end,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		12,
+		"converse",
+		&global_real_argb_orange,
+		20u,
+		2,
+		&action_converse_begin,
+		&action_converse_perform,
+		&action_converse_update,
+		&action_converse_control,
+		&action_converse_end,
+		NULL,
+		&action_converse_replace_prop,
+		NULL,
+		NULL
+	},
+	{
+		13,
+		"avoid",
+		&global_real_argb_grey,
+		4u,
+		2,
+		&action_avoid_begin,
+		&action_avoid_perform,
+		&action_avoid_update,
+		&action_avoid_control,
+		&action_avoid_end,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	}
+};
+*/
+
+
 /* ---------- public code */
+
+real_argb_color *actor_action_debug_color(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+
+	global_temporary_render_color = *global_real_argb_black;
+
+	if (actor->state.action < NUMBER_OF_ACTOR_ACTIONS)
+	{
+		global_temporary_render_color = **global_action_functions[actor->state.action].color;
+
+		if (global_action_functions[actor->state.action].modify_color)
+		{
+			global_action_functions[actor->state.action].modify_color(actor_index, &global_temporary_render_color);
+		}
+	}
+
+	return &global_temporary_render_color;
+}
 
 /* ---------- private code */

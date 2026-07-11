@@ -17,6 +17,9 @@ header included in hcex build.
 /* ---------- prototypes/DRAW_STRING.C */
 
 void draw_string_set_tab_stops(short const *tab_stops, short count);
+void draw_string_set_indents(short initial_indent, short paragraph_indent);
+void draw_string_set_color(real_argb_color const *color);
+void draw_string_get_color(real_argb_color *color);
 
 void draw_string_set_draw_mode(long font_index, short style, short justification, unsigned long flags, union real_argb_color const *color);
 

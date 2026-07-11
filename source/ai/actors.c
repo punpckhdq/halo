@@ -280,6 +280,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "actors.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -289,6 +292,9 @@ symbols in this file:
 /* ---------- prototypes */
 
 /* ---------- globals */
+
+struct data_array *swarm_data = NULL;
+struct data_array *actor_data = NULL;
 
 /* ---------- public code */
 

@@ -66,6 +66,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "props.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -75,6 +78,8 @@ symbols in this file:
 /* ---------- prototypes */
 
 /* ---------- globals */
+
+struct data_array *prop_data = NULL;
 
 /* ---------- public code */
 

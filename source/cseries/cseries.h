@@ -136,6 +136,7 @@ enum
 
 #define VALID_FLAGS(flags, bits) (!((flags)>>bits))
 
+#define SIZEOF_BITS(value) (CHAR_BITS*sizeof(value))
 #define NUMBEROF(array) (sizeof(array) / sizeof(array[0]))
 
 #define VALID_INDEX(index, count) (index>=0 && index<count)

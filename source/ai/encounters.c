@@ -279,6 +279,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "encounters.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -288,6 +291,11 @@ symbols in this file:
 /* ---------- prototypes */
 
 /* ---------- globals */
+
+struct data_array *encounter_data;
+struct platoon_datum *platoon_array;
+struct squad_datum *squad_array;
+struct data_array *pursuit_data;
 
 /* ---------- public code */
 

@@ -28,6 +28,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "ai_scenario_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -257,51 +257,51 @@ void component_vectors_from_direction3d(
 }
 
 void quaternions_multiply(
-    real_quaternion const *q0,
-    real_quaternion const *q1,
-    real_quaternion *result)
+	real_quaternion const *q0,
+	real_quaternion const *q1,
+	real_quaternion *result)
 {
-    real_quaternion temporary;
+	real_quaternion temporary;
 
-    if (q0== result)
-    {
-        temporary = *q0;
-        q0= &temporary;
-    }
+	if (q0== result)
+	{
+		temporary = *q0;
+		q0= &temporary;
+	}
 
-    if (q1== result)
-    {
+	if (q1== result)
+	{
 		temporary = *q1;
 		q1= &temporary;
-    }
+	}
 
-    result->v.i =     
-                    + q0->v.j*q1->v.k
-                    + q0->v.i*q1->w
-                    + q0->w  *q1->v.i 
-                    - q0->v.k*q1->v.j
-                    ;
+	result->v.i =
+					+ q0->v.j*q1->v.k
+					+ q0->v.i*q1->w
+					+ q0->w  *q1->v.i 
+					- q0->v.k*q1->v.j
+					;
 
-    result->v.j =     
-                    + q0->w  *q1->v.j 
-                    + q0->v.j*q1->w
-                    + q0->v.k*q1->v.i 
-                    - q0->v.i*q1->v.k
-                    ;
+	result->v.j =
+					+ q0->w  *q1->v.j 
+					+ q0->v.j*q1->w
+					+ q0->v.k*q1->v.i 
+					- q0->v.i*q1->v.k
+					;
 
-    result->v.k =     
-                    + q0->v.k*q1->w 
-                    + q0->v.i*q1->v.j
-                    + q0->w  *q1->v.k 
-                    - q0->v.j*q1->v.i
-                    ;
+	result->v.k =
+					+ q0->v.k*q1->w 
+					+ q0->v.i*q1->v.j
+					+ q0->w  *q1->v.k 
+					- q0->v.j*q1->v.i
+					;
 
-    result->w =       
-                    + q0->w  *q1->w 
-                    - q0->v.i*q1->v.i 
-                    - q0->v.j*q1->v.j 
-                    - q0->v.k*q1->v.k
-                    ;
+	result->w =
+					+ q0->w  *q1->w 
+					- q0->v.i*q1->v.i 
+					- q0->v.j*q1->v.j 
+					- q0->v.k*q1->v.k
+					;
 
 	return;
 }
@@ -733,8 +733,8 @@ real angle_between_normals3d(
 	real result = 0.f;
 
 	if ((*(long *)&a->i) == (*(long *)&b->i)
-	  && (*(long *)&a->j) == (*(long *)&b->j)
-	  && (*(long *)&a->k) == (*(long *)&b->k))
+		&& (*(long *)&a->j) == (*(long *)&b->j)
+		&& (*(long *)&a->k) == (*(long *)&b->k))
 	{
 		return result;
 	}

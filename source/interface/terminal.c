@@ -401,8 +401,8 @@ static boolean terminal_update_input(
 		long time = local_time_get();
 		
 		for (terminal_globals.input_state->key_count = 0;
-			  input_get_key(&key);
-			  terminal_globals.last_insertion_point_toggle = time)
+			input_get_key(&key);
+			terminal_globals.last_insertion_point_toggle = time)
 		{
 			if (terminal_globals.input_state->key_count < TERMINAL_GETS_MAXIMUM_KEYS)
 			{

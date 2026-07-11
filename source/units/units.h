@@ -318,6 +318,15 @@ enum
 	NUMBER_OF_UNIT_SCREAM_TYPES
 };
 
+enum
+{
+	_unit_estimate_none = 0,
+	_unit_estimate_head_standing,
+	_unit_estimate_head_crouching,
+	_unit_estimate_gun_position,
+	NUMBER_OF_UNIT_ESTIMATE_POSITION_MODES,
+};
+
 /* ---------- macros */
 
 #define unit_get(index)			((struct unit_datum*)object_get_and_verify_type(index, _object_mask_unit))
@@ -504,10 +513,24 @@ void unit_euler_aiming_update(
 
 void unit_unzoom(long unit_index);
 
+void unit_destroy(long unit_index);
 void unit_died(long unit_index, boolean feigned);
-
 void unit_get_head_position(long unit_index, union real_point3d *head_position);
-
+void unit_get_camera_position(long unit_index, real_point3d *camera_position);
+void unit_estimate_position(
+	long unit_index,
+	short estimate_mode, 
+	real_point3d const *body_position,
+	real_vector3d *desired_facing,
+	real_vector3d *desired_gun_offset,
+	real_point3d *estimated_position);
+void unit_get_center_of_mass(long unit_index, real_point3d *center_of_mass);
+boolean unit_test_animation_impulse(long unit_index, short animation_impulse);
+boolean unit_start_animation_impulse(long unit_index, short animation_impulse, real_vector2d *alignment_vector);
+long unit_get_aiming_unit_index(long unit_index);
+void unit_get_aiming_vector(long unit_index, real_vector3d *aiming_vector);
+void unit_get_looking_vector(long unit_index, real_vector3d *looking_vector);
+void unit_get_facing_vector(long unit_index, real_vector3d *facing_vector);
 boolean unit_clip_to_aiming_bounds(long unit_index, real_vector3d *vector, boolean use_aiming_screen);
 long unit_inventory_get_weapon(long unit_index, short index);
 short unit_inventory_next_grenade(long unit_index, short current_index, short delta);
@@ -516,7 +539,10 @@ void unit_ready_desired_weapon(long unit_index, boolean immediate);
 
 boolean unit_can_use_weapon(long unit_index, long weapon_index);
 
+void unit_set_possessed(long unit_index, boolean possessed);
 void unit_set_actively_controlled(long unit_index, boolean actively_controlled);
+boolean unit_is_busy(long object_index);
+void unit_scripting_set_emotion_animation(long unit_index, char const *animation_name);
 
 boolean unit_drop_current_weapon(long unit_index, boolean immediate);
 

@@ -121,7 +121,7 @@ struct scenario
 	struct tag_block detail_object_collection_palette;
 	long render_unused[21];
 	struct tag_block ai_actor_palette;
-	struct tag_block ai_encounters;
+	struct tag_block ai_encounters;						// encounter_definition
 	struct tag_block ai_command_lists;
 	struct tag_block ai_animation_references;
 	struct tag_block ai_script_references;

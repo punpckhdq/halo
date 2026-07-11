@@ -15,6 +15,8 @@ file has inline function assertions.
 #define _real_epsilon 0.0001f
 #define _pi ((real)M_PI)
 
+#define REAL_MIN -3.4028235e38f
+#define REAL_MAX 3.4028235e38f
 #define DOUBLE_MIN 3.62314807E-315
 
 /* ---------- macros */
@@ -677,17 +679,18 @@ __inline real magnitude2d(
 __inline real normalize2d(
 	real_vector2d *v)
 {
-	real result = magnitude2d(v);
-	if (fabs(result-0.f)>=_real_epsilon)
+	real magnitude = magnitude2d(v);
+
+	if (!(_real_epsilon>fabs(magnitude-0.f)))
 	{
-		scale_vector2d(v, 1.f / result, v);
+		scale_vector2d(v, 1.f / magnitude, v);
 	}
 	else
 	{
-		result = 0.f;
+		magnitude = 0.f;
 	}
 
-	return result;
+	return magnitude;
 }
 
 __inline boolean limit2d(
@@ -1106,7 +1109,7 @@ __inline real vector_intersect_plane3d(
 {
 	// TODO: might not be correct
 	return (dot_product3d((real_vector3d *)point, &plane->n) - plane->d) 
-	     / -dot_product3d(vector, &plane->n);
+		/ -dot_product3d(vector, &plane->n);
 }
 
 __inline boolean point_in_circle(

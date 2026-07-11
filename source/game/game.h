@@ -10,7 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "real_math.h"
+#include "math/real_math.h"
 
 /* ---------- constants */
 
@@ -31,6 +31,25 @@ enum
 	_game_difficulty_level_impossible,
 	NUMBER_OF_GAME_DIFFICULTY_LEVELS
 };
+
+enum
+{
+	_game_team_default = 0x0,
+	_game_team_player,
+	_game_team_human,
+	_game_team_covenant,
+	_game_team_flood,
+	_game_team_sentinel,
+	_game_team_unused6,
+	_game_team_unused7,
+	_game_team_unused8,
+	_game_team_unused9,
+	NUMBER_OF_SOLO_CAMPAIGN_TEAMS,
+	_team_red = 0,
+	_team_blue,
+	MAXIMUM_MULTIPLAYER_GAME_TEAMS,
+};
+
 
 /* ---------- macros */
 

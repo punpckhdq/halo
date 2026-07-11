@@ -1438,10 +1438,10 @@ boolean unit_update(
 				if (current_time >= last_time+TICKS_PER_SECOND)
 				{
 					error(
-					  _error_silent,
-					  "player illumination: self %.2f ambient %.2f",
-					  unit->unit.self_illumination,
-					  unit->unit.ambient_illumination);
+						_error_silent,
+						"player illumination: self %.2f ambient %.2f",
+						unit->unit.self_illumination,
+						unit->unit.ambient_illumination);
 					last_time = current_time;
 				}
 			}

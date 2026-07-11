@@ -16,6 +16,9 @@ header included in hcex build.
 
 /* ---------- macros */
 
+#define biped_get(index)			((struct biped_datum *)object_get_and_verify_type((index), _object_mask_biped))
+#define biped_try_and_get(index)	((struct biped_datum *)object_try_and_get_and_verify_type((index), _object_mask_biped))
+
 /* ---------- structures */
 
 struct _biped_datum
@@ -59,9 +62,18 @@ struct biped_datum
 
 /* ---------- prototypes/BIPEDS.C */
 
+void biped_get_sight_position(
+	long biped_index,
+	short estimate_mode,
+	real_point3d const *estimated_body_position,
+	real_vector3d *desired_facing,
+	real_vector3d const *desired_gun_offset,
+	real_point3d *sight_position);
+void biped_get_physics_pill(long biped_index, real_point3d *base, real *height, real *width);
+
 void biped_stop_limp_body_physics(long biped_index);
 
-void biped_get_sight_position(long biped_index, short estimate_mode, real_point3d const *estimated_body_position, real_vector3d *desired_facing, real_vector3d const *desired_gun_offset, real_point3d *sight_position);
+void biped_build_flying_axes(real_vector3d const *forward_vector, real_vector3d *left_vector, real_vector3d *up_vector);
 
 /* ---------- globals */
 

@@ -10,6 +10,16 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_ai_line_of_sight_clear = 0,
+	_ai_line_of_sight_occluded,
+	_ai_line_of_sight_from_cover,
+	_ai_line_of_sight_to_cover,
+	_ai_line_of_sight_obstructed,
+	NUMBER_OF_AI_LINE_OF_SIGHTS,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

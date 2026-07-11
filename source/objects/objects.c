@@ -4248,12 +4248,12 @@ static long recursive_object_adder(
 		if (object->object.first_child_object_index!=NONE)
 		{
 			object_count = recursive_object_adder(
-					   object->object.first_child_object_index,
-					   add_object_function,
-					   custom_data,
-					   object_count,
-					   maximum_count,
-					   object_indices);
+				object->object.first_child_object_index,
+				add_object_function,
+				custom_data,
+				object_count,
+				maximum_count,
+				object_indices);
 		}
 
 		if (object->object.next_object_index!=NONE)
@@ -4357,17 +4357,17 @@ static void object_dump_write(
 	}
 
 	fprintf(
-		   stream,
-		   "% 6d (% 6d) [% 7d/% 7d/% 7d/% 7d] % 7d % 7d %s\r\n",
-		   dump->count,
-		   dump->active_count,
-		   dump->garbage_count,
-		   dump->dead_count,
-		   dump->outside_map_count,
-		   dump->at_rest_count,
-		   dump->maximum_size,
-		   dump->total_size,
-		   name);
+		stream,
+		"% 6d (% 6d) [% 7d/% 7d/% 7d/% 7d] % 7d % 7d %s\r\n",
+		dump->count,
+		dump->active_count,
+		dump->garbage_count,
+		dump->dead_count,
+		dump->outside_map_count,
+		dump->at_rest_count,
+		dump->maximum_size,
+		dump->total_size,
+		name);
 
 	return;
 }

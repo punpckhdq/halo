@@ -141,7 +141,7 @@ static void debug_key_select_actor(
 {
 	if (key_is_down)
 	{
-		ai_debug.select_actor = TRUE;
+		ai_debug.select_this_actor = TRUE;
 	}
 
 	return;
