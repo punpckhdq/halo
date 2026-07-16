@@ -650,7 +650,7 @@
 				{ "name": "source/input/input_windows.c", "index": 278, "status": "Matching" },
 				{ "name": "source/input/input_abstraction.c", "index": 279, "status": "NonMatching" },
 				{ "name": "source/input/HaloAutoTest.c", "index": 280, "status": "Matching" },
-				{ "name": "source/hs/object_lists.c", "index": 281, "status": "NonMatching" },
+				{ "name": "source/hs/object_lists.c", "index": 281, "status": "Matching" },
 				{ "name": "source/hs/hs_scenario_definitions.c", "index": 282, "status": "NonMatching" },
 				{ "name": "source/hs/hs_runtime.c", "index": 283, "status": "NonMatching" },
 				{ "name": "source/hs/hs_library_external.c", "index": 284, "status": "NonMatching" },

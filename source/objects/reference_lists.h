@@ -10,7 +10,8 @@ file has inline function assertions.
 
 /* ---------- headers */
 
-#include "game_state.h"
+#include "cseries/errors.h"
+#include "saved games/game_state.h"
 
 /* ---------- constants */
 
