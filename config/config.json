@@ -513,7 +513,7 @@
 				{ "name": "source/physics/collision_bsp_definitions.c", "index": 141, "status": "NonMatching" },
 				{ "name": "source/physics/collision_bsp.c", "index": 142, "status": "NonMatching" },
 				{ "name": "source/physics/bsp3d.c", "index": 143, "status": "NonMatching" },
-				{ "name": "source/physics/bsp2d.c", "index": 144, "status": "NonMatching" },
+				{ "name": "source/physics/bsp2d.c", "index": 144, "status": "Matching" },
                 { "name": "source/physics/breakable_surfaces.c", "index": 145, "status": "NonMatching", "options": { "cflags": [ "/nologo", "/c", "/O2", "/Oy-", "/Ow", "/QIfist" ] } },
 				{ "name": "source/objects/scenery_group.c", "index": 146, "status": "Matching" },
 				{ "name": "source/objects/scenery.c", "index": 147, "status": "NonMatching" },
