@@ -5477,7 +5477,7 @@
 { "file_offset": 1326480, "flags": 32, "name": "_physics_variable_speed_update" },
 { "file_offset": 1326720, "flags": 32, "name": "_physics_variable_speed_update_seek" },
 { "file_offset": 1326848, "flags": 32, "name": "_physics_variable_update" },
-{ "file_offset": 1326912, "flags": 32, "name": "_code_00143f40" },
+{ "file_offset": 1326912, "flags": 32, "name": "_physics_variable_position_get_seek_direction" },
 { "file_offset": 1327008, "flags": 32, "name": "_physics_variable_position_update_seek" },
 { "file_offset": 1327136, "flags": 32, "name": "_physics_variable_update_seek" },
 { "file_offset": 1327280, "flags": 32, "name": "_point_physics_initialize_for_new_map" },

@@ -501,7 +501,7 @@
 				{ "name": "source/rasterizer/common/rasterizer_common.c", "index": 129, "status": "Matching" },
 				{ "name": "source/physics/terrain_definitions.c", "index": 130, "status": "Matching" },
 				{ "name": "source/physics/point_physics.c", "index": 131, "status": "NonMatching" },
-				{ "name": "source/physics/physics_variables.c", "index": 132, "status": "NonMatching" },
+				{ "name": "source/physics/physics_variables.c", "index": 132, "status": "Matching" },
 				{ "name": "source/physics/physics_definitions.c", "index": 133, "status": "Matching" },
 				{ "name": "source/physics/physics.c", "index": 134, "status": "NonMatching" },
 				{ "name": "source/physics/collisions.c", "index": 135, "status": "NonMatching" },
