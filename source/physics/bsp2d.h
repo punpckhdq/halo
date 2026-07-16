@@ -22,7 +22,7 @@ header included in hcex build.
 struct bsp2d_node
 {
 	struct real_plane2d plane;
-	long children[2];
+	long child_indices[2];
 };
 
 struct bsp2d
@@ -36,6 +36,6 @@ struct bsp2d
 
 /* ---------- public code */
 
-int bsp2d_test_point(const struct bsp2d *bsp, const union real_point2d *point, int child_index);
+long bsp2d_test_point(struct bsp2d const *bsp, real_point2d const *point, long child_index);
 
 #endif // __BSP2D_H
