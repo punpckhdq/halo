@@ -22,7 +22,11 @@ static real physics_variable_position_get_seek_direction(real position, struct p
 
 /* ---------- public code */
 
-void physics_variable_position_update(real *position, struct physics_variable_position const *definition, boolean cyclical_position, real speed)
+void physics_variable_position_update(
+	real *position, 
+	struct physics_variable_position const *definition, 
+	boolean cyclical_position, 
+	real speed)
 {
 	speed += *position;
 	*position = speed;
@@ -49,9 +53,14 @@ void physics_variable_position_update(real *position, struct physics_variable_po
 			*position = definition->maximum_position;
 		}
 	}
+
+	return;
 }
 
-void physics_variable_speed_update(real *speed, struct physics_variable_speed const *definition, real magnitude)
+void physics_variable_speed_update(
+	real *speed, 
+	struct physics_variable_speed const *definition,
+	real magnitude)
 {
 	real absolute_magnitude = fabs(magnitude);
 	real acceleration = absolute_magnitude*definition->acceleration;
@@ -97,9 +106,15 @@ void physics_variable_speed_update(real *speed, struct physics_variable_speed co
 		minimum_speed = -(absolute_magnitude*definition->maximum_reverse_speed);
 		*speed = (minimum_speed > *speed) ? minimum_speed : *speed;
 	}
+
+	return;
 }
 
-boolean physics_variable_speed_update_seek(real *speed, struct physics_variable_speed const *definition, real desired_speed, real magnitude)
+boolean physics_variable_speed_update_seek(
+	real *speed, 
+	struct physics_variable_speed const *definition, 
+	real desired_speed, 
+	real magnitude)
 {
 	boolean result = FALSE;
 
@@ -131,14 +146,27 @@ boolean physics_variable_speed_update_seek(real *speed, struct physics_variable_
 	return result;
 }
 
-void physics_variable_update(real *position, real *speed, struct physics_variable const *definition, boolean cyclical_position, real magnitude)
+void physics_variable_update(
+	real *position,
+	real *speed, 
+	struct physics_variable const *definition,
+	boolean cyclical_position, 
+	real magnitude)
 {
 	physics_variable_speed_update(speed, &definition->speed, magnitude);
 	physics_variable_position_update(position, &definition->position, cyclical_position, *speed);
+
+	return;
 }
 
-boolean physics_variable_position_update_seek(real *position, struct physics_variable_position const *definition, boolean cyclical_position, real desired_position, real speed)
+boolean physics_variable_position_update_seek(
+	real *position,
+	struct physics_variable_position const *definition, 
+	boolean cyclical_position, 
+	real desired_position, 
+	real speed)
 {
+	boolean result = TRUE;
 	real direction = physics_variable_position_get_seek_direction(*position, definition, cyclical_position, desired_position);
 
 	if (direction != 0.0f)
@@ -147,16 +175,25 @@ boolean physics_variable_position_update_seek(real *position, struct physics_var
 
 		if (physics_variable_position_get_seek_direction(*position, definition, cyclical_position, desired_position) == direction)
 		{
-			return FALSE;
+			result = FALSE;
 		}
 	}
 
-	*position = desired_position;
+	if (result)
+	{
+		*position = desired_position;
+	}
 
-	return TRUE;
+	return result;
 }
 
-boolean physics_variable_update_seek(real *position, real *speed, struct physics_variable const *definition, boolean cyclical_position, real desired_position, real magnitude)
+boolean physics_variable_update_seek(
+	real *position,
+	real *speed, 
+	struct physics_variable const *definition, 
+	boolean cyclical_position, 
+	real desired_position,
+	real magnitude)
 {
 	boolean result = TRUE;
 	struct physics_variable_position const *position_definition = &definition->position;
@@ -184,7 +221,11 @@ boolean physics_variable_update_seek(real *position, real *speed, struct physics
 
 /* ---------- private code */
 
-static real physics_variable_position_get_seek_direction(real position, struct physics_variable_position const *definition, boolean cyclical_position, real desired_position)
+static real physics_variable_position_get_seek_direction(
+	real position, 
+	struct physics_variable_position const *definition, 
+	boolean cyclical_position, 
+	real desired_position)
 {
 	real direction = desired_position - position;
 
