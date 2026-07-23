@@ -20,6 +20,8 @@ header included in hcex build.
 
 /* ---------- prototypes/AI_COMMUNICATION.C */
 
+void ai_communication_packet_new(struct ai_information_packet *information);
+
 real ai_communication_get_player_rating(real unit_index, boolean test_line_of_sight, long *unit_index_reference, real *distance_reference);
 
 /* ---------- globals */

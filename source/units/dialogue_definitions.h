@@ -16,6 +16,8 @@ header included in hcex build.
 
 /* ---------- prototypes/EXAMPLE.C */
 
+short dialogue_get_vocalization_type_by_name(char const *name);
+
 /* ---------- globals */
 
 /* ---------- public code */

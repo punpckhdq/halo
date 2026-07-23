@@ -29,6 +29,7 @@ AI_DEBUG.C
 #include "text/draw_string.h"
 #include "units/bipeds.h"
 #include "units/biped_definitions.h"
+#include "units/dialogue_definitions.h"
 #include "units/units.h"
 #include "units/unit_definitions.h"
 
@@ -512,6 +513,75 @@ char *ai_debug_describe_actor(
 	_snprintf(buffer, bufsize, "%s%s%s", actor_string, tag_name, object_name);
 
 	return buffer;
+}
+
+void ai_debug_vocalize(
+	char const *speech_priority_name,
+	char const *vocalization_type_name)
+{
+	if (ai_debug.selected_actor_index!=NONE)
+	{
+		struct actor_datum const *actor = actor_get(ai_debug.selected_actor_index);
+		
+		ai_debug.render_speech = TRUE;
+
+		if (actor->meta.unit_index!=NONE)
+		{
+			short speech_priority = unit_get_speech_priority_by_name(speech_priority_name);
+			short vocalization_type = dialogue_get_vocalization_type_by_name(vocalization_type_name);
+
+			if (speech_priority > 0 && vocalization_type != NONE)
+			{
+				long sound_definition_index_reference = NONE;
+				short play_type = unit_test_speech(
+						actor->meta.unit_index,
+						speech_priority,
+						TRUE,
+						TRUE,
+						NULL,
+						&vocalization_type,
+						&sound_definition_index_reference);
+
+				if (play_type)
+				{
+					struct unit_speech_item speech_item;
+
+					memset(&speech_item, 0, sizeof(speech_item));
+					
+					speech_item.priority = speech_priority;
+					speech_item.vocalization_type = vocalization_type;
+					speech_item.sound_definition_index = sound_definition_index_reference;
+
+					ai_communication_packet_new(&speech_item.ai);
+					unit_speak(actor->meta.unit_index, play_type, &speech_item);
+				}
+			}
+		}
+	}
+
+	return;
+}
+
+void ai_debug_speak(
+	char const *vocalization_type_name)
+{
+	if (ai_debug.selected_actor_index!=NONE)
+	{
+		struct actor_datum const *actor = actor_get(ai_debug.selected_actor_index);
+		short vocalization_type = dialogue_get_vocalization_type_by_name(vocalization_type_name);
+
+		if (actor->meta.unit_index!=NONE && vocalization_type!=NONE)
+		{
+			ai_debug.render_speech = TRUE;
+			ai_debug.field_85B20 = TRUE;
+			ai_debug.field_85B28 = FALSE;
+			ai_debug.field_85B21 = FALSE;
+			ai_debug.speaking_unit_index = actor->meta.unit_index;
+			ai_debug.vocalization_type = vocalization_type;
+		}
+	}
+
+	return;
 }
 
 // TODO: remove this!!!!!

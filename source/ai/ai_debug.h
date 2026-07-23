@@ -256,7 +256,12 @@ struct ai_debug_state
 	short prop_idle_look_count;
 	long prop_idle_look_indicies[32];
 	real prop_idle_look_distances[32];
-	char __unknown85B20[12];
+	boolean field_85B20;
+	boolean field_85B21;
+	boolean field_85B22;
+	long speaking_unit_index;
+	short field_85B28;
+	short vocalization_type;
 };
 
 struct actor_debug_info
@@ -386,6 +391,8 @@ void ai_debug_lineoffire_success(boolean success);
 boolean ai_debug_highlight_cluster(short index, real_argb_color const **highlight_color);
 void ai_debug_lineofsight_reset(void);
 char *ai_debug_describe_actor(long actor_index, long unit_index, boolean include_squad, char *buffer, long bufsize);
+void ai_debug_vocalize(char const *speech_priority_name, char const *vocalization_type_name);
+void ai_debug_speak(char const *vocalization_type_name);
 
 void ai_debug_change_selected_encounter(boolean search_forwards);
 void ai_debug_change_selected_actor(boolean search_forwards);
