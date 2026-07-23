@@ -848,7 +848,7 @@ __inline real_point3d *point_from_line3d(
 	return result;
 }
 
-__inline real_vector3d *vector_from_points3d(
+__inline real_vector3d* vector_from_points3d(
 	real_point3d const *a,
 	real_point3d const *b,
 	real_vector3d *result)
@@ -1099,7 +1099,7 @@ __inline real plane3d_distance_to_point(
 	real_plane3d const *plane,
 	real_point3d const *point)
 {
-	return (dot_product3d((real_vector3d *)point, &plane->n) - plane->d);
+	return dot_product3d(&plane->n, (real_vector3d *)point) - plane->d;
 }
 
 __inline real vector_intersect_plane3d(
@@ -1107,9 +1107,7 @@ __inline real vector_intersect_plane3d(
 	real_vector3d const *vector,
 	real_plane3d const *plane)
 {
-	// TODO: might not be correct
-	return (dot_product3d((real_vector3d *)point, &plane->n) - plane->d) 
-		/ -dot_product3d(vector, &plane->n);
+	return -(plane3d_distance_to_point(plane, point) / dot_product3d(vector, &plane->n));
 }
 
 __inline boolean point_in_circle(

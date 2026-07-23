@@ -12,6 +12,7 @@ header included in hcex build.
 /* ---------- headers */
 
 #include "tag_files/tag_groups.h"
+#include "real_math.h"
 
 /* ---------- constants */
 
@@ -19,15 +20,51 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct bsp3d_node
+{
+	long plane;
+	long child_indices[2];
+};
+
 struct bsp3d
 {
 	struct tag_block nodes;
 	struct tag_block planes;
 };
 
+typedef void (*bsp3d_clip_line_to_leaves_proc)(
+	real_point3d const *p0,
+	real_point3d const *p1,
+	long leaf_index,
+	void *data);
+
+typedef void (*bsp3d_clip_polygon_to_leaves_proc)(
+	real_point3d const *vertices,
+	short vertex_count,
+	long leaf_index,
+	long on_node_designator,
+	void *data);
+
 /* ---------- prototypes/BSP3D.C */
 
-long bsp3d_test_point(struct bsp3d const *bsp, long node_index, union real_point3d const *point);
+long bsp3d_test_point(struct bsp3d const *bsp, long node_index, real_point3d const *point);
+
+long bsp3d_clip_line_to_leaves(
+	struct bsp3d const *bsp,
+	long node_index,
+	real_point3d const *p0,
+	real_point3d const *p1,
+	bsp3d_clip_line_to_leaves_proc handler,
+	void *data);
+
+long bsp3d_clip_polygon_to_leaves(
+	struct bsp3d const *bsp,
+	long node_index,
+	real_point3d const *vertices,
+	short vertex_count,
+	real epsilon,
+	bsp3d_clip_polygon_to_leaves_proc handler,
+	void *data);
 
 /* ---------- globals */
 
