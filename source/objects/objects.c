@@ -784,7 +784,6 @@ void objects_place(
 	return;
 }
 
-// TODO: match
 long find_objects_from_point_vector(
 	real_point3d const *position,
 	real_vector3d const *direction, 
@@ -817,10 +816,9 @@ long find_objects_from_point_vector(
 			{
 				if (cluster_pvs[i])
 				{
-					short j;
-
-					short offset = (LONG_BITS * i);
+					short offset = (short)(i << LONG_BITS_BITS);
 					short size = MIN(offset + LONG_BITS, global_structure_bsp_get()->clusters.count);
+					short j;
 
 					for (j = offset; j<size; ++j)
 					{
@@ -858,7 +856,6 @@ long find_objects_from_point_vector(
 void objects_dump_memory(
 	void)
 {
-	struct objects_information information;
 	struct dump_datum dumps[MAXIMUM_DUMPS];
 	struct dump_datum dumps_by_type[NUMBER_OF_OBJECT_TYPES];
 	struct object_iterator iterator;
@@ -936,6 +933,8 @@ void objects_dump_memory(
 	if (file)
 	{
 		{
+			struct objects_information information;
+
 			objects_information_get(&information);
 
 			fprintf(
@@ -1240,7 +1239,8 @@ short object_get_first_cluster(
 real_matrix4x3 *object_get_node_matrices(
 	long object_index)
 {
-	return (real_matrix4x3 *)object_header_block_get(object_index, &object_get(object_index)->object.node_matrices);
+	struct object_datum *object = object_get(object_index);
+	return (real_matrix4x3 *)object_header_block_get(object_index, &object->object.node_matrices);
 }
 
 char const *object_get_attachment_marker_name(
@@ -1820,9 +1820,15 @@ real_matrix4x3 *object_get_node_matrix(
 	long object_index,
 	short node_index)
 {
+	real_matrix4x3 *node_matrices;
+	struct object_datum *object;
+
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1060, object_has_node(object_index, node_index));
 
-	return &((real_matrix4x3 *)object_header_block_get(object_index, &object_get(object_index)->object.node_matrices))[node_index];
+	object = object_get(object_index);
+	node_matrices = (real_matrix4x3 *)object_header_block_get(object_index, &object->object.node_matrices);
+
+	return &node_matrices[node_index];
 }
 
 short object_get_marker_by_name(
@@ -1835,12 +1841,10 @@ short object_get_marker_by_name(
 
 	struct object_datum const *object = object_get(object_index);
 	struct object_definition const *object_definition = object_definition_get(object->definition_index);
-	
 	real_matrix4x3 const *matrices = object_get_node_matrices(object_index);
-	long const model_index = object_definition->object.model.index;
 
 	marker = model_get_marker_by_name(
-		model_index,
+		object_definition->object.model.index,
 		name,
 		object->object.region_permutations,
 		FALSE,
@@ -2309,31 +2313,37 @@ void object_compute_node_matrices(
 
 		world_relative = FALSE;
 
-		if (object->object.animation.animation_graph_index!=NONE && object->object.animation.state.index!=NONE)
+		if (object->object.animation.animation_graph_index!=NONE)
 		{
-			short frame_index;
-
-			struct animation_graph *animation_graph = animation_graph_definition_get(
-				object->object.animation.animation_graph_index);
-			struct animation *animation = TAG_BLOCK_GET_ELEMENT(
-				&animation_graph->animations,
-				object->object.animation.state.index,
-				struct animation);
-
-			if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) && animation->frame_count>0)
+			if (object->object.animation.state.index!=NONE)
 			{
+				short frame_index;
 
-				frame_index = OBJECT_FRAME_INDEX_GET(object_index) % (unsigned long)animation->frame_count;
+				struct animation_graph *animation_graph = animation_graph_definition_get(
+					object->object.animation.animation_graph_index);
+				struct animation *animation = TAG_BLOCK_GET_ELEMENT(
+					&animation_graph->animations,
+					object->object.animation.state.index,
+					struct animation);
 
-				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2704, frame_index>=0)
+				if (TEST_FLAG(object->object.flags, _object_animates_automatically_bit) && animation->frame_count>0)
+				{
+					frame_index = OBJECT_FRAME_INDEX_GET(object_index) % (unsigned long)animation->frame_count;
+
+					match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2704, frame_index>=0)
+				}
+				else
+				{
+					frame_index = object->object.animation.state.frame_index;
+				}
+
+				animation_get_node_orientations(model, animation, frame_index, node_orientations);
+				world_relative = TEST_FLAG(animation->flags, _animation_world_relative_bit);
 			}
 			else
 			{
-				frame_index = object->object.animation.state.frame_index;
+				model_get_node_orientations(model, node_orientations);
 			}
-
-			animation_get_node_orientations(model, animation, frame_index, node_orientations);
-			world_relative = TEST_FLAG(animation->flags, _animation_world_relative_bit);
 		}
 		else
 		{
@@ -2641,19 +2651,24 @@ void object_compute_node_matrices(
 			}
 			else
 			{
-				real_matrix4x3 *matrix = &object_nodes[node_stack_index];
 				real_orientation *orientation = &node_orientations[node_stack_index];
 
-				matrix4x3_from_orientation(matrix, orientation);
+				matrix4x3_from_orientation(&object_nodes[node_stack_index], orientation);
 				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2929, node->parent_node_index!=NONE);
-				matrix4x3_multiply(&object_nodes[node->parent_node_index], matrix, matrix);
+				matrix4x3_multiply(
+					&object_nodes[node->parent_node_index],
+					&object_nodes[node_stack_index],
+					&object_nodes[node_stack_index]);
 			}
 
-			match_assert_valid_real_matrix4x3_custom_string(
-				"c:\\halo\\SOURCE\\objects\\objects.c",
-				2935,
-				&object_nodes[node_stack_index],
-				tag_get_name(object->definition_index));
+			if (node_stack_index==0)
+			{
+				match_assert_valid_real_matrix4x3_custom_string(
+					"c:\\halo\\SOURCE\\objects\\objects.c",
+					2935,
+					&object_nodes[node_stack_index],
+					tag_get_name(object->definition_index));
+			}
 
 			if (node->next_sibling_node_index!=NONE)
 			{
@@ -3413,7 +3428,10 @@ void object_attach_to_node(
 
 		object_deactivate(child_object_index);
 
-		SET_FLAG(object_header_get(child_object_index)->flags, _object_header_do_not_update_bit, TRUE);
+		{
+			struct object_header_datum *header = object_header_get(child_object_index);
+			SET_FLAG(header->flags, _object_header_do_not_update_bit, TRUE);
+		}
 
 		object_compute_node_matrices(child_object_index);
 	}
@@ -3689,11 +3707,6 @@ void object_delete_immediately(
 void objects_garbage_collection(
 	void)
 {
-	long garbage_object_indices[MAXIMUM_OBJECTS_PER_MAP];
-	char warningbuf[512];
-	unsigned char release_proc_working_memory[4096];
-	char released_resultbuf[512];
-
 	long garbage_collect_mode = NONE;
 
 	if (object_globals->force_garbage_collection)
@@ -3730,6 +3743,8 @@ void objects_garbage_collection(
 	
 	if (garbage_collect_mode!=NONE)
 	{
+		long garbage_object_indices[MAXIMUM_OBJECTS_PER_MAP];
+
 		short garbage_object_count = 0;
 		boolean should_collect = FALSE;
 
@@ -3849,6 +3864,10 @@ void objects_garbage_collection(
 
 			while (TRUE)
 			{
+				char warningbuf[512];
+				unsigned char release_proc_working_memory[4096];
+				char released_resultbuf[512];
+
 				boolean debug_garbage_collection = FALSE;
 				boolean status_still_critical = FALSE;
 
@@ -3927,40 +3946,37 @@ void objects_garbage_collection(
 				{
 					boolean result = FALSE;
 
-					if (current_release_procs->function)
+					while (current_release_procs->function && !result)
 					{
-						while (current_release_procs->function && !result)
+						boolean more_to_release = FALSE;
+
+						if (!v0 && current_release_procs->init_function)
 						{
-							boolean more_to_release = FALSE;
-
-							if (!v0 && current_release_procs->init_function)
-							{
-								current_release_procs->init_function(
-									release_proc_working_memory,
-									sizeof(release_proc_working_memory));
-								v0 = TRUE;
-							}
-
-							result = current_release_procs->function(
-								released_resultbuf,
-								&more_to_release,
+							current_release_procs->init_function(
 								release_proc_working_memory,
 								sizeof(release_proc_working_memory));
+							v0 = TRUE;
+						}
 
-							if (result)
-							{
-								char tempbuffer[512];
+						result = current_release_procs->function(
+							released_resultbuf,
+							&more_to_release,
+							release_proc_working_memory,
+							sizeof(release_proc_working_memory));
 
-								sprintf(tempbuffer, "removing objects: %s", released_resultbuf);
-								console_printf(FALSE, "%s", tempbuffer);
-								error(_error_log, "%s", tempbuffer);
-							}
+						if (result)
+						{
+							char tempbuffer[512];
 
-							if (!more_to_release)
-							{
-								++current_release_procs;
-								v0 = FALSE;
-							}
+							sprintf(tempbuffer, "removing objects: %s", released_resultbuf);
+							console_printf(FALSE, "%s", tempbuffer);
+							error(_error_log, "%s", tempbuffer);
+						}
+
+						if (!more_to_release)
+						{
+							++current_release_procs;
+							v0 = FALSE;
 						}
 					}
 					
@@ -4747,7 +4763,6 @@ static void object_compute_function_values(
 	return;
 }
 
-// TODO: match
 static void object_compute_change_colors(
 	long object_index)
 {
@@ -4756,7 +4771,8 @@ static void object_compute_change_colors(
 
 	if (TEST_FLAG(object_definition->object.runtime_flags, _object_runtime_scaled_change_colors_bit))
 	{
-		long cc_index;
+		short cc_index;
+		
 		for (cc_index = 0; cc_index<object_definition->object.change_colors.count; cc_index++)
 		{
 			struct object_change_color_definition *change_color = TAG_BLOCK_GET_ELEMENT(
@@ -4771,12 +4787,12 @@ static void object_compute_change_colors(
 					change_color->scale_flags,
 					&change_color->color_lower_bound,
 					&change_color->color_upper_bound,
-					object->object.incoming_function_values[change_color->scaled_by]);
+					OBJECT_INCOMING_FUNCTION_GET_VALUE(object, change_color->scaled_by));
 			}
 
 			if (change_color->darken_by)
 			{
-				const real scale = object->object.incoming_function_values[change_color->scaled_by];
+				const real scale = OBJECT_INCOMING_FUNCTION_GET_VALUE(object, change_color->darken_by);
 				object->object.outgoing_change_colors[cc_index].red*= scale;
 				object->object.outgoing_change_colors[cc_index].green*= scale;
 				object->object.outgoing_change_colors[cc_index].blue*= scale;
