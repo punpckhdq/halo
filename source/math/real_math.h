@@ -611,6 +611,7 @@ __inline real_point2d *set_real_point2d(
 {
 	p->x = x;
 	p->y = y;
+	return p;
 }
 
 __inline real_vector2d *set_real_vector2d(
@@ -620,6 +621,7 @@ __inline real_vector2d *set_real_vector2d(
 {
 	v->i = i;
 	v->j = j;
+	return v;
 }
 
 __inline real_point2d *point_from_line2d(
@@ -848,7 +850,7 @@ __inline real_point3d *point_from_line3d(
 	return result;
 }
 
-__inline real_vector3d* vector_from_points3d(
+__inline real_vector3d *vector_from_points3d(
 	real_point3d const *a,
 	real_point3d const *b,
 	real_vector3d *result)
@@ -935,6 +937,7 @@ __inline real_point3d *midpoint3d(
 	result->x = (p0->x + p1->x) * 0.5f;
 	result->y = (p0->y + p1->y) * 0.5f;
 	result->z = (p0->z + p1->z) * 0.5f;
+	return result;
 }
 
 __inline real dot_product3d(
@@ -951,8 +954,7 @@ __inline real_vector3d *cross_product3d(
 {
 	real k = a->i*b->j - a->j*b->i;
 	real j = a->k*b->i - a->i*b->k;
-	real i = a->j*b->k - a->k*b->j;
-	result->i = i;
+	result->i = a->j*b->k - a->k*b->j;
 	result->j = j;
 	result->k = k;
 
@@ -1099,7 +1101,7 @@ __inline real plane3d_distance_to_point(
 	real_plane3d const *plane,
 	real_point3d const *point)
 {
-	return dot_product3d(&plane->n, (real_vector3d *)point) - plane->d;
+	return dot_product3d((real_vector3d *)point, &plane->n) - plane->d;
 }
 
 __inline real vector_intersect_plane3d(

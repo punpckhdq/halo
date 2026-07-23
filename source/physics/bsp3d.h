@@ -16,15 +16,19 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	MAXIMUM_NODES_PER_BSP3D = 131072,
+	MAXIMUM_LEAVES_PER_BSP3D = UNSIGNED_SHORT_MAX+1,
+	MAXIMUM_PLANES_PER_BSP3D = UNSIGNED_SHORT_MAX+1,
+	MAXIMUM_BSP3D_DEPTH = 128,
+	BSP3D_ROOT_NODE_INDEX = 0,
+};
+
+
 /* ---------- macros */
 
 /* ---------- structures */
-
-struct bsp3d_node
-{
-	long plane;
-	long child_indices[2];
-};
 
 struct bsp3d
 {
@@ -32,13 +36,19 @@ struct bsp3d
 	struct tag_block planes;
 };
 
-typedef void (*bsp3d_clip_line_to_leaves_proc)(
+struct bsp3d_node
+{
+	long plane;
+	long child_indices[2];
+};
+
+typedef void (*line_proc)(
 	real_point3d const *p0,
 	real_point3d const *p1,
 	long leaf_index,
 	void *data);
 
-typedef void (*bsp3d_clip_polygon_to_leaves_proc)(
+typedef void (*polygon_proc)(
 	real_point3d const *vertices,
 	short vertex_count,
 	long leaf_index,
@@ -54,8 +64,8 @@ long bsp3d_clip_line_to_leaves(
 	long node_index,
 	real_point3d const *p0,
 	real_point3d const *p1,
-	bsp3d_clip_line_to_leaves_proc handler,
-	void *data);
+	line_proc handler,
+	void *user_data);
 
 long bsp3d_clip_polygon_to_leaves(
 	struct bsp3d const *bsp,
@@ -63,8 +73,8 @@ long bsp3d_clip_polygon_to_leaves(
 	real_point3d const *vertices,
 	short vertex_count,
 	real epsilon,
-	bsp3d_clip_polygon_to_leaves_proc handler,
-	void *data);
+	polygon_proc handler,
+	void *user_data);
 
 /* ---------- globals */
 
