@@ -765,7 +765,7 @@ static void ai_debug_render_actor(
 
 		/* Unit highlighting */
 
-		if (!actor->meta.swarm)
+		if (actor->meta.swarm)
 		{
 			if (actor->meta.swarm_cache_index!=NONE)
 			{
@@ -796,23 +796,17 @@ static void ai_debug_render_actor(
 				actor->emotions.crouch_friends_in_line_of_fire ||
 				actor->emotions.crouch_blocking_player_line_of_fire)
 			{
-				char const *blocking_type;
-
 				char const *blocking_mode = actor->emotions.crouch_friends_in_line_of_fire ? "friends-blocking" : "";
-
-				if (actor->emotions.crouch_blocking_player_line_of_fire)
-				{
-					blocking_type = "blocking-player ";
-				}
-				else
-				{
-					blocking_type = actor->emotions.crouch_blocking_line_of_fire ? "blocking " : "";
-				}
+				char const *blocking_type = actor->emotions.crouch_blocking_player_line_of_fire ? "blocking-player " : actor->emotions.crouch_blocking_line_of_fire ? "blocking " : "";
 
 				render_debug_string_at_point(
 					TRUE,
 					ai_debug_drawstack(),
-					csprintf(temporary, "%s%s", blocking_mode, blocking_type),
+					csprintf(
+						temporary,
+						"%s%s",
+						blocking_mode,
+						blocking_type),
 					global_real_argb_orange);
 			}
 
@@ -821,12 +815,14 @@ static void ai_debug_render_actor(
 			if (actor->emotions.moving_into_player_line_of_fire ||
 				actor->emotions.moving_into_fire_timer > 0)
 			{
-				char const *string = actor->emotions.moving_into_player_line_of_fire ? "moving-into-fire" : "";
-
 				render_debug_string_at_point(
 					TRUE,
 					ai_debug_drawstack(),
-					csprintf(temporary, "%sforce-stop %d", string, actor->emotions.moving_into_fire_timer),
+					csprintf(
+						temporary,
+						"%sforce-stop %d", 
+						actor->emotions.moving_into_player_line_of_fire ? "moving-into-fire" : "",
+						actor->emotions.moving_into_fire_timer),
 					global_real_argb_pink);
 			}
 		}
@@ -1539,7 +1535,11 @@ static void ai_debug_render_actor(
 		if (ai_debug.render_player_ratings && actor->meta.unit_index!=NONE)
 		{
 			real player_rating = ai_communication_get_player_rating(actor->meta.unit_index, TRUE, NULL, NULL);
-			render_debug_string_at_point(TRUE, ai_debug_drawstack(), csprintf(temporary, "%.1f", player_rating), player_rating==0.f ? global_real_argb_blue : global_real_argb_white);
+			render_debug_string_at_point(
+				TRUE,
+				ai_debug_drawstack(),
+				csprintf(temporary, "%.1f", player_rating),
+				player_rating==0.f ? global_real_argb_blue : global_real_argb_white);
 		}
 
 		/* Audibility */
@@ -2600,7 +2600,7 @@ static void ai_debug_render_actor(
 						csprintf(
 							temporary,
 							"newtarget %d", 
-							(unsigned long)(
+							(
 								actor_variant_definition->ranged_combat.new_target_pattern_time*TICKS_PER_SECOND - 
 								(real)actor->control.current_fire_target_timer
 							)
@@ -3230,7 +3230,12 @@ static void ai_debug_render_actor(
 
 			if (actor_debug_info->field_138)
 			{
-				render_debug_vector(TRUE, &actor_debug_info->field_108, &actor_debug_info->field_12C, 2.f, actor_debug_info->field_139 ? global_real_argb_yellow : global_real_argb_purple);
+				render_debug_vector(
+					TRUE,
+					&actor_debug_info->field_108,
+					&actor_debug_info->field_12C,
+					2.f,
+					actor_debug_info->field_139 ? global_real_argb_yellow : global_real_argb_purple);
 			}
 			else
 			{
@@ -3492,9 +3497,7 @@ static void ai_debug_render_actor(
 						headspace_vector.j = (((real)(side_index==0 ? 1 : -1)) * sine_horizontal_angle) * sine_vertical_angle[ring_index];
 						headspace_vector.k = cosine_vertical_angle[ring_index];
 
-						direction_vector[side_index][ring_index].x = global_zero_vector3d->i;
-						direction_vector[side_index][ring_index].y = global_zero_vector3d->j;
-						direction_vector[side_index][ring_index].z = global_zero_vector3d->k;
+						direction_vector[side_index][ring_index] = *(real_point3d*)global_zero_vector3d;
 
 						point_from_line3d(&direction_vector[side_index][ring_index], &actor->input.looking_vector, headspace_vector.i, &direction_vector[side_index][ring_index]);
 						point_from_line3d(&direction_vector[side_index][ring_index], &actor->input.looking_left_vector, headspace_vector.j, &direction_vector[side_index][ring_index]);
@@ -3661,7 +3664,7 @@ static void ai_debug_render_actor(
 				render_debug_line_offset(
 					TRUE,
 					&actor->input.position.body_position,
-					&actor->control.path.path.steps[actor->control.path.path.step_index].point,
+					&actor->control.path.path.steps[first_index].point,
 					color,
 					0.1f);
 
