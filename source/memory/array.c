@@ -5,12 +5,15 @@ ARRAY.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "profile.h"
 #include "array.h"
+
+#include "cseries/profile.h"
 
 /* ---------- globals */
 
-extern struct profile_section data_00308bc0[3];
+static struct profile_section memory_dynamic_array_resize_section = {"memory_dynamic_array_resize", NONE, TRUE};
+static struct profile_section memory_dynamic_array_add_element_section = {"memory_dynamic_array_add_element", NONE, TRUE};
+static struct profile_section memory_dynamic_array_delete_element_section = { "memory_dynamic_array_delete_element", NONE, TRUE };
 
 /* ---------- public code */
 
@@ -39,21 +42,19 @@ boolean dynamic_array_resize(
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 35, array->count>=0);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 36, (array->count!=0)==(array->elements!=NULL));
 
-	profile_enter(data_00308bc0[0]);
+	profile_enter(memory_dynamic_array_resize_section);
 
-	if (count>=0)
+	if (count>=0 && count<=LONG_MAX)
 	{
-		if (array->count != count)
+		if (count!=array->count)
 		{
 			void *new_elements = match_realloc("c:\\halo\\SOURCE\\memory\\array.c", 44, array->elements, array->element_size*count);
 
 			if ((count!=0)==(new_elements!=NULL))
 			{
-				long old_count = array->count;
-
-				if (count>old_count)
+				if (count>array->count)
 				{
-					memset((byte*)new_elements + array->element_size*old_count, 0, (count-old_count)*array->element_size);
+					memset((byte*)new_elements + array->element_size*array->count, 0, (count-array->count)*array->element_size);
 				}
 
 				array->count = count;
@@ -68,7 +69,7 @@ boolean dynamic_array_resize(
 		}
 	}
 
-	profile_exit(data_00308bc0[0]);
+	profile_exit(memory_dynamic_array_resize_section);
 
 	return result;
 }
@@ -84,8 +85,8 @@ void dynamic_array_delete(
 
 	elements = array->elements;
 
-	array->element_size = -1;
-	array->count = -1;
+	array->element_size = NONE;
+	array->count = NONE;
 
 	if (elements!=NULL)
 	{
@@ -98,34 +99,33 @@ void dynamic_array_delete(
 long dynamic_array_add_element(
 	struct dynamic_array *array)
 {
-	long new_index = -1;
-	long old_count = -1;
+	long new_index = NONE;
 
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 93, array);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 94, array->element_size>0);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 95, array->count>=0);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 96, (array->count!=0)==(array->elements!=NULL));
 
-	profile_enter(data_00308bc0[1]);
+	profile_enter(memory_dynamic_array_add_element_section);
 
-	old_count = array->count;
 	
-	if (old_count>=0)
+	if (array->count<LONG_MAX)
 	{
-		void *new_elements = match_realloc("c:\\halo\\SOURCE\\memory\\array.c", 103, array->elements, array->element_size*(old_count+1));
+		long new_count = array->count+1;
+		void *new_elements = match_realloc("c:\\halo\\SOURCE\\memory\\array.c", 103, array->elements, array->element_size*(new_count));
 
 		if (new_elements!=NULL)
 		{
-			new_index = old_count;
+			new_index = array->count;
 
-			memset((byte*)new_elements + array->element_size*array->count, 0, array->element_size);
+			memset((byte*)new_elements + array->element_size*new_index, 0, array->element_size);
 
-			array->count = old_count+1;
+			array->count = new_count;
 			array->elements = new_elements;
 		}
 	}
 
-	profile_exit(data_00308bc0[1]);
+	profile_exit(memory_dynamic_array_add_element_section);
 
 	return new_index;
 }
@@ -152,29 +152,31 @@ void dynamic_array_delete_element(
 	struct dynamic_array *array,
 	long index)
 {
+	long new_count;
+
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 139, array);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 140, array->element_size>0);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 141, array->count>=0);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 142, (array->count!=0)==(array->elements!=NULL));
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 143, index>=0 && index<array->count);
 
-	profile_enter(data_00308bc0[2]);
+	profile_enter(memory_dynamic_array_delete_element_section);
 
-	array->count -= 1;
+	array->count--;
 
 	if (index<array->count)
 	{
-		memmove(
-			(byte*)array->elements + array->element_size*index,
-			(byte*)array->elements + array->element_size*(index+1),
-			array->element_size * (array->count-index));
+		byte *element_start = &((byte *)array->elements)[array->element_size*index];
+
+		memmove(element_start, &element_start[array->element_size], array->element_size * (array->count-index));
 	}
 
-	array->elements = match_realloc("c:\\halo\\SOURCE\\memory\\array.c", 156, array->elements, array->element_size * array->count);
-
+	array->elements = match_realloc("c:\\halo\\SOURCE\\memory\\array.c", 156, array->elements, array->element_size*array->count);
+	
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 158, (array->count!=0)==(array->elements!=NULL));
 
-	profile_exit(data_00308bc0[2]);
+	profile_exit(memory_dynamic_array_delete_element_section);
+
 
 	return;
 }
@@ -191,7 +193,7 @@ void static_array_new(
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 174, maximum_count<=UNSIGNED_CHAR_MAX);
 
 	*count = 0;
-	memset(elements, -1, element_size*maximum_count);
+	memset(elements, NONE, element_size*maximum_count);
 
 	return;
 }
@@ -214,16 +216,16 @@ byte static_array_resize(
 	{
 		if (*count!=new_count)
 		{
-			void *new_end = (byte*)elements + new_count*element_size;
-			void *old_end = (byte*)elements + *count*element_size;
+			void *old_end = &((byte *)elements)[element_size * *count];
+			void *new_end = &((byte *)elements)[element_size * new_count];
 
-			if (old_end > new_end)
+			if (new_end>old_end)
 			{
-				csmemset(new_end, 0, (unsigned long)old_end - (unsigned long)new_end);
+				memset(old_end, 0, (uintptr_t)new_end - (uintptr_t)old_end);
 			}
 			else
 			{
-				csmemset(old_end, -1, (unsigned long)new_end - (unsigned long)old_end);
+				memset(new_end, NONE, (uintptr_t)old_end - (uintptr_t)new_end);
 			}
 
 			*count = new_count;
@@ -241,25 +243,18 @@ short static_array_add_element(
 	short element_size,
 	short maximum_count)
 {
-	short old_count;
-	short new_index;
+	short new_index = NONE;
 
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 230, count && *count>=0);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 231, elements);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 232, element_size>0);
 	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 233, maximum_count<=UNSIGNED_CHAR_MAX);
 
-	old_count = *count;
 
-	if (old_count < maximum_count)
+	if (*count < maximum_count)
 	{
-		new_index = old_count;
-		*count = *count + 1;
-		memset((byte*)elements + old_count*element_size, 0, element_size);
-	}
-	else
-	{
-		new_index = -1;
+		new_index = (*count)++;
+		memset(&((byte*)elements)[element_size*new_index], 0, element_size);
 	}
 
 	return new_index;
@@ -288,22 +283,21 @@ void static_array_delete_element(
 	short element_size,
 	short index)
 {
-	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 230, count && *count>=0);
-	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 231, elements);
-	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 232, element_size>0);
-	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 254, index>=0 && index<*count);
+	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 265, count && *count>0);
+	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 266, elements);
+	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 267, element_size>0);
+	match_assert("c:\\halo\\SOURCE\\memory\\array.c", 268, index>=0 && index<*count);
 
-	*count -= 1;
-
-	if (index<*count)
+	if (index < (long)(--*count))
 	{
+		byte *element_start = &((byte *)elements)[element_size*index];
 		memmove(
-			(byte*)elements + element_size*index,
-			(byte*)elements + element_size*(index+1),
+			element_start,
+			&element_start[element_size],
 			element_size * (*count-index));
 	}
 
-	memset((byte*)elements + element_size * *count, -1, element_size);
+	memset(&((byte*)elements)[element_size * *count], NONE, element_size);
 
 	return;
 }

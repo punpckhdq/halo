@@ -574,7 +574,7 @@
 				{ "name": "source/memory/crc.c", "index": 202, "status": "NonMatching" },
 				{ "name": "source/memory/circular_queue.c", "index": 203, "status": "NonMatching" },
 				{ "name": "source/memory/byte_swapping.c", "index": 204, "status": "NonMatching" },
-				{ "name": "source/memory/array.c", "index": 205, "status": "NonMatching" },
+				{ "name": "source/memory/array.c", "index": 205, "status": "Matching" },
 				{ "name": "source/memory/zlib/zutil.c", "index": 206, "status": "NonMatching" },
 				{ "name": "source/memory/zlib/uncompr.c", "index": 207, "status": "Matching" },
 				{ "name": "source/memory/zlib/trees.c", "index": 208, "status": "NonMatching" },
