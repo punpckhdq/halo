@@ -104,10 +104,10 @@ symbols in this file:
 
 /* ---------- globals */
 
-float global_gravity = 0.0035651792f;
-float global_water_density = 1.0f;
-float global_air_density = 0.0011f;
-float global_physics_collision_depth = 0.2f;
+real global_gravity = 0.0035651792f;
+real global_water_density = 1.0f;
+real global_air_density = 0.0011f;
+real global_physics_collision_depth = 0.2f;
 long depths_of_hell = 0;
 
 /* ---------- public code */

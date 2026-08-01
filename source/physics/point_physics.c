@@ -41,10 +41,12 @@ void point_physics_initialize_for_new_map(void)
 {
 	global_air_mass_over_radius_cubed = global_air_density * 118613.34f;
 	global_water_mass_over_radius_cubed = global_water_density * 118613.34f;
+	return;
 }
 
 void point_physics_dispose_from_old_map(void)
 {
+	return;
 }
 
 real point_physics_definition_get_mass(
@@ -53,8 +55,6 @@ real point_physics_definition_get_mass(
 {
 	return definition->runtime_mass_over_radius_cubed * radius * radius * radius;
 }
-
-// HCEX has an additional function here: `hcex_is_under_water()`
 
 unsigned long point_physics_update(
 	unsigned long flags,
@@ -257,4 +257,6 @@ static void render_debug_point_physics(
 		: global_real_argb_green;
 
 	render_debug_point(TRUE, position, radius, color);
+
+	return;
 }
