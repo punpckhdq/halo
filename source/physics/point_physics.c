@@ -126,14 +126,14 @@ unsigned long point_physics_update(
 			mass += global_water_mass_over_radius_cubed;
 			buoyancy_scale = definition->runtime_water_buoyancy_scale;
 			friction = definition->water_friction * radius_squared;
-			result |= FLAG(1);
+			result |= FLAG(_point_physics_in_water_bit);
 		}
 		else
 		{
 			mass += global_air_mass_over_radius_cubed;
 			buoyancy_scale = definition->runtime_air_buoyancy_scale;
 			friction = definition->air_friction * radius_squared;
-			result |= FLAG(0);
+			result |= FLAG(_point_physics_in_air_bit);
 		}
 
 		mass = mass * radius_cubed;
