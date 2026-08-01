@@ -190,11 +190,11 @@ unsigned long point_physics_update(
 
 			if (collision.type == _collision_result_media)
 			{
-				result |= FLAG(_point_physics_collided_with_water_bit);
+				SET_FLAG(result, _point_physics_collided_with_water_bit, TRUE);
 			}
 			else if (collision.type == _collision_result_structure)
 			{
-				result |= FLAG(_point_physics_collided_with_structure_bit);
+				SET_FLAG(result, _point_physics_collided_with_structure_bit, TRUE);
 			}
 
 			if (collision_normal)
