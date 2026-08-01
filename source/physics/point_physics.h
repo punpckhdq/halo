@@ -49,8 +49,6 @@ enum
 	NUMBER_OF_POINT_PHYSICS_FLAGS,
 };
 
-/* ---------- macros */
-
 /* ---------- structures */
 
 struct point_physics_definition
