@@ -98,6 +98,9 @@ real scenario_location_water_depth(const struct location *location, const real_p
 void scenario_get_sound_environment(long *background_sound_index, long *sound_environment_tag, boolean *crossed_water_boundary);
 void scenario_get_atmospheric_fog(short local_player_index, short sky_index, real_point3d *camera_point, struct render_fog *render_fog);
 
+boolean scenario_get_current(struct location const *location, real_point3d const *position, real_vector3d *wind_vector, long flags);
+void scenario_get_current_from_weather_palette( real_point3d const *position, real_vector3d *wind_vector, long flags, short weather_palette_index);
+
 /* ---------- globals */
 
 extern long global_scenario_index;

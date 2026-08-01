@@ -34,6 +34,12 @@ void render_debug_physics(struct physics_instance *instance);
 
 /* ---------- globals */
 
+extern float global_gravity;
+extern float global_water_density;
+extern float global_air_density;
+extern float global_physics_collision_depth;
+extern long depths_of_hell;
+
 /* ---------- public code */
 
 #endif // __PHYSICS_H
