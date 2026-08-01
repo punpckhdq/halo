@@ -28,8 +28,7 @@ enum
 	_point_physics_simple_wind_bit,
 	_point_physics_damped_wind_bit,
 	_point_physics_no_gravity_bit,
-	NUMBER_OF_POINT_PHYSICS_DEFINITION_FLAGS = 6,
-
+	NUMBER_OF_POINT_PHYSICS_DEFINITION_FLAGS,
 	NUMBER_OF_POINT_PHYSICS_DEFINITION_VARIABLES = 6
 };
 
