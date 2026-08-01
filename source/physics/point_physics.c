@@ -30,6 +30,8 @@ static void render_debug_point_physics(
 
 /* ---------- globals */
 
+struct tag_reference_definition global_point_physics_reference = { 0, 'pphy', NULL };
+
 boolean debug_point_physics = FALSE;
 
 static real global_air_mass_over_radius_cubed = 0.0f;
