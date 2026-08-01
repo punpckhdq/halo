@@ -93,6 +93,8 @@ symbols in this file:
 */
 
 /* ---------- headers */
+#include "cseries.h"
+#include "physics.h"
 
 /* ---------- constants */
 
