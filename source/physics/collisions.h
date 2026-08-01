@@ -16,6 +16,15 @@ header included in hcex build.
 
 enum
 {
+	_collision_result_media = 0,
+	_collision_result_mesh,
+	_collision_result_structure,
+	_collision_result_object,
+	NUMBER_OF_COLLISION_RESULT_TYPES,
+};
+
+enum
+{
 	_collision_test_front_facing_surfaces_bit = 0,
 	_collision_test_back_facing_surfaces_bit,
 	_collision_test_ignore_two_sided_surfaces_bit,

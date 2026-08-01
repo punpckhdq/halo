@@ -17,6 +17,11 @@ POINT_PHYSICS.C
 
 /* ---------- constants */
 
+enum
+{
+	MAXIMUM_POINT_PHYSICS_COLLISIONS = 3
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -30,7 +35,7 @@ static void render_debug_point_physics(
 
 /* ---------- globals */
 
-struct tag_reference_definition global_point_physics_reference = { 0, 'pphy', NULL };
+struct tag_reference_definition global_point_physics_reference = { 0, POINT_PHYSICS_DEFINITION_TAG, NULL };
 
 boolean debug_point_physics = FALSE;
 
@@ -39,14 +44,17 @@ static real global_water_mass_over_radius_cubed = 0.0f;
 
 /* ---------- public code */
 
-void point_physics_initialize_for_new_map(void)
+void point_physics_initialize_for_new_map(
+	void)
 {
 	global_air_mass_over_radius_cubed = global_air_density * 118613.34f;
 	global_water_mass_over_radius_cubed = global_water_density * 118613.34f;
+
 	return;
 }
 
-void point_physics_dispose_from_old_map(void)
+void point_physics_dispose_from_old_map(
+	void)
 {
 	return;
 }
@@ -100,12 +108,12 @@ unsigned long point_physics_update(
 
 		wind_flags = 0;
 
-		SET_FLAG(wind_flags, 0, TEST_FLAG(definition->flags, _point_physics_flag_uses_simple_wind_bit));
-		SET_FLAG(wind_flags, 1, TEST_FLAG(definition->flags, _point_physics_flag_uses_damped_wind_bit));
+		SET_FLAG(wind_flags, _scenario_current_simple_bit, TEST_FLAG(definition->flags, _point_physics_simple_wind_bit));
+		SET_FLAG(wind_flags, _scenario_current_damped_bit, TEST_FLAG(definition->flags, _point_physics_damped_wind_bit));
 
-		if (TEST_FLAG(flags, 0))
+		if (TEST_FLAG(flags, _point_physics_ignore_position_bit))
 		{
-			underwater = TEST_FLAG(flags, 1);
+			underwater = TEST_FLAG(flags, _point_physics_ignore_position_under_water_bit);
 			scenario_get_current_from_weather_palette(position, &wind_vector, wind_flags, force_weather_palette_index);
 		}
 		else
@@ -131,8 +139,10 @@ unsigned long point_physics_update(
 		mass = mass * radius_cubed;
 		dt_over_mass = dt / mass;
 
-		if (TEST_FLAG(definition->flags, _point_physics_flag_no_gravity_bit))
+		if (TEST_FLAG(definition->flags, _point_physics_no_gravity_bit))
+		{
 			buoyancy_scale = 0.0f;
+		}
 
 		if (translational_force && mass != 0.0f)
 		{
@@ -144,7 +154,9 @@ unsigned long point_physics_update(
 		translational_velocity->k = ((global_gravity * TICKS_PER_SECOND) * TICKS_PER_SECOND) * buoyancy_scale * dt + translational_velocity->k;
 
 		if (mass == 0.0f)
+		{
 			t = (friction == 0.0f) ? 0.0f : 1.0f;
+		}
 		else
 		{
 			t = dt_over_mass * friction;
@@ -156,13 +168,13 @@ unsigned long point_physics_update(
 		translational_velocity->k += (wind_vector.k - translational_velocity->k) * t;
 
 		collision_flags = FLAG(_collision_test_front_facing_surfaces_bit);
-		SET_FLAG(collision_flags, _collision_test_media_bit, TEST_FLAG(definition->flags, _point_physics_flag_collides_with_water_surface_bit) && !TEST_FLAG(flags, 2));
-		SET_FLAG(collision_flags, _collision_test_structure_bit, TEST_FLAG(definition->flags, _point_physics_flag_collides_with_structures_bit) && !TEST_FLAG(flags, 2));
+		SET_FLAG(collision_flags, _collision_test_media_bit, TEST_FLAG(definition->flags, _point_physics_water_collisions_bit) && !TEST_FLAG(flags, _point_physics_force_no_collisions_bit));
+		SET_FLAG(collision_flags, _collision_test_structure_bit, TEST_FLAG(definition->flags, _point_physics_structure_collisions_bit) && !TEST_FLAG(flags, _point_physics_force_no_collisions_bit));
 
 		match_assert("c:\\halo\\SOURCE\\physics\\point_physics.c", 269, global_current_collision_user_depth < MAXIMUM_COLLISION_USER_STACK_DEPTH);
 		global_current_collision_users[global_current_collision_user_depth++] = _collision_user_point_physics;
 
-		for (i = 0; dt != 0.0f && i < 3; i++)
+		for (i = 0; dt != 0.0f && i < MAXIMUM_POINT_PHYSICS_COLLISIONS; i++)
 		{
 			delta.i = translational_velocity->i * dt;
 			delta.j = translational_velocity->j * dt;
@@ -171,27 +183,34 @@ unsigned long point_physics_update(
 			if (!collision_test_vector(collision_flags, position, &delta, NONE, &collision))
 			{
 				if (collision.location.leaf_index != NONE)
+				{
 					*location = collision.location;
+				}
+
 				*position = collision.point;
 				break;
 			}
 
 			offset = MIN(radius, 0.005f);
 
-			if (collision.type == 0) // needs enum
+			if (collision.type == _collision_result_media)
 			{
-				result |= FLAG(3);
+				result |= FLAG(_point_physics_collided_with_water_bit);
 			}
-			else if (collision.type == 2)
+			else if (collision.type == _collision_result_structure)
 			{
-				result |= FLAG(2);
+				result |= FLAG(_point_physics_collided_with_structure_bit);
 			}
 
 			if (collision_normal)
+			{
 				*collision_normal = collision.plane.n;
+			}
 
 			if (collision_material_type)
+			{
 				*collision_material_type = collision.material_type;
+			}
 
 			component_vectors_from_normal3d(translational_velocity, &collision.plane.n, &parallel, &perpendicular);
 			translational_velocity->i = (1.0f - definition->contact_friction) * perpendicular.i - parallel.i * definition->elasticity;
@@ -199,7 +218,9 @@ unsigned long point_physics_update(
 			translational_velocity->k = (1.0f - definition->contact_friction) * perpendicular.k - parallel.k * definition->elasticity;
 
 			if (collision.location.leaf_index != NONE)
+			{
 				*location = collision.location;
+			}
 
 			position->x = collision.plane.n.i * offset + collision.point.x;
 			position->y = collision.plane.n.j * offset + collision.point.y;
@@ -254,7 +275,7 @@ static void render_debug_point_physics(
 	real_point3d const *position,
 	real radius)
 {
-	real_argb_color const *color = TEST_FLAG(definition->flags, _point_physics_flag_collides_with_structures_bit)
+	real_argb_color const *color = TEST_FLAG(definition->flags, _point_physics_structure_collisions_bit)
 		? global_real_argb_red
 		: global_real_argb_green;
 

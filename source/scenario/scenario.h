@@ -48,6 +48,15 @@ enum
 	MAXIMUM_EDITOR_COMMENT_LENGTH = 0x4000,
 };
 
+enum
+{
+	_scenario_current_simple_bit = 0,
+	_scenario_current_damped_bit,
+	_scenario_current_force_water_bit,
+	_scenario_current_force_no_water_bit,
+	NUMBER_OF_SCENARIO_GET_CURRENT_BITS,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

@@ -16,21 +16,38 @@ header included in hcex build.
 
 enum
 {
-	// These are fake names, but based on data found in sapien
-	// 0x11ef060 - "flamethrower particle collision"
-	// 0x11ef088 - "collides with structures"
-	// 0x11ef0a8 - "collides with water surface"
-	// 0x11ef0d0 - "uses simple wind#the wind on this point won't have high-frequency variations"
-	// 0x11ef130 - "uses damped wind#the wind on this point will be artificially slow"
-	// 0x11ef180 - "no gravity#the point is not affected by gravity"
-	_point_physics_flag_flamethrower_particle_collision_bit = 0,
-	_point_physics_flag_collides_with_structures_bit,
-	_point_physics_flag_collides_with_water_surface_bit,
-	_point_physics_flag_uses_simple_wind_bit,
-	_point_physics_flag_uses_damped_wind_bit,
-	_point_physics_flag_no_gravity_bit,
+	POINT_PHYSICS_DEFINITION_TAG = 'pphy',
+	POINT_PHYSICS_DEFINITION_VERSION = 1
+};
 
-	NUMBER_OF_POINT_PHYSICS_FLAGS
+enum
+{
+	_point_physics_flamethrower_collision_bit = 0,
+	_point_physics_structure_collisions_bit,
+	_point_physics_water_collisions_bit,
+	_point_physics_simple_wind_bit,
+	_point_physics_damped_wind_bit,
+	_point_physics_no_gravity_bit,
+	NUMBER_OF_POINT_PHYSICS_DEFINITION_FLAGS = 6,
+
+	NUMBER_OF_POINT_PHYSICS_DEFINITION_VARIABLES = 6
+};
+
+enum
+{
+	_point_physics_in_air_bit = 0,
+	_point_physics_in_water_bit,
+	_point_physics_collided_with_structure_bit,
+	_point_physics_collided_with_water_bit,
+	NUMBER_OF_POINT_PHYSICS_RESULT_FLAGS,
+};
+
+enum
+{
+	_point_physics_ignore_position_bit = 0,
+	_point_physics_ignore_position_under_water_bit,
+	_point_physics_force_no_collisions_bit,
+	NUMBER_OF_POINT_PHYSICS_FLAGS,
 };
 
 /* ---------- macros */

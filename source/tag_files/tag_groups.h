@@ -57,9 +57,9 @@ struct tag_reference
 
 struct tag_reference_definition
 {
-    unsigned int flags;
-    unsigned int group_tag;
-    unsigned int *group_tags;
+    unsigned long flags;
+    unsigned long group_tag;
+    unsigned long *group_tags;
 };
 
 struct tag_data
