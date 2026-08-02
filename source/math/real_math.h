@@ -780,7 +780,10 @@ __inline real_point2d *project_point3d(
 	match_assert("..\\math\\real_math.h", 859, projection>=_x && projection<=_z);
 	match_assert("..\\math\\real_math.h", 860, ~(sign&~1));
 
-	set_real_point2d(p2d, global_projection3d_mappings[projection][sign][0], global_projection3d_mappings[projection][sign][1]);
+	set_real_point2d(
+		p2d,
+		p3d->n[global_projection3d_mappings[projection][sign][0]],
+		p3d->n[global_projection3d_mappings[projection][sign][1]]);
 	return p2d;
 }
 

@@ -90,6 +90,11 @@ boolean collision_bsp_test_sphere(
 	real radius,
 	struct collision_bsp_test_sphere_result *result);
 
+short collision_surface_polygon(
+	struct collision_bsp const *bsp,
+	long surface_index,
+	real_point3d *points);
+
 /* ---------- globals */
 
 /* ---------- public code */

@@ -75,6 +75,8 @@ symbols in this file:
 */
 
 /* ---------- headers */
+#include "cseries.h"
+#include "collision_bsp.h"
 
 /* ---------- constants */
 
