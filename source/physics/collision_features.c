@@ -26,7 +26,8 @@ COLLISION_FEATURES.C
 void collision_features_new(
 	struct collision_feature_list *features)
 {
-	csmemset(features->count, 0, sizeof(features->count));
+	memset(features->count, 0, sizeof(features->count));
+	return;
 }
 
 void collision_features_from_point(
@@ -957,102 +958,110 @@ boolean collision_prism_test_vector(
 	real *t,
 	real_plane3d *plane)
 {
-	real_vector3d v3d;
-	real_point3d p3d;
-	real_point2d p2d;
-	real_vector2d v2d;
-	real_vector2d edge_vector;
-	real_vector2d point_vector;
-	real minimum_t;
-	real maximum_t;
-	real distance;
-	real delta;
-	real inverse_delta;
-	real bottom_t;
-	real top_t;
-	real edge_distance;
-	real edge_delta;
-	real edge_t;
-	long point_index;
-	long next_point_index;
 
-	minimum_t = 0.0f;
-	maximum_t = 1.0f;
-	distance = plane3d_distance_to_point(&prism->plane, point);
-	delta = dot_product3d(vector, &prism->plane.n);
-	if (delta != 0.0f)
+	real t_out = 0.0f;
+	real t_in = 1.0f;
+	real d = plane3d_distance_to_point(&prism->plane, point);
+	real vn = dot_product3d(vector, &prism->plane.n);
+
+	if (vn != 0.0f)
 	{
-		inverse_delta = 1.0f / delta;
-		bottom_t = -inverse_delta * distance;
-		top_t = -inverse_delta * (distance - prism->height);
-		if (delta > 0.0f)
+		real oovn = 1.0f / vn;
+		real t0 = -oovn * d;
+		real t1 = -oovn * (d - prism->height);
+
+		if (vn > 0.0f)
 		{
-			if (minimum_t < bottom_t)
+			if (t_out < t0)
 			{
-				minimum_t = bottom_t;
+				t_out = t0;
 			}
-			maximum_t = MIN(maximum_t, top_t);
+			t_in = MIN(t_in, t1);
 		}
 		else
 		{
-			if (minimum_t < top_t)
+			if (t_out < t1)
 			{
-				minimum_t = top_t;
+				t_out = t1;
 			}
-			maximum_t = MIN(maximum_t, bottom_t);
+			t_in = MIN(t_in, t0);
 		}
 
-		if (minimum_t > maximum_t)
+		if (t_out > t_in)
 		{
 			return FALSE;
 		}
 	}
-	else if (distance < 0.0f || distance >= prism->height)
+	else if (d < 0.0f || d >= prism->height)
 	{
 		return FALSE;
 	}
 
-	point_from_line3d(point, &prism->plane.n, -distance, &p3d);
-	point_from_line3d((real_point3d const *)vector, &prism->plane.n, -delta, (real_point3d *)&v3d);
-	project_point3d(&p3d, prism->projection_axis, prism->projection_sign, &p2d);
-	project_point3d((real_point3d const *)&v3d, prism->projection_axis, prism->projection_sign, (real_point2d *)&v2d);
-
-	for (point_index = 0; point_index < prism->point_count; point_index++)
 	{
-		next_point_index = point_index + 1 < prism->point_count ? point_index + 1 : 0;
-		vector_from_points2d(&prism->points[point_index], &prism->points[next_point_index], &edge_vector);
-		vector_from_points2d(&prism->points[point_index], &p2d, &point_vector);
-		edge_delta = cross_product2d(&v2d, &edge_vector);
-		edge_distance = cross_product2d(&edge_vector, &point_vector);
-		if (edge_delta != 0.0f)
+		real_point3d p3d;
+		real_vector3d v3d;
+		real_point2d p2d;
+		real_vector2d v2d;
+		long point_index;
+
+		point_from_line3d(point, &prism->plane.n, -d, &p3d);
+		point_from_line3d((real_point3d const *)vector, &prism->plane.n, -vn, (real_point3d *)&v3d);
+		project_point3d(&p3d, prism->projection_axis, prism->projection_sign, &p2d);
+		project_point3d((real_point3d const *)&v3d, prism->projection_axis, prism->projection_sign, (real_point2d *)&v2d);
+
+		for (point_index = 0; point_index < prism->point_count; point_index++)
 		{
-			edge_t = edge_distance / edge_delta;
-			if (edge_delta < 0.0f)
+			real vw;
+			real wx;
+			real_vector2d w;
+			real_vector2d x;
+
+			long next_point_index = point_index + 1 >= prism->point_count ? 0 : point_index + 1;
+			real_point2d const *p0 = &prism->points[point_index];
+			real_point2d const *p1 = &prism->points[next_point_index];
+
+			vector_from_points2d(p0, p1, &w);
+			vector_from_points2d(p0, &p2d, &x);
+			vw = cross_product2d(&v2d, &w);
+			wx = cross_product2d(&w, &x);
+
+			if (vw != 0.0f)
 			{
-				if (minimum_t < edge_t)
+				real t_edge = wx / vw;
+				
+				if (vw < 0.0f)
 				{
-					minimum_t = edge_t;
+					if (t_out < t_edge)
+					{
+						t_out = t_edge;
+					}
+				}
+				else
+				{
+					if (t_in > t_edge)
+					{
+						t_in = t_edge;
+					}
+				}
+
+				if (t_out > t_in)
+				{
+					return FALSE;
 				}
 			}
-			else if (maximum_t > edge_t)
+			else
 			{
-				maximum_t = edge_t;
+				if (wx < 0.0f)
+				{
+					return FALSE;
+				}
 			}
+		}
 
-			if (minimum_t > maximum_t)
-			{
-				return FALSE;
-			}
-		}
-		else if (edge_distance < 0.0f)
-		{
-			return FALSE;
-		}
+		*t = t_out;
+		plane->n = prism->plane.n;
+		plane->d = prism->plane.d + prism->height;
 	}
-
-	*t = minimum_t;
-	plane->n = prism->plane.n;
-	plane->d = prism->plane.d + prism->height;
 
 	return TRUE;
 }
@@ -1062,7 +1071,6 @@ void render_debug_collision_sphere(
 	real_argb_color const *color)
 {
 	render_debug_sphere(TRUE, &sphere->center, sphere->radius, color);
-
 	return;
 }
 
@@ -1071,7 +1079,6 @@ void render_debug_collision_cylinder(
 	real_argb_color const *color)
 {
 	render_debug_cylinder(TRUE, &cylinder->base, &cylinder->height, cylinder->width, color);
-
 	return;
 }
 
