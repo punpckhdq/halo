@@ -847,9 +847,9 @@ __inline real_point3d *point_from_line3d(
 	real t,
 	real_point3d *result)
 {
-	result->x = (v->i*t) + p->x;
-	result->y = (v->j*t) + p->y;
-	result->z = (v->k*t) + p->z;
+	result->x = v->i*t + p->x;
+	result->y = v->j*t + p->y;
+	result->z = v->k*t + p->z;
 	return result;
 }
 
