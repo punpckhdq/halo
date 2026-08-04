@@ -162,7 +162,6 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 	short clipped_counts[2];
 
 	short vertex_index;
-	short child_index;
 
 	long intersected_leaf_count = 0;
 	struct bsp3d_node const *node = TAG_BLOCK_GET_ELEMENT(&bsp->nodes, node_index, struct bsp3d_node);
@@ -174,7 +173,7 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 
 	for (vertex_index = 0; vertex_index < vertex_count; ++vertex_index)
 	{
-		if (!(fabs(plane3d_distance_to_point(plane, &vertices[vertex_index])-0.f) < epsilon))
+		if (!(fabs(plane3d_distance_to_point(plane, &vertices[vertex_index])-0.0f) < epsilon))
 		{
 			break;
 		}
@@ -186,12 +185,13 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 		real_vector3d p0p1;
 		real_vector3d n;
 		boolean facing;
+		real_vector3d *edge2 = &p0p2;
 
 		vector_from_points3d(&vertices[0], &vertices[1], &p0p1);
-		vector_from_points3d(&vertices[0], &vertices[2], &p0p2);
-		cross_product3d(&p0p2, &p0p1, &n);
+		vector_from_points3d(&vertices[0], &vertices[2], edge2);
+		cross_product3d(edge2, &p0p1, &n);
 
-		facing = dot_product3d(&n, &plane->n) > 0.f;
+		facing = dot_product3d(&n, &plane->n) > 0.0f;
 
 		clipped_polygons[facing] = vertices;
 		
@@ -238,20 +238,20 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 		clipped_polygons[1] = clipped_polygon_storage[1];
 	}
 
-	for (child_index = 0; child_index<NUMBEROF(clipped_counts); ++child_index)
+	for (vertex_index = 0; vertex_index<NUMBEROF(clipped_counts); ++vertex_index)
 	{
-		if (clipped_counts[child_index])
+		if (clipped_counts[vertex_index])
 		{
-			if (node->child_indices[child_index] & LONG_MIN)
+			if (node->child_indices[vertex_index] & LONG_MIN)
 			{
-				if (node->child_indices[child_index] != NONE)
+				if (node->child_indices[vertex_index] != NONE)
 				{
 					if (handler)
 					{
 						handler(
-							clipped_polygons[child_index],
-							clipped_counts[child_index],
-							node->child_indices[child_index] & LONG_MAX,
+							clipped_polygons[vertex_index],
+							clipped_counts[vertex_index],
+							node->child_indices[vertex_index] & LONG_MAX,
 							on_node_designator,
 							user_data);
 					}
@@ -263,10 +263,10 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 			{
 				intersected_leaf_count += bsp3d_clip_polygon_to_leaves_recursive(
 					bsp,
-					node->child_indices[child_index],
+					node->child_indices[vertex_index],
 					on_node_designator,
-					clipped_polygons[child_index],
-					clipped_counts[child_index],
+					clipped_polygons[vertex_index],
+					clipped_counts[vertex_index],
 					epsilon, 
 					handler, 
 					user_data);

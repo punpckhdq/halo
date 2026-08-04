@@ -92,7 +92,7 @@ void breakable_surfaces_initialize_for_new_map(
 
 		for (surface_index = 0; surface_index < MAXIMUM_BREAKABLE_SURFACES_PER_MAP; ++surface_index)
 		{
-			globals->breakable_surfaces[bsp_index][surface_index].vitality = 1.f;
+			globals->breakable_surfaces[bsp_index][surface_index].vitality = 1.0f;
 		}
 	}
 
@@ -156,13 +156,13 @@ void breakable_surface_damage(
 		{
 			struct breakable_surface_datum *surface = breakable_surface_get(breakable_surface_index);
 
-			if (surface->vitality > 0.f)
+			if (surface->vitality > 0.0f)
 			{
 				struct material_definition *material = scenario_material_definition_get(damage_data->material_type);
 
 				if (material)
 				{
-					if (material->breakable_surface.maximum_vitality > 0.f)
+					if (material->breakable_surface.maximum_vitality > 0.0f)
 					{
 						struct damage_effect_definition *definition = damage_effect_definition_get(damage_data->definition_index);
 						struct damage_definition *damage = &definition->damage;
@@ -175,7 +175,7 @@ void breakable_surface_damage(
 
 						surface->vitality -= damage_fraction;
 
-						if (surface->vitality <= 0.f)
+						if (surface->vitality <= 0.0f)
 						{
 							BIT_VECTOR_SET_FLAG((long *)breakable_surface_flags_get(), breakable_surface_index, FALSE);
 
@@ -198,7 +198,7 @@ void breakable_surface_damage_area_of_effect(
 	struct damage_effect_definition *damage_effect_definition = damage_effect_definition_get(damage_data->definition_index);
 
 	if (globals->enabled &&
-		(damage_effect_definition->damage.damage_lower_bound!= 0.f || damage_effect_definition->damage.damage_upper_bound!=0.f))
+		(damage_effect_definition->damage.damage_lower_bound!= 0.0f || damage_effect_definition->damage.damage_upper_bound!=0.0f))
 	{
 		short breakable_surface_index;
 
@@ -214,10 +214,12 @@ void breakable_surface_damage_area_of_effect(
 			if (breakable_surface_extant(breakable_surface_index))
 			{
 				struct structure_breakable_surface *breakable_surface = TAG_BLOCK_GET_ELEMENT(&structure_bsp->breakable_surfaces, breakable_surface_index, struct structure_breakable_surface);
+				real radius = breakable_surface->bounding_radius;
+				radius += cutoff_radius;
 
-				if (point_in_sphere(&breakable_surface->centroid, &damage_data->epicenter, breakable_surface->bounding_radius + cutoff_radius))
+				if (point_in_sphere(&breakable_surface->centroid, &damage_data->epicenter, radius))
 				{
-					breakable_surface_get(breakable_surface_index)->vitality = 0.f;
+					breakable_surface_get(breakable_surface_index)->vitality = 0.0f;
 					BIT_VECTOR_SET_FLAG((long *)breakable_surface_flags_get(), breakable_surface_index, FALSE);
 					breakable_surface_effect(breakable_surface_index, damage_data, breakable_surface->collision_surface_index);
 				}
@@ -249,13 +251,8 @@ static void breakable_surface_effect(
 	real_rectangle2d surface_bounds;
 	real_plane3d t_plane;
 	real_point3d surface_vertices3d[MAXIMUM_VERTICES_PER_COLLISION_SURFACE];
-	real_point2d surface_vertices2d[MAXIMUM_VERTICES_PER_COLLISION_SURFACE];
-	real_vector3d t_normal;
-	real_vector3d s_normal;
 	real_point3d position;
-	real_point2d position_2d_test;
 	real_vector3d velocity;
-	struct new_particle_data particle;
 	
 	struct structure_bsp *structure_bsp = global_structure_bsp_get();
 	struct collision_bsp *collision_bsp = global_collision_bsp_get();
@@ -264,7 +261,6 @@ static void breakable_surface_effect(
 
 	if (breakable_surface_effect_enabled)
 	{
-		short surface_queue_read_index;
 		long material_type;
 		struct material_definition *material_def;
 
@@ -283,12 +279,14 @@ static void breakable_surface_effect(
 
 		while (surface_queue_read_index<surface_queue_write_index)
 		{
+			real_point2d surface_vertices2d[MAXIMUM_VERTICES_PER_COLLISION_SURFACE];
 			boolean projection_sign;
 			short projection_axis;
 			short particle_index;
 			struct collision_surface const *surface;
 			long edge_index;
-			word surface_vertex_index;
+			short surface_vertex_index;
+			short surface_queue_index;
 
 			surface_index = surface_queue[surface_queue_read_index++];
 			surface = TAG_BLOCK_GET_ELEMENT(&collision_bsp->surfaces, surface_index, struct collision_surface);
@@ -304,25 +302,27 @@ static void breakable_surface_effect(
 			{
 				struct collision_edge const *collision_edge = TAG_BLOCK_GET_ELEMENT(&collision_bsp->edges, edge_index, struct collision_edge);
 				boolean reverse = (collision_edge->surface_indices[1] == surface_index);
-				struct collision_vertex const *vertex = TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[!reverse], struct collision_vertex);
+				real_point3d const *vertex_point = &TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[!reverse], struct collision_vertex)->point;
 				long adjacent_surface_index = collision_edge->surface_indices[!reverse];
 
 				if (surface_vertex_index==0)
 				{
-					struct collision_vertex const *next_vertex = TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[reverse], struct collision_vertex);
+					real_point3d const *next_vertex_point = &TAG_BLOCK_GET_ELEMENT(&collision_bsp->vertices, collision_edge->vertex_indices[reverse], struct collision_vertex)->point;
+					real_vector3d t_normal;
+					real_vector3d s_normal;
 
 					if (surface_index==seed_surface_index)
 					{
-						real_point2d projected_epicenter;
-						project_point3d(&damage_data->epicenter, projection_axis, projection_sign, &projected_epicenter);
-						project_point2d(&projected_epicenter, &surface_plane, projection_axis, projection_sign, &origin);
+						real_point2d temp_2d;
+						project_point3d(&damage_data->epicenter, projection_axis, projection_sign, &temp_2d);
+						project_point2d(&temp_2d, &surface_plane, projection_axis, projection_sign, &origin);
 					}
 					else
 					{
-						origin = vertex->point;
+						origin = *vertex_point;
 					}
 
-					vector_from_points3d(&vertex->point, &next_vertex->point, &s_normal);
+					vector_from_points3d(vertex_point, next_vertex_point, &s_normal);
 					normalize3d(&s_normal);
 
 					cross_product3d(&s_normal, &surface_plane.n, &t_normal);
@@ -330,50 +330,50 @@ static void breakable_surface_effect(
 					plane3d_from_point_and_normal(&s_plane, &origin, &s_normal);
 					plane3d_from_point_and_normal(&t_plane, &origin, &t_normal);
 
-					surface_bounds.x1 = plane3d_distance_to_point(&s_plane, &vertex->point);
+					surface_bounds.x1 = plane3d_distance_to_point(&s_plane, vertex_point);
 					surface_bounds.x0 = surface_bounds.x1;
-					surface_bounds.y1 = plane3d_distance_to_point(&t_plane, &vertex->point);
+					surface_bounds.y1 = plane3d_distance_to_point(&t_plane, vertex_point);
 					surface_bounds.y0 = surface_bounds.y1;
 				}
 				else
 				{
-					real s = plane3d_distance_to_point(&s_plane, &vertex->point);
-					real t = plane3d_distance_to_point(&t_plane, &vertex->point);
+					real s = plane3d_distance_to_point(&s_plane, vertex_point);
+					real t = plane3d_distance_to_point(&t_plane, vertex_point);
 
 					surface_bounds.x0 = MIN(s, surface_bounds.x0);
 					surface_bounds.y0 = MIN(t, surface_bounds.y0);
-					surface_bounds.x1 = MIN(s, surface_bounds.x1);
-					surface_bounds.y1 = MIN(t, surface_bounds.y1);
+					surface_bounds.x1 = MAX(s, surface_bounds.x1);
+					surface_bounds.y1 = MAX(t, surface_bounds.y1);
 				}
 				
 				match_assert("c:\\halo\\SOURCE\\physics\\breakable_surfaces.c", 348, surface_vertex_index<MAXIMUM_VERTICES_PER_COLLISION_SURFACE);
 
-				surface_vertices3d[surface_vertex_index] = vertex->point;
-				project_point3d(&vertex->point, projection_axis, projection_sign, &surface_vertices2d[surface_vertex_index]);
+				surface_vertices3d[surface_vertex_index] = *vertex_point;
+				project_point3d(vertex_point, projection_axis, projection_sign, &surface_vertices2d[surface_vertex_index]);
 
 				if (total_bounds_valid)
 				{
-					total_bounds.x0 = MIN(total_bounds.x0, vertex->point.x);
-					total_bounds.y0 = MIN(total_bounds.y0, vertex->point.y);
-					total_bounds.z0 = MIN(total_bounds.z0, vertex->point.z);
-					total_bounds.x1 = MAX(total_bounds.x1, vertex->point.x);
-					total_bounds.y1 = MAX(total_bounds.y1, vertex->point.y);
-					total_bounds.z1 = MAX(total_bounds.z1, vertex->point.z);
+					total_bounds.x0 = MIN(vertex_point->x, total_bounds.x0);
+					total_bounds.y0 = MIN(vertex_point->y, total_bounds.y0);
+					total_bounds.z0 = MIN(vertex_point->z, total_bounds.z0);
+					total_bounds.x1 = MAX(vertex_point->x, total_bounds.x1);
+					total_bounds.y1 = MAX(vertex_point->y, total_bounds.y1);
+					total_bounds.z1 = MAX(vertex_point->z, total_bounds.z1);
 				}
 				else
 				{
-					total_bounds.x1 = vertex->point.x;
+					total_bounds.x1 = vertex_point->x;
 					total_bounds.x0 = total_bounds.x1;
-					total_bounds.y1 = vertex->point.y;
+					total_bounds.y1 = vertex_point->y;
 					total_bounds.y0 = total_bounds.y1;
-					total_bounds.z1 = vertex->point.z;
+					total_bounds.z1 = vertex_point->z;
 					total_bounds.z0 = total_bounds.z1;
 					total_bounds_valid = TRUE;
 				}
 
-				for (surface_index = 0; adjacent_surface_index!=NONE && surface_index<surface_queue_write_index; surface_index++)
+				for (surface_queue_index = 0; adjacent_surface_index!=NONE && surface_queue_index<surface_queue_write_index; surface_queue_index++)
 				{
-					if (surface_queue[surface_index]==adjacent_surface_index)
+					if (surface_queue[surface_queue_index]==adjacent_surface_index)
 					{
 						adjacent_surface_index = NONE;
 					}
@@ -402,85 +402,86 @@ static void breakable_surface_effect(
 				
 				if (particle_effect->particle.index!=NONE)
 				{
-					word s_min;
-					word s_max;
-					word t_min;
-					word t_max;
-					word t_index;
+					rectangle2d bounds;
+					short t_index;
 
-					if (particle_effect->density==0.f)
+					if (particle_effect->density!=0.0f)
 					{
-						s_min = (word)ceil(PIN(surface_bounds.x0 / particle_effect->density, -1000.f, 1000.f));
-						t_min = (word)ceil(PIN(surface_bounds.y0 / particle_effect->density, -1000.f, 1000.f));
-						s_max = (word)floor(PIN(surface_bounds.x1 / particle_effect->density, -1000.f, 1000.f));
-						t_max = (word)floor(PIN(surface_bounds.y1 / particle_effect->density, -1000.f, 1000.f));
+						bounds.x0 = fast_ftol(ceil(PIN(surface_bounds.x0 / particle_effect->density, -1000.f, 1000.f)));
+						bounds.y0 = fast_ftol(ceil(PIN(surface_bounds.y0 / particle_effect->density, -1000.f, 1000.f)));
+						bounds.x1 = fast_ftol(floor(PIN(surface_bounds.x1 / particle_effect->density, -1000.f, 1000.f)));
+						bounds.y1 = fast_ftol(floor(PIN(surface_bounds.y1 / particle_effect->density, -1000.f, 1000.f)));
 					}
 					else
 					{
 						if (surface_index==seed_surface_index)
 						{
-							t_max = 0;
-							s_max = 0;
-							t_min = 0;
-							s_min = 0;
+							bounds.y1 = 0;
+							bounds.x1 = 0;
+							bounds.y0 = 0;
+							bounds.x0 = 0;
 						}
 						else
 						{
-							t_min = 1;
-							s_min = 1;
-							t_max = 0;
-							s_max = 0;
+							bounds.y0 = 1;
+							bounds.x0 = 1;
+							bounds.y1 = 0;
+							bounds.x1 = 0;
 						}
 					}
 
-					for (t_index = t_min; t_index<=t_max; ++t_index)
+					for (t_index = bounds.y0; t_index<=bounds.y1; ++t_index)
 					{
 						short s_index;
 
-						for (s_index = s_min; s_index<=s_max; ++s_index)
+						for (s_index = bounds.x0; s_index<=bounds.x1; ++s_index)
 						{
+							real_point2d position_2d_test;
+
 							position = origin;
 
 							{
-								real s_offset = ((real)s_index + real_local_random_range(-0.75f, 0.75f)) * particle_effect->density;
-								real t_offset = ((real)t_index + real_local_random_range(-0.75f, 0.75f)) * particle_effect->density;
+								real_point2d jitter;
+								jitter.x = real_local_random_range(-0.75f, 0.75f);
+								jitter.y = real_local_random_range(-0.75f, 0.75f);
 
-								point_from_line3d(&position, &s_plane.n, s_offset, &position);
-								point_from_line3d(&position, &t_plane.n, t_offset, &position);
+								point_from_line3d(&position, &s_plane.n, ((real)s_index + jitter.x) * particle_effect->density, &position);
+								point_from_line3d(&position, &t_plane.n, ((real)t_index + jitter.y) * particle_effect->density, &position);
 							}
 
 							project_point3d(&position, projection_axis, projection_sign, &position_2d_test);
 
-							if (convex_hull2d_test_point(surface_vertex_index, surface_vertices2d, &position_2d_test, 0.f))
+							if (convex_hull2d_test_point(surface_vertex_index, surface_vertices2d, &position_2d_test, 0.0f))
 							{
 								struct damage_breaking_effect_definition const *breaking_effect;
-								real_vector3d outward;
+								real_vector3d outward_vector;
 								real distance;
+								struct new_particle_data particle;
 
 								velocity = *global_zero_vector3d;
 								breaking_effect = &damage_effect_definition_get(damage_data->definition_index)->breaking_effect;
-								vector_from_points3d(&position, &damage_data->epicenter, &outward);
-								distance = normalize3d(&outward);
+								vector_from_points3d(&damage_data->epicenter, &position, &outward_vector);
+								distance = normalize3d(&outward_vector);
 
-								if (breaking_effect->outward_radius>0.f)
+								if (breaking_effect->outward_radius>0.0f)
 								{
-									real factor = PIN(1.f - distance / breaking_effect->outward_radius, 0.f, 1.f);
+									real factor = PIN(1.0f - distance / breaking_effect->outward_radius, 0.0f, 1.0f);
 
-									if (breaking_effect->outward_exponent != 0.f)
+									if (breaking_effect->outward_exponent != 0.0f)
 									{
 										factor = power(factor, breaking_effect->outward_exponent);
 									}
 
 									factor *= breaking_effect->outward_velocity;
 
-									point_from_line3d((real_point3d *)&velocity, &outward, factor, (real_point3d *)&velocity);
+									point_from_line3d((real_point3d *)&velocity, &outward_vector, factor, (real_point3d *)&velocity);
 								}
 
-								if (breaking_effect->forward_radius > 0.f)
+								if (breaking_effect->forward_radius > 0.0f)
 								{
-									real factor = PIN(1.f - distance / breaking_effect->forward_radius, 0.f, 1.f);
+									real factor = PIN(1.0f - distance / breaking_effect->forward_radius, 0.0f, 1.0f);
 
-									if (breaking_effect->forward_exponent != 0.f)
+									if (breaking_effect->forward_exponent != 0.0f)
 									{
 										factor = power(factor, breaking_effect->forward_exponent);
 									}
@@ -490,7 +491,7 @@ static void breakable_surface_effect(
 									point_from_line3d((real_point3d *)&velocity, &damage_data->direction, factor, (real_point3d *)&velocity);
 								}
 
-								if (particle_effect->velocity_scale_upper_bound > 0.f)
+								if (particle_effect->velocity_scale_upper_bound > 0.0f)
 								{
 									real scale = real_local_random_range(particle_effect->velocity_scale_lower_bound, particle_effect->velocity_scale_upper_bound);
 									scale_vector3d(&velocity, scale, &velocity);
@@ -507,24 +508,28 @@ static void breakable_surface_effect(
 								particle.velocity = velocity;
 								particle.direction = velocity;
 								particle.initial_impulse = *global_zero_vector3d;
-								particle.rotation = real_local_random_range(0.f, 2*M_PI);
+								particle.rotation = real_local_random_range(0.0f, 2*M_PI);
 								particle.angular_velocity = real_local_random_range(particle_effect->angular_velocity_lower_bound, particle_effect->angular_velocity_upper_bound);
 								particle.radius = real_local_random_range(particle_effect->radius_lower_bound, particle_effect->radius_upper_bound);
 
-								rgb_colors_interpolate(
-									&particle.color.rgb,
-									(particle_effect->flags &
-										FLAG(_breakable_surface_particle_effect_color_interpolate_in_hsv_bit) |
-										FLAG(_breakable_surface_particle_effect_color_interpolate_along_farthest_hue_path_bit)
-									) != 0,
-									&particle_effect->tint_lower_bound.rgb,
-									&particle_effect->tint_upper_bound.rgb,
-									real_local_random()
-								);
+								{
+									real u = real_local_random();
 
-								particle.color.alpha = PIN(particle_effect->tint_lower_bound.alpha + real_local_random() * (particle_effect->tint_upper_bound.alpha - particle_effect->tint_lower_bound.alpha), 0.f, 1.f);
+									rgb_colors_interpolate(
+										&particle.color.rgb,
+										particle_effect->flags & (
+											FLAG(_breakable_surface_particle_effect_color_interpolate_in_hsv_bit) |
+											FLAG(_breakable_surface_particle_effect_color_interpolate_along_farthest_hue_path_bit)
+										),
+										&particle_effect->tint_lower_bound.rgb,
+										&particle_effect->tint_upper_bound.rgb,
+										u
+									);
+								}
 
-								if (normalize3d(&particle.direction)==0.f)
+								particle.color.alpha = PIN(particle_effect->tint_lower_bound.alpha + (particle_effect->tint_upper_bound.alpha - particle_effect->tint_lower_bound.alpha) * real_local_random(), 0.0f, 1.0f);
+
+								if (normalize3d(&particle.direction)==0.0f)
 								{
 									local_random_direction3d(&particle.direction);
 								}
@@ -545,7 +550,7 @@ static void breakable_surface_effect(
 			sound_location.forward = *global_forward3d;
 			sound_location.translational_velocity = *global_zero_vector3d;
 			sound_location.game_location = damage_data->location;
-			unattached_impulse_sound_new(breakable_surface->sound.index, &sound_location, 1.f);
+			unattached_impulse_sound_new(breakable_surface->sound.index, &sound_location, 1.0f);
 		}
 	}
 

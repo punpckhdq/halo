@@ -87,7 +87,7 @@ __inline real_plane3d *bsp3d_get_plane_from_designator(
 {
 	real_plane3d* plane = TAG_BLOCK_GET_ELEMENT(&bsp->planes, plane_designator & LONG_MAX, real_plane3d);
 
-	if (plane_designator<0)
+	if (plane_designator & LONG_MIN)
 	{
 		plane3d_negate(plane, result);
 	}

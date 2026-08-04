@@ -529,6 +529,24 @@ extern const real_vector3d *const global_down3d;
 
 /* ---------- public code */
 
+__inline long fast_ftol(float d)
+{
+	long result;
+
+	__asm
+	{
+		fld d
+		fistp result
+	}
+
+	return result;
+}
+
+__inline long fast_ftol_C(float x)
+{
+	return (long)x;
+}
+
 __inline real sine(
 	real angle)
 {
@@ -753,14 +771,16 @@ __inline short projection_from_vector3d(
 	real j = fabs(n->j);
 	real k = fabs(n->k);
 
-	if (k < j || k < i)
-	{
-		return j < i;
-	}
-	else
+	if (k >= j && k >= i)
 	{
 		return _z;
 	}
+	else if (j >= i)
+	{
+		return _y;
+	}
+
+	return _x;
 }
 
 __inline boolean projection_sign_from_vector3d(
@@ -1029,7 +1049,7 @@ __inline real_plane2d *plane2d_from_points(
 	}
 	else
 	{
-		plane->d = dot_product2d((real_vector2d *)point0, &plane->n);
+		plane->d = dot_product2d(&plane->n, (real_vector2d const *)point0);
 	}
 
 	return plane;
@@ -1057,7 +1077,7 @@ __inline real_plane3d *plane3d_from_point_and_normal(
 )
 {
 	plane->n = *normal;
-	plane->d = dot_product3d((real_vector3d *)point, &plane->n);
+	plane->d = dot_product3d(&plane->n, (real_vector3d const *)point);
 	return plane;
 }
 
@@ -1081,7 +1101,7 @@ __inline real_plane3d *plane3d_from_points(
 	}
 	else
 	{
-		plane->d = dot_product3d((real_vector3d *)point0, &plane->n);
+		plane->d = dot_product3d(&plane->n, (real_vector3d const *)point0);
 	}
 
 	return plane;
@@ -1104,7 +1124,7 @@ __inline real plane3d_distance_to_point(
 	real_plane3d const *plane,
 	real_point3d const *point)
 {
-	return dot_product3d((real_vector3d *)point, &plane->n) - plane->d;
+	return dot_product3d(&plane->n, (real_vector3d const *)point) - plane->d;
 }
 
 __inline real vector_intersect_plane3d(
