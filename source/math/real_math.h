@@ -529,24 +529,6 @@ extern const real_vector3d *const global_down3d;
 
 /* ---------- public code */
 
-__inline long fast_ftol(float d)
-{
-	long result;
-
-	__asm
-	{
-		fld d
-		fistp result
-	}
-
-	return result;
-}
-
-__inline long fast_ftol_C(float x)
-{
-	return (long)x;
-}
-
 __inline real sine(
 	real angle)
 {

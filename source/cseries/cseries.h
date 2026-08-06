@@ -277,4 +277,27 @@ extern const union real_rgb_color *const global_real_rgb_darkgreen;
 extern const union real_rgb_color *const global_real_rgb_salmon;
 extern const union real_rgb_color *const global_real_rgb_violet;
 
+/* ---------- public code */
+
+// HCEX indicates these live here despite the lack of real type
+__inline long fast_ftol(
+	float d)
+{
+	long result;
+
+	__asm
+	{
+		fld d
+		fistp result
+	}
+
+	return result;
+}
+
+__inline long fast_ftol_C(
+	float x)
+{
+	return (long)x;
+}
+
 #endif // __CSERIES_H

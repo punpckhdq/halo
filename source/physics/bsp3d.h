@@ -25,9 +25,6 @@ enum
 	BSP3D_ROOT_NODE_INDEX = 0,
 };
 
-
-/* ---------- macros */
-
 /* ---------- structures */
 
 struct bsp3d
@@ -75,8 +72,6 @@ long bsp3d_clip_polygon_to_leaves(
 	real epsilon,
 	polygon_proc handler,
 	void *user_data);
-
-/* ---------- globals */
 
 /* ---------- public code */
 

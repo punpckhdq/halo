@@ -19,10 +19,6 @@ enum
 
 #define CLIP_LINE_EPSILON (1.0f / 4096.0f)
 
-/* ---------- macros */
-
-/* ---------- structures */
-
 /* ---------- prototypes */
 
 static long bsp3d_clip_polygon_to_leaves_recursive(
@@ -162,6 +158,7 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 	short clipped_counts[2];
 
 	short vertex_index;
+	short child_index;
 
 	long intersected_leaf_count = 0;
 	struct bsp3d_node const *node = TAG_BLOCK_GET_ELEMENT(&bsp->nodes, node_index, struct bsp3d_node);
@@ -185,6 +182,8 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 		real_vector3d p0p1;
 		real_vector3d n;
 		boolean facing;
+
+		// TODO: this is a fake match
 		real_vector3d *edge2 = &p0p2;
 
 		vector_from_points3d(&vertices[0], &vertices[1], &p0p1);
@@ -238,20 +237,20 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 		clipped_polygons[1] = clipped_polygon_storage[1];
 	}
 
-	for (vertex_index = 0; vertex_index<NUMBEROF(clipped_counts); ++vertex_index)
+	for (child_index = 0; child_index<NUMBEROF(clipped_counts); ++child_index)
 	{
-		if (clipped_counts[vertex_index])
+		if (clipped_counts[child_index])
 		{
-			if (node->child_indices[vertex_index] & LONG_MIN)
+			if (node->child_indices[child_index] & LONG_MIN)
 			{
-				if (node->child_indices[vertex_index] != NONE)
+				if (node->child_indices[child_index] != NONE)
 				{
 					if (handler)
 					{
 						handler(
-							clipped_polygons[vertex_index],
-							clipped_counts[vertex_index],
-							node->child_indices[vertex_index] & LONG_MAX,
+							clipped_polygons[child_index],
+							clipped_counts[child_index],
+							node->child_indices[child_index] & LONG_MAX,
 							on_node_designator,
 							user_data);
 					}
@@ -263,10 +262,10 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 			{
 				intersected_leaf_count += bsp3d_clip_polygon_to_leaves_recursive(
 					bsp,
-					node->child_indices[vertex_index],
+					node->child_indices[child_index],
 					on_node_designator,
-					clipped_polygons[vertex_index],
-					clipped_counts[vertex_index],
+					clipped_polygons[child_index],
+					clipped_counts[child_index],
 					epsilon, 
 					handler, 
 					user_data);
