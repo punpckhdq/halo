@@ -1,194 +1,16 @@
 /*
 NETWORK_CLIENT_MESSAGE_HANDLER.C
 
-symbols in this file:
-00116AB0 00b0:
-	_code_00116ab0 (0000)
-00116B60 0090:
-	_code_00116b60 (0000)
-00116BF0 00a0:
-	_code_00116bf0 (0000)
-00116C90 00a0:
-	_code_00116c90 (0000)
-00116D30 0130:
-	_code_00116d30 (0000)
-00116E60 0100:
-	_code_00116e60 (0000)
-00116F60 00e0:
-	_code_00116f60 (0000)
-00117040 00e0:
-	_code_00117040 (0000)
-00117120 00d0:
-	_code_00117120 (0000)
-001171F0 00b0:
-	_code_001171f0 (0000)
-001172A0 00c0:
-	_code_001172a0 (0000)
-00117360 00c0:
-	_code_00117360 (0000)
-00117420 00c0:
-	_code_00117420 (0000)
-001174E0 00a0:
-	_code_001174e0 (0000)
-00117580 00c0:
-	_code_00117580 (0000)
-00117640 00b0:
-	_code_00117640 (0000)
-001176F0 0440:
-	_network_game_client_handle_message (0000)
-00281928 0045:
-	??_C@_0EF@JEKJBGGG@ignoring?5an?5advertised?5game?5beca@ (0000)
-00281970 0038:
-	??_C@_0DI@DKMFJKNC@failed?5to?5decode?5a?5message_serve@ (0000)
-002819A8 003e:
-	??_C@_0DO@KGHCHMKG@ignoring?5a?5pong?5message?5because?5@ (0000)
-002819E8 002e:
-	??_C@_0CO@MNCKPDII@failed?5to?5decode?5a?5message_serve@ (0000)
-00281A18 005e:
-	??_C@_0FO@MDHPOCDK@ignoring?5a?5message_server_machin@ (0000)
-00281A78 003a:
-	??_C@_0DK@OHJLEEJA@failed?5to?5decode?5a?5message_serve@ (0000)
-00281AB8 005e:
-	??_C@_0FO@KFHDMLDG@ignoring?5a?5message_server_machin@ (0000)
-00281B18 003a:
-	??_C@_0DK@NPFONKEC@failed?5to?5decode?5a?5message_serve@ (0000)
-00281B58 0048:
-	??_C@_0EI@MBCELKHN@ignoring?5a?5message_server_game_s@ (0000)
-00281BA0 0055:
-	??_C@_0FF@MOCCMIII@failed?5to?5handle?5a?5message_serve@ (0000)
-00281BF8 003e:
-	??_C@_0DO@CFANMJHG@failed?5to?5decode?5a?5message_serve@ (0000)
-00281C38 0033:
-	??_C@_0DD@BCJHCHJP@network_game_client_game_setting@ (0000)
-00281C6C 0017:
-	??_C@_0BH@BJKENKMM@source_address?5?$CB?$DN?5NULL?$AA@ (0000)
-00281C84 003b:
-	??_C@_0DL@LEGDIILJ@c?3?2halo?2SOURCE?2networking?2networ@ (0000)
-00281CC0 0045:
-	??_C@_0EF@KFKEPLOD@ignoring?5a?5message_server_pregam@ (0000)
-00281D08 0052:
-	??_C@_0FC@JHBFLLPP@failed?5to?5handle?5a?5message_serve@ (0000)
-00281D5C 003b:
-	??_C@_0DL@LHJKBMIA@failed?5to?5decode?5a?5message_serve@ (0000)
-00281D98 0046:
-	??_C@_0EG@IAKPIALP@ignoring?5a?5message_server_pregam@ (0000)
-00281DE0 0053:
-	??_C@_0FD@ECPEPJNC@failed?5to?5handle?5a?5message_serve@ (0000)
-00281E34 003c:
-	??_C@_0DM@GMAKBHHC@failed?5to?5decode?5a?5message_serve@ (0000)
-00281E70 0047:
-	??_C@_0EH@IABGEGJI@ignoring?5a?5message_server_postga@ (0000)
-00281EB8 0055:
-	??_C@_0FF@PKNMLFIC@failed?5to?5handle?5a?5message_serve@ (0000)
-00281F10 003d:
-	??_C@_0DN@BIGGNOLB@failed?5to?5decode?5a?5message_serve@ (0000)
-00281F50 0046:
-	??_C@_0EG@KGCDAEPA@ignoring?5a?5message_server_begin_@ (0000)
-00281F98 004c:
-	??_C@_0EM@LHDJIHFO@failed?5to?5handle?5a?5message_serve@ (0000)
-00281FE4 0034:
-	??_C@_0DE@OPOJGBIB@failed?5to?5decode?5a?5message_serve@ (0000)
-00282018 002e:
-	??_C@_0CO@IDLMDGAP@network_game_client_game_has_sta@ (0000)
-00282048 0056:
-	??_C@_0FG@NGBIOKLC@ignoring?5a?5message_server_gracef@ (0000)
-002820A0 005c:
-	??_C@_0FM@DIGPPEBG@failed?5to?5handle?5a?5message_serve@ (0000)
-00282100 0044:
-	??_C@_0EE@ECCKOGDL@failed?5to?5decode?5a?5message_serve@ (0000)
-00282148 0047:
-	??_C@_0EH@MEBMJMKF@ignoring?5a?5message_server_game_u@ (0000)
-00282190 004a:
-	??_C@_0EK@HLKFMGH@failed?5to?5handle?5a?5message_serve@ (0000)
-002821DC 0035:
-	??_C@_0DF@IIILBLL@failed?5to?5decode?5a?5message_serve@ (0000)
-00282214 0030:
-	??_C@_0DA@NKCCMGPH@network_game_client_handle_game_@ (0000)
-00282248 004d:
-	??_C@_0EN@FKBHABAC@ignoring?5a?5message_server_add_pl@ (0000)
-00282298 0050:
-	??_C@_0FA@NACEIJGI@failed?5to?5handle?5a?5message_serve@ (0000)
-002822E8 003b:
-	??_C@_0DL@FGDEKFMJ@failed?5to?5decode?5a?5message_serve@ (0000)
-00282324 0030:
-	??_C@_0DA@ICGCINCO@network_game_client_add_player_t@ (0000)
-00282358 0050:
-	??_C@_0FA@IBHOBKAI@ignoring?5a?5message_server_remove@ (0000)
-002823A8 0053:
-	??_C@_0FD@OLBMGIKB@failed?5to?5handle?5a?5message_serve@ (0000)
-002823FC 003e:
-	??_C@_0DO@GODOOHMN@failed?5to?5decode?5a?5message_serve@ (0000)
-0028243C 002b:
-	??_C@_0CL@NBDIBGCC@network_game_client_remove_playe@ (0000)
-00282468 0045:
-	??_C@_0EF@DDKCBEG@ignoring?5a?5message_server_game_o@ (0000)
-002824B0 0048:
-	??_C@_0EI@BGOBBEDF@failed?5to?5handle?5a?5message_serve@ (0000)
-002824F8 0043:
-	??_C@_0ED@LKOOJPFP@failed?5to?5decode?5a?5message_serve@ (0000)
-00282540 004d:
-	??_C@_0EN@IMILJCHD@ignoring?5a?5message_server_switch@ (0000)
-00282590 0055:
-	??_C@_0FF@LPOEGCEN@failed?5to?5handle?5a?5message_serve@ (0000)
-002825E8 002f:
-	??_C@_0CP@KPJNEAOB@network_game_client_switch_to_pr@ (0000)
-00282618 003b:
-	??_C@_0DL@DIFCCPGE@failed?5to?5decode?5a?5message_serve@ (0000)
-00282658 0057:
-	??_C@_0FH@MFCGNFNN@ignoring?5a?5message_server_gracef@ (0000)
-002826B0 005f:
-	??_C@_0FP@KCFNLJEN@failed?5to?5handle?5a?5message_serve@ (0000)
-00282710 0054:
-	??_C@_0FE@LHBDFEJN@failed?5to?5decode?5a?5message_serve@ (0000)
-00282764 003a:
-	??_C@_0DK@BPCDJE@client?5received?5a?5malformed?1dama@ (0000)
-002827A0 0039:
-	??_C@_0DJ@ILEOJBLB@client?5received?5low?9level?5error?5@ (0000)
-002827DC 0038:
-	??_C@_0DI@MKDILEED@client?5received?5a?5bad?5message?5ty@ (0000)
-00282814 0037:
-	??_C@_0DH@DOCAAFEI@unknown?5packet?5type?5received?5fro@ (0000)
-00282850 004f:
-	??_C@_0EP@PCPAJAJP@network_game_client_handle_messa@ (0000)
-002828A0 0045:
-	??_C@_0EF@GBNHBHMJ@network_game_client_handle_messa@ (0000)
-002828E8 003d:
-	??_C@_0DN@ODDAPCAH@network_game_client_handle_messa@ (0000)
-00282928 0048:
-	??_C@_0EI@EDFDAGJM@network_game_client_handle_messa@ (0000)
-00282970 0045:
-	??_C@_0EF@HHBDNBDF@network_game_client_handle_messa@ (0000)
-002829B8 003f:
-	??_C@_0DP@KPKJEOKA@network_game_client_handle_messa@ (0000)
-002829F8 004e:
-	??_C@_0EO@BMIPGLHI@network_game_client_handle_messa@ (0000)
-00282A48 003e:
-	??_C@_0DO@CAKHJPLK@network_game_client_handle_messa@ (0000)
-00282A88 0047:
-	??_C@_0EH@IEIFIIEF@network_game_client_handle_messa@ (0000)
-00282AD0 0046:
-	??_C@_0EG@NOAJAKOF@network_game_client_handle_messa@ (0000)
-00282B18 0045:
-	??_C@_0EF@OEBFMPPP@network_game_client_handle_messa@ (0000)
-00282B60 0048:
-	??_C@_0EI@JILEDHBD@network_game_client_handle_messa@ (0000)
-00282BA8 0044:
-	??_C@_0EE@JFCCKCCI@network_game_client_handle_messa@ (0000)
-00282BF0 0044:
-	??_C@_0EE@DBJLIDDD@network_game_client_handle_messa@ (0000)
-00282C34 0038:
-	??_C@_0DI@MEGCHKLI@network_game_client_handle_messa@ (0000)
-00282C70 0042:
-	??_C@_0EC@DCBNODDF@network_game_client_handle_messa@ (0000)
-00282CB4 0037:
-	??_C@_0DH@OBKILCJH@client?5received?5a?5message?5with?5a@ (0000)
-00282CEC 0032:
-	??_C@_0DC@OIBJKL@client?5received?5client?5message?5w@ (0000)
-00282D20 0054:
-	??_C@_0FE@FDBDJMOG@client?5?$CG?$CG?5message?5?$CG?$CG?5?$CImessage_si@ (0000)
+- the packet body starts at sizeof(word), not sizeof(message_header); only the leading word is read here
 */
 
 /* ---------- headers */
+
+#include "cseries.h"
+#include "network_client_message_handler.h"
+#include "network_client_manager.h"
+#include "network_messages.h"
+#include "transport.h"
 
 /* ---------- constants */
 
@@ -198,8 +20,891 @@ symbols in this file:
 
 /* ---------- prototypes */
 
+static boolean network_game_client_handle_message_server_game_advertise(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_pong(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_machine_accepted(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_machine_rejected(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_game_settings_update(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_pregame_countdown(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_pregame_keep_alive(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_postgame_keep_alive(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_begin_game(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_graceful_game_exit_pregame(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_game_update(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_add_player_ingame(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_remove_player_ingame(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_game_over(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_switch_to_pregame(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+static boolean network_game_client_handle_message_server_graceful_game_exit_postgame(network_game_client *client, message_header *message, short message_size, transport_address *source_address);
+
 /* ---------- globals */
 
 /* ---------- public code */
 
+boolean network_game_client_handle_message(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= TRUE;
+	word header;
+	word message_type;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 47, client && message && (message_size == GET_MESSAGE_SIZE(*message)) && source_address);
+
+	header= message->packed_size;
+	message_type= GET_MESSAGE_TYPE(message->packed_size);
+
+	if (GET_MESSAGE_FLAGS(header)!=0)
+	{
+		network_event("client received client message with invalid flags");
+	}
+	else
+	{
+		switch (message_type)
+		{
+			case 1: // low-level error message from the server
+			{
+				// the payload is a 0x80 byte string followed by the one byte error code
+				if (message_size>=sizeof(word)+0x80+1)
+				{
+					byte *error_string= (byte *)message + sizeof(word);
+
+					network_event("client received low-level error message: error= #%d (%s)", error_string[0x80], error_string);
+				}
+				else
+				{
+					network_event("client received a malformed/damaged message from a server");
+				}
+				break;
+			}
+
+			case _message_type_data:
+			{
+				network_event("client received a bad message type (_message_type_data)");
+				break;
+			}
+
+			case _message_type_packet:
+			{
+				switch (((byte *)message)[message_size-1])
+				{
+					case _message_type_server_game_advertise:
+					{
+						result= network_game_client_handle_message_server_game_advertise(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_game_advertise() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_pong:
+					{
+						result= network_game_client_handle_message_server_pong(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_pong() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_machine_accepted:
+					{
+						result= network_game_client_handle_message_server_machine_accepted(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_machine_accepted() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_machine_rejected:
+					{
+						result= network_game_client_handle_message_server_machine_rejected(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_machine_rejected() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_game_settings_update:
+					{
+						result= network_game_client_handle_message_server_game_settings_update(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_game_settings_update() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_pregame_countdown:
+					{
+						result= network_game_client_handle_message_server_pregame_countdown(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_pregame_countdown() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_pregame_keep_alive:
+					{
+						result= network_game_client_handle_message_server_pregame_keep_alive(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_pregame_keep_alive() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_postgame_keep_alive:
+					{
+						result= network_game_client_handle_message_server_postgame_keep_alive(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_postgame_keep_alive() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_begin_game:
+					{
+						result= network_game_client_handle_message_server_begin_game(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_begin_game() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_graceful_game_exit_pregame:
+					{
+						result= network_game_client_handle_message_server_graceful_game_exit_pregame(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_graceful_game_exit_pregame() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_game_update:
+					{
+						result= network_game_client_handle_message_server_game_update(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_game_update() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_add_player_ingame:
+					{
+						result= network_game_client_handle_message_server_add_player_ingame(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_add_player_ingame() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_remove_player_ingame:
+					{
+						result= network_game_client_handle_message_server_remove_player_ingame(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_remove_player_ingame() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_game_over:
+					{
+						result= network_game_client_handle_message_server_game_over(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_game_over() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_switch_to_pregame:
+					{
+						result= network_game_client_handle_message_server_switch_to_pregame(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_switch_to_pregame() failed");
+						}
+						break;
+					}
+
+					case _message_type_server_graceful_game_exit_postgame:
+					{
+						result= network_game_client_handle_message_server_graceful_game_exit_postgame(client, message, message_size, source_address);
+						if (!result)
+						{
+							network_event("network_game_client_handle_message_server_graceful_game_exit_postgame() failed");
+						}
+						break;
+					}
+
+					default:
+					{
+						network_event("unknown packet type received from system @ address: %s", transport_address_to_string(source_address));
+						break;
+					}
+				}
+				break;
+			}
+
+			default:
+			{
+				network_event("client received a message with an unknown message type");
+				break;
+			}
+		}
+	}
+
+	return result;
+}
+
 /* ---------- private code */
+
+static boolean network_game_client_handle_message_server_game_advertise(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	if (network_game_client_get_state(client, NULL)==_network_game_client_state_searching)
+	{
+		message_server_game_advertise message_packet;
+		short packet_type= _message_type_server_game_advertise;
+		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+		message_size-= sizeof(word);
+		if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 1))
+		{
+			// the advertisement echoes the nonce we broadcast in our game search
+			if (transport_is_nonce(message_packet.client_nonce, sizeof(message_packet.client_nonce)))
+			{
+				network_game_client_new_advertised_game(client, &message_packet);
+			}
+		}
+		else
+		{
+			network_event("failed to decode a message_server_game_advertise packet");
+		}
+	}
+	else
+	{
+		network_event("ignoring an advertised game because we are not looking for new games");
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_client_handle_message_server_pong(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	if (network_game_client_get_state(client, NULL)==_network_game_client_state_searching)
+	{
+		message_server_pong message_packet;
+		short packet_type= _message_type_server_pong;
+		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+		message_size-= sizeof(word);
+		if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 1))
+		{
+			network_game_client_ponged(client, source_address, message_packet.system_milliseconds);
+		}
+		else
+		{
+			network_event("failed to decode a message_server_pong packet");
+		}
+	}
+	else
+	{
+		network_event("ignoring a pong message because we are not listening for them");
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_client_handle_message_server_machine_accepted(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= TRUE;
+
+	if (network_game_client_address_matches_server(client, source_address) &&
+		(network_game_client_get_state(client, NULL)==_network_game_client_state_joining))
+	{
+		message_server_machine_accepted message_packet;
+		short packet_type= _message_type_server_machine_accepted;
+		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+		message_size-= sizeof(word);
+		if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 2))
+		{
+			network_game_client_accepted_into_game(client, source_address, &message_packet);
+		}
+		else
+		{
+			network_event("failed to decode a message_server_machine_accepted packet");
+			result= FALSE;
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_machine_accepted message; either a bad machine or we aren't joining");
+		result= FALSE;
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_machine_rejected(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= TRUE;
+
+	if (network_game_client_address_matches_server(client, source_address) &&
+		(network_game_client_get_state(client, NULL)==_network_game_client_state_joining))
+	{
+		message_server_machine_rejected message_packet;
+		short packet_type= _message_type_server_machine_rejected;
+		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+		message_size-= sizeof(word);
+		if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 2))
+		{
+			network_game_client_rejected_by_game(client, source_address, message_packet.reason);
+		}
+		else
+		{
+			network_event("failed to decode a message_server_machine_rejected packet");
+			result= FALSE;
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_machine_rejected message; either a bad machine or we aren't joining");
+		result= FALSE;
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_game_settings_update(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 361, client != NULL);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 362, source_address != NULL);
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_pregame)
+		{
+			message_server_game_settings_update message_packet;
+			short packet_type= _message_type_server_game_settings_update;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 2))
+			{
+				result= network_game_client_game_settings_updated(client, &message_packet);
+				if (!result)
+				{
+					network_event("network_game_client_game_settings_updated() failed");
+				}
+			}
+			else
+			{
+				network_event("failed to decode a message_server_game_settings_update packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_game_settings_update message; not in pregame state");
+			result= TRUE;
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_game_settings_update; came from a bad machine");
+		result= TRUE;
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_pregame_countdown(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 411, client != NULL);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 412, source_address != NULL);
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_pregame)
+		{
+			message_server_pregame_countdown message_packet;
+			short packet_type= _message_type_server_pregame_countdown;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 2))
+			{
+				network_game_client_countdown_timer_update(client, message_packet.seconds_to_start);
+			}
+			else
+			{
+				network_event("failed to decode a message_server_pregame_countdown packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_pregame_countdown message; not in pregame state");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_pregame_countdown; came from a bad machine");
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_client_handle_message_server_pregame_keep_alive(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 452, client != NULL);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 453, source_address != NULL);
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_pregame)
+		{
+			message_server_pregame_keep_alive message_packet;
+			short packet_type= _message_type_server_pregame_keep_alive;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (!decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 2))
+			{
+				network_event("failed to decode a message_server_pregame_keep_alive packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_pregame_keep_alive message; not in pregame state");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_pregame_keep_alive; came from a bad machine");
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_client_handle_message_server_postgame_keep_alive(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 494, client != NULL);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_message_handler.c", 495, source_address != NULL);
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_postgame)
+		{
+			message_server_postgame_keep_alive message_packet;
+			short packet_type= _message_type_server_postgame_keep_alive;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (!decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 6))
+			{
+				network_event("failed to decode a message_server_postgame_keep_alive packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_postgame_keep_alive message; not in postgame state");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_postgame_keep_alive; came from a bad machine");
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_client_handle_message_server_begin_game(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= FALSE;
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_pregame)
+		{
+			message_server_begin_game message_packet;
+			short packet_type= _message_type_server_begin_game;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 2))
+			{
+				result= network_game_client_game_has_started(client);
+				if (!result)
+				{
+					network_event("network_game_client_game_has_started() failed");
+				}
+			}
+			else
+			{
+				network_event("failed to decode a message_server_begin_game packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_begin_game message; we are not in pregame");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_begin_game message; came from a bad machine");
+		result= TRUE;
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_graceful_game_exit_pregame(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_pregame)
+		{
+			message_server_graceful_game_exit_pregame message_packet;
+			short packet_type= _message_type_server_graceful_game_exit_pregame;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 2))
+			{
+				network_game_client_game_shutdown(client);
+			}
+			else
+			{
+				network_event("failed to decode a message_server_graceful_game_exit_pregame packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_graceful_game_exit_pregame message; we are not in pregame");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_graceful_game_exit_pregame message; came from a bad machine");
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_client_handle_message_server_game_update(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= FALSE;
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_ingame)
+		{
+			message_server_game_update message_packet;
+			short packet_type= _message_type_server_game_update;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 4))
+			{
+				result= network_game_client_handle_game_update(client, &message_packet);
+				if (!result)
+				{
+					network_event("network_game_client_handle_game_update() failed");
+				}
+			}
+			else
+			{
+				network_event("failed to decode a message_server_game_update packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_game_update message; we are not in game");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_game_update message; came from a bad machine");
+		result= TRUE;
+	}
+
+	if (!result)
+	{
+		network_game_client_game_out_of_sync(client);
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_add_player_ingame(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= FALSE;
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_ingame)
+		{
+			message_server_add_player_ingame message_packet;
+			short packet_type= _message_type_server_add_player_ingame;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 4))
+			{
+				result= network_game_client_add_player_to_game(client, &message_packet.player);
+				if (!result)
+				{
+					network_event("network_game_client_add_player_to_game() failed");
+				}
+			}
+			else
+			{
+				network_event("failed to decode a message_server_add_player_ingame packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_add_player_ingame message; we are not in game");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_add_player_ingame message; came from a bad machine");
+		result= TRUE;
+	}
+
+	if (!result)
+	{
+		network_game_client_game_out_of_sync(client);
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_remove_player_ingame(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= FALSE;
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_ingame)
+		{
+			message_server_remove_player_ingame message_packet;
+			short packet_type= _message_type_server_remove_player_ingame;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 4))
+			{
+				result= network_game_client_remove_player(client, &message_packet.player, message_packet.time_of_quit_out_of_game);
+				if (!result)
+				{
+					network_event("network_game_client_remove_player() failed");
+				}
+			}
+			else
+			{
+				network_event("failed to decode a message_server_remove_player_ingame packet");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_remove_player_ingame message; we are not in game");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_remove_player_ingame message; came from a bad machine");
+		result= TRUE;
+	}
+
+	if (!result)
+	{
+		network_game_client_game_out_of_sync(client);
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_game_over(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_ingame)
+		{
+			message_server_game_over message_packet;
+			short packet_type= _message_type_server_game_over;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (!decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 4))
+			{
+				network_event("failed to decode a message_server_game_over message (not critical)");
+			}
+
+			network_game_client_switch_to_postgame(client);
+		}
+		else
+		{
+			network_event("failed to handle a message_server_game_over message; we are not in game");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_game_over message; came from a bad machine");
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_client_handle_message_server_switch_to_pregame(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= FALSE;
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_postgame)
+		{
+			message_server_switch_to_pregame message_packet;
+			short packet_type= _message_type_server_switch_to_pregame;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (!decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 6))
+			{
+				network_event("failed to decode a message_server_switch_to_pregame packet");
+			}
+
+			result= network_game_client_switch_to_pregame(client);
+			if (!result)
+			{
+				network_event("network_game_client_switch_to_pregame() failed");
+			}
+		}
+		else
+		{
+			network_event("failed to handle a message_server_switch_to_pregame message; we are not in post-game");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_switch_to_pregame message; came from a bad machine");
+		result= TRUE;
+	}
+
+	return result;
+}
+
+static boolean network_game_client_handle_message_server_graceful_game_exit_postgame(
+	network_game_client *client,
+	message_header *message,
+	short message_size,
+	transport_address *source_address)
+{
+	boolean result= FALSE;
+
+	if (network_game_client_address_matches_server(client, source_address))
+	{
+		if (network_game_client_get_state(client, NULL)==_network_game_client_state_postgame)
+		{
+			message_server_graceful_game_exit_postgame message_packet;
+			short packet_type= _message_type_server_graceful_game_exit_postgame;
+			short packet_version= NETWORK_GAME_MESSAGE_VERSION;
+
+			message_size-= sizeof(word);
+			if (!decode_network_game_message(&message_packet, (byte *)message + sizeof(word), &message_size, &packet_type, &packet_version, 6))
+			{
+				network_event("failed to decode a message_server_graceful_game_exit_postgame packet (not critical)");
+			}
+
+			network_game_client_game_shutdown(client);
+		}
+		else
+		{
+			network_event("failed to handle a message_server_graceful_game_exit_postgame message; we are not in post-game");
+		}
+	}
+	else
+	{
+		network_event("ignoring a message_server_graceful_game_exit_postgame message; came from a bad machine");
+		result= TRUE;
+	}
+
+	return result;
+}

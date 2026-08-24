@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/NETWORK_GAME_UI.C */
+
+wchar *network_game_get_random_player_name(void);
 
 /* ---------- globals */
 
