@@ -59,16 +59,16 @@ enum
 /* ---------- structures */
 
 // the wire header is the leading word alone: create_message() lays the body down at message+sizeof(word)
-typedef struct message_header
+struct message_header
 {
 	word packed_size; // size<<4 in the upper 12 bits (GET_MESSAGE_SIZE)
-	word pad_02; // 0x02, never read and never written; only sizeof(message_header) sees it
-} message_header;
+	word pad_02; // 0x02, never read and never written; only sizeof(struct message_header) sees it
+};
 
 /* ---------- prototypes/MESSAGE_HEADER.C */
 
 void build_message_header(word *msg, word length, byte type, byte flags);
-void byte_swap_message_header(message_header *header, long byte_order); // swaps packed_size; both byte orders swap it the same way
+void byte_swap_message_header(struct message_header *header, long byte_order); // swaps packed_size; both byte orders swap it the same way
 void *create_message(long type, void const *data, word data_size, void *buffer, word buffer_size);
 
 /* ---------- globals */

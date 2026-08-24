@@ -1,7 +1,7 @@
 /*
 NETWORK_GAME_MANAGER.C
 
-- owns the network_game_data record: the machine and player tables the server and client managers replicate
+- owns the struct network_game_data record: the machine and player tables the server and client managers replicate
 - a client builds its game objects out of that record when the game starts
 */
 
@@ -48,8 +48,8 @@ void network_game_invalidate_player(
 }
 
 boolean network_game_add_machine(
-	network_game_data *game,
-	network_machine *machine)
+	struct network_game_data *game,
+	struct network_machine *machine)
 {
 	boolean result= FALSE;
 	long machine_index;
@@ -61,7 +61,7 @@ boolean network_game_add_machine(
 	{
 		if (!network_machine_is_valid(&game->machines[machine_index]))
 		{
-			csmemcpy(&game->machines[machine_index], machine, sizeof(network_machine));
+			csmemcpy(&game->machines[machine_index], machine, sizeof(struct network_machine));
 			game->machine_count++;
 			result= TRUE;
 			break;
@@ -72,8 +72,8 @@ boolean network_game_add_machine(
 }
 
 boolean network_game_update_machine(
-	network_game_data *game,
-	network_machine *machine)
+	struct network_game_data *game,
+	struct network_machine *machine)
 {
 	boolean result= FALSE;
 	long machine_index;
@@ -85,7 +85,7 @@ boolean network_game_update_machine(
 	{
 		if (game->machines[machine_index].machine_index==machine->machine_index)
 		{
-			csmemcpy(&game->machines[machine_index], machine, sizeof(network_machine));
+			csmemcpy(&game->machines[machine_index], machine, sizeof(struct network_machine));
 			result= TRUE;
 			break;
 		}
@@ -153,7 +153,7 @@ void network_game_generate_local_machine_name(
 }
 
 void network_game_end_and_load_ui(
-	network_game_data *game)
+	struct network_game_data *game)
 {
 	if (game->local_data.game_objects_loaded)
 	{
@@ -166,7 +166,7 @@ void network_game_end_and_load_ui(
 }
 
 void network_game_reset_for_next_round(
-	network_game_data *game,
+	struct network_game_data *game,
 	boolean load_ui)
 {
 	match_assert("c:\\halo\\SOURCE\\networking\\network_game_manager.c", 557, game);
@@ -210,7 +210,7 @@ boolean network_player_is_valid(
 }
 
 void network_game_invalidate_machine(
-	network_game_data *game,
+	struct network_game_data *game,
 	word machine_index)
 {
 	long player_index;
@@ -233,7 +233,7 @@ void network_game_invalidate_machine(
 }
 
 boolean network_game_add_player(
-	network_game_data *game,
+	struct network_game_data *game,
 	struct network_player *player)
 {
 	boolean result= FALSE;
@@ -370,7 +370,7 @@ boolean network_game_spawn_player(
 
 boolean network_game_player_is_valid(
 	struct network_player *player,
-	network_game_data *game)
+	struct network_game_data *game)
 {
 	boolean result= FALSE;
 
@@ -395,13 +395,13 @@ boolean network_game_player_is_valid(
 }
 
 void network_game_invalidate(
-	network_game_data *game)
+	struct network_game_data *game)
 {
 	long machine_index;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_game_manager.c", 35, game);
 
-	csmemset(game, 0, sizeof(network_game_data));
+	csmemset(game, 0, sizeof(struct network_game_data));
 	csmemset(&game->map, 0, sizeof(game->map));
 
 	game->machine_count= 0;
@@ -422,7 +422,7 @@ void network_game_invalidate(
 }
 
 boolean network_game_update_player(
-	network_game_data *game,
+	struct network_game_data *game,
 	struct network_player *player)
 {
 	boolean result= FALSE;
@@ -447,7 +447,7 @@ boolean network_game_update_player(
 }
 
 boolean network_game_remove_player(
-	network_game_data *game,
+	struct network_game_data *game,
 	struct network_player *player)
 {
 	boolean result= FALSE;
@@ -481,7 +481,7 @@ boolean network_game_remove_player(
 }
 
 boolean network_game_create_game_objects(
-	network_game_data *game)
+	struct network_game_data *game)
 {
 	struct game_options options;
 
@@ -554,8 +554,8 @@ boolean network_game_create_game_objects(
 }
 
 boolean network_game_remove_machine(
-	network_game_data *game,
-	network_machine *machine)
+	struct network_game_data *game,
+	struct network_machine *machine)
 {
 	boolean result= FALSE;
 

@@ -49,7 +49,7 @@ struct transport_endpoint_globals
 struct transport_connect_process
 {
 	transport_endpoint_ref ep; // 0x00
-	transport_address address; // 0x04
+	struct transport_address address; // 0x04
 	struct thread_reference *thread; // 0x1c
 	struct mutex_reference *mutex; // 0x20
 	boolean cancelled; // 0x24
@@ -171,7 +171,7 @@ void delete_transport_endpoint(
 
 short get_endpoint_address(
 	transport_endpoint_ref ep,
-	transport_address *address)
+	struct transport_address *address)
 {
 	short result= _transport_error_none;
 	struct sockaddr_in sockaddress;
@@ -277,7 +277,7 @@ short set_endpoint_blocking(
 
 short bind_endpoint(
 	transport_endpoint_ref ep,
-	transport_address *address)
+	struct transport_address *address)
 {
 	short result= _transport_error_none;
 	struct sockaddr_in sockaddress;
@@ -338,7 +338,7 @@ short bind_endpoint(
 
 short connect_endpoint(
 	transport_endpoint_ref ep,
-	transport_address *address)
+	struct transport_address *address)
 {
 	short result= _transport_error_none;
 	struct sockaddr_in sockaddress;
@@ -510,7 +510,7 @@ static unsigned long __stdcall connect_async_thread_proc(
 
 short connect_endpoint_async(
 	transport_endpoint_ref ep,
-	transport_address *address,
+	struct transport_address *address,
 	transport_connect_process_ref *process_ref_ptr)
 {
 	long result;
@@ -758,7 +758,7 @@ long read_from_endpoint(
 	transport_endpoint_ref ep,
 	void *buffer,
 	long length,
-	transport_address *src_addr)
+	struct transport_address *src_addr)
 {
 	long result;
 	struct sockaddr_in sockaddress;
@@ -774,7 +774,7 @@ long read_from_endpoint(
 		ep->socket= create_socket(AF_INET, SOCK_DGRAM, 0);
 		if (ep->socket!=INVALID_SOCKET)
 		{
-			transport_address address= {0};
+			struct transport_address address= {0};
 			short err;
 
 			address.address_length= IPV4_ADDRESS_LENGTH;
@@ -834,7 +834,7 @@ long write_to_endpoint(
 	transport_endpoint_ref ep,
 	void *buffer,
 	long length,
-	transport_address *dest_addr)
+	struct transport_address *dest_addr)
 {
 	long result;
 	struct sockaddr_in sockaddress;

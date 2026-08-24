@@ -57,7 +57,7 @@ void build_message_header(
 }
 
 void byte_swap_message_header(
-	message_header *header,
+	struct message_header *header,
 	long byte_order)
 {
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\message_header.c", 80, header);

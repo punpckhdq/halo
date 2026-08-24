@@ -70,8 +70,8 @@ struct data_packet_definition player_action_collection_definition=
 };
 
 // a machine can be both at once; a server always runs a client alongside it
-static network_game_server *global_network_game_server;
-static network_game_client *global_network_game_client;
+static struct network_game_server *global_network_game_server;
+static struct network_game_client *global_network_game_client;
 
 static struct
 {
@@ -114,7 +114,7 @@ void network_game_set_random_seed(
 long network_game_get_number_of_games_played(
 	void)
 {
-	network_game_data *game= network_game_get_game();
+	struct network_game_data *game= network_game_get_game();
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_game_globals.c", 85, game);
 
@@ -124,14 +124,14 @@ long network_game_get_number_of_games_played(
 unsigned long network_game_get_random_seed(
 	void)
 {
-	network_game_data *game= network_game_get_game();
+	struct network_game_data *game= network_game_get_game();
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_game_globals.c", 115, game);
 
 	return game->network_game_random_seed;
 }
 
-network_game_data *network_game_get_game(
+struct network_game_data *network_game_get_game(
 	void)
 {
 	if (global_network_game_server)
@@ -152,7 +152,7 @@ boolean network_game_player_is_local(
 {
 	if (player && network_player_is_valid(player) && global_network_game_client)
 	{
-		network_machine *machine= network_game_client_get_machine(global_network_game_client);
+		struct network_machine *machine= network_game_client_get_machine(global_network_game_client);
 
 		return (boolean)(machine && (machine->machine_index == player->machine_index));
 	}
@@ -370,8 +370,8 @@ boolean network_game_client_end_frame(
 				network_game_client_server_has_started_game(global_network_game_client))
 			{
 				struct player_action_collection actions;
-				message_client_game_update message_packet;
-				message_header *message;
+				struct message_client_game_update message_packet;
+				struct message_header *message;
 
 				network_game_client_get_next_update_number(global_network_game_client);
 				network_game_client_get_game(global_network_game_client);
@@ -391,7 +391,7 @@ boolean network_game_client_end_frame(
 				message= create_network_game_message(_message_type_client_game_update, &message_packet, sizeof(message_packet));
 				if (message)
 				{
-					transport_address address;
+					struct transport_address address;
 
 					network_game_client_get_remote_server_address(global_network_game_client, &address);
 					result= network_game_client_write(network_game_client_get_connection(global_network_game_client), message, GET_MESSAGE_SIZE(*message), &address, FALSE);
@@ -422,7 +422,7 @@ short network_game_client_get_local_machine_index(
 
 	if (global_network_game_client)
 	{
-		network_machine *machine= network_game_client_get_machine(global_network_game_client);
+		struct network_machine *machine= network_game_client_get_machine(global_network_game_client);
 
 		if (machine) machine_index= machine->machine_index;
 	}
@@ -435,8 +435,8 @@ void network_game_client_local_player_quit(
 {
 	if (global_network_game_client)
 	{
-		network_machine *machine= network_game_client_get_machine(global_network_game_client);
-		network_game_data *game= network_game_client_get_game(global_network_game_client);
+		struct network_machine *machine= network_game_client_get_machine(global_network_game_client);
+		struct network_game_data *game= network_game_client_get_game(global_network_game_client);
 
 		if (machine)
 		{

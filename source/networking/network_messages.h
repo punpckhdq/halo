@@ -101,23 +101,23 @@ enum
 
 // the size after each structure is the one create_network_game_message() asserts for its message type
 
-typedef struct message_client_broadcast_game_search
+struct message_client_broadcast_game_search
 {
 	word port;
 	word version;
 	byte nonce[8];
-} message_client_broadcast_game_search; // 12
+}; // 12
 
-typedef struct message_client_ping
+struct message_client_ping
 {
 	unsigned long system_milliseconds;
 	word reply_to_port;
 	word pad_06; // 0x06, alignment only: message_client_ping_packet skips it, so it never goes on the wire
-} message_client_ping; // 8
+}; // 8
 
-typedef struct message_server_game_advertise
+struct message_server_game_advertise
 {
-	byte client_nonce[8]; // 0x00, echoed back from message_client_broadcast_game_search
+	byte client_nonce[8]; // 0x00, echoed back from struct message_client_broadcast_game_search
 	byte server_nonce[8]; // 0x08
 	XNKID key_id; // 0x10
 	XNKEY key; // 0x18
@@ -139,97 +139,97 @@ typedef struct message_server_game_advertise
 	short score_to_win; // 0x100
 	word flags; // 0x102
 	byte join_token[NETWORK_JOIN_GAME_TOKEN_SIZE]; // 0x104
-} message_server_game_advertise; // 276
+}; // 276
 
-typedef struct message_server_pong
+struct message_server_pong
 {
 	unsigned long system_milliseconds; // 0x00, echoed back from message_client_ping
-} message_server_pong; // 4
+}; // 4
 
-typedef struct message_server_machine_accepted
+struct message_server_machine_accepted
 {
 	unsigned long server_random_seed; // 0x00
 	short machine_index; // 0x04
 	short pad_06; // 0x06, alignment only: message_server_machine_accepted_packet skips it, so it never goes on the wire
-} message_server_machine_accepted; // 8
+}; // 8
 
-typedef struct message_server_machine_rejected
+struct message_server_machine_rejected
 {
 	word reason;
-} message_server_machine_rejected; // 2
+}; // 2
 
-typedef struct message_server_game_settings_update
+struct message_server_game_settings_update
 {
-	network_game_data game;
-} message_server_game_settings_update; // 1076
+	struct network_game_data game;
+}; // 1076
 
-typedef struct message_server_pregame_countdown
+struct message_server_pregame_countdown
 {
 	short seconds_to_start;
-} message_server_pregame_countdown; // 2
+}; // 2
 
-typedef struct message_server_pregame_keep_alive
+struct message_server_pregame_keep_alive
 {
 	word unused;
-} message_server_pregame_keep_alive; // 2
+}; // 2
 
-typedef struct message_server_begin_game
+struct message_server_begin_game
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_server_begin_game; // 4
+}; // 4
 
-typedef struct message_server_graceful_game_exit_pregame
+struct message_server_graceful_game_exit_pregame
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_server_graceful_game_exit_pregame; // 4
+}; // 4
 
-typedef struct message_server_postgame_keep_alive
+struct message_server_postgame_keep_alive
 {
 	word unused;
-} message_server_postgame_keep_alive; // 2
+}; // 2
 
-typedef struct message_client_join_game_request
+struct message_client_join_game_request
 {
 	wchar machine_name[MAXIMUM_NETWORK_GAME_MACHINE_NAME_LENGTH]; // 0x00
 	byte join_token[NETWORK_JOIN_GAME_TOKEN_SIZE]; // 0x40
-} message_client_join_game_request; // 80
+}; // 80
 
-typedef struct message_client_add_player_request_pregame
+struct message_client_add_player_request_pregame
 {
 	struct network_player player;
-} message_client_add_player_request_pregame; // 32
+}; // 32
 
-typedef struct message_client_remove_player_request_pregame
+struct message_client_remove_player_request_pregame
 {
 	struct network_player player;
-} message_client_remove_player_request_pregame; // 32
+}; // 32
 
-typedef struct message_client_settings_request
+struct message_client_settings_request
 {
-	network_machine machine;
-} message_client_settings_request; // 68
+	struct network_machine machine;
+}; // 68
 
-typedef struct message_client_player_settings_request
+struct message_client_player_settings_request
 {
 	struct network_player player;
-} message_client_player_settings_request; // 32
+}; // 32
 
-typedef struct message_client_game_start_request
+struct message_client_game_start_request
 {
 	short request;
-} message_client_game_start_request; // 2
+}; // 2
 
-typedef struct message_client_graceful_game_exit_pregame
+struct message_client_graceful_game_exit_pregame
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_client_graceful_game_exit_pregame; // 4
+}; // 4
 
-typedef struct message_client_map_is_precached_pregame
+struct message_client_map_is_precached_pregame
 {
 	char map_name[256];
-} message_client_map_is_precached_pregame; // 256
+}; // 256
 
-typedef struct message_server_game_update
+struct message_server_game_update
 {
 	unsigned long update_number; // 0x00
 	unsigned long debug_random_seed; // 0x04
@@ -239,30 +239,30 @@ typedef struct message_server_game_update
 	short pad_0C;
 	short player_count; // 0x0E
 	struct player_action action_update[NETWORK_GAME_MAXIMUM_PLAYER_COUNT]; // 0x10
-} message_server_game_update; // 528
+}; // 528
 
-typedef struct message_server_add_player_ingame
+struct message_server_add_player_ingame
 {
 	struct network_player player;
-} message_server_add_player_ingame; // 32
+}; // 32
 
-typedef struct message_server_remove_player_ingame
+struct message_server_remove_player_ingame
 {
 	struct network_player player; // 0x00
 	long time_of_quit_out_of_game; // 0x20
-} message_server_remove_player_ingame; // 36
+}; // 36
 
-typedef struct message_server_game_over
+struct message_server_game_over
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_server_game_over; // 4
+}; // 4
 
-typedef struct message_client_loaded
+struct message_client_loaded
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_client_loaded; // 4
+}; // 4
 
-typedef struct message_client_game_update
+struct message_client_game_update
 {
 	unsigned long update_number; // 0x00, bit 31 = out of sync
 	// 0x04, alignment only: message_client_game_update_packet's array field takes its element
@@ -270,62 +270,62 @@ typedef struct message_client_game_update
 	short pad_04;
 	short player_count; // 0x06
 	struct player_action action_update[MAXIMUM_NUMBER_OF_LOCAL_PLAYERS]; // 0x08
-} message_client_game_update; // 136
+}; // 136
 
-typedef struct message_client_add_player_request_ingame
+struct message_client_add_player_request_ingame
 {
 	struct network_player player;
-} message_client_add_player_request_ingame; // 32
+}; // 32
 
-typedef struct message_client_remove_player_request_ingame
+struct message_client_remove_player_request_ingame
 {
 	struct network_player player;
-} message_client_remove_player_request_ingame; // 32
+}; // 32
 
-typedef struct message_client_host_crashed_cry_for_help
+struct message_client_host_crashed_cry_for_help
 {
 	// 0x00, message_client_host_crashed_cry_for_help_packet encodes three longs and a word
 	// followed by two bytes of padding; nothing creates this message and neither manager handles it
 	byte pad_00[16];
-} message_client_host_crashed_cry_for_help; // 16
+}; // 16
 
-typedef struct message_client_join_new_host
+struct message_client_join_new_host
 {
 	// 0x00, message_client_join_new_host_packet encodes three longs and a word
 	// followed by two bytes of padding; nothing creates this message and neither manager handles it
 	byte pad_00[16];
-} message_client_join_new_host; // 16
+}; // 16
 
-typedef struct message_server_switch_to_pregame
+struct message_server_switch_to_pregame
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_server_switch_to_pregame; // 4
+}; // 4
 
-typedef struct message_server_graceful_game_exit_postgame
+struct message_server_graceful_game_exit_postgame
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_server_graceful_game_exit_postgame; // 4
+}; // 4
 
-typedef struct message_client_remove_player_request_postgame
+struct message_client_remove_player_request_postgame
 {
 	struct network_player player;
-} message_client_remove_player_request_postgame; // 32
+}; // 32
 
-typedef struct message_client_switch_to_pregame
+struct message_client_switch_to_pregame
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_client_switch_to_pregame; // 4
+}; // 4
 
-typedef struct message_client_graceful_game_exit_postgame
+struct message_client_graceful_game_exit_postgame
 {
 	long pad_00; // 0x00, filler; the message carries no payload
-} message_client_graceful_game_exit_postgame; // 4
+}; // 4
 
 /* ---------- prototypes/NETWORK_MESSAGES.C */
 
 void initialize_network_game_packets(void);
 void network_event(char *format, ...);
-message_header *create_network_game_message(short message_type, void *message_struct, short message_struct_size);
+struct message_header *create_network_game_message(short message_type, void *message_struct, short message_struct_size);
 boolean decode_network_game_message(void *message_struct, void const *encoded_message, short *encoded_message_size, short *packet_type, short *packet_version, short expected_packet_class);
 
 /* ---------- globals */

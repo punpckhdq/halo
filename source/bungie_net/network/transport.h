@@ -74,13 +74,13 @@ union transport_address_data
 	byte bytes[16];
 };
 
-typedef struct transport_address
+struct transport_address
 {
 	union transport_address_data address; // 0x00
 	word address_length; // 0x10
 	word port; // 0x12
 	long address_type; // 0x14, always zero; nothing above the transport layer reads it
-} transport_address; // 0x18
+}; // 0x18
 
 typedef struct transport_endpoint *transport_endpoint_ref;
 typedef struct transport_connect_process *transport_connect_process_ref;
@@ -90,10 +90,10 @@ typedef struct transport_connect_process *transport_connect_process_ref;
 boolean transport_network_available(void);
 short transport_server_initialize(void);
 short transport_server_terminate(void);
-transport_address *create_transport_address(union transport_address_data *address, word address_length, word port);
-void delete_transport_address(transport_address *address);
-long transport_address_equivalent(transport_address *a, transport_address *b);
-char *transport_address_to_string(transport_address *address);
+struct transport_address *create_transport_address(union transport_address_data *address, word address_length, word port);
+void delete_transport_address(struct transport_address *address);
+long transport_address_equivalent(struct transport_address *a, struct transport_address *b);
+char *transport_address_to_string(struct transport_address *address);
 char *transport_error_to_string(short error);
 void transport_get_nonce(byte *nonce, long nonce_size);
 #ifdef xbox

@@ -30,34 +30,34 @@ public endpoint; everything else has to come in on an accepted client connection
 
 /* ---------- prototypes */
 
-static boolean network_game_server_write(struct network_connection *connection, message_header *message, word message_size, transport_address *dest_address, boolean reliable);
+static boolean network_game_server_write(struct network_connection *connection, struct message_header *message, word message_size, struct transport_address *dest_address, boolean reliable);
 
-static boolean handle_message_client_broadcast_game_search(network_game_server *server, transport_address *source_address, message_client_broadcast_game_search *client_message);
-static boolean handle_message_client_ping(network_game_server *server, transport_address *source_address, message_client_ping *client_message);
+static boolean handle_message_client_broadcast_game_search(struct network_game_server *server, struct transport_address *source_address, struct message_client_broadcast_game_search *client_message);
+static boolean handle_message_client_ping(struct network_game_server *server, struct transport_address *source_address, struct message_client_ping *client_message);
 
-static boolean network_game_server_handle_message_client_join_game_request(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_add_player_request_pregame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_remove_player_request_pregame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_settings_request(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_player_settings_request(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_game_start_request(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_graceful_game_exit_pregame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_map_is_precached_pregame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_loaded(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_add_player_request_ingame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_remove_player_request_ingame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_remove_player_request_postgame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
-static boolean network_game_server_handle_message_client_switch_to_pregame(network_game_server *server, network_client_machine *machine, message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_join_game_request(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_add_player_request_pregame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_remove_player_request_pregame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_settings_request(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_player_settings_request(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_game_start_request(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_graceful_game_exit_pregame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_map_is_precached_pregame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_loaded(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_add_player_request_ingame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_remove_player_request_ingame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_remove_player_request_postgame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
+static boolean network_game_server_handle_message_client_switch_to_pregame(struct network_game_server *server, struct network_client_machine *machine, struct message_header *message, short message_size);
 
 /* ---------- globals */
 
 /* ---------- public code */
 
 boolean network_game_server_handle_datagram(
-	network_game_server *server,
-	message_header *message,
+	struct network_game_server *server,
+	struct message_header *message,
 	short datagram_size,
-	transport_address *source_address)
+	struct transport_address *source_address)
 {
 	boolean result= TRUE;
 	word header;
@@ -82,7 +82,7 @@ boolean network_game_server_handle_datagram(
 			case 1:
 			{
 				// the low-level error datagram is 128 characters of text followed by the
-				// one-byte error code, so the whole message is sizeof(message_header)+129
+				// one-byte error code, so the whole message is sizeof(struct message_header)+129
 				if (datagram_size >= sizeof(word)+129)
 				{
 					byte *error_message= (byte *)message + sizeof(word);
@@ -118,7 +118,7 @@ boolean network_game_server_handle_datagram(
 					{
 						if (network_game_should_accept_remote_connections())
 						{
-							message_client_broadcast_game_search message_packet;
+							struct message_client_broadcast_game_search message_packet;
 
 							if (decode_network_game_message(&message_packet, (char *)message + sizeof(word),
 								&datagram_size, &packet_type, &packet_version, 0))
@@ -141,7 +141,7 @@ boolean network_game_server_handle_datagram(
 					{
 						if (network_game_should_accept_remote_connections())
 						{
-							message_client_ping message_packet;
+							struct message_client_ping message_packet;
 
 							if (decode_network_game_message(&message_packet, (char *)message + sizeof(word),
 								&datagram_size, &packet_type, &packet_version, 0))
@@ -163,11 +163,11 @@ boolean network_game_server_handle_datagram(
 					{
 						if (network_game_server_get_state(server, NULL) == _network_game_server_state_ingame)
 						{
-							network_client_machine *machine= network_game_server_get_client_machine_at_address(server, source_address->address.ipv4_address);
+							struct network_client_machine *machine= network_game_server_get_client_machine_at_address(server, source_address->address.ipv4_address);
 
 							if (machine)
 							{
-								message_client_game_update message_packet;
+								struct message_client_game_update message_packet;
 
 								if (decode_network_game_message(&message_packet, (char *)message + sizeof(word),
 									&datagram_size, &packet_type, &packet_version, 5))
@@ -214,9 +214,9 @@ boolean network_game_server_handle_datagram(
 }
 
 boolean network_game_server_handle_client_message(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_buffer_size)
 {
 	boolean result= TRUE;
@@ -420,9 +420,9 @@ boolean network_game_server_handle_client_message(
 }
 
 boolean network_game_server_send_message_to_machine(
-	network_game_server *server,
-	network_machine *machine,
-	message_header *message)
+	struct network_game_server *server,
+	struct network_machine *machine,
+	struct message_header *message)
 {
 	boolean result= FALSE;
 	struct network_connection *connection= network_game_server_get_machine_connection(server, machine);
@@ -436,8 +436,8 @@ boolean network_game_server_send_message_to_machine(
 }
 
 boolean network_game_server_send_message_to_all_machines(
-	network_game_server *server,
-	message_header *message)
+	struct network_game_server *server,
+	struct message_header *message)
 {
 	boolean result= TRUE;
 	word message_length;
@@ -449,7 +449,7 @@ boolean network_game_server_send_message_to_all_machines(
 
 	for (i= 0; i<MAXIMUM_NETWORK_MACHINE_COUNT; i++)
 	{
-		network_client_machine *client_machine= network_game_server_get_client_machine_at_index(server, i);
+		struct network_client_machine *client_machine= network_game_server_get_client_machine_at_index(server, i);
 
 		if (network_game_server_client_machine_is_joined_to_game(server, client_machine))
 		{
@@ -463,7 +463,7 @@ boolean network_game_server_send_message_to_all_machines(
 
 				csmemcpy(message_buffer, message, message_length);
 
-				if (!network_game_server_write(connection, (message_header *)message_buffer, message_length, NULL, TRUE))
+				if (!network_game_server_write(connection, (struct message_header *)message_buffer, message_length, NULL, TRUE))
 				{
 					network_event("network_game_server_write() failed in network_game_server_send_message_to_all_machines()");
 					result= FALSE;
@@ -476,12 +476,12 @@ boolean network_game_server_send_message_to_all_machines(
 }
 
 boolean network_game_server_send_player_joined_info_ingame(
-	network_game_server *server,
-	network_player *player)
+	struct network_game_server *server,
+	struct network_player *player)
 {
 	boolean result;
-	message_server_add_player_ingame message_packet;
-	message_header *message;
+	struct message_server_add_player_ingame message_packet;
+	struct message_header *message;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_message_handler.c", 432, server && player);
 
@@ -504,18 +504,18 @@ boolean network_game_server_send_player_joined_info_ingame(
 }
 
 boolean network_game_server_send_game_data_pregame(
-	network_game_server *server)
+	struct network_game_server *server)
 {
 	boolean result= FALSE;
-	network_game_data *game;
-	message_server_game_settings_update message_packet;
+	struct network_game_data *game;
+	struct message_server_game_settings_update message_packet;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_message_handler.c", 456, server);
 
 	game= network_game_server_get_game(server);
 	if (game)
 	{
-		message_header *message;
+		struct message_header *message;
 
 		csmemcpy(&message_packet, game, sizeof(message_packet));
 
@@ -543,18 +543,18 @@ boolean network_game_server_send_game_data_pregame(
 
 static boolean network_game_server_write(
 	struct network_connection *connection,
-	message_header *message,
+	struct message_header *message,
 	word message_size,
-	transport_address *dest_address,
+	struct transport_address *dest_address,
 	boolean reliable)
 {
 	return network_connection_write(connection, message, message_size, dest_address, reliable);
 }
 
 static boolean handle_message_client_broadcast_game_search(
-	network_game_server *server,
-	transport_address *source_address,
-	message_client_broadcast_game_search *client_message)
+	struct network_game_server *server,
+	struct transport_address *source_address,
+	struct message_client_broadcast_game_search *client_message)
 {
 	boolean result= TRUE;
 
@@ -562,13 +562,13 @@ static boolean handle_message_client_broadcast_game_search(
 
 	if (client_message->version == NETWORK_GAME_MESSAGE_VERSION)
 	{
-		network_game_data *game= network_game_server_get_game(server);
+		struct network_game_data *game= network_game_server_get_game(server);
 
 		if (game)
 		{
-			message_server_game_advertise game_advertisement= {0};
-			transport_address reply_address;
-			message_header *message;
+			struct message_server_game_advertise game_advertisement= {0};
+			struct transport_address reply_address;
+			struct message_header *message;
 
 			reply_address.address_length= IPV4_ADDRESS_LENGTH;
 			reply_address.address.ipv4_address= IPV4_BROADCAST_ADDRESS;
@@ -627,13 +627,13 @@ static boolean handle_message_client_broadcast_game_search(
 }
 
 static boolean handle_message_client_ping(
-	network_game_server *server,
-	transport_address *source_address,
-	message_client_ping *client_message)
+	struct network_game_server *server,
+	struct transport_address *source_address,
+	struct message_client_ping *client_message)
 {
 	boolean result;
-	message_server_pong pong_message;
-	message_header *message;
+	struct message_server_pong pong_message;
+	struct message_header *message;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_message_handler.c", 618, server && source_address && client_message);
 
@@ -641,7 +641,7 @@ static boolean handle_message_client_ping(
 
 	if ((message= create_network_game_message(_message_type_server_pong, &pong_message, sizeof(pong_message))) != NULL)
 	{
-		transport_address reply_address;
+		struct transport_address reply_address;
 
 		reply_address.address_length= IPV4_ADDRESS_LENGTH;
 		reply_address.address.ipv4_address= source_address->address.ipv4_address;
@@ -663,16 +663,16 @@ static boolean handle_message_client_ping(
 }
 
 static boolean network_game_server_handle_message_client_join_game_request(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_join_game_request message_packet;
+		struct message_client_join_game_request message_packet;
 		short packet_type= _message_type_client_join_game_request;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -685,8 +685,8 @@ static boolean network_game_server_handle_message_client_join_game_request(
 		else if (decode_network_game_message(&message_packet, (char *)message + sizeof(word),
 			&message_size, &packet_type, &packet_version, 3))
 		{
-			transport_address remote_address;
-			message_header *reply;
+			struct transport_address remote_address;
+			struct message_header *reply;
 
 			network_connection_get_address(network_game_server_get_client_connection(machine), &remote_address, NULL);
 
@@ -721,7 +721,7 @@ static boolean network_game_server_handle_message_client_join_game_request(
 
 						if (!found)
 						{
-							message_server_machine_rejected rejection_message;
+							struct message_server_machine_rejected rejection_message;
 
 							rejection_message.reason= _rejection_code_blacklisted_machine;
 
@@ -741,10 +741,10 @@ static boolean network_game_server_handle_message_client_join_game_request(
 
 					if (network_game_server_accept_client_machine_into_game(server, machine))
 					{
-						message_server_machine_accepted accepted_message;
+						struct message_server_machine_accepted accepted_message;
 						long machine_index= NONE;
-						network_machine *client_machine= network_game_server_get_client_machine(server, machine, &machine_index);
-						network_game_data *game= network_game_server_get_game(server);
+						struct network_machine *client_machine= network_game_server_get_client_machine(server, machine, &machine_index);
+						struct network_game_data *game= network_game_server_get_game(server);
 
 						match_assert("c:\\halo\\SOURCE\\networking\\network_server_message_handler.c", 718, network_machine_is_valid(client_machine));
 
@@ -778,7 +778,7 @@ static boolean network_game_server_handle_message_client_join_game_request(
 					}
 					else
 					{
-						message_server_machine_rejected rejection_message;
+						struct message_server_machine_rejected rejection_message;
 
 						rejection_message.reason= _rejection_code_game_is_closed;
 
@@ -799,7 +799,7 @@ static boolean network_game_server_handle_message_client_join_game_request(
 				}
 				else
 				{
-					message_server_machine_rejected rejection_message;
+					struct message_server_machine_rejected rejection_message;
 
 					rejection_message.reason= _rejection_code_bad_join_token;
 
@@ -824,7 +824,7 @@ static boolean network_game_server_handle_message_client_join_game_request(
 			}
 			else
 			{
-				message_server_machine_rejected rejection_message;
+				struct message_server_machine_rejected rejection_message;
 
 				rejection_message.reason= _rejection_code_game_is_closed;
 
@@ -859,16 +859,16 @@ done:
 }
 
 static boolean network_game_server_handle_message_client_add_player_request_pregame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_add_player_request_pregame message_packet;
+		struct message_client_add_player_request_pregame message_packet;
 		short packet_type= _message_type_client_add_player_request_pregame;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -903,16 +903,16 @@ static boolean network_game_server_handle_message_client_add_player_request_preg
 }
 
 static boolean network_game_server_handle_message_client_remove_player_request_pregame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_remove_player_request_pregame message_packet;
+		struct message_client_remove_player_request_pregame message_packet;
 		short packet_type= _message_type_client_remove_player_request_pregame;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -947,16 +947,16 @@ static boolean network_game_server_handle_message_client_remove_player_request_p
 }
 
 static boolean network_game_server_handle_message_client_settings_request(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_settings_request message_packet;
+		struct message_client_settings_request message_packet;
 		short packet_type= _message_type_client_settings_request;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -995,16 +995,16 @@ static boolean network_game_server_handle_message_client_settings_request(
 }
 
 static boolean network_game_server_handle_message_client_player_settings_request(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_player_settings_request message_packet;
+		struct message_client_player_settings_request message_packet;
 		short packet_type= _message_type_client_player_settings_request;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -1041,16 +1041,16 @@ static boolean network_game_server_handle_message_client_player_settings_request
 }
 
 static boolean network_game_server_handle_message_client_game_start_request(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_game_start_request message_packet;
+		struct message_client_game_start_request message_packet;
 		// xxx copied from the player settings handler above; should be
 		// _message_type_client_game_start_request
 		short packet_type= _message_type_client_player_settings_request;
@@ -1077,16 +1077,16 @@ static boolean network_game_server_handle_message_client_game_start_request(
 }
 
 static boolean network_game_server_handle_message_client_graceful_game_exit_pregame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_graceful_game_exit_pregame message_packet;
+		struct message_client_graceful_game_exit_pregame message_packet;
 		short packet_type= _message_type_client_graceful_game_exit_pregame;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -1121,16 +1121,16 @@ static boolean network_game_server_handle_message_client_graceful_game_exit_preg
 }
 
 static boolean network_game_server_handle_message_client_map_is_precached_pregame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_map_is_precached_pregame message_packet;
+		struct message_client_map_is_precached_pregame message_packet;
 		short packet_type= _message_type_client_map_is_precached_pregame;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -1155,16 +1155,16 @@ static boolean network_game_server_handle_message_client_map_is_precached_pregam
 }
 
 static boolean network_game_server_handle_message_client_loaded(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_pregame)
 	{
-		message_client_loaded message_packet;
+		struct message_client_loaded message_packet;
 		short packet_type= _message_type_client_loaded;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -1191,16 +1191,16 @@ static boolean network_game_server_handle_message_client_loaded(
 }
 
 static boolean network_game_server_handle_message_client_add_player_request_ingame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_ingame)
 	{
-		message_client_add_player_request_ingame message_packet;
+		struct message_client_add_player_request_ingame message_packet;
 		short packet_type= _message_type_client_add_player_request_ingame;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -1225,16 +1225,16 @@ static boolean network_game_server_handle_message_client_add_player_request_inga
 }
 
 static boolean network_game_server_handle_message_client_remove_player_request_ingame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_ingame)
 	{
-		message_client_remove_player_request_ingame message_packet;
+		struct message_client_remove_player_request_ingame message_packet;
 		// xxx copied from the add-player handler above; should be
 		// _message_type_client_remove_player_request_ingame
 		short packet_type= _message_type_client_add_player_request_ingame;
@@ -1245,12 +1245,12 @@ static boolean network_game_server_handle_message_client_remove_player_request_i
 		if (decode_network_game_message(&message_packet, (char *)message + sizeof(word),
 			&message_size, &packet_type, &packet_version, 5))
 		{
-			network_game_data *game= network_game_server_get_game(server);
+			struct network_game_data *game= network_game_server_get_game(server);
 
 			if (network_game_remove_player(game, &message_packet.player))
 			{
-				message_server_remove_player_ingame remove_player_ingame_message;
-				message_header *reply;
+				struct message_server_remove_player_ingame remove_player_ingame_message;
+				struct message_header *reply;
 
 				remove_player_ingame_message.player= message_packet.player;
 				remove_player_ingame_message.time_of_quit_out_of_game= game_time_get() + MAXIMUM_SERVER_SAVED_UPDATES + 1;
@@ -1278,16 +1278,16 @@ static boolean network_game_server_handle_message_client_remove_player_request_i
 }
 
 static boolean network_game_server_handle_message_client_remove_player_request_postgame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_postgame)
 	{
-		message_client_remove_player_request_postgame message_packet;
+		struct message_client_remove_player_request_postgame message_packet;
 		short packet_type= _message_type_client_remove_player_request_postgame;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 
@@ -1315,16 +1315,16 @@ static boolean network_game_server_handle_message_client_remove_player_request_p
 }
 
 static boolean network_game_server_handle_message_client_switch_to_pregame(
-	network_game_server *server,
-	network_client_machine *machine,
-	message_header *message,
+	struct network_game_server *server,
+	struct network_client_machine *machine,
+	struct message_header *message,
 	short message_size)
 {
 	boolean result= TRUE;
 
 	if (network_game_server_get_state(server, NULL) == _network_game_server_state_postgame)
 	{
-		message_client_switch_to_pregame message_packet;
+		struct message_client_switch_to_pregame message_packet;
 		short packet_type= _message_type_client_switch_to_pregame;
 		short packet_version= NETWORK_GAME_MESSAGE_VERSION;
 

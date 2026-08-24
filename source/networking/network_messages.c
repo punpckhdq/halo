@@ -2,7 +2,7 @@
 NETWORK_MESSAGES.C
 
 - wraps the data_packet_groups codec: create_network_game_message encodes a message structure
-into a message_header the connection layer can send, decode_network_game_message unpacks one
+into a struct message_header the connection layer can send, decode_network_game_message unpacks one
 */
 
 /* ---------- headers */
@@ -116,75 +116,75 @@ static struct network_game_message_packet_table
 } data_0030aa68=
 {
 	{ {2, 2, 0, 0, 0}, {1, 8, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_broadcast_game_search_packet", 0, sizeof(message_client_broadcast_game_search), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_broadcast_game_search_packet_fields, FALSE },
+	{ "message_client_broadcast_game_search_packet", 0, sizeof(struct message_client_broadcast_game_search), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_broadcast_game_search_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {2, 1, 0, 0, 0}, {0, 2, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_ping_packet", 0, sizeof(message_client_ping), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_ping_packet_fields, FALSE },
+	{ "message_client_ping_packet", 0, sizeof(struct message_client_ping), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_ping_packet_fields, FALSE },
 	{ {8, 276, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_game_advertise_packet", 0, sizeof(message_server_game_advertise), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_advertise_packet_fields, FALSE },
+	{ "message_server_game_advertise_packet", 0, sizeof(struct message_server_game_advertise), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_advertise_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_pong_packet", 0, sizeof(message_server_pong), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_pong_packet_fields, FALSE },
+	{ "message_server_pong_packet", 0, sizeof(struct message_server_pong), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_pong_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {2, 1, 0, 0, 0}, {0, 2, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_machine_accepted_packet", 0, sizeof(message_server_machine_accepted), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_machine_accepted_packet_fields, FALSE },
+	{ "message_server_machine_accepted_packet", 0, sizeof(struct message_server_machine_accepted), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_machine_accepted_packet_fields, FALSE },
 	{ {2, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_machine_rejected_packet", 0, sizeof(message_server_machine_rejected), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_machine_rejected_packet_fields, FALSE },
+	{ "message_server_machine_rejected_packet", 0, sizeof(struct message_server_machine_rejected), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_machine_rejected_packet_fields, FALSE },
 	{ {8, 1076, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_game_settings_update_packet", 0, sizeof(message_server_game_settings_update), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_settings_update_packet_fields, FALSE },
+	{ "message_server_game_settings_update_packet", 0, sizeof(struct message_server_game_settings_update), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_settings_update_packet_fields, FALSE },
 	{ {2, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_pregame_countdown_packet", 0, sizeof(message_server_pregame_countdown), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_pregame_countdown_packet_fields, FALSE },
+	{ "message_server_pregame_countdown_packet", 0, sizeof(struct message_server_pregame_countdown), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_pregame_countdown_packet_fields, FALSE },
 	{ {2, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_pregame_keep_alive_packet", 0, sizeof(message_server_pregame_keep_alive), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_pregame_keep_alive_packet_fields, FALSE },
+	{ "message_server_pregame_keep_alive_packet", 0, sizeof(struct message_server_pregame_keep_alive), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_pregame_keep_alive_packet_fields, FALSE },
 	{ {2, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_postgame_keep_alive_packet", 0, sizeof(message_server_postgame_keep_alive), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_postgame_keep_alive_packet_fields, FALSE },
+	{ "message_server_postgame_keep_alive_packet", 0, sizeof(struct message_server_postgame_keep_alive), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_postgame_keep_alive_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_begin_game_packet", 0, sizeof(message_server_begin_game), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_begin_game_packet_fields, FALSE },
+	{ "message_server_begin_game_packet", 0, sizeof(struct message_server_begin_game), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_begin_game_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_graceful_game_exit_pregame_packet", 0, sizeof(message_server_graceful_game_exit_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_graceful_game_exit_pregame_packet_fields, FALSE },
+	{ "message_server_graceful_game_exit_pregame_packet", 0, sizeof(struct message_server_graceful_game_exit_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_graceful_game_exit_pregame_packet_fields, FALSE },
 	{ {2, 32, 0, 0, 0}, {1, 16, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_join_game_request_packet", 0, sizeof(message_client_join_game_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_join_game_request_packet_fields, FALSE },
+	{ "message_client_join_game_request_packet", 0, sizeof(struct message_client_join_game_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_join_game_request_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_add_player_request_pregame_packet", 0, sizeof(message_client_add_player_request_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_add_player_request_pregame_packet_fields, FALSE },
+	{ "message_client_add_player_request_pregame_packet", 0, sizeof(struct message_client_add_player_request_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_add_player_request_pregame_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_remove_player_request_pregame_packet", 0, sizeof(message_client_remove_player_request_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_remove_player_request_pregame_packet_fields, FALSE },
+	{ "message_client_remove_player_request_pregame_packet", 0, sizeof(struct message_client_remove_player_request_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_remove_player_request_pregame_packet_fields, FALSE },
 	{ {2, 32, 0, 0, 0}, {1, 1, 0, 0, 0}, {0, 3, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_settings_request_packet", 0, sizeof(message_client_settings_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_settings_request_packet_fields, FALSE },
+	{ "message_client_settings_request_packet", 0, sizeof(struct message_client_settings_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_settings_request_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_player_settings_request_packet", 0, sizeof(message_client_player_settings_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_player_settings_request_packet_fields, FALSE },
+	{ "message_client_player_settings_request_packet", 0, sizeof(struct message_client_player_settings_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_player_settings_request_packet_fields, FALSE },
 	{ {2, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_game_start_request_packet", 0, sizeof(message_client_game_start_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_game_start_request_packet_fields, FALSE },
+	{ "message_client_game_start_request_packet", 0, sizeof(struct message_client_game_start_request), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_game_start_request_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_graceful_game_exit_pregame_packet", 0, sizeof(message_client_graceful_game_exit_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_graceful_game_exit_pregame_packet_fields, FALSE },
+	{ "message_client_graceful_game_exit_pregame_packet", 0, sizeof(struct message_client_graceful_game_exit_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_graceful_game_exit_pregame_packet_fields, FALSE },
 	{ {1, 256, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_map_is_precached_pregame_packet", 0, sizeof(message_client_map_is_precached_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_map_is_precached_pregame_packet_fields, FALSE },
+	{ "message_client_map_is_precached_pregame_packet", 0, sizeof(struct message_client_map_is_precached_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_map_is_precached_pregame_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 3, 0, 0, 0}, {0, 2, 0, 0, 0}, {7, 16, 0, 0, 0}, {_data_packet_field_longs, 6, 0, 0, 0}, {2, 3, 0, 0, 0}, {0, 2, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_game_update_packet", 0, sizeof(message_server_game_update), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_update_packet_fields, FALSE },
+	{ "message_server_game_update_packet", 0, sizeof(struct message_server_game_update), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_update_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_add_player_ingame_packet", 0, sizeof(message_server_add_player_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_add_player_ingame_packet_fields, FALSE },
+	{ "message_server_add_player_ingame_packet", 0, sizeof(struct message_server_add_player_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_add_player_ingame_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_remove_player_ingame_packet", 0, sizeof(message_server_remove_player_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_remove_player_ingame_packet_fields, FALSE },
+	{ "message_server_remove_player_ingame_packet", 0, sizeof(struct message_server_remove_player_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_remove_player_ingame_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_game_over_packet", 0, sizeof(message_server_game_over), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_over_packet_fields, FALSE },
+	{ "message_server_game_over_packet", 0, sizeof(struct message_server_game_over), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_game_over_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_loaded_packet", 0, sizeof(message_client_loaded), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_loaded_packet_fields, FALSE },
+	{ "message_client_loaded_packet", 0, sizeof(struct message_client_loaded), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_loaded_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {0, 2, 0, 0, 0}, {7, 4, 0, 0, 0}, {_data_packet_field_longs, 6, 0, 0, 0}, {2, 3, 0, 0, 0}, {0, 2, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_game_update_packet", 0, sizeof(message_client_game_update), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_game_update_packet_fields, FALSE },
+	{ "message_client_game_update_packet", 0, sizeof(struct message_client_game_update), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_game_update_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_add_player_request_ingame_packet", 0, sizeof(message_client_add_player_request_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_add_player_request_ingame_packet_fields, FALSE },
+	{ "message_client_add_player_request_ingame_packet", 0, sizeof(struct message_client_add_player_request_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_add_player_request_ingame_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_remove_player_request_ingame_packet", 0, sizeof(message_client_remove_player_request_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_remove_player_request_ingame_packet_fields, FALSE },
+	{ "message_client_remove_player_request_ingame_packet", 0, sizeof(struct message_client_remove_player_request_ingame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_remove_player_request_ingame_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 3, 0, 0, 0}, {2, 1, 0, 0, 0}, {0, 2, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_host_crashed_cry_for_help_packet", 0, sizeof(message_client_host_crashed_cry_for_help), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_host_crashed_cry_for_help_packet_fields, FALSE },
+	{ "message_client_host_crashed_cry_for_help_packet", 0, sizeof(struct message_client_host_crashed_cry_for_help), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_host_crashed_cry_for_help_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 3, 0, 0, 0}, {2, 1, 0, 0, 0}, {0, 2, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_join_new_host_packet", 0, sizeof(message_client_join_new_host), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_join_new_host_packet_fields, FALSE },
+	{ "message_client_join_new_host_packet", 0, sizeof(struct message_client_join_new_host), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_join_new_host_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_switch_to_pregame_packet", 0, sizeof(message_server_switch_to_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_switch_to_pregame_packet_fields, FALSE },
+	{ "message_server_switch_to_pregame_packet", 0, sizeof(struct message_server_switch_to_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_switch_to_pregame_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_server_graceful_game_exit_postgame_packet", 0, sizeof(message_server_graceful_game_exit_postgame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_graceful_game_exit_postgame_packet_fields, FALSE },
+	{ "message_server_graceful_game_exit_postgame_packet", 0, sizeof(struct message_server_graceful_game_exit_postgame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_server_graceful_game_exit_postgame_packet_fields, FALSE },
 	{ {2, 12, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 4, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_remove_player_request_postgame_packet", 0, sizeof(message_client_remove_player_request_postgame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_remove_player_request_postgame_packet_fields, FALSE },
+	{ "message_client_remove_player_request_postgame_packet", 0, sizeof(struct message_client_remove_player_request_postgame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_remove_player_request_postgame_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_switch_to_pregame_packet", 0, sizeof(message_client_switch_to_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_switch_to_pregame_packet_fields, FALSE },
+	{ "message_client_switch_to_pregame_packet", 0, sizeof(struct message_client_switch_to_pregame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_switch_to_pregame_packet_fields, FALSE },
 	{ {_data_packet_field_longs, 1, 0, 0, 0}, {_data_packet_field_end, 0, 0, 0, 0} },
-	{ "message_client_graceful_game_exit_postgame_packet", 0, sizeof(message_client_graceful_game_exit_postgame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_graceful_game_exit_postgame_packet_fields, FALSE },
+	{ "message_client_graceful_game_exit_postgame_packet", 0, sizeof(struct message_client_graceful_game_exit_postgame), NETWORK_GAME_MESSAGE_VERSION, data_0030aa68.message_client_graceful_game_exit_postgame_packet_fields, FALSE },
 	// packet class then definition, indexed by message type
 	// xxx rows 8..10 are shifted one against create_network_game_message's switch: type 8 encodes
 	// under the pregame_keep_alive definition (2 bytes) though the switch asserts sizeof(begin_game),
@@ -235,7 +235,7 @@ static struct data_packet_group_definition network_game_messages_group=
 };
 
 // create_network_game_message builds every outgoing message into this buffer
-static byte bss_004566f0[MAXIMUM_DECODED_NETWORK_GAME_MESSAGE_SIZE+sizeof(message_header)];
+static byte bss_004566f0[MAXIMUM_DECODED_NETWORK_GAME_MESSAGE_SIZE+sizeof(struct message_header)];
 
 /* ---------- public code */
 
@@ -282,12 +282,12 @@ static boolean encode_network_game_message(
 
 /* ---------- public code */
 
-message_header *create_network_game_message(
+struct message_header *create_network_game_message(
 	short message_type,
 	void *message_struct,
 	short message_struct_size)
 {
-	message_header *message;
+	struct message_header *message;
 	byte encoded_message[MAXIMUM_DECODED_NETWORK_GAME_MESSAGE_SIZE];
 	long encoded_message_size= sizeof(encoded_message);
 
@@ -295,177 +295,177 @@ message_header *create_network_game_message(
 	{
 		case _message_type_client_broadcast_game_search:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 160,
-				message_struct_size==sizeof(message_client_broadcast_game_search));
+				message_struct_size==sizeof(struct message_client_broadcast_game_search));
 			break;
 
 		case _message_type_client_ping:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 161,
-				message_struct_size==sizeof(message_client_ping));
+				message_struct_size==sizeof(struct message_client_ping));
 			break;
 
 		case _message_type_server_game_advertise:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 164,
-				message_struct_size==sizeof(message_server_game_advertise));
+				message_struct_size==sizeof(struct message_server_game_advertise));
 			break;
 
 		case _message_type_server_pong:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 165,
-				message_struct_size==sizeof(message_server_pong));
+				message_struct_size==sizeof(struct message_server_pong));
 			break;
 
 		case _message_type_server_machine_accepted:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 168,
-				message_struct_size==sizeof(message_server_machine_accepted));
+				message_struct_size==sizeof(struct message_server_machine_accepted));
 			break;
 
 		case _message_type_server_machine_rejected:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 169,
-				message_struct_size==sizeof(message_server_machine_rejected));
+				message_struct_size==sizeof(struct message_server_machine_rejected));
 			break;
 
 		case _message_type_server_game_settings_update:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 170,
-				message_struct_size==sizeof(message_server_game_settings_update));
+				message_struct_size==sizeof(struct message_server_game_settings_update));
 			break;
 
 		case _message_type_server_pregame_countdown:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 171,
-				message_struct_size==sizeof(message_server_pregame_countdown));
+				message_struct_size==sizeof(struct message_server_pregame_countdown));
 			break;
 
 		case _message_type_server_pregame_keep_alive:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 172,
-				message_struct_size==sizeof(message_server_pregame_keep_alive));
+				message_struct_size==sizeof(struct message_server_pregame_keep_alive));
 			break;
 
 		case _message_type_server_begin_game:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 173,
-				message_struct_size==sizeof(message_server_begin_game));
+				message_struct_size==sizeof(struct message_server_begin_game));
 			break;
 
 		case _message_type_server_graceful_game_exit_pregame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 174,
-				message_struct_size==sizeof(message_server_graceful_game_exit_pregame));
+				message_struct_size==sizeof(struct message_server_graceful_game_exit_pregame));
 			break;
 
 		case _message_type_server_postgame_keep_alive:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 177,
-				message_struct_size==sizeof(message_server_postgame_keep_alive));
+				message_struct_size==sizeof(struct message_server_postgame_keep_alive));
 			break;
 
 		case _message_type_client_join_game_request:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 180,
-				message_struct_size==sizeof(message_client_join_game_request));
+				message_struct_size==sizeof(struct message_client_join_game_request));
 			break;
 
 		case _message_type_client_add_player_request_pregame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 181,
-				message_struct_size==sizeof(message_client_add_player_request_pregame));
+				message_struct_size==sizeof(struct message_client_add_player_request_pregame));
 			break;
 
 		case _message_type_client_remove_player_request_pregame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 182,
-				message_struct_size==sizeof(message_client_remove_player_request_pregame));
+				message_struct_size==sizeof(struct message_client_remove_player_request_pregame));
 			break;
 
 		case _message_type_client_settings_request:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 183,
-				message_struct_size==sizeof(message_client_settings_request));
+				message_struct_size==sizeof(struct message_client_settings_request));
 			break;
 
 		case _message_type_client_player_settings_request:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 184,
-				message_struct_size==sizeof(message_client_player_settings_request));
+				message_struct_size==sizeof(struct message_client_player_settings_request));
 			break;
 
 		case _message_type_client_game_start_request:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 185,
-				message_struct_size==sizeof(message_client_game_start_request));
+				message_struct_size==sizeof(struct message_client_game_start_request));
 			break;
 
 		case _message_type_client_graceful_game_exit_pregame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 186,
-				message_struct_size==sizeof(message_client_graceful_game_exit_pregame));
+				message_struct_size==sizeof(struct message_client_graceful_game_exit_pregame));
 			break;
 
 		case _message_type_client_map_is_precached_pregame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 187,
-				message_struct_size==sizeof(message_client_map_is_precached_pregame));
+				message_struct_size==sizeof(struct message_client_map_is_precached_pregame));
 			break;
 
 		case _message_type_server_game_update:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 190,
-				message_struct_size==sizeof(message_server_game_update));
+				message_struct_size==sizeof(struct message_server_game_update));
 			break;
 
 		case _message_type_server_add_player_ingame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 191,
-				message_struct_size==sizeof(message_server_add_player_ingame));
+				message_struct_size==sizeof(struct message_server_add_player_ingame));
 			break;
 
 		case _message_type_server_remove_player_ingame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 192,
-				message_struct_size==sizeof(message_server_remove_player_ingame));
+				message_struct_size==sizeof(struct message_server_remove_player_ingame));
 			break;
 
 		case _message_type_server_game_over:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 193,
-				message_struct_size==sizeof(message_server_game_over));
+				message_struct_size==sizeof(struct message_server_game_over));
 			break;
 
 		case _message_type_client_loaded:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 196,
-				message_struct_size==sizeof(message_client_loaded));
+				message_struct_size==sizeof(struct message_client_loaded));
 			break;
 
 		case _message_type_client_game_update:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 197,
-				message_struct_size==sizeof(message_client_game_update));
+				message_struct_size==sizeof(struct message_client_game_update));
 			break;
 
 		case _message_type_client_add_player_request_ingame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 198,
-				message_struct_size==sizeof(message_client_add_player_request_ingame));
+				message_struct_size==sizeof(struct message_client_add_player_request_ingame));
 			break;
 
 		case _message_type_client_remove_player_request_ingame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 199,
-				message_struct_size==sizeof(message_client_remove_player_request_ingame));
+				message_struct_size==sizeof(struct message_client_remove_player_request_ingame));
 			break;
 
 		case _message_type_client_host_crashed_cry_for_help:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 201,
-				message_struct_size==sizeof(message_client_host_crashed_cry_for_help));
+				message_struct_size==sizeof(struct message_client_host_crashed_cry_for_help));
 			break;
 
 		case _message_type_client_join_new_host:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 202,
-				message_struct_size==sizeof(message_client_join_new_host));
+				message_struct_size==sizeof(struct message_client_join_new_host));
 			break;
 
 		case _message_type_server_switch_to_pregame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 205,
-				message_struct_size==sizeof(message_server_switch_to_pregame));
+				message_struct_size==sizeof(struct message_server_switch_to_pregame));
 			break;
 
 		case _message_type_server_graceful_game_exit_postgame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 206,
-				message_struct_size==sizeof(message_server_graceful_game_exit_postgame));
+				message_struct_size==sizeof(struct message_server_graceful_game_exit_postgame));
 			break;
 
 		case _message_type_client_remove_player_request_postgame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 209,
-				message_struct_size==sizeof(message_client_remove_player_request_postgame));
+				message_struct_size==sizeof(struct message_client_remove_player_request_postgame));
 			break;
 
 		case _message_type_client_switch_to_pregame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 210,
-				message_struct_size==sizeof(message_client_switch_to_pregame));
+				message_struct_size==sizeof(struct message_client_switch_to_pregame));
 			break;
 
 		case _message_type_client_graceful_game_exit_postgame:
 			match_assert("c:\\halo\\SOURCE\\networking\\network_messages.c", 211,
-				message_struct_size==sizeof(message_client_graceful_game_exit_postgame));
+				message_struct_size==sizeof(struct message_client_graceful_game_exit_postgame));
 			break;
 
 		default:

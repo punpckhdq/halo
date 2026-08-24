@@ -25,17 +25,17 @@ static char bss_0031cd30[256];
 
 /* ---------- public code */
 
-transport_address *create_transport_address(
+struct transport_address *create_transport_address(
 	union transport_address_data *address,
 	word address_length,
 	word port)
 {
-	transport_address *result;
+	struct transport_address *result;
 
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 30, transport_initialized);
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 31, address);
 
-	result= match_malloc("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 33, sizeof(transport_address));
+	result= match_malloc("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 33, sizeof(struct transport_address));
 	if (result)
 	{
 		result->address= *address;
@@ -48,7 +48,7 @@ transport_address *create_transport_address(
 }
 
 void delete_transport_address(
-	transport_address *address)
+	struct transport_address *address)
 {
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 47, transport_initialized);
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 48, address);
@@ -59,8 +59,8 @@ void delete_transport_address(
 }
 
 long transport_address_equivalent(
-	transport_address *a,
-	transport_address *b)
+	struct transport_address *a,
+	struct transport_address *b)
 {
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 59, a);
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 60, b);
@@ -78,7 +78,7 @@ long transport_address_equivalent(
 }
 
 char *transport_address_to_string(
-	transport_address *addr)
+	struct transport_address *addr)
 {
 	word address_length;
 

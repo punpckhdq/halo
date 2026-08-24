@@ -514,7 +514,7 @@ void transport_client_start(
 	XNKEY *key,
 	XNKID *key_id,
 	word port,
-	transport_address *address)
+	struct transport_address *address)
 {
 	IN_ADDR ina;
 

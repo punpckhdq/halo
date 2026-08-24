@@ -96,8 +96,8 @@ struct network_server_connection
 
 static struct network_connection *network_connection_create_client_from_endpoint(transport_endpoint_ref reliable_endpoint);
 
-static boolean network_client_reliable_connection_read(struct network_connection *connection, message_header *message, word *buffer_size, transport_address *source_address);
-static boolean network_client_unreliable_connection_read(struct network_connection *connection, message_header *message, word *buffer_size, transport_address *source_address);
+static boolean network_client_reliable_connection_read(struct network_connection *connection, struct message_header *message, word *buffer_size, struct transport_address *source_address);
+static boolean network_client_unreliable_connection_read(struct network_connection *connection, struct message_header *message, word *buffer_size, struct transport_address *source_address);
 
 static boolean network_connection_idle_server_reliable_endpoint(struct network_server_connection *connection, struct network_connection **new_client_connection);
 static boolean network_connection_idle_client_reliable_endpoint(struct network_connection *connection);
@@ -168,7 +168,7 @@ struct network_connection *network_connection_new(
 
 		if (success && (flags&FLAG(_connection_create_server_bit)))
 		{
-			transport_address address= {0};
+			struct transport_address address= {0};
 
 			address.address_length= IPV4_ADDRESS_LENGTH;
 			address.port= well_known_port;
@@ -186,7 +186,7 @@ struct network_connection *network_connection_new(
 			connection->unreliable_endpoint= create_transport_endpoint(_transport_type_udp);
 			if (connection->unreliable_endpoint)
 			{
-				transport_address address;
+				struct transport_address address;
 
 				address.address_length= IPV4_ADDRESS_LENGTH;
 				address.address.ipv4_address= 0;
@@ -292,9 +292,9 @@ boolean network_connection_connected(
 #pragma inline_depth(0) // the 2342 object calls network_connection_log_traffic_event() for the datagram writes; 3823 would inline them
 boolean network_connection_write(
 	struct network_connection *connection,
-	message_header *message,
+	struct message_header *message,
 	unsigned short buffer_size,
-	transport_address *dest_address,
+	struct transport_address *dest_address,
 	boolean reliable)
 {
 	long bytes_written= 0;
@@ -388,9 +388,9 @@ retry:
 
 boolean network_connection_read(
 	struct network_connection *connection,
-	message_header *message,
+	struct message_header *message,
 	word *buffer_size,
-	transport_address *source_address)
+	struct transport_address *source_address)
 {
 	boolean success;
 
@@ -503,7 +503,7 @@ boolean network_connection_idle(
 		while (success && (free_space >= DATAGRAM_MAXIMUM_SIZE+sizeof(unsigned long)))
 		{
 			char buffer[DATAGRAM_MAXIMUM_SIZE+sizeof(unsigned long)];
-			transport_address address;
+			struct transport_address address;
 			long bytes_read;
 			unsigned long ipv4_address;
 			if (endpoint_connected(connection->unreliable_endpoint))
@@ -560,8 +560,8 @@ done:
 
 void network_connection_get_address(
 	struct network_connection *connection,
-	transport_address *remote_address,
-	transport_address *local_address)
+	struct transport_address *remote_address,
+	struct transport_address *local_address)
 {
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_connection.c", 658, connection);
@@ -570,7 +570,7 @@ void network_connection_get_address(
 	{
 		if (!connection->reliable_endpoint || (get_endpoint_address(connection->reliable_endpoint, remote_address) != _transport_error_none))
 		{
-			memset(remote_address, 0, sizeof(transport_address));
+			memset(remote_address, 0, sizeof(struct transport_address));
 			remote_address->address_length= IPV4_ADDRESS_LENGTH;
 		}
 	}
@@ -579,7 +579,7 @@ void network_connection_get_address(
 	{
 		if (!connection->unreliable_endpoint || (get_endpoint_address(connection->unreliable_endpoint, local_address) != _transport_error_none))
 		{
-			memset(local_address, 0, sizeof(transport_address));
+			memset(local_address, 0, sizeof(struct transport_address));
 			local_address->address_length= IPV4_ADDRESS_LENGTH;
 		}
 	}
@@ -589,7 +589,7 @@ void network_connection_get_address(
 
 boolean network_connection_connect(
 	struct network_connection *connection,
-	transport_address *remote_address,
+	struct transport_address *remote_address,
 	transport_connect_process_ref *connect_process)
 {
 	boolean success;
@@ -652,7 +652,7 @@ boolean network_connection_disconnect(
 
 	if (connection->unreliable_endpoint && connection->well_known_port)
 	{
-		transport_address address;
+		struct transport_address address;
 
 		address.address_length= IPV4_ADDRESS_LENGTH;
 		address.address.ipv4_address= 0;
@@ -738,11 +738,11 @@ static struct network_connection *network_connection_create_client_from_endpoint
 
 static boolean network_client_reliable_connection_read(
 	struct network_connection *connection,
-	message_header *message,
+	struct message_header *message,
 	word *buffer_size,
-	transport_address *source_address)
+	struct transport_address *source_address)
 {
-	word header; // the 2342 message_header is the packed size word alone (sizeof 2); message_header.h pads it to 4
+	word header; // the 2342 struct message_header is the packed size word alone (sizeof 2); message_header.h pads it to 4
 	word message_size;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_connection.c", 881, connection && connection->reliable_incoming_queue);
@@ -752,7 +752,7 @@ static boolean network_client_reliable_connection_read(
 
 	if (!circular_queue_dequeue_data(connection->reliable_incoming_queue, &header, sizeof(header), FALSE)) return FALSE;
 
-	byte_swap_message_header((message_header *)&header, _byte_order_host);
+	byte_swap_message_header((struct message_header *)&header, _byte_order_host);
 	message_size= header>>4;
 	if (message_size > MESSAGE_MAXIMUM_SIZE)
 	{
@@ -775,7 +775,7 @@ static boolean network_client_reliable_connection_read(
 
 	if (source_address && (get_endpoint_address(connection->reliable_endpoint, source_address) != _transport_error_none))
 	{
-		memset(source_address, 0, sizeof(transport_address));
+		memset(source_address, 0, sizeof(struct transport_address));
 		source_address->address_length= IPV4_ADDRESS_LENGTH;
 	}
 
@@ -792,9 +792,9 @@ failed:
 
 static boolean network_client_unreliable_connection_read(
 	struct network_connection *connection,
-	message_header *message,
+	struct message_header *message,
 	word *buffer_size,
-	transport_address *source_address)
+	struct transport_address *source_address)
 {
 	unsigned long ipv4_address;
 	word header;
@@ -808,7 +808,7 @@ static boolean network_client_unreliable_connection_read(
 	if (circular_queue_dequeue_data(connection->unreliable_incoming_queue, &header, sizeof(header), FALSE))
 	{
 
-		byte_swap_message_header((message_header *)&header, _byte_order_host);
+		byte_swap_message_header((struct message_header *)&header, _byte_order_host);
 		message_size= header>>4;
 		if (message_size > DATAGRAM_MAXIMUM_SIZE)
 		{
@@ -1028,7 +1028,7 @@ static void network_connection_log_traffic_event(
 		{
 			case _traffic_event_connection_created:
 				{
-					transport_address address;
+					struct transport_address address;
 
 					if ((get_endpoint_address(connection->reliable_endpoint, &address) != _transport_error_none) &&
 						(get_endpoint_address(connection->unreliable_endpoint, &address) != _transport_error_none))
@@ -1065,7 +1065,7 @@ static void network_connection_log_traffic_event(
 			case _traffic_event_connection_deleted:
 				if (connection->traffic_log)
 				{
-					transport_address address;
+					struct transport_address address;
 
 					if (get_endpoint_address(connection->reliable_endpoint, &address) != _transport_error_none)
 					{

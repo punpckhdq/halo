@@ -64,7 +64,7 @@ void telnet_console_initialize(void)
 
 	if (telnet_console_globals.endpoint)
 	{
-		transport_address address= {0};
+		struct transport_address address= {0};
 
 		address.address_length= IPV4_ADDRESS_LENGTH;
 		address.port= TELNET_CONSOLE_PORT;

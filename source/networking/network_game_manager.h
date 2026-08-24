@@ -21,8 +21,6 @@ wchar *ustrncpy(wchar *s1, const wchar *s2, unsigned long size);
 long ustrcmp(const wchar *s1, const wchar *s2);
 char *wide_to_ascii(const wchar *unicode, char *ascii, unsigned long size);
 
-typedef struct network_player network_player;
-
 enum
 {
 	MAXIMUM_NUMBER_OF_LOCAL_PLAYERS= 4
@@ -106,14 +104,14 @@ enum
 	MAXIMUM_NUMBER_OF_SCORED_TEAMS= 2
 };
 
-typedef struct network_machine
+struct network_machine
 {
 	wchar name[MAXIMUM_NETWORK_GAME_MACHINE_NAME_LENGTH]; // 0x00
 	char machine_index; // 0x40, NONE when the slot is free
 	char pad_41[3]; // 0x41, rounds the record out to 0x44; machines only ever move whole and nothing reads these three
-} network_machine; // 0x44
+}; // 0x44
 
-typedef struct network_game_data
+struct network_game_data
 {
 	wchar name[MAXIMUM_NETWORK_GAME_NAME_LENGTH]; // 0x000
 	struct
@@ -128,7 +126,7 @@ typedef struct network_game_data
 	char maximum_teams; // 0x10F
 	short difficulty_level; // 0x110
 	short machine_count; // 0x112
-	network_machine machines[MAXIMUM_NETWORK_MACHINE_COUNT]; // 0x114
+	struct network_machine machines[MAXIMUM_NETWORK_MACHINE_COUNT]; // 0x114
 	short player_count; // 0x224
 	struct network_player players[NETWORK_GAME_MAXIMUM_PLAYER_COUNT]; // 0x226
 	char pad_426[2]; // 0x426, aligns network_game_random_seed; nothing reads or writes it
@@ -137,28 +135,28 @@ typedef struct network_game_data
 	struct
 	{
 		boolean game_objects_loaded; // 0x430
-		char pad_431[3]; // 0x431, rounds network_game_data out to 0x434; nothing reads or writes it
+		char pad_431[3]; // 0x431, rounds struct network_game_data out to 0x434; nothing reads or writes it
 	} local_data; // 0x430
-} network_game_data; // 0x434
+}; // 0x434
 
 /* ---------- prototypes/NETWORK_GAME_MANAGER.C */
 
-void network_game_invalidate(network_game_data *game);
-void network_game_invalidate_machine(network_game_data *game, word machine_index);
+void network_game_invalidate(struct network_game_data *game);
+void network_game_invalidate_machine(struct network_game_data *game, word machine_index);
 void network_game_invalidate_player(struct network_player *player);
-boolean network_game_add_machine(network_game_data *game, network_machine *machine);
-boolean network_game_update_machine(network_game_data *game, network_machine *machine);
-boolean network_game_remove_machine(network_game_data *game, network_machine *machine);
-boolean network_game_add_player(network_game_data *game, struct network_player *player);
-boolean network_game_update_player(network_game_data *game, struct network_player *player);
-boolean network_game_remove_player(network_game_data *game, struct network_player *player);
+boolean network_game_add_machine(struct network_game_data *game, struct network_machine *machine);
+boolean network_game_update_machine(struct network_game_data *game, struct network_machine *machine);
+boolean network_game_remove_machine(struct network_game_data *game, struct network_machine *machine);
+boolean network_game_add_player(struct network_game_data *game, struct network_player *player);
+boolean network_game_update_player(struct network_game_data *game, struct network_player *player);
+boolean network_game_remove_player(struct network_game_data *game, struct network_player *player);
 boolean network_game_spawn_player(struct network_player *player);
 boolean network_player_is_valid(struct network_player *player);
-boolean network_game_player_is_valid(struct network_player *player, network_game_data *game);
-boolean network_game_create_game_objects(network_game_data *game);
-void network_game_reset_for_next_round(network_game_data *game, boolean load_ui);
+boolean network_game_player_is_valid(struct network_player *player, struct network_game_data *game);
+boolean network_game_create_game_objects(struct network_game_data *game);
+void network_game_reset_for_next_round(struct network_game_data *game, boolean load_ui);
 void network_game_generate_local_machine_name(wchar machine_name[MAXIMUM_NETWORK_GAME_MACHINE_NAME_LENGTH]);
-void network_game_end_and_load_ui(network_game_data *game);
+void network_game_end_and_load_ui(struct network_game_data *game);
 void network_game_assign_players_to_team(void);
 
 /* ---------- prototypes/GAME_ENGINE.C */

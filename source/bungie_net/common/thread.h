@@ -47,11 +47,10 @@ struct mutex_reference
 	boolean in_use;
 };
 
-typedef unsigned long (__stdcall *thread_proc)(void *parameter);
 
 /* ---------- prototypes/THREAD_WIN32.C */
 
-boolean create_thread(byte flags, thread_proc function, void *parameter, struct thread_reference **thread_reference);
+boolean create_thread(byte flags, unsigned long (__stdcall *function)(void *parameter), void *parameter, struct thread_reference **thread_reference);
 boolean thread_has_exited(struct thread_reference *thread_reference);
 void dispose_thread(struct thread_reference *thread_reference);
 boolean create_mutex(struct mutex_reference **mutex_reference);

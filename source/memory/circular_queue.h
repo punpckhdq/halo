@@ -14,7 +14,6 @@ header included in hcex build.
 
 /* ---------- structures */
 
-struct circular_queue;
 
 /* ---------- prototypes/CIRCULAR_QUEUE.C */
 

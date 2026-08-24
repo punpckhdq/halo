@@ -39,7 +39,6 @@ enum
 
 /* ---------- structures */
 
-struct network_connection;
 
 typedef void (*connection_rejection_procedure)(transport_endpoint_ref endpoint);
 
@@ -53,13 +52,13 @@ boolean network_connection_connected(struct network_connection *connection);
 boolean network_connection_active(struct network_connection *connection);
 boolean network_connection_going_stale(struct network_connection *connection);
 void network_connection_keep_alive(struct network_connection *connection);
-void network_connection_get_address(struct network_connection *connection, transport_address *remote_address, transport_address *local_address);
-boolean network_connection_connect(struct network_connection *connection, transport_address *address, transport_connect_process_ref *connect_process);
+void network_connection_get_address(struct network_connection *connection, struct transport_address *remote_address, struct transport_address *local_address);
+boolean network_connection_connect(struct network_connection *connection, struct transport_address *address, transport_connect_process_ref *connect_process);
 boolean network_connection_disconnect(struct network_connection *connection);
 void network_connection_set_connection_rejection_procedure(struct network_connection *connection, connection_rejection_procedure procedure);
 boolean network_connection_server_accept_client_connection(struct network_connection *server_connection, struct network_connection *new_client_connection);
-boolean network_connection_write(struct network_connection *connection, message_header *message, unsigned short message_size, transport_address *dest_address, boolean reliable);
-boolean network_connection_read(struct network_connection *connection, message_header *message, word *buffer_size, transport_address *source_address);
+boolean network_connection_write(struct network_connection *connection, struct message_header *message, unsigned short message_size, struct transport_address *dest_address, boolean reliable);
+boolean network_connection_read(struct network_connection *connection, struct message_header *message, word *buffer_size, struct transport_address *source_address);
 void network_server_allow_client_connections(struct network_connection *server_connection, boolean allow);
 boolean network_server_close_client_connection(struct network_connection *server_connection, struct network_connection *client_connection);
 
@@ -75,7 +74,6 @@ this unit's call sites read the results as 16-bit, and widening any of the three
 definition costs matched bytes (693, 716 and 1000 respectively). Leave them alone.
 */
 
-struct endpoint_set;
 
 struct endpoint_set *create_endpoint_set(short max_endpoints);
 short delete_endpoint_set(struct endpoint_set *set);
@@ -88,18 +86,18 @@ long count_endpoints_in_set(struct endpoint_set *set);
 
 transport_endpoint_ref create_transport_endpoint(long type);
 void delete_transport_endpoint(transport_endpoint_ref ep);
-short get_endpoint_address(transport_endpoint_ref ep, transport_address *address);
+short get_endpoint_address(transport_endpoint_ref ep, struct transport_address *address);
 short set_endpoint_blocking(transport_endpoint_ref ep, long blocking);
-short bind_endpoint(transport_endpoint_ref ep, transport_address *address);
-short connect_endpoint(transport_endpoint_ref ep, transport_address *address);
+short bind_endpoint(transport_endpoint_ref ep, struct transport_address *address);
+short connect_endpoint(transport_endpoint_ref ep, struct transport_address *address);
 void disconnect_endpoint(transport_endpoint_ref ep);
-short connect_endpoint_async(transport_endpoint_ref ep, transport_address *address, transport_connect_process_ref *process_ref_ptr);
+short connect_endpoint_async(transport_endpoint_ref ep, struct transport_address *address, transport_connect_process_ref *process_ref_ptr);
 short listen_endpoint(transport_endpoint_ref ep);
 transport_endpoint_ref accept_endpoint(transport_endpoint_ref listening_endpoint);
 short reject_endpoint(transport_endpoint_ref listening_endpoint);
 long read_endpoint(transport_endpoint_ref ep, void *buffer, long length);
-long read_from_endpoint(transport_endpoint_ref ep, void *buffer, long length, transport_address *src_addr);
-long write_to_endpoint(transport_endpoint_ref ep, void *buffer, long length, transport_address *dest_addr);
+long read_from_endpoint(transport_endpoint_ref ep, void *buffer, long length, struct transport_address *src_addr);
+long write_to_endpoint(transport_endpoint_ref ep, void *buffer, long length, struct transport_address *dest_addr);
 boolean endpoint_readable(transport_endpoint_ref ep, word timeout);
 boolean endpoint_connected(transport_endpoint_ref ep);
 

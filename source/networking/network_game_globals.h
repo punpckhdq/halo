@@ -28,15 +28,13 @@ enum
 
 /* ---------- structures */
 
-struct network_game_server;
-struct network_game_client;
 
 /* ---------- prototypes/NETWORK_GAME_GLOBALS.C */
 
 boolean network_game_is_active(void);
 void network_game_set_number_of_games_played(long number_of_games_played);
 void network_game_set_random_seed(long random_seed);
-network_game_data *network_game_get_game(void);
+struct network_game_data *network_game_get_game(void);
 boolean network_game_player_is_local(struct network_player *player);
 void network_game_accept_remote_connections(boolean accept);
 boolean network_game_should_accept_remote_connections(void);

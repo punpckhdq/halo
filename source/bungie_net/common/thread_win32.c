@@ -82,7 +82,7 @@ static struct mutex_reference *get_mutex_from_pool(
 
 boolean create_thread(
 	byte flags,
-	thread_proc function,
+	unsigned long (__stdcall *function)(void *parameter),
 	void *parameter,
 	struct thread_reference **thread_reference)
 {

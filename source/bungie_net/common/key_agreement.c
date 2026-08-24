@@ -214,7 +214,7 @@ boolean initiate_key_exchange(
 	if (message)
 	{
 		message_size= MESSAGE_GET_SIZE(message);
-		byte_swap_message_header((message_header *)message, _byte_order_network);
+		byte_swap_message_header((struct message_header *)message, _byte_order_network);
 		if (write_endpoint(endpoint, message, message_size)!=message_size)
 		{
 			success= FALSE;
@@ -274,7 +274,7 @@ boolean complete_key_exchange(
 				if (message)
 				{
 					message_size= MESSAGE_GET_SIZE(message);
-					byte_swap_message_header((message_header *)message, _byte_order_network);
+					byte_swap_message_header((struct message_header *)message, _byte_order_network);
 					if (write_endpoint(endpoint, message, message_size)==message_size)
 					{
 						generate_private_key(&initiate_packet.key, &initiate_packet.prime, secret, private_key);
