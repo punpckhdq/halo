@@ -1,380 +1,1756 @@
 /*
 NETWORK_CLIENT_MANAGER.C
-
-symbols in this file:
-001141C0 0040:
-	_code_001141c0 (0000)
-00114200 0060:
-	_network_game_client_dispose (0000)
-00114260 0020:
-	_network_game_client_keep_alive (0000)
-00114280 0070:
-	_network_game_client_get_state (0000)
-001142F0 0100:
-	_network_game_client_initiate_join_game (0000)
-001143F0 0070:
-	_network_game_client_set_machine (0000)
-00114460 0030:
-	_network_game_client_get_machine (0000)
-00114490 0040:
-	_network_game_client_get_machine_index (0000)
-001144D0 0040:
-	_network_game_client_get_available_games (0000)
-00114510 0040:
-	_network_game_client_get_error (0000)
-00114550 0040:
-	_network_game_client_get_seconds_to_game_start (0000)
-00114590 0010:
-	_network_game_client_write (0000)
-001145A0 00d0:
-	_network_game_client_address_matches_server (0000)
-00114670 0070:
-	_network_game_client_game_out_of_sync (0000)
-001146E0 00b0:
-	_network_game_client_ponged (0000)
-00114790 0110:
-	_network_game_client_accepted_into_game (0000)
-001148A0 0130:
-	_network_game_client_game_settings_updated (0000)
-001149D0 0060:
-	_unstrip_player_index (0000)
-00114A30 01a0:
-	_network_game_client_game_has_started (0000)
-00114BD0 0190:
-	_network_game_client_handle_game_update (0000)
-00114D60 0100:
-	_network_game_client_add_player_to_game (0000)
-00114E60 0050:
-	_network_game_client_switch_to_postgame (0000)
-00114EB0 00b0:
-	_network_game_client_switch_to_pregame (0000)
-00114F60 0040:
-	_network_game_client_get_connection (0000)
-00114FA0 0050:
-	_network_game_client_get_remote_server_address (0000)
-00114FF0 0040:
-	_network_game_client_get_game (0000)
-00115030 0040:
-	_network_game_client_server_has_started_game (0000)
-00115070 0040:
-	_network_game_client_get_next_update_number (0000)
-001150B0 0040:
-	_network_client_get_oos (0000)
-001150F0 01f0:
-	_network_game_client_add_player (0000)
-001152E0 0100:
-	_network_game_client_update_local_player_data (0000)
-001153E0 00d0:
-	_network_game_client_request_start_time_change (0000)
-001154B0 0050:
-	_network_game_client_countdown_timer_update (0000)
-00115500 0030:
-	_network_game_client_advertised_game_is_valid (0000)
-00115530 02d0:
-	_code_00115530 (0000)
-00115800 0050:
-	_code_00115800 (0000)
-00115850 00c0:
-	_code_00115850 (0000)
-00115910 0080:
-	_code_00115910 (0000)
-00115990 0260:
-	_network_game_client_leave_game (0000)
-00115BF0 01f0:
-	_network_game_client_request_remove_player (0000)
-00115DE0 0170:
-	_network_game_client_remove_player (0000)
-00115F50 0050:
-	_network_game_client_new_advertised_game (0000)
-00115FA0 0070:
-	_network_game_client_game_shutdown (0000)
-00116010 00e0:
-	_network_game_client_reset (0000)
-001160F0 02c0:
-	_code_001160f0 (0000)
-001163B0 0180:
-	_code_001163b0 (0000)
-00116530 00d0:
-	_code_00116530 (0000)
-00116600 0190:
-	_code_00116600 (0000)
-00116790 00a0:
-	_code_00116790 (0000)
-00116830 0090:
-	_network_game_client_create (0000)
-001168C0 0130:
-	_network_game_client_idle (0000)
-001169F0 00c0:
-	_network_game_client_rejected_by_game (0000)
-0027FC5C 0018:
-	??_C@_0BI@DEMLIONO@network?5client?5disposed?$AA@ (0000)
-0027FC74 002d:
-	??_C@_0CN@POHNGKMA@network_game_client_dont_use_dir@ (0000)
-0027FCA4 0033:
-	??_C@_0DD@GHLNCEHN@c?3?2halo?2SOURCE?2networking?2networ@ (0000)
-0027FCD8 0007:
-	??_C@_06DGDLPBAN@client?$AA@ (0000)
-0027FCE0 0035:
-	??_C@_0DF@IEPBBGCD@failed?5attempt?5to?5initiate?5a?5con@ (0000)
-0027FD18 0023:
-	??_C@_0CD@NIGOILLF@attempting?5to?5connect?5to?5game?5?$EA?5@ (0000)
-0027FD40 00e1:
-	??_C@_0OB@CAKDCBMD@client?5?$CG?$CG?5?$CIclient?9?$DOstate?5?$DN?$DN?5_net@ (0000)
-0027FE28 0065:
-	??_C@_0GF@JAOOPLIH@client?5?$CG?$CG?5?$CIclient?9?$DOmachine_index@ (0000)
-0027FE90 001e:
-	??_C@_0BO@IIIGFMHE@address?9?$DOaddress?4ipv4_address?$AA@ (0000)
-0027FEB0 0010:
-	??_C@_0BA@IONABMGK@address?5?$CB?$DN?5NULL?$AA@ (0000)
-0027FEC0 0013:
-	??_C@_0BD@PONNKDL@client?9?$DOconnection?$AA@ (0000)
-0027FED4 000f:
-	??_C@_0P@FOLJNCCO@client?5?$CB?$DN?5NULL?$AA@ (0000)
-0027FEE4 002d:
-	??_C@_0CN@FOHIFFFA@local?5machine?5is?5out?5of?5sync?5wit@ (0000)
-0027FF14 0036:
-	??_C@_0DG@JNMFILGG@received?5a?5pong?5from?5a?5system?5we@ (0000)
-0027FF4C 0020:
-	??_C@_0CA@IDICKDHG@received?5a?5pong?5from?5the?5future?$AA@ (0000)
-0027FF6C 0019:
-	??_C@_0BJ@NIPOLBAB@client?5?$CG?$CG?5source_address?$AA@ (0000)
-0027FF88 004c:
-	??_C@_0EM@DJKCNCJP@received?5a?5message_server_machin@ (0000)
-0027FFD4 003b:
-	??_C@_0DL@PONBKBJJ@failed?5to?5create?5a?5message_clien@ (0000)
-00280010 005b:
-	??_C@_0FL@OHPOKFBL@network_game_client_write?$CI?$CJ?5fail@ (0000)
-0028006C 0033:
-	??_C@_0DD@POLEJMBC@successfully?5joined?5a?5net?5game?$DL?5@ (0000)
-002800A0 0064:
-	??_C@_0GE@OLBCDHF@client?5?$CG?$CG?5source_address?5?$CG?$CG?5mess@ (0000)
-00280108 005e:
-	??_C@_0FO@NIJHHMKN@invalid?5message_server_game_sett@ (0000)
-00280168 0021:
-	??_C@_0CB@KMIKJFNP@player?5count?5?$CFd?5machine?5count?5?$CFd@ (0000)
-00280190 0060:
-	??_C@_0GA@FCJMEIKG@received?5updated?5game?5settings?5f@ (0000)
-002801F0 0017:
-	??_C@_0BH@KPFLOHLF@precaching?5map?5?8?$CFs?8?4?4?4?$AA@ (0000)
-00280208 0019:
-	??_C@_0BJ@MGLALEIH@client?5?$CG?$CG?5message_packet?$AA@ (0000)
-00280224 0027:
-	??_C@_0CH@CHLJGLMB@failed?5to?5load?5the?5necessary?5gam@ (0000)
-0028024C 0031:
-	??_C@_0DB@BGLEMKKH@failed?5to?5create?5a?5message_clien@ (0000)
-00280280 0051:
-	??_C@_0FB@NFJPBNDI@network_game_client_write?$CI?$CJ?5fail@ (0000)
-002802D4 0028:
-	??_C@_0CI@DFFIDDAF@local?5machine?5is?5loaded?5?$CG?5ready?5@ (0000)
-00280300 0040:
-	??_C@_0EA@MFKNPKNH@client?5?$CG?$CG?5?$CIclient?9?$DOstate?5?$DN?$DN?5_net@ (0000)
-00280340 0036:
-	??_C@_0DG@PKKMJLJH@client?5is?5lagging?5behind?5the?5ser@ (0000)
-00280378 0061:
-	??_C@_0GB@LLAIIL@out?5of?5sync?3?5client?1server?5rando@ (0000)
-002803DC 002d:
-	??_C@_0CN@HEOJJEAC@not?5a?5bug?0?5but?5update?5?$CFd?5time?5?$CFd@ (0000)
-0028040C 003e:
-	??_C@_0DO@OFILJPBP@out?5of?5sync?3?5missed?5a?5server?5upd@ (0000)
-0028044C 003c:
-	??_C@_0DM@JCJEPCIA@added?5new?5player?5to?5the?5game?5?$CIma@ (0000)
-00280488 0011:
-	??_C@_0BB@NJALFKEL@client?5?$CG?$CG?5player?$AA@ (0000)
-0028049C 0016:
-	??_C@_0BG@OEHGDLGH@switching?5to?5postgame?$AA@ (0000)
-002804B4 0015:
-	??_C@_0BF@FFECCEDB@switching?5to?5pregame?$AA@ (0000)
-002804CC 001e:
-	??_C@_0BO@NFAGDPGC@client?5is?5in?5an?5unknown?5state?$AA@ (0000)
-002804EC 002e:
-	??_C@_0CO@BDJGBKN@client?5tried?5to?5add?5a?5new?5player@ (0000)
-00280520 0044:
-	??_C@_0EE@EPIGONGI@failed?5to?5create?5a?5message_clien@ (0000)
-00280568 0064:
-	??_C@_0GE@JOEDNBHN@network_game_client_write?$CI?$CJ?5fail@ (0000)
-002805D0 0045:
-	??_C@_0EF@CDEPJEJP@failed?5to?5create?5a?5message_clien@ (0000)
-00280618 0065:
-	??_C@_0GF@EOEDLFEI@network_game_client_write?$CI?$CJ?5fail@ (0000)
-00280680 0039:
-	??_C@_0DJ@IAEGENPP@can?8t?5add?5players?5to?5a?5game?5unti@ (0000)
-002806BC 0034:
-	??_C@_0DE@DFECLBOM@requesting?5a?5player?5addition?5?$CIco@ (0000)
-002806F0 005a:
-	??_C@_0FK@DNGOMOFK@client?5?$CG?$CG?5?$CIlocal_player_index?$DO?$DN0@ (0000)
-00280750 0075:
-	??_C@_0HF@KCCMHIFI@network_game_client_update_local@ (0000)
-002807C8 0020:
-	??_C@_0CA@GNHJCNBC@network_player_is_valid?$CIplayer?$CJ?$AA@ (0000)
-002807E8 002d:
-	??_C@_0CN@MLPKDKFB@player?9?$DOmachine_index?$DN?$DNclient?9?$DOm@ (0000)
-00280818 005b:
-	??_C@_0FL@EPANHPNG@failed?5to?5send?5a?5message_client_@ (0000)
-00280878 006b:
-	??_C@_0GL@IAFAMNHJ@network_game_client_request_star@ (0000)
-002808E8 0042:
-	??_C@_0EC@OCMHEGGP@?$CIrequest_type?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIrequest_ty@ (0000)
-0028092C 0038:
-	??_C@_0DI@NNABEADG@there?5is?5?$CFs?5?$CFs?5net?5game?5with?5?$CFd?5@ (0000)
-00280964 0009:
-	??_C@_08EDJFMNDP@a?5closed?$AA@ (0000)
-00280970 0008:
-	??_C@_07JPIGLNNP@an?5open?$AA@ (0000)
-00280978 0013:
-	??_C@_0BD@DEAGDPEH@?$DMunknown?5platform?$DO?$AA@ (0000)
-0028098C 0003:
-	??_C@_02LHFGBEJL@PC?$AA@ (0000)
-00280990 0005:
-	??_C@_04KEMOGDLN@XBox?$AA@ (0000)
-00280998 0008:
-	??_C@_17JLFEDMMI@?$AA?$DP?$AA?$DP?$AA?$DP?$AA?$AA@ (0000)
-002809A0 0050:
-	??_C@_0FA@NLFFOHBN@not?5fatal?0?5but?5we?5have?5to?5many?5a@ (0000)
-002809F0 000f:
-	??_C@_0P@JAPJELHA@current?9?$DOvalid?$AA@ (0000)
-00280A00 0065:
-	??_C@_0GF@OLAKLCGH@network_game_client_write?$CI?$CJ?5fail@ (0000)
-00280A68 005f:
-	??_C@_0FP@INNHEEHK@network_game_client_handle_messa@ (0000)
-00280AC8 004b:
-	??_C@_0EL@PNCEEMAP@network_connection_disconnect?$CI?$CJ?5@ (0000)
-00280B18 0066:
-	??_C@_0GG@PLNHOJNK@network_game_client_write?$CI?$CJ?5fail@ (0000)
-00280B80 0049:
-	??_C@_0EJ@ENIOKCKK@network_connection_disconnect?$CI?$CJ?5@ (0000)
-00280BD0 004a:
-	??_C@_0EK@GLADDNKH@network_connection_disconnect?$CI?$CJ?5@ (0000)
-00280C20 0045:
-	??_C@_0EF@IGAGJDLA@failed?5to?5create?5a?5message_clien@ (0000)
-00280C68 004a:
-	??_C@_0EK@PGHLLHE@network_connection_disconnect?$CI?$CJ?5@ (0000)
-00280CB4 0032:
-	??_C@_0DC@NBAMODMB@?$CBnetwork_connection_connected?$CIcl@ (0000)
-00280CE8 0015:
-	??_C@_0BF@IHNDJMJI@leaving?5network?5game?$AA@ (0000)
-00280D00 001d:
-	??_C@_0BN@LOKEMLAG@client?5?$CG?$CG?5client?9?$DOconnection?$AA@ (0000)
-00280D20 0049:
-	??_C@_0EJ@ENDAFHHG@failed?5to?5create?5a?5message_clien@ (0000)
-00280D70 0069:
-	??_C@_0GJ@FAIKKIGI@network_game_client_write?$CI?$CJ?5fail@ (0000)
-00280DE0 0047:
-	??_C@_0EH@PAHGGHIO@failed?5to?5create?5a?5message_clien@ (0000)
-00280E28 0047:
-	??_C@_0EH@NIHALOOC@failed?5to?5create?5a?5message_clien@ (0000)
-00280E70 003e:
-	??_C@_0DO@LCAGMDAF@can?8t?5remove?5players?5from?5a?5game@ (0000)
-00280EB0 0033:
-	??_C@_0DD@MJJEPI@requesting?5a?5player?5removal?5?$CIcon@ (0000)
-00280EE4 0039:
-	??_C@_0DJ@ICFAMCBO@client?8s?5can?5only?5remove?5players@ (0000)
-00280F20 002a:
-	??_C@_0CK@HGKAMGLN@client?5?$CG?$CG?5network_player_is_vali@ (0000)
-00280F50 004b:
-	??_C@_0EL@IAJNHEOO@network?5game?5tried?5to?5delete?5a?5p@ (0000)
-00280F9C 003a:
-	??_C@_0DK@NONHICBE@no?5local?5players?5remain?5in?5the?5g@ (0000)
-00280FD8 0027:
-	??_C@_0CH@HDEKFDCH@?$CFx?5quit?5of?5of?5game?5at?5tick?5?$CFd?5?$CIn@ (0000)
-00281000 001f:
-	??_C@_0BP@BGMFPCP@the?5game?5host?5is?5shutting?5down?$AA@ (0000)
-00281020 002b:
-	??_C@_0CL@FIOOPCIN@failed?5to?5reinitialize?5network?5g@ (0000)
-0028104C 002f:
-	??_C@_0CP@KMAGFDPK@failed?5to?5create?5a?5message_clien@ (0000)
-00281080 004f:
-	??_C@_0EP@PHHJAEIL@network_game_client_write?$CI?$CJ?5fail@ (0000)
-002810D0 0040:
-	??_C@_0EA@BPICBMAG@failed?5to?5create?5a?5message_clien@ (0000)
-00281110 0060:
-	??_C@_0GA@PDNHMAGG@network_game_client_write?$CI?$CJ?5fail@ (0000)
-00281170 0028:
-	??_C@_0CI@BAIHEHNF@sent?5out?5a?5broadcast?5game?5search@ (0000)
-00281198 005f:
-	??_C@_0FP@MCNPILK@network_game_client_process_inco@ (0000)
-002811F8 0049:
-	??_C@_0EJ@CNGHFAJM@network_connection_idle?$CI?$CJ?5failed@ (0000)
-00281244 0030:
-	??_C@_0DA@OHNFENCP@network_game_client_initiate_joi@ (0000)
-00281278 0047:
-	??_C@_0EH@NDJKGODE@network_connection_idle?$CI?$CJ?5failed@ (0000)
-002812C0 0045:
-	??_C@_0EF@EDNLPKBO@client?5connection?5process?5has?5ti@ (0000)
-00281308 005d:
-	??_C@_0FN@FLBCCMKM@network_game_client_process_inco@ (0000)
-00281368 003c:
-	??_C@_0DM@ONBHNBGE@failed?5to?5create?5a?5message_clien@ (0000)
-002813A8 0056:
-	??_C@_0FG@EPCJDBOJ@network_game_client_write?$CI?$CJ?5fail@ (0000)
-00281400 005d:
-	??_C@_0FN@PFNMPIAB@network_game_client_process_inco@ (0000)
-00281460 0047:
-	??_C@_0EH@HNFELKJJ@network_connection_idle?$CI?$CJ?5failed@ (0000)
-002814A8 0046:
-	??_C@_0EG@BKDKHIKF@network_connection_idle?$CI?$CJ?5failed@ (0000)
-002814F0 001c:
-	??_C@_0BM@GGCBKEBE@new2?5idle?5in?5game?5abort?5hit?$AA@ (0000)
-0028150C 001b:
-	??_C@_0BL@IEONCJFK@new?5idle?5in?5game?5abort?5hit?$AA@ (0000)
-00281528 005c:
-	??_C@_0FM@JKCCAGHN@network_game_client_process_inco@ (0000)
-00281588 0050:
-	??_C@_0FA@IKFHHCAC@network?5client?5connection?5has?5be@ (0000)
-002815D8 002d:
-	??_C@_0CN@GOKOEOFK@network?5connection?5went?5down?5?$CIid@ (0000)
-00281608 005e:
-	??_C@_0FO@IANECALJ@network_game_client_process_inco@ (0000)
-00281668 0048:
-	??_C@_0EI@HOIILDIN@network_connection_idle?$CI?$CJ?5failed@ (0000)
-002816B0 0049:
-	??_C@_0EJ@KIFFADMI@network_game_create_client?$CI?$CJ?5fai@ (0000)
-002816FC 002e:
-	??_C@_0CO@LNIBCIDF@?$CBnetwork_game_client_dont_use_di@ (0000)
-0028172C 0018:
-	??_C@_0BI@HFOMKHNG@?$CB?$CCunknown?5client?5state?$CC?$AA@ (0000)
-00281744 002b:
-	??_C@_0CL@EHLJKOCJ@network_game_client_idle_postgam@ (0000)
-00281770 0029:
-	??_C@_0CJ@NNEAELPC@network_game_client_idle_ingame?$CI@ (0000)
-0028179C 002a:
-	??_C@_0CK@IFHOOMMF@network_game_client_idle_pregame@ (0000)
-002817C8 002a:
-	??_C@_0CK@NBDMDINO@network_game_client_idle_joining@ (0000)
-002817F4 002c:
-	??_C@_0CM@IDLHBFKK@network_game_client_idle_searchi@ (0000)
-00281820 0024:
-	??_C@_0CE@DOGOGKDE@unable?5to?5join?5game?3?5reason?$DN?5?$CD?$CFd@ (0000)
-00281844 0024:
-	??_C@_0CE@JOPGMOA@_rejection_code_blacklisted_mach@ (0000)
-00281868 001f:
-	??_C@_0BP@EHGPFGEK@_rejection_code_game_is_closed?$AA@ (0000)
-00281888 001d:
-	??_C@_0BN@IDHMJFHO@_rejection_code_game_is_full?$AA@ (0000)
-002818A8 001d:
-	??_C@_0BN@NIEJJECI@_rejection_code_bad_password?$AA@ (0000)
-002818C8 001f:
-	??_C@_0BP@MGMNOIHD@_rejection_code_bad_join_token?$AA@ (0000)
-002818E8 0020:
-	??_C@_0CA@EEFCENHL@_rejection_code_version_too_new?$AA@ (0000)
-00281908 0020:
-	??_C@_0CA@JCNAFAAD@_rejection_code_version_too_old?$AA@ (0000)
-004566D8 0002:
-	_allow_out_of_sync (0000)
-	_network_game_client_dont_use_directly_in_use (0001)
 */
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "cseries_windows.h"
+#include "network_client_manager.h"
+#include "network_client_message_handler.h"
+#include "network_connection.h"
+#include "network_game_globals.h"
+#include "network_game_manager.h"
+#include "network_messages.h"
+#include "game.h"
+#include "players.h"
+#include "interface.h"
+#include "ui_widget.h"
+
 /* ---------- constants */
+
+enum
+{
+	_network_game_client_connected_to_server_bit= 0,
+	_network_game_client_sent_join_request_to_server_bit,
+	NUMBER_OF_NETWORK_GAME_CLIENT_FLAGS,
+
+	ADVERTISED_GAME_TIMEOUT= 6000, // milliseconds a game stays valid after its last advertisement
+	PRECACHE_POLL_INTERVAL= 1000, // milliseconds between precache progress reports
+	BROADCAST_SEARCH_INTERVAL= 2000, // milliseconds between broadcast game searches
+	PING_INTERVAL= 1000, // milliseconds between pings to the server we are watching
+	JOIN_TIMEOUT= 120000, // milliseconds a join attempt is given before it is abandoned
+	MAXIMUM_INCOMING_MESSAGE_SIZE= 2048
+};
 
 /* ---------- macros */
 
 /* ---------- structures */
 
+struct network_game_client
+{
+	word machine_index; // 0x000, NONE until the server accepts us
+	byte pad_002[2]; // 0x002, aligns the advertised game array
+	advertised_game_data advertised_games[MAXIMUM_ADVERTISED_GAMES]; // 0x004
+	transport_address server_address; // 0x808, pongs from any other address are discarded
+	long last_ping_time; // 0x820, system_milliseconds() of the last ping we sent
+	byte unknown_824[2]; // 0x824
+	word ping_sample_count; // 0x826, divisor of the running average below
+	word average_ping; // 0x828, milliseconds
+	boolean accepting_pongs; // 0x82A, clear: network_game_client_ponged discards the sample
+	byte pad_82B; // 0x82B
+	struct network_connection *connection; // 0x82C
+	transport_connect_process_ref connect_process; // 0x830, live only while a join is in flight
+	unsigned long join_start_time; // 0x834, system_milliseconds() when the join began
+	network_game_join_parameters join_parameters; // 0x838, copied whole from the caller
+	byte pad_85A[2]; // 0x85A
+	network_game_data game; // 0x85C
+	long unknown_C90; // 0x0C90, set when a join begins and before a teardown
+	long last_broadcast_time; // 0x0C94, system_milliseconds() of the last broadcast game search
+	unsigned long next_update_number; // 0x0C98, also the test for whether the server has started
+	long last_update_time; // 0x0C9C, system_milliseconds() of the last server update we handled
+	long precache_poll_time; // 0x0CA0, system_milliseconds() of the last precache progress report
+	short seconds_to_game_start; // 0x0CA4, NONE outside the pregame countdown
+	word state; // 0x0CA6, one of the _network_game_client_state_* values
+	word error; // 0x0CA8, one of the _network_game_client_error_* values
+	word flags; // 0x0CAA
+	boolean out_of_sync; // 0x0CAC
+	boolean connection_going_stale; // 0x0CAD, set from network_connection_going_stale() by the ingame handler
+	byte pad_CAE[2]; // 0x0CAE, rounds the record out to 0xCB0
+}; // 0xCB0
+
 /* ---------- prototypes */
+
+static boolean check_networking_and_generate_error(void);
+static boolean add_advertised_game(advertised_game_data *list, message_server_game_advertise *message);
+static boolean add_advertised_game(
+	advertised_game_data *list,
+	message_server_game_advertise *message)
+{
+	boolean success = FALSE;
+	boolean game_to_add_is_open = TEST_FLAG(message->flags, _game_advertise_open_bit) && (message->current_number_of_machines < MAXIMUM_NETWORK_MACHINE_COUNT);
+	long itr;
+	advertised_game_data *item = NULL;
+
+	for(itr = 0; itr < MAXIMUM_ADVERTISED_GAMES; itr++)
+	{
+		advertised_game_data *current= list + itr;
+
+		if (!network_game_client_advertised_game_is_valid(current))
+		{
+			csmemset(current, 0, sizeof(*current));
+		}
+	}
+
+	for(itr = 0; itr < MAXIMUM_ADVERTISED_GAMES; itr++)
+	{
+		advertised_game_data *current= list + itr;
+
+		if (transport_nonce_is_equal(current->server_nonce, message->server_nonce))
+		{
+			item = current;
+			break;
+		}
+	}
+
+	if (NULL == item)
+	{
+		for(itr = 0; itr < MAXIMUM_ADVERTISED_GAMES; itr++)
+		{
+			advertised_game_data *current= list + itr;
+
+			if (!(current->valid))
+			{
+				item = current;
+				break;
+			}
+		}
+
+		if ((NULL == item) && (game_to_add_is_open))
+		{
+			for(itr = 0; itr < MAXIMUM_ADVERTISED_GAMES; itr++)
+			{
+				advertised_game_data *current = list + itr;
+
+				match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1567, current->valid);
+
+				if (!(current->open))
+				{
+					item = current;
+					csmemset(item, 0, sizeof(*item));
+
+					break;
+				}
+			}
+		}
+	}
+
+	if (item)
+	{
+		item->valid = TRUE;
+
+		item->key= message->key;
+		item->key_id= message->key_id;
+		item->xnet_address= message->host_address;
+		csmemcpy(item->server_nonce, message->server_nonce, sizeof(message->server_nonce));
+		item->time_in_milliseconds_of_last_news = system_milliseconds();
+
+		item->platform= message->platform;
+		if (message->name[0] != L'\0')
+		{
+			ustrncpy(item->name, message->name, MAXIMUM_NETWORK_GAME_NAME_LENGTH-1);
+		}
+		else
+		{
+			ustrncpy(item->name, L"???", MAXIMUM_NETWORK_GAME_NAME_LENGTH-1);
+		}
+		item->name[MAXIMUM_NETWORK_GAME_NAME_LENGTH-1]= L'\0';
+		item->game_engine= message->game_engine;
+		csmemcpy(&item->map, &message->map, sizeof(message->map));
+		item->current_number_of_machines= message->current_number_of_machines;
+		item->current_number_of_players= message->current_number_of_players;
+		item->maximum_number_of_players= message->maximum_number_of_players;
+		item->score_to_win= message->score_to_win;
+		item->open= game_to_add_is_open;
+		item->teams_enabled= TEST_FLAG(message->flags, _game_advertise_teams_enabled_bit);
+		item->terminator= (item->game_engine == _game_engine_oddball) && TEST_FLAG(message->flags, _game_advertise_oddball_terminator_bit);
+
+		success= TRUE;
+
+		network_event("there is %s %s net game with %d players and %d machines",
+			(item->open ? "an open" : "a closed"),
+			(item->platform == _game_platform_xbox) ? "XBox" :
+				((item->platform == _game_platform_mswindows) ? "PC" : "<unknown platform>"),
+			item->current_number_of_players, item->current_number_of_machines);
+	}
+	else
+	{
+		error(_error_silent, "not fatal, but we have to many active network games cannot add more to the list");
+	}
+
+	return success;
+}
+
+static void network_game_client_set_error(network_game_client *client, word error);
+static void network_game_client_update_precache_status(network_game_client *client);
+static boolean network_game_client_process_incoming_messages(network_game_client *client);
+static boolean network_game_client_idle_searching(
+	network_game_client *client)
+{
+	boolean result= TRUE;
+	unsigned long now= system_milliseconds();
+
+	network_game_client_keep_alive(client);
+
+	result = check_networking_and_generate_error();
+
+	if (result == TRUE)
+	{
+		if (global_network_game_server_get())
+		{
+			advertised_game_data game= {0};
+			network_game_join_parameters join_parameters;
+			transport_address address;
+
+			address.address.ipv4_address= IPV4_LOOPBACK_ADDRESS;
+			address.port= NETWORK_SERVER_PORT;
+			address.address_length = IPV4_ADDRESS_LENGTH;
+
+			game.platform= network_game_get_local_platform();
+			transport_get_nonce(game.server_nonce, sizeof(game.server_nonce));
+
+			join_parameters.password[0]= L'\0';
+			network_game_generate_join_game_token(join_parameters.join_token);
+			if (!network_game_client_initiate_join_game(client, &game, &join_parameters, &address))
+			{
+				result = FALSE;
+				display_error_when_main_menu_loaded(_error_network_failed_to_join_game);
+				network_event("network_game_client_initiate_join_game() failed");
+			}
+		}
+		else if ((result= network_connection_idle(client->connection, _connection_timeout_fast, NULL)) == FALSE)
+		{
+			display_error_when_main_menu_loaded(_error_network_failed_to_join_game);
+			network_event("network_connection_idle() failed in network_game_client_idle_searching()");
+		}
+		else if ((result= network_game_client_process_incoming_messages(client)) == FALSE)
+		{
+			network_event("network_game_client_process_incoming_messages() failed in network_game_client_idle_searching()");
+		}
+		else if ((now - client->last_broadcast_time) > BROADCAST_SEARCH_INTERVAL)
+		{
+			if (global_network_game_server_get() == NULL)
+			{
+				message_client_broadcast_game_search message_packet;
+				transport_address broadcast_address;
+				message_header *message;
+
+				message_packet.port= NETWORK_CLIENT_PORT;
+				message_packet.version= NETWORK_GAME_MESSAGE_VERSION;
+				transport_get_nonce(message_packet.nonce, sizeof(message_packet.nonce));
+
+				broadcast_address.address_length= IPV4_ADDRESS_LENGTH;
+				broadcast_address.address.ipv4_address= IPV4_BROADCAST_ADDRESS;
+				broadcast_address.port= NETWORK_SERVER_PORT;
+
+				if ((message= create_network_game_message(_message_type_client_broadcast_game_search, &message_packet, sizeof(message_packet))) != NULL)
+				{
+					if ((result= network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), &broadcast_address, FALSE)) == TRUE)
+					{
+						network_event("sent out a broadcast game search packet");
+						client->last_broadcast_time= now;
+					}
+					else
+					{
+						network_event("network_game_client_write() failed while sending a message_client_broadcast_game_search message");
+					}
+				}
+				else
+				{
+					network_event("failed to create a message_client_broadcast_game_search message");
+				}
+			}
+		}
+		else if ((client->accepting_pongs == TRUE) &&
+			((now - client->last_ping_time) > PING_INTERVAL))
+		{
+			message_client_ping ping_packet;
+			message_header *message;
+
+			ping_packet.system_milliseconds= now;
+			ping_packet.reply_to_port= NETWORK_CLIENT_PORT;
+
+			if ((message= create_network_game_message(_message_type_client_ping, &ping_packet, sizeof(ping_packet))) != NULL)
+			{
+				if (network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), &client->server_address, FALSE))
+				{
+					client->last_ping_time= now;
+				}
+				else
+				{
+					network_event("network_game_client_write() failed while sending a message_client_ping message");
+				}
+			}
+			else
+			{
+				network_event("failed to create a message_client_ping message");
+			}
+		}
+	}
+
+	return result;
+}
+
+static boolean network_game_client_idle_joining(
+	network_game_client *client)
+{
+	boolean success= TRUE;
+
+	success = check_networking_and_generate_error();
+
+	if (success == TRUE)
+	{
+		if (network_connection_connected(client->connection))
+		{
+			if (!(client->flags & FLAG(_network_game_client_sent_join_request_to_server_bit)))
+			{
+				message_client_join_game_request message_packet;
+				message_header *message;
+
+				csmemset(&message_packet, 0, sizeof(message_packet));
+
+				network_game_generate_local_machine_name(message_packet.machine_name);
+				csmemcpy(message_packet.join_token, client->join_parameters.join_token, sizeof(message_packet.join_token));
+				
+				if ((message= create_network_game_message(_message_type_client_join_game_request, &message_packet, sizeof(message_packet))) != NULL)
+				{
+					if (network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+					{
+						client->flags|= FLAG(_network_game_client_sent_join_request_to_server_bit);
+					}
+					else
+					{
+						network_event("network_game_client_write() failed to send a message_client_join_game_request message");
+					}
+				}
+				else
+				{
+					network_event("failed to create a message_client_join_game_request message");
+				}
+			}
+			client->connect_process= NULL;
+		}
+		else if (client->connect_process)
+		{
+			if ((system_milliseconds() - client->join_start_time) > JOIN_TIMEOUT)
+			{
+				network_event("client connection process has timed out; aborting connection attempt");
+				cancel_connect_process(client->connect_process);
+				client->connect_process= NULL;
+				success= FALSE;
+			}
+		}
+	}
+
+	if (success == TRUE)
+	{
+		if (success= network_connection_idle(client->connection, _connection_timeout_fast, NULL))
+		{
+			if ((success= network_game_client_process_incoming_messages(client)) == FALSE)
+			{
+				network_event("network_game_client_process_incoming_messages() failed in network_game_client_idle_joining()");
+			}
+		}
+		else
+		{
+			network_event("network_connection_idle() failed in network_game_client_idle_joining()");
+		}
+	}
+
+	return success;
+}
+
+static boolean network_game_client_idle_pregame(
+	network_game_client *client)
+{
+	boolean result= TRUE;
+
+	result = check_networking_and_generate_error();
+	if (!result)
+	{
+		goto exit;
+	}
+
+	if (!network_connection_active(client->connection) || !network_connection_connected(client->connection))
+	{
+		result= FALSE;
+	}
+	else if (result)
+	{
+		network_game_client_update_precache_status(client);
+
+		result= network_connection_idle(client->connection, _connection_timeout, NULL);
+
+		if (!result)
+		{
+			network_event("network_connection_idle() failed in network_game_client_idle_pregame()");
+			goto exit;
+		}
+
+		result= network_game_client_process_incoming_messages(client);
+
+		if (!result)
+		{
+			network_event("network_game_client_process_incoming_messages() failed in network_game_client_idle_pregame()");
+			goto exit;
+		}
+
+		if (client->state == _network_game_client_state_pregame)
+		{
+		}
+	}
+
+exit:
+	if ((!result) && (!network_connection_active(client->connection)))
+	{
+		display_error_when_main_menu_loaded(_error_network_server_shut_down);
+		result= FALSE;
+	}
+
+	return result;
+}
+
+static boolean network_game_client_idle_searching(network_game_client *client);
+static boolean network_game_client_idle_joining(network_game_client *client);
+static boolean network_game_client_idle_pregame(network_game_client *client);
+static boolean network_game_client_idle_ingame(network_game_client *client);
+static boolean network_game_client_idle_ingame(
+	network_game_client *client)
+{
+	boolean success= TRUE;
+	
+	if (!network_connection_active(client->connection) || !network_connection_connected(client->connection))
+	{
+		error(_error_silent, "new idle in game abort hit");
+		display_error_when_main_menu_loaded(_error_network_server_shut_down);
+		success= FALSE;
+	}
+	else if (!network_game_is_splitscreen_local())
+	{
+		boolean connection_stale= network_connection_going_stale(client->connection);
+
+		if (!transport_network_available())
+		{
+			display_error_when_main_menu_loaded(_error_network_connection_lost);
+			network_event("network connection went down (idle in game)!");
+			success= FALSE;
+		}
+		else if (connection_stale && !client->connection_going_stale)
+		{
+			short player_index;
+
+			for (player_index= local_player_get_next(NONE); player_index != NONE; player_index= local_player_get_next(player_index))
+			{
+				display_error(_error_network_trouble_is_brewing, player_index, FALSE, FALSE);
+			}
+			network_event("network client connection has been silent for a dangerously long amount of time");
+		}
+		client->connection_going_stale= connection_stale;
+	}
+	if (success == TRUE)
+	{
+		success= network_connection_idle(client->connection, _connection_timeout, NULL);
+
+		if (success)
+		{
+			success= network_game_client_process_incoming_messages(client);
+
+			if (success)
+			{
+			}
+			else
+			{
+				network_event("network_game_client_process_incoming_messages() failed in network_game_client_idle_ingame()");
+			}
+		}
+		else
+		{
+			if (!network_connection_active(client->connection) || !network_connection_connected(client->connection))
+			{
+				error(_error_silent, "new2 idle in game abort hit");
+				display_error_when_main_menu_loaded(_error_network_server_shut_down);
+				success= FALSE;
+			}
+
+			network_event("network_connection_idle() failed in network_game_client_idle_ingame()");
+		}
+	}
+
+	return success;
+}
+
+static boolean network_game_client_idle_postgame(network_game_client *client);
 
 /* ---------- globals */
 
-/* ---------- public code */
+boolean allow_out_of_sync;
+static boolean network_game_client_dont_use_directly_in_use;
+static struct network_game_client network_game_client_dont_use_directly;
 
 /* ---------- private code */
+
+static boolean check_networking_and_generate_error(
+	void)
+{
+	boolean result= TRUE;
+
+	if (!network_game_is_splitscreen_local())
+	{
+		result= transport_network_available();
+		if (!result)
+		{
+			error(_error_silent, "network connection went down!");
+			display_error_when_main_menu_loaded(_error_network_connection_lost);
+		}
+	}
+
+	return result;
+}
+
+/* ---------- public code */
+
+void network_game_client_dispose(
+	network_game_client *client)
+{
+	if (client)
+	{
+		if (client->connection)
+		{
+			network_connection_delete(client->connection);
+		}
+
+		match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 178, network_game_client_dont_use_directly_in_use);
+
+		network_game_client_dont_use_directly_in_use= FALSE;
+	}
+
+	network_event("network client disposed");
+}
+
+void network_game_client_keep_alive(
+	struct network_game_client *client)
+{
+	network_connection_keep_alive(client->connection);
+}
+
+word network_game_client_get_state(
+	network_game_client *client,
+	word *progress)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 249, client);
+
+	if (progress)
+	{
+		*progress= 0;
+		if (client->state==_network_game_client_state_joining)
+		{
+			*progress= (word)((100*system_milliseconds() - 100*client->join_start_time)/JOIN_TIMEOUT);
+		}
+	}
+
+	return client->state;
+}
+
+boolean network_game_client_initiate_join_game(
+	network_game_client *client,
+	struct advertised_game_data *game,
+	network_game_join_parameters *join_parameters,
+	transport_address *address)
+{
+	boolean result;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 343, client && (client->state == _network_game_client_state_searching) && game && join_parameters && client->connection && !network_connection_connected(client->connection) && (game->platform == network_game_get_local_platform()));
+
+	client->unknown_C90= 1;
+	client->connect_process= NULL;
+	client->join_start_time= system_milliseconds();
+	csmemcpy(&client->join_parameters, join_parameters, sizeof(network_game_join_parameters));
+
+	result= network_connection_connect(client->connection, address, NULL);
+	if (result==TRUE)
+	{
+		client->state= _network_game_client_state_joining;
+		network_event("attempting to connect to game @ %s", transport_address_to_string(address));
+
+		return TRUE;
+	}
+
+	display_error_when_main_menu_loaded(_network_game_client_error_host_closed_down-1);
+	network_event("failed attempt to initiate a connection to game @ %s", transport_address_to_string(address));
+
+	return result;
+}
+
+boolean network_game_client_set_machine(
+	network_game_client *client,
+	network_machine *machine)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 481, client && (client->machine_index<MAXIMUM_NETWORK_MACHINE_COUNT) && network_machine_is_valid(machine));
+
+	csmemcpy(&client->game.machines[client->machine_index], machine, sizeof(network_machine));
+
+	return TRUE;
+}
+
+network_machine *network_game_client_get_machine(
+	network_game_client *client)
+{
+	if (client && client->machine_index<MAXIMUM_NETWORK_MACHINE_COUNT)
+	{
+		return &client->game.machines[client->machine_index];
+	}
+
+	return NULL;
+}
+
+short network_game_client_get_machine_index(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 509, client);
+
+	return client->machine_index;
+}
+
+advertised_game_data *network_game_client_get_available_games(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 684, client);
+
+	return client->advertised_games;
+}
+
+word network_game_client_get_error(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 692, client);
+
+	return client->error;
+}
+
+short network_game_client_get_seconds_to_game_start(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 700, client);
+
+	return client->seconds_to_game_start;
+}
+
+boolean network_game_client_write(
+	struct network_connection *connection,
+	message_header *message,
+	unsigned short message_size,
+	transport_address *dest_address,
+	boolean reliable)
+{
+	return network_connection_write(connection, message, message_size, dest_address, reliable);
+}
+
+boolean network_game_client_address_matches_server(
+	network_game_client *client,
+	transport_address *address)
+{
+	transport_address remote_address;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 722, client != NULL);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 723, client->connection);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 724, address != NULL);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 725, address->address.ipv4_address);
+
+	network_connection_get_address(client->connection, &remote_address, NULL);
+
+	return (boolean)(remote_address.address.ipv4_address==address->address.ipv4_address);
+}
+
+void network_game_client_game_out_of_sync(
+	network_game_client *client)
+{
+	if (!allow_out_of_sync)
+	{
+		network_event("local machine is out of sync with the server");
+		if (client->out_of_sync == FALSE)
+		{
+			short player_index;
+
+			for (player_index= local_player_get_next(NONE); player_index != NONE; player_index= local_player_get_next(player_index))
+			{
+				display_error(_error_network_out_of_sync_alert, player_index, TRUE, FALSE);
+			}
+		}
+		client->out_of_sync= TRUE;
+	}
+
+	return;
+}
+
+void network_game_client_ponged(
+	network_game_client *client,
+	transport_address *source_address,
+	unsigned long sent_time_system_milliseconds)
+{
+	unsigned long now;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 775, client && source_address);
+
+	if (client->accepting_pongs && client->server_address.address.ipv4_address==source_address->address.ipv4_address)
+	{
+		now= system_milliseconds();
+		if (sent_time_system_milliseconds<=now)
+		{
+			client->average_ping= (word)((now + client->ping_sample_count*client->average_ping - sent_time_system_milliseconds)/(client->ping_sample_count + 1));
+			client->ping_sample_count++;
+		}
+		else
+		{
+			network_event("received a pong from the future");
+		}
+	}
+	else
+	{
+		network_event("received a pong from a system we aren't interested in");
+	}
+}
+
+void network_game_client_accepted_into_game(
+	network_game_client *client,
+	transport_address *source_address,
+	message_server_machine_accepted *message_packet)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 807, client && source_address && message_packet && (client->state == _network_game_client_state_joining));
+
+	if ((message_packet->machine_index>=0) && (message_packet->machine_index<MAXIMUM_NETWORK_MACHINE_COUNT))
+	{
+		message_client_settings_request settings_request;
+		message_header *message;
+
+		client->machine_index= message_packet->machine_index;
+		client->game.machines[message_packet->machine_index].machine_index= message_packet->machine_index;
+		client->state= _network_game_client_state_pregame;
+
+		network_game_set_random_seed(message_packet->server_random_seed);
+
+		network_event("successfully joined a net game; our machine is #%d", message_packet->machine_index);
+
+		network_game_generate_local_machine_name(settings_request.machine.name);
+		settings_request.machine.machine_index= message_packet->machine_index;
+
+		message= create_network_game_message(_message_type_client_settings_request, &settings_request, sizeof(settings_request));
+		if (message)
+		{
+			if (!network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+			{
+				network_event("network_game_client_write() failed while sending a message_client_settings_request message");
+			}
+		}
+		else
+		{
+			network_event("failed to create a message_client_settings_request message");
+		}
+	}
+	else
+	{
+		network_event("received a message_server_machine_accepted message with a bad machine_index");
+	}
+}
+
+boolean network_game_client_game_settings_updated(
+	network_game_client *client,
+	message_server_game_settings_update *message_packet)
+{
+	boolean success;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 885, client && message_packet);
+
+	if ((message_packet->game.machine_count>=0) && (message_packet->game.machine_count<=MAXIMUM_NETWORK_MACHINE_COUNT) &&
+		(message_packet->game.player_count>=0) && (message_packet->game.player_count<=NETWORK_GAME_MAXIMUM_PLAYER_COUNT))
+	{
+		network_game_data game;
+
+		if (csstrcmp(message_packet->game.map.name, client->game.map.name) != 0)
+		{
+			network_event("precaching map '%s'...", message_packet->game.map.name);
+			main_set_multiplayer_map_name(message_packet->game.map.name);
+		}
+
+		csmemcpy(&game, &client->game, sizeof(network_game_data));
+		csmemcpy(&client->game, &message_packet->game, sizeof(network_game_data));
+		csmemcpy(&client->game.local_data, &game.local_data, sizeof(game.local_data));
+
+		network_event("received updated game settings from the server; there are %d players on %d machines in the game",
+			message_packet->game.player_count, message_packet->game.machine_count);
+		network_event("player count %d machine count %d", message_packet->game.player_count, message_packet->game.machine_count);
+
+		success= TRUE;
+	}
+	else
+	{
+		network_event("invalid message_server_game_settings_update message received player count %d machine count %d", message_packet->game.player_count, message_packet->game.machine_count);
+		success= FALSE;
+	}
+
+	return success;
+}
+
+boolean network_game_client_game_has_started(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 944, client && (client->state == _network_game_client_state_pregame));
+
+	client->seconds_to_game_start = NONE;
+
+	network_game_client_keep_alive(client);
+
+	if (network_game_create_game_objects(&client->game))
+	{
+		int i, local_player_index;
+
+		for (i= local_player_index= 0; i < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; i++)
+		{
+			if (client->game.players[i].machine_index == client->machine_index)
+			{
+				while ((client->game.players[i].machine_index == client->machine_index) &&
+					network_player_is_valid(&client->game.players[i]))
+				{
+					local_player_set_player_index(client->game.players[i].controller_index, unstrip_player_index(client->game.players[i].player_list_index));
+					i+= 1;
+				}
+				break;
+			}
+		}
+
+		network_game_client_keep_alive(client);
+
+		{
+			message_client_loaded message_packet= {0};
+			message_header *message= create_network_game_message(_message_type_client_loaded, &message_packet, sizeof(message_packet));
+
+			if (message != NULL)
+			{
+				if (network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+				{
+					network_event("local machine is loaded & ready to play");
+					client->state= _network_game_client_state_ingame;
+					client->next_update_number= 0;
+					client->last_update_time= 0;
+					client->connection_going_stale= FALSE;
+
+					ui_widgets_close_all();
+					game_time_start();
+					game_initial_pulse();
+				}
+				else
+				{
+					network_event("network_game_client_write() failed while sending a message_client_loaded message");
+				}
+			}
+			else
+			{
+				network_event("failed to create a message_client_loaded message");
+			}
+		}
+	}
+	else
+	{
+		network_event("failed to load the necessary game data");
+	}
+
+	return (client->state == _network_game_client_state_ingame) ? TRUE : FALSE;
+}
+
+long unstrip_player_index(
+	long stripped_player_index)
+{
+	long result= NONE;
+	struct data_iterator iterator;
+	struct player_datum *player;
+
+	data_iterator_new(&iterator, player_data);
+
+	while (player= data_iterator_next(&iterator))
+	{
+		if ((iterator.index & 0xffff) == (stripped_player_index & 0xffff))
+		{
+			result= iterator.index;
+
+			break;
+		}
+	}
+
+	return result;
+}
+
+boolean network_game_client_handle_game_update(
+	network_game_client *client,
+	message_server_game_update *message_packet)
+{
+	boolean success= FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1037, client && message_packet);
+
+	if (message_packet->player_count < client->game.player_count)
+	{
+		csmemset(&message_packet->action_update[message_packet->player_count], 0,
+			(client->game.player_count-message_packet->player_count)*sizeof(struct player_action));
+		message_packet->player_count= client->game.player_count;
+	}
+	{
+		struct game_update update;
+
+		if (message_packet->update_number != client->next_update_number)
+		{
+			network_event("out of sync: missed a server update (expected #%ld, got #%ld)", client->next_update_number, message_packet->update_number);
+			network_game_client_game_out_of_sync(client);
+		}
+		else if (!global_network_game_server_get())
+		{
+			if (game_time_get() == (long)message_packet->update_number)
+			{
+				if (message_packet->debug_game_time != game_time_get())
+				{
+					network_event("not a bug, but update %d time %d our time %d", message_packet->update_number, message_packet->debug_game_time, game_time_get());
+				}
+			}
+
+			if (game_time_get() == message_packet->debug_game_time)
+			{
+				if (message_packet->debug_random_seed != get_random_seed())
+				{
+					network_event("out of sync: client/server random seed mismatch, update= #%ld, game time= #%ld (%ld) (#%lx/#%lx)",
+						message_packet->update_number, game_time_get(), message_packet->debug_game_time, get_random_seed(), message_packet->debug_random_seed);
+					network_game_client_game_out_of_sync(client);
+				}
+			}
+
+			if ((message_packet->update_number % TICKS_PER_SECOND) == 0)
+			{
+				network_event("client is lagging behind the server by #%d game ticks", message_packet->update_number - game_time_get());
+			}
+		}
+
+		update.number_of_actions= message_packet->player_count;
+		csmemcpy(update.actions, message_packet->action_update, update.number_of_actions*sizeof(struct player_action));
+
+		update_client_handle_server_update(&update, message_packet->update_number);
+
+		client->next_update_number+= 1;
+		client->last_update_time= system_milliseconds();
+
+		success= TRUE;
+	}
+
+	return success;
+}
+
+boolean network_game_client_add_player_to_game(
+	network_game_client *client,
+	struct network_player *player)
+{
+	boolean result= FALSE;
+	long player_index;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1122, client && player);
+
+	if (network_player_is_valid(player))
+	{
+		result= network_game_add_player(&client->game, player);
+		if (result)
+		{
+			if (client->state==_network_game_client_state_ingame)
+			{
+				player= &client->game.players[client->game.player_count - 1];
+
+				result= network_game_spawn_player(player);
+				if (result)
+				{
+					player_index= unstrip_player_index(player->player_list_index);
+
+					if (player->machine_index==client->machine_index)
+					{
+						local_player_set_player_index(player->controller_index, player_index);
+					}
+
+					update_client_add_player(player_index);
+
+					if (global_network_game_server_get())
+					{
+						update_server_add_player(player_index);
+					}
+				}
+				else
+				{
+					return result;
+				}
+			}
+
+			network_event("added new player to the game (machine #%d / controller #%d)", player->machine_index, player->controller_index);
+		}
+	}
+
+	return result;
+}
+
+void network_game_client_switch_to_postgame(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1164, client);
+
+	game_engine_switch_to_postgame();
+	client->state= _network_game_client_state_postgame;
+
+	network_event("switching to postgame");
+}
+
+boolean network_game_client_switch_to_pregame(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1177, client);
+
+	if (client->state!=_network_game_client_state_pregame)
+	{
+		network_game_reset_for_next_round(&client->game, TRUE);
+		network_connection_keep_alive(client->connection);
+
+		client->next_update_number= 0;
+		client->unknown_C90= 1;
+		client->last_update_time= 0;
+		client->connection_going_stale= 0;
+		client->state= _network_game_client_state_pregame;
+		client->out_of_sync= FALSE;
+
+		network_event("switching to pregame");
+		network_game_reset_to_pregame_ui();
+		network_connection_keep_alive(client->connection);
+	}
+
+	return TRUE;
+}
+
+struct network_connection *network_game_client_get_connection(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1203, client);
+
+	return client->connection;
+}
+
+void network_game_client_get_remote_server_address(
+	network_game_client *client,
+	transport_address *remote_address)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1212, client);
+
+	network_connection_get_address(client->connection, remote_address, NULL);
+}
+
+network_game_data *network_game_client_get_game(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1229, client);
+
+	return &client->game;
+}
+
+boolean network_game_client_server_has_started_game(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1237, client);
+
+	return (client->next_update_number > 0) ? TRUE : FALSE;
+}
+
+long network_game_client_get_next_update_number(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1245, client);
+
+	return client->next_update_number;
+}
+
+boolean network_client_get_oos(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1253, client);
+
+	return client->out_of_sync;
+}
+
+boolean network_game_client_add_player(
+	network_game_client *client,
+	short local_player_index)
+{
+	boolean result= TRUE;
+	struct player_profile profile;
+	message_client_add_player_request_pregame add_player_request;
+	struct network_player player;
+	message_header *message;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1328, client && (local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS));
+
+	player_ui_get_active_player_profile(local_player_index, &profile);
+
+	player.controller_index= (char)local_player_index;
+	player.machine_index= (char)client->machine_index;
+	ustrncpy(player.name, profile.player_name, 11);
+	player.name[11]= 0;
+	player.primary_color_index= profile.primary_color_index;
+	player.icon_index= NONE;
+	player.team_index= NONE;
+	player.player_list_index= NONE;
+
+	network_event("requesting a player addition (controller index #%d)", player.controller_index);
+
+	switch (client->state)
+	{
+		case _network_game_client_state_searching:
+		case _network_game_client_state_joining:
+			network_event("can't add players to a game until after a game is joined");
+			result= FALSE;
+			break;
+
+		case _network_game_client_state_pregame:
+			csmemcpy(&add_player_request, &player, sizeof(struct network_player));
+			message= create_network_game_message(_message_type_client_add_player_request_pregame, &add_player_request, sizeof(message_client_add_player_request_pregame));
+			if (message)
+			{
+				result= network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE);
+				if (!result)
+				{
+					network_event("network_game_client_write() failed while sending a message_client_add_player_request_pregame message");
+				}
+			}
+			else
+			{
+				network_event("failed to create a message_client_add_player_request_pregame message");
+			}
+			break;
+
+		case _network_game_client_state_ingame:
+			csmemcpy(&add_player_request, &player, sizeof(struct network_player));
+			message= create_network_game_message(_message_type_client_add_player_request_ingame, &add_player_request, sizeof(message_client_add_player_request_pregame));
+			if (message)
+			{
+				result= network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE);
+				if (!result)
+				{
+					network_event("network_game_client_write() failed while sending a message_client_add_player_request_ingame message");
+				}
+			}
+			else
+			{
+				network_event("failed to create a message_client_add_player_request_ingame message");
+			}
+			break;
+
+		case _network_game_client_state_postgame:
+			network_event("client tried to add a new player in post-game");
+			result= FALSE;
+			break;
+
+		default:
+			network_event("client is in an unknown state");
+			break;
+	}
+
+	return result;
+}
+
+boolean network_game_client_update_local_player_data(
+	network_game_client *client,
+	struct network_player *player)
+{
+	boolean result= FALSE;
+	message_client_player_settings_request settings_request;
+	message_header *message;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1415, client && player);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1416, player->machine_index==client->machine_index);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1417, network_player_is_valid(player));
+
+	csmemcpy(&settings_request, player, sizeof(struct network_player));
+
+	if (settings_request.player.team_index==NONE)
+	{
+		settings_request.player.team_index= 0;
+	}
+
+	message= create_network_game_message(_message_type_client_player_settings_request, &settings_request, sizeof(message_client_player_settings_request));
+	if (message)
+	{
+		if (network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+		{
+			result= TRUE;
+		}
+		else
+		{
+			network_event("network_game_client_update_local_player_data() failed while sending a message_client_player_settings_request message");
+		}
+	}
+
+	return result;
+}
+
+boolean network_game_client_request_start_time_change(
+	network_game_client *client,
+	short request_type)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1445, client);
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1446, (request_type>=0) && (request_type<NUMBER_OF_GAME_START_REQUESTS));
+
+	if (client->state == _network_game_client_state_pregame)
+	{
+		message_client_game_start_request message_packet;
+		message_header *message;
+
+		message_packet.request= request_type;
+		message= create_network_game_message(_message_type_client_game_start_request, &message_packet, sizeof(message_packet));
+		if (message != NULL)
+		{
+			if (!network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+			{
+				network_event("network_game_client_request_start_time_change() failed to send a message_client_game_start_request message");
+			}
+		}
+	}
+	else
+	{
+		network_event("failed to send a message_client_game_start_request because we are not in the pregame state");
+	}
+
+	return TRUE;
+}
+
+void network_game_client_countdown_timer_update(
+	network_game_client *client,
+	short seconds_to_start)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1475, client);
+
+	client->seconds_to_game_start= seconds_to_start;
+}
+
+boolean network_game_client_advertised_game_is_valid(
+	struct advertised_game_data *advertised_game)
+{
+	boolean result= TRUE;
+
+	if (!advertised_game->valid ||
+		(long)(system_milliseconds() - advertised_game->time_in_milliseconds_of_last_news)>ADVERTISED_GAME_TIMEOUT)
+	{
+		result= FALSE;
+	}
+
+	return result;
+}
+
+static void network_game_client_set_error(
+	network_game_client *client,
+	word error)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1634, client);
+
+	if (error >= NUMBER_OF_NETWORK_GAME_CLIENT_ERROR_CODES) error= _network_game_client_error_unknown;
+	if (client->error == _network_game_client_error_none) client->error= error;
+}
+
+static void network_game_client_update_precache_status(
+	network_game_client *client)
+{
+	long current_time = system_milliseconds();
+	long time_between_precache_updates = MILLISECONDS_PER_SECOND;
+	long time_to_send_next_precache_update = client->precache_poll_time + time_between_precache_updates;
+
+	if (current_time > time_to_send_next_precache_update)
+	{
+		boolean map_is_precached;
+		char *multiplayer_map_name = main_get_multiplayer_map_name();
+
+		client->precache_poll_time = current_time;
+
+		map_is_precached = cache_files_give_time_to_precache(multiplayer_map_name);
+
+		if (map_is_precached)
+		{
+			message_client_map_is_precached_pregame precache_status= {0};
+			message_header *message;
+
+			csstrncpy(precache_status.map_name, multiplayer_map_name, sizeof(precache_status.map_name));
+
+			message= create_network_game_message(_message_type_client_map_is_precached_pregame, &precache_status, sizeof(precache_status));
+
+			if (message != NULL)
+			{
+				if (!network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+				{
+					network_event("network_game_client_write() failed while sending a message_client_graceful_game_exit_pregame message");
+				}
+			}
+		}
+	}
+}
+
+static boolean network_game_client_process_incoming_messages(
+	network_game_client *client)
+{
+	boolean result= TRUE;
+	byte buffer[MAXIMUM_INCOMING_MESSAGE_SIZE];
+	transport_address source_address;
+	long buffer_size= MAXIMUM_INCOMING_MESSAGE_SIZE;
+
+	do
+	{
+		if (!network_connection_read(client->connection, (message_header *)buffer, &buffer_size, &source_address))
+		{
+			break;
+		}
+
+		result= network_game_client_handle_message(client, (message_header *)buffer, (short)buffer_size, &source_address);
+		if (!result)
+		{
+			network_event("network_game_client_handle_message() failed in network_game_client_process_incoming_messages()");
+		}
+
+		buffer_size= MAXIMUM_INCOMING_MESSAGE_SIZE;
+	}
+	while (result);
+
+	return result;
+}
+
+boolean network_game_client_leave_game(
+	network_game_client *client)
+{
+	boolean result= TRUE;
+	long message_struct;
+	message_header *message;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 377, client && client->connection);
+
+	network_event("leaving network game");
+
+	switch (client->state)
+	{
+		case _network_game_client_state_searching:
+			match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 384, !network_connection_connected(client->connection));
+			break;
+
+		case _network_game_client_state_joining:
+			if (client->connect_process)
+			{
+				cancel_connect_process(client->connect_process);
+				client->connect_process= NULL;
+			}
+
+			if (network_connection_connected(client->connection))
+			{
+				result= network_connection_disconnect(client->connection);
+				if (!result)
+				{
+					network_event("network_connection_disconnect() failed _network_game_client_state_joining");
+				}
+			}
+			break;
+
+		case _network_game_client_state_pregame:
+			message_struct= 0;
+			if (network_connection_connected(client->connection))
+			{
+				message= create_network_game_message(_message_type_client_graceful_game_exit_pregame, &message_struct, sizeof(long));
+				if (message)
+				{
+					if (!network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+					{
+						network_event("network_game_client_write() failed while sending a message_client_graceful_game_exit_pregame message");
+					}
+				}
+				else
+				{
+					network_event("failed to create a message_client_graceful_game_exit_pregame message");
+				}
+
+				result= network_connection_disconnect(client->connection);
+				if (!result)
+				{
+					network_event("network_connection_disconnect() failed _network_game_client_state_pregame");
+				}
+			}
+			break;
+
+		case _network_game_client_state_ingame:
+			if (network_connection_connected(client->connection))
+			{
+				result= network_connection_disconnect(client->connection);
+				if (!result)
+				{
+					network_event("network_connection_disconnect() failed _network_game_client_state_ingame");
+				}
+			}
+			break;
+
+		case _network_game_client_state_postgame:
+			message_struct= 0;
+			if (network_connection_connected(client->connection))
+			{
+				message= create_network_game_message(_message_type_client_graceful_game_exit_postgame, &message_struct, sizeof(long));
+				if (message && !network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE))
+				{
+					network_event("network_game_client_write() failed while sending a message_client_graceful_game_exit_postgame message");
+				}
+
+				result= network_connection_disconnect(client->connection);
+				if (!result)
+				{
+					network_event("network_connection_disconnect() failed _network_game_client_state_postgame");
+				}
+			}
+			break;
+
+		default:
+			network_event("client is in an unknown state");
+			break;
+	}
+
+	network_game_invalidate(&client->game);
+	client->state= _network_game_client_state_searching;
+
+	return result;
+}
+
+boolean network_game_client_request_remove_player(
+	network_game_client *client,
+	struct network_player *player)
+{
+	boolean result= TRUE;
+	struct network_player player_record;
+	message_header *message;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 520, client && network_player_is_valid(player));
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 521, client->game.machines[client->machine_index].machine_index==player->machine_index);
+
+	network_event("requesting a player removal (controller index #%d)", player->controller_index);
+
+	switch (client->state)
+	{
+		case _network_game_client_state_searching:
+		case _network_game_client_state_joining:
+			network_event("can't remove players from a game until after a game is joined");
+			result= FALSE;
+			break;
+
+		case _network_game_client_state_pregame:
+			csmemcpy(&player_record, player, sizeof(struct network_player));
+			message= create_network_game_message(_message_type_client_remove_player_request_pregame, &player_record, sizeof(struct network_player));
+			if (!message)
+			{
+				network_event("failed to create a message_client_remove_player_request_pregame mesage");
+				result= FALSE;
+				break;
+			}
+			result= network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE);
+			break;
+
+		case _network_game_client_state_ingame:
+			csmemcpy(&player_record, player, sizeof(struct network_player));
+			message= create_network_game_message(_message_type_client_remove_player_request_ingame, &player_record, sizeof(struct network_player));
+			if (message)
+			{
+				result= network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE);
+			}
+			else
+			{
+				network_event("failed to create a message_client_remove_player_request_ingame message");
+				result= FALSE;
+			}
+			break;
+
+		case _network_game_client_state_postgame:
+			csmemcpy(&player_record, player, sizeof(struct network_player));
+			message= create_network_game_message(_message_type_client_remove_player_request_postgame, &player_record, sizeof(struct network_player));
+			if (message)
+			{
+				result= network_game_client_write(client->connection, message, GET_MESSAGE_SIZE(*message), NULL, TRUE);
+				if (!result)
+				{
+					network_event("network_game_client_write() failed while sending a message_client_remove_player_request_postgame message");
+					result= FALSE;
+				}
+			}
+			else
+			{
+				network_event("failed to create a message_client_remove_player_request_postgame message");
+				result= FALSE;
+			}
+			break;
+
+		default:
+			network_event("client is in an unknown state");
+			break;
+	}
+
+	return result;
+}
+
+boolean network_game_client_remove_player(
+	network_game_client *client,
+	struct network_player *player,
+	long time_of_death)
+{
+	boolean success= FALSE;
+	long game_player_index= NONE;
+	int i;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 627, client && player);
+
+	for (i= 0; i < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; i++)
+	{
+		if (network_player_is_valid(&client->game.players[i]) &&
+			(client->game.players[i].machine_index == player->machine_index) &&
+			(client->game.players[i].controller_index == player->controller_index))
+		{
+			game_player_index= unstrip_player_index(client->game.players[i].player_list_index);
+			success= network_game_remove_player(&client->game, player);
+			break;
+		}
+	}
+	if (success)
+	{
+		if (client->game.local_data.game_objects_loaded)
+		{
+			if (game_player_index && (game_player_index != NONE))
+			{
+				struct player_datum *player= player_get(game_player_index);
+
+				if (NONE != time_of_death)
+				{
+					error(_error_silent, "%x quit of of game at tick %d (now %d)", game_player_index, time_of_death, game_time_get());
+					player->quit_out_of_game_time = time_of_death;
+				}
+
+				for (i= 0; i < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; i++)
+				{
+					if (network_player_is_valid(&client->game.players[i]) &&
+						(client->game.players[i].machine_index == client->machine_index))
+					{
+						break;
+					}
+				}
+				if (i == NETWORK_GAME_MAXIMUM_PLAYER_COUNT)
+				{
+					network_game_client_all_local_players_have_quit();
+					network_event("no local players remain in the game, exiting the game now");
+				}
+			}
+			else
+			{
+				error(_error_silent, "network game tried to delete a player with a phony player index (#0x%08lX)", game_player_index);
+				success= FALSE;
+			}
+		}
+	}
+
+	return success;
+}
+
+void network_game_client_new_advertised_game(
+	network_game_client *client,
+	message_server_game_advertise *message_packet)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 764, client && message_packet);
+
+	add_advertised_game(client->advertised_games, message_packet);
+}
+
+void network_game_client_game_shutdown(
+	network_game_client *client)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1020, client);
+
+	network_game_client_set_error(client, _network_game_client_error_host_closed_down);
+
+	network_event("the game host is shutting down");
+	network_game_client_all_local_players_have_quit();
+}
+
+void network_game_client_reset(
+	network_game_client *client,
+	boolean teardown_connection)
+{
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1262, client);
+
+	network_game_invalidate(&client->game);
+	client->machine_index= NONE;
+	client->state= _network_game_client_state_searching;
+	
+	if (teardown_connection && client->connection && network_connection_connected(client->connection))
+	{
+		client->unknown_C90= 1;
+		if (network_connection_disconnect(client->connection))
+		{
+			client->flags&= ~FLAG(_network_game_client_connected_to_server_bit);
+		}
+		else
+		{
+			network_game_client_set_error(client, _network_game_client_error_unknown);
+			network_event("failed to reinitialize network game client");
+		}
+
+	}
+	
+	client->error= _network_game_client_error_none;
+	client->flags&= ~FLAG(_network_game_client_sent_join_request_to_server_bit);
+	client->last_broadcast_time= 0;
+	client->next_update_number= 0;
+	client->last_update_time= 0;
+	client->connection_going_stale= FALSE;
+	client->seconds_to_game_start= NONE;
+	client->out_of_sync= FALSE;
+
+	return;
+}
+
+static boolean network_game_client_idle_postgame(
+	network_game_client *client)
+{
+	boolean success;
+
+	success = check_networking_and_generate_error();
+
+	if (!success)
+	{
+		goto exit;
+	}
+
+	success= network_connection_idle(client->connection, _connection_timeout, NULL);
+
+	if (!success)
+	{
+		network_event("network_connection_idle() failed in network_game_client_idle_postgame()");
+		goto exit;
+	}
+
+	success= network_game_client_process_incoming_messages(client);
+
+	if (!success)
+	{
+		network_event("network_game_client_process_incoming_messages() failed in network_game_client_idle_postgame()");
+		goto exit;
+	}
+
+exit:
+	if ((!success) && (!network_connection_active(client->connection)))
+	{
+		display_error_when_main_menu_loaded(_error_network_server_shut_down);
+		success= FALSE;
+	}
+
+	return success;
+}
+
+network_game_client *network_game_client_create(
+	void)
+{
+	network_game_client *client = &network_game_client_dont_use_directly;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 148, !network_game_client_dont_use_directly_in_use);
+	network_game_client_dont_use_directly_in_use = TRUE;
+
+	csmemset(client, 0, sizeof(*client));
+
+	if (client != NULL)
+	{
+		if ((client->connection= network_connection_new(FLAG(_connection_create_clientside_client_bit),
+			NETWORK_CLIENT_PORT)) != NULL)
+		{
+			network_game_client_reset(client, FALSE);
+		}
+		else
+		{
+			network_event("network_game_create_client() failed; could not create network connection");
+			network_game_client_dispose(client);
+			client= NULL;
+		}
+	}
+
+	return client;
+}
+
+boolean network_game_client_idle(
+	network_game_client *client)
+{
+	boolean result= FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 198, client);
+
+	switch (client->state)
+	{
+		case _network_game_client_state_searching:
+			result= network_game_client_idle_searching(client);
+			if (!result)
+			{
+				network_event("network_game_client_idle_searching() failed");
+			}
+			break;
+
+		case _network_game_client_state_joining:
+			result= network_game_client_idle_joining(client);
+			if (!result)
+			{
+				network_event("network_game_client_idle_joining() failed");
+			}
+			break;
+
+		case _network_game_client_state_pregame:
+			result= network_game_client_idle_pregame(client);
+			if (!result)
+			{
+				network_event("network_game_client_idle_pregame() failed");
+			}
+			break;
+
+		case _network_game_client_state_ingame:
+			result= network_game_client_idle_ingame(client);
+			if (!result)
+			{
+				network_event("network_game_client_idle_ingame() failed");
+			}
+			break;
+
+		case _network_game_client_state_postgame:
+			result= network_game_client_idle_postgame(client);
+			if (!result)
+			{
+				network_event("network_game_client_idle_postgame() failed");
+			}
+			break;
+
+		default:
+			match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 238, !"unknown client state");
+			break;
+	}
+
+	return result;
+}
+
+void network_game_client_rejected_by_game(
+	network_game_client *client,
+	transport_address *source_address,
+	word reason)
+{
+	char *reason_string= "<unknown>";
+
+	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 858, client && source_address);
+
+	client->state= _network_game_client_state_searching;
+
+	switch (reason)
+	{
+		case _rejection_code_version_too_old: reason_string= "_rejection_code_version_too_old"; break;
+		case _rejection_code_version_too_new: reason_string= "_rejection_code_version_too_new"; break;
+		case _rejection_code_bad_join_token: reason_string= "_rejection_code_bad_join_token"; break;
+		case _rejection_code_bad_password: reason_string= "_rejection_code_bad_password"; break;
+		case _rejection_code_game_is_full: reason_string= "_rejection_code_game_is_full"; break;
+		case _rejection_code_game_is_closed: reason_string= "_rejection_code_game_is_closed"; break;
+		case _rejection_code_blacklisted_machine: reason_string= "_rejection_code_blacklisted_machine"; break;
+	}
+
+	network_event("unable to join game: reason= #%d/%s", reason, reason_string);
+	network_game_client_reset(client, TRUE);
+}
