@@ -5,11 +5,11 @@ KEY_AGREEMENT.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "key_agreement.h"
 
+#include "public_key_crypt.h"
+#include "memory/data_packets.h"
 #include "message_header.h"
 #include "random_numbers.h"
-#include "memory/data_packet_groups.h"
 #include "bungie_net/network/transport.h"
 
 /* ---------- constants */

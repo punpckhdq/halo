@@ -8,7 +8,6 @@ PUBLIC_KEY_CRYPT.C
 #include "public_key_crypt.h"
 
 #include "64bit_math.h"
-#include "prime_numbers.h"
 #include "random_numbers.h"
 
 /* ---------- constants */

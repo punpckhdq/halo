@@ -10,8 +10,8 @@ into a message_header the connection layer can send, decode_network_game_message
 #include "cseries.h"
 #include "errors.h"
 #include "network_messages.h"
+#include "memory/data_packets.h"
 #include "network_game_manager.h"
-#include "memory/data_packet_groups.h"
 #include "message_header.h"
 #include "players.h"
 

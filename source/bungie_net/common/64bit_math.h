@@ -33,6 +33,12 @@ void subtract64(struct qword_value const *a, struct qword_value const *b, struct
 void multiply64(struct qword_value const *a, struct qword_value const *b, struct qword_value *result);
 void divide64(struct qword_value const *numerator, struct qword_value const *denominator, struct qword_value *quotient, struct qword_value *remainder);
 
+/* ---------- prototypes/PRIME_NUMBERS.C */
+
+unsigned long randomprime(unsigned long max);
+
+void probable_prime64(struct qword_value *result);
+
 /* ---------- globals */
 
 /* ---------- public code */

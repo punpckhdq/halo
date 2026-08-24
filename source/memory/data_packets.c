@@ -5,7 +5,6 @@ DATA_PACKETS.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "data_packet_groups.h"
 #include "data_packets.h"
 
 #include "byte_swapping.h"

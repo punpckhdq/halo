@@ -5,7 +5,6 @@ PRIME_NUMBERS.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "prime_numbers.h"
 
 #include "64bit_math.h"
 #include "random_numbers.h"

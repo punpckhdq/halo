@@ -8,6 +8,10 @@ header included in hcex build.
 #define __PUBLIC_KEY_CRYPT_H
 #pragma once
 
+/* ---------- headers */
+
+#include "bungie_net/network/transport.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
@@ -25,6 +29,13 @@ struct public_key
 void generate_key_parameters(struct public_key *p, struct public_key *x, struct public_key *g);
 void generate_public_key(struct public_key const *p, struct public_key const *x, struct public_key const *g, struct public_key *public_key);
 void generate_private_key(struct public_key const *public_key, struct public_key const *p, struct public_key const *x, struct public_key *private_key);
+
+/* ---------- prototypes/KEY_AGREEMENT.C */
+
+long is_message_encryption_key_message(word *msgptr, word message_size, byte *packet_type);
+boolean initiate_key_exchange(transport_endpoint_ref endpoint, struct public_key *public_key, struct public_key *p, struct public_key *x);
+boolean complete_key_exchange(transport_endpoint_ref endpoint, word *msgptr, struct public_key *prime, struct public_key *secret, struct public_key *private_key);
+void initialize_key_agreement_packets(void);
 
 /* ---------- globals */
 
