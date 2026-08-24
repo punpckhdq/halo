@@ -141,6 +141,8 @@ void dispose_thread(
 	CloseHandle(thread_reference->handle);
 	thread_reference->handle= NULL;
 	thread_reference->in_use= FALSE;
+
+	return;
 }
 
 boolean create_mutex(
@@ -194,6 +196,8 @@ void release_mutex(
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\thread_win32.c", 230, mutex_reference);
 
 	ReleaseMutex(mutex_reference->handle);
+
+	return;
 }
 
 void dispose_mutex(
@@ -206,4 +210,6 @@ void dispose_mutex(
 	mutex_reference->name[0]= 0;
 	mutex_reference->handle= NULL;
 	mutex_reference->in_use= FALSE;
+
+	return;
 }

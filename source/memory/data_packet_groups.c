@@ -58,6 +58,8 @@ void data_packet_group_initialize(
 			data_packet_verify(packet->definition);
 		}
 	}
+
+	return;
 }
 
 char const *data_packet_groups_get_error(

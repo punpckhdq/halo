@@ -525,12 +525,16 @@ void network_game_client_dispose(
 	}
 
 	network_event("network client disposed");
+
+	return;
 }
 
 void network_game_client_keep_alive(
 	struct network_game_client *client)
 {
 	network_connection_keep_alive(client->connection);
+
+	return;
 }
 
 word network_game_client_get_state(
@@ -708,6 +712,8 @@ void network_game_client_ponged(
 	{
 		network_event("received a pong from a system we aren't interested in");
 	}
+
+	return;
 }
 
 void network_game_client_accepted_into_game(
@@ -750,6 +756,8 @@ void network_game_client_accepted_into_game(
 	{
 		network_event("received a message_server_machine_accepted message with a bad machine_index");
 	}
+
+	return;
 }
 
 boolean network_game_client_game_settings_updated(
@@ -997,6 +1005,8 @@ void network_game_client_switch_to_postgame(
 	client->state= _network_game_client_state_postgame;
 
 	network_event("switching to postgame");
+
+	return;
 }
 
 boolean network_game_client_switch_to_pregame(
@@ -1039,6 +1049,8 @@ void network_game_client_get_remote_server_address(
 	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1212, client);
 
 	network_connection_get_address(client->connection, remote_address, NULL);
+
+	return;
 }
 
 network_game_data *network_game_client_get_game(
@@ -1225,6 +1237,8 @@ void network_game_client_countdown_timer_update(
 	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 1475, client);
 
 	client->seconds_to_game_start= seconds_to_start;
+
+	return;
 }
 
 boolean network_game_client_advertised_game_is_valid(
@@ -1249,6 +1263,8 @@ static void network_game_client_set_error(
 
 	if (error >= NUMBER_OF_NETWORK_GAME_CLIENT_ERROR_CODES) error= _network_game_client_error_unknown;
 	if (client->error == _network_game_client_error_none) client->error= error;
+
+	return;
 }
 
 static void network_game_client_update_precache_status(
@@ -1285,6 +1301,8 @@ static void network_game_client_update_precache_status(
 			}
 		}
 	}
+
+	return;
 }
 
 static boolean network_game_client_process_incoming_messages(
@@ -1556,6 +1574,8 @@ void network_game_client_new_advertised_game(
 	match_assert("c:\\halo\\SOURCE\\networking\\network_client_manager.c", 764, client && message_packet);
 
 	add_advertised_game(client->advertised_games, message_packet);
+
+	return;
 }
 
 void network_game_client_game_shutdown(
@@ -1567,6 +1587,8 @@ void network_game_client_game_shutdown(
 
 	network_event("the game host is shutting down");
 	network_game_client_all_local_players_have_quit();
+
+	return;
 }
 
 void network_game_client_reset(
@@ -1609,9 +1631,7 @@ void network_game_client_reset(
 static boolean network_game_client_idle_postgame(
 	network_game_client *client)
 {
-	boolean success;
-
-	success = check_networking_and_generate_error();
+	boolean success = check_networking_and_generate_error();
 
 	if (!success)
 	{
@@ -1753,4 +1773,6 @@ void network_game_client_rejected_by_game(
 
 	network_event("unable to join game: reason= #%d/%s", reason, reason_string);
 	network_game_client_reset(client, TRUE);
+
+	return;
 }

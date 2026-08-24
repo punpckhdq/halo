@@ -41,6 +41,8 @@ extern boolean server_transport_globals;
 void net_startup_debug(
 	void)
 {
+
+	return;
 }
 
 void transport_push_key(
@@ -59,6 +61,8 @@ void transport_push_key(
 	}
 
 	global_key_depth++;
+
+	return;
 }
 
 void transport_pop_key(
@@ -70,6 +74,8 @@ void transport_pop_key(
 	{
 		XNetUnregisterKey(&global_key_id);
 	}
+
+	return;
 }
 
 void transport_get_nonce(
@@ -80,6 +86,8 @@ void transport_get_nonce(
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_set_winsock.c", 152, bytes == sizeof(global_nonce));
 
 	csmemcpy(dst, global_nonce, sizeof(global_nonce));
+
+	return;
 }
 
 boolean transport_nonce_is_equal(
@@ -110,6 +118,8 @@ void transport_client_stop(
 		transport_pop_key();
 		global_client_active= FALSE;
 	}
+
+	return;
 }
 
 XNADDR transport_get_xnaddr(
@@ -442,6 +452,8 @@ void rewind_endpoint_set(
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_set_winsock.c", 622, transport_initialized);
 
 	set->next_index= 0;
+
+	return;
 }
 
 transport_endpoint_ref get_next_endpoint_from_set(
@@ -517,6 +529,8 @@ void transport_client_start(
 	address->address_type= 0;
 
 	global_client_active= TRUE;
+
+	return;
 }
 
 /* ---------- private code */

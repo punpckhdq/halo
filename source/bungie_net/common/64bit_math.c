@@ -35,6 +35,8 @@ void add64(
 	sum= carry+a->words[3]+b->words[3];
 	result->words[3]= (word)sum;
 	carry= sum>0xFFFF;
+
+	return;
 }
 
 static void negate64(
@@ -52,6 +54,8 @@ static void negate64(
 	result->words[2]= -(word)(a->words[2]+borrow);
 	if (a->words[2]) borrow= 1;
 	result->words[3]= -(word)(a->words[3]+borrow);
+
+	return;
 }
 
 void subtract64(
@@ -65,6 +69,8 @@ void subtract64(
 
 	negate64(b, &negated_b);
 	add64(a, &negated_b, result);
+
+	return;
 }
 
 void multiply64(
@@ -92,6 +98,8 @@ void multiply64(
 	result->words[1]= (word)partial[1];
 	result->words[2]= (word)partial[2];
 	result->words[3]= (word)partial[3];
+
+	return;
 }
 
 void divide64(
@@ -135,4 +143,6 @@ void divide64(
 
 	if (quotient) *quotient= value[0];
 	if (remainder) *remainder= value[1];
+
+	return;
 }

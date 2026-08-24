@@ -93,6 +93,8 @@ void telnet_console_initialize(void)
 	{
 		error(_error_silent, "create_transport_endpoint() failed on telnet console endpoint");
 	}
+
+	return;
 }
 
 void telnet_console_dispose(void)
@@ -111,6 +113,8 @@ void telnet_console_dispose(void)
 	}
 
 	csmemset(&telnet_console_globals, 0, sizeof(telnet_console_globals));
+
+	return;
 }
 
 void telnet_console_print(
@@ -145,6 +149,8 @@ void telnet_console_print(
 			}
 		}
 	}
+
+	return;
 }
 
 void telnet_console_process(void)
@@ -215,6 +221,8 @@ void telnet_console_process(void)
 			}
 		}
 	}
+
+	return;
 }
 
 /* ---------- private code */

@@ -1498,9 +1498,7 @@ boolean server_has_a_player_on_each_machine(network_game_server *server)
 	
 	for(machine_itr = 0; machine_itr < MAXIMUM_NETWORK_MACHINE_COUNT; machine_itr++)
 	{
-		boolean machine_is_valid;
-
-		machine_is_valid = (server->client_machines[machine_itr].machine_index >= 0) && (server->client_machines[machine_itr].machine_index < MAXIMUM_NETWORK_MACHINE_COUNT);
+		boolean machine_is_valid = (server->client_machines[machine_itr].machine_index >= 0) && (server->client_machines[machine_itr].machine_index < MAXIMUM_NETWORK_MACHINE_COUNT);
 
 		if (machine_is_valid)
 		{
@@ -1537,9 +1535,7 @@ boolean server_has_enough_machines(network_game_server *server)
 
 	for(machine_itr = 0; machine_itr < MAXIMUM_NETWORK_MACHINE_COUNT; machine_itr++)
 	{
-		boolean machine_is_valid;
-
-		machine_is_valid = (server->client_machines[machine_itr].machine_index >= 0) && (server->client_machines[machine_itr].machine_index < MAXIMUM_NETWORK_MACHINE_COUNT);
+		boolean machine_is_valid = (server->client_machines[machine_itr].machine_index >= 0) && (server->client_machines[machine_itr].machine_index < MAXIMUM_NETWORK_MACHINE_COUNT);
 
 		if (machine_is_valid)
 		{
@@ -1554,9 +1550,7 @@ boolean server_has_enough_machines(network_game_server *server)
 
 boolean server_ok_to_countdown(network_game_server *server)
 {
-	boolean ok_to_countdown;
-
-	ok_to_countdown = TRUE;
+	boolean ok_to_countdown = TRUE;
 	ok_to_countdown = ok_to_countdown && server_has_enough_machines(server);
 	ok_to_countdown = ok_to_countdown && server_has_a_player_on_each_machine(server);
 	ok_to_countdown = ok_to_countdown && (!server_needs_more_teams(server));

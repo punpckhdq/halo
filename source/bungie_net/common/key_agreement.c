@@ -293,4 +293,6 @@ void initialize_key_agreement_packets(
 	void)
 {
 	data_packet_group_initialize(&key_agreement_packets_group);
+
+	return;
 }

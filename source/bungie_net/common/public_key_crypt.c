@@ -95,9 +95,7 @@ void generate_key_parameters(
 	struct public_key *x,
 	struct public_key *g)
 {
-	long i;
-
-	i= 0;
+	long i= 0;
 	while (i<KEY_DWORD_COUNT)
 	{
 		do
@@ -113,6 +111,8 @@ void generate_key_parameters(
 		match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\public_key_crypt.c", 163, g->dwords[i] < (p->dwords[i] - 1));
 		i++;
 	}
+
+	return;
 }
 
 void generate_public_key(
@@ -131,6 +131,8 @@ void generate_public_key(
 	error(2, "p= %8lX%8lX\nx= %8lX%8lX\ng= %8lX%8lX\npublic key= %8lX%8lX\n\n",
 		p->dwords[0], p->dwords[1], x->dwords[0], x->dwords[1], g->dwords[0], g->dwords[1],
 		public_key->dwords[0], public_key->dwords[1]);
+
+	return;
 }
 
 void generate_private_key(
@@ -154,4 +156,6 @@ void generate_private_key(
 	error(2, "public_key= %8lX%8lX\np= %8lX%8lX\nx= %8lX%8lX\nprivate key= %8lX%8lX\n\n",
 		public_key->dwords[0], public_key->dwords[1], p->dwords[0], p->dwords[1], x->dwords[0], x->dwords[1],
 		private_key->dwords[0], private_key->dwords[1]);
+
+	return;
 }

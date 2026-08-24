@@ -54,6 +54,8 @@ void delete_transport_address(
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 48, address);
 
 	match_free("c:\\halo\\SOURCE\\bungie_net\\network\\transport_address.c", 50, address);
+
+	return;
 }
 
 long transport_address_equivalent(

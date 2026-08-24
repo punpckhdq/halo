@@ -44,6 +44,8 @@ void data_packet_verify(
 
 		packet_definition->initialized= TRUE;
 	}
+
+	return;
 }
 
 boolean data_packet_encode(
@@ -225,6 +227,8 @@ static void _data_packet_verify(
 	{
 		*packet_size= size;
 	}
+
+	return;
 }
 
 static void _data_packet_encode(
@@ -371,6 +375,8 @@ static void _data_packet_encode(
 	{
 		*packet_size= (short)(data - (byte const *)source);
 	}
+
+	return;
 }
 
 static void _data_packet_decode(
@@ -526,4 +532,6 @@ static void _data_packet_decode(
 	{
 		*packet_size= (short)(data - (byte *)destination);
 	}
+
+	return;
 }

@@ -52,6 +52,8 @@ void build_message_header(
 	MATCH_SET_MESSAGE_SIZE("c:\\halo\\SOURCE\\bungie_net\\common\\message_header.c", 69, msg, length);
 	MATCH_SET_MESSAGE_TYPE("c:\\halo\\SOURCE\\bungie_net\\common\\message_header.c", 70, msg, type);
 	MATCH_SET_MESSAGE_FLAGS("c:\\halo\\SOURCE\\bungie_net\\common\\message_header.c", 71, msg, flags);
+
+	return;
 }
 
 void byte_swap_message_header(
@@ -74,4 +76,6 @@ void byte_swap_message_header(
 	{
 		match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\message_header.c", 94, !"bad value for byte order");
 	}
+
+	return;
 }

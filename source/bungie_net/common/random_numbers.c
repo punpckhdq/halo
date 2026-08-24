@@ -50,4 +50,6 @@ void randomrange64(
 
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\random_numbers.c", 58, result->qword >= min->qword);
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\random_numbers.c", 59, result->qword <= max->qword);
+
+	return;
 }

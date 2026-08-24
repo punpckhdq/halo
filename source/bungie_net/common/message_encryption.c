@@ -52,6 +52,8 @@ void message_encrypt(
 		flags|= FLAG(_message_flag_encrypted_bit);
 		MATCH_SET_MESSAGE_FLAGS("c:\\halo\\SOURCE\\bungie_net\\common\\message_encryption.c", 76, msgptr, flags);
 	}
+
+	return;
 }
 
 void message_decrypt(
@@ -88,6 +90,8 @@ void message_decrypt(
 		flags&= ~FLAG(_message_flag_encrypted_bit);
 		MATCH_SET_MESSAGE_FLAGS("c:\\halo\\SOURCE\\bungie_net\\common\\message_encryption.c", 131, msgptr, flags);
 	}
+
+	return;
 }
 
 void reversible_crypt(
@@ -111,6 +115,8 @@ void reversible_crypt(
 			key_index+= direction;
 		}
 	}
+
+	return;
 }
 
 void tea_encipher(
@@ -129,6 +135,8 @@ void tea_encipher(
 
 	output[0]= y;
 	output[1]= z;
+
+	return;
 }
 
 void tea_decipher(
@@ -147,4 +155,6 @@ void tea_decipher(
 
 	output[0]= y;
 	output[1]= z;
+
+	return;
 }

@@ -72,9 +72,7 @@ static struct transport_endpoint_globals transport_endpoint_globals;
 static boolean add_connect_thread(
 	struct thread_reference *thread)
 {
-	long index;
-
-	index= 0;
+	long index= 0;
 	while (transport_endpoint_globals.threads[index].thread!=NULL && index<MAXIMUM_CONNECT_THREADS)
 	{
 		index++;
@@ -109,6 +107,8 @@ static void mark_connection_thread_as_terminated(
 			return;
 		}
 	}
+
+	return;
 }
 
 static void connection_thread_list_maintenance(
@@ -125,6 +125,8 @@ static void connection_thread_list_maintenance(
 			transport_endpoint_globals.threads[index].terminated= FALSE;
 		}
 	}
+
+	return;
 }
 
 /* ---------- public code */
@@ -163,6 +165,8 @@ void delete_transport_endpoint(
 	match_free("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_winsock.c", 232, ep);
 
 	connection_thread_list_maintenance();
+
+	return;
 }
 
 short get_endpoint_address(
@@ -449,6 +453,8 @@ void disconnect_endpoint(
 	}
 
 	ep->flags&= (byte)~FLAG(_endpoint_connected_bit);
+
+	return;
 }
 
 /* ---------- private code */
@@ -581,6 +587,8 @@ void cancel_connect_process(
 	{
 		match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_winsock.c", 677, !"unable to get mutex in cancel_connect_process()!");
 	}
+
+	return;
 }
 
 short listen_endpoint(
