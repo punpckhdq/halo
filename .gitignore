@@ -12,6 +12,8 @@ build/
 projects/
 .ninja_*
 build.ninja
+build.log
+_CL_*
 *.vcxproj*
 *.sln*
 
@@ -34,5 +36,5 @@ compile_commands.json
 *.nam
 *.til
 *.bndb
-xbox/
+xbox
 !source/**/xbox/

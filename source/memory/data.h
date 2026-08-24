@@ -18,6 +18,15 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct data_iterator
+{
+	struct data_array *data;
+	short absolute_index;
+	short pad;
+	long index;
+	unsigned long signature;
+};
+
 struct data_array
 {
 	char name[TAG_STRING_LENGTH+1];

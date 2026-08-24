@@ -12,6 +12,11 @@ header included in hcex build.
 
 enum
 {
+	UNICODE_STRING_LIST_TAG = 'ustr',
+};
+
+enum
+{
 	_text_style_plain = NONE,
 	_text_style_bold = 0,
 	_text_style_italic,
@@ -24,7 +29,9 @@ enum
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/TEXT_GROUP.C */
+
+wchar_t *unicode_string_list_get_string(long tag_index, short string_index);
 
 /* ---------- globals */
 

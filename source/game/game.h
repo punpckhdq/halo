@@ -55,6 +55,17 @@ enum
 
 /* ---------- structures */
 
+// game_options_new() fills this in with the defaults; game_load() copies it whole into
+// game_globals and hands the map name to scenario_load()
+struct game_options
+{
+	long unknown_00; // +0x00, zeroed at creation and never read
+	short unknown_04; // +0x04, zeroed at creation and never read
+	short difficulty_level; // +0x06, one of the _game_difficulty_level_* values
+	unsigned long random_seed; // +0x08, seeds the global generator for the new map
+	char map_name[256]; // +0x0c
+}; // 0x10c
+
 struct slayer_statistics
 {
 	short ignored;
@@ -170,6 +181,7 @@ void game_time_update(real time_delta_sec);
 /* ---------- prototypes/MAIN.C */
 
 short game_connection(void);
+void game_connection_set(short connection);
 
 /* ---------- globals */
 

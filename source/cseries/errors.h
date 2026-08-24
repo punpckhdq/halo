@@ -40,7 +40,7 @@ struct error_global_data
 
 void errors_initialize(void);
 void errors_dispose(void);
-void error(long priority, const char *format, ...);
+void error(short priority, const char *format, ...);
 
 void write_to_error_file(char *string, boolean date);
 

@@ -73,12 +73,20 @@ struct player_datum
 	long aim_assist_timestamp;
 	struct network_player network_player_data;
 	short powerup_durations[NUMBER_OF_PLAYER_POWERUPS];
-	struct game_statistics statistics;
-	long telefrag_timeout;
-	long quit_out_of_game_time;
-	boolean is_blocking_teleporter;
-	boolean quit_out_of_game;
-	struct player_action action_input;
+	real speed_multiplier; // +0x6c, 1.0 at creation; slayer handicap
+	long source_teleporter_netgame_index; // +0x70, NONE at creation
+	long state_message_index; // +0x74, NONE at creation
+	long state_message_player_index; // +0x78, NONE at creation
+	long state_message_target_player; // +0x7c, NONE at creation
+	long state_message_target_time; // +0x80
+	long last_death_time; // +0x84, game_time_get() in game_engine_player_killed
+	long target_player_index; // +0x88, slayer kill-in-order target ("next_target")
+	struct game_statistics statistics; // +0x8c
+	long telefrag_timeout; // +0xc8
+	long quit_out_of_game_time; // +0xcc, NONE at creation
+	boolean is_blocking_teleporter; // +0xd0
+	boolean quit_out_of_game; // +0xd1
+	byte pad1[2];
 };
 
 /* ---------- prototypes/PLAYER_CONTROL.C */

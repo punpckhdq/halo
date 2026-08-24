@@ -102,8 +102,8 @@ enum
 	#define MATCH_LINE(line) line
 #endif
 
-#define match_halt(file, line) do { display_assert(NULL, MATCH_FILE(file), MATCH_LINE(line), TRUE); halt_and_catch_fire(); } while (FALSE);
-#define match_vhalt(file, line, string) do { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), TRUE); halt_and_catch_fire(); } while (FALSE);
+#define match_halt(file, line) do { display_assert(NULL, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); } while (FALSE);
+#define match_vhalt(file, line, string) do { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); } while (FALSE);
 #define match_assert(file, line, expr) if (!(expr)) { display_assert(#expr, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_vassert(file, line, expr, string) if (!(expr)) { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_warn(file, line, expr) if (!(expr)) { display_assert(#expr, MATCH_FILE(file), MATCH_LINE(line), FALSE); }
