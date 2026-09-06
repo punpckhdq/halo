@@ -509,7 +509,7 @@
 				{ "name": "source/physics/collision_models.c", "index": 137, "status": "Matching" },
 				{ "name": "source/physics/collision_model_definitions.c", "index": 138, "status": "Matching" },
 				{ "name": "source/physics/collision_features.c", "index": 139, "status": "Matching" },
-				{ "name": "source/physics/collision_debug.c", "index": 140, "status": "NonMatching" },
+				{ "name": "source/physics/collision_debug.c", "index": 140, "status": "Matching" },
 				{ "name": "source/physics/collision_bsp_definitions.c", "index": 141, "status": "NonMatching" },
 				{ "name": "source/physics/collision_bsp.c", "index": 142, "status": "NonMatching" },
 				{ "name": "source/physics/bsp3d.c", "index": 143, "status": "Matching" },

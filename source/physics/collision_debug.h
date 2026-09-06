@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/COLLISION_DEBUG.C */
+
+void collision_debug_render(void);
 
 /* ---------- globals */
 
