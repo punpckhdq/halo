@@ -7,6 +7,14 @@ DATA.C
 #include "cseries.h"
 #include "data.h"
 
+/* ---------- constants */
+
+enum
+{
+	DATA_ARRAY_SIGNATURE = 'd@t@',
+	DATA_ITERATOR_SIGNATURE = 'iter',
+};
+
 /* ---------- prototypes */
 
 static void datum_initialize(struct data_array *data, struct datum_header *header);
@@ -50,7 +58,7 @@ void data_initialize(
 	strncpy(data->name, name, TAG_STRING_LENGTH);
 	data->maximum_count = maximum_count;
 	data->size = size;
-	data->signature = 'd@t@';
+	data->signature = DATA_ARRAY_SIGNATURE;
 	data->data = data+1;
 	data->valid = FALSE;
 
@@ -92,6 +100,7 @@ long datum_new_at_index(
 {
 	short identifier = DATUM_INDEX_TO_IDENTIFIER(index);
 	short absolute_index = DATUM_INDEX_TO_ABSOLUTE_INDEX(index);
+	long result = NONE;
 
 	data_verify(data);
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 123, data->valid);
@@ -111,11 +120,11 @@ long datum_new_at_index(
 			datum_initialize(data, header);
 			header->identifier = identifier;
 
-			return DATUM_INDEX_NEW(absolute_index, identifier);
+			result = DATUM_INDEX_NEW(absolute_index, identifier);
 		}
 	}
 
-	return NONE;
+	return result;
 }
 
 long datum_new(
@@ -123,6 +132,7 @@ long datum_new(
 {
 	short absolute_index;
 	struct datum_header *header;
+	long result = NONE;
 
 	data_verify(data);
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 163, data->valid);
@@ -141,11 +151,12 @@ long datum_new(
 				data->count = absolute_index+1;
 			}
 
-			return DATUM_INDEX_NEW(absolute_index, header->identifier);
+			result = DATUM_INDEX_NEW(absolute_index, header->identifier);
+			break;
 		}
 	}
 
-	return NONE;
+	return result;
 }
 
 void datum_delete(
@@ -190,7 +201,7 @@ void data_delete_all(
 	data->actual_count = 0;
 	data->first_free_absolute_index = 0;
 	strncpy((char *)&data->next_identifier, data->name, sizeof(data->next_identifier));
-	data->next_identifier |= 0x8000;
+	data->next_identifier |= SHORT_MIN;
 
 	for (absolute_index = 0; absolute_index<data->maximum_count; absolute_index++)
 	{
@@ -209,7 +220,7 @@ void data_iterator_new(
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 249, data->valid);
 
 	iterator->data = data;
-	iterator->signature = (unsigned long)data^'iter';
+	iterator->signature = (unsigned long)data^DATA_ITERATOR_SIGNATURE;
 	iterator->absolute_index = 0;
 	iterator->index = NONE;
 
@@ -224,7 +235,7 @@ void *data_iterator_next(
 	short size;
 	struct datum_header *header;
 
-	match_vassert("c:\\halo\\SOURCE\\memory\\data.c", 268, iterator->signature==((unsigned long)iterator->data^'iter'), "uninitialized iterator passed to iterator_next()");
+	match_vassert("c:\\halo\\SOURCE\\memory\\data.c", 268, iterator->signature==((unsigned long)iterator->data^DATA_ITERATOR_SIGNATURE), "uninitialized iterator passed to iterator_next()");
 	data_verify(iterator->data);
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 271, iterator->data->valid);
 
@@ -352,28 +363,20 @@ void *datum_get(
 {
 	short identifier = DATUM_INDEX_TO_IDENTIFIER(index);
 	short absolute_index = DATUM_INDEX_TO_ABSOLUTE_INDEX(index);
-	struct datum_header *header = NULL;
+	struct datum_header *header;
 
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 396, data->valid);
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 397, identifier || !data->identifier_zero_invalid);
 
-	if (absolute_index>=0 && absolute_index<data->count)
+	if (absolute_index<0 || absolute_index>=data->count ||
+		!(header = (struct datum_header *)((byte *)data->data+absolute_index*data->size))->identifier ||
+		(identifier && identifier!=header->identifier))
 	{
-		header = (struct datum_header *)((byte *)data->data+absolute_index*data->size);
-
-		if (header->identifier && (!identifier || identifier==header->identifier))
-		{
-			return header;
-		}
+		match_vassert("c:\\halo\\SOURCE\\memory\\data.c", 412, FALSE, csprintf(temporary, "%s index #%d (0x%x) is unused or changed", data->name, DATUM_INDEX_TO_ABSOLUTE_INDEX(index), index));
+		header = NULL;
 	}
 
-	match_vassert(
-		"c:\\halo\\SOURCE\\memory\\data.c",
-		412,
-		FALSE,
-		csprintf(temporary, "%s index #%d (0x%x) is unused or changed", data->name, DATUM_INDEX_TO_ABSOLUTE_INDEX(index), index));
-
-	return NULL;
+	return header;
 }
 
 void data_compact(
@@ -422,7 +425,7 @@ void data_verify(
 		"c:\\halo\\SOURCE\\memory\\data.c",
 		470,
 		data->data &&
-		data->signature=='d@t@' &&
+		data->signature==DATA_ARRAY_SIGNATURE &&
 		data->maximum_count>=0 &&
 		data->count>=0 &&
 		data->count<=data->maximum_count &&
@@ -445,7 +448,7 @@ static void datum_initialize(
 	header->identifier = data->next_identifier++;
 	if (!data->next_identifier)
 	{
-		data->next_identifier = 0x8000;
+		data->next_identifier = SHORT_MIN;
 	}
 
 	return;
