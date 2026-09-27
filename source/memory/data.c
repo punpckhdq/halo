@@ -200,7 +200,10 @@ void data_delete_all(
 	data->count = 0;
 	data->actual_count = 0;
 	data->first_free_absolute_index = 0;
+
+	/* seed identifier salt with first two characters of the array name */
 	strncpy((char *)&data->next_identifier, data->name, sizeof(data->next_identifier));
+
 	data->next_identifier |= SHORT_MIN;
 
 	for (absolute_index = 0; absolute_index<data->maximum_count; absolute_index++)
