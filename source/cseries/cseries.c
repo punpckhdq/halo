@@ -131,14 +131,25 @@ symbols in this file:
 
 /* ---------- headers */
 
-#define BUILDING_CSERIES
-
 #include "cseries.h"
 #include "profile.h"
 #include "errors.h"
 #include "real_math.h"
 #include "byte_swapping.h"
 #include "crc.h"
+
+#undef memcmp
+#undef memmove
+#undef memset
+#undef strcat
+#undef strcmp
+#undef strncat
+#undef strncmp
+#undef strncpy
+#undef strtok
+#undef strlen
+#undef strcpy
+#undef memcpy
 
 /* ---------- constants */
 

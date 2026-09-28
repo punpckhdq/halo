@@ -11,6 +11,7 @@ CSERIES.H
 #include <StdDef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
@@ -217,7 +218,6 @@ void stack_walk_disregard_symbol_names(boolean disregard);
 
 /* ---------- macros */
 
-#ifndef BUILDING_CSERIES
 #define memcmp csmemcmp
 #define memmove csmemmove
 #define memset csmemset
@@ -238,7 +238,6 @@ void stack_walk_disregard_symbol_names(boolean disregard);
 #define malloc(size) match_malloc(__FILE__, __LINE__, size)
 #define free(ptr) match_free(__FILE__, __LINE__, ptr)
 #define realloc(ptr, size) match_realloc(__FILE__, __LINE__, ptr, size)
-#endif
 
 /* ---------- globals */
 

@@ -11,7 +11,8 @@
 					"/nologo",
 					"/c",
 					"/O2",
-					"/Oy-"
+					"/Oy-",
+					"/FIheaders.h"
 				],
 				"include_dirs": [
 					"xbox/include",
@@ -375,7 +376,7 @@
 				]
 			},
 			"objects": [
-				{ "name": "source/main/d3d_intimacy.cpp", "index": 6, "status": "Matching" },
+				{ "name": "source/main/d3d_intimacy.cpp", "index": 6, "status": "Matching", "options": { "cflags": [ "/nologo", "/c", "/O2", "/Oy-" ] } },
 				{ "name": "source/cseries/headers.c", "index": 7, "status": "NonMatching" },
 				{ "name": "source/sound/sound_scenery_group.c", "index": 8, "status": "Matching" },
 				{ "name": "source/sound/sound_scenery.c", "index": 9, "status": "NonMatching" },
@@ -804,7 +805,7 @@
 				{ "name": "source/ai/ai_script.c", "index": 432, "status": "NonMatching" },
 				{ "name": "source/ai/ai_scenario_definitions.c", "index": 433, "status": "NonMatching" },
 				{ "name": "source/ai/ai_profile.c", "index": 434, "status": "NonMatching" },
-				{ "name": "source/ai/ai_debug.c", "index": 435, "status": "NonMatching", "options": { "cflags": [ "/nologo", "/c", "/O2", "/Oy-", "/QIfist" ] } },
+				{ "name": "source/ai/ai_debug.c", "index": 435, "status": "NonMatching", "options": { "cflags": [ "/nologo", "/c", "/O2", "/Oy-", "/QIfist", "/FIheaders.h" ] } },
 				{ "name": "source/ai/ai_communication.c", "index": 436, "status": "NonMatching" },
 				{ "name": "source/ai/ai.c", "index": 437, "status": "NonMatching" },
 				{ "name": "source/ai/actors.c", "index": 438, "status": "NonMatching" },

@@ -174,7 +174,7 @@ extern	long lseek();
 extern	void *malloc(size_t size);
 extern	void *realloc(void *ptr, size_t size);
 #else /* !__MACH__ && !THINK_C */
-#if defined(MSDOS)
+#if defined(MSDOS) || defined(_MSC_VER)
 #include <malloc.h>
 #else /* !MSDOS */
 #if defined(_IBMR2)
