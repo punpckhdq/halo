@@ -106,8 +106,8 @@ static boolean collision_bsp_test_pill_new_recursive(struct test_pill_new_data *
 
 /* ---------- globals */
 
-static __int64 vector_start_time;
-static __int64 sphere_start_time;
+static __int64 vector_start_time = 0;
+static __int64 sphere_start_time = 0;
 
 /* ---------- public code */
 

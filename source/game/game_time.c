@@ -131,8 +131,8 @@ extern void *game_state_malloc(char const *, char const *, long);
 
 /* ---------- globals */
 
-static struct game_time_statistics game_time_statistics;
-static struct game_time_globals_struct *game_time_globals;
+static struct game_time_statistics game_time_statistics = {0};
+static struct game_time_globals_struct *game_time_globals = 0;
 
 /* ---------- public code */
 

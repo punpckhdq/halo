@@ -65,9 +65,9 @@ boolean collision_debug_flag_objects = TRUE;
 real collision_debug_length = 100.f;
 long collision_debug_ignore_object_index = NONE;
 
-static real_vector3d collision_debug_spray_vectors[COLLISION_DEBUG_SPRAY_ROWS][COLLISION_DEBUG_SPRAY_COLUMNS];
-static real_point3d collision_debug_spray_points[COLLISION_DEBUG_SPRAY_ROWS][COLLISION_DEBUG_SPRAY_COLUMNS];
-static unsigned long collision_debug_spray_hits[BIT_VECTOR_SIZE_IN_LONGS(COLLISION_DEBUG_SPRAY_COUNT)];
+static real_vector3d collision_debug_spray_vectors[COLLISION_DEBUG_SPRAY_ROWS][COLLISION_DEBUG_SPRAY_COLUMNS] = {0};
+static real_point3d collision_debug_spray_points[COLLISION_DEBUG_SPRAY_ROWS][COLLISION_DEBUG_SPRAY_COLUMNS] = {0};
+static unsigned long collision_debug_spray_hits[BIT_VECTOR_SIZE_IN_LONGS(COLLISION_DEBUG_SPRAY_COUNT)] = {0};
 
 real collision_debug_width = 0.f;
 real collision_debug_height = 0.f;

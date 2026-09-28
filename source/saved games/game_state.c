@@ -139,7 +139,7 @@ static void game_state_set_revert_time(void);
 
 boolean recover_saved_games_hack;
 
-static FILE* bss_004d27b0;
+static FILE* bss_004d27b0 = 0;
 
 static struct
 {
@@ -151,7 +151,7 @@ static struct
 	boolean saved_game_valid; // 0x11
 	long revert_time; // 0x14
 	struct game_state_header *header; // 0x18
-} game_state_globals;
+} game_state_globals = {0};
 
 typedef void (*game_state_before_load_proc)();
 typedef void (*game_state_after_load_proc)();

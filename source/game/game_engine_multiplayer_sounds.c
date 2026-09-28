@@ -80,7 +80,7 @@ static boolean sound_is_queueable[NUMBER_OF_MULTIPLAYER_SOUNDS] =
 };
 
 static long mp_sound_queue_count = 0;
-static struct queued_mp_sound mp_sound_queue[5];
+static struct queued_mp_sound mp_sound_queue[5] = {0};
 
 /* ---------- public code */
 

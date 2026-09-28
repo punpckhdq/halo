@@ -36,8 +36,8 @@ extern short seed_random_range(unsigned long *seed, short lower_bound, short upp
 
 /* ---------- globals */
 
-static unsigned long bss_00453ad8;
-static char bss_00453ae8[128];
+static unsigned long bss_00453ad8 = 0;
+static char bss_00453ae8[128] = {0};
 
 short data_002e4c84 = NONE;
 

@@ -14,9 +14,9 @@ static struct mutex *get_mutex_from_pool(void);
 
 /* ---------- globals */
 
-static unsigned long mutex_count;
-static struct thread thread_pool[MAXIMUM_THREADS];
-static struct mutex mutex_pool[MAXIMUM_MUTEXES];
+static unsigned long mutex_count = 0;
+static struct thread thread_pool[MAXIMUM_THREADS] = {0};
+static struct mutex mutex_pool[MAXIMUM_MUTEXES] = {0};
 
 /* ---------- public code */
 
