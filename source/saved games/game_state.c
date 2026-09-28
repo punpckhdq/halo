@@ -139,7 +139,7 @@ static void game_state_set_revert_time(void);
 
 boolean recover_saved_games_hack;
 
-static FILE* bss_004d27b0 = 0;
+static FILE* bss_004d27b0 = NULL;
 
 static struct
 {
