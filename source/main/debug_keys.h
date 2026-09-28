@@ -8,6 +8,10 @@ header included in hcex build.
 #define __DEBUG_KEYS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "input_windows.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

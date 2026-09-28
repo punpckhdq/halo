@@ -10,6 +10,8 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "collision_usage.h"
+#include "collision_features.h"
 
 /* ---------- constants */
 

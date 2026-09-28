@@ -8,6 +8,10 @@ header included in hcex build.
 #define __LIGHTNING_H
 #pragma once
 
+/* ---------- headers */
+
+#include "lightning_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

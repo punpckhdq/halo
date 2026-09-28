@@ -8,6 +8,10 @@ header included in hcex build.
 #define __GLOW_H
 #pragma once
 
+/* ---------- headers */
+
+#include "glow_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

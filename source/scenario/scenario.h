@@ -11,6 +11,9 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "cheats.h"
+#include "game.h"
+#include "scenario_definitions.h"
 
 /* ---------- constants */
 

@@ -21,8 +21,8 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "input.h"
 #include "edit_text.h"
+#include "input.h"
 #include "international_strings.h"
 
 /* ---------- constants */

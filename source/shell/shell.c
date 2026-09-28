@@ -9,7 +9,6 @@ SHELL.C
 #include "game_state.h"
 #include "input.h"
 #include "sound_manager.h"
-#include "render_cameras.h"
 #include "rasterizer.h"
 
 /* ---------- globals */

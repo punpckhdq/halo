@@ -8,6 +8,10 @@ header included in hcex build.
 #define __SOUND_MANAGER_H
 #pragma once
 
+/* ---------- headers */
+
+#include "sound_environment_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

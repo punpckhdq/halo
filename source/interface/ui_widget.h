@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "ui_widget_group.h"
 
 /* ---------- constants */
 

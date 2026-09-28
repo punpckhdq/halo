@@ -11,6 +11,17 @@ file has inline function assertions.
 /* ---------- headers */
 
 #include "object_definitions.h"
+#include "ai_scenario_definitions.h"
+#include "game_globals.h"
+#include "interface.h"
+#include "damage.h"
+#include "breakable_surfaces.h"
+#include "scenario.h"
+#include "model_animation_definitions.h"
+#include "model_definitions.h"
+#include "models.h"
+#include "damage_resistances.h"
+#include "shader_definitions.h"
 
 /* ---------- constants */
 

@@ -28,10 +28,10 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "scenario_definitions.h"
 #include "recorded_animation_definitions.h"
 #include "recorded_animation_playback.h"
 #include "recorded_animation_playback_v1.h"
+#include "scenario_definitions.h"
 
 /* ---------- constants */
 

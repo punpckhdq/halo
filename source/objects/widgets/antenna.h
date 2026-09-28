@@ -8,6 +8,10 @@ header included in hcex build.
 #define __ANTENNA_H
 #pragma once
 
+/* ---------- headers */
+
+#include "antenna_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

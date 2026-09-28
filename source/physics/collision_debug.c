@@ -5,30 +5,13 @@ COLLISION_DEBUG.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "game.h"
-#include "game_globals.h"
-#include "breakable_surfaces.h"
-#include "scenario.h"
-#include "object_definitions.h"
-#include "rasterizer_geometry.h"
-#include "damage_resistances.h"
+#include "collision_debug.h"
+#include "collisions.h"
+#include "collision_models.h"
 #include "objects.h"
-#include "bsp3d.h"
-#include "bsp2d.h"
-#include "collision_bsp_definitions.h"
-#include "collision_bsp.h"
-#include "leaf_map.h"
-#include "render_cameras.h"
-#include "structure_bsp_definitions.h"
 #include "render.h"
 #include "players.h"
-#include "collision_usage.h"
-#include "collision_features.h"
-#include "collisions.h"
 #include "render_debug.h"
-#include "collision_model_definitions.h"
-#include "collision_models.h"
-#include "collision_debug.h"
 
 /* ---------- constants */
 

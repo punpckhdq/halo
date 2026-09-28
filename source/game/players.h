@@ -11,6 +11,7 @@ header included in hcex build.
 /* ---------- headers */
 
 #include "game.h"
+#include "network_game_manager.h"
 
 /* ---------- constants */
 

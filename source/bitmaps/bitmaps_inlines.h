@@ -10,6 +10,7 @@ file has inline function assertions.
 
 /* ---------- headers */
 
+#include "bitmap_macros.h"
 
 /* ---------- constants */
 

@@ -133,8 +133,8 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "bsp3d.h"
 #include "leaf_map.h"
+#include "bsp3d.h"
 #include "render_debug.h"
 
 /* ---------- constants */

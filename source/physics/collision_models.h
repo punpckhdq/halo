@@ -8,6 +8,10 @@ header included in hcex build.
 #define __COLLISION_MODELS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "collision_model_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

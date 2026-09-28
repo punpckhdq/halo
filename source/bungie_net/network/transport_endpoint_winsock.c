@@ -277,8 +277,8 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "transport.h"
 #include "transport_endpoint_winsock.h"
+#include "transport.h"
 
 /* ---------- constants */
 

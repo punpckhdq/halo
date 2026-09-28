@@ -5,10 +5,6 @@ COLLISION_FEATURES.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "bsp3d.h"
-#include "bsp2d.h"
-#include "collision_bsp_definitions.h"
-#include "collision_bsp.h"
 #include "collision_features.h"
 #ifdef DEBUG
 #include "render_debug.h"

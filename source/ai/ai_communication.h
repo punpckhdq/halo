@@ -10,6 +10,8 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "ai.h"
+#include "ai_constants.h"
 
 /* ---------- constants */
 

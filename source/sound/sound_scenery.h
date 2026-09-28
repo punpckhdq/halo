@@ -8,6 +8,10 @@ header included in hcex build.
 #define __SOUND_SCENERY_H
 #pragma once
 
+/* ---------- headers */
+
+#include "objects.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -8,6 +8,10 @@ header included in hcex build.
 #define __NETWORK_CLIENT_MANAGER_H
 #pragma once
 
+/* ---------- headers */
+
+#include "cluster_partitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

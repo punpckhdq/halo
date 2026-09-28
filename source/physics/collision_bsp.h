@@ -8,6 +8,9 @@ header included in hcex build.
 #define __COLLISION_BSP_H
 #pragma once
 
+/* ---------- headers */
+
+#include "collision_bsp_definitions.h"
 
 /* ---------- constants */
 

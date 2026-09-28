@@ -8,6 +8,10 @@ header included in hcex build.
 #define __SHADERS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "shader_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

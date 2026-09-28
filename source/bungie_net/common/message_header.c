@@ -27,11 +27,11 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "bungie_net/common/message_header.h"
+#include "message_header.h"
+#include "memory_manager.h"
+#include "64bit_math.h"
+#include "random_numbers.h"
 #include "bungie_net/network/transport.h"
-#include "bungie_net/common/memory_manager.h"
-#include "bungie_net/common/64bit_math.h"
-#include "bungie_net/common/random_numbers.h"
 
 /* ---------- constants */
 

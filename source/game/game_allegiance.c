@@ -53,14 +53,9 @@ symbols in this file:
 #include "cseries.h"
 #include "cheats.h"
 #include "game.h"
-#include "ai.h"
-#include "bungie_net/common/message_header.h"
-#include "network_game_globals.h"
-#include "unicode.h"
-#include "index_resolution.h"
 #include "game_engine.h"
-#include "lruv_cache.h"
-#include "memory_pool.h"
+#include "ai.h"
+#include "network_game_globals.h"
 #include "game_state.h"
 
 /* ---------- constants */

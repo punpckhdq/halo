@@ -29,8 +29,8 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "input.h"
 #include "event_manager.h"
+#include "input.h"
 
 /* ---------- constants */
 

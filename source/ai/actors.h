@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "actor_definitions.h"
 #include "actions.h"
 #include "path.h"
 

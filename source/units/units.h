@@ -10,6 +10,8 @@ UNITS.H
 
 #include "ai.h"
 #include "objects.h"
+#include "unit_definitions.h"
+#include "ai_communication.h"
 
 /* ---------- constants */
 

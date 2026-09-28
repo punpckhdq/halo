@@ -9,7 +9,6 @@ COLLISION_USAGE.C
 #include "collision_usage.h"
 #include "game.h"
 #include "editor_stubs.h"
-#include "render_cameras.h"
 #include "rasterizer.h"
 #include "interface.h"
 #include "draw_string.h"

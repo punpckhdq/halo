@@ -8,6 +8,10 @@ header included in hcex build.
 #define __NETWORK_GAME_GLOBALS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "bungie_net/common/message_header.h"
+
 /* ---------- constants */
 
 enum

@@ -10,7 +10,6 @@ UNIT_HUD_INTERFACE_DEFINITION.H
 
 #include "hud_definitions.h"
 
-
 /* ---------- constants */
 
 enum

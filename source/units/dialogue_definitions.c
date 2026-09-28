@@ -603,9 +603,9 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "dialogue_definitions.h"
 #include "object_definitions.h"
 #include "sound_definitions.h"
-#include "dialogue_definitions.h"
 
 /* ---------- constants */
 

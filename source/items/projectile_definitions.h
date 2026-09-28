@@ -8,6 +8,10 @@ header included in hcex build.
 #define __PROJECTILE_DEFINITIONS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "object_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

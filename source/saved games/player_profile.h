@@ -8,6 +8,12 @@ header included in hcex build.
 #define __PLAYER_PROFILE_H
 #pragma once
 
+/* ---------- headers */
+
+#include "input_abstraction.h"
+#include "input_windows.h"
+#include "event_manager.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

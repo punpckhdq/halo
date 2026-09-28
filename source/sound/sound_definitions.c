@@ -32,27 +32,20 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "cheats.h"
-#include "game.h"
-#include "scenario_definitions.h"
+#include "sound_definitions.h"
+#include "sound_manager.h"
+#include "sound_classes.h"
+#include "ima_adpcm.h"
 #include "ai_scenario_definitions.h"
-#include "game_globals.h"
 #include "interface.h"
 #include "damage.h"
 #include "breakable_surfaces.h"
 #include "scenario.h"
-#include "bungie_net/common/message_header.h"
 #include "network_game_globals.h"
-#include "unicode.h"
-#include "sound_environment_definitions.h"
-#include "sound_manager.h"
 #include "text_group.h"
-#include "sound_definitions.h"
 #include "damage_effect_definitions.h"
 #include "predicted_resources.h"
 #include "sound_cache.h"
-#include "sound_classes.h"
-#include "ima_adpcm.h"
 
 /* ---------- constants */
 

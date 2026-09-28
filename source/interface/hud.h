@@ -8,6 +8,9 @@ header included in hcex build.
 #define __HUD_H
 #pragma once
 
+/* ---------- headers */
+
+#include "hud_definitions.h"
 
 /* ---------- constants */
 

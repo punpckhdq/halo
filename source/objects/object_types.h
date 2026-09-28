@@ -6,6 +6,10 @@ OBJECT_TYPES.H
 #define __OBJECT_TYPES_H
 #pragma once
 
+/* ---------- headers */
+
+#include "objects.h"
+
 /* ---------- constants */
 
 enum

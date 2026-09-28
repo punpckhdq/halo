@@ -11,6 +11,7 @@ header included in hcex build.
 /* ---------- headers */
 
 #include "units.h"
+#include "biped_definitions.h"
 
 /* ---------- constants */
 

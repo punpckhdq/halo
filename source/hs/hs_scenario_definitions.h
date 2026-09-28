@@ -8,6 +8,10 @@ header included in hcex build.
 #define __HS_SCENARIO_DEFINITIONS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "hs.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

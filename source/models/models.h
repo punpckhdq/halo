@@ -8,6 +8,12 @@ header included in hcex build.
 #define __MODELS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "model_definitions.h"
+#include "rasterizer_geometry.h"
+#include "object_definitions.h"
+
 /* ---------- constants */
 
 enum animation_update_kind

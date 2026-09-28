@@ -8,6 +8,10 @@ header included in hcex build.
 #define __TEXT_GROUP_H
 #pragma once
 
+/* ---------- headers */
+
+#include "unicode.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

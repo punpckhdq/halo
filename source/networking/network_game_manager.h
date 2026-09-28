@@ -8,6 +8,10 @@ header included in hcex build.
 #define __NETWORK_GAME_MANAGER_H
 #pragma once
 
+/* ---------- headers */
+
+#include "game_engine.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

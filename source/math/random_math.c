@@ -55,8 +55,8 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "unicode.h"
-#include "index_resolution.h"
+#include "real_math.h"
+#include "geometry.h"
 #include "game_engine.h"
 
 /* ---------- constants */

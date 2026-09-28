@@ -8,6 +8,10 @@ header included in hcex build.
 #define __NETWORK_MESSAGES_H
 #pragma once
 
+/* ---------- headers */
+
+#include "bungie_net/network/transport.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

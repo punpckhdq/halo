@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "path.h"
 
 /* ---------- constants */
 

@@ -59,10 +59,8 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "input.h"
-#include "edit_text.h"
-#include "terminal.h"
 #include "build_number.h"
+#include "terminal.h"
 
 /* ---------- constants */
 

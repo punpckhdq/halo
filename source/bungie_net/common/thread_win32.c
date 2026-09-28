@@ -5,7 +5,7 @@ THREAD_WIN32.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "bungie_net/common/thread.h"
+#include "thread.h"
 
 /* ---------- prototypes */
 

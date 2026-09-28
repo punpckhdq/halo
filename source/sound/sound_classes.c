@@ -108,10 +108,8 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "lruv_cache.h"
-#include "memory_pool.h"
-#include "game_state.h"
 #include "sound_classes.h"
+#include "game_state.h"
 
 /* ---------- constants */
 

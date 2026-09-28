@@ -8,6 +8,10 @@ header included in hcex build.
 #define __RECORDED_ANIMATIONS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "units.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

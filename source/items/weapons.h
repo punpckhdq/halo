@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "weapon_definitions.h"
 #include "model_animation_definitions.h"
 #include "items.h"
 

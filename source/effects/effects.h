@@ -8,6 +8,10 @@ header included in hcex build.
 #define __EFFECTS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "effect_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

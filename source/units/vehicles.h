@@ -8,6 +8,11 @@ header included in hcex build.
 #define __VEHICLES_H
 #pragma once
 
+/* ---------- headers */
+
+#include "units.h"
+#include "vehicle_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

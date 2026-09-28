@@ -10,6 +10,8 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "unicode.h"
+#include "index_resolution.h"
 
 /* ---------- constants */
 

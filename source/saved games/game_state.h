@@ -8,6 +8,11 @@ header included in hcex build.
 #define __GAME_STATE_H
 #pragma once
 
+/* ---------- headers */
+
+#include "lruv_cache.h"
+#include "memory_pool.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -8,6 +8,10 @@ header included in hcex build.
 #define __EQUIPMENT_DEFINITIONS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "item_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

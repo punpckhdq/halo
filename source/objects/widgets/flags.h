@@ -8,6 +8,10 @@ header included in hcex build.
 #define __FLAGS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "flag_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */
