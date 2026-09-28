@@ -10,12 +10,7 @@ file has inline function assertions.
 
 /* ---------- headers */
 
-#include "object_definitions.h"
-#include "object_types.h"
 
-#include "math/real_math.h"
-#include "memory/data.h"
-#include "structures/cluster_partitions.h"
 
 /* ---------- constants */
 

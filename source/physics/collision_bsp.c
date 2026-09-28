@@ -5,12 +5,32 @@ COLLISION_BSP.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "collision_bsp.h"
-#include "collision_bsp_definitions.h"
-
-#include "render_debug.h"
-#include "collision_usage.h"
+#include "game.h"
+#include "scenario_definitions.h"
+#include "ai_scenario_definitions.h"
+#include "game_globals.h"
+#include "interface.h"
+#include "object_definitions.h"
+#include "object_types.h"
+#include "objects.h"
+#include "damage.h"
+#include "breakable_surfaces.h"
 #include "scenario.h"
+#include "rasterizer_geometry.h"
+#include "model_animation_definitions.h"
+#include "model_definitions.h"
+#include "models.h"
+#include "damage_resistances.h"
+#include "shader_definitions.h"
+#include "bsp3d.h"
+#include "bsp2d.h"
+#include "collision_bsp_definitions.h"
+#include "collision_bsp.h"
+#include "collision_usage.h"
+#include "collision_features.h"
+#include "collisions.h"
+#include "render_debug.h"
+
 
 /* ---------- structures */
 

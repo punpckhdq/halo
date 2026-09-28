@@ -8,7 +8,6 @@ INPUT.H
 
 /* ---------- headers */
 
-#include "math/integer_math.h"
 
 /* ---------- constants */
 

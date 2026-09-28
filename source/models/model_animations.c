@@ -148,7 +148,13 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "model_definitions.h"
 #include "model_animation_definitions.h"
+#include "object_definitions.h"
+#include "rasterizer_geometry.h"
+#include "models.h"
+#include "damage_resistances.h"
+#include "shader_definitions.h"
 
 /* ---------- constants */
 

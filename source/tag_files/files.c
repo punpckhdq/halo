@@ -5,7 +5,6 @@ FILES.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "files.h"
 
 /* ---------- globals */
 

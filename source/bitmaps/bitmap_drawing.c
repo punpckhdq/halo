@@ -43,6 +43,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "bitmap_drawing.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

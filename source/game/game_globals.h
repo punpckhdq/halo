@@ -10,7 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "math/integer_math.h"
 
 /* ---------- constants */
 

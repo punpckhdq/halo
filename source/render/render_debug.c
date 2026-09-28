@@ -132,6 +132,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "render_debug.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

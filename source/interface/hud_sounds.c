@@ -4,12 +4,24 @@ HUD_SOUNDS.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "hud.h"
-#include "hud_definitions.h"
-#include "objects.h"
-#include "game_sound.h"
-#include "sound_definitions.h"
+#include "game.h"
+#include "scenario_definitions.h"
+#include "ai_scenario_definitions.h"
+#include "game_globals.h"
+#include "interface.h"
+#include "breakable_surfaces.h"
+#include "scenario.h"
+#include "bungie_net/common/message_header.h"
+#include "network_game_globals.h"
+#include "sound_environment_definitions.h"
 #include "sound_manager.h"
+#include "sound_definitions.h"
+#include "hud_definitions.h"
+#include "object_definitions.h"
+#include "object_types.h"
+#include "objects.h"
+#include "damage.h"
+#include "game_sound.h"
 
 /* ---------- public code */
 

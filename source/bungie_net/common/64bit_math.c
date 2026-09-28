@@ -24,6 +24,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "64bit_math.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -12,6 +12,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "static_camera.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

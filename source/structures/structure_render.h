@@ -8,7 +8,6 @@ STRUCTURE_RENDER.H
 
 /* ---------- headers */
 
-#include "math/real_math.h"
 
 /* ---------- constants */
 

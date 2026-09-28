@@ -114,6 +114,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "bink_playback.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

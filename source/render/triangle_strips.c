@@ -18,6 +18,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "triangle_strips.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

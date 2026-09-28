@@ -5,7 +5,6 @@ TAG_FILES.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "tag_files.h"
 
 /* ---------- public code */
 

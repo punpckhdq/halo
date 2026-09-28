@@ -46,6 +46,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "hashtable.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

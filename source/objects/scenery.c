@@ -6,12 +6,26 @@ SCENERY.C
 /* ---------- headers */
 
 #include "cseries.h"
+#include "game.h"
+#include "scenario_definitions.h"
+#include "ai_scenario_definitions.h"
+#include "game_globals.h"
+#include "interface.h"
+#include "breakable_surfaces.h"
+#include "scenario.h"
+#include "object_definitions.h"
+#include "rasterizer_geometry.h"
+#include "model_animation_definitions.h"
+#include "model_definitions.h"
+#include "damage_resistances.h"
+#include "shader_definitions.h"
+#include "console.h"
+#include "editor_stubs.h"
+#include "object_types.h"
+#include "objects.h"
+#include "damage.h"
+#include "models.h"
 #include "scenery.h"
-
-#include "main/console.h"
-#include "models/models.h"
-#include "models/model_animation_definitions.h"
-#include "scenario/scenario_definitions.h"
 
 /* ---------- constants */
 

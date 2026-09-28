@@ -5,7 +5,7 @@ REAL_MATH.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "real_math.h"
+#include "shell.h"
 
 /* ---------- constants */
 

@@ -10,8 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "tag_files/tag_groups.h"
-#include "real_math.h"
 
 /* ---------- constants */
 

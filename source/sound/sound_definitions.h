@@ -10,9 +10,6 @@ file has inline function assertions.
 
 /* ---------- headers */
 
-#include "real_math.h"
-#include "tag_files.h"
-#include "tag_groups.h"
 
 /* ---------- constants */
 

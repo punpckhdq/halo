@@ -114,6 +114,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "international_strings.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -8,8 +8,6 @@ UNITS.H
 
 /* ---------- headers */
 
-#include "ai/ai.h"
-#include "objects/objects.h"
 
 /* ---------- constants */
 

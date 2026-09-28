@@ -6,7 +6,6 @@ PHYSICS_VARIABLES.C
 /* ---------- headers */
 #include "cseries.h"
 #include "physics_variables.h"
-#include "real_math.h"
 
 /* ---------- constants */
 

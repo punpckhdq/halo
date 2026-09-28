@@ -10,9 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "dialogs/edit_text.h"
-#include "input/input.h"
-#include "math/real_math.h"
 
 /* ---------- constants */
 

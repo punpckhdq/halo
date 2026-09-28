@@ -56,6 +56,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "texture_page.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

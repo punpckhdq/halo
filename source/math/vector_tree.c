@@ -28,6 +28,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "vector_tree.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -60,6 +60,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "hs_scenario_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -6,7 +6,6 @@ BSP2D.C
 /* ---------- headers */
 #include "cseries.h"
 #include "bsp2d.h"
-#include "real_math.h"
 
 /* ---------- constants */
 

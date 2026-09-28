@@ -10,7 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "cseries_windows.h"
 
 /* ---------- constants */
 

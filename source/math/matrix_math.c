@@ -87,7 +87,6 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "real_math.h"
 
 /* ---------- constants */
 

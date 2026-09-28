@@ -10,11 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "actions.h"
-#include "path.h"
 
-#include "math/real_math.h"
-#include "objects/objects.h"
 
 /* ---------- constants */
 

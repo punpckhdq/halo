@@ -10,10 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "item_definitions.h"
 
-#include "math/integer_math.h"
-#include "game/aim_assist.h"
 
 /* ---------- constants */
 

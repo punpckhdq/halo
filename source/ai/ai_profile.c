@@ -78,6 +78,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "ai_profile.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

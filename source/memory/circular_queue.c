@@ -32,6 +32,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "circular_queue.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -219,6 +219,11 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "cache_files_decompress_windows.h"
+#include "zconf.h"
+#include "zlib.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

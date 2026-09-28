@@ -120,6 +120,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "stack_memory_pool.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

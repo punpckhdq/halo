@@ -307,6 +307,28 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "saved_game_files.h"
+#include "bungie_net/common/message_header.h"
+#include "bungie_net/common/thread.h"
+#include "cheats.h"
+#include "event_manager.h"
+#include "game.h"
+#include "game_engine.h"
+#include "game_state.h"
+#include "index_resolution.h"
+#include "input.h"
+#include "input_abstraction.h"
+#include "lruv_cache.h"
+#include "memory_pool.h"
+#include "network_game_globals.h"
+#include "player_profile.h"
+#include "playlist_profile.h"
+#include "text_group.h"
+#include "ui_widget.h"
+#include "ui_widget_group.h"
+#include "unicode.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

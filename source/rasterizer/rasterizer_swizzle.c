@@ -52,6 +52,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "rasterizer_swizzle.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

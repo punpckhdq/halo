@@ -10,9 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "render_cameras.h"
-#include "structures/structures.h"
-#include "structures/structure_render.h"
 
 /* ---------- constants */
 

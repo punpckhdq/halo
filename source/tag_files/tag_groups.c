@@ -5,9 +5,6 @@ TAG_GROUPS.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "tag_files.h"
-#include "byte_swapping.h"
-#include "tag_groups.h"
 
 /* ---------- public code */
 

@@ -7,8 +7,6 @@ BSP3D.C
 #include "cseries.h"
 #include "bsp3d.h"
 
-#include "math/geometry.h"
-#include "math/real_math.h"
 
 /* ---------- constants */
 

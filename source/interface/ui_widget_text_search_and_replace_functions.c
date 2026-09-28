@@ -20,6 +20,22 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "game.h"
+#include "bungie_net/common/message_header.h"
+#include "network_game_globals.h"
+#include "unicode.h"
+#include "input.h"
+#include "input_abstraction.h"
+#include "input_windows.h"
+#include "event_manager.h"
+#include "player_profile.h"
+#include "saved_game_files.h"
+#include "ui_widget_group.h"
+#include "ui_widget.h"
+#include "build_number.h"
+#include "ui_widget_text_search_and_replace_functions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

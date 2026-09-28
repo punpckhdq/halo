@@ -222,6 +222,10 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "bitmap_macros.h"
+#include "bitmaps/s3tc/s3tc.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -91,7 +91,6 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "periodic_functions.h"
 
 /* ---------- constants */
 

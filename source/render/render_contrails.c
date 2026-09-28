@@ -24,6 +24,40 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "game.h"
+#include "scenario_definitions.h"
+#include "ai_scenario_definitions.h"
+#include "game_globals.h"
+#include "interface.h"
+#include "breakable_surfaces.h"
+#include "scenario.h"
+#include "object_definitions.h"
+#include "rasterizer_geometry.h"
+#include "model_animation_definitions.h"
+#include "model_definitions.h"
+#include "damage_resistances.h"
+#include "shader_definitions.h"
+#include "bsp3d.h"
+#include "bsp2d.h"
+#include "collision_bsp_definitions.h"
+#include "collision_bsp.h"
+#include "leaf_map.h"
+#include "render_cameras.h"
+#include "rasterizer.h"
+#include "bitmap_macros.h"
+#include "bitmaps_inlines.h"
+#include "texture_cache.h"
+#include "contrails.h"
+#include "contrail_definitions.h"
+#include "object_types.h"
+#include "objects.h"
+#include "damage.h"
+#include "models.h"
+#include "structures.h"
+#include "render.h"
+#include "structure_bsp_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

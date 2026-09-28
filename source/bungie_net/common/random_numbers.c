@@ -22,6 +22,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "random_numbers.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

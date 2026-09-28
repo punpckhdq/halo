@@ -10,7 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "memory/byte_swapping.h"
 
 /* ---------- constants */
 

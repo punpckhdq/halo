@@ -10,9 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "actors.h"
 
-#include "math/real_math.h"
 
 /* ---------- constants */
 

@@ -5,9 +5,10 @@ OBJECT_LISTS.C
 /* ---------- headers */
 
 #include "cseries.h"
+#include "lruv_cache.h"
+#include "memory_pool.h"
+#include "game_state.h"
 #include "object_lists.h"
-
-#include "data.h"
 #include "reference_lists.h"
 
 /* ---------- constants */

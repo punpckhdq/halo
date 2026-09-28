@@ -6,14 +6,11 @@ SHELL.C
 
 #include "cseries.h"
 #include "shell.h"
-#include "errors.h"
-#include "tag_files.h"
-#include "real_math.h"
 #include "game_state.h"
-#include "rasterizer.h"
-#include "integer_math.h"
 #include "input.h"
 #include "sound_manager.h"
+#include "render_cameras.h"
+#include "rasterizer.h"
 
 /* ---------- globals */
 

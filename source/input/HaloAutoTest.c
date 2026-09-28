@@ -5,9 +5,7 @@ HALOAUTOTEST.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "cseries_windows.h"
 #include "HaloAutoTest.h"
-#include "integer_math.h"
 #include "input.h"
 
 /* ---------- globals */

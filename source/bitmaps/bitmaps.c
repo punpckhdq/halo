@@ -228,6 +228,14 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "rasterizer_geometry.h"
+#include "bitmap_macros.h"
+#include "rasterizer_hardware_format_utilities.h"
+#include "bitmaps/s3tc/s3tc.h"
+#include "rasterizer_swizzle.h"
+#include "bitmaps.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -32,6 +32,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "connected_geometry.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

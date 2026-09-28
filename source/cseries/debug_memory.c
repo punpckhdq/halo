@@ -96,6 +96,8 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

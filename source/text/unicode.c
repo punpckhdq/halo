@@ -242,6 +242,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "unicode.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

@@ -16,6 +16,41 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "game.h"
+#include "scenario_definitions.h"
+#include "ai_scenario_definitions.h"
+#include "game_globals.h"
+#include "interface.h"
+#include "breakable_surfaces.h"
+#include "scenario.h"
+#include "object_definitions.h"
+#include "rasterizer_geometry.h"
+#include "model_animation_definitions.h"
+#include "model_definitions.h"
+#include "damage_resistances.h"
+#include "shader_definitions.h"
+#include "bungie_net/common/message_header.h"
+#include "network_game_globals.h"
+#include "unicode.h"
+#include "index_resolution.h"
+#include "game_engine.h"
+#include "network_game_manager.h"
+#include "players.h"
+#include "input.h"
+#include "text_group.h"
+#include "sound_definitions.h"
+#include "draw_string.h"
+#include "hud_definitions.h"
+#include "hud.h"
+#include "font_group.h"
+#include "weapon_hud_interface_definition.h"
+#include "hud_messaging_definitions.h"
+#include "object_types.h"
+#include "objects.h"
+#include "damage.h"
+#include "models.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

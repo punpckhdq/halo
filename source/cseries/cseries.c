@@ -133,10 +133,6 @@ symbols in this file:
 
 #include "cseries.h"
 #include "profile.h"
-#include "errors.h"
-#include "real_math.h"
-#include "byte_swapping.h"
-#include "crc.h"
 
 #undef memcmp
 #undef memmove

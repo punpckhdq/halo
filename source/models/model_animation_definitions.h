@@ -11,9 +11,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "math/real_math.h"
-#include "tag_files/tag_files.h"
-#include "tag_files/tag_groups.h"
 
 /* ---------- constants */
 

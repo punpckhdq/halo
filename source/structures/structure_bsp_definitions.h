@@ -10,12 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "leaf_map.h"
 
-#include "math/integer_math.h"
-#include "rasterizer/rasterizer_geometry.h"
-#include "render/render.h"
-#include "tag_files/tag_groups.h"
 
 /* ---------- constants */
 

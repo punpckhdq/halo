@@ -5,11 +5,12 @@ COLLISION_FEATURES.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "collision_features.h"
-#include "collision_bsp.h"
+#include "bsp3d.h"
+#include "bsp2d.h"
 #include "collision_bsp_definitions.h"
-#include "render/render_debug.h"
-#include "tag_files/tag_groups.h"
+#include "collision_bsp.h"
+#include "collision_features.h"
+#include "render_debug.h"
 
 /* ---------- constants */
 

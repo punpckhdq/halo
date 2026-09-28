@@ -44,6 +44,7 @@ class Object:
             "cflags": None,
             "include_dirs": None,
             "defines": None,
+            "pch": None,
         }
         self.options.update(options)
 
@@ -74,6 +75,7 @@ class ProjectConfig:
             "include_dirs": None,
             "headers": None,
             "defines": None,
+            "pch": None,
         }
         self.options.update(options)
 
@@ -284,8 +286,9 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     ###
     n.rule(
         name="cl",
-        command=f"{wrapper_cmd}xbox/bin/vc7/CL.Exe /nologo /c $cflags /Fo$out $in",
+        command=f"{wrapper_cmd}xbox/bin/vc7/CL.Exe /nologo /c /showIncludes $cflags /Fo$out $in",
         description="CL $out",
+        deps="msvc",
     )
     n.newline()
     
@@ -300,6 +303,8 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     for proj in sln.projects:
         objects: Dict[str, Object] = proj.resolve(sln)
         n.comment(proj.name)
+        pch = proj.options["pch"]
+        pch_path = sln.build_dir / "base" / f"{proj.name}.pch"
         proj_base_object_targets: List[Path] = []
         for obj_name, obj in objects.items():
             split_object_targets.append(obj.split_obj_path)
@@ -309,12 +314,24 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
                 cflags.extend(obj.options["cflags"])
                 cflags.extend([f"/D{define}" for define in obj.options["defines"]])
                 cflags.extend([f"/I\"{path}\"" for path in obj.options["include_dirs"]])
+                implicit: List[Path] = [wrapper_implicit] if wrapper_implicit else []
+                implicit_outputs: List[Path] = []
+                if pch and obj.options["pch"] is not False:
+                    header = pch["header"]
+                    cflags.append(f"/FI{header}")
+                    if Path(pch["source"]) == obj.file_path:
+                        cflags.extend([f"/Yc{header}", f"/Fp{pch_path}"])
+                        implicit_outputs.append(pch_path)
+                    else:
+                        cflags.extend([f"/Yu{header}", f"/Fp{pch_path}"])
+                        implicit.append(pch_path)
                 n.build(
                     outputs=obj.base_obj_path,
                     rule="cl",
                     variables={"cflags": cflags},
                     inputs=obj.file_path,
-                    implicit=wrapper_implicit
+                    implicit=implicit,
+                    implicit_outputs=implicit_outputs,
                 )
         base_object_targets.extend(proj_base_object_targets)
         n.build(

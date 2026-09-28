@@ -80,6 +80,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "ui_widget_group.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

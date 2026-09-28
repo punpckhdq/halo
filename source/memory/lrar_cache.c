@@ -50,6 +50,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "lrar_cache.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

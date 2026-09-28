@@ -10,9 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "cseries.h"
-#include "math/real_math.h"
-#include "physics/collision_bsp.h"
 
 /* ---------- constants */
 

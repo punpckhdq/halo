@@ -52,6 +52,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "byte_swapping.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

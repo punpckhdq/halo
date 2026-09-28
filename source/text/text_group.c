@@ -14,6 +14,10 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "unicode.h"
+#include "text_group.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

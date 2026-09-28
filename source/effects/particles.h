@@ -8,7 +8,6 @@ header included in hcex build.
 #define __PARTICLES_H
 #pragma once
 
-#include "real_math.h"
 
 /* ---------- constants */
 

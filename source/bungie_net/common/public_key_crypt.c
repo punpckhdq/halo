@@ -36,6 +36,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "public_key_crypt.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

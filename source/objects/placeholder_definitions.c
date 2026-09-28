@@ -5,9 +5,24 @@ PLACEHOLDER_DEFINITIONS.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "placeholder_definitions.h"
-#include "real_math.h"
+#include "game.h"
 #include "scenario_definitions.h"
+#include "ai_scenario_definitions.h"
+#include "game_globals.h"
+#include "interface.h"
+#include "breakable_surfaces.h"
+#include "scenario.h"
+#include "object_definitions.h"
+#include "rasterizer_geometry.h"
+#include "model_animation_definitions.h"
+#include "model_definitions.h"
+#include "damage_resistances.h"
+#include "shader_definitions.h"
+#include "placeholder_definitions.h"
+#include "object_types.h"
+#include "objects.h"
+#include "damage.h"
+#include "models.h"
 
 /* ---------- public code */
 

@@ -31,7 +31,6 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "cseries_windows.h"
 #include "shell.h"
 #include "physical_memory_map.h"
 #include "xbox/rasterizer_xbox.h"

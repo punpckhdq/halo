@@ -10,7 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "tag_files.h"
 
 /* ---------- structures */
 

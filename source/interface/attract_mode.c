@@ -5,16 +5,11 @@ ATTRACT_MODE.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "cseries_windows.h"
 #include "attract_mode.h"
-#include "real_math.h"
-#include "cache_files.h"
 #include "bink_playback.h"
 #include "ui_widget.h"
 #include "sound_manager.h"
 #include "international_strings.h"
-#include "files.h"
-#include "errors.h"
 #include "event_manager.h"
 #include "network_game_globals.h"
 

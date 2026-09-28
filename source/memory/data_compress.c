@@ -5,7 +5,6 @@ DATA_COMPRESS.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "byte_swapping.h"
 #include "zlib.h"
 
 /* ---------- structures */

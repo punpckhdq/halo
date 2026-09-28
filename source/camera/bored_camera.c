@@ -36,6 +36,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "bored_camera.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

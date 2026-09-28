@@ -8,6 +8,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "game_engine_list.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

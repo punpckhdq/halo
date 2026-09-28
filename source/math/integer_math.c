@@ -5,7 +5,6 @@ INTEGER_MATH.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "integer_math.h"
 
 /* ---------- constants */
 

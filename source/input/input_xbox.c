@@ -100,6 +100,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "input.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

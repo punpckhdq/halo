@@ -10,7 +10,6 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "unit_definitions.h"
 
 /* ---------- constants */
 

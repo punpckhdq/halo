@@ -8,6 +8,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "effect_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

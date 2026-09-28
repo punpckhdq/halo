@@ -90,6 +90,9 @@ symbols in this file:
 
 /* ---------- headers */
 
+#include "cseries.h"
+#include "transport.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

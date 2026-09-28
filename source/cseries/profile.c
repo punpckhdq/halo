@@ -270,8 +270,6 @@ symbols in this file:
 #include "cseries.h"
 #include "profile.h"
 
-#include "math/real_math.h"
-
 /* ---------- constants */
 
 enum
