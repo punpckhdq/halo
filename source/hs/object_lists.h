@@ -10,20 +10,9 @@ OBJECT_LISTS.H
 
 /* ---------- macros */
 
-#define object_list_header_get(index)	((struct object_list_header_datum*)(datum_get(object_list_header_data, (index))))
-
 #define object_list_get(index)	((struct data_reference*)(datum_get(object_list_data, (index))))
 
 /* ---------- structures */
-
-struct object_list_header_datum
-{
-	short identifier;
-	word pad;
-	short reference_count;
-	short count;
-	long first_reference_index;
-};
 
 /* ---------- prototypes/OBJECT_LISTS.C */
 

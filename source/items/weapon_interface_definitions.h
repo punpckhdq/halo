@@ -14,6 +14,20 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct weapon_interface_definition
+{
+	struct tag_reference first_person_model;
+	struct tag_reference first_person_animations;
+	long unused[1];
+	struct tag_reference hud_interface;
+};
+
+struct weapon_magazine_interface_definition
+{
+	long unused[2];
+	rectangle2d unused_rectangles[2];
+};
+
 /* ---------- prototypes/EXAMPLE.C */
 
 /* ---------- globals */

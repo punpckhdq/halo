@@ -21,6 +21,13 @@ enum
 
 enum
 {
+	MAXIMUM_NUMBER_OF_HUD_SOUNDS = 12,
+	MAXIMUM_NUMBER_OF_WAYPOINTS = 16,
+	MAXIMUM_NUMBER_OF_HUD_DECIMAL_DIGITS = 4,
+};
+
+enum
+{
 	_hud_top_left = 0,
 	_hud_top_right,
 	_hud_bottom_left,

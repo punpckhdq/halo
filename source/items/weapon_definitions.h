@@ -12,6 +12,7 @@ header included in hcex build.
 
 #include "aim_assist.h"
 #include "item_definitions.h"
+#include "weapon_interface_definitions.h"
 
 /* ---------- constants */
 
@@ -47,20 +48,6 @@ enum
 #define weapon_definition_get(index) ((struct weapon_definition *)tag_get(WEAPON_DEFINITION_TAG, index))
 
 /* ---------- structures */
-
-struct weapon_interface_definition
-{
-	struct tag_reference first_person_model;
-	struct tag_reference first_person_animations;
-	long unused[1];
-	struct tag_reference hud_interface;
-};
-
-struct weapon_magazine_interface_definition
-{
-	long unused[2];
-	rectangle2d unused_rectangles[2];
-};
 
 struct weapon_magazine_definition
 {

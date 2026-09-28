@@ -14,27 +14,6 @@ header included in hcex build.
 
 /* ---------- structures */
 
-struct memory_pool_block
-{
-	unsigned long header_signature;
-	long size;
-	void **reference;
-	struct memory_pool_block *next_block;
-	struct memory_pool_block *previous_block;
-	unsigned long trailer_signature;
-};
-
-struct memory_pool
-{
-	unsigned long signature;
-	char name[32];
-	void *base_address;
-	long size;
-	long free_size;
-	struct memory_pool_block *first_block;
-	struct memory_pool_block *last_block;
-};
-
 /* ---------- prototypes/MEMORY_POOL.C */
 
 struct memory_pool *memory_pool_new(char const *name, long size);

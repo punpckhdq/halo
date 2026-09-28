@@ -6,6 +6,48 @@ FILES.C
 
 #include "cseries.h"
 
+/* ---------- constants */
+
+enum
+{
+	FILE_REFERENCE_SIGNATURE = 'filo'
+};
+
+enum
+{
+	_has_filename_bit = 0,
+
+	NUMBER_OF_REFERENCE_INFO_FLAGS
+};
+
+enum
+{
+	//NUMBER_OF_DATASTORE_ENTRIES
+	DATASTORE_MAX_DATA_SIZE = 255,
+	DATASTORE_MAX_FIELD_NAME_SIZE = 255
+};
+
+/* ---------- structures */
+
+struct datastore_entry
+{
+	char name[DATASTORE_MAX_FIELD_NAME_SIZE];
+	char data[DATASTORE_MAX_DATA_SIZE];
+};
+
+struct datastore
+{
+	struct datastore_entry entry[200];
+};
+
+struct file_reference_info
+{
+	unsigned long signature; // 0x0
+	word flags; // 0x4
+	short location; // 0x6
+	char path[256]; // 0x8
+};
+
 /* ---------- globals */
 
 char file_location_volume_names[NUMBER_OF_FILE_REFERENCE_LOCATIONS-1][256];

@@ -14,20 +14,6 @@ header included in hcex build.
 
 /* ---------- structures */
 
-struct lruv_cache
-{
-	char name[32];
-	void (*delete_block_proc)(long block_index);
-	boolean (*locked_block_proc)(long block_index);
-	long page_count;
-	long page_size_bits;
-	unsigned long frame_index;
-	long first_block_index;
-	long last_block_index;
-	struct data_array *blocks;
-	unsigned long signature;
-};
-
 /* ---------- prototypes/LRUV_CACHE.C */
 
 boolean lruv_has_locked_proc(struct lruv_cache const *cache);

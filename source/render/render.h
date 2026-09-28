@@ -19,6 +19,19 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct render_screen_flash
+{
+	short type;
+	real intensity;
+	real_argb_color color;
+};
+
+struct render_screen_effect
+{
+	short type;
+	real intensity;
+};
+
 struct rendered_cluster
 {
 	short cluster_index;

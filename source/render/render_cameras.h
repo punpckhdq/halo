@@ -49,19 +49,6 @@ struct render_lighting
 	real_rgb_color shadow_color;
 };
 
-struct render_screen_flash
-{
-	short type;
-	real intensity;
-	real_argb_color color;
-};
-
-struct render_screen_effect
-{
-	short type;
-	real intensity;
-};
-
 struct render_camera
 {
 	real_point3d position;

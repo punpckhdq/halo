@@ -24,18 +24,6 @@ enum
 
 /* ---------- structures */
 
-struct error_global_data
-{
-	boolean delayed;
-	boolean output_to_debug_file;
-	boolean display_state;
-	boolean recursion_lock;
-	boolean overflow_suppression;
-	boolean suppress_all;
-	short message_buffer_size;
-	char message_buffer[ERROR_MESSAGE_BUFFER_MAXIMUM_SIZE];
-};
-
 /* ---------- prototypes/ERRORS.C */
 
 void errors_initialize(void);

@@ -166,6 +166,14 @@ symbols in this file:
 
 /* ---------- constants */
 
+enum
+{
+	PATH_HASH_TABLE_SIZE_PER_KEY = 8,
+	PATH_HASH_KEY_MASK = 511,
+	PATH_HASH_TABLE_MASK = 4095,
+	MAXIMUM_PATH_EDGES_PER_COLLISION_SURFACE = 64
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

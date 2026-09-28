@@ -36,7 +36,11 @@ enum
 
 /* ---------- structures */
 
-struct animation_state;
+struct animation_state
+{
+	short index;
+	short frame_index;
+};
 
 /* ---------- prototypes/MODELS.C */
 

@@ -10,7 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
-#include "render_cameras.h"
+#include "render.h"
 
 /* ---------- constants */
 
@@ -19,28 +19,6 @@ enum
 	MAXIMUM_WINDOWS = 4,
 	MAXIMUM_LENS_FLARES_PER_FRAME = 1024,
 	MAXIMUM_LIGHTS_PER_WINDOW = 128,
-};
-
-enum
-{
-	RASTERIZER_MEMORY_POOL_SIZE = 0x18000,
-	RASTERIZER_MAXIMUM_TRIANGLES_PER_TRIANGLE_BUFFER = 24576,
-	RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES = 131072,
-	RASTERIZER_MAXIMUM_DEBUG_VERTICES = 393216,
-	RASTERIZER_MAXIMUM_TRANSPARENT_GEOMETRY_GROUPS = 384,
-	RASTERIZER_MAXIMUM_TRANSPARENT_GEOMETRY_GROUPS2 = 32,
-	RASTERIZER_MAXIMUM_DYNAMIC_TRIANGLES = 32768,
-	RASTERIZER_MAXIMUM_DYNAMIC_TRIANGLE_BUFFERS = 1024,
-	RASTERIZER_MAXIMUM_DYNAMIC_UNLIT_VERTICES = 8192,
-	RASTERIZER_MAXIMUM_DYNAMIC_LIT_VERTICES = 2,
-	RASTERIZER_MAXIMUM_DYNAMIC_SCREEN_VERTICES = 16384,
-	RASTERIZER_MAXIMUM_DYNAMIC_MODEL_VERTICES = 2048,
-	RASTERIZER_MAXIMUM_DYNAMIC_MODEL_PROCESSED_VERTICES = 8192,
-	RASTERIZER_MAXIMUM_DYNAMIC_VERTEX_BUFFERS = 1024,
-	RASTERIZER_MAXIMUM_DETAIL_OBJECTS_PER_FRAME = 4096,
-	RASTERIZER_NODES_PER_MODEL_VERTEX = 2,
-	RASTERIZER_MAXIMUM_NODES_PER_MODEL = 44,
-	RASTERIZER_MAXIMUM_NEARBY_OPAQUE_MODEL_GEOMETRY_GROUPS_THAT_MIGHT_OBSCURE_THE_ENVIRONMENT_FOG_SCREEN_EFFECT = 1
 };
 
 enum
@@ -223,6 +201,21 @@ struct rasterizer_frame_statistics_s
 	long decal_primitive_count;
 	long decal_shader_count;
 	long decal_texture_count;
+};
+
+struct rasterizer_lens_flare_submit_parameters
+{
+	struct lens_flare_definition *definition;
+	real_point3d position;
+	unsigned long compressed_direction;
+	unsigned long compressed_up;
+	unsigned long compressed_light_color;
+	short light_identifier;
+	short light_index;
+	short lens_flare_index;
+	byte compressed_window_index;
+	byte compressed_light_scale;
+	long internal__occlusion_pixels;
 };
 
 /* ---------- prototypes/RASTERIZER.C */

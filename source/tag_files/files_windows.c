@@ -119,9 +119,53 @@ symbols in this file:
 
 /* ---------- constants */
 
+//enum
+//{
+//    _find_files_recursive_bit = 0,
+//    _find_files_enumerate_directories_bit,
+//    NUMBER_OF_FIND_FILES_FLAGS,
+//};
+
+//enum
+//{
+//    FIRST_DRIVE_LETTER = 65, // 0x0041 'A'
+//    LAST_DRIVE_LETTER = 90, // 0x005A 'Z'
+//    DRIVE_NAME_LENGTH = 4, // 0x0004
+//    DIRECTORY_SEPARATOR = 92, // 0x005C '\'
+//    EXTENSION_SEPARATOR = 46, // 0x002E '.'
+//    BAD_FILE = -1, // 0xFF
+//    MAXIMUM_SEARCH_DEPTH = 8, // 0x0008
+//};
+
+enum
+{
+	has_filename_bit = 0,
+	NUMBER_OF_REFERENCE_INFO_FLAGS
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
+
+//struct find_files_state
+//{
+//    unsigned long flags; // 0x0
+//    short depth; // 0x4
+//    short location; // 0x6
+//    char path[256]; // 0x8
+//    void *handles[8]; // 0x108
+//    _WIN32_FIND_DATAA data; // 0x128
+//};
+//static_assert(sizeof(find_files_state) == 616, "Invalid find_files_state size");
+
+struct file_reference_info
+{
+	unsigned long signature; // 0x0
+	word flags; // 0x4
+	short location; // 0x6
+	char path[256]; // 0x8
+	void *file_handle; // 0x108
+};
 
 /* ---------- prototypes */
 

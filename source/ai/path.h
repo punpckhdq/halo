@@ -21,14 +21,6 @@ enum
 
 enum
 {
-	PATH_HASH_TABLE_SIZE_PER_KEY = 8,
-	PATH_HASH_KEY_MASK = 511,
-	PATH_HASH_TABLE_MASK = 4095,
-	MAXIMUM_PATH_EDGES_PER_COLLISION_SURFACE = 64
-};
-
-enum
-{
 	_path_traverse_result_none = 0,
 	_path_traverse_result_initial_not_pathfindable,
 	_path_traverse_result_never_close_enough,

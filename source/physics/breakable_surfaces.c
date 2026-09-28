@@ -20,7 +20,12 @@ BREAKABLE_SURFACES.C
 #include "projectile_definitions.h"
 #include "particles.h"
 
+/* ---------- constants */
 
+enum
+{
+	MAXIMUM_BREAKABLE_SURFACE_QUEUE_SIZE = 1024,
+};
 
 /* ---------- structures */
 

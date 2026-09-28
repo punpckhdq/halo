@@ -41,12 +41,6 @@ HUD_UNIT.C
 
 enum
 {
-	NUMBER_OF_UNIT_AUXILARY_METERS = 1,
-	MAXIMUM_NUMBER_OF_HUD_SOUNDS = 12,
-};
-
-enum
-{
 	_hud_panel_health_dont_show_bit = 0,
 	_hud_panel_health_blink_bit,
 	_hud_panel_shield_dont_show_bit,

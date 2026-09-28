@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "collision_bsp.h"
 #include "collision_model_definitions.h"
 
 /* ---------- constants */
@@ -24,6 +25,22 @@ struct collision_model_instance
 	const struct collision_model *model;
 	const byte *region_permutation_indices;
 	const struct real_matrix4x3 *matrices;
+};
+
+struct collision_model_test_vector_result
+{
+	short node_index;
+	short region_index;
+	short bsp_index;
+	struct collision_bsp_test_vector_result bsp_result;
+};
+
+struct collision_model_test_pill_result
+{
+	short node_index;
+	short region_index;
+	short bsp_index;
+	struct collision_bsp_test_pill_result bsp_result;
 };
 
 /* ---------- prototypes/COLLISION_MODELS.C */

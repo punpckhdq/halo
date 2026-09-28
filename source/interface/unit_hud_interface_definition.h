@@ -33,8 +33,19 @@ enum
 enum
 {
 	_auxilary_meter_integrated_light = 0,
+	NUMBER_OF_UNIT_AUXILARY_METERS,
+};
+
+enum
+{
 	_auxilary_overlay_team = 0,
+	NUMBER_OF_UNIT_AUXILARY_OVERLAY_TYPES,
+};
+
+enum
+{
 	_auxilary_overlay_use_team_color_bit = 0,
+	NUMBER_OF_UNIT_AUXILARY_OVERLAY_FLAGS,
 };
 
 /* ---------- structures */
