@@ -549,7 +549,10 @@ def generate_solution(sln: SolutionConfig) -> None:
         
         vc_macros: List[str] = proj.options["defines"]
         vc_include_dirs: List[Path] = [relative_root / path for path in proj.options["include_dirs"] or []]
-        vc_params = BuildParams(macros=vc_macros, include_directories=vc_include_dirs, output=f"{proj.name}_build")
+        vc_forced: List[Path] = []
+        if proj.options["pch"]:
+            vc_forced.append(relative_root / Path(proj.options["pch"]["source"]).with_name(proj.options["pch"]["header"]))
+        vc_params = BuildParams(macros=vc_macros, include_directories=vc_include_dirs, forced_includes=vc_forced, output=f"{proj.name}_build")
         vc_proj.add_build_params(str(vc_config), vc_params)
         
         vc_sources: List[Path] = []

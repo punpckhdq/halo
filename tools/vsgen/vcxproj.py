@@ -80,6 +80,8 @@ class VcxProj:
                     params.include_directories = list(map(Path, include_directories.split(';')))
                 if macros := self._read_opt_node(config_node, 'NMakePreprocessorDefinitions'):
                     params.macros = macros.split(' ')
+                if forced_includes := self._read_opt_node(config_node, 'NMakeForcedIncludes'):
+                    params.forced_includes = list(map(Path, forced_includes.split(';')))
                 if additional_options := self._read_opt_node(config_node, 'AdditionalOptions'):
                     params.additional_options = additional_options.split(';')
                 if self._read_opt_node(config_node, 'IncludePath') == '$(INCLUDE)':
@@ -208,6 +210,10 @@ class VcxProj:
             if params.include_directories:
                 ET.SubElement(compile_cmd, 'NMakeIncludeSearchPath').text = ';'.join(
                     map(self._relpath, params.include_directories)
+                )
+            if params.forced_includes:
+                ET.SubElement(compile_cmd, 'NMakeForcedIncludes').text = ';'.join(
+                    map(self._relpath, params.forced_includes)
                 )
             if params.additional_options:
                 ET.SubElement(compile_cmd, 'AdditionalOptions').text = ' '.join(params.additional_options)

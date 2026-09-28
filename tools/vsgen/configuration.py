@@ -39,6 +39,7 @@ class BuildParams:
     output: str | None = None
     include_directories: list[Path] = field(default_factory=list)
     macros: list[str] = field(default_factory=list)
+    forced_includes: list[Path] = field(default_factory=list)
     additional_options: list[str] = field(default_factory=list)
     search_paths: list[Path] = field(default_factory=list)
     envs: dict[str, str] = field(default_factory=dict)
