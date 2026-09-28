@@ -31,23 +31,23 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "scenario_definitions.h"
 #include "ai_scenario_definitions.h"
 #include "game_globals.h"
 #include "interface.h"
-#include "object_definitions.h"
-#include "object_types.h"
-#include "objects.h"
 #include "damage.h"
 #include "breakable_surfaces.h"
 #include "scenario.h"
+#include "object_definitions.h"
 #include "rasterizer_geometry.h"
 #include "model_animation_definitions.h"
 #include "model_definitions.h"
 #include "models.h"
 #include "damage_resistances.h"
 #include "shader_definitions.h"
+#include "objects.h"
 #include "bsp3d.h"
 #include "bsp2d.h"
 #include "collision_bsp_definitions.h"
@@ -65,7 +65,6 @@ symbols in this file:
 #include "biped_definitions.h"
 #include "bipeds.h"
 #include "physics_constants.h"
-#include "biped_limp_noodle.h"
 
 /* ---------- constants */
 

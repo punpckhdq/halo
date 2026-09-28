@@ -5,11 +5,13 @@ MARKETING_AND_STRATEGIC_BUSINESS_DEVELOPMENT.C
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "scenario_definitions.h"
 #include "ai_scenario_definitions.h"
 #include "game_globals.h"
 #include "interface.h"
+#include "damage.h"
 #include "breakable_surfaces.h"
 #include "scenario.h"
 #include "bungie_net/common/message_header.h"
@@ -27,10 +29,6 @@ MARKETING_AND_STRATEGIC_BUSINESS_DEVELOPMENT.C
 #include "ui_widget.h"
 #include "physical_memory_map.h"
 #include "marketing_and_strategic_business_development.h"
-#include "object_definitions.h"
-#include "object_types.h"
-#include "objects.h"
-#include "damage.h"
 
 /* ---------- prototypes */
 

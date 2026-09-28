@@ -10,11 +10,6 @@ header included in hcex build.
 
 /* ---------- constants */
 
-enum
-{
-	MAXIMUM_NUMBER_OF_LOCAL_PLAYERS = 4,
-};
-
 /* ---------- macros */
 
 /* ---------- structures */

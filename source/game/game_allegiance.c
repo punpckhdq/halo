@@ -51,6 +51,7 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "ai.h"
 #include "bungie_net/common/message_header.h"

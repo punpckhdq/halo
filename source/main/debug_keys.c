@@ -5,23 +5,23 @@ DEBUG_KEYS.C
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "scenario_definitions.h"
 #include "ai_scenario_definitions.h"
 #include "game_globals.h"
 #include "interface.h"
-#include "object_definitions.h"
-#include "object_types.h"
-#include "objects.h"
 #include "damage.h"
 #include "breakable_surfaces.h"
 #include "scenario.h"
+#include "object_definitions.h"
 #include "rasterizer_geometry.h"
 #include "model_animation_definitions.h"
 #include "model_definitions.h"
 #include "models.h"
 #include "damage_resistances.h"
 #include "shader_definitions.h"
+#include "objects.h"
 #include "ai.h"
 #include "ai_constants.h"
 #include "bungie_net/common/message_header.h"
@@ -31,17 +31,38 @@ DEBUG_KEYS.C
 #include "game_engine.h"
 #include "network_game_manager.h"
 #include "players.h"
-#include "path.h"
-#include "actions.h"
-#include "actors.h"
 #include "input.h"
+#ifdef DEBUG
+#include "path.h"
+#endif
 #include "ai_debug.h"
 #include "encounters.h"
 #include "director.h"
 #include "ai_profile.h"
 #include "ai_script.h"
-#include "profile.h"
-#include "debug_keys.h"
+
+/* ---------- constants */
+
+enum
+{
+	_debug_key_no_modifier = 0,
+	_debug_key_shift,
+	_debug_key_ctrl,
+	_debug_key_shift_ctrl,
+	NUMBER_OF_DEBUG_KEY_MODIFIERS,
+};
+
+/* ---------- structures */
+
+struct debug_key
+{
+	const char *name;
+	short key_code;
+	short modifier;
+	void (*function)(boolean down);
+	boolean toggle_variable;
+	boolean *variable;
+};
 
 /* ---------- prototypes */
 

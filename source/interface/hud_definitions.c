@@ -17,19 +17,23 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "scenario_definitions.h"
 #include "ai_scenario_definitions.h"
 #include "game_globals.h"
 #include "interface.h"
+#include "damage.h"
 #include "breakable_surfaces.h"
 #include "scenario.h"
 #include "object_definitions.h"
 #include "rasterizer_geometry.h"
 #include "model_animation_definitions.h"
 #include "model_definitions.h"
+#include "models.h"
 #include "damage_resistances.h"
 #include "shader_definitions.h"
+#include "objects.h"
 #include "bungie_net/common/message_header.h"
 #include "network_game_globals.h"
 #include "unicode.h"
@@ -46,10 +50,6 @@ symbols in this file:
 #include "font_group.h"
 #include "weapon_hud_interface_definition.h"
 #include "hud_messaging_definitions.h"
-#include "object_types.h"
-#include "objects.h"
-#include "damage.h"
-#include "models.h"
 
 /* ---------- constants */
 

@@ -10,19 +10,6 @@ header included in hcex build.
 
 /* ---------- constants */
 
-/* right placement? language.h doesn't exist */
-enum
-{
-	_german = 0,
-	_french,
-	_spanish,
-	_italian,
-	_english,
-	_japanese,
-	_unknown,
-	NUMBER_OF_SUPPORTED_LANGUAGES,
-};
-
 enum
 {
 	_language_roman = 0,

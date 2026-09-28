@@ -10,7 +10,9 @@ COLLISION_FEATURES.C
 #include "collision_bsp_definitions.h"
 #include "collision_bsp.h"
 #include "collision_features.h"
+#ifdef DEBUG
 #include "render_debug.h"
+#endif
 
 /* ---------- constants */
 

@@ -14,7 +14,6 @@ CSERIES.H
 #include <malloc.h>
 #include <math.h>
 #include <string.h>
-#include <stdarg.h>
 
 /* ---------- constants */
 
@@ -86,8 +85,19 @@ enum
 	NUMBER_OF_POINTS_PER_RECTANGLE = 4,
 };
 
-
 #define NONE -1
+
+enum
+{
+	_german = 0,
+	_french,
+	_spanish,
+	_italian,
+	_english,
+	_japanese,
+	_unknown,
+	NUMBER_OF_SUPPORTED_LANGUAGES,
+};
 
 /* ---------- macros */
 
@@ -161,6 +171,15 @@ typedef unsigned short word;
 typedef byte boolean;
 
 typedef unsigned long tag;
+
+/* ---------- structures */
+
+struct location
+{
+	long leaf_index;
+	short cluster_index;
+	word bonus;
+};
 
 /* ---------- prototypes/CSERIES.C */
 

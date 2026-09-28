@@ -95,11 +95,13 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "scenario_definitions.h"
 #include "ai_scenario_definitions.h"
 #include "game_globals.h"
 #include "interface.h"
+#include "damage.h"
 #include "breakable_surfaces.h"
 #include "scenario.h"
 #include "bungie_net/common/message_header.h"
@@ -113,10 +115,6 @@ symbols in this file:
 #include "text_group.h"
 #include "player_ui.h"
 #include "physical_memory_map.h"
-#include "object_definitions.h"
-#include "object_types.h"
-#include "objects.h"
-#include "damage.h"
 
 /* ---------- constants */
 

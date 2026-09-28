@@ -132,7 +132,6 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "profile.h"
 
 #undef memcmp
 #undef memmove

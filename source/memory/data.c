@@ -5,7 +5,6 @@ DATA.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "data.h"
 
 /* ---------- constants */
 

@@ -47,7 +47,6 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "data_packets.h"
 
 /* ---------- constants */
 

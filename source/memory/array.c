@@ -5,9 +5,6 @@ ARRAY.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "array.h"
-
-#include "cseries/profile.h"
 
 /* ---------- globals */
 

@@ -67,7 +67,6 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
-#include "data_encoding.h"
 
 /* ---------- constants */
 

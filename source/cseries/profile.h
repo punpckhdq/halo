@@ -54,8 +54,6 @@ extern boolean profile_global_enable;
 extern boolean profile_dump_frames;
 extern boolean profile_dump_lost_frames;
 
-/* comm */
-boolean profile_global_enable;
 
 /* ---------- public code */
 

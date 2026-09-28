@@ -52,6 +52,7 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "bungie_net/common/message_header.h"
 #include "network_game_globals.h"
@@ -76,7 +77,6 @@ symbols in this file:
 #include "build_number.h"
 #include "virtual_keyboard.h"
 #include "shell_windows.h"
-#include "profile.h"
 
 /* ---------- constants */
 

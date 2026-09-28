@@ -64,8 +64,6 @@ symbols in this file:
 #include "terminal.h"
 #include "build_number.h"
 
-#include <time.h>
-
 /* ---------- constants */
 
 /* ---------- macros */

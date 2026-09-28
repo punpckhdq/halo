@@ -5,7 +5,6 @@ CRC.C
 /* ---------- headers */
 
 #include "cseries.h"
-#include "crc.h"
 
 /* ---------- constants */
 

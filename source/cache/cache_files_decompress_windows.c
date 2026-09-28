@@ -221,8 +221,6 @@ symbols in this file:
 
 #include "cseries.h"
 #include "cache_files_decompress_windows.h"
-#include "zconf.h"
-#include "zlib.h"
 
 /* ---------- constants */
 

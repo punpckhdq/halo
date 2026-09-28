@@ -409,19 +409,23 @@ symbols in this file:
 /* ---------- headers */
 
 #include "cseries.h"
+#include "cheats.h"
 #include "game.h"
 #include "scenario_definitions.h"
 #include "ai_scenario_definitions.h"
 #include "game_globals.h"
 #include "interface.h"
+#include "damage.h"
 #include "breakable_surfaces.h"
 #include "scenario.h"
 #include "object_definitions.h"
 #include "rasterizer_geometry.h"
 #include "model_animation_definitions.h"
 #include "model_definitions.h"
+#include "models.h"
 #include "damage_resistances.h"
 #include "shader_definitions.h"
+#include "objects.h"
 #include "ai.h"
 #include "ai_constants.h"
 #include "bungie_net/common/message_header.h"
@@ -434,6 +438,7 @@ symbols in this file:
 #include "input.h"
 #include "encounters.h"
 #include "hud_definitions.h"
+#include "devices.h"
 #include "ai_script.h"
 #include "hs.h"
 #include "recorded_animation_definitions.h"
@@ -441,11 +446,6 @@ symbols in this file:
 #include "hs_library_internal.h"
 #include "hs_scenario_definitions.h"
 #include "hs_library_internal_compile.h"
-#include "object_types.h"
-#include "objects.h"
-#include "damage.h"
-#include "models.h"
-#include "devices.h"
 
 /* ---------- constants */
 

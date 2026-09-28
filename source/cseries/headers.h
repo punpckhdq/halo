@@ -12,7 +12,10 @@ HEADERS.H
 #include "cseries_windows.h"
 #include "platform.h"
 #include "errors.h"
+#include <time.h>
+
 #include "progress.h"
+#include "profile.h"
 
 #include "integer_math.h"
 #include "real_math.h"
