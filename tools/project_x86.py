@@ -284,12 +284,19 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     ###
     # Build rules
     ###
-    n.rule(
-        name="cl",
-        command=f"{wrapper_cmd}xbox/bin/vc7/CL.Exe /nologo /c /showIncludes $cflags /Fo$out $in",
-        description="CL $out",
-        deps="msvc",
-    )
+    if is_windows():
+        n.rule(
+            name="cl",
+            command=f"{wrapper_cmd}xbox/bin/vc7/CL.Exe /nologo /c /showIncludes $cflags /Fo$out $in",
+            description="CL $out",
+            deps="msvc",
+        )
+    else:
+        n.rule(
+            name="cl",
+            command=f"{wrapper_cmd}xbox/bin/vc7/CL.Exe /nologo /c $cflags /Fo$out $in",
+            description="CL $out",
+        )
     n.newline()
     
     ###

@@ -84,7 +84,7 @@ def wibo_url(tag: str) -> str:
     if system == "darwin":
         arch = "macos"
 
-    repo = "https://github.com/decompals/wibo"
+    repo = "https://github.com/punpckhdq/wibo"
     return f"{repo}/releases/download/{tag}/wibo-{arch}"
 
 

@@ -118,8 +118,8 @@ if not is_windows():
 
 # Tool versions
 sln.objdiff_tag = "v3.3.1"
-sln.csplit_tag = "v0.0.2"
-sln.wibo_tag = "1.0.0"
+sln.csplit_tag = "v0.0.3"
+sln.wibo_tag = "1.2.0-crypt"
 
 sln.projects = []
 for build_project in build_config["projects"]:
