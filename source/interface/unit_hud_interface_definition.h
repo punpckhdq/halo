@@ -6,6 +6,10 @@ UNIT_HUD_INTERFACE_DEFINITION.H
 #define __UNIT_HUD_INTERFACE_DEFINITION_H
 #pragma once
 
+/* ---------- headers */
+
+#include "hud_definitions.h"
+
 
 /* ---------- constants */
 

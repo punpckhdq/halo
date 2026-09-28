@@ -10,6 +10,10 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "render_cameras.h"
+#include "leaf_map.h"
+#include "rasterizer_geometry.h"
+
 /* ---------- constants */
 
 enum

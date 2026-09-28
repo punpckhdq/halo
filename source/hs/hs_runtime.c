@@ -297,9 +297,6 @@ symbols in this file:
 #include "collision_usage.h"
 #include "collision_features.h"
 #include "collisions.h"
-#ifdef DEBUG
-#include "path.h"
-#endif
 #include "ai_debug.h"
 #include "encounters.h"
 #include "render_debug.h"

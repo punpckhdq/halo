@@ -11,7 +11,8 @@ header included in hcex build.
 
 /* ---------- headers */
 
-
+#include "bsp2d.h"
+#include "bsp3d.h"
 
 /* ---------- constants */
 

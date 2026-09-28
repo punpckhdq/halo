@@ -10,7 +10,8 @@ header included in hcex build.
 
 /* ---------- headers */
 
-
+#include "aim_assist.h"
+#include "item_definitions.h"
 
 /* ---------- constants */
 

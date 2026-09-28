@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "collision_bsp.h"
 
 /* ---------- constants */
 

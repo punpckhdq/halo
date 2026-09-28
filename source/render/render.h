@@ -10,6 +10,9 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "render_cameras.h"
+#include "structure_bsp_definitions.h"
+
 /* ---------- constants */
 
 /* ---------- macros */

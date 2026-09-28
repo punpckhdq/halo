@@ -10,6 +10,8 @@ file has inline function assertions.
 
 /* ---------- headers */
 
+#include "object_definitions.h"
+
 /* ---------- constants */
 
 enum

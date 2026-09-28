@@ -32,9 +32,6 @@ DEBUG_KEYS.C
 #include "network_game_manager.h"
 #include "players.h"
 #include "input.h"
-#ifdef DEBUG
-#include "path.h"
-#endif
 #include "ai_debug.h"
 #include "encounters.h"
 #include "director.h"

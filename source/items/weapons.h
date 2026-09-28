@@ -10,6 +10,8 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "model_animation_definitions.h"
+#include "items.h"
 
 /* ---------- constants */
 
