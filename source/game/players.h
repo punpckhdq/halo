@@ -17,6 +17,11 @@ header included in hcex build.
 
 enum
 {
+	MAXIMUM_NUMBER_OF_LOCAL_PLAYERS = 4,
+};
+
+enum
+{
 	_player_powerup_active_camouflage = 0,
 	_player_powerup_full_spectrum_vision,
 	NUMBER_OF_PLAYER_POWERUPS,
