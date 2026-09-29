@@ -55,9 +55,9 @@ enum
 	OBJECT_ITERATOR_SIGNATURE = 0x86868686,
 	MAXIMUM_CLUSTERS_PER_OBJECT = 32,
 	OBJECT_MEMORY_POOL_SIZE = 0x100000,
-	GARBAGE_LIMIT_FREE_MEMORY_CRITICAL = 52428,
-	GARBAGE_LIMIT_FREE_MEMORY_TRIGGER = 104857,
-	GARBAGE_LIMIT_FREE_MEMORY_TARGET = 209715,
+	GARBAGE_LIMIT_FREE_MEMORY_CRITICAL = 26214,
+	GARBAGE_LIMIT_FREE_MEMORY_TRIGGER = 52428,
+	GARBAGE_LIMIT_FREE_MEMORY_TARGET = 104857,
 	GARBAGE_LIMIT_FREE_OBJECTS_CRITICAL = 51,
 	GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER = 102,
 	GARBAGE_LIMIT_FREE_OBJECTS_TARGET = 204,
@@ -2298,13 +2298,6 @@ void object_compute_node_matrices(
 {
 	real_orientation cannot_interpolate_node_orientations_storage[MAXIMUM_NODES_PER_MODEL];
 	short node_stack[MAXIMUM_NODES_PER_MODEL];
-	real_matrix4x3 center_matrix;
-	real_matrix4x3 offset_matrix;
-	real_matrix4x3 node_matrix;
-	real_matrix4x3 object_translation_matrix;
-	real_matrix4x3 object_rotation_matrix;
-	real_point3d center;
-	real_matrix4x3 parent_node_matrix_no_scale_no_mirror;
 
 	struct object_datum *object = object_get(object_index);
 	struct object_definition *object_definition = object_definition_get(object->definition_index);
@@ -2322,7 +2315,6 @@ void object_compute_node_matrices(
 
 		short node_count;
 		short node_index;
-		long unknown_var;
 
 		struct object_type_definition *object_type_definition = object_type_definition_get(object->object.type);
 		
@@ -2491,7 +2483,6 @@ void object_compute_node_matrices(
 
 		node_index = 0;
 		node_count = 1;
-		unknown_var = 0;
 		node_stack[0] = 0;
 
 		while (node_index!=node_count)
@@ -2501,6 +2492,14 @@ void object_compute_node_matrices(
 			
 			if (node_stack_index==0)
 			{
+				real_matrix4x3 node_matrix;
+				real_matrix4x3 object_translation_matrix;
+				real_matrix4x3 object_rotation_matrix;
+				real_matrix4x3 center_matrix;
+				real_point3d center;
+				real_matrix4x3 offset_matrix;
+				real_matrix4x3 parent_node_matrix_no_scale_no_mirror;
+
 				matrix4x3_from_orientation(&node_matrix, node_orientations);
 				
 				if (!world_relative)
@@ -2536,7 +2535,7 @@ void object_compute_node_matrices(
 
 							parent_node_matrix_no_scale_no_mirror= *object_node_matrix;
 							object_node_matrix= &parent_node_matrix_no_scale_no_mirror;
-							parent_node_matrix_no_scale_no_mirror.scale= 1.f;
+							object_node_matrix->scale= 1.f;
 						}
 
 						if (TEST_FLAG(object_get(object->object.parent_object_index)->object.flags, _object_mirrored_bit))
@@ -2666,20 +2665,17 @@ void object_compute_node_matrices(
 						object_nodes[node_stack_index].position.y,
 						object_nodes[node_stack_index].position.z);
 					error(_error_silent, "                scale %f", object_nodes[node_stack_index].scale);
-				}
-				
 
-				match_assert_valid_real_matrix4x3_custom_string(
-					"c:\\halo\\SOURCE\\objects\\objects.c",
-					2921,
-					&object_nodes[node_stack_index],
-					"object_compute_node_matrices root node matrix");
+					match_assert_valid_real_matrix4x3_custom_string(
+						"c:\\halo\\SOURCE\\objects\\objects.c",
+						2921,
+						&object_nodes[node_stack_index],
+						"object_compute_node_matrices root node matrix");
+				}
 			}
 			else
 			{
-				real_orientation *orientation = &node_orientations[node_stack_index];
-
-				matrix4x3_from_orientation(&object_nodes[node_stack_index], orientation);
+				matrix4x3_from_orientation(&object_nodes[node_stack_index], &node_orientations[node_stack_index]);
 				match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 2929, node->parent_node_index!=NONE);
 				matrix4x3_multiply(
 					&object_nodes[node->parent_node_index],
@@ -3234,7 +3230,7 @@ long object_new(
 			point_from_line3d(
 				&object->object.position,
 				&object->object.up,
-				data->height,
+				(data->height),
 				&object->object.position);
 
 			SET_FLAG(object->object.flags, _object_mirrored_bit, TEST_FLAG(data->flags, _new_object_mirrored_bit));
@@ -3355,26 +3351,23 @@ long object_new(
 				success = FALSE;
 			}
 
-			if (success)
-			{
-				if (object_definition->object.creation_effect.index!=NONE)
-				{
-					effect_new_from_object(
-						object_definition->object.creation_effect.index,
-						object_index,
-						object_index,
-						NONE,
-						0.f,
-						0.f,
-						NULL,
-						NULL);
-				}
-			}
-			else
+			if (!success)
 			{
 				object_type_delete(object_index);
 				object_header_delete(object_header_data, object_index);
 				object_index = NONE;
+			}
+			else if (object_definition->object.creation_effect.index!=NONE)
+			{
+				effect_new_from_object(
+					object_definition->object.creation_effect.index,
+					object_index,
+					object_index,
+					NONE,
+					0.f,
+					0.f,
+					NULL,
+					NULL);
 			}
 		}
 	}
@@ -3396,23 +3389,20 @@ void object_attach_to_node(
 	long child_object_index,
 	short parent_node_index)
 {
-	long object_index;
-	struct object_datum *object;
-
+	long object_index = parent_object_index;
 	boolean valid = TRUE;
 
-	for (
-		object_index = parent_object_index;
-		object_index!=NONE;
-		object_index = object->object.parent_object_index)
+	while (object_index!=NONE)
 	{
-		object = object_get(object_index);
+		struct object_datum *object = object_get(object_index);
 
 		if (object_index==child_object_index)
 		{
 			valid = FALSE;
 			break;
 		}
+
+		object_index = object->object.parent_object_index;
 	}
 
 	match_vassert(
@@ -3423,7 +3413,7 @@ void object_attach_to_node(
 
 	if (valid)
 	{
-		real_matrix4x3 inverse_node_matrix;
+		real_matrix4x3 inverted_matrix;
 
 		struct object_datum *child_object = object_get(child_object_index);
 		struct object_datum *parent_object = object_get(parent_object_index);
@@ -3439,10 +3429,10 @@ void object_attach_to_node(
 			object_disconnect_from_map(child_object_index);
 		}
 		
-		matrix4x3_inverse(object_get_node_matrix(parent_object_index, parent_node_index), &inverse_node_matrix);
-		matrix4x3_transform_point(&inverse_node_matrix, &child_object->object.position, &child_object->object.position);
-		matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.forward, &child_object->object.forward);
-		matrix4x3_transform_normal(&inverse_node_matrix, &child_object->object.up, &child_object->object.up);
+		matrix4x3_inverse(object_get_node_matrix(parent_object_index, parent_node_index), &inverted_matrix);
+		matrix4x3_transform_point(&inverted_matrix, &child_object->object.position, &child_object->object.position);
+		matrix4x3_transform_normal(&inverted_matrix, &child_object->object.forward, &child_object->object.forward);
+		matrix4x3_transform_normal(&inverted_matrix, &child_object->object.up, &child_object->object.up);
 
 		child_object->object.parent_object_index = parent_object_index;
 		child_object->object.parent_node_index = parent_node_index;
@@ -3731,23 +3721,19 @@ void object_delete_immediately(
 void objects_garbage_collection(
 	void)
 {
-	long garbage_collect_mode = NONE;
+	short garbage_collect_mode = NONE;
 
 	if (object_globals->force_garbage_collection)
 	{
 		garbage_collect_mode = _garbage_collect_everything;
 	}
-	else if (memory_pool_get_contiguous_free_size(object_memory_pool)<=GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
+	else if (memory_pool_get_contiguous_free_size(object_memory_pool)<=GARBAGE_LIMIT_FREE_MEMORY_TRIGGER)
 	{
 		memory_pool_compact(object_memory_pool);
 		
-		if (memory_pool_get_contiguous_free_size(object_memory_pool)<=GARBAGE_LIMIT_FREE_MEMORY_TRIGGER)
+		if (memory_pool_get_contiguous_free_size(object_memory_pool)<=GARBAGE_LIMIT_FREE_MEMORY_TARGET)
 		{
 			garbage_collect_mode = _garbage_collect_for_space;
-		}
-		else
-		{
-			object_globals->force_garbage_collection = FALSE;
 		}
 	}
 	else
@@ -3815,7 +3801,7 @@ void objects_garbage_collection(
 				break;
 			case _garbage_collect_for_space:
 				should_collect =
-					memory_pool_get_free_size(object_memory_pool)>=GARBAGE_LIMIT_FREE_MEMORY_TRIGGER &&
+					memory_pool_get_free_size(object_memory_pool)>=GARBAGE_LIMIT_FREE_MEMORY_TARGET &&
 					MAXIMUM_OBJECTS_PER_MAP-object_header_data->count>=GARBAGE_LIMIT_FREE_OBJECTS_TARGET;
 				break;
 			default:
@@ -3827,7 +3813,6 @@ void objects_garbage_collection(
 			{
 				break;
 			}
-			
 
 			object_index = garbage_object_indices[--garbage_object_count];
 			header = object_header_get(object_index);
@@ -3838,7 +3823,7 @@ void objects_garbage_collection(
 				garbage_collect = TEST_FLAG(header->flags, _object_header_active_bit);
 			}
 
-			if (garbage_collect && object_visible_to_any_player(object_index))
+			if (object_visible_to_any_player(object_index))
 			{
 				garbage_collect = FALSE;
 			}
@@ -3855,7 +3840,6 @@ void objects_garbage_collection(
 						"WARNING: garbage collecting a living unit (%s)",
 						ai_debug_describe_actor(NONE, object_index, TRUE, temporary, NUMBEROF(temporary)));
 				}
-
 
 				if (TEST_FLAG(header->flags, _object_header_active_bit))
 				{
@@ -3881,71 +3865,66 @@ void objects_garbage_collection(
 		if (!should_collect)
 		{
 			const struct object_memory_release_function *current_release_procs = object_memory_release_procs;
-			boolean v0 = FALSE;
+			boolean release_procs_initialized = FALSE;
+			unsigned char release_proc_working_memory[4096];
+			char warningbuf[512];
 			boolean garbage_collection_after_first_attempt = FALSE;
 			boolean garbage_should_warn = object_globals->last_garbage_warn_time==NONE || object_globals->last_garbage_warn_time+150<game_time_get();
 			boolean update_time = FALSE;
+			boolean debug_garbage_collection;
+			boolean status_still_critical;
 
-			while (TRUE)
+			do
 			{
-				char warningbuf[512];
-				unsigned char release_proc_working_memory[4096];
-				char released_resultbuf[512];
+				debug_garbage_collection = FALSE;
+				status_still_critical = FALSE;
 
-				boolean debug_garbage_collection = FALSE;
-				boolean status_still_critical = FALSE;
-
-				if (garbage_collect_mode==_garbage_collect_for_space)
+				switch (garbage_collect_mode)
 				{
-					long free_size = memory_pool_get_contiguous_free_size(object_memory_pool);
-					long free_objects = MAXIMUM_OBJECTS_PER_MAP-object_header_data->count;
-					boolean debug_slots_free = FALSE;
+				case _garbage_collect_for_space:
+					{
+						long free_size = memory_pool_get_contiguous_free_size(object_memory_pool);
+						long free_objects = MAXIMUM_OBJECTS_PER_MAP-object_header_data->count;
+						boolean debug_slots_free = FALSE;
 
-					if (free_size<=GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
-					{
-						status_still_critical = TRUE;
-						debug_garbage_collection = TRUE;
-					}
-					else
-					{
-						if (free_objects<=GARBAGE_LIMIT_FREE_OBJECTS_CRITICAL)
+						if (free_size<=GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
+						{
+							status_still_critical = TRUE;
+							debug_garbage_collection = TRUE;
+						}
+						else if (free_objects<=GARBAGE_LIMIT_FREE_OBJECTS_CRITICAL)
 						{
 							status_still_critical = TRUE;
 							debug_garbage_collection = TRUE;
 							debug_slots_free = TRUE;
 						}
+						else if (free_size<=GARBAGE_LIMIT_FREE_MEMORY_TRIGGER)
+						{
+							debug_garbage_collection = TRUE;
+						}
+						else if (free_objects<=GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
+						{
+							debug_garbage_collection = TRUE;
+							debug_slots_free = TRUE;
+						}
+
+						if (debug_slots_free)
+						{
+							sprintf(warningbuf, "%d slots free", free_objects);
+						}
 						else
 						{
-							if (free_size<=GARBAGE_LIMIT_FREE_MEMORY_CRITICAL)
-							{
-								debug_garbage_collection = TRUE;
-							}
-							else
-							{
-								if (free_objects<=GARBAGE_LIMIT_FREE_OBJECTS_TRIGGER)
-								{
-									debug_garbage_collection = TRUE;
-									debug_slots_free = TRUE;
-								}
-							}
+							sprintf(warningbuf, "%4.2f%% memory free", ((free_size * 100.f) / (real)OBJECT_MEMORY_POOL_SIZE));
 						}
 					}
-
-					if (debug_slots_free)
-					{
-						sprintf(warningbuf, "%d slots free", free_objects);
-					}
-					else
-					{
-						sprintf(warningbuf, "%4.2f%% memory free", ((free_size * 100.f) / (real)OBJECT_MEMORY_POOL_SIZE));
-					}
+					break;
 				}
 
 				if (status_still_critical || garbage_collection_after_first_attempt)
 				{
 					char tempbuffer[512];
 					const char *status;
-					
+
 					if (garbage_collection_after_first_attempt)
 					{
 						status = status_still_critical ? "still " : "not ";
@@ -3968,55 +3947,66 @@ void objects_garbage_collection(
 
 				if (status_still_critical)
 				{
-					boolean result = FALSE;
-
-					while (current_release_procs->function && !result)
+					if (!current_release_procs->function)
 					{
-						boolean more_to_release = FALSE;
+						break;
+					}
+					else
+					{
+						boolean result = FALSE;
+						char released_resultbuf[512];
 
-						if (!v0 && current_release_procs->init_function)
+						while (current_release_procs->function && !result)
 						{
-							current_release_procs->init_function(
+							boolean more_to_release = FALSE;
+
+							if (!release_procs_initialized && current_release_procs->init_function)
+							{
+								current_release_procs->init_function(
+									release_proc_working_memory,
+									sizeof(release_proc_working_memory));
+								release_procs_initialized = TRUE;
+							}
+
+							result = current_release_procs->function(
+								released_resultbuf,
+								&more_to_release,
 								release_proc_working_memory,
 								sizeof(release_proc_working_memory));
-							v0 = TRUE;
-						}
 
-						result = current_release_procs->function(
-							released_resultbuf,
-							&more_to_release,
-							release_proc_working_memory,
-							sizeof(release_proc_working_memory));
+							if (result)
+							{
+								char tempbuffer[512];
+
+								sprintf(tempbuffer, "removing objects: %s", released_resultbuf);
+								console_printf(FALSE, "%s", tempbuffer);
+								error(_error_log, "%s", tempbuffer);
+							}
+
+							if (!more_to_release)
+							{
+								++current_release_procs;
+								release_procs_initialized = FALSE;
+							}
+						}
 
 						if (result)
 						{
-							char tempbuffer[512];
-
-							sprintf(tempbuffer, "removing objects: %s", released_resultbuf);
-							console_printf(FALSE, "%s", tempbuffer);
-							error(_error_log, "%s", tempbuffer);
+							garbage_collection_after_first_attempt = TRUE;
+							memory_pool_compact(object_memory_pool);
 						}
-
-						if (!more_to_release)
+						else
 						{
-							++current_release_procs;
-							v0 = FALSE;
+							break;
 						}
 					}
-					
-					if (!result)
-					{
-						if (update_time)
-						{
-							object_globals->last_garbage_warn_time = game_time_get();
-						}
-
-						break;
-					}
-
-					garbage_collection_after_first_attempt = TRUE;
-					memory_pool_compact(object_memory_pool);
 				}
+			}
+			while (status_still_critical);
+
+			if (update_time)
+			{
+				object_globals->last_garbage_warn_time = game_time_get();
 			}
 		}
 	}

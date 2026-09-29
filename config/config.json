@@ -519,7 +519,7 @@
 				{ "name": "source/objects/scenery_group.c", "index": 146, "status": "Matching" },
 				{ "name": "source/objects/scenery.c", "index": 147, "status": "Matching" },
 				{ "name": "source/objects/placeholder_definitions.c", "index": 148, "status": "Matching" },
-				{ "name": "source/objects/objects.c", "index": 149, "status": "NonMatching" },
+				{ "name": "source/objects/objects.c", "index": 149, "status": "Matching" },
 				{ "name": "source/objects/object_types.c", "index": 150, "status": "NonMatching" },
 				{ "name": "source/objects/object_shadows.c", "index": 151, "status": "NonMatching" },
 				{ "name": "source/objects/object_lights.c", "index": 152, "status": "NonMatching" },
