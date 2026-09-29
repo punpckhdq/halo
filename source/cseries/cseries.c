@@ -480,10 +480,11 @@ void *csmemcpy(
 }
 
 char *stristr(
-	const char *haystack,
-	const char *needle)
+	char const *haystack,
+	char const *needle)
 {
-	char c, sc;
+	char c;
+	char sc;
 	unsigned long length;
 
 	if ((c = *needle++) != 0)
@@ -497,8 +498,10 @@ char *stristr(
 				{
 					return NULL;
 				}
-			} while (sc != c);
-		} while (_strnicmp(haystack, needle, length) != 0);
+			}
+			while (sc != c);
+		}
+		while (_strnicmp(haystack, needle, length) != 0);
 		haystack--;
 	}
 
