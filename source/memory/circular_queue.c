@@ -9,10 +9,7 @@ CIRCULAR_QUEUE.C
 
 /* ---------- constants */
 
-enum
-{
-	CIRCULAR_QUEUE_SIGNATURE = 'circ', /* fake name */
-};
+#define CIRCULAR_QUEUE_SIGNATURE 'circ'
 
 /* ---------- structures */
 
