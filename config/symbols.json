@@ -4533,7 +4533,7 @@
 { "file_offset": 1082368, "flags": 32, "name": "_byte_swap_data" },
 { "file_offset": 1082576, "flags": 32, "name": "_byte_swap_data_explicit" },
 { "file_offset": 1082752, "flags": 32, "name": "_circular_queue_reset" },
-{ "file_offset": 1082768, "flags": 32, "name": "_code_00108590" },
+{ "file_offset": 1082768, "flags": 32, "name": "_circular_queue_verify" },
 { "file_offset": 1082880, "flags": 32, "name": "_circular_queue_new" },
 { "file_offset": 1082976, "flags": 32, "name": "_circular_queue_delete" },
 { "file_offset": 1083024, "flags": 32, "name": "_circular_queue_size" },

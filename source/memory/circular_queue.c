@@ -1,33 +1,5 @@
 /*
 CIRCULAR_QUEUE.C
-
-symbols in this file:
-00108580 0010:
-	_circular_queue_reset (0000)
-00108590 0070:
-	_code_00108590 (0000)
-00108600 0060:
-	_circular_queue_new (0000)
-00108660 0030:
-	_circular_queue_delete (0000)
-00108690 0020:
-	_circular_queue_size (0000)
-001086B0 0030:
-	_circular_queue_free_space (0000)
-001086E0 00f0:
-	_circular_queue_queue_data (0000)
-001087D0 0100:
-	_circular_queue_dequeue_data (0000)
-0027D1DC 002e:
-	??_C@_0CO@NAJBHEFM@the?5circular?5queue?5?$EA?$CFp?5appears?5t@ (0000)
-0027D20C 0027:
-	??_C@_0CH@CMCOODHF@c?3?2halo?2SOURCE?2memory?2circular_q@ (0000)
-0027D238 0041:
-	??_C@_0EB@KGLMCPKK@queue?9?$DOwrite_offset?$DO?$DN0?5?$CG?$CG?5queue?9@ (0000)
-0027D27C 0034:
-	??_C@_0DE@GEMEIDKC@data?5?$CG?$CG?5data_size?$DO0?5?$CG?$CG?5data_size@ (0000)
-0027D2B0 0031:
-	??_C@_0DB@LGMLFMAL@read_offset?$DO?$DN0?5?$CG?$CG?5read_offset?$DMqu@ (0000)
 */
 
 /* ---------- headers */
@@ -37,14 +9,185 @@ symbols in this file:
 
 /* ---------- constants */
 
-/* ---------- macros */
+enum
+{
+	CIRCULAR_QUEUE_SIGNATURE = 'circ', /* fake name */
+};
 
 /* ---------- structures */
 
+struct circular_queue
+{
+	char *name; /* fake name */
+	unsigned long signature; /* fake name */
+	long read_offset;
+	long write_offset;
+	long buffer_size;
+	byte *buffer; /* fake name */
+};
+
 /* ---------- prototypes */
 
-/* ---------- globals */
+static void circular_queue_verify(struct circular_queue *queue);
 
 /* ---------- public code */
 
+void circular_queue_reset(
+	struct circular_queue *queue)
+{
+	queue->write_offset = 0;
+	queue->read_offset = 0;
+
+	return;
+}
+
+struct circular_queue *circular_queue_new(
+	char *name,
+	long buffer_size)
+{
+	struct circular_queue *queue = match_malloc("c:\\halo\\SOURCE\\memory\\circular_queue.c", 52, sizeof(struct circular_queue) + buffer_size + 1);
+
+	if (queue)
+	{
+		memset(queue, 0, sizeof(struct circular_queue));
+		queue->name = name;
+		queue->signature = CIRCULAR_QUEUE_SIGNATURE;
+		queue->buffer_size = buffer_size + 1;
+		queue->buffer = (byte *)(queue + 1);
+		circular_queue_verify(queue);
+	}
+
+	return queue;
+}
+
+void circular_queue_delete(
+	struct circular_queue *queue)
+{
+	circular_queue_verify(queue);
+	match_free("c:\\halo\\SOURCE\\memory\\circular_queue.c", 72, queue);
+
+	return;
+}
+
+long circular_queue_size(
+	struct circular_queue *queue)
+{
+	long size;
+
+	circular_queue_verify(queue);
+	size = queue->write_offset - queue->read_offset;
+	if (size < 0)
+	{
+		size += queue->buffer_size;
+	}
+
+	return size;
+}
+
+long circular_queue_free_space(
+	struct circular_queue *queue)
+{
+	long free_space = queue->buffer_size - circular_queue_size(queue) - 1;
+
+	return free_space;
+}
+
+boolean circular_queue_queue_data(
+	struct circular_queue *queue,
+	void *data,
+	long data_size)
+{
+	boolean success = FALSE;
+
+	circular_queue_verify(queue);
+	match_assert("c:\\halo\\SOURCE\\memory\\circular_queue.c", 116, data && data_size>0 && data_size<queue->buffer_size);
+
+	if (circular_queue_size(queue) + data_size < queue->buffer_size)
+	{
+		long bytes_to_end = queue->buffer_size - queue->write_offset;
+
+		if (data_size >= bytes_to_end)
+		{
+			memcpy(queue->buffer + queue->write_offset, data, bytes_to_end);
+			queue->write_offset = 0;
+			// TODO: this is supposed to be offset_pointer in cseries.h
+			// indicated by unoptimized builds to be an inline
+			data = (byte *)data + bytes_to_end;
+			data_size -= bytes_to_end;
+		}
+
+		if (data_size > 0)
+		{
+			memcpy(queue->buffer + queue->write_offset, data, data_size);
+			queue->write_offset += data_size;
+		}
+
+		match_assert("c:\\halo\\SOURCE\\memory\\circular_queue.c", 136, queue->write_offset>=0 && queue->write_offset<queue->buffer_size);
+		success = TRUE;
+	}
+
+	return success;
+}
+
+boolean circular_queue_dequeue_data(
+	struct circular_queue *queue,
+	void *data,
+	long data_size,
+	boolean advance)
+{
+	boolean success = FALSE;
+
+	circular_queue_verify(queue);
+	match_assert("c:\\halo\\SOURCE\\memory\\circular_queue.c", 153, data && data_size>0 && data_size<queue->buffer_size);
+
+	if (data_size <= circular_queue_size(queue))
+	{
+		long bytes_to_end = queue->buffer_size - queue->read_offset;
+		long read_offset = queue->read_offset;
+
+		if (data_size >= bytes_to_end)
+		{
+			memcpy(data, queue->buffer + read_offset, bytes_to_end);
+			read_offset = 0;
+			data = (byte *)data + bytes_to_end;
+			data_size -= bytes_to_end;
+		}
+
+		if (data_size > 0)
+		{
+			memcpy(data, queue->buffer + read_offset, data_size);
+			read_offset += data_size;
+		}
+
+		match_assert("c:\\halo\\SOURCE\\memory\\circular_queue.c", 174, read_offset>=0 && read_offset<queue->buffer_size);
+
+		if (advance)
+		{
+			queue->read_offset = read_offset;
+		}
+		success = TRUE;
+	}
+
+	return success;
+}
+
 /* ---------- private code */
+
+static void circular_queue_verify(
+	struct circular_queue *queue)
+{
+	boolean valid = FALSE;
+
+	if (queue &&
+		queue->signature == CIRCULAR_QUEUE_SIGNATURE &&
+		queue->buffer &&
+		queue->buffer_size > 0 &&
+		queue->read_offset >= 0 && queue->read_offset < queue->buffer_size &&
+		queue->write_offset >= 0 && queue->write_offset < queue->buffer_size)
+	{
+		valid = TRUE;
+	}
+	match_vassert("c:\\halo\\SOURCE\\memory\\circular_queue.c", 204, valid, csprintf(temporary, "the circular queue @%p appears to be corrupt.", queue));
+
+	return;
+}
