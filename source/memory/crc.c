@@ -38,6 +38,8 @@ void crc_checksum_buffer(
 	static boolean crc_table_built;
 
 	unsigned long crc;
+	unsigned long temp1;
+	unsigned long temp2;
 
 	match_assert("c:\\halo\\SOURCE\\memory\\crc.c", 42, buffer_size>=0);
 
@@ -49,15 +51,11 @@ void crc_checksum_buffer(
 
 	crc = *crc_reference;
 
-	if (buffer_size>0)
+	while (buffer_size-->0)
 	{
-		byte *data = (byte*)buffer;
-		
-		while (buffer_size--) 
-		{
-			unsigned long v7 = crc_table[(crc ^ *data++) & 0xFF];
-			crc = (crc>>8) ^ v7;
-		}
+		temp1 = (crc>>8) & 0x00FFFFFF;
+		temp2 = crc_table[(crc ^ *((byte *)buffer)++) & 0xFF];
+		crc = temp1 ^ temp2;
 	}
 
 	*crc_reference = crc;

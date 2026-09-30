@@ -573,7 +573,7 @@
 				{ "name": "source/memory/data_encoding.c", "index": 199, "status": "NonMatching" },
 				{ "name": "source/memory/data_compress.c", "index": 200, "status": "Matching" },
 				{ "name": "source/memory/data.c", "index": 201, "status": "Matching" },
-				{ "name": "source/memory/crc.c", "index": 202, "status": "NonMatching" },
+				{ "name": "source/memory/crc.c", "index": 202, "status": "Matching" },
 				{ "name": "source/memory/circular_queue.c", "index": 203, "status": "NonMatching" },
 				{ "name": "source/memory/byte_swapping.c", "index": 204, "status": "NonMatching" },
 				{ "name": "source/memory/array.c", "index": 205, "status": "Matching" },
