@@ -14,6 +14,18 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_item_in_unit_inventory_bit = 0,
+	_item_belongs_to_player_bit,
+	_item_has_nonzero_angular_velocity_bit,
+	_item_on_structure_bit,
+	_item_on_object_bit,
+	_item_does_not_accelerate_bit,
+	_item_part_of_respawn_system,
+	NUMBER_OF_ITEM_DATUM_FLAGS,
+};
+
 /* ---------- macros */
 
 #define item_get(index)			((struct item_datum*)object_get_and_verify_type(index, _object_mask_item))

@@ -22,6 +22,14 @@ enum
 	NUMBER_OF_SCENARIO_OBJECT_LOCATION_PLACEMENT_FLAGS,
 };
 
+enum
+{
+	_equipment_created_at_rest_bit = 0,
+	_equipment_obsolete_bit,
+	_equipment_does_accelerate_bit,
+	NUMBER_OF_SCENARIO_EQUIPMENT_FLAGS,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -59,6 +67,11 @@ struct scenario_scenery_datum
 };
 
 struct scenario_placeholder_datum
+{
+	struct scenario_object_datum object;
+};
+
+struct scenario_equipment_datum
 {
 	struct scenario_object_datum object;
 };

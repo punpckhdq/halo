@@ -26,4 +26,33 @@ symbols in this file:
 
 /* ---------- public code */
 
+boolean garbage_update(
+	long garbage_index)
+{
+	struct garbage_datum *garbage = garbage_get(garbage_index);
+	boolean exists;
+
+	garbage->garbage.destroy_timer--;
+	exists = garbage->garbage.destroy_timer > 0;
+	if (!exists)
+	{
+		object_delete(garbage_index);
+	}
+
+	return exists;
+}
+
+boolean garbage_new(
+	long garbage_index)
+{
+	struct garbage_datum *garbage = garbage_get(garbage_index);
+
+	object_set_garbage(garbage_index, TRUE);
+	SET_FLAG(garbage->object.flags, _object_shadowless_bit, TRUE);
+	SET_FLAG(garbage->object.flags, _object_deleted_when_deactivated_bit, TRUE);
+	garbage->garbage.destroy_timer = random_range(300, 600);
+
+	return TRUE;
+}
+
 /* ---------- private code */
