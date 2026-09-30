@@ -17,6 +17,7 @@ header included in hcex build.
 /* ---------- macros */
 
 #define equipment_get(index)			((struct equipment_datum*)object_get_and_verify_type(index, _object_mask_equipment))
+#define equipment_try_and_get(index)	((struct equipment_datum*)object_try_and_get_and_verify_type(index, _object_mask_equipment))
 
 /* ---------- structures */
 

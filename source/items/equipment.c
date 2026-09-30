@@ -50,29 +50,35 @@ void equipment_place(
 	{
 		equipment->object.position.z += 0.05f;
 	}
+
+	return;
 }
 
 void equipment_handle_pickup(
 	long equipment_index)
 {
-	struct equipment_datum *equipment = equipment_get(equipment_index);
-	struct equipment_definition *definition = equipment_definition_get(equipment->definition_index);
+	struct equipment_datum const *equipment = equipment_get(equipment_index);
+	struct equipment_definition const *definition = equipment_definition_get(equipment->definition_index);
 
 	if (definition->equipment.pickup_sound.index != NONE)
 	{
 		unspatialized_impulse_sound_new(definition->equipment.pickup_sound.index, 1.f);
 	}
+
+	return;
 }
 
 void equipment_definition_handle_pickup(
 	long equipment_definition_index)
 {
-	struct equipment_definition *definition = equipment_definition_get(equipment_definition_index);
+	struct equipment_definition const *definition = equipment_definition_get(equipment_definition_index);
 
 	if (definition->equipment.pickup_sound.index != NONE)
 	{
 		unspatialized_impulse_sound_new(definition->equipment.pickup_sound.index, 1.f);
 	}
+
+	return;
 }
 
 /* ---------- private code */

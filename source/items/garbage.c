@@ -29,8 +29,8 @@ symbols in this file:
 boolean garbage_update(
 	long garbage_index)
 {
-	struct garbage_datum *garbage = garbage_get(garbage_index);
 	boolean exists;
+	struct garbage_datum *garbage = garbage_get(garbage_index);
 
 	garbage->garbage.destroy_timer--;
 	exists = garbage->garbage.destroy_timer > 0;
