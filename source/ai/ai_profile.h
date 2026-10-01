@@ -12,7 +12,7 @@ header included in hcex build.
 
 enum
 {
-	_ai_meter_encounter, /* fake name */
+	_ai_meter_encounter = 0, /* fake name */
 	_ai_meter_encounter_active,
 	_ai_meter_actor,
 	_ai_meter_actor_active,

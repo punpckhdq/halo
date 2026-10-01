@@ -197,6 +197,12 @@ enum
 
 enum
 {
+	MAXIMUM_FIRING_POSITION_AVOID_POINTS = 32,
+	MAXIMUM_FIRING_POSITION_ATTACK_VECTORS = 32,
+};
+
+enum
+{
 	_actor_aiming_clear = 0,
 	_actor_aiming_occluded,
 	_actor_aiming_blocked,
@@ -944,11 +950,11 @@ struct firing_position_evaluation_context
 	unsigned long preferred_groups;
 	real preferred_weight;
 	long avoid_point_count;
-	struct firing_position_avoid_point avoid_point[32];
+	struct firing_position_avoid_point avoid_point[MAXIMUM_FIRING_POSITION_AVOID_POINTS];
 	short attack_vector_count;
 	short friend_attack_vector_count;
 	short dangerous_enemy_attack_vector_count;
-	struct firing_position_attack_vector attack_vectors[32];
+	struct firing_position_attack_vector attack_vectors[MAXIMUM_FIRING_POSITION_ATTACK_VECTORS];
 	boolean has_gun_offset_stand;
 	real_vector3d gun_offset_stand;
 	boolean has_gun_offset_crouch;

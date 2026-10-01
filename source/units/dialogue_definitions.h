@@ -12,18 +12,18 @@ header included in hcex build.
 
 enum
 {
-	_speech_priority_none = 0,
-	_speech_priority_idle,
-	_speech_priority_pain,
-	_speech_priority_talk,
-	_speech_priority_communicate,
-	_speech_priority_shout,
-	_speech_priority_script,
-	_speech_priority_involuntary,
-	_speech_priority_exclaim,
-	_speech_priority_scream,
-	_speech_priority_death,
-	NUMBER_OF_SPEECH_PRIORITIES,
+	_unit_speech_none = 0,
+	_unit_speech_idle,
+	_unit_speech_pain,
+	_unit_speech_talk,
+	_unit_speech_communicate,
+	_unit_speech_shout,
+	_unit_speech_scripted,
+	_unit_speech_involuntary,
+	_unit_speech_exclamation,
+	_unit_speech_scream,
+	_unit_speech_death,
+	NUMBER_OF_UNIT_SPEECH_PRIORITIES,
 };
 
 enum

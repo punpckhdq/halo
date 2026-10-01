@@ -98,6 +98,14 @@ enum
 
 enum
 {
+	_unit_play_speech_none = 0,
+	_unit_play_speech_queue,
+	_unit_play_speech_immediate,
+	_unit_play_speech_immediate_dequeue,
+};
+
+enum
+{
 	_unit_state_idle = 0,
 	_unit_state_gesture,
 	_unit_state_turn_left,

@@ -754,8 +754,8 @@ static void ai_debug_render_path_node(
 	real_argb_color const *closest_color)
 {
 	real_point3d text_point;
-	struct observer_result const *camera = observer_get_camera(0);
 	real text_increment_height;
+	struct observer_result const *camera = observer_get_camera(0);
 	real_point3d const *point = &node->entry_point;
 
 	midpoint3d(child_point, point, &text_point);
@@ -797,8 +797,8 @@ static void ai_debug_render_path_node(
 
 	if (closest_color && node->closest_distance<REAL_MAX)
 	{
-		real_point3d closest_text_point = node->closest_point;
 		real closest_text_increment_height;
+		real_point3d closest_text_point = node->closest_point;
 
 		if (camera)
 		{
@@ -886,8 +886,8 @@ static void ai_debug_render_path_nodes(
 
 	if (render_all_nodes)
 	{
-		struct collision_bsp const *collision_bsp = TAG_BLOCK_GET_ELEMENT(&path_state->structure->collision_bsp, 0, struct collision_bsp);
 		short node_iterator_index;
+		struct collision_bsp const *collision_bsp = TAG_BLOCK_GET_ELEMENT(&path_state->structure->collision_bsp, 0, struct collision_bsp);
 
 		for (node_iterator_index = path_state->node_count - 1; node_iterator_index>=0; --node_iterator_index)
 		{
@@ -900,8 +900,8 @@ static void ai_debug_render_path_nodes(
 
 				if (node->debug_render_traverse_index!=current_traverse_index)
 				{
-					real_point3d midpoint = *global_origin3d;
 					real_point3d const *child_point;
+					real_point3d midpoint = *global_origin3d;
 
 					if (!previous_node)
 					{
@@ -1054,8 +1054,8 @@ static void ai_debug_render_actor(
 		{
 			if (actor->meta.swarm_cache_index!=NONE)
 			{
-				struct swarm_datum *swarm = swarm_get(actor->meta.swarm_cache_index);
 				short unit_num;
+				struct swarm_datum *swarm = swarm_get(actor->meta.swarm_cache_index);
 
 				for (unit_num = 0; unit_num<swarm->unit_count; ++unit_num)
 				{
@@ -1114,9 +1114,9 @@ static void ai_debug_render_actor(
 		{
 			struct prop_iterator iterator;
 			struct prop_datum *prop;
-			short player_obstruction = 0;
-			boolean found_player = FALSE;
 			real_vector3d aiming_vector;
+			short player_obstruction = _actor_aiming_clear;
+			boolean found_player = FALSE;
 
 			prop_iterator_new(&iterator, actor_index);
 
@@ -1254,7 +1254,7 @@ static void ai_debug_render_actor(
 							break;
 						}
 
-						if (actor_debug_info->avoid_result[i][j]>0)
+						if (actor_debug_info->avoid_result[i][j]>_actor_vector_avoidance_clear)
 						{
 							real_point3d point0;
 							real_point3d point1;
@@ -1343,8 +1343,8 @@ static void ai_debug_render_actor(
 
 			if (ai_debug.render_vector_avoidance_intermediate)
 			{
-				real_argb_color const *color = actor_debug_info->field_6550 ? global_real_argb_magenta : global_real_argb_cyan;
 				real_vector3d direction;
+				real_argb_color const *color = actor_debug_info->field_6550 ? global_real_argb_magenta : global_real_argb_cyan;
 
 				render_debug_vector(TRUE, &actor_debug_info->avoidance_data.origin, &actor_debug_info->field_6524, 5.f, global_real_argb_yellow);
 				render_debug_vector(TRUE, &actor_debug_info->avoidance_data.origin, &actor_debug_info->field_6530, 1.f, global_real_argb_purple);
@@ -1396,8 +1396,8 @@ static void ai_debug_render_actor(
 
 				for (avoidance_object_index = 0; avoidance_object_index<actor_debug_info->avoidance_data.avoidance_object_count; ++avoidance_object_index)
 				{
-					struct vehicle_avoidance_cylinder const *avoidance_object = &actor_debug_info->avoidance_data.avoidance_objects[avoidance_object_index];
 					real_vector3d height;
+					struct vehicle_avoidance_cylinder const *avoidance_object = &actor_debug_info->avoidance_data.avoidance_objects[avoidance_object_index];
 
 					set_real_vector3d(&height, 0.f, 0.f, avoidance_object->height);
 					render_debug_pill(
@@ -1557,10 +1557,10 @@ static void ai_debug_render_actor(
 						else if (BIT_VECTOR_TEST_FLAG(pvs, cluster_index))
 						{
 							real_point3d mid_point;
-							real_point3d p0 = base_point;
 							real_point3d p1;
 							real_point3d p2;
 							real_point3d p3;
+							real_point3d p0 = base_point;
 
 							point_from_line3d(&base_point, global_up3d, 0.2f, &p2);
 							point_from_line3d(&base_point, global_up3d, 0.1f, &mid_point);
@@ -1743,8 +1743,8 @@ static void ai_debug_render_actor(
 
 			if (actor->emotions.unopposable_retreat_timer>0)
 			{
-				struct prop_datum *prop = prop_get(actor->emotions.unopposable_retreat_prop_index);
 				real_point3d position;
+				struct prop_datum *prop = prop_get(actor->emotions.unopposable_retreat_prop_index);
 
 				point_from_line3d(&actor->input.position.head_position, global_up3d, 0.05f, &position);
 				render_debug_string_at_point(TRUE, ai_debug_drawstack(), csprintf(temporary, "retreat t%d", actor->emotions.unopposable_retreat_timer), global_real_argb_red);
@@ -1922,8 +1922,8 @@ static void ai_debug_render_actor(
 						
 						if (!prop->definitely_located)
 						{
-							real_argb_color const *alt_color = prop->state==_prop_state_uninspected_orphan ? global_real_argb_yellow : global_real_argb_blue;
 							real_vector3d hint_vector;
+							real_argb_color const *alt_color = prop->state==_prop_state_uninspected_orphan ? global_real_argb_yellow : global_real_argb_blue;
 
 							set_real_vector3d(&hint_vector, prop->orphan_hint_vector.i, prop->orphan_hint_vector.j, 0.f);
 							render_debug_sphere(TRUE, &prop->head_position, 0.2f, alt_color);
@@ -2020,8 +2020,8 @@ static void ai_debug_render_actor(
 
 			if (ai_debug.render_props_unopposable && actor->emotions.unopposable_retreat_timer>0)
 			{
-				struct prop_datum const *retreating_prop = prop_get(actor->emotions.unopposable_retreat_prop_index);
 				real_point3d p0;
+				struct prop_datum const *retreating_prop = prop_get(actor->emotions.unopposable_retreat_prop_index);
 				
 				point_from_line3d(&actor->input.position.head_position, global_up3d, 0.03f, &p0);
 				render_debug_string_at_point(
@@ -2240,12 +2240,10 @@ static void ai_debug_render_actor(
 		
 		if (ai_debug.render_gun_positions && actor->meta.unit_index!=NONE)
 		{
-			real_vector3d desired_facing;
 			real_point3d estimated_position;
 			real_vector3d *gun_offset = NULL;
 			real_argb_color const *color = global_real_argb_red;
-
-			desired_facing = actor->input.aiming_vector;
+			real_vector3d desired_facing = actor->input.aiming_vector;
 
 			if (normalize2d((real_vector2d *)&desired_facing)>0.f)
 			{
@@ -2313,9 +2311,9 @@ static void ai_debug_render_actor(
 			actor->target.target_type!=_actor_target_none &&
 			actor->target.target_prop_index!=NONE)
 		{
-			struct prop_datum *prop = prop_get(actor->target.target_prop_index);
 			real_point3d actor_target_position;
 			real_point3d prop_target_position;
+			struct prop_datum *prop = prop_get(actor->target.target_prop_index);
 			real_argb_color const *target_color = global_real_argb_white;
 
 			switch (actor->target.target_type)
@@ -2740,11 +2738,11 @@ static void ai_debug_render_actor(
 								if (command->point1_index>=0 &&
 									command->point1_index<command_list->points.count)
 								{
+									real_point3d position;
 									struct ai_command_point_definition const *point = TAG_BLOCK_GET_ELEMENT(
 										&command_list->points,
 										command->point1_index,
 										struct ai_command_point_definition);
-									real_point3d position;
 
 									render_debug_line(
 										TRUE,
@@ -2783,11 +2781,11 @@ static void ai_debug_render_actor(
 								if (command->point2_index>=0 &&
 									command->point2_index<command_list->points.count)
 								{
+									real_point3d position;
 									struct ai_command_point_definition const *point = TAG_BLOCK_GET_ELEMENT(
 										&command_list->points,
 										command->point2_index,
 										struct ai_command_point_definition);
-									real_point3d position;
 
 									render_debug_line(
 										TRUE,
@@ -3180,8 +3178,8 @@ static void ai_debug_render_actor(
 
 		if (ai_debug.render_control && actor->meta.unit_index!=NONE)
 		{
-			short flag_count = NUMBER_OF_UNIT_CONTROL_FLAGS;
 			short control_flag_bit;
+			short flag_count = NUMBER_OF_UNIT_CONTROL_FLAGS;
 
 			char const *control_flag_names[NUMBER_OF_UNIT_CONTROL_FLAGS-1] =
 			{
@@ -3576,6 +3574,8 @@ static void ai_debug_render_actor(
 		{
 			real max_distance;
 			real perception_factor;
+			real_point3d last_points[2][2][2];
+			real angle_itr;
 			real const angle_step = 0.08726646f;
 
 			real_argb_color const *const *colors[2] =
@@ -3583,9 +3583,6 @@ static void ai_debug_render_actor(
 				&global_real_argb_red,
 				&global_real_argb_blue
 			};
-
-			real_point3d last_points[2][2][2];
-			real angle_itr;
 
 			if (actor_debug_info->vision_last_time!=NONE &&
 				actor_debug_info->vision_last_time+15 >= game_time_get())
@@ -3610,15 +3607,15 @@ static void ai_debug_render_actor(
 			{
 				real_point3d current_points[2][2][2];
 				real distances[2];
-				real horizontal_angle = MIN(angle_itr, actor_definition->perception.peripheral_vision_angle);
 				real_point3d direction_vector[2][2];
 				short side_index;
 				short ring_index;
 				short height_index;
-				real cosine_horizontal_angle = cosine(horizontal_angle);
-				real sine_horizontal_angle = sine(horizontal_angle);
 				real cosine_vertical_angle[2];
 				real sine_vertical_angle[2];
+				real horizontal_angle = MIN(angle_itr, actor_definition->perception.peripheral_vision_angle);
+				real cosine_horizontal_angle = cosine(horizontal_angle);
+				real sine_horizontal_angle = sine(horizontal_angle);
 
 				cosine_vertical_angle[0] = cosine(DEGREES_TO_RADIANS(30));
 				sine_vertical_angle[0] = sine(DEGREES_TO_RADIANS(30));
@@ -3690,6 +3687,10 @@ static void ai_debug_render_actor(
 
 		if (render_exclusive &&ai_debug.render_detailed_state)
 		{
+			char buffer[1024];
+			struct prop_iterator iterator;
+			struct prop_datum *prop;
+
 			short tabs[7] =
 			{
 				100,
@@ -3700,10 +3701,6 @@ static void ai_debug_render_actor(
 				475,
 				550
 			};
-
-			char buffer[1024];
-			struct prop_iterator iterator;
-			struct prop_datum *prop;
 
 			sprintf(buffer, "|n|n|n|n");
 
@@ -4062,7 +4059,7 @@ void ai_debug_speak_list(
 
 		for (list = lists; list->name; list++)
 		{
-			if (_stricmp(list->name, name)==0)
+			if (!_stricmp(list->name, name))
 			{
 				break;
 			}
@@ -4100,7 +4097,7 @@ static void ai_debug_speech_update(
 
 		if (unit && !TEST_FLAG(unit->object.damage_flags, _object_dead_bit))
 		{
-			if (unit->unit.speech.current.priority==0)
+			if (unit->unit.speech.current.priority==_unit_speech_none)
 			{
 				if (ai_debug.speak_delay_timer>0)
 				{
@@ -4111,19 +4108,19 @@ static void ai_debug_speech_update(
 				{
 					if (ai_debug.vocalization_type>=0 && ai_debug.vocalization_type<NUMBER_OF_VOCALIZATION_TYPES)
 					{
+						char const *sound_name;
 						short vocalization_type = ai_debug.vocalization_type;
 						long sound_definition_index = NONE;
 						short play_type = unit_test_speech(
 							ai_debug.speaking_unit_index,
-							_speech_priority_talk,
+							_unit_speech_talk,
 							FALSE,
 							FALSE,
 							NULL,
 							&vocalization_type,
 							&sound_definition_index);
-						char const *sound_name;
 
-						if (play_type>=2)
+						if (play_type>=_unit_play_speech_immediate)
 						{
 							struct unit_speech_item speech_item;
 
@@ -4131,7 +4128,7 @@ static void ai_debug_speech_update(
 
 							speech_item.vocalization_type = vocalization_type;
 							speech_item.sound_definition_index = sound_definition_index;
-							speech_item.priority = _speech_priority_communicate;
+							speech_item.priority = _unit_speech_communicate;
 							speech_item.pause_time = 15;
 
 							ai_communication_packet_new(&speech_item.ai);
@@ -4139,7 +4136,7 @@ static void ai_debug_speech_update(
 
 						}
 
-						if (play_type>=2 && sound_definition_index!=NONE)
+						if (play_type>=_unit_play_speech_immediate && sound_definition_index!=NONE)
 						{
 							char const *conditional;
 
@@ -4171,7 +4168,7 @@ static void ai_debug_speech_update(
 							do
 							{
 								ai_debug.vocalization_type++;
-								if (strcmp(dialogue_get_vocalization_name(ai_debug.vocalization_type, FALSE), "unused")!=0)
+								if (strcmp(dialogue_get_vocalization_name(ai_debug.vocalization_type, FALSE), "unused"))
 								{
 									break;
 								}
@@ -4213,9 +4210,9 @@ static void ai_debug_communication_toggle_bits(
 	short (*lookup)(char const *name))
 {
 	unsigned long vector[BIT_VECTOR_SIZE_IN_LONGS(2048)];
+	long index;
 	short clear_count = 0;
 	short set_count = 0;
-	long index;
 
 	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 4968, lookup);
 	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 4969, vector_size <= 2048);
@@ -4231,7 +4228,7 @@ static void ai_debug_communication_toggle_bits(
 			match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 4978, (comm_type >= 0) && (comm_type < vector_size));
 			BIT_VECTOR_SET_FLAG(vector, comm_type, TRUE);
 		}
-		else if (strcmp(names[index], "all")==0)
+		else if (!strcmp(names[index], "all"))
 		{
 			memset(vector, -1, BIT_VECTOR_SIZE_IN_BYTES(vector_size));
 		}
@@ -4390,16 +4387,16 @@ static void ai_debug_render_spatial_effects(
 
 	for (effect_index = ai_globals->spatial_effects_first_index;
 		effect_index!=ai_globals->spatial_effects_last_index;
-		effect_index = (effect_index + 1) & 31)
+		effect_index = (effect_index + 1) & MASK(5))
 	{
 		struct ai_spatial_effect *spatial_effect = &ai_globals->spatial_effects[effect_index];
 
 		if (spatial_effect->type!=NONE)
 		{
-			real_argb_color const *const *colors[3] = { &global_real_argb_blue, &global_real_argb_yellow, &global_real_argb_red };
+			real_argb_color const *const *colors[NUMBER_OF_AI_SPATIAL_EFFECTS] = { &global_real_argb_blue, &global_real_argb_yellow, &global_real_argb_red };
 			real_argb_color const *color = global_real_argb_white;
 
-			if (spatial_effect->type>=0 && spatial_effect->type<3)
+			if (spatial_effect->type>=0 && spatial_effect->type<NUMBER_OF_AI_SPATIAL_EFFECTS)
 			{
 				color = *colors[spatial_effect->type];
 			}
@@ -4449,10 +4446,8 @@ static void ai_debug_render_speech(
 			if (unit_definition->unit.dialogue_variants.count>0)
 			{
 				short variant_index;
-				short variant_number;
 				char const *dialogue_name = "<none>";
-
-				variant_number = NONE;
+				short variant_number = NONE;
 
 				for (variant_index = 0; variant_index<unit_definition->unit.dialogue_variants.count; variant_index++)
 				{
@@ -4488,7 +4483,7 @@ static void ai_debug_render_speech(
 
 		if (ai_debug.render_speech)
 		{
-			if (unit_speech->current.priority>0)
+			if (unit_speech->current.priority>_unit_speech_none)
 			{
 				render_debug_string_at_point(
 					TRUE,
@@ -4504,7 +4499,7 @@ static void ai_debug_render_speech(
 					global_real_argb_white);
 			}
 
-			if (unit_speech->queued.priority>0)
+			if (unit_speech->queued.priority>_unit_speech_none)
 			{
 				render_debug_string_at_point(
 					TRUE,
@@ -4519,19 +4514,19 @@ static void ai_debug_render_speech(
 			}
 		}
 
-		if (ai_debug.print_speech && !ai_debug.render_speech && unit_speech->current.priority>0)
+		if (ai_debug.print_speech && !ai_debug.render_speech && unit_speech->current.priority>_unit_speech_none)
 		{
 			char speechbuf[512];
 			real_argb_color const *color;
 
 			switch (unit_speech->current.priority)
 			{
-			case _speech_priority_pain:
-			case _speech_priority_involuntary:
-			case _speech_priority_death:
+			case _unit_speech_pain:
+			case _unit_speech_involuntary:
+			case _unit_speech_death:
 				color = global_real_argb_red;
 				break;
-			case _speech_priority_script:
+			case _unit_speech_scripted:
 				color = global_real_argb_blue;
 				break;
 			default:
@@ -4751,7 +4746,7 @@ static short ai_debug_lineofsight_findpoint(
 			index = NONE;
 			if (!ai_debug.lineofsight_overflow)
 			{
-				error(2, "ai_debug_lineofsight: overflowed point buffer (%d) with %d rays and counting", 16384, ai_debug.lineofsight_numrays);
+				error(_error_silent, "ai_debug_lineofsight: overflowed point buffer (%d) with %d rays and counting", 16384, ai_debug.lineofsight_numrays);
 				ai_debug.lineofsight_overflow = TRUE;
 			}
 		}
@@ -4797,7 +4792,7 @@ static long ai_debug_lineofsight_storeray(
 				index = NONE;
 				if (!ai_debug.lineofsight_overflow)
 				{
-					error(2, "ai_debug_lineofsight: overflowed ray buffer (%d) with %d points and counting", 8192, ai_debug.lineofsight_numpoints);
+					error(_error_silent, "ai_debug_lineofsight: overflowed ray buffer (%d) with %d points and counting", 8192, ai_debug.lineofsight_numpoints);
 					ai_debug.lineofsight_overflow = TRUE;
 				}
 			}
@@ -4827,6 +4822,8 @@ void ai_debug_lineofsight(
 static void ai_debug_render_lineofsight(
 	void)
 {
+	long index;
+
 	real_argb_color const *const *lineofsight_colors[13] =
 	{
 		&global_real_argb_black,
@@ -4843,7 +4840,6 @@ static void ai_debug_render_lineofsight(
 		&global_real_argb_yellow,
 		&global_real_argb_white
 	};
-	long index;
 	long const max_lineofsight_colors = NUMBEROF(lineofsight_colors);
 
 	for (index = 0; index<ai_debug.lineofsight_numpoints; index++)
@@ -5258,11 +5254,11 @@ static long ai_debug_get_this_actor(
 
 	if (user_index!=NONE)
 	{
-		long ignore_object_index = NONE;
-		struct observer_result const *camera = observer_get_camera(user_index);
 		struct collision_result collision;
 		long object_index;
 		real_vector3d v;
+		long ignore_object_index = NONE;
+		struct observer_result const *camera = observer_get_camera(user_index);
 
 		match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 4489, camera != NULL);
 
@@ -5412,14 +5408,14 @@ static void ai_debug_render_all_actors(
 static void ai_debug_render_encounter(
 	long encounter_index)
 {
+	long firing_position_owner_actor_indices[512];
+	short firing_position_index;
 	struct encounter_datum *encounter = encounter_get(encounter_index);
 	struct encounter_definition const *encounter_definition = TAG_BLOCK_GET_ELEMENT(
 		&global_scenario_get()->ai_encounters,
 		DATUM_INDEX_TO_ABSOLUTE_INDEX(encounter_index),
 		struct encounter_definition);
 	long history_start_time = NONE;
-	long firing_position_owner_actor_indices[512];
-	short firing_position_index;
 
 	{
 		struct encounter_actor_iterator iterator;
@@ -5452,19 +5448,22 @@ static void ai_debug_render_encounter(
 
 	for (firing_position_index = 0; firing_position_index<encounter_definition->firing_positions.count; firing_position_index++)
 	{
-		struct firing_position_definition const *firing_position = TAG_BLOCK_GET_ELEMENT(
-			&encounter_definition->firing_positions,
-			firing_position_index,
-			struct firing_position_definition);
-		long num_firing_position_colors = 0;
 		real_point3d points[4];
 		boolean firing_position_crosses[MAXIMUM_NUMBER_OF_FIRING_POSITION_GROUPS];
 		real_point3d position;
 		real_argb_color const *firing_position_colors[MAXIMUM_NUMBER_OF_FIRING_POSITION_GROUPS];
 		long color_index;
 		boolean selected_actor_in_encounter;
+		struct firing_position_definition const *firing_position = TAG_BLOCK_GET_ELEMENT(
+			&encounter_definition->firing_positions,
+			firing_position_index,
+			struct firing_position_definition);
+		long num_firing_position_colors = 0;
 
-		points[0].z = points[1].z = points[2].z = points[3].z = firing_position->position.z + 0.05f;
+		points[3].z = firing_position->position.z + 0.05f;
+		points[2].z = points[3].z;
+		points[1].z = points[2].z;
+		points[0].z = points[1].z;
 		points[0].x = points[3].x = firing_position->position.x - 0.25f;
 		points[1].x = points[2].x = firing_position->position.x + 0.25f;
 		points[0].y = points[1].y = firing_position->position.y - 0.25f;
@@ -5486,6 +5485,11 @@ static void ai_debug_render_encounter(
 		}
 		else
 		{
+			short primary_group;
+			short secondary_group;
+			short attacking_group;
+			short search_group;
+
 			real_argb_color const *const *group_colors[NUMBER_OF_FIRING_POSITION_GROUPS] =
 			{
 				&global_real_argb_red,
@@ -5506,10 +5510,6 @@ static void ai_debug_render_encounter(
 				actor->meta.squad_index,
 				struct squad_definition);
 			short guard_group = actor->emotions.currently_defending ? _firing_position_group_defending_guard : _firing_position_group_attacking_guard;
-			short primary_group;
-			short secondary_group;
-			short attacking_group;
-			short search_group;
 
 			if (squad_definition->firing_position_groups[guard_group] & FLAG(firing_position->group_index))
 			{
@@ -5559,7 +5559,10 @@ static void ai_debug_render_encounter(
 			real_point3d owner_points[4];
 			struct actor_datum *owner_actor = actor_get(firing_position_owner_actor_indices[firing_position_index]);
 
-			owner_points[0].z = owner_points[1].z = owner_points[2].z = owner_points[3].z = firing_position->position.z + 0.05f;
+			owner_points[3].z = firing_position->position.z + 0.05f;
+			owner_points[2].z = owner_points[3].z;
+			owner_points[1].z = owner_points[2].z;
+			owner_points[0].z = owner_points[1].z;
 			owner_points[0].x = owner_points[3].x = firing_position->position.x - 0.375f;
 			owner_points[1].x = owner_points[2].x = firing_position->position.x + 0.375f;
 			owner_points[0].y = owner_points[1].y = firing_position->position.y - 0.375f;
@@ -5593,7 +5596,10 @@ static void ai_debug_render_encounter(
 
 		for (color_index = 0; color_index<num_firing_position_colors; color_index++)
 		{
-			points[0].z = points[1].z = points[2].z = points[3].z = points[0].z + 0.05f;
+			points[3].z = points[0].z + 0.05f;
+			points[2].z = points[3].z;
+			points[1].z = points[2].z;
+			points[0].z = points[1].z;
 
 			if (firing_position_crosses[color_index])
 			{
@@ -5611,9 +5617,9 @@ static void ai_debug_render_encounter(
 
 		if (ai_debug.render_pursuit && ai_debug.firing_positions[firing_position_index].pursuit_position)
 		{
-			boolean current_pursuit_position = FALSE;
 			boolean already_examined;
 			short actor_count;
+			boolean current_pursuit_position = FALSE;
 
 			if (ai_debug.selected_actor_index!=NONE)
 			{

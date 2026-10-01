@@ -10,6 +10,14 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_ai_spatial_effect_environmental_noise = 0,
+	_ai_spatial_effect_weapon_impact,
+	_ai_spatial_effect_weapon_detonation,
+	NUMBER_OF_AI_SPATIAL_EFFECTS,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
