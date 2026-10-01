@@ -5411,7 +5411,7 @@ static void ai_debug_render_all_actors(
 static void ai_debug_render_encounter(
 	long encounter_index)
 {
-	long firing_position_owner_actor_indices[512];
+	long firing_position_owner_actor_indices[MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER];
 	short firing_position_index;
 	struct encounter_datum *encounter = encounter_get(encounter_index);
 	struct encounter_definition const *encounter_definition = TAG_BLOCK_GET_ELEMENT(

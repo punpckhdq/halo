@@ -21,6 +21,8 @@ file has inline function assertions.
 
 /* ---------- macros */
 
+#define MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER 512
+
 #define encounter_get(index)			((struct encounter_datum *)datum_get(encounter_data, (index)))
 #define encounter_try_and_get(index)	((struct encounter_datum *)datum_try_and_get(encounter_data, (index)))
 

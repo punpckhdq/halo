@@ -20,6 +20,8 @@ enum
 
 /* ---------- macros */
 
+#define MAXIMUM_ENTERABLE_VEHICLES 32
+
 /* ---------- structures */
 
 struct recent_conversation
@@ -71,7 +73,7 @@ struct ai_globals
 	struct ai_spatial_effect spatial_effects[32];
 	boolean grenades_enabled;
 	short enterable_vehicle_count;
-	struct ai_vehicle_enterable enterable_vehicles[32];
+	struct ai_vehicle_enterable enterable_vehicles[MAXIMUM_ENTERABLE_VEHICLES];
 	short mounted_weapon_unit_count;
 	long mounted_weapon_unit_indices[8];
 };

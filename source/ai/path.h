@@ -45,9 +45,10 @@ enum
 /* ---------- macros */
 
 #define MAXIMUM_SMOOTHED_PATH_STEPS 4
-
 #define MAXIMUM_DISC_COUNT 128
 #define MAXIMUM_OBSTACLE_AVOIDANCE_STEPS 128
+
+#define MAXIMUM_RAW_PATH_STEPS 64
 
 /* ---------- structures */
 
@@ -201,7 +202,7 @@ struct path_debug_storage
 	struct path_state path_state;
 	struct path_result result;
 	short raw_step_count;
-	struct path_step raw_steps[64];
+	struct path_step raw_steps[MAXIMUM_RAW_PATH_STEPS];
 	short smoothed_step_count;
 	struct path_step smoothed_steps[MAXIMUM_SMOOTHED_PATH_STEPS];
 	short avoided_step_count;

@@ -13,6 +13,7 @@ header included in hcex build.
 #ifdef DEBUG
 #include "path.h"
 #include "actors.h"
+#include "encounters.h"
 #include "ai_communication.h"
 #include "dialogue_definitions.h"
 #endif
@@ -109,6 +110,8 @@ enum
 #define MAXIMUM_LINEOFSIGHT_POINTS 16384
 #define MAXIMUM_LINEOFSIGHT_RAYS 8192
 #define MAXIMUM_IDLE_LOOK_PROPS 32
+#define MAXIMUM_BALLISTIC_PILLS 16
+#define MAXIMUM_BALLISTIC_POINTS 64
 
 /* ---------- structures */
 
@@ -289,11 +292,11 @@ struct ai_debug_state
 	real_point3d ballistic_origin;
 	real_vector3d ballistic_initial_velocity;
 	long ballistic_numpills;
-	real_point3d ballistic_pillbase[16];
-	real_vector3d ballistic_pilldirectedheight[16];
-	real ballistic_pillwidth[16];
+	real_point3d ballistic_pillbase[MAXIMUM_BALLISTIC_PILLS];
+	real_vector3d ballistic_pilldirectedheight[MAXIMUM_BALLISTIC_PILLS];
+	real ballistic_pillwidth[MAXIMUM_BALLISTIC_PILLS];
 	long ballistic_numpoints;
-	real_point3d ballistic_points[64];
+	real_point3d ballistic_points[MAXIMUM_BALLISTIC_POINTS];
 	char __unknown4C7D8[16];
 	boolean path_start_valid;
 	real_point3d path_start_point;
@@ -307,7 +310,7 @@ struct ai_debug_state
 	struct path_debug_storage path_debug;
 	boolean firing_position_context_valid;
 	struct firing_position_evaluation_context firing_position_context;
-	struct ai_debug_firing_position firing_positions[512];
+	struct ai_debug_firing_position firing_positions[MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER];
 	long aiming_validity_actor_index;
 	boolean aiming_validity_looking_stored;
 	boolean aiming_validity_aiming_stored;
