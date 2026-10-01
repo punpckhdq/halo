@@ -3181,7 +3181,7 @@ static void ai_debug_render_actor(
 			short control_flag_bit;
 			short flag_count = NUMBER_OF_UNIT_CONTROL_FLAGS;
 
-			char const *control_flag_names[NUMBER_OF_UNIT_CONTROL_FLAGS-1] =
+			char const *control_flag_names[] =
 			{
 				"crouch",
 				"jump",
@@ -3212,7 +3212,7 @@ static void ai_debug_render_actor(
 						strcat(temporary, " ");
 					}
 
-					if (control_flag_bit<NUMBER_OF_UNIT_CONTROL_FLAGS-1)
+					if (control_flag_bit<_unit_control_swap_weapons_bit)
 					{
 						strcat(temporary, control_flag_names[control_flag_bit]);
 					}
@@ -3246,7 +3246,7 @@ static void ai_debug_render_actor(
 						csstrcat(temporary, " ");
 					}
 
-					if (control_flag_bit<NUMBER_OF_UNIT_CONTROL_FLAGS-1)
+					if (control_flag_bit<_unit_control_swap_weapons_bit)
 					{
 						strcat(temporary, control_flag_names[control_flag_bit]);
 					}
@@ -5464,10 +5464,14 @@ static void ai_debug_render_encounter(
 		points[2].z = points[3].z;
 		points[1].z = points[2].z;
 		points[0].z = points[1].z;
-		points[0].x = points[3].x = firing_position->position.x - 0.25f;
-		points[1].x = points[2].x = firing_position->position.x + 0.25f;
-		points[0].y = points[1].y = firing_position->position.y - 0.25f;
-		points[2].y = points[3].y = firing_position->position.y + 0.25f;
+		points[3].x = firing_position->position.x - 0.25f;
+		points[0].x = points[3].x;
+		points[2].x = firing_position->position.x + 0.25f;
+		points[1].x = points[2].x;
+		points[1].y = firing_position->position.y - 0.25f;
+		points[0].y = points[1].y;
+		points[3].y = firing_position->position.y + 0.25f;
+		points[2].y = points[3].y;
 
 		memset(firing_position_crosses, 0, sizeof(firing_position_crosses));
 
@@ -5563,10 +5567,14 @@ static void ai_debug_render_encounter(
 			owner_points[2].z = owner_points[3].z;
 			owner_points[1].z = owner_points[2].z;
 			owner_points[0].z = owner_points[1].z;
-			owner_points[0].x = owner_points[3].x = firing_position->position.x - 0.375f;
-			owner_points[1].x = owner_points[2].x = firing_position->position.x + 0.375f;
-			owner_points[0].y = owner_points[1].y = firing_position->position.y - 0.375f;
-			owner_points[2].y = owner_points[3].y = firing_position->position.y + 0.375f;
+			owner_points[3].x = firing_position->position.x - 0.375f;
+			owner_points[0].x = owner_points[3].x;
+			owner_points[2].x = firing_position->position.x + 0.375f;
+			owner_points[1].x = owner_points[2].x;
+			owner_points[1].y = firing_position->position.y - 0.375f;
+			owner_points[0].y = owner_points[1].y;
+			owner_points[3].y = firing_position->position.y + 0.375f;
+			owner_points[2].y = owner_points[3].y;
 
 			render_debug_polygon(owner_points, 4, actor_action_debug_color(firing_position_owner_actor_indices[firing_position_index]));
 		}
