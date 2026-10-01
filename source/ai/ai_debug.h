@@ -106,6 +106,10 @@ enum
 
 /* ---------- macros */
 
+#define MAXIMUM_LINEOFSIGHT_POINTS 16384
+#define MAXIMUM_LINEOFSIGHT_RAYS 8192
+#define MAXIMUM_IDLE_LOOK_PROPS 32
+
 /* ---------- structures */
 
 struct ai_debug_firing_position
@@ -275,11 +279,11 @@ struct ai_debug_state
 	real lineoffire_pillwidth[16];
 	boolean lineofsight_overflow;
 	long lineofsight_numpoints;
-	real_point3d lineofsight_points[16384];
-	short lineofsight_pointcounts[16384];
-	short lineofsight_pointclusters[16384];
+	real_point3d lineofsight_points[MAXIMUM_LINEOFSIGHT_POINTS];
+	short lineofsight_pointcounts[MAXIMUM_LINEOFSIGHT_POINTS];
+	short lineofsight_pointclusters[MAXIMUM_LINEOFSIGHT_POINTS];
 	long lineofsight_numrays;
-	short lineofsight_rays[8192][3];
+	short lineofsight_rays[MAXIMUM_LINEOFSIGHT_RAYS][3];
 	boolean ballistic_valid;
 	boolean ballistic_success;
 	real_point3d ballistic_origin;
@@ -312,8 +316,8 @@ struct ai_debug_state
 	boolean idle_look_valid;
 	long prop_idle_actor_index;
 	short prop_idle_look_count;
-	long prop_idle_look_indicies[32];
-	real prop_idle_look_distances[32];
+	long prop_idle_look_indicies[MAXIMUM_IDLE_LOOK_PROPS];
+	real prop_idle_look_distances[MAXIMUM_IDLE_LOOK_PROPS];
 	boolean speak_active; /* fake name */
 	boolean speak_list; /* fake name */
 	boolean speak_list_skip_unused; /* fake name */

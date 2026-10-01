@@ -45,6 +45,8 @@ enum
 
 /* ---------- macros */
 
+#define AI_METER_HISTORY_TICKS 60
+
 /* ---------- structures */
 
 struct ai_meter
@@ -55,7 +57,7 @@ struct ai_meter
 	long average_total;
 	short history_next_index;
 	short history_max_index;
-	short history_count[60];
+	short history_count[AI_METER_HISTORY_TICKS];
 };
 
 struct ai_profile_state

@@ -44,6 +44,11 @@ enum
 
 /* ---------- macros */
 
+#define MAXIMUM_SMOOTHED_PATH_STEPS 4
+
+#define MAXIMUM_DISC_COUNT 128
+#define MAXIMUM_OBSTACLE_AVOIDANCE_STEPS 128
+
 /* ---------- structures */
 
 struct path_destination
@@ -66,7 +71,7 @@ struct path_result
 	boolean steps_finish_path;
 	char step_count;
 	char step_index;
-	struct path_step steps[4];
+	struct path_step steps[MAXIMUM_SMOOTHED_PATH_STEPS];
 };
 
 struct path_input
@@ -146,7 +151,7 @@ struct obstacles
 	short obstacle_count;
 	short disc_count;
 	short disc_optional_count;
-	struct disc discs[128];
+	struct disc discs[MAXIMUM_DISC_COUNT];
 };
 
 struct step
@@ -178,9 +183,9 @@ struct obstacle_path
 	boolean finishing;
 	boolean ignore_optional;
 	short step_count;
-	struct step steps[128];
+	struct step steps[MAXIMUM_OBSTACLE_AVOIDANCE_STEPS];
 	short heap_count;
-	short heap[128];
+	short heap[MAXIMUM_OBSTACLE_AVOIDANCE_STEPS];
 };
 
 struct path_debug_storage
@@ -198,9 +203,9 @@ struct path_debug_storage
 	short raw_step_count;
 	struct path_step raw_steps[64];
 	short smoothed_step_count;
-	struct path_step smoothed_steps[4];
+	struct path_step smoothed_steps[MAXIMUM_SMOOTHED_PATH_STEPS];
 	short avoided_step_count;
-	struct path_step avoided_steps[4];
+	struct path_step avoided_steps[MAXIMUM_SMOOTHED_PATH_STEPS];
 	boolean debug_use_stored_obstacles;
 	short stored_obstacle_step_count;
 	struct obstacles path_obstacles[4];

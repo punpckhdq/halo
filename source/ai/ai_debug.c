@@ -4325,7 +4325,7 @@ void ai_debug_idle_look_addprop(
 {
 	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 5062, ai_debug.idle_look_valid);
 
-	if (ai_debug.prop_idle_look_count<32)
+	if (ai_debug.prop_idle_look_count<MAXIMUM_IDLE_LOOK_PROPS)
 	{
 		ai_debug.prop_idle_look_indicies[ai_debug.prop_idle_look_count] = prop_index;
 		ai_debug.prop_idle_look_distances[ai_debug.prop_idle_look_count] = distance;
@@ -4390,7 +4390,7 @@ static void ai_debug_render_spatial_effects(
 
 	for (effect_index = ai_globals->spatial_effects_first_index;
 		effect_index!=ai_globals->spatial_effects_last_index;
-		effect_index = (effect_index + 1) & MASK(5))
+		effect_index = (effect_index + 1) % NUMBEROF(ai_globals->spatial_effects))
 	{
 		struct ai_spatial_effect *spatial_effect = &ai_globals->spatial_effects[effect_index];
 
@@ -4737,7 +4737,7 @@ static short ai_debug_lineofsight_findpoint(
 
 	if (index>=ai_debug.lineofsight_numpoints)
 	{
-		if (ai_debug.lineofsight_numpoints<16384)
+		if (ai_debug.lineofsight_numpoints<MAXIMUM_LINEOFSIGHT_POINTS)
 		{
 			index = ai_debug.lineofsight_numpoints++;
 			ai_debug.lineofsight_points[index] = *point;
@@ -4749,7 +4749,7 @@ static short ai_debug_lineofsight_findpoint(
 			index = NONE;
 			if (!ai_debug.lineofsight_overflow)
 			{
-				error(_error_silent, "ai_debug_lineofsight: overflowed point buffer (%d) with %d rays and counting", 16384, ai_debug.lineofsight_numrays);
+				error(_error_silent, "ai_debug_lineofsight: overflowed point buffer (%d) with %d rays and counting", MAXIMUM_LINEOFSIGHT_POINTS, ai_debug.lineofsight_numrays);
 				ai_debug.lineofsight_overflow = TRUE;
 			}
 		}
@@ -4783,7 +4783,7 @@ static long ai_debug_lineofsight_storeray(
 
 		if (index>=ai_debug.lineofsight_numrays)
 		{
-			if (ai_debug.lineofsight_numrays<8192)
+			if (ai_debug.lineofsight_numrays<MAXIMUM_LINEOFSIGHT_RAYS)
 			{
 				index = ai_debug.lineofsight_numrays++;
 				ai_debug.lineofsight_rays[index][0] = p0_index;
@@ -4795,7 +4795,7 @@ static long ai_debug_lineofsight_storeray(
 				index = NONE;
 				if (!ai_debug.lineofsight_overflow)
 				{
-					error(_error_silent, "ai_debug_lineofsight: overflowed ray buffer (%d) with %d points and counting", 8192, ai_debug.lineofsight_numpoints);
+					error(_error_silent, "ai_debug_lineofsight: overflowed ray buffer (%d) with %d points and counting", MAXIMUM_LINEOFSIGHT_RAYS, ai_debug.lineofsight_numpoints);
 					ai_debug.lineofsight_overflow = TRUE;
 				}
 			}
