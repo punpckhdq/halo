@@ -925,7 +925,7 @@ static void ai_debug_render_path_nodes(
 							while (edge_index!=surface->first_edge_index);
 
 							scale /= vertex_count;
-							scale_vector3d((real_vector3d const *)&midpoint, scale, (real_vector3d *)&midpoint);
+							scale_point3d(&midpoint, scale, &midpoint);
 							child_point = &midpoint;
 						}
 						else
@@ -1200,7 +1200,7 @@ static void ai_debug_render_actor(
 						point_from_line3d(
 							&actor_debug_info->ray_origin[ray_index],
 							&actor_debug_info->ray_direction[ray_index],
-							(double)(actor_debug_info->collision_t[ray_index]),
+							(actor_debug_info->collision_t[ray_index]),
 							&point0);
 						point_from_line3d(
 							&actor_debug_info->ray_origin[ray_index],
@@ -1262,7 +1262,7 @@ static void ai_debug_render_actor(
 							point_from_line3d(
 								&actor_debug_info->field_6358[i][j],
 								&actor_debug_info->field_6418[i][j],
-								(double)(actor_debug_info->avoid_t[i][j]),
+								(actor_debug_info->avoid_t[i][j]),
 								&point0);
 							point_from_line3d(
 								&actor_debug_info->field_6358[i][j],
@@ -2221,14 +2221,14 @@ static void ai_debug_render_actor(
 
 					biped_build_flying_axes(&forward, &left_vector, &up_vector);
 					scale_vector3d(&forward, actor->output.throttle.i, &throttle_vector);
-					point_from_line3d((real_point3d *)&throttle_vector, &left_vector, (double)(actor->output.throttle.j), (real_point3d *)&throttle_vector);
-					point_from_line3d((real_point3d *)&throttle_vector, &up_vector, (double)(actor->output.throttle.k), (real_point3d *)&throttle_vector);
+					vector_from_line3d(&throttle_vector, &left_vector, actor->output.throttle.j, &throttle_vector);
+					vector_from_line3d(&throttle_vector, &up_vector, actor->output.throttle.k, &throttle_vector);
 				}
 				else
 				{
 					set_real_vector3d(&v, -forward.j, forward.i, 0.f);
 					scale_vector3d(&forward, actor->output.throttle.i, &throttle_vector);
-					point_from_line3d((real_point3d *)&throttle_vector, &v, (double)(actor->output.throttle.j), (real_point3d *)&throttle_vector);
+					vector_from_line3d(&throttle_vector, &v, actor->output.throttle.j, &throttle_vector);
 				}
 
 				point_from_line3d(&actor->input.position.body_position, global_up3d, 0.1f, &p0);
@@ -3367,14 +3367,14 @@ static void ai_debug_render_actor(
 
 						biped_build_flying_axes(&facing_vector, &left_vector, &up_vector);
 						scale_vector3d(&facing_vector, actor->output.throttle.i, &throttle_vector);
-						point_from_line3d((real_point3d *)&throttle_vector, &left_vector, (double)(actor->output.throttle.j), (real_point3d *)&throttle_vector);
-						point_from_line3d((real_point3d *)&throttle_vector, &up_vector, (double)(actor->output.throttle.k), (real_point3d *)&throttle_vector);
+						vector_from_line3d(&throttle_vector, &left_vector, actor->output.throttle.j, &throttle_vector);
+						vector_from_line3d(&throttle_vector, &up_vector, actor->output.throttle.k, &throttle_vector);
 					}
 					else
 					{
 						set_real_vector3d(&right_facing_vector, -facing_vector.j, facing_vector.i, 0.f);
 						scale_vector3d(&facing_vector, actor->output.throttle.i, &throttle_vector);
-						point_from_line3d((real_point3d *)&throttle_vector, &right_facing_vector, (double)(actor->output.throttle.j), (real_point3d *)&throttle_vector);
+						vector_from_line3d(&throttle_vector, &right_facing_vector, actor->output.throttle.j, &throttle_vector);
 					}
 
 					point_from_line3d(&actor->input.position.body_position, global_up3d, 0.1f, &p0);
@@ -3448,10 +3448,10 @@ static void ai_debug_render_actor(
 				render_debug_line(TRUE, &actor_debug_info->field_120, &actor_debug_info->field_13C, global_real_argb_purple);
 				render_debug_sphere(TRUE, &actor_debug_info->field_13C, 0.2f, global_real_argb_purple);
 				
-				point_from_line3d(&actor_debug_info->field_108, &actor_debug_info->field_12C, (double)(actor_debug_info->field_14C), &p1);
+				point_from_line3d(&actor_debug_info->field_108, &actor_debug_info->field_12C, (actor_debug_info->field_14C), &p1);
 				render_debug_line(TRUE, &actor_debug_info->field_108, &p1, global_real_argb_green);
 				
-				point_from_line3d(&actor_debug_info->field_108, &actor_debug_info->field_12C, (double)(actor_debug_info->field_148), &p0);
+				point_from_line3d(&actor_debug_info->field_108, &actor_debug_info->field_12C, (actor_debug_info->field_148), &p0);
 				perpendicular3d(&actor_debug_info->field_12C, &v);
 				
 				point_from_line3d(&p0, &v, 0.3f, &p1);
@@ -3485,7 +3485,7 @@ static void ai_debug_render_actor(
 
 				ai_debug_render_cross(&actor_debug_info->vehicle_intended_entry_point, global_real_argb_red);
 				vector_from_points3d(&actor_debug_info->vehicle_avoidance_point, &actor_debug_info->vehicle_intended_entry_point, &v0);
-				point_from_line3d(&actor_debug_info->vehicle_avoidance_point, &v0, (double)(actor_debug_info->vehicle_intersect_t), &p2);
+				point_from_line3d(&actor_debug_info->vehicle_avoidance_point, &v0, (actor_debug_info->vehicle_intersect_t), &p2);
 			
 				ai_debug_render_cross(&p2, global_real_argb_blue);
 			}
@@ -3607,39 +3607,42 @@ static void ai_debug_render_actor(
 			{
 				real_point3d current_points[2][2][2];
 				real distances[2];
-				real_point3d direction_vector[2][2];
+				real_vector3d direction_vector[2][2];
 				short side_index;
 				short ring_index;
 				short height_index;
-				real cosine_vertical_angle[2];
-				real sine_vertical_angle[2];
-				real horizontal_angle = MIN(angle_itr, actor_definition->perception.peripheral_vision_angle);
-				real cosine_horizontal_angle = cosine(horizontal_angle);
-				real sine_horizontal_angle = sine(horizontal_angle);
+				real actual_angle = MIN(angle_itr, actor_definition->perception.peripheral_vision_angle);
 
-				cosine_vertical_angle[0] = cosine(DEGREES_TO_RADIANS(30));
-				sine_vertical_angle[0] = sine(DEGREES_TO_RADIANS(30));
-				cosine_vertical_angle[1] = cosine(DEGREES_TO_RADIANS(45));
-				sine_vertical_angle[1] = -sine(DEGREES_TO_RADIANS(45));
-
-				for (ring_index = 0; ring_index<2; ++ring_index)
 				{
-					for (height_index = 0; height_index<2; ++height_index)
+					real cosine_vertical_angle[2];
+					real sine_vertical_angle[2];
+					real cosine_horizontal_angle = cosine(actual_angle);
+					real sine_horizontal_angle = sine(actual_angle);
+
+					cosine_vertical_angle[0] = cosine(DEGREES_TO_RADIANS(30));
+					sine_vertical_angle[0] = sine(DEGREES_TO_RADIANS(30));
+					cosine_vertical_angle[1] = cosine(DEGREES_TO_RADIANS(45));
+					sine_vertical_angle[1] = -sine(DEGREES_TO_RADIANS(45));
+
+					for (ring_index = 0; ring_index<2; ++ring_index)
 					{
-						real_vector3d headspace_vector;
-						headspace_vector.i = cosine_horizontal_angle * cosine_vertical_angle[height_index];
-						headspace_vector.j = ((real)(ring_index==0 ? 1 : -1)) * cosine_vertical_angle[height_index] * sine_horizontal_angle;
-						headspace_vector.k = sine_vertical_angle[height_index];
+						for (height_index = 0; height_index<2; ++height_index)
+						{
+							real_vector3d headspace_vector;
+							headspace_vector.i = cosine_horizontal_angle * cosine_vertical_angle[height_index];
+							headspace_vector.j = ((real)(ring_index==0 ? 1 : -1)) * cosine_vertical_angle[height_index] * sine_horizontal_angle;
+							headspace_vector.k = sine_vertical_angle[height_index];
 
-						direction_vector[ring_index][height_index] = *(real_point3d*)global_zero_vector3d;
+							direction_vector[ring_index][height_index] = *global_zero_vector3d;
 
-						point_from_line3d(&direction_vector[ring_index][height_index], &actor->input.looking_vector, (double)(headspace_vector.i), &direction_vector[ring_index][height_index]);
-						point_from_line3d(&direction_vector[ring_index][height_index], &actor->input.looking_left_vector, (double)(headspace_vector.j), &direction_vector[ring_index][height_index]);
-						point_from_line3d(&direction_vector[ring_index][height_index], &actor->input.looking_up_vector, (double)(headspace_vector.k), &direction_vector[ring_index][height_index]);
+							vector_from_line3d(&direction_vector[ring_index][height_index], &actor->input.looking_vector, headspace_vector.i, &direction_vector[ring_index][height_index]);
+							vector_from_line3d(&direction_vector[ring_index][height_index], &actor->input.looking_left_vector, headspace_vector.j, &direction_vector[ring_index][height_index]);
+							vector_from_line3d(&direction_vector[ring_index][height_index], &actor->input.looking_up_vector, headspace_vector.k, &direction_vector[ring_index][height_index]);
+						}
 					}
 				}
 
-				actor_get_vision_distances(actor_index, max_distance, perception_factor, horizontal_angle, &distances[0], &distances[1]);
+				actor_get_vision_distances(actor_index, max_distance, perception_factor, actual_angle, &distances[0], &distances[1]);
 			
 				for (side_index = 0; side_index < 2; ++side_index)
 				{
@@ -3649,7 +3652,7 @@ static void ai_debug_render_actor(
 						{
 							point_from_line3d(
 								&actor->input.position.head_position,
-								(real_vector3d *)&direction_vector[ring_index][height_index],
+								&direction_vector[ring_index][height_index],
 								distances[side_index],
 								&current_points[side_index][ring_index][height_index]);
 

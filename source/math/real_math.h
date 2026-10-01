@@ -894,6 +894,12 @@ __inline real_point3d *point_from_line3d(
 	return result;
 }
 
+#define vector_from_line3d(v0, v1, t, result) \
+	point_from_line3d((real_point3d const *)(v0), (v1), (double)(t), (real_point3d *)(result))
+
+#define scale_point3d(point, scale, result) \
+	scale_vector3d((real_vector3d const *)(point), (scale), (real_vector3d *)(result))
+
 __inline real_vector3d *vector_from_points3d(
 	real_point3d const *a,
 	real_point3d const *b,
