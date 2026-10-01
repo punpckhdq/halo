@@ -12,7 +12,6 @@ AI_DEBUG.C
 #include "encounters.h"
 #include "props.h"
 #include "collision_bsp_definitions.h"
-#include "render.h"
 #include "rasterizer.h"
 #include "players.h"
 #include "render_debug.h"
