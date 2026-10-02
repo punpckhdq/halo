@@ -60,7 +60,7 @@ struct game_options
 	short code_version;
 	short difficulty;
 	unsigned long random_seed;
-	char map_name[256];
+	char map_name[MAXIMUM_FILENAME_LENGTH+1];
 };
 
 struct slayer_statistics

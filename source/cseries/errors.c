@@ -101,7 +101,7 @@ void write_to_error_file(
 	{
 		first_line = FALSE;
 		write_to_error_file("\r\n\r\n", FALSE);
-		write_to_error_file("halobeta xbox 01.01.14.2342(CACHE) ----------------------------------------------\r\n", TRUE);
+		write_to_error_file(BUILD_NAME " " BUILD_STRING "(CACHE) ----------------------------------------------\r\n", TRUE);
 		sprintf(line, "reference function: %s\r\n", "_write_to_error_file");
 		write_to_error_file(line, TRUE);
 		sprintf(line, "reference address: %x\r\n", write_to_error_file);

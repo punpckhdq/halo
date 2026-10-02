@@ -256,7 +256,7 @@ void game_state_initialize_for_new_map(
 
 	name = tag_get_name(global_scenario_index);
 	strcpy(game_state_globals.header->map_name, name);
-	strcpy(game_state_globals.header->build_number, "01.01.14.2342");
+	strcpy(game_state_globals.header->build_number, BUILD_STRING);
 
 	game_state_globals.header->player_count = player_spawn_count;
 	game_state_globals.header->difficulty = game_difficulty_level_get();

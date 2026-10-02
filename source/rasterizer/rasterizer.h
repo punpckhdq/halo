@@ -330,8 +330,8 @@ struct rasterizer_globals_struct
 	byte __unknown14[4];
 	__int64 frame_index;
 	unsigned long flip_index;
-	volatile __int64 __unknown28;
-	volatile __int64 __unknown30;
+	volatile __int64 vblank_index;
+	volatile __int64 flip_vblank_index;
 	byte __unknown38[5];
 	boolean use_rasterizer_frame_rate_throttle;
 	boolean use_rasterizer_frame_rate_stabilization;

@@ -73,7 +73,7 @@ struct _main_globals
 	__int64 last_present_vblank_index;
 	real seconds_elapsed;
 	short connection;
-	unsigned short screenshot_identifier;
+	word screenshot_identifier;
 	struct bitmap_data *movie;
 	long recording_start_tick;
 	long recording_stop_tick;
@@ -112,9 +112,9 @@ struct _main_globals
 	boolean queue_map;
 	byte pad0[3];
 	boolean solo_try_and_load_from_persistent_storage;
-	char soloplayer_map_name[256];
-	char multiplayer_map_name[256];
-	char queued_map_name[256];
+	char soloplayer_map_name[MAXIMUM_FILENAME_LENGTH+1];
+	char multiplayer_map_name[MAXIMUM_FILENAME_LENGTH+1];
+	char queued_map_name[MAXIMUM_FILENAME_LENGTH+1];
 	char core_file_name[64];
 	short vblank_interval_current;
 	short vblank_interval_minimum;
@@ -124,12 +124,12 @@ struct _main_globals
 	unsigned long *vblank_flip_counter;
 	short vblank_flip_delta_next_index;
 	short vblank_flip_deltas[15];
-	char __unknown41C[512];
+	char time_debug_string[512]; /* fake name */
 };
 
 /* ---------- prototypes */
 
-static long code_000ef8a0(short const *a, short const *b);
+static long sort_controllers_ascending(short const *a, short const *b);
 static void create_local_players(void);
 static void main_queue_map_private(void);
 static void compute_subframe_counts(long num_players, long *out_horizontal_count, long *out_vertical_count);
@@ -138,7 +138,7 @@ static void main_new_map(struct game_options *options);
 static void main_change_map_name(void);
 static void main_revert_map_private(void);
 static void main_skip_cinematic_private(void);
-static void code_000f05f0(void);
+static void main_cutscene_skip_private(void); /* fake name */
 static void main_saving_map_private(void);
 static void main_save_map_private(void);
 static void main_switch_to_structure_bsp_private(void);
@@ -154,7 +154,7 @@ static void main_setup_connection(void);
 static void main_exit(void);
 static void main_initialize_time(void);
 static void main_reset_time(void);
-static boolean code_000f0be0(void);
+static boolean main_time_is_throttled(void);
 static void main_update_time(void);
 static void screenshot_render(struct render_window *window);
 static void screenshot_record(struct bitmap_data *screen, struct file_reference *file);
@@ -166,7 +166,7 @@ short player_spawn_count = 1;
 boolean global_frame_rate_throttle = TRUE;
 short global_screenshot_size = 1;
 
-static struct _main_globals main_globals = {0};
+static struct _main_globals main_globals;
 
 boolean debug_force_frame_rate_update = FALSE;
 boolean debug_no_drawing = FALSE;
@@ -307,7 +307,7 @@ void main_loop(
 
 			if (main_globals.cutscene_skip)
 			{
-				code_000f05f0();
+				main_cutscene_skip_private();
 			}
 
 			if (main_globals.queue_map)
@@ -590,7 +590,7 @@ void main_load_last_solo_map(
 {
 	if (main_globals.load_last_solo_level && !bink_playback_active())
 	{
-		char map_name[256];
+		char map_name[MAXIMUM_FILENAME_LENGTH+1];
 		long count;
 		boolean loaded = FALSE;
 		FILE *file = fopen("z:\\last_solo.txt", "r");
@@ -599,7 +599,7 @@ void main_load_last_solo_map(
 		{
 			count = fread(map_name, 1, NUMBEROF(map_name)-1, file);
 			fclose(file);
-			map_name[MIN(count, 255)] = '\0';
+			map_name[MIN(count, MAXIMUM_FILENAME_LENGTH)] = '\0';
 			loaded = main_get_solo_level_from_name(map_name)!=NONE;
 		}
 
@@ -619,7 +619,7 @@ void main_load_last_solo_map(
 	return;
 }
 
-static long code_000ef8a0(
+static long sort_controllers_ascending(
 	short const *a,
 	short const *b)
 {
@@ -663,10 +663,11 @@ static void create_local_players(
 
 		memset(controllers_used, NONE, sizeof(controllers_used));
 		memset(desired_controllers, NONE, sizeof(desired_controllers));
-		default_controllers[0] = 0;
-		default_controllers[1] = 1;
-		default_controllers[2] = 2;
-		default_controllers[3] = 3;
+
+		for (i = 0; i<MAXIMUM_GAMEPADS; i++)
+		{
+			default_controllers[i] = (short)i;
+		}
 
 		match_assert("c:\\halo\\SOURCE\\main\\main.c", 741, game_connection() == _game_connection_local);
 
@@ -703,7 +704,7 @@ static void create_local_players(
 			}
 		}
 
-		qsort(desired_controllers, NUMBEROF(desired_controllers), sizeof(desired_controllers[0]), (int(__cdecl *)(const void *, const void *))code_000ef8a0);
+		qsort(desired_controllers, NUMBEROF(desired_controllers), sizeof(desired_controllers[0]), (int(__cdecl *)(const void *, const void *))sort_controllers_ascending);
 
 		for (i = 0; i<player_spawn_count; i++)
 		{
@@ -823,7 +824,7 @@ void main_respawn(
 
 	if (force_respawn)
 	{
-		main_globals.respawn_timer = 91;
+		main_globals.respawn_timer = 3*TICKS_PER_SECOND+1;
 	}
 
 	return;
@@ -1533,7 +1534,7 @@ static void main_new_map(
 		game_state_try_and_load_from_persistent_storage();
 	}
 
-	ui_widgets_disable_pause_game(30);
+	ui_widgets_disable_pause_game(TICKS_PER_SECOND);
 
 	return;
 }
@@ -1599,7 +1600,7 @@ static void main_revert_map_private(
 	void)
 {
 	game_state_revert();
-	ui_widgets_disable_pause_game(30);
+	ui_widgets_disable_pause_game(TICKS_PER_SECOND);
 	main_globals.revert_map = FALSE;
 
 	return;
@@ -1618,7 +1619,7 @@ static void main_skip_cinematic_private(
 	return;
 }
 
-static void code_000f05f0(
+static void main_cutscene_skip_private(
 	void)
 {
 	if (main_globals.skip_ticks && cinematic_in_progress())
@@ -1629,7 +1630,7 @@ static void code_000f05f0(
 
 		while (main_globals.skip_ticks-->0)
 		{
-			game_time_update(1.f/30.f);
+			game_time_update(SECONDS_PER_TICK);
 		}
 
 		game_time_set_speed(speed);
@@ -1664,7 +1665,7 @@ static void main_save_map_private(
 
 		if (main_globals.save_map_safely)
 		{
-			if (main_globals.ticks_unable_to_save++<240 || !main_globals.save_map_timeout)
+			if (main_globals.ticks_unable_to_save++<8*TICKS_PER_SECOND || !main_globals.save_map_timeout)
 			{
 				if (main_globals.ticks_until_next_save_check--<=0)
 				{
@@ -1680,7 +1681,7 @@ static void main_save_map_private(
 						main_globals.safe_intervals = 0;
 					}
 
-					main_globals.ticks_until_next_save_check = 10;
+					main_globals.ticks_until_next_save_check = TICKS_PER_SECOND/3;
 				}
 			}
 			else
@@ -1729,7 +1730,7 @@ static void main_lost_map_private(
 {
 	if (!game_time_get_paused())
 	{
-		if (main_globals.loss_timer++>90)
+		if (main_globals.loss_timer++>3*TICKS_PER_SECOND)
 		{
 			main_globals.lost_map = FALSE;
 			main_globals.loss_timer = 0;
@@ -1745,7 +1746,7 @@ static void main_respawn_private(
 {
 	if (!game_time_get_paused() && !cinematic_in_progress())
 	{
-		if (main_globals.respawn_timer++>90 && players_respawn_coop())
+		if (main_globals.respawn_timer++>3*TICKS_PER_SECOND && players_respawn_coop())
 		{
 			main_globals.respawn = FALSE;
 			main_globals.respawn_timer = 0;
@@ -1811,7 +1812,7 @@ static void main_reset_map_private(
 		create_local_players();
 		game_time_start();
 		game_initial_pulse();
-		ui_widgets_disable_pause_game(30);
+		ui_widgets_disable_pause_game(TICKS_PER_SECOND);
 		main_globals.reset_map = FALSE;
 	}
 
@@ -1994,12 +1995,12 @@ static void main_reset_time(
 	void)
 {
 	main_globals.last_time_msec = system_milliseconds();
-	main_globals.last_vblank_index = rasterizer_globals.__unknown28;
+	main_globals.last_vblank_index = rasterizer_globals.vblank_index;
 
 	return;
 }
 
-static boolean code_000f0be0(
+static boolean main_time_is_throttled(
 	void)
 {
 	return rasterizer_globals.use_rasterizer_frame_rate_throttle;
@@ -2012,16 +2013,16 @@ static void main_update_time(
 	unsigned long current_milliseconds = system_milliseconds();
 	__int64 current_vblank_index = MAX(main_globals.last_vblank_index, main_globals.last_present_vblank_index);
 	__int64 target_display_vblank_index = current_vblank_index;
-	boolean throttle = code_000f0be0();
+	boolean throttle = main_time_is_throttled();
 
 	if (throttle)
 	{
-		strcpy(main_globals.__unknown41C, "");
+		strcpy(main_globals.time_debug_string, "");
 
 		if (global_frame_rate_throttle && rasterizer_globals.refresh_rate>=0)
 		{
 			short interval;
-			short minimum_interval = 60/(rasterizer_globals.refresh_rate ? rasterizer_globals.refresh_rate : 30);
+			short minimum_interval = VBLANKS_PER_SECOND/(rasterizer_globals.refresh_rate ? rasterizer_globals.refresh_rate : TICKS_PER_SECOND);
 
 			main_globals.vblank_interval_minimum = minimum_interval;
 
@@ -2032,7 +2033,7 @@ static void main_update_time(
 				short elapsed = game_time_get_elapsed();
 				short frame_index = (short)current_vblank_index;
 
-				_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), "last%6I64d init%6I64d achv%6I64d pres%6I64d g%d cur%d... ",
+				_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "last%6I64d init%6I64d achv%6I64d pres%6I64d g%d cur%d... ",
 					main_globals.last_vblank_index, main_globals.last_initial_vblank_index, main_globals.last_achievable_vblank_index, main_globals.last_present_vblank_index,
 					elapsed, main_globals.vblank_interval_current);
 
@@ -2060,18 +2061,18 @@ static void main_update_time(
 							main_globals.vblank_last_failure_time[interval] = current_vblank_index;
 						}
 
-						_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), "(%s%2d) ",
+						_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "(%s%2d) ",
 							ignore ? "ignor" : "fail ", failure_count);
 					}
 					else if (current_vblank_index>=main_globals.vblank_last_failure_time[interval]+15)
 					{
 						main_globals.vblank_failure_count[interval] = 0;
-						_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), "(ok   %2d) ",
+						_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "(ok   %2d) ",
 							frames_since_failure);
 					}
 					else
 					{
-						_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), "(%s%2d/%2d) ",
+						_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "(%s%2d/%2d) ",
 							main_globals.vblank_failure_count[interval]>=4 ? "dn" : "wt", failure_count, frames_since_failure);
 					}
 
@@ -2081,22 +2082,22 @@ static void main_update_time(
 					}
 				}
 
-				frame_rate = best_interval==0 ? 999 : 60/best_interval;
+				frame_rate = best_interval==0 ? 999 : VBLANKS_PER_SECOND/best_interval;
 
 				if (best_interval>main_globals.vblank_interval_current)
 				{
-					_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), " FAILDOWN %d", frame_rate);
+					_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " FAILDOWN %d", frame_rate);
 				}
 				else if (best_interval<main_globals.vblank_interval_current)
 				{
-					_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), " RESTORE  %d", frame_rate);
+					_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " RESTORE  %d", frame_rate);
 				}
 				else
 				{
-					_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), " MAINTAIN %d", frame_rate);
+					_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " MAINTAIN %d", frame_rate);
 				}
 
-				_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), " des %d targ%6I64d",
+				_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " des %d targ%6I64d",
 					best_interval, current_vblank_index+best_interval);
 
 				main_globals.vblank_interval_current = best_interval;
@@ -2135,11 +2136,11 @@ static void main_update_time(
 	}
 
 	current_milliseconds = system_milliseconds();
-	target_display_vblank_index = MAX(rasterizer_globals.__unknown28, target_display_vblank_index);
+	target_display_vblank_index = MAX(rasterizer_globals.vblank_index, target_display_vblank_index);
 
 	if (throttle)
 	{
-		seconds_elapsed = (target_display_vblank_index-main_globals.last_vblank_index)*(1.f/60.f);
+		seconds_elapsed = (target_display_vblank_index-main_globals.last_vblank_index)*(1.f/VBLANKS_PER_SECOND);
 	}
 	else
 	{
@@ -2156,7 +2157,7 @@ static void main_update_time(
 
 		if (main_globals.connection==_game_connection_local)
 		{
-			seconds_elapsed = debug_force_frame_rate_update ? CEILING(seconds_elapsed, 1.f/30.f) : CEILING(seconds_elapsed, 1.f/15.f);
+			seconds_elapsed = debug_force_frame_rate_update ? CEILING(seconds_elapsed, SECONDS_PER_TICK) : CEILING(seconds_elapsed, 1.f/15.f);
 		}
 	}
 
@@ -2164,7 +2165,7 @@ static void main_update_time(
 	main_globals.last_vblank_index = target_display_vblank_index;
 	main_globals.seconds_elapsed = seconds_elapsed;
 	profile_seconds_elapsed(seconds_elapsed);
-	main_globals.last_initial_vblank_index = rasterizer_globals.__unknown28;
+	main_globals.last_initial_vblank_index = rasterizer_globals.vblank_index;
 
 	return;
 }
@@ -2174,16 +2175,16 @@ void main_rasterizer_throttle(
 {
 	boolean at_minimum;
 	short lapsed;
-	__int64 vblank_index = rasterizer_globals.__unknown28;
+	__int64 vblank_index = rasterizer_globals.vblank_index;
 	boolean throttled = FALSE;
 
-	main_globals.last_achievable_vblank_index = rasterizer_globals.__unknown28+1;
+	main_globals.last_achievable_vblank_index = rasterizer_globals.vblank_index+1;
 
-	if (code_000f0be0())
+	if (main_time_is_throttled())
 	{
 		__int64 vblank_to_begin_present = main_globals.last_vblank_index-1;
 
-		if (rasterizer_globals.__unknown28<vblank_to_begin_present)
+		if (rasterizer_globals.vblank_index<vblank_to_begin_present)
 		{
 			unsigned long time_ms = system_milliseconds();
 			boolean precaching = cache_files_precache_in_progress();
@@ -2191,7 +2192,7 @@ void main_rasterizer_throttle(
 			throttled = TRUE;
 			profile_idle_start();
 
-			while (rasterizer_globals.__unknown28<vblank_to_begin_present)
+			while (rasterizer_globals.vblank_index<vblank_to_begin_present)
 			{
 				if (precaching)
 				{
@@ -2210,17 +2211,17 @@ void main_rasterizer_throttle(
 		}
 	}
 
-	main_globals.last_present_vblank_index = rasterizer_globals.__unknown28+1;
+	main_globals.last_present_vblank_index = rasterizer_globals.vblank_index+1;
 	at_minimum = main_globals.vblank_interval_current==main_globals.vblank_interval_minimum;
 	lapsed = PIN(main_globals.last_present_vblank_index-main_globals.last_vblank_index, 0, SHRT_MAX);
 
-	_snprintf(main_globals.__unknown41C+strlen(main_globals.__unknown41C), NUMBEROF(main_globals.__unknown41C)-strlen(main_globals.__unknown41C), "%6I64d(targ%6I64d %s%2d)",
+	_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "%6I64d(targ%6I64d %s%2d)",
 		vblank_index, main_globals.last_vblank_index,
 		throttled ? "THROTTLE" : (lapsed==0 ? "SYNCED  " : "LAPSED  "),
-		throttled ? rasterizer_globals.__unknown28-vblank_index : lapsed);
+		throttled ? rasterizer_globals.vblank_index-vblank_index : lapsed);
 
 	main_globals.vblank_interval_held = main_globals.vblank_interval_current>0 && lapsed==0;
-	profile_lapsed_frames(lapsed, at_minimum, main_globals.__unknown41C);
+	profile_lapsed_frames(lapsed, at_minimum, main_globals.time_debug_string);
 
 	return;
 }
@@ -2316,7 +2317,7 @@ void main_movie_start(
 		directory_create_or_delete_contents("movie");
 		main_globals.recording_frame_index = 0;
 
-		main_globals.recording_dt = frames_per_second>0.0001f ? 1.f/frames_per_second : 1.f/30.f;
+		main_globals.recording_dt = frames_per_second>0.0001f ? 1.f/frames_per_second : SECONDS_PER_TICK;
 		game_time_set_speed(1.f);
 	}
 
@@ -2367,7 +2368,7 @@ void main_framerate_render(
 
 			if (main_globals.vblank_interval_held)
 			{
-				frame_rate = 60/main_globals.vblank_interval_current;
+				frame_rate = VBLANKS_PER_SECOND/main_globals.vblank_interval_current;
 			}
 
 			_snprintf(str, NUMBEROF(str)-1, "%d", frame_rate);
@@ -2513,7 +2514,7 @@ void halt_and_catch_fire(
 				draw_string_set_draw_mode(font_index, _text_style_plain, _text_justification_left, 0, global_real_argb_white);
 				draw_string_set_tab_stops(NULL, 0);
 				draw_string_set_color(global_real_argb_white);
-				rasterizer_draw_string(&bounds, NULL, &cursor, -4, "halobeta xbox 01.01.14.2342 built at: Jan 14 2002 12:49:20");
+				rasterizer_draw_string(&bounds, NULL, &cursor, -4, BUILD_NAME " " BUILD_STRING " built at: " BUILD_DATE " " BUILD_TIME);
 				bounds.y0 = cursor.y-1;
 				rasterizer_draw_string(&bounds, NULL, &cursor, -4, error_get());
 			}
@@ -2545,7 +2546,7 @@ void main_crash(
 void main_print_version(
 	void)
 {
-	console_printf(FALSE, "halobeta xbox 01.01.14.2342 Jan 14 2002 12:49:20");
+	console_printf(FALSE, BUILD_NAME " " BUILD_STRING " " BUILD_DATE " " BUILD_TIME);
 
 	return;
 }
@@ -2553,17 +2554,17 @@ void main_print_version(
 void main_vertical_blank_interrupt_handler(
 	unsigned long context)
 {
-	rasterizer_globals.__unknown28++;
+	rasterizer_globals.vblank_index++;
 
 	if (!main_globals.vblank_flip_counter)
 	{
-		rasterizer_globals.__unknown30 = rasterizer_globals.__unknown28;
+		rasterizer_globals.flip_vblank_index = rasterizer_globals.vblank_index;
 	}
 	else if (*main_globals.vblank_flip_counter!=rasterizer_globals.flip_index)
 	{
-		main_globals.vblank_flip_deltas[main_globals.vblank_flip_delta_next_index] = rasterizer_globals.__unknown28-rasterizer_globals.__unknown30;
+		main_globals.vblank_flip_deltas[main_globals.vblank_flip_delta_next_index] = rasterizer_globals.vblank_index-rasterizer_globals.flip_vblank_index;
 		main_globals.vblank_flip_delta_next_index = (main_globals.vblank_flip_delta_next_index+1)%15;
-		rasterizer_globals.__unknown30 = rasterizer_globals.__unknown28;
+		rasterizer_globals.flip_vblank_index = rasterizer_globals.vblank_index;
 		rasterizer_globals.flip_index = *main_globals.vblank_flip_counter;
 	}
 
