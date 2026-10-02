@@ -366,7 +366,7 @@ void object_set_object_index_for_name_index(
 	short name_index,
 	long object_index)
 {
-	if (VALID_INDEX(name_index, global_scenario_get()->object_names.count))
+	if (name_index >= 0 && name_index < global_scenario_get()->object_names.count)
 	{
 		object_name_list[name_index] = object_index;
 	}
@@ -1278,7 +1278,7 @@ char const *object_get_attachment_marker_name(
 	struct object_datum *object = object_get(object_index);
 	struct object_definition *object_definition = object_definition_get(object->definition_index);
 
-	if (VALID_INDEX(attachment_index, object_definition->object.attachments.count))
+	if (attachment_index >= 0 && attachment_index < object_definition->object.attachments.count)
 	{
 		result = TAG_BLOCK_GET_ELEMENT(
 			&object_definition->object.attachments,
@@ -1311,7 +1311,7 @@ boolean object_has_node(
 	else
 	{
 		struct model *model = model_definition_get(model_index);
-		if (VALID_INDEX(node_index, model->nodes.count))
+		if (node_index >= 0 && node_index < model->nodes.count)
 		{
 			result = TRUE;
 		}
@@ -4255,7 +4255,7 @@ static void object_name_list_delete(
 static long object_name_list_lookup(
 	short name_index)
 {
-	return VALID_INDEX(name_index, MAXIMUM_OBJECT_NAMES_PER_SCENARIO) ? object_name_list[name_index] : NONE;
+	return (name_index >= 0 && name_index < MAXIMUM_OBJECT_NAMES_PER_SCENARIO) ? object_name_list[name_index] : NONE;
 }
 
 static long recursive_object_adder(

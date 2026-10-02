@@ -57,7 +57,7 @@ struct parse_string_state
 	pixel32 color;
 };
 
-typedef void (*draw_character_proc)(struct parse_string_state *parse_state, struct font_header *font_header, struct font_character *character, pixel32 color, short x0, short y0, short x, short y, short dx, short dy); // [fake name]
+typedef void (*draw_character_proc)(struct parse_string_state *parse_state, struct font_header *font_header, struct font_character *character, pixel32 color, short x0, short y0, short x, short y, short dx, short dy); /* fake name */
 
 /* ---------- prototypes */
 

@@ -10,12 +10,12 @@ ERROR_GEOMETRY.C
 
 /* ---------- constants */
 
-#define ERROR_GEOMETRY_FILE_EXTENSION ".wrl" // [fake name]
-#define MAXIMUM_ERROR_GEOMETRY_NAME_LENGTH (sizeof(error_geometry_file_name)-sizeof(ERROR_GEOMETRY_FILE_EXTENSION)) // [fake name]
+#define ERROR_GEOMETRY_FILE_EXTENSION ".wrl" /* fake name */
+#define MAXIMUM_ERROR_GEOMETRY_NAME_LENGTH (sizeof(error_geometry_file_name)-sizeof(ERROR_GEOMETRY_FILE_EXTENSION)) /* fake name */
 
-#define IMPORT_SCALE 100.f // [fake name]
+#define IMPORT_SCALE 100.f /* fake name */
 
-#define ERROR_GEOMETRY_POINT_RADIUS 0.01f // [fake name]
+#define ERROR_GEOMETRY_POINT_RADIUS 0.01f /* fake name */
 
 /* ---------- macros */
 
@@ -29,9 +29,9 @@ static boolean error_geometry_file_is_open(void);
 
 static FILE *error_geometry_file= NULL;
 
-static char error_geometry_file_name[64]= "debug.wrl"; // [fake name]
+static char error_geometry_file_name[64]= "debug.wrl"; /* fake name */
 
-static real_matrix4x3 error_geometry_transform= // [fake name]
+static real_matrix4x3 error_geometry_transform= /* fake name */
 {
 	1.f,
 	{

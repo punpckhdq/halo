@@ -27,8 +27,8 @@ enum
 
 enum
 {
-	GAMEPAD_STICK_DEAD_ZONE = 9000, // [fake name]
-	INPUT_RUMBLE_THREAD_STACK_SIZE = 16*1024, // [fake name]
+	GAMEPAD_STICK_DEAD_ZONE = 9000, /* fake name */
+	INPUT_RUMBLE_THREAD_STACK_SIZE = 16*1024, /* fake name */
 };
 
 /* ---------- macros */
@@ -37,17 +37,17 @@ enum
 
 struct input_globals_xbox
 {
-	boolean suppressed; // [fake name]
-	boolean rumble_thread_resumed; // [fake name]
+	boolean suppressed; /* fake name */
+	boolean rumble_thread_resumed; /* fake name */
 	HANDLE gamepad_handles[MAXIMUM_GAMEPADS];
 	struct gamepad_state gamepads[MAXIMUM_GAMEPADS];
-	struct gamepad_state suppressed_gamepad; // [fake name]
-	struct vibrate_data vibrations[MAXIMUM_GAMEPADS]; // [fake name]
-	HANDLE rumble_thread; // [fake name]
-	HANDLE rumble_event; // [fake name]
-	boolean rumble_this_vertical_blank; // [fake name]
-	boolean in_frame; // [fake name]
-	long unused; // [fake name]
+	struct gamepad_state suppressed_gamepad; /* fake name */
+	struct vibrate_data vibrations[MAXIMUM_GAMEPADS]; /* fake name */
+	HANDLE rumble_thread; /* fake name */
+	HANDLE rumble_event; /* fake name */
+	boolean rumble_this_vertical_blank; /* fake name */
+	boolean in_frame; /* fake name */
+	long unused; /* fake name */
 	HANDLE keyboard_handle;
 	byte key_ticks[NUMBER_OF_KEYS];
 	byte key_latches[NUMBER_OF_KEYS];
@@ -59,16 +59,16 @@ struct input_globals_xbox
 /* ---------- prototypes */
 
 static void update_threshold(byte *threshold, boolean down, byte value);
-static void input_update_mouse(void); // [fake name]
+static void input_update_mouse(void); /* fake name */
 static void input_update_device_connections(void); // [fake name?]
 static void input_update_gamepads(void);
 static void input_update_gamepads_rumble(void);
 static void input_update_keyboard(void);
-static DWORD WINAPI input_rumble_thread(LPVOID parameter); // [fake name]
+static DWORD WINAPI input_rumble_thread(LPVOID parameter); /* fake name */
 
 /* ---------- globals */
 
-static byte const gamepad_analog_button_table[NUMBER_OF_GAMEPAD_ANALOG_BUTTONS]= // [fake name]
+static byte const gamepad_analog_button_table[NUMBER_OF_GAMEPAD_ANALOG_BUTTONS]= /* fake name */
 {
 	XINPUT_GAMEPAD_A,
 	XINPUT_GAMEPAD_B,
@@ -80,7 +80,7 @@ static byte const gamepad_analog_button_table[NUMBER_OF_GAMEPAD_ANALOG_BUTTONS]=
 	XINPUT_GAMEPAD_RIGHT_TRIGGER
 };
 
-static byte const gamepad_binary_button_table[NUMBER_OF_GAMEPAD_BINARY_BUTTONS]= // [fake name]
+static byte const gamepad_binary_button_table[NUMBER_OF_GAMEPAD_BINARY_BUTTONS]= /* fake name */
 {
 	XINPUT_GAMEPAD_DPAD_UP,
 	XINPUT_GAMEPAD_DPAD_DOWN,
@@ -484,8 +484,8 @@ static short const ascii_to_key_table[NUMBER_OF_ASCII_CODES]=
 	_key_delete
 };
 
-static XINPUT_FEEDBACK gamepad_feedback[MAXIMUM_GAMEPADS] = {0}; // [fake name]
-static point2d gamepad_raw_sticks[MAXIMUM_GAMEPADS][NUMBER_OF_GAMEPAD_STICKS] = {0}; // [fake name]
+static XINPUT_FEEDBACK gamepad_feedback[MAXIMUM_GAMEPADS] = {0}; /* fake name */
+static point2d gamepad_raw_sticks[MAXIMUM_GAMEPADS][NUMBER_OF_GAMEPAD_STICKS] = {0}; /* fake name */
 static struct input_globals_xbox input_globals = {0};
 
 /* ---------- public code */
@@ -760,7 +760,7 @@ void input_vertical_blank_interrupt(
 	return;
 }
 
-static void input_update_mouse( // [fake name]
+static void input_update_mouse( /* fake name */
 	void)
 {
 	return;
@@ -1175,7 +1175,7 @@ void input_frame_end(
 	return;
 }
 
-static DWORD WINAPI input_rumble_thread( // [fake name]
+static DWORD WINAPI input_rumble_thread( /* fake name */
 	LPVOID parameter)
 {
 	for (;;)

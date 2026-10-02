@@ -12,12 +12,12 @@ CONNECTED_GEOMETRY.C
 
 /* ---------- constants */
 
-#define CONNECTED_GEOMETRY_POINT_EPSILON 0.001f // [fake name]
-#define CONNECTED_GEOMETRY_COPLANAR_EPSILON 0.01f // [fake name]
+#define CONNECTED_GEOMETRY_POINT_EPSILON 0.001f /* fake name */
+#define CONNECTED_GEOMETRY_COPLANAR_EPSILON 0.01f /* fake name */
 
 /* ---------- macros */
 
-#define POINT_COORDINATES_EQUAL(a, b) (fabs((a)-(b))<CONNECTED_GEOMETRY_POINT_EPSILON) // [fake name]
+#define POINT_COORDINATES_EQUAL(a, b) (fabs((a)-(b))<CONNECTED_GEOMETRY_POINT_EPSILON) /* fake name */
 
 /* ---------- structures */
 
@@ -184,7 +184,7 @@ long connected_geometry_add_triangle(
 	real_point3d const *p2,
 	boolean check_for_duplicates)
 {
-	static boolean warned= FALSE; // [fake name]
+	static boolean warned= FALSE; /* fake name */
 	long triangle_index= dynamic_array_add_element(&geometry->triangles);
 
 	if (triangle_index!=NONE)

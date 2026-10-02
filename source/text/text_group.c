@@ -30,7 +30,7 @@ char *string_list_get_string(
 	{
 		struct string_list_group_header *string_list = tag_get(STRING_LISTS_GROUP_TAG, tag_index);
 
-		if (VALID_INDEX(string_index, string_list->string_references.count))
+		if (string_index >= 0 && string_index < string_list->string_references.count)
 		{
 			struct string_list_string_reference *reference = TAG_BLOCK_GET_ELEMENT(&string_list->string_references, string_index, struct string_list_string_reference);
 
@@ -55,7 +55,7 @@ wchar_t *unicode_string_list_get_string(
 	{
 		struct unicode_string_list_group_header *string_list = tag_get(UNICODE_STRING_LISTS_GROUP_TAG, tag_index);
 
-		if (VALID_INDEX(string_index, string_list->string_references.count))
+		if (string_index >= 0 && string_index < string_list->string_references.count)
 		{
 			struct unicode_string_list_string_reference *reference = TAG_BLOCK_GET_ELEMENT(&string_list->string_references, string_index, struct unicode_string_list_string_reference);
 

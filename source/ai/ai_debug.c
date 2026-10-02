@@ -2906,7 +2906,7 @@ static void ai_debug_render_actor(
 				}
 			}
 
-			if (VALID_INDEX(actor_debug_info->firing_decision, NUMBER_OF_ACTOR_DEBUG_FIRING_DECISIONS))
+			if (actor_debug_info->firing_decision >= 0 && actor_debug_info->firing_decision < NUMBER_OF_ACTOR_DEBUG_FIRING_DECISIONS)
 			{
 				char const *firing_decision_names[NUMBER_OF_ACTOR_DEBUG_FIRING_DECISIONS] =
 				{

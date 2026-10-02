@@ -45,9 +45,9 @@ enum
 
 /* ---------- macros */
 
-#define PIXEL32_ALPHA(pixel) ((pixel)>>24) // [fake name]
-#define PIXEL32_TO_PIXEL16_565(pixel) ((word)((((pixel)&0xff)>>3) | (((((pixel)>>8)&0xff)>>2)<<5) | (((((pixel)>>16)&0xff)>>3)<<11))) // [fake name]
-#define REAL_ARGB_COLOR_TO_PIXEL32(color) ((((((pixel32)((color)->alpha*255.f)<<8) | (pixel32)((color)->red*255.f))<<8 | (pixel32)((color)->green*255.f))<<8) | (pixel32)((color)->blue*255.f)) // [fake name]
+#define PIXEL32_ALPHA(pixel) ((pixel)>>24) /* fake name */
+#define PIXEL32_TO_PIXEL16_565(pixel) ((word)((((pixel)&0xff)>>3) | (((((pixel)>>8)&0xff)>>2)<<5) | (((((pixel)>>16)&0xff)>>3)<<11))) /* fake name */
+#define REAL_ARGB_COLOR_TO_PIXEL32(color) ((((((pixel32)((color)->alpha*255.f)<<8) | (pixel32)((color)->red*255.f))<<8 | (pixel32)((color)->green*255.f))<<8) | (pixel32)((color)->blue*255.f)) /* fake name */
 
 /* ---------- structures */
 

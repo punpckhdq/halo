@@ -26,7 +26,7 @@ enum
 
 /* ---------- macros */
 
-#define GRAVITY 9.78f // [fake name] Earth's gravity is 9.78m/s at the equator. (and 9.83m/s at the poles)
+#define GRAVITY 9.78f /* fake name */
 
 /* ---------- structures */
 

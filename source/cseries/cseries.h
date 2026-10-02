@@ -101,8 +101,8 @@ enum
 
 /* ---------- macros */
 
-#define SECONDS_PER_TICK (1.f/TICKS_PER_SECOND) // [fake name]
-#define METERS_PER_UNIT 3.048f // [fake name] 1 Halo world Unit = 10ft = 3.048m
+#define SECONDS_PER_TICK (1.f/TICKS_PER_SECOND) /* fake name */
+#define METERS_PER_UNIT 3.048f /* fake name */
 
 #define STRINGIFY_DETAIL(x) #x
 #define STRINGIFY(x) STRINGIFY_DETAIL(x)
@@ -155,8 +155,6 @@ enum
 
 #define SIZEOF_BITS(value) (CHAR_BITS*sizeof(value))
 #define NUMBEROF(array) (sizeof(array) / sizeof(array[0]))
-
-#define VALID_INDEX(index, count) (index>=0 && index<count)
 
 #define DATUM_INDEX_NEW(absolute_index, salt) ((absolute_index) | ((salt)<<SHORT_BITS))
 #define DATUM_INDEX_TO_ABSOLUTE_INDEX(datum_index) ((datum_index)&UNSIGNED_SHORT_MAX)

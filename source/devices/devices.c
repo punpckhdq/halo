@@ -24,7 +24,7 @@ DEVICES.C
 
 enum
 {
-	MAXIMUM_DEVICE_GROUPS_PER_MAP = 1024, // [fake name]
+	MAXIMUM_DEVICE_GROUPS_PER_MAP = 1024, /* fake name */
 };
 
 /* ---------- macros */

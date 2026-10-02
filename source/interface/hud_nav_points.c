@@ -557,7 +557,7 @@ static void hud_activate_nav_point(
 	{
 		short local_player_index = player_get(player_index)->local_player_index;
 
-		if (VALID_INDEX(local_player_index, MAXIMUM_NUMBER_OF_LOCAL_PLAYERS) && reference_index != NONE && nav_index != NONE)
+		if (local_player_index >= 0 && local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS && reference_index != NONE && nav_index != NONE)
 		{
 			struct hud_nav_point_player_datum *data = get_nav_point_datum(local_player_index);
 			short index;
@@ -651,7 +651,7 @@ static void hud_deactivate_nav_point(
 	{
 		short local_player_index = player_get(player_index)->local_player_index;
 
-		if (VALID_INDEX(local_player_index, MAXIMUM_NUMBER_OF_LOCAL_PLAYERS) && reference_index != NONE)
+		if (local_player_index >= 0 && local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS && reference_index != NONE)
 		{
 			struct hud_nav_point_player_datum *data = get_nav_point_datum(local_player_index);
 			short index;

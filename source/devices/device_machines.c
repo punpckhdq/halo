@@ -16,8 +16,8 @@ DEVICE_MACHINES.C
 
 enum
 {
-	MAXIMUM_OBJECTS_OPENING_MACHINE = 16, // [fake name]
-	MACHINE_DOOR_OPEN_TICKS_DELAY = -3, // [fake name]
+	MAXIMUM_OBJECTS_OPENING_MACHINE = 16, /* fake name */
+	MACHINE_DOOR_OPEN_TICKS_DELAY = -3, /* fake name */
 };
 
 /* ---------- macros */
