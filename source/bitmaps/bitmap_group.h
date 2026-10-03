@@ -10,6 +10,14 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	BITMAP_GROUP_TAG= 'bitm',
+	BITMAP_GROUP_VERSION= 7,
+	BITMAP_GROUP_SHOW_BITMAP_CUSTOM_ID= 'bshw',
+	MAXIMUM_BITMAP_PIXELS_SIZE= 0x1000000
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

@@ -19,6 +19,12 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct render_animation
+{
+	real_rgb_color const *colors;
+	real const *values;
+};
+
 struct render_screen_flash
 {
 	short type;
