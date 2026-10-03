@@ -76,7 +76,9 @@ struct vehicle_datum
 	struct _vehicle_datum vehicle;
 };
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/VEHICLES.C */
+
+void vehicle_hover(long vehicle_index, boolean hover);
 
 /* ---------- globals */
 

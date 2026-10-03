@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/HS_LIBRARY_EXTERNAL.C */
+
+void hs_object_destroy(long object_index);
 
 /* ---------- globals */
 

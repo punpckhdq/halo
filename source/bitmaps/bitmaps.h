@@ -109,6 +109,7 @@ long bitmap_mipmap_get_pixel_data_size(struct bitmap_data const *bitmap, short m
 /* ---------- prototypes/BITMAP_UTILITIES.C */
 
 real real_rgb_color_brightness(union real_rgb_color const *color);
+union real_argb_color *pixel32_to_real_argb_color(pixel32 pixel, union real_argb_color *color);
 
 union real_rgb_color *rgb_colors_interpolate(
 	union real_rgb_color *rgb_result,

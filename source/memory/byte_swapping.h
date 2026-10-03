@@ -45,4 +45,11 @@ long byte_swap_codes_size(char *name, byte_swap_code *codes);
 void byte_swap_data(struct byte_swap_definition *definition, void *data, long data_count);
 void byte_swap_data_explicit(char *name, long size, byte_swap_code *codes, long data_count, void *data);
 
+/* ---------- globals */
+
+extern struct byte_swap_definition byte_bs_definition;
+extern struct byte_swap_definition word_bs_definition;
+extern struct byte_swap_definition long_bs_definition;
+extern struct byte_swap_definition int64_bs_definition;
+
 #endif // __BYTE_SWAPPING_H

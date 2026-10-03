@@ -157,6 +157,25 @@ struct scenario_cutscene_camera_point
 	long unused[9];
 };
 
+struct scenario_cutscene_title
+{
+	long flags;
+	char name[TAG_STRING_LENGTH+1];
+	long pad0;
+	rectangle2d bounds;
+	short text_index;
+	short style;
+	short justification;
+	short pad1;
+	unsigned long text_flags;
+	pixel32 foreground_color;
+	pixel32 shadow_color;
+	real fade_in_time;
+	real up_time;
+	real fade_out_time;
+	long unused[4];
+};
+
 struct scenario
 {
 	struct tag_reference ugly_structure_bsp;

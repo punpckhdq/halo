@@ -1,28 +1,5 @@
 /*
 RECORDED_ANIMATION_DEFINITIONS.C
-
-symbols in this file:
-00081CD0 0050:
-	_code_00081cd0 (0000)
-00081D20 0060:
-	_scenario_get_animation_by_name (0000)
-00258A84 0021:
-	??_C@_0CB@HNENIBHH@recorded?5animation?5event?5stream?$CK@ (0000)
-00258AA8 001b:
-	??_C@_0BL@GJLMOMCK@length?5of?5animation?$CK?3ticks?$AA@ (0000)
-00258AC4 001b:
-	??_C@_0BL@NBNEAFHE@unit?5control?5data?5version?$CK?$AA@ (0000)
-00258AE0 0014:
-	??_C@_0BE@LAHBNGDE@raw?5animation?5data?$CK?$AA@ (0000)
-00258AF4 0009:
-	??_C@_08COEAJJNH@version?$CK?$AA@ (0000)
-00258B00 0019:
-	??_C@_0BJ@DEDBCMOK@recorded_animation_block?$AA@ (0000)
-00258B1C 0025:
-	??_C@_0CF@DKFDGPGH@recorded_animation_event_stream_@ (0000)
-002DCD58 00b4:
-	_recorded_animation_event_stream_data (0000)
-	_recorded_animation_block (0088)
 */
 
 /* ---------- headers */
@@ -41,8 +18,87 @@ symbols in this file:
 
 /* ---------- prototypes */
 
+static void byte_swap_recording(void *recording, void *data, long size);
+
 /* ---------- globals */
+
+static struct tag_field recorded_animation_block_fields[10];
+
+struct tag_data_definition recorded_animation_event_stream_data =
+{
+	"recorded_animation_event_stream_data",
+	0,
+	MAXIMUM_RECORDED_ANIMATION_DATA_SIZE,
+	byte_swap_recording
+};
+
+struct tag_block_definition recorded_animation_block =
+{
+	"recorded_animation_block",
+	0,
+	MAXIMUM_RECORDED_ANIMATIONS_PER_MAP,
+	sizeof(struct recorded_animation_definition),
+	NULL,
+	recorded_animation_block_fields
+};
+
+static struct tag_field recorded_animation_block_fields[10] =
+{
+	{ _field_string, "name^" },
+	{ _field_char_integer, "version*" },
+	{ _field_char_integer, "raw animation data*" },
+	{ _field_char_integer, "unit control data version*" },
+	{ _field_pad, NULL, (void *)1 },
+	{ _field_short_integer, "length of animation*:ticks" },
+	{ _field_pad, NULL, (void *)2 },
+	{ _field_pad, NULL, (void *)4 },
+	{ _field_data, "recorded animation event stream*", &recorded_animation_event_stream_data },
+	{ _field_terminator }
+};
+
+/* ---------- private code */
+
+static void byte_swap_recording(
+	void *recording,
+	void *data,
+	long size)
+{
+	struct recorded_animation_definition *animation = recording;
+
+	switch (animation->version)
+	{
+	case 1:
+	case 2:
+	case 3:
+		byte_swap_recording_stream_v1(data, size, animation->unit_control_data_version);
+		break;
+	case RECORDED_ANIMATION_VERSION:
+		byte_swap_recording_stream(data, size, animation->unit_control_data_version);
+		break;
+	}
+
+	return;
+}
 
 /* ---------- public code */
 
-/* ---------- private code */
+short scenario_get_animation_by_name(
+	struct scenario *scenario,
+	char const *animation_name)
+{
+	short result = NONE;
+	short animation_index;
+
+	for (animation_index = 0; animation_index < scenario->recorded_animations.count; animation_index++)
+	{
+		struct recorded_animation_definition *animation = TAG_BLOCK_GET_ELEMENT(&scenario->recorded_animations, animation_index, struct recorded_animation_definition);
+
+		if (!_stricmp(animation->name, animation_name))
+		{
+			result = animation_index;
+			break;
+		}
+	}
+
+	return result;
+}

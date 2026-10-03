@@ -344,6 +344,22 @@ enum
 
 /* ---------- structures */
 
+struct unit_control_data
+{
+	char animation_state;
+	char aiming_speed;
+	word control_flags;
+	short weapon_index;
+	short grenade_index;
+	short zoom_level;
+	word pad;
+	real_vector3d throttle;
+	real primary_trigger;
+	real_vector3d facing_vector;
+	real_vector3d aiming_vector;
+	real_vector3d looking_vector;
+};
+
 struct unit_animation
 {
 	word flags;
@@ -551,6 +567,9 @@ boolean unit_can_use_weapon(long unit_index, long weapon_index);
 
 void unit_set_possessed(long unit_index, boolean possessed);
 void unit_set_actively_controlled(long unit_index, boolean actively_controlled);
+boolean unit_controllable(long unit_index);
+void unit_set_controllable(long unit_index, boolean controllable);
+void unit_control(long unit_index, struct unit_control_data *control);
 boolean unit_is_busy(long object_index);
 void unit_scripting_set_emotion_animation(long unit_index, char const *animation_name);
 

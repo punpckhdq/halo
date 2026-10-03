@@ -21,6 +21,7 @@ header included in hcex build.
 /* ---------- prototypes/PROJECTILES.C */
 
 void projectile_accelerate(long projectile_index, union real_vector3d const *acceleration);
+void projectiles_delete_all(void);
 
 /* ---------- globals */
 

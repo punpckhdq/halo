@@ -139,6 +139,8 @@ unsigned long const *players_get_combined_pvs(void);
 
 void player_control_fix_for_loaded_game_state(void);
 
+void player_input_enable(boolean enable);
+
 /* ---------- prototypes/PLAYER_QUEUES_NEW.C */
 
 void update_server_delete(void);

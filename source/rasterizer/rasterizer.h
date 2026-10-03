@@ -301,6 +301,12 @@ void rasterizer_bitmap_changed(struct bitmap_data *bitmap);
 /* ---------- prototypes/RASTERIZER_TEXT.C */
 
 void rasterizer_draw_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, char const *string);
+void rasterizer_draw_unicode_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, wchar_t const *string);
+void rasterizer_text_set_shadow_color(pixel32 color);
+
+/* ---------- prototypes/RASTERIZER_XBOX_DYNAVOBGEOM.C */
+
+void rasterizer_psuedo_dynamic_screen_quad_draw(struct rasterizer_dynamic_screen_geometry_parameters const *parameters, struct dynamic_screen_vertex *vertices);
 
 /* ---------- prototypes/RASTERIZER_MEMORY_POOL.C */
 
