@@ -252,6 +252,7 @@ void stack_walk_disregard_symbol_names(boolean disregard);
 #define memcpy csmemcpy
 
 #define match_malloc(file, line, size) debug_malloc(size, FALSE, MATCH_FILE(file), MATCH_LINE(line))
+#define match_malloc_clear(file, line, size) debug_malloc(size, TRUE, MATCH_FILE(file), MATCH_LINE(line)) /* fake name */
 #define match_free(file, line, ptr) debug_free(ptr, MATCH_FILE(file), MATCH_LINE(line))
 #define match_realloc(file, line, ptr, size) debug_realloc(ptr, size, MATCH_FILE(file), MATCH_LINE(line))
 
