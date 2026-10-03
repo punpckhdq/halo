@@ -26,6 +26,7 @@ static void camera_track_splut(struct unit_camera const *camera, real pitch, rea
 
 /* ---------- globals */
 
+/* This is from DEFAULT_HORIZONTAL_FIELD_OF_VIEW zoomed 2.5x per level in degrees and then rounded */
 real following_camera_zoom_levels[4] =
 {
 	31.29f,
