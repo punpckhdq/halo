@@ -17,13 +17,22 @@ header included in hcex build.
 
 enum
 {
-	PLANAR_FOG_DEFINITION_TAG = 'fog ',
-	PLANAR_FOG_DEFINITION_VERSION = 1,
+	PLANAR_FOG_DEFINITION_TAG = 'fog ', /* fake name */
+	PLANAR_FOG_DEFINITION_VERSION = 1, /* fake name */
+};
+
+enum
+{
+	_fog_definition_is_water_bit = 0,
+	_fog_definition_atmosphere_dominant_bit,
+	_fog_definition_screen_effect_only_bit,
+	NUMBER_OF_FOG_DEFINITION_FLAGS
 };
 
 /* ---------- macros */
 
-#define fog_definition_get(index) ((struct fog_definition *)tag_get(PLANAR_FOG_DEFINITION_TAG, index))
+#define fog_definition_get(index) ((struct fog_definition *)tag_get(PLANAR_FOG_DEFINITION_TAG, (index))) /* fake name */
+#define fog_definition_try_and_get(index) ((index) == NONE ? (struct fog_definition *)NULL : fog_definition_get(index)) /* fake name */
 
 /* ---------- structures */
 
@@ -43,7 +52,7 @@ struct fog_screen
 	real zoom_multiplier;
 	long unused2[2];
 	real map_scale;
-	struct tag_reference map;
+	struct tag_reference map;	// bitmap_group
 	real animation_period;
 	real animation_unused[1];
 	real wind_velocity_lower_bound;
@@ -70,8 +79,8 @@ struct fog_definition
 	real distance_to_water_plane;
 	real_rgb_color color;
 	struct fog_screen screen;
-	struct tag_reference background_sound;
-	struct tag_reference sound_environment;
+	struct tag_reference background_sound;	// looping_sound_definition
+	struct tag_reference sound_environment;	// sound_environment
 	long sound_unused[30];
 };
 

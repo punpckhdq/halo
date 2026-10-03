@@ -18,6 +18,11 @@ header included in hcex build.
 
 enum
 {
+	STRUCTURE_BSP_DEFINITION_TAG = 'sbsp' /* fake name */
+};
+
+enum
+{
 	MAXIMUM_COLLISION_MATERIALS_PER_STRUCTURE = 512,
 	MAXIMUM_SURFACE_REFERENCES_PER_STRUCTURE = 0x40000,
 	MAXIMUM_LIGHTMAPS_PER_STRUCTURE = 128,
@@ -92,11 +97,45 @@ struct structure_fog_region
 struct structure_fog_palette_entry
 {
 	char name[32];
-	struct tag_reference fog;
+	struct tag_reference fog;	// fog_definition
 	unsigned short pad;
 	short runtime_global_function_index;
 	char global_function_name[32];
 	long unused[13];
+};
+
+struct structure_weather_palette_entry
+{
+	char name[32];
+	struct tag_reference particle_system;	// weather_particle_system_definition
+	unsigned short pad1;
+	short runtime_particle_system_global_function_index;
+	char particle_system_global_function_name[32];
+	long particle_system_unused[11];
+	struct tag_reference wind;				// wind_definition
+	real_vector3d wind_direction;
+	real wind_magnitude;
+	unsigned short pad2;
+	short wind_global_function_index;
+	char wind_global_function_name[32];
+	long wind_unused[11];
+};
+
+struct structure_background_sound_palette_entry
+{
+	char name[32];
+	struct tag_reference background_sound;	// looping_sound_definition
+	unsigned short pad;
+	short runtime_global_function_index;
+	char global_function_name[32];
+	long unused[8];
+};
+
+struct structure_sound_environment_palette_entry
+{
+	char name[32];
+	struct tag_reference sound_environment;	// sound_environment
+	long unused[8];
 };
 
 struct structure_leaf
@@ -110,7 +149,7 @@ struct structure_leaf
 
 struct structure_material
 {
-	struct tag_reference shader;
+	struct tag_reference shader;	// _shader
 	short permutation_index;
 	word flags;
 	long first_surface_index;
@@ -136,7 +175,7 @@ struct structure_lightmap
 
 struct structure_bsp
 {
-	struct tag_reference lightmap_group;
+	struct tag_reference lightmap_group;	// bitmap_group
 	real vehicle_floor;
 	real vehicle_ceiling;
 	long sad_unused[5];
@@ -180,7 +219,7 @@ struct structure_bsp
 
 struct structure_collision_material
 {
-	struct tag_reference shader;
+	struct tag_reference shader;	// _shader
 	word pad;
 	short runtime_physics_material_type;
 };

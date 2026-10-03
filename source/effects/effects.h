@@ -20,6 +20,10 @@ header included in hcex build.
 
 /* ---------- prototypes/EFFECTS.C */
 
+void effect_delete(long effect_index);
+void effects_disconnect_from_structure_bsp(void);
+void effects_reconnect_to_structure_bsp(void);
+
 long effect_new_looping(
 	long definition_index,
 	long object_index,
@@ -36,8 +40,6 @@ long effect_new_from_object(
 	real scale_b,
 	real_rgb_color const *color,
 	struct effect_vector_field const *impulse_field);
-
-void effect_delete(long effect_index);
 
 /* ---------- globals */
 

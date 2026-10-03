@@ -74,9 +74,11 @@ struct decal_datum
 
 /* ---------- prototypes/DECALS.C */
 
-void decal_delete(long decal_index);
 void decals_unlock(boolean permanent);
 long decal_get_first_decal_index(short cluster_index, short layer);
+void decals_reconnect_to_structure_bsp(void);
+void decals_disconnect_from_structure_bsp(void);
+void decal_delete(long decal_index);
 
 /* ---------- globals */
 

@@ -14,14 +14,6 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/STRUCTURES.C */
-
-short structure_clusters_in_sphere(short cluster_index, real_point3d const *position, real radius, short maximum_count, short *intersected_indices);
-
-void structure_cluster_marker_begin(void);
-boolean structure_cluster_mark(short cluster_index);
-void structure_cluster_marker_end(void);
-
 /* ---------- prototypes/STRUCTURE_DETAIL_OBJECTS.C */
 
 void structure_detail_objects_flush(void);
@@ -32,7 +24,16 @@ long cluster_index_from_point(struct structure_bsp const *structure_bsp, union r
 
 /* ---------- prototypes/STRUCTURE_RUNTIME_DECALS.C */
 
+void structure_decals_reconnect_to_structure_bsp(void);
+void structure_decals_disconnect_from_structure_bsp(void);
 void structure_decals_update(unsigned long *old_combined_pvs, unsigned long *new_combined_pvs, short cluster_count);
+
+/* ---------- prototypes/STRUCTURES.C */
+
+void structure_cluster_marker_begin(void);
+boolean structure_cluster_mark(short cluster_index);
+void structure_cluster_marker_end(void);
+short structure_clusters_in_sphere(short cluster_index, real_point3d const *position, real radius, short maximum_count, short *intersected_indices);
 
 /* ---------- globals */
 

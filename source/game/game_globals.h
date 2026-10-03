@@ -13,6 +13,11 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	GAME_GLOBALS_DEFINITION_TAG = 'matg'
+};
+
 /* referenced in game_globals.c? */
 enum
 {

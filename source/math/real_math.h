@@ -1015,8 +1015,7 @@ __inline real distance3d(
 	real_point3d const *a,
 	real_point3d const *b)
 {
-	real_vector3d v;
-	return magnitude3d(vector_from_points3d(a, b, &v));
+	return square_root(distance_squared3d(a, b));
 }
 
 __inline real_point3d *midpoint3d(

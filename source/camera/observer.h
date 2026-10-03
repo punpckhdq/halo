@@ -234,6 +234,8 @@ void observer_up_from_forward(real_vector3d const *forward, real_vector3d *up);
 void observer_reconnect_to_structure_bsp(void);
 void observer_obsolete_position(short local_player_index);
 
+void observer_reconnect_to_structure_bsp(void);
+
 /* ---------- globals */
 
 /* ---------- public code */

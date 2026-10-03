@@ -93,6 +93,9 @@ boolean ai_release_inactive_encounters(char *result_description, unsigned char *
 
 void ai_handle_damage(long unit_index, long shooter_object_index, short damage_category, float fraction, union real_vector3d *damage_velocity, boolean delayed);
 
+void ai_disconnect_from_structure_bsp(void);
+void ai_reconnect_to_structure_bsp(void);
+
 /* ---------- globals */
 
 /* ---------- public code */

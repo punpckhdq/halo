@@ -37,6 +37,14 @@ enum
 	MAXIMUM_DETAIL_SOUNDS_PER_LOOPING_SOUND = 32,
 };
 
+enum
+{
+	_looping_sound_deafening_bit = 0,
+	_looping_sound_fake_impulse_sound_bit,
+	_looping_sound_stops_music_bit,
+	NUMBER_OF_LOOPING_SOUND_FLAGS
+};
+
 /* ---------- macros */
 
 #define sound_definition_get(index) ((struct sound_definition *)tag_get(SOUND_DEFINITION_TAG, (index)))
@@ -71,7 +79,7 @@ struct sound_definition
 	struct sound_scale_modifiers scale_upper_bound;
 	short encoding;
 	short compression;
-	struct tag_reference promotion_sound;
+	struct tag_reference promotion_sound;	// sound_definition
 	short promotion_count;
 	word pad2;
 	long runtime_maximum_play_time;
@@ -80,6 +88,25 @@ struct sound_definition
 	long runtime_scripting_time;
 	long runtime_scripting_sound_index;
 	struct tag_block pitch_ranges;
+};
+
+struct looping_sound_scale_modifiers
+{
+	real detail_period;
+	long unused0[2];
+};
+
+struct looping_sound_definition
+{
+	unsigned long flags;
+	struct looping_sound_scale_modifiers scale_lower_bound;
+	struct looping_sound_scale_modifiers scale_upper_bound;
+	long runtime_scripting_sound_index;
+	real runtime_maximum_distance;
+	long unused[2];
+	struct tag_reference continuous_damage_effect;	// continuous_damage_effect_definition
+	struct tag_block tracks;
+	struct tag_block details;
 };
 
 /* ---------- prototypes/EXAMPLE.C */

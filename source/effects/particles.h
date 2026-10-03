@@ -36,6 +36,8 @@ struct new_particle_data
 
 /* ---------- prototypes/PARTICLES.C */
 
+void particles_disconnect_from_structure_bsp(void);
+void particles_reconnect_to_structure_bsp(void);
 void particle_new(struct new_particle_data const *data);
 
 /* ---------- globals */

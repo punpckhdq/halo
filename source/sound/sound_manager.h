@@ -23,11 +23,10 @@ header included in hcex build.
 void sound_render(void);
 
 void sound_dispose(void);
-
+void sound_reconnect_to_structure_bsp(void);
 void sound_initialize(void);
-
-void sound_stop_all(void);
 void sound_stop_impulse(long sound_index);
+void sound_stop_all(void);
 
 /* ---------- globals */
 
