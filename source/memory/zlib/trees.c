@@ -551,7 +551,7 @@ local void gen_bitlen(s, desc)
      * lengths instead of fixing only the wrong ones. This idea is taken
      * from 'ar' written by Haruhiko Okumura.)
      */
-    for (bits = max_length; bits != 0; bits--) {
+    for (bits = max_length; bits > 0; bits--) {
         n = s->bl_count[bits];
         while (n != 0) {
             m = s->heap[--h];
@@ -1208,7 +1208,7 @@ local void copy_block(s, buf, len, header)
 #ifdef DEBUG
     s->bits_sent += (ulg)len<<3;
 #endif
-    while (len--) {
+    while (len-- > 0) {
         put_byte(s, *buf++);
     }
 }

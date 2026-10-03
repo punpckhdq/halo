@@ -203,7 +203,7 @@ uIntf *v;               /* working area: values in order of bit length */
   for (; k <= g; k++)
   {
     a = c[k];
-    while (a--)
+    while (a-- > 0)
     {
       /* here i is the Huffman code of length k bits for value *p */
       /* make tables up to required level */
