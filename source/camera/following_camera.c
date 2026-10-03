@@ -95,7 +95,7 @@ void following_camera_update(
 	result->focus_position = camera_info.unit_origin;
 	result->timer = 0.f;
 	result->flags = 0;
-	result->field_of_view = DEGREES_TO_RADIANS(70.f);
+	result->field_of_view = DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 
 	if (camera->initialized)
 	{
@@ -175,7 +175,7 @@ static struct unit_camera *unit_camera_get(
 			struct vehicle_definition *vehicle_definition = vehicle_definition_get(parent->definition_index);
 			struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&vehicle_definition->unit.seats, unit->unit.parent_seat_index, struct unit_seat);
 
-			if (seat->flags & (FLAG(_unit_seat_is_invisible_bit) | FLAG(_unit_seat_is_driver_bit) | FLAG(_unit_seat_has_third_person_camera_bit)))
+			if (TEST_FLAG(seat->flags, _unit_seat_is_driver_bit) || TEST_FLAG(seat->flags, _unit_seat_is_invisible_bit) || TEST_FLAG(seat->flags, _unit_seat_has_third_person_camera_bit))
 			{
 				camera = &seat->camera;
 			}
@@ -197,18 +197,12 @@ static void camera_track_splut(
 {
 	struct unit_camera_track const *unit_camera_track = camera->unit_camera_tracks.count ? TAG_BLOCK_GET_ELEMENT(&camera->unit_camera_tracks, MIN(_unit_camera_track_loose, camera->unit_camera_tracks.count - 1), struct unit_camera_track) : NULL;
 	long camera_track_index = unit_camera_track && unit_camera_track->track.index != NONE ? unit_camera_track->track.index : TAG_BLOCK_GET_ELEMENT(&scenario_get_game_globals()->camera, 0, struct game_globals_camera)->default_unit_camera_track.index;
-	struct camera_track_definition const *camera_track;
-	short start_index;
-	short index;
-	real h;
-	real t;
+	struct camera_track_definition const *camera_track = camera_track_definition_get(camera_track_index);
+	real t = (pitch + _half_pi) / _pi;
+	short start_index = (short)(t * (camera_track->control_points.count - 1));
+	short index = start_index;
+	real h = 1.f / (camera_track->control_points.count - 1);
 
-	camera_track = camera_track_definition_get(camera_track_index);
-
-	t = (pitch + _half_pi) * (1.f / _pi);
-	start_index = (short)(t * (camera_track->control_points.count - 1));
-	index = start_index;
-	h = 1.f / (camera_track->control_points.count - 1);
 	match_assert("c:\\halo\\SOURCE\\camera\\following_camera.c", 86, camera_track->control_points.count >= 4);
 
 	while (index > 0 && (index + 4 > camera_track->control_points.count || index > start_index - 1))

@@ -20,18 +20,22 @@ FLYING_CAMERA.C
 
 /* ---------- public code */
 
-void flying_camera_new(struct flying_camera *camera)
+void flying_camera_new(
+	struct flying_camera *camera)
 {
 	camera->position.x = camera->position.y = 0.f;
 	camera->orientation.yaw = 0.f;
 	camera->orientation.pitch = 0.f;
 	camera->roll = 0.f;
-	camera->field_of_view = DEGREES_TO_RADIANS(70.f);
+	camera->field_of_view = DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 
 	return;
 }
 
-void flying_camera_new_from_point_and_vector(struct flying_camera *camera, real_point3d const *focus, real_vector3d const *orientation)
+void flying_camera_new_from_point_and_vector(
+	struct flying_camera *camera,
+	real_point3d const *focus,
+	real_vector3d const *orientation)
 {
 	flying_camera_new(camera);
 	camera->position = *focus;
@@ -40,7 +44,10 @@ void flying_camera_new_from_point_and_vector(struct flying_camera *camera, real_
 	return;
 }
 
-void flying_camera_update(struct flying_camera *camera, struct camera_control const *controls, struct observer_command *result)
+void flying_camera_update(
+	struct flying_camera *camera,
+	struct camera_control const *controls,
+	struct observer_command *result)
 {
 	real_point3d new_position;
 

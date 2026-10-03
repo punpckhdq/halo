@@ -13,8 +13,8 @@ file has inline function assertions.
 /* ---------- constants */
 
 #define _real_epsilon 0.0001f
-#define _pi ((real)M_PI)
-#define _half_pi ((real)M_PI_2) // [fake name?]
+#define _pi 3.14159265359f
+#define _half_pi 1.57079632679f // [fake name?]
 
 #define REAL_MIN -3.4028235e38f
 #define REAL_MAX 3.4028235e38f
@@ -22,8 +22,8 @@ file has inline function assertions.
 
 /* ---------- macros */
 
-#define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * _pi / 180.f))
-#define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / _pi))
+#define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * M_PI / 180.f))
+#define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / M_PI))
 
 #define assert_valid_real(v)				\
 vassert(									\

@@ -14,6 +14,10 @@ OBSERVER.C
 #include "collisions.h"
 #include "predicted_resources.h"
 
+/* ---------- constants */
+
+#define ORBITING_CAMERA_FIELD_OF_VIEW 50.f /* fake name */
+
 /* ---------- prototypes */
 
 static struct observer *observer_get(short local_player_index);
@@ -85,9 +89,9 @@ void observer_set_camera(
 	if (!observer->first_command)
 	{
 		observer->first_command = TRUE;
-		command->timer = 0.f;
+		observer->pending_command->timer = 0.f;
 		SET_FLAG(observer->pending_command->flags, _observer_command_force_time_bit, TRUE);
-		csmemset(observer->pending_command->parameter_timers, 0, sizeof(observer->pending_command->parameter_timers));
+		memset(observer->pending_command->parameter_timers, 0, sizeof(observer->pending_command->parameter_timers));
 	}
 
 	return;
@@ -148,22 +152,32 @@ boolean observer_command_has_finished(
 	short local_player_index)
 {
 	short parameter_index;
+	boolean finished;
 	struct observer const *observer = observer_get(local_player_index);
 
 	if (observer->last_command.timer != 0.f)
 	{
-		return FALSE;
+		finished = FALSE;
 	}
-
-	for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++)
+	else
 	{
-		if (observer->last_command.parameter_timers[parameter_index] != 0.f)
+		for (parameter_index = 0; ; parameter_index++)
 		{
-			return FALSE;
+			if (parameter_index >= NUMBER_OF_OBSERVER_PARAMETERS)
+			{
+				finished = TRUE;
+				break;
+			}
+
+			if (observer->last_command.parameter_timers[parameter_index] != 0.f)
+			{
+				finished = FALSE;
+				break;
+			}
 		}
 	}
 
-	return TRUE;
+	return finished;
 }
 
 void observer_up_from_forward(
@@ -227,16 +241,16 @@ static void observer_clear(
 {
 	observer->forward = *global_forward3d;
 	observer->up = *global_up3d;
-	observer->field_of_view = DEGREES_TO_RADIANS(50.f);
+	observer->field_of_view = DEGREES_TO_RADIANS(ORBITING_CAMERA_FIELD_OF_VIEW);
 	observer->result.position = *global_origin3d;
 	observer->result.location.cluster_index = NONE;
 	observer->result.location.leaf_index = NONE;
 	observer->result.velocity = *global_zero_vector3d;
 	observer->result.forward = *global_forward3d;
 	observer->result.up = *global_up3d;
-	observer->result.field_of_view = DEGREES_TO_RADIANS(50.f);
+	observer->result.field_of_view = DEGREES_TO_RADIANS(ORBITING_CAMERA_FIELD_OF_VIEW);
 
-	csmemset(&observer->last_command, 0, sizeof(observer->last_command));
+	memset(&observer->last_command, 0, sizeof(observer->last_command));
 	observer->last_command.forward = observer->forward;
 	observer->last_command.up = observer->up;
 	observer->last_command.field_of_view = observer->field_of_view;
@@ -254,35 +268,35 @@ static void observer_update_command(
 {
 	short parameter_index;
 	struct observer *observer = observer_get(local_player_index);
-	real *pending_timer = observer->pending_command->parameter_timers;
-	real const *last_timer = observer->last_command.parameter_timers;
-	byte const *pending_flags = observer->pending_command->parameter_flags;
+	real *pending_command_times = observer->pending_command->parameter_timers;
+	real const *last_command_times = observer->last_command.parameter_timers;
+	byte const *pending_command_flags = observer->pending_command->parameter_flags;
 
 	match_assert_valid_observer_command("c:\\halo\\SOURCE\\camera\\observer.c", 370, observer->pending_command);
 
 	if (TEST_FLAG(observer->pending_command->flags, _observer_command_valid_bit))
 	{
-		for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++, pending_timer++, last_timer++, pending_flags++)
+		for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++, pending_command_times++, last_command_times++, pending_command_flags++)
 		{
-			if (TEST_FLAG(*pending_flags, _observer_time_valid_bit))
+			if (TEST_FLAG(*pending_command_flags, _observer_time_valid_bit))
 			{
-				if (!TEST_FLAG(*pending_flags, _observer_time_force_bit))
+				if (!TEST_FLAG(*pending_command_flags, _observer_time_force_bit))
 				{
-					if (*pending_timer < *last_timer)
+					if (*pending_command_times < *last_command_times)
 					{
-						*pending_timer = CEILING(*last_timer, 2.f);
+						*pending_command_times = CEILING(*last_command_times, 2.f);
 					}
 				}
 			}
 			else
 			{
-				if (observer->pending_command->timer < *last_timer && !TEST_FLAG(observer->pending_command->flags, _observer_command_force_time_bit))
+				if (observer->pending_command->timer < *last_command_times && !TEST_FLAG(observer->pending_command->flags, _observer_command_force_time_bit))
 				{
-					*pending_timer = CEILING(*last_timer, 2.f);
+					*pending_command_times = CEILING(*last_command_times, 2.f);
 				}
 				else
 				{
-					*pending_timer = observer->pending_command->timer;
+					*pending_command_times = observer->pending_command->timer;
 				}
 			}
 		}
@@ -298,7 +312,7 @@ static void observer_pass_time(
 {
 	short parameter_index;
 	struct observer *observer = observer_get(local_player_index);
-	real *timer = observer->last_command.parameter_timers;
+	real *timers = observer->last_command.parameter_timers;
 
 	if (!TEST_FLAG(observer->pending_command->flags, _observer_command_freeze_camera_bit))
 	{
@@ -308,9 +322,9 @@ static void observer_pass_time(
 		observer_update_velocities(local_player_index);
 		observer_update_positions(local_player_index);
 
-		for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++, timer++)
+		for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++, timers++)
 		{
-			*timer = MAX(*timer - observer_globals.dtime, 0.f);
+			*timers = MAX(*timers - observer_globals.dtime, 0.f);
 		}
 	}
 
@@ -333,60 +347,60 @@ static void observer_update_polynomial(
 	short parameter_index;
 	short real_index;
 	struct observer *observer = observer_get(local_player_index);
-	real const *acceleration = observer->accelerations.n;
-	real const *displacement = observer->displacements.n;
-	real const *velocity = observer->velocities.n;
+	real const *accelerations = observer->accelerations.n;
+	real const *displacements = observer->displacements.n;
+	real const *velocities = observer->velocities.n;
 	real *a = observer->a;
 	real *b = observer->b;
 	real *c = observer->c;
 	real *d = observer->d;
 	real *e = observer->e;
 	real *f = observer->f;
-	real const *timer = observer->last_command.parameter_timers;
+	real const *times = observer->last_command.parameter_timers;
 
 	match_assert_valid_observer_command("c:\\halo\\SOURCE\\camera\\observer.c", 502, &observer->last_command);
 
 	for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++)
 	{
-		if (TEST_FLAG(observer->last_command.flags, _observer_command_valid_bit) && *timer > observer_globals.dtime)
+		if (TEST_FLAG(observer->last_command.flags, _observer_command_valid_bit) && *times > observer_globals.dtime)
 		{
-			real t1 = 1.f / *timer;
-			real t2 = t1 * t1;
-			real t3 = t2 * t1;
-			real t4 = t3 * t1;
-			real t5 = t4 * t1;
+			real oo_t = 1.f / *times;
+			real oo_t2 = oo_t * oo_t;
+			real oo_t3 = oo_t2 * oo_t;
+			real oo_t4 = oo_t3 * oo_t;
+			real oo_t5 = oo_t4 * oo_t;
 
 			for (real_index = 0; real_index < observer_parameter_derivative_real_counts[parameter_index]; real_index++)
 			{
-				a[real_index] = -6.f*t5*displacement[real_index] + -3.f*t4*velocity[real_index] + 0.5f*t3*acceleration[real_index];
-				b[real_index] = 15.f*t4*displacement[real_index] + 7.f*t3*velocity[real_index] + -1.f*t2*acceleration[real_index];
-				c[real_index] = -10.f*t3*displacement[real_index] + -4.f*t2*velocity[real_index] + 0.5f*t1*acceleration[real_index];
+				a[real_index] = -6.f*oo_t5*displacements[real_index] + -3.f*oo_t4*velocities[real_index] + 0.5f*oo_t3*accelerations[real_index];
+				b[real_index] = 15.f*oo_t4*displacements[real_index] + 7.f*oo_t3*velocities[real_index] + -1.f*oo_t2*accelerations[real_index];
+				c[real_index] = -10.f*oo_t3*displacements[real_index] + -4.f*oo_t2*velocities[real_index] + 0.5f*oo_t*accelerations[real_index];
 				d[real_index] = 0.f;
 				e[real_index] = 0.f;
-				f[real_index] = displacement[real_index];
+				f[real_index] = displacements[real_index];
 
 				if (parameter_index == _observer_focus_position)
 				{
-					real focus_velocity = observer->last_command.focus_velocity.n[real_index] * 30.f;
+					real desired_velocity = observer->last_command.focus_velocity.n[real_index] * 30.f;
 
-					a[real_index] = a[real_index] - 3.f*focus_velocity*t4;
-					b[real_index] = 8.f*focus_velocity*t3 + b[real_index];
-					c[real_index] = c[real_index] - 6.f*focus_velocity*t2;
-					e[real_index] = e[real_index] + focus_velocity;
+					a[real_index] = a[real_index] - 3.f*desired_velocity*oo_t4;
+					b[real_index] = 8.f*desired_velocity*oo_t3 + b[real_index];
+					c[real_index] = c[real_index] - 6.f*desired_velocity*oo_t2;
+					e[real_index] = e[real_index] + desired_velocity;
 				}
 			}
 		}
 
-		acceleration += observer_parameter_derivative_real_counts[parameter_index];
-		displacement += observer_parameter_derivative_real_counts[parameter_index];
-		velocity += observer_parameter_derivative_real_counts[parameter_index];
+		accelerations += observer_parameter_derivative_real_counts[parameter_index];
+		displacements += observer_parameter_derivative_real_counts[parameter_index];
+		velocities += observer_parameter_derivative_real_counts[parameter_index];
 		a += observer_parameter_derivative_real_counts[parameter_index];
 		b += observer_parameter_derivative_real_counts[parameter_index];
 		c += observer_parameter_derivative_real_counts[parameter_index];
 		d += observer_parameter_derivative_real_counts[parameter_index];
 		e += observer_parameter_derivative_real_counts[parameter_index];
 		f += observer_parameter_derivative_real_counts[parameter_index];
-		timer++;
+		times++;
 	}
 
 	return;
@@ -397,62 +411,62 @@ static void observer_update_accelerations(
 {
 	short parameter_index;
 	short real_index;
-	short timer_index;
+	short other_parameter_index;
 	struct observer *observer = observer_get(local_player_index);
-	real *acceleration = observer->accelerations.n;
-	real const *displacement = observer->displacements.n;
-	real const *velocity = observer->velocities.n;
+	real *accelerations = observer->accelerations.n;
+	real const *displacements = observer->displacements.n;
+	real const *velocities = observer->velocities.n;
 	real const *a = observer->a;
 	real const *b = observer->b;
 	real const *c = observer->c;
 	real const *d = observer->d;
 	real const *e = observer->e;
 	real const *f = observer->f;
-	real *timer = observer->last_command.parameter_timers;
+	real *times = observer->last_command.parameter_timers;
 
 	for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++)
 	{
-		real time_remaining = *timer - observer_globals.dtime;
+		real t = *times - observer_globals.dtime;
 		real const *unused;
 
-		if (time_remaining > 0.f)
+		if (t > 0.f)
 		{
-			real t2 = time_remaining * time_remaining;
-			real t3 = t2 * time_remaining;
+			real t2 = t * t;
+			real t3 = t2 * t;
 
 			for (real_index = 0; real_index < observer_parameter_derivative_real_counts[parameter_index]; real_index++)
 			{
-				acceleration[real_index] = 20.f*a[real_index]*t3 + 12.f*b[real_index]*t2 + 6.f*c[real_index]*time_remaining + 2.f*d[real_index];
+				accelerations[real_index] = 20.f*a[real_index]*t3 + 12.f*b[real_index]*t2 + 6.f*c[real_index]*t + 2.f*d[real_index];
 
-				if (acceleration[real_index] > observer_maximum_accelerations[parameter_index] || acceleration[real_index] < -observer_maximum_accelerations[parameter_index])
+				if (accelerations[real_index] > observer_maximum_accelerations[parameter_index] || accelerations[real_index] < -observer_maximum_accelerations[parameter_index])
 				{
-					for (timer_index = 0; timer_index < NUMBER_OF_OBSERVER_PARAMETERS; timer_index++)
+					for (other_parameter_index = 0; other_parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; other_parameter_index++)
 					{
-						if (timer_index != parameter_index && observer->last_command.parameter_timers[timer_index] == *timer)
+						if (other_parameter_index != parameter_index && observer->last_command.parameter_timers[other_parameter_index] == *times)
 						{
-							observer->last_command.parameter_timers[timer_index] = 0.f;
+							observer->last_command.parameter_timers[other_parameter_index] = 0.f;
 						}
 					}
 
-					*timer = 0.f;
+					*times = 0.f;
 				}
 			}
 		}
 		else
 		{
-			csmemset(acceleration, 0, observer_parameter_derivative_real_counts[parameter_index] * sizeof(real));
+			memset(accelerations, 0, observer_parameter_derivative_real_counts[parameter_index] * sizeof(real));
 		}
 
-		acceleration += observer_parameter_derivative_real_counts[parameter_index];
-		displacement += observer_parameter_derivative_real_counts[parameter_index];
-		velocity += observer_parameter_derivative_real_counts[parameter_index];
+		accelerations += observer_parameter_derivative_real_counts[parameter_index];
+		displacements += observer_parameter_derivative_real_counts[parameter_index];
+		velocities += observer_parameter_derivative_real_counts[parameter_index];
 		a += observer_parameter_derivative_real_counts[parameter_index];
 		b += observer_parameter_derivative_real_counts[parameter_index];
 		c += observer_parameter_derivative_real_counts[parameter_index];
 		d += observer_parameter_derivative_real_counts[parameter_index];
 		e += observer_parameter_derivative_real_counts[parameter_index];
 		f += observer_parameter_derivative_real_counts[parameter_index];
-		timer++;
+		times++;
 	}
 
 	return;
@@ -464,58 +478,58 @@ static void observer_update_velocities(
 	short parameter_index;
 	short real_index;
 	struct observer *observer = observer_get(local_player_index);
-	real const *displacement = observer->displacements.n;
-	real *velocity = observer->velocities.n;
+	real const *displacements = observer->displacements.n;
+	real *velocities = observer->velocities.n;
 	real const *a = observer->a;
 	real const *b = observer->b;
 	real const *c = observer->c;
 	real const *d = observer->d;
 	real const *e = observer->e;
 	real const *f = observer->f;
-	real const *timer = observer->last_command.parameter_timers;
+	real const *times = observer->last_command.parameter_timers;
 	byte const *flags = observer->last_command.parameter_flags;
-	real inverse_dtime = 1.0 / observer_globals.dtime;
+	real one_over_dtime = 1.0 / observer_globals.dtime;
 
 	for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++)
 	{
-		real time_remaining = *timer - observer_globals.dtime;
+		real t = *times - observer_globals.dtime;
 		real const *unused;
 
-		if (time_remaining > 0.f)
+		if (t > 0.f)
 		{
-			real t2 = time_remaining * time_remaining;
-			real t3 = t2 * time_remaining;
-			real t4 = t3 * time_remaining;
+			real t2 = t * t;
+			real t3 = t2 * t;
+			real t4 = t3 * t;
 
 			for (real_index = 0; real_index < observer_parameter_derivative_real_counts[parameter_index]; real_index++)
 			{
-				velocity[real_index] = 5.f*a[real_index]*t4 + 4.f*b[real_index]*t3 + 3.f*c[real_index]*t2 + 2.f*d[real_index]*time_remaining + e[real_index];
+				velocities[real_index] = 5.f*a[real_index]*t4 + 4.f*b[real_index]*t3 + 3.f*c[real_index]*t2 + 2.f*d[real_index]*t + e[real_index];
 			}
 		}
 		else
 		{
 			if (TEST_FLAG(observer->last_command.flags, _observer_command_valid_bit) && (TEST_FLAG(*flags, _observer_time_force_bit) || TEST_FLAG(observer->last_command.flags, _observer_command_force_time_bit)))
 			{
-				csmemset(velocity, 0, observer_parameter_derivative_real_counts[parameter_index] * sizeof(real));
+				memset(velocities, 0, observer_parameter_derivative_real_counts[parameter_index] * sizeof(real));
 			}
 			else if (TEST_FLAG(observer->last_command.flags, _observer_command_valid_bit))
 			{
 				for (real_index = 0; real_index < observer_parameter_derivative_real_counts[parameter_index]; real_index++)
 				{
-					velocity[real_index] = -displacement[real_index] * inverse_dtime;
+					velocities[real_index] = -displacements[real_index] * one_over_dtime;
 				}
 			}
 		}
 
-		displacement += observer_parameter_derivative_real_counts[parameter_index];
-		velocity += observer_parameter_derivative_real_counts[parameter_index];
+		displacements += observer_parameter_derivative_real_counts[parameter_index];
+		velocities += observer_parameter_derivative_real_counts[parameter_index];
 		a += observer_parameter_derivative_real_counts[parameter_index];
 		b += observer_parameter_derivative_real_counts[parameter_index];
 		c += observer_parameter_derivative_real_counts[parameter_index];
 		d += observer_parameter_derivative_real_counts[parameter_index];
 		e += observer_parameter_derivative_real_counts[parameter_index];
 		f += observer_parameter_derivative_real_counts[parameter_index];
-		timer++;
+		times++;
 		flags++;
 	}
 
@@ -528,17 +542,17 @@ static void observer_update_positions(
 	struct observer_derivative new_camera_displacements;
 	short parameter_index;
 	struct observer *observer = observer_get(local_player_index);
-	real *position = observer->positions;
-	real const *velocity = observer->velocities.n;
-	real *new_displacement = new_camera_displacements.n;
-	real const *parameter = observer->last_command.parameters;
+	real *positions = observer->positions;
+	real const *velocities = observer->velocities.n;
+	real *camera_displacements = new_camera_displacements.n;
+	real const *command_positions = observer->last_command.parameters;
 	real const *a = observer->a;
 	real const *b = observer->b;
 	real const *c = observer->c;
 	real const *d = observer->d;
 	real const *e = observer->e;
 	real const *f = observer->f;
-	real const *timer = observer->last_command.parameter_timers;
+	real const *times = observer->last_command.parameter_timers;
 
 	for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_CARTESIAN_VELOCITIES + NUMBER_OF_OBSERVER_POLAR_VELOCITIES; parameter_index++)
 	{
@@ -547,31 +561,31 @@ static void observer_update_positions(
 
 	for (parameter_index = 0; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++)
 	{
-		real time_remaining = *timer - observer_globals.dtime;
+		real t = *times - observer_globals.dtime;
 		real const *unused;
 
-		if (time_remaining > 0.f || !(observer->last_command.flags & FLAG(_observer_command_valid_bit)))
+		if (t > 0.f || !(observer->last_command.flags & FLAG(_observer_command_valid_bit)))
 		{
 			short real_index;
 
-			if (time_remaining > 0.f)
+			if (t > 0.f)
 			{
-				real t2 = time_remaining * time_remaining;
-				real t3 = t2 * time_remaining;
-				real t4 = t3 * time_remaining;
-				real t5 = t4 * time_remaining;
+				real t2 = t * t;
+				real t3 = t2 * t;
+				real t4 = t3 * t;
+				real t5 = t4 * t;
 				real t6;
 
 				for (real_index = 0; real_index < observer_parameter_derivative_real_counts[parameter_index]; real_index++)
 				{
-					new_displacement[real_index] = a[real_index]*t5 + b[real_index]*t4 + c[real_index]*t3 + d[real_index]*t2 + e[real_index]*time_remaining + f[real_index];
+					camera_displacements[real_index] = a[real_index]*t5 + b[real_index]*t4 + c[real_index]*t3 + d[real_index]*t2 + e[real_index]*t + f[real_index];
 				}
 			}
 			else
 			{
 				for (real_index = 0; real_index < observer_parameter_derivative_real_counts[parameter_index]; real_index++)
 				{
-					new_displacement[real_index] = -(velocity[real_index] * observer_globals.dtime);
+					camera_displacements[real_index] = -(velocities[real_index] * observer_globals.dtime);
 				}
 			}
 
@@ -579,12 +593,12 @@ static void observer_update_positions(
 			{
 				for (real_index = 0; real_index < observer_parameter_derivative_real_counts[parameter_index]; real_index++)
 				{
-					position[real_index] += new_displacement[real_index];
+					positions[real_index] += camera_displacements[real_index];
 				}
 			}
 			else
 			{
-				observer_apply_rotational_displacement((real_vector3d *)new_displacement, (real_vector3d *)position, (real_vector3d *)(position + 3));
+				observer_apply_rotational_displacement((real_vector3d *)camera_displacements, (real_vector3d *)positions, (real_vector3d *)(positions + 3));
 			}
 		}
 		else
@@ -593,29 +607,29 @@ static void observer_update_positions(
 
 			for (real_index = 0; real_index < observer_parameter_real_counts[parameter_index]; real_index++)
 			{
-				position[real_index] = parameter[real_index];
+				positions[real_index] = command_positions[real_index];
 			}
 		}
 
-		position += observer_parameter_real_counts[parameter_index];
-		parameter += observer_parameter_real_counts[parameter_index];
-		velocity += observer_parameter_derivative_real_counts[parameter_index];
-		new_displacement += observer_parameter_derivative_real_counts[parameter_index];
+		positions += observer_parameter_real_counts[parameter_index];
+		command_positions += observer_parameter_real_counts[parameter_index];
+		velocities += observer_parameter_derivative_real_counts[parameter_index];
+		camera_displacements += observer_parameter_derivative_real_counts[parameter_index];
 		a += observer_parameter_derivative_real_counts[parameter_index];
 		b += observer_parameter_derivative_real_counts[parameter_index];
 		c += observer_parameter_derivative_real_counts[parameter_index];
 		d += observer_parameter_derivative_real_counts[parameter_index];
 		e += observer_parameter_derivative_real_counts[parameter_index];
 		f += observer_parameter_derivative_real_counts[parameter_index];
-		timer++;
+		times++;
 	}
 
-	position = observer->positions + 8;
+	positions = observer->positions + 8;
 
 	for (parameter_index = _observer_orientation; parameter_index < NUMBER_OF_OBSERVER_PARAMETERS; parameter_index++)
 	{
-		real_vector3d *forward = (real_vector3d *)position;
-		real_vector3d *up = (real_vector3d *)(position + 3);
+		real_vector3d *forward = (real_vector3d *)positions;
+		real_vector3d *up = (real_vector3d *)(positions + 3);
 
 		if (!valid_real_vector3d_axes2(forward, up))
 		{
@@ -627,7 +641,7 @@ static void observer_update_positions(
 			normalize3d(up);
 		}
 
-		position += observer_parameter_real_counts[parameter_index];
+		positions += observer_parameter_real_counts[parameter_index];
 	}
 
 	return;
@@ -689,15 +703,15 @@ static void observer_apply_rotational_displacement(
 	real_vector3d *up)
 {
 	real_vector3d axis_of_rotation = *rotational_displacement;
-	real angle = normalize3d(&axis_of_rotation);
+	real theta = normalize3d(&axis_of_rotation);
 
-	if (angle != 0.f)
+	if (theta != 0.f)
 	{
-		real sine = sin(angle);
-		real cosine = cos(angle);
+		real sine_theta = sin(theta);
+		real cosine_theta = cos(theta);
 
-		rotate_vector_about_axis(forward, &axis_of_rotation, sine, cosine);
-		rotate_vector_about_axis(up, &axis_of_rotation, sine, cosine);
+		rotate_vector_about_axis(forward, &axis_of_rotation, sine_theta, cosine_theta);
+		rotate_vector_about_axis(up, &axis_of_rotation, sine_theta, cosine_theta);
 	}
 
 	return;
@@ -797,17 +811,17 @@ static void observer_check_penetration(
 {
 	static real const sine_region_angle = 0.174f;
 
-	real safe_t = 1.f;
-	struct location location;
 	real_vector3d camera_ray;
 	real_point3d camera_point;
+	real safe_t = 1.f;
+	struct location location;
 	boolean ignore_media;
-	real minimum_t;
-	real_vector3d const *minimum_basis;
-	real minimum_sign;
-	real region_radius;
 	real_vector3d camera_region_basis[2];
-	short basis_index;
+	short direction_index;
+	real minimum_t;
+	real_vector3d const *minimum_basis_vector;
+	real minimum_sign;
+	real region_width;
 
 	scenario_location_from_point(&location, focus_position);
 	ignore_media = scenario_location_underwater(&location, focus_position, NULL);
@@ -822,62 +836,62 @@ static void observer_check_penetration(
 	observer_collision_test_with_t(focus_position, &camera_point, &safe_t, ignore_media);
 
 	minimum_t = safe_t;
-	minimum_basis = NULL;
-	region_radius = sine_region_angle * *distance;
+	minimum_basis_vector = NULL;
+	region_width = sine_region_angle * *distance;
 
 	camera_region_basis[0] = *up;
 	cross_product3d(up, forward, &camera_region_basis[1]);
-	camera_region_basis[0].i = camera_region_basis[0].i * region_radius;
-	camera_region_basis[0].j = camera_region_basis[0].j * region_radius;
-	camera_region_basis[0].k = camera_region_basis[0].k * region_radius;
-	camera_region_basis[1].i = camera_region_basis[1].i * region_radius;
-	camera_region_basis[1].j = camera_region_basis[1].j * region_radius;
-	camera_region_basis[1].k = camera_region_basis[1].k * region_radius;
+	camera_region_basis[0].i = camera_region_basis[0].i * region_width;
+	camera_region_basis[0].j = camera_region_basis[0].j * region_width;
+	camera_region_basis[0].k = camera_region_basis[0].k * region_width;
+	camera_region_basis[1].i = camera_region_basis[1].i * region_width;
+	camera_region_basis[1].j = camera_region_basis[1].j * region_width;
+	camera_region_basis[1].k = camera_region_basis[1].k * region_width;
 
-	for (basis_index = 0; basis_index < 4; basis_index++)
+	for (direction_index = 0; direction_index < 4; direction_index++)
 	{
-		real sign = (basis_index & 2) ? 1 : -1;
+		real sign = (direction_index & 2) ? 1 : -1;
 		real t;
 
-		if (observer_collision_test_differential(focus_position, &camera_point, &camera_region_basis[basis_index & 1], sign, &t, ignore_media) && t < minimum_t)
+		if (observer_collision_test_differential(focus_position, &camera_point, &camera_region_basis[direction_index & 1], sign, &t, ignore_media) && t < minimum_t)
 		{
 			minimum_t = t;
-			minimum_basis = &camera_region_basis[basis_index & 1];
+			minimum_basis_vector = &camera_region_basis[direction_index & 1];
 			minimum_sign = sign;
 		}
 	}
 
-	if (minimum_basis)
+	if (minimum_basis_vector)
 	{
-		real low = 0.f;
-		real high = minimum_sign;
-		real safe_low_t = safe_t;
-		real safe_high_t = minimum_t;
-		short iteration;
+		real minimum_differential;
+		real near_bound = 0.f;
+		real far_bound = minimum_sign;
+		real near_bound_t = safe_t;
+		real far_bound_t = minimum_t;
+		short bisection_count = 0;
+		short const bisection_limit = 10;
+		real const epsilon = 0.1f;
 
-		for (iteration = 0; iteration < 10; iteration++)
+		for (bisection_count = 0; bisection_count < 10; bisection_count++)
 		{
-			real middle = (low + high) * 0.5f;
+			real midpoint = (near_bound + far_bound) * 0.5f;
 			real t;
-			boolean collision = observer_collision_test_differential(focus_position, &camera_point, minimum_basis, middle, &t, ignore_media);
+			boolean collided = observer_collision_test_differential(focus_position, &camera_point, minimum_basis_vector, midpoint, &t, ignore_media);
 
-			if (collision && fabs(t - safe_high_t) < 0.1f)
+			if (collided && fabs(t - far_bound_t) < 0.1f)
 			{
-				high = middle;
-				safe_high_t = t;
+				far_bound = midpoint;
+				far_bound_t = t;
 			}
 			else
 			{
-				low = middle;
-				safe_low_t = collision ? t : 1.f;
+				near_bound = midpoint;
+				near_bound_t = collided ? t : 1.f;
 			}
 		}
 
-		{
-			real fraction = ABS(safe_low_t < safe_high_t ? low : high);
-
-			safe_t = fraction*safe_t + (1.f - fraction)*minimum_t;
-		}
+		minimum_differential = ABS(near_bound_t < far_bound_t ? near_bound : far_bound);
+		safe_t = minimum_differential*safe_t + (1.f - minimum_differential)*minimum_t;
 	}
 
 	*distance = *distance * safe_t;
@@ -893,7 +907,7 @@ static boolean observer_collision_test_with_t(
 {
 	struct collision_result collision;
 	unsigned long flags = FLAG(_collision_test_front_facing_surfaces_bit) | FLAG(_collision_test_structure_bit) | FLAG(_collision_test_media_bit) | FLAG(_collision_test_objects_bit) | FLAG(_collision_test_objects_scenery_bit);
-	boolean success = FALSE;
+	boolean result = FALSE;
 
 	if (ignore_media)
 	{
@@ -905,12 +919,12 @@ static boolean observer_collision_test_with_t(
 	if (collision_test_line(flags, p0, p1, NONE, &collision))
 	{
 		*t = collision.t;
-		success = TRUE;
+		result = TRUE;
 	}
 
 	match_collision_log_end_user("c:\\halo\\SOURCE\\camera\\observer.c", 1210);
 
-	return success;
+	return result;
 }
 
 static boolean observer_collision_test_differential(

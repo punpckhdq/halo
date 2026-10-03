@@ -25,7 +25,7 @@ void first_person_camera_new(
 {
 	match_assert("c:\\halo\\SOURCE\\camera\\first_person_camera.c", 24, camera);
 
-	camera->last_field_of_view = 0.0f;
+	camera->last_field_of_view = 0.f;
 
 	return;
 }
@@ -92,7 +92,7 @@ void first_person_camera_update(
 	result->field_of_view = player_control_get_field_of_view(controls->local_player_index);
 	if (result->field_of_view!=camera->last_field_of_view)
 	{
-		result->field_of_view_timer = 0.18f;
+		result->field_of_view_timer = DEFAULT_HORIZONTAL_FIELD_OF_VIEW_CHANGE_TIME;
 		result->field_of_view_flags = FLAG(_observer_time_valid_bit);
 		camera->last_field_of_view = result->field_of_view;
 	}
@@ -110,12 +110,12 @@ static void first_person_camera_for_unit_and_vector(
 	struct object_marker marker;
 	real_matrix4x3 matrix;
 
-	result->timer = 0.0f;
+	result->timer = 0.f;
 	result->flags = 0;
 	result->focus_offset = *global_zero_vector3d;
-	result->focus_distance = 0.0f;
+	result->focus_distance = 0.f;
 	result->forward = *forward;
-	result->field_of_view = DEGREES_TO_RADIANS(70.f);
+	result->field_of_view = DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 	observer_up_from_forward(&result->forward, &result->up);
 	match_assert("c:\\halo\\SOURCE\\camera\\first_person_camera.c", 82, valid_real_vector3d_axes2(&result->forward, &result->up));
 

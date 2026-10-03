@@ -45,7 +45,7 @@ static struct
 	{ 0.f, 0.f, 0.f },
 	{ 0.f, 0.f, 1.f },
 	{ 0.f, 1.f, 0.f },
-	DEGREES_TO_RADIANS(70.f),
+	DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW),
 	NONE,
 	NONE,
 	0,
@@ -86,7 +86,7 @@ void scripted_camera_set_animation(
 					camera_script_globals.first_update = TRUE;
 					camera_script_globals.animation_index = animation_index;
 					camera_script_globals.animation_graph_index = animation_graph_index;
-					camera_script_globals.field_of_view = DEGREES_TO_RADIANS(70.f);
+					camera_script_globals.field_of_view = DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 					camera_script_globals.time_stop = (real)(animation->frame_count / TICKS_PER_SECOND);
 
 					break;
@@ -153,7 +153,7 @@ void scripted_camera_set(
 	camera_script_globals.camera_point_index = camera_point_index;
 	camera_script_globals.point = camera_point->position;
 	vectors3d_from_euler_angles3d(&camera_script_globals.forward, &camera_script_globals.up, &camera_point->orientation);
-	camera_script_globals.field_of_view = camera_point->field_of_view != 0.f ? camera_point->field_of_view : DEGREES_TO_RADIANS(70.f);
+	camera_script_globals.field_of_view = camera_point->field_of_view != 0.f ? camera_point->field_of_view : DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 	camera_script_globals.time_stop = (real)seconds;
 	camera_script_globals.relative_object_index = relative_to_object_index;
 
@@ -185,7 +185,7 @@ void scripted_camera_set_camera_point_relative(
 	camera_script_globals.point = *position;
 	camera_script_globals.forward = *forward;
 	camera_script_globals.up = *up;
-	camera_script_globals.field_of_view = fov != 0.f ? fov : DEGREES_TO_RADIANS(70.f);
+	camera_script_globals.field_of_view = fov != 0.f ? fov : DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 	camera_script_globals.time_stop = (real)(tick_count / TICKS_PER_SECOND);
 	camera_script_globals.relative_object_index = relative_to_object_index;
 
@@ -302,7 +302,7 @@ void scripted_camera_update(
 			frame_index = PIN(frame_index, 0, animation->frame_count - 1);
 			animation_get_root_matrix(NULL, animation, frame_index, &frame_matrix);
 
-			result->field_of_view = DEGREES_TO_RADIANS(70.f);
+			result->field_of_view = DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 			result->forward = frame_matrix.forward;
 			result->up = frame_matrix.up;
 			result->focus_position = frame_matrix.position;

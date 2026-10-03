@@ -57,7 +57,7 @@ void bored_camera_update(
 	{
 		struct unit_camera_info camera_info;
 		real_euler_angles2d facing;
-		real_point3d camera_position;
+		real_point3d aiming_origin;
 		long next_timer;
 		long aiming_unit_index = player_control_get_aiming_unit_index(controls->local_player_index);
 
@@ -66,13 +66,10 @@ void bored_camera_update(
 
 		if (aiming_unit_index!=NONE)
 		{
-			if (camera_info.unit_camera->unit_camera_tracks.count)
-			{
-				struct unit_camera_track *track = TAG_BLOCK_GET_ELEMENT(&camera_info.unit_camera->unit_camera_tracks, 0, struct unit_camera_track);
-			}
+			struct unit_camera_track *track = camera_info.unit_camera->unit_camera_tracks.count ? TAG_BLOCK_GET_ELEMENT(&camera_info.unit_camera->unit_camera_tracks, 0, struct unit_camera_track) : NULL;
 
 			facing = *player_control_get_facing_angles(controls->local_player_index);
-			unit_get_camera_position(aiming_unit_index, &camera_position);
+			unit_get_camera_position(aiming_unit_index, &aiming_origin);
 
 			facing.pitch = real_local_random_range(DEGREES_TO_RADIANS(-63.f), DEGREES_TO_RADIANS(22.5f));
 			facing.yaw = real_local_random_range(DEGREES_TO_RADIANS(-45.f), DEGREES_TO_RADIANS(45.f)) + facing.yaw + _pi;
@@ -80,7 +77,7 @@ void bored_camera_update(
 			observer_up_from_forward(&result->forward, &result->up);
 
 			result->field_of_view = (real_local_random_range(DEGREES_TO_RADIANS(30.f), DEGREES_TO_RADIANS(80.f)));
-			result->focus_distance = real_local_random_range(1.0f, 6.0f);
+			result->focus_distance = real_local_random_range(1.f, 6.f);
 			result->focus_velocity = *global_zero_vector3d;
 
 			next_timer = bored_camera_get_next_timer(camera->camera_count);
@@ -89,10 +86,7 @@ void bored_camera_update(
 			result->timer = (real)next_timer;
 			camera->camera_count++;
 
-			if (TEST_FLAG(result->flags, _observer_command_valid_bit))
-			{
-				match_assert_valid_observer_command("c:\\halo\\SOURCE\\camera\\bored_camera.c", 95, result);
-			}
+			match_assert_valid_observer_command("c:\\halo\\SOURCE\\camera\\bored_camera.c", 95, result);
 		}
 	}
 

@@ -263,8 +263,8 @@ real editor_camera_get_field_of_view(
 {
 	static real const fov[NUMBER_OF_EDITOR_CAMERA_MODES] =
 	{
-		DEGREES_TO_RADIANS(70.f),
-		DEGREES_TO_RADIANS(70.f),
+		DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW),
+		DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW),
 	};
 
 	return fov[camera_mode];
@@ -409,11 +409,11 @@ void editor_camera_set_scripted(
 		editor_camera_set_position(&editor_custom_render->camera.position, &angles);
 		if (unit_focus != NONE)
 		{
-			scripted_camera_set_camera_point_relative((real_point3d const *)&unit_offset, &editor_custom_render->camera.forward, &editor_custom_render->camera.up, DEGREES_TO_RADIANS(70.f), 0, unit_focus);
+			scripted_camera_set_camera_point_relative((real_point3d const *)&unit_offset, &editor_custom_render->camera.forward, &editor_custom_render->camera.up, DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW), 0, unit_focus);
 		}
 		else
 		{
-			scripted_camera_set_camera_point_relative(&editor_custom_render->camera.position, &editor_custom_render->camera.forward, &editor_custom_render->camera.up, DEGREES_TO_RADIANS(70.f), 0, NONE);
+			scripted_camera_set_camera_point_relative(&editor_custom_render->camera.position, &editor_custom_render->camera.forward, &editor_custom_render->camera.up, DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW), 0, NONE);
 		}
 	}
 	else
@@ -517,7 +517,7 @@ static void editor_camera_flying_update(
 	result->focus_position = new_position;
 	result->focus_offset = *global_zero_vector3d;
 	result->focus_distance = 0.f;
-	result->field_of_view = DEGREES_TO_RADIANS(70.f);
+	result->field_of_view = DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
 	result->flags = FLAG(_observer_command_valid_bit);
 	match_assert_valid_observer_command("c:\\halo\\SOURCE\\camera\\editor_flying_camera.c", 518, result);
 

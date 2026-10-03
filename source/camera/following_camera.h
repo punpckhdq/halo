@@ -29,9 +29,6 @@ struct following_camera
 
 /* ---------- prototypes/FOLLOWING_CAMERA.C */
 
-struct camera_control;
-struct observer_command;
-
 void following_camera_new(struct following_camera *camera);
 void following_camera_deterministic(long unit_index, real_point3d *position, real_vector3d *forward);
 void following_camera_update(struct following_camera *camera, struct camera_control const *controls, struct observer_command *result);

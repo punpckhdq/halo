@@ -19,9 +19,9 @@ static long player_get_next_player_with_a_unit(long player_index, long old_playe
 
 /* ---------- globals */
 
-static real const dead_timer = 3.0f;
-static real const multiplayer_switch_timer = 15.0f;
-static real const singleplayer_switch_timer = 3.0f;
+static real const dead_timer = 3.f;
+static real const multiplayer_switch_timer = 15.f;
+static real const singleplayer_switch_timer = 3.f;
 
 /* ---------- public code */
 
@@ -36,10 +36,10 @@ void dead_camera_new(
 	match_assert("c:\\halo\\SOURCE\\camera\\dead_camera.c", 23, camera);
 
 	camera->position = observer->position;
-	camera->field_of_view = DEGREES_TO_RADIANS(70.0f);
-	camera->distance = (real_local_random_range(2.0f, 6.0f));
-	camera->orientation.yaw = (real_local_random_range(0.0f, 2*_pi));
-	camera->orientation.pitch = -(real_local_random_range(0.47123894f, DEGREES_TO_RADIANS(63.f)));
+	camera->field_of_view = DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
+	camera->distance = (real_local_random_range(2.f, 6.f));
+	camera->orientation.yaw = (real_local_random_range(0.f, 2*_pi));
+	camera->orientation.pitch = -(real_local_random_range(0.15f*_pi, DEGREES_TO_RADIANS(63.f)));
 	camera->timer = dead_timer;
 	camera->switch_timer = unit_index!=NONE ? REAL_MAX : (game_engine_running() ? multiplayer_switch_timer : singleplayer_switch_timer);
 	camera->player_index = local_player_get_player_index(local_player_index);
@@ -74,26 +74,25 @@ void dead_camera_update(
 	result->focus_offset = *global_zero_vector3d;
 	result->focus_velocity = *global_zero_vector3d;
 	result->flags = FLAG(_observer_command_valid_bit);
-	result->timer = MAX(0.0f, camera->timer);
-	result->position_timer = 0.0f;
+	result->timer = MAX(0.f, camera->timer);
+	result->position_timer = 0.f;
 	result->position_flags = FLAG(_observer_time_valid_bit) | FLAG(_observer_time_force_bit);
 
 	if (camera->timer==dead_timer)
 	{
 		result->focus_distance = 0.5f;
-		result->distance_timer = 0.0f;
+		result->distance_timer = 0.f;
 		result->distance_flags = FLAG(_observer_time_valid_bit) | FLAG(_observer_time_force_bit);
 	}
 
 	camera->timer -= controls->seconds_elapsed;
-	camera->switch_timer = MAX(0.0f, camera->switch_timer - controls->seconds_elapsed);
+	camera->switch_timer = MAX(0.f, camera->switch_timer - controls->seconds_elapsed);
 
-	if (0.0f==camera->switch_timer && !game_time_get_paused())
+	if (0.f==camera->switch_timer && !game_time_get_paused())
 	{
 		long unit_index;
-		boolean match_team = player_has_allies(camera->player_index);
 
-		camera->current_player_index = player_get_next_player_with_a_unit(camera->player_index, camera->current_player_index, match_team);
+		camera->current_player_index = player_get_next_player_with_a_unit(camera->player_index, camera->current_player_index, player_has_allies(camera->player_index));
 		if (camera->current_player_index!=NONE)
 		{
 			unit_index = player_get(camera->current_player_index)->unit_index;
