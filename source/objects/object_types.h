@@ -67,6 +67,7 @@ boolean object_type_new(long object_index);
 void object_type_place(long object_index, struct scenario_object_datum *scenario_object);
 
 void object_type_handle_deleted_object(long object_index, long deleted_object_index);
+void object_type_notify_impulse_sound(long object_index, long sound_definition_index, long impulse_sound_index);
 
 void object_type_delete(long object_index);
 boolean object_type_update(long object_index);

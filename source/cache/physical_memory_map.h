@@ -18,6 +18,7 @@ header included in hcex build.
 
 void physical_memory_allocate(void);
 void physical_memory_verify(void);
+void *physical_memory_get_sound_cache_base_address(void);
 
 /* ---------- globals */
 

@@ -133,6 +133,12 @@ struct tag_data
 	struct tag_data_definition *definition;
 };
 
+struct tag_iterator
+{
+	struct data_iterator iterator;
+	unsigned long key_group_tag;
+};
+
 /* ---------- prototypes/TAG_GROUPS.C */
 
 void *tag_data_get_pointer(struct tag_data const *data, long offset, long size);
@@ -143,6 +149,9 @@ void *tag_block_get_element_with_size(struct tag_block const *block, long index,
 long tag_loaded(long group_tag, const char *name);
 
 void *tag_get(long group_tag, long tag_index);
+
+void tag_iterator_new(struct tag_iterator *iterator, unsigned long key_group_tag);
+long tag_iterator_next(struct tag_iterator *iterator);
 
 /* ---------- globals */
 

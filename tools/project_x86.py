@@ -271,6 +271,27 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     n.newline()
 
     ###
+    # Generated headers
+    ###
+    n.comment("Generated headers")
+    generated_include_dir = sln.build_dir / "include"
+    dsp_image_script = sln.tools_dir / "dsp_image.py"
+    dsp_image_header = generated_include_dir / "sound_dsound_xbox_effects_image.h"
+    n.rule(
+        name="dsp_image",
+        command=f"$python {dsp_image_script} $in $out",
+        description="DSP_IMAGE $out",
+        restat=True,
+    )
+    n.build(
+        outputs=dsp_image_header,
+        rule="dsp_image",
+        inputs=sln.baserom,
+        implicit=dsp_image_script,
+    )
+    n.newline()
+
+    ###
     # Helper rule for downloading all tools
     ###
     n.comment("Download all tools")
@@ -321,7 +342,9 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
                 cflags.extend(obj.options["cflags"])
                 cflags.extend([f"/D{define}" for define in obj.options["defines"]])
                 cflags.extend([f"/I\"{path}\"" for path in obj.options["include_dirs"]])
+                cflags.append(f"/I\"{generated_include_dir}\"")
                 implicit: List[Path] = [wrapper_implicit] if wrapper_implicit else []
+                implicit.append(dsp_image_header)
                 implicit_outputs: List[Path] = []
                 if pch and obj.options["pch"] is not False:
                     header = pch["header"]

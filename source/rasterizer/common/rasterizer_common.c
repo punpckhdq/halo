@@ -27,7 +27,7 @@ RASTERIZER_COMMON.C
 
 /* ---------- globals */
 
-struct game_globals_rasterizer_data *global_rasterizer_data;
+struct game_globals_rasterizer_data *global_rasterizer_data = NULL;
 
 /* ---------- public code */
 

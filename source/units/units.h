@@ -510,6 +510,8 @@ struct unit_datum
 
 void units_update(void);
 
+void unit_set_mouth_aperture(long unit_index, real aperture);
+
 boolean unit_update(long unit_index);
 
 void unit_euler_aiming_update(

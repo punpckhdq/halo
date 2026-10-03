@@ -23,7 +23,6 @@ file has inline function assertions.
 /* ---------- macros */
 
 #define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * M_PI / 180.f))
-#define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / M_PI))
 
 #define assert_valid_real(v)				\
 vassert(									\
@@ -1015,8 +1014,7 @@ __inline real distance3d(
 	real_point3d const *a,
 	real_point3d const *b)
 {
-	real_vector3d v;
-	return magnitude3d(vector_from_points3d(a, b, &v));
+	return square_root(distance_squared3d(a, b));
 }
 
 __inline real_point3d *midpoint3d(

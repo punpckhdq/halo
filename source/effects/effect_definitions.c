@@ -1,9 +1,5 @@
 /*
 EFFECT_DEFINITIONS.C
-
-symbols in this file:
-002DD194 000c:
-	_global_effect_reference (0000)
 */
 
 /* ---------- headers */
@@ -11,16 +7,6 @@ symbols in this file:
 #include "cseries.h"
 #include "effect_definitions.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
 /* ---------- globals */
 
-/* ---------- public code */
-
-/* ---------- private code */
+struct tag_reference_definition global_effect_reference = { 0, EFFECT_DEFINITION_TAG, NULL };

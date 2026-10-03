@@ -128,6 +128,7 @@ boolean players_respawn_coop(void);
 boolean local_player_exists(long local_player_index);
 short local_player_count(void);
 short local_player_get_next(short local_player_index);
+boolean players_are_all_dead(void);
 long local_player_get_player_index(short local_player_index);
 
 long player_index_from_unit_index(long unit_index);
