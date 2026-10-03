@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/RASTERIZER_SWIZZLE.C */
+
+void bitmap_swizzle_vector2d(short width, short height, short x, short y, long *offsets);
 
 /* ---------- globals */
 

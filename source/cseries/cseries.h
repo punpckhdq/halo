@@ -338,4 +338,23 @@ __inline long fast_ftol_C(
 	return result;
 }
 
+__inline unsigned int address_from_pointer(
+	void const *pointer)
+{
+	return (unsigned int)pointer;
+}
+
+__inline void *pointer_from_address(
+	unsigned int address)
+{
+	return (void *)address;
+}
+
+__inline void *offset_pointer(
+	void *pointer,
+	long offset)
+{
+	return pointer_from_address(address_from_pointer(pointer) + offset);
+}
+
 #endif // __CSERIES_H

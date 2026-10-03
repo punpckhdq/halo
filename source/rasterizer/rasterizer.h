@@ -292,12 +292,6 @@ void rasterizer_dispose(void);
 
 void rasterizer_decals_update_function_pointers(void);
 
-/* ---------- prototypes/RASTERIZER_XBOX_HARDWARE_BITMAPS.C */
-
-boolean rasterizer_bitmap_new(struct bitmap_data *bitmap);
-void rasterizer_bitmap_delete(struct bitmap_data *bitmap);
-void rasterizer_bitmap_changed(struct bitmap_data *bitmap);
-
 /* ---------- prototypes/RASTERIZER_TEXT.C */
 
 void rasterizer_draw_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, char const *string);
