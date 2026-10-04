@@ -208,14 +208,17 @@ boolean sound_valid_for_channel(
 	{
 		valid = FALSE;
 	}
+
 	if (!TEST_FLAG(channel_type_flags, _sound_channel_stereo_bit) != !encoding)
 	{
 		valid = FALSE;
 	}
+
 	if (TEST_FLAG(channel_type_flags, _sound_channel_44k_bit) != sample_rate)
 	{
 		valid = FALSE;
 	}
+
 	if (!TEST_FLAG(channel_type_flags, _sound_channel_stereo_bit) &&
 		!TEST_FLAG(channel_type_flags, _sound_channel_3d_bit) != !spatialization_mode)
 	{
@@ -252,6 +255,7 @@ void sound_dispose(
 	{
 		data_dispose(sound_data);
 	}
+
 	if (looping_sound_data)
 	{
 		data_dispose(looping_sound_data);
@@ -600,6 +604,7 @@ static void channel_stop(
 		sound_cache_sound_finished(channel->queued_permutation);
 		channel->queued_permutation = NULL;
 	}
+
 	if (channel->playing_permutation)
 	{
 		sound_cache_sound_finished(channel->playing_permutation);
@@ -935,6 +940,7 @@ static void sound_start_fade(
 		{
 			sound->fade_interpolation_start = 0.f;
 		}
+
 		sound->fade_interpolation_end = 1.f;
 		sound->fade_mode = mode;
 		sound->fade_start_time = start_time;
@@ -2085,6 +2091,7 @@ static short sound_find_channel(
 	{
 		return sound_find_like_channel(sound_index, summary.like_source_channels, summary.like_source_count);
 	}
+
 	if (summary.like_definition_count>=summary.maximum_instance_count)
 	{
 		return sound_find_like_channel(sound_index, summary.like_definition_channels, summary.like_definition_count);
@@ -2258,6 +2265,7 @@ void sound_idle(
 			sound_update_time();
 			update_channels();
 		}
+
 		sound_manager_globals.platform->end_scene();
 	}
 
@@ -2300,6 +2308,7 @@ static void prioritize_sounds(
 						{
 							sound_stop(channel->sound_index);
 						}
+
 						channel->sound_index = sound_index;
 						sound->start_time = sound_manager_globals.render_time;
 					}
@@ -2327,6 +2336,7 @@ static void prioritize_sounds(
 					{
 						range->runtime_discarded_permutation_index = sound->permutation_index;
 					}
+
 					sound_stop(sound_index);
 					break;
 				}
@@ -2398,6 +2408,7 @@ void sound_render(
 			update_channels();
 			sound_manager_globals.flip_flop = !sound_manager_globals.flip_flop;
 		}
+
 		sound_manager_globals.platform->end_scene();
 	}
 
