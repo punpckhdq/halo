@@ -610,7 +610,7 @@
 				{ "name": "source/main/restricted_beta.c", "index": 231, "status": "Matching" },
 				{ "name": "source/main/main.c", "index": 232, "status": "Matching" },
 				{ "name": "source/main/debug_keys.c", "index": 233, "status": "Matching" },
-				{ "name": "source/main/console.c", "index": 234, "status": "NonMatching" },
+				{ "name": "source/main/console.c", "index": 234, "status": "Matching" },
 				{ "name": "source/items/weapons.c", "index": 235, "status": "NonMatching" },
 				{ "name": "source/items/weapon_interfaces.c", "index": 236, "status": "Matching" },
 				{ "name": "source/items/weapon_definitions.c", "index": 237, "status": "NonMatching" },
