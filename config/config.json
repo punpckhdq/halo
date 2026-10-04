@@ -732,7 +732,7 @@
 				{ "name": "source/cseries/errors.c", "index": 356, "status": "NonMatching" },
 				{ "name": "source/cseries/debug_memory.c", "index": 357, "status": "NonMatching" },
 				{ "name": "source/cseries/cseries_windows.c", "index": 358, "status": "NonMatching" },
-				{ "name": "source/cseries/cseries.c", "index": 359, "status": "NonMatching" },
+				{ "name": "source/cseries/cseries.c", "index": 359, "status": "Matching" },
 				{ "name": "source/camera/static_camera.c", "index": 360, "status": "Matching" },
 				{ "name": "source/camera/orbiting_camera.c", "index": 361, "status": "Matching" },
 				{ "name": "source/camera/observer.c", "index": 362, "status": "Matching" },
