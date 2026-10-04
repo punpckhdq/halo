@@ -77,11 +77,11 @@ long compress_ima_adpcm_audio_data(
 
 		while (sample_count > 0 && buffer_size)
 		{
-			long difference = *samples - predicted_sample;
-			long step_size = step_size_table[step_index];
 			long delta;
 			char code;
 			char mask;
+			long difference = *samples - predicted_sample;
+			long step_size = step_size_table[step_index];
 
 			if (difference < 0)
 			{
@@ -153,9 +153,9 @@ long decompress_ima_adpcm_audio_data(
 	long maximum_sample_count,
 	struct ima_adpcm_decompression_state *state)
 {
+	long result;
 	struct bungie_ima_adpcm_header const *header = (struct bungie_ima_adpcm_header const *)buffer;
 	char const *data = (char const *)(header + 1);
-	long result;
 
 	buffer_size -= sizeof(struct bungie_ima_adpcm_header);
 	result = header->sample_count * sizeof(short);
@@ -193,9 +193,9 @@ long decompress_ima_adpcm_audio_data(
 
 		while (remaining_sample_count && maximum_sample_count && buffer_size)
 		{
+			char code;
 			long step_size = step_size_table[step_index];
 			long delta = step_size >> 3;
-			char code;
 			char mask = 4;
 
 			if (high_nibble)

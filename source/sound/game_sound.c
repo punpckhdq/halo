@@ -267,8 +267,8 @@ void scripted_foley_predict(
 {
 	if (definition_index != NONE)
 	{
-		struct looping_sound_definition *definition = looping_sound_definition_get(definition_index);
 		short track_index;
+		struct looping_sound_definition *definition = looping_sound_definition_get(definition_index);
 
 		for (track_index = 0; track_index<definition->tracks.count; track_index++)
 		{
@@ -363,17 +363,15 @@ void unattached_looping_sound_stop(
 	return;
 }
 
-/* ---------- private code */
-
 static void update_potentially_audible_looping_sound(
 	long looping_sound_index,
 	struct location const *location)
 {
+	struct sound_source source;
+	boolean playing;
 	struct game_looping_sound_datum *sound = game_looping_sound_get(looping_sound_index);
 	struct looping_sound_definition *definition = looping_sound_definition_get(sound->definition_index);
 	boolean audible_last_frame = sound->last_audible_frame_index==NONE || sound->last_audible_frame_index==game_sound_globals->frame_index-1;
-	struct sound_source source;
-	boolean playing;
 
 	if (!TEST_FLAG(sound->flags, _game_looping_sound_unattached_bit))
 	{
@@ -389,8 +387,8 @@ static void update_potentially_audible_looping_sound(
 	{
 		if (sound->object_index != NONE)
 		{
-			real_matrix4x3 *matrix = object_get_node_matrix(sound->object_index, sound->attachment.node_index);
 			real_vector3d unused_velocity;
+			real_matrix4x3 *matrix = object_get_node_matrix(sound->object_index, sound->attachment.node_index);
 
 			match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 619, location);
 			matrix4x3_transform_point(matrix, &sound->attachment.position, &source.location.position);
@@ -464,8 +462,6 @@ static void update_potentially_audible_looping_sound(
 	return;
 }
 
-/* ---------- public code */
-
 boolean track_object_impulse_sound(
 	long object_index,
 	struct sound_attachment_data const *attachment_data,
@@ -509,13 +505,11 @@ void game_sound_set_mouth_aperture(
 	return;
 }
 
-/* ---------- private code */
-
 static void compute_combined_pas(
 	void)
 {
-	struct structure_bsp *structure_bsp = global_structure_bsp_get();
 	short local_player_index;
+	struct structure_bsp *structure_bsp = global_structure_bsp_get();
 
 	memset(combined_pas, 0, BIT_VECTOR_SIZE_IN_BYTES(structure_bsp->clusters.count));
 	for (local_player_index = 0; local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; local_player_index++)
@@ -580,8 +574,8 @@ static void scripted_looping_sound_stop_internal(
 static boolean looping_sound_definition_is_music(
 	long definition_index)
 {
-	struct looping_sound_definition *definition = looping_sound_definition_get(definition_index);
 	short track_index;
+	struct looping_sound_definition *definition = looping_sound_definition_get(definition_index);
 
 	for (track_index = 0; track_index<definition->tracks.count; track_index++)
 	{
@@ -616,8 +610,6 @@ static void scripted_music_stop_all(
 	return;
 }
 
-/* ---------- public code */
-
 void game_sound_dispose_from_old_map(
 	void)
 {
@@ -638,9 +630,9 @@ long object_impulse_sound_new(
 	real_vector3d const *forward,
 	real scale)
 {
-	long sound_index = NONE;
 	struct sound_source source;
 	struct sound_attachment_data attachment_data;
+	long sound_index = NONE;
 
 	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 301, position && forward);
 	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 302, scale>=0.f && scale<=1.f);
@@ -667,8 +659,8 @@ void scripted_sound_new(
 {
 	if (definition_index != NONE)
 	{
-		struct sound_definition *definition = sound_definition_get(definition_index);
 		long sound_index;
+		struct sound_definition *definition = sound_definition_get(definition_index);
 
 		sound_stop_impulse(definition->runtime_scripting_sound_index);
 		definition->runtime_scripting_time = game_time_get() + definition->runtime_maximum_play_time*TICKS_PER_SECOND/1000;

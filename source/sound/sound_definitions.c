@@ -83,8 +83,8 @@ short sound_definition_find_pitch_range_by_pitch(
 
 	if (range_index == NONE)
 	{
-		real best_ratio = REAL_MAX;
 		short pitch_range_index;
+		real best_ratio = REAL_MAX;
 
 		for (pitch_range_index = 0; pitch_range_index<sound->pitch_ranges.count; pitch_range_index++)
 		{
@@ -152,8 +152,8 @@ short sound_definition_next_permutation(
 	short pitch_range_index,
 	short looping_last_permutation_index)
 {
-	struct sound_pitch_range *range = TAG_BLOCK_GET_ELEMENT(&sound->pitch_ranges, pitch_range_index, struct sound_pitch_range);
 	short permutation_index;
+	struct sound_pitch_range *range = TAG_BLOCK_GET_ELEMENT(&sound->pitch_ranges, pitch_range_index, struct sound_pitch_range);
 	short attempts = 0;
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_definitions.c", 892, range->permutations.count);

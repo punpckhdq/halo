@@ -100,7 +100,7 @@ unsigned long file_get_eof(const struct file_reference *file);
 boolean file_set_eof(const struct file_reference *file, unsigned long position);
 boolean file_read(const struct file_reference *file, unsigned long count, void *buffer);
 boolean file_write(const struct file_reference *file, unsigned long count, const void *buffer);
-// file_read_from_position
+boolean file_read_from_position(const struct file_reference *file, unsigned long position, unsigned long count, void *buffer);
 // file_write_to_position
 // file_get_last_modification_date
 // file_get_size

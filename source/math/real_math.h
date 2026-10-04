@@ -23,6 +23,7 @@ file has inline function assertions.
 /* ---------- macros */
 
 #define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * M_PI / 180.f))
+#define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / M_PI))
 
 #define assert_valid_real(v)				\
 vassert(									\

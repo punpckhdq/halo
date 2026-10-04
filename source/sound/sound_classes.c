@@ -144,7 +144,7 @@ struct sound_class_definition *sound_class_get(
 void sound_classes_initialize(
 	void)
 {
-	sound_class_data = game_state_malloc("sound classes", NULL, NUMBER_OF_SOUND_CLASSES*sizeof(struct sound_class_datum));
+	sound_class_data = game_state_malloc("sound classes", NULL, NUMBER_OF_SOUND_CLASSES*sizeof(*sound_class_data));
 
 	return;
 }

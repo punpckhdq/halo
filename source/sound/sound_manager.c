@@ -31,6 +31,7 @@ SOUND_MANAGER.C
 
 #define sound_get(index) ((struct sound_datum *)datum_get(sound_data, (index)))
 #define looping_sound_get(index) ((struct looping_sound_datum *)datum_get(looping_sound_data, (index)))
+#define looping_sound_try_and_get(index) ((struct looping_sound_datum *)datum_try_and_get(looping_sound_data, (index)))
 
 /* ---------- structures */
 
@@ -274,6 +275,7 @@ void sound_pause(
 	{
 		sound_manager_globals.paused = paused;
 		sound_manager_globals.platform->set_pause(paused);
+
 		if (!paused)
 		{
 			sound_manager_globals.render_time = system_milliseconds();
@@ -338,8 +340,6 @@ void sound_manager_set_sound_environment(
 	return;
 }
 
-/* ---------- private code */
-
 static __forceinline void sound_update_time(
 	void)
 {
@@ -398,6 +398,7 @@ static short sound_definition_promote(
 		definition->runtime_promotion_counter = FLOOR(definition->runtime_promotion_counter, 0);
 		definition->runtime_promotion_time = sound_manager_globals.render_time;
 		definition->runtime_promotion_counter += definition->runtime_maximum_play_time;
+
 		if (definition->runtime_promotion_counter > definition->promotion_count*definition->runtime_maximum_play_time)
 		{
 			if (definition->promotion_sound.index != NONE)
@@ -477,9 +478,9 @@ static void sound_channel_summary_build(
 	struct sound_channel_summary *summary,
 	long sound_index)
 {
+	short channel_index;
 	struct sound_datum *sound = sound_get(sound_index);
 	struct sound_definition *definition = sound_definition_get(sound->definition_index);
-	short channel_index;
 
 	summary->like_definition_count = 0;
 	summary->like_source_count = 0;
@@ -526,6 +527,7 @@ static void channel_queue_sound(
 	}
 
 	sound_manager_globals.platform->queue_sound_to_channel(channel_index, permutation);
+
 	if (channel->playing_permutation)
 	{
 		channel->queued_permutation = permutation;
@@ -569,6 +571,7 @@ static short channel_get_state(
 		channel->playing_permutation = channel->queued_permutation;
 		channel->queued_permutation = NULL;
 		channel->estimated_tick_time = 0.f;
+
 		if (!sound_cache_sound_loaded(channel->playing_permutation))
 		{
 			state = _sound_channel_idle;
@@ -613,7 +616,7 @@ static boolean track_loop_track_sound(
 	void const *unused,
 	struct sound_source *source)
 {
-	struct looping_sound_datum *loop = datum_try_and_get(looping_sound_data, looping_sound_index);
+	struct looping_sound_datum *loop = looping_sound_try_and_get(looping_sound_index);
 
 	if (loop)
 	{
@@ -630,13 +633,14 @@ static boolean track_loop_impulse_sound(
 	struct loop_impulse_sound_tracking_data const *track_data,
 	struct sound_source *source)
 {
-	struct looping_sound_datum *loop = datum_try_and_get(looping_sound_data, looping_sound_index);
+	struct looping_sound_datum *loop = looping_sound_try_and_get(looping_sound_index);
 	boolean result = FALSE;
 
 	if (loop)
 	{
 		source->obstruction = loop->source.obstruction;
 		source->occlusion = loop->source.occlusion;
+
 		if (loop->source.spatialization_mode != _sound_spatialization_mode_none)
 		{
 			source->location.translational_velocity = loop->source.location.translational_velocity;
@@ -650,6 +654,7 @@ static boolean track_loop_impulse_sound(
 		}
 
 		*(real_vector3d *)&source->location.position = track_data->position_offset;
+
 		if (source->spatialization_mode == _sound_spatialization_mode_absolute)
 		{
 			source->location.position.x += loop->source.location.position.x;
@@ -688,6 +693,7 @@ static real sound_calculate_fade(
 		real t = ((real)sound_manager_globals.render_time - sound->fade_start_time) / (sound->fade_stop_time - sound->fade_start_time);
 
 		t = PIN(t, 0.f, 1.f);
+
 		switch (sound->fade_mode)
 		{
 		case _sound_fade_mode_linear:
@@ -788,11 +794,11 @@ static void render_debug_looping_sound(
 {
 	if (debug_looping_sound && source->spatialization_mode == _sound_spatialization_mode_absolute)
 	{
+		short track_index;
+		short detail_index;
 		struct looping_sound_definition *definition = looping_sound_definition_get(definition_index);
 		real minimum_distance = 0.f;
 		real maximum_distance = 0.f;
-		short track_index;
-		short detail_index;
 
 		for (track_index = 0; track_index<definition->tracks.count; track_index++)
 		{
@@ -833,8 +839,6 @@ static void render_debug_looping_sound(
 	return;
 }
 
-/* ---------- public code */
-
 void sound_initialize(
 	void)
 {
@@ -853,16 +857,19 @@ void sound_initialize(
 	{
 		sound_manager_globals.platform = platform_definitions[preferences->platform_code];
 		sound_data = data_new("sounds", MAXIMUM_SOUNDS_PER_MAP, sizeof(struct sound_datum));
+
 		if (sound_data)
 		{
 			looping_sound_data = data_new("looping sounds", MAXIMUM_LOOPING_SOUNDS_PER_MAP, sizeof(struct looping_sound_datum));
+
 			if (looping_sound_data && sound_manager_globals.platform->initialize(preferences))
 			{
-				short channel_index = 0;
 				short channel_type;
+				short channel_index = 0;
 
 				data_make_valid(sound_data);
 				data_make_valid(looping_sound_data);
+
 				for (channel_type = 0; channel_type<NUMBER_OF_SOUND_CHANNEL_TYPES; channel_type++)
 				{
 					short type_channel_index;
@@ -888,8 +895,6 @@ void sound_initialize(
 
 	return;
 }
-
-/* ---------- private code */
 
 static real sound_scale_random_value(
 	real base_lower_bound,
@@ -969,11 +974,12 @@ static void sound_stop(
 
 	if (sound->type != _sound_impulse)
 	{
-		struct looping_sound_datum *loop = datum_try_and_get(looping_sound_data, sound->source_identifier);
+		struct looping_sound_datum *loop = looping_sound_try_and_get(sound->source_identifier);
 
 		if (loop)
 		{
 			loop->component_sound_count--;
+
 			if (loop->tracks[sound->loop_track_index].primary_sound_index == sound_index)
 			{
 				loop->tracks[sound->loop_track_index].primary_sound_index = NONE;
@@ -1046,10 +1052,10 @@ static short sound_find_like_channel(
 	short *channel_indices,
 	short channel_count)
 {
+	short index;
 	struct sound_datum *sound = sound_get(sound_index);
 	struct sound_definition *definition = sound_definition_get(sound->definition_index);
 	real distance_squared = source_distance_squared(sound->listener_index, &sound->source);
-	short index;
 
 	for (index = 0; index<channel_count; index++)
 	{
@@ -1094,9 +1100,9 @@ static void update_channel_for_impulse_sound(
 
 	if (sound->playing_channel_index == NONE)
 	{
+		struct platform_sound_channel_properties properties;
 		struct sound_pitch_range *range = TAG_BLOCK_GET_ELEMENT(&definition->pitch_ranges, sound->pitch_range_index, struct sound_pitch_range);
 		struct sound_permutation *permutation = TAG_BLOCK_GET_ELEMENT(&range->permutations, sound->permutation_index, struct sound_permutation);
-		struct platform_sound_channel_properties properties;
 
 		properties.gain = permutation->gain * definition->gain * gain;
 		properties.pitch = sound->pitch * range->runtime_oo_natural_pitch;
@@ -1135,16 +1141,18 @@ static long looping_sound_new(
 	if (sound_is_active())
 	{
 		looping_sound_index = datum_new(looping_sound_data);
+
 		if (looping_sound_index != NONE)
 		{
+			short detail_index;
 			struct looping_sound_datum *loop = looping_sound_get(looping_sound_index);
 			struct looping_sound_definition *definition = looping_sound_definition_get(definition_index);
-			short detail_index;
 
 			loop->definition_index = definition_index;
 			loop->loop_identifier = identifier;
 			loop->component_sound_count = 0;
 			loop->ordered_permutations_finished = FALSE;
+
 			for (detail_index = 0; detail_index<definition->details.count; detail_index++)
 			{
 				struct looping_sound_detail *detail = TAG_BLOCK_GET_ELEMENT(&definition->details, detail_index, struct looping_sound_detail);
@@ -1161,9 +1169,9 @@ static long looping_sound_new(
 static void sound_set_definition_end(
 	long sound_index)
 {
+	struct sound_channel_summary summary;
 	struct sound_datum *sound = sound_get(sound_index);
 	struct sound_definition *definition = sound_definition_get(sound->next_definition_index);
-	struct sound_channel_summary summary;
 
 	SET_FLAG(sound->flags, _sound_waiting_for_cache_bit, TRUE);
 	sound->definition_index = sound->next_definition_index;
@@ -1176,24 +1184,31 @@ static void sound_set_definition_end(
 		short channel_index;
 
 		sound_channel_summary_build(&summary, sound_index);
+
 		if (summary.like_source_count>=summary.maximum_source_instance_count)
 		{
 			channel_index = sound_find_like_channel(sound_index, summary.like_source_channels, summary.like_source_count);
+			if (channel_index != NONE)
+			{
+				sound_stop(channel_get(channel_index)->sound_index);
+			}
+			else
+			{
+				sound_stop(sound_index);
+			}
 		}
 		else if (summary.like_definition_count>=summary.maximum_instance_count)
 		{
 			channel_index = sound_find_like_channel(sound_index, summary.like_definition_channels, summary.like_definition_count);
+			if (channel_index != NONE)
+			{
+				sound_stop(channel_get(channel_index)->sound_index);
+			}
+			else
+			{
+				sound_stop(sound_index);
+			}
 		}
-		else
-		{
-			return;
-		}
-
-		if (channel_index != NONE)
-		{
-			sound_index = channel_get(channel_index)->sound_index;
-		}
-		sound_stop(sound_index);
 	}
 
 	return;
@@ -1222,14 +1237,13 @@ static void detail_sound_random_offset(
 	return;
 }
 
-/* ---------- public code */
-
 void sound_stop_impulse(
 	long sound_index)
 {
 	if (sound_try_and_get(sound_index))
 	{
 		match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 705, sound_get(sound_index)->type==_sound_impulse);
+
 		if (sound_get(sound_index)->type == _sound_impulse)
 		{
 			sound_start_fade(_sound_fade_mode_linear, 0.3f, NONE, sound_index);
@@ -1280,8 +1294,6 @@ void sound_stop_all(
 	return;
 }
 
-/* ---------- private code */
-
 static short source_audible(
 	struct sound_source *source,
 	real maximum_distance)
@@ -1301,8 +1313,8 @@ static short source_audible(
 	}
 	else
 	{
-		real best_distance_squared = REAL_MAX;
 		short index;
+		real best_distance_squared = REAL_MAX;
 
 		for (index = 0; index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; index++)
 		{
@@ -1335,9 +1347,9 @@ static short source_audible(
 static void refresh_sounds(
 	void)
 {
+	long sound_index;
 	boolean players_dead = players_are_all_dead();
 	boolean scripted_dialog_playing = FALSE;
-	long sound_index;
 
 	for (sound_index = data_next_index(sound_data, NONE); sound_index != NONE; sound_index = data_next_index(sound_data, sound_index))
 	{
@@ -1353,6 +1365,7 @@ static void refresh_sounds(
 			short listener_index = source_audible(&sound->source, sound_definition_get_maximum_distance(sound->definition_index));
 
 			render_debug_sound(sound_index);
+
 			if (definition->class_index == _sound_class_scripted_dialog_to_player ||
 				definition->class_index == _sound_class_scripted_dialog_to_other ||
 				definition->class_index == _sound_class_scripted_dialog_force_unspatialized)
@@ -1371,6 +1384,7 @@ static void refresh_sounds(
 			else
 			{
 				sound->listener_index = listener_index;
+
 				if (TEST_FLAG(sound->flags, _sound_inaudible_bit))
 				{
 					sound_start_fade(_sound_fade_mode_linear, sound_inaudible_fade_back_in_time, sound_index, NONE);
@@ -1424,13 +1438,13 @@ static void refresh_sounds(
 static short sound_find_best_channel(
 	long sound_index)
 {
+	real best_distance_squared;
+	short channel_index;
 	short best_channel_index = NONE;
 	struct sound_datum *sound = sound_get(sound_index);
 	struct sound_definition *definition = sound_definition_get(sound->definition_index);
 	long best_sound_index = NONE;
 	real distance_squared = source_distance_squared(sound->listener_index, &sound->source);
-	real best_distance_squared;
-	short channel_index;
 
 	for (channel_index = 0; channel_index<sound_manager_globals.channel_count; channel_index++)
 	{
@@ -1477,6 +1491,7 @@ static long looping_sound_new_sound(
 		if (listener_index != NONE)
 		{
 			sound_index = datum_new(sound_data);
+
 			if (sound_index != NONE)
 			{
 				struct sound_datum *sound = sound_get(sound_index);
@@ -1510,6 +1525,8 @@ static void update_channel_for_looping_sound(
 	short channel_index,
 	real fade)
 {
+	struct platform_sound_channel_properties properties;
+	struct sound_pitch_range *range;
 	struct sound_channel_datum *channel = channel_get(channel_index);
 	struct sound_datum *sound = sound_get(channel->sound_index);
 	struct sound_definition *definition = sound_definition_get(sound->definition_index);
@@ -1519,8 +1536,6 @@ static void update_channel_for_looping_sound(
 	struct looping_sound_track *track = TAG_BLOCK_GET_ELEMENT(&loop_definition->tracks, sound->loop_track_index, struct looping_sound_track);
 	real scale = sound->source.scale;
 	real pitch = sound_scale_value(sound->pitch, definition->scale_lower_bound.pitch, definition->scale_upper_bound.pitch, scale);
-	struct platform_sound_channel_properties properties;
-	struct sound_pitch_range *range;
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 2500, sound->type!=_sound_impulse);
 
@@ -1591,6 +1606,7 @@ static void update_channel_for_looping_sound(
 					if (permutation_index == NONE)
 					{
 						match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 2588, TEST_FLAG(definition->flags, _sound_definition_linked_permutations_bit));
+
 						if (!TEST_FLAG(loop_definition->flags, _looping_sound_fake_impulse_sound_bit))
 						{
 							permutation_index = sound_definition_next_permutation(definition, sound->pitch_range_index, NONE);
@@ -1610,10 +1626,12 @@ static void update_channel_for_looping_sound(
 				}
 
 				permutation = TAG_BLOCK_GET_ELEMENT(&range->permutations, sound->permutation_index, struct sound_permutation);
+
 				if (sound->type != _sound_stop_track && _sound_cache_sound_request(permutation, FALSE, TRUE, TRUE))
 				{
 					SET_FLAG(sound->flags, _sound_waiting_for_cache_bit, FALSE);
 					channel_queue_sound(channel_index, permutation);
+
 					if (sound->next_definition_index == NONE && permutation->next_permutation_index == NONE)
 					{
 						if (sound->type == _sound_start_track)
@@ -1637,8 +1655,6 @@ static void update_channel_for_looping_sound(
 
 	return;
 }
-
-/* ---------- public code */
 
 long sound_new_impulse(
 	long definition_index,
@@ -1701,6 +1717,7 @@ long sound_new_impulse(
 							if (promotion == _sound_promotion_dont)
 							{
 								sound_index = datum_new(sound_data);
+
 								if (sound_index != NONE)
 								{
 									struct sound_datum *sound = sound_get(sound_index);
@@ -1715,6 +1732,7 @@ long sound_new_impulse(
 									sound->source_identifier = source_identifier;
 									sound->source = *source;
 									sound->track_proc = track_proc;
+
 									if (track_proc)
 									{
 										match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 654, sound->track_data);
@@ -1774,12 +1792,14 @@ boolean sound_refresh_looping(
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 756, source->spatialization_mode==_sound_spatialization_mode_none || valid_real_normal3d(&source->location.forward));
 
 	render_debug_looping_sound(definition_index, source);
+
 	if (sound_is_active())
 	{
 		long looping_sound_index = looping_sound_find(identifier);
 		boolean new_loop = FALSE;
 
 		result = TRUE;
+
 		if (looping_sound_index == NONE && refresh_state != _looping_sound_refresh_stop)
 		{
 			looping_sound_index = looping_sound_new(definition_index, identifier, source);
@@ -1795,6 +1815,7 @@ boolean sound_refresh_looping(
 
 			loop->source = *source;
 			loop->flip_flop = sound_manager_globals.flip_flop;
+
 			if ((refresh_state == _looping_sound_refresh_stop || loop->ordered_permutations_finished) && loop->component_sound_count == 0)
 			{
 				datum_delete(looping_sound_data, looping_sound_index);
@@ -1804,6 +1825,7 @@ boolean sound_refresh_looping(
 				short track_index;
 
 				result = FALSE;
+
 				if (definition->continuous_damage_effect.index != NONE)
 				{
 					player_effect_continuous_refresh(definition->continuous_damage_effect.index, &source->location.position);
@@ -1941,8 +1963,6 @@ boolean sound_refresh_looping(
 	return result;
 }
 
-/* ---------- private code */
-
 static void refresh_listener(
 	void)
 {
@@ -1958,13 +1978,14 @@ static void refresh_listener(
 
 			if (local_player_get_player_index(local_player_index) != NONE)
 			{
-				struct observer_result const *camera = observer_get_camera(local_player_index);
 				boolean underwater;
+				struct observer_result const *camera = observer_get_camera(local_player_index);
 
 				match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 1263, camera);
 
 				listener->valid = TRUE;
 				underwater = scenario_location_underwater(&camera->location, &camera->position, NULL);
+
 				if (listener->underwater != underwater)
 				{
 					struct game_globals *game_globals = scenario_get_game_globals();
@@ -1972,6 +1993,7 @@ static void refresh_listener(
 					source.spatialization_mode = _sound_spatialization_mode_none;
 					source.scale = 1.f;
 					source.gain = 1.f;
+
 					if (underwater)
 					{
 						if (game_globals->sounds.count>_global_sound_water_in)
@@ -2022,8 +2044,8 @@ static void refresh_listener(
 static short sound_find_channel(
 	long sound_index)
 {
-	struct sound_datum *sound = sound_get(sound_index);
 	struct sound_channel_summary summary;
+	struct sound_datum *sound = sound_get(sound_index);
 
 	if (sound->playing_channel_index != NONE)
 	{
@@ -2058,6 +2080,7 @@ static short sound_find_channel(
 	}
 
 	sound_channel_summary_build(&summary, sound_index);
+
 	if (summary.like_source_count>=summary.maximum_source_instance_count)
 	{
 		return sound_find_like_channel(sound_index, summary.like_source_channels, summary.like_source_count);
@@ -2101,8 +2124,8 @@ static void update_channels(
 						break;
 					case _sound_spatialization_mode_absolute:
 					{
-						struct sound_listener *listener = listener_get(sound->listener_index);
 						struct sound_location transformed_location;
+						struct sound_listener *listener = listener_get(sound->listener_index);
 
 						match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 2011, listener->valid);
 						matrix4x3_inverse_transform_point(&listener->matrix, &sound->source.location.position, &transformed_location.position);
@@ -2221,15 +2244,15 @@ static void process_looping_sounds(
 	return;
 }
 
-/* ---------- public code */
-
 void sound_idle(
 	void)
 {
 	sound_manager_globals.idling = TRUE;
+
 	if (sound_is_active())
 	{
 		sound_manager_globals.platform->begin_scene();
+
 		if (!sound_manager_globals.paused)
 		{
 			sound_update_time();
@@ -2243,8 +2266,6 @@ void sound_idle(
 
 	return;
 }
-
-/* ---------- private code */
 
 static void prioritize_sounds(
 	void)
@@ -2264,6 +2285,7 @@ static void prioritize_sounds(
 
 				SET_FLAG(sound->flags, _sound_cached_bit, TRUE);
 				channel_index = sound_find_channel(sound_index);
+
 				if (channel_index != NONE)
 				{
 					struct sound_channel_datum *channel = channel_get(channel_index);
@@ -2273,6 +2295,7 @@ static void prioritize_sounds(
 						struct sound_definition *definition = sound_definition_get(sound->definition_index);
 
 						match_assert("c:\\halo\\SOURCE\\sound\\sound_manager.c", 1602, sound_valid_for_channel(definition->compression, definition->encoding, definition->sample_rate, sound->source.spatialization_mode, channel->type_flags));
+
 						if (channel->sound_index != NONE)
 						{
 							sound_stop(channel->sound_index);
@@ -2323,16 +2346,14 @@ static void prioritize_sounds(
 	return;
 }
 
-/* ---------- public code */
-
 void sound_dispose_from_old_map(
 	void)
 {
 	if (!sound_manager_globals.paused && sound_manager_globals.initialized && sound_manager_globals.active)
 	{
+		long sound_index;
 		long start_time = system_milliseconds();
 		boolean sounds_fading = FALSE;
-		long sound_index;
 
 		for (sound_index = data_next_index(sound_data, NONE); sound_index != NONE; sound_index = data_next_index(sound_data, sound_index))
 		{
@@ -2348,6 +2369,7 @@ void sound_dispose_from_old_map(
 
 	sound_pause(FALSE);
 	sound_stop_all();
+
 	if (looping_sound_data)
 	{
 		data_delete_all(looping_sound_data);
@@ -2364,6 +2386,7 @@ void sound_render(
 	if (sound_is_active())
 	{
 		sound_manager_globals.platform->begin_scene();
+
 		if (!sound_manager_globals.paused)
 		{
 			sound_update_time();

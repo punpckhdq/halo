@@ -8,6 +8,18 @@ SOUND_WAVE.C
 #include "sound_import.h"
 #include "files.h"
 
+/* ---------- constants */
+
+enum
+{
+	RIFF_CHUNK_TYPE = 'RIFF', /* fake name */
+	WAVE_CONTAINER_TYPE = 'WAVE', /* fake name */
+	WAVE_FORMAT_CHUNK_TYPE = 'fmt ', /* fake name */
+	WAVE_DATA_CHUNK_TYPE = 'data', /* fake name */
+
+	WAVE_8BIT_SAMPLE_BIAS = 0x8080 /* fake name */
+};
+
 /* ---------- structures */
 
 struct riff_container_chunk
@@ -17,6 +29,7 @@ struct riff_container_chunk
 	long container_type; /* fake name */
 };
 
+#pragma pack(push, 2)
 struct riff_chunk
 {
 	short format_tag; /* fake name */
@@ -27,19 +40,18 @@ struct riff_chunk
 	short bits_per_sample; /* fake name */
 	short extra_size; /* fake name */
 };
+#pragma pack(pop)
 
 /* ---------- prototypes */
-
-extern boolean file_read_from_position(const struct file_reference *file, unsigned long position, unsigned long count, void *buffer);
 
 /* ---------- globals */
 
 static byte_swap_code riff_container_chunk_bs_codes[] = /* fake name */
 {
 	_begin_bs_array, 1,
-		_4byte,
-		_4byte,
-		_4byte,
+	_4byte,
+	_4byte,
+	_4byte,
 	_end_bs_array
 };
 
@@ -55,7 +67,7 @@ static struct byte_swap_definition riff_container_chunk_bs_definition = /* fake 
 static byte_swap_code riff_chunk_type_bs_codes[] = /* fake name */
 {
 	_begin_bs_array, 1,
-		_4byte,
+	_4byte,
 	_end_bs_array
 };
 
@@ -71,7 +83,7 @@ static struct byte_swap_definition riff_chunk_type_bs_definition = /* fake name 
 static byte_swap_code riff_chunk_length_bs_codes[] = /* fake name */
 {
 	_begin_bs_array, 1,
-		_4byte,
+	_4byte,
 	_end_bs_array
 };
 
@@ -87,20 +99,20 @@ static struct byte_swap_definition riff_chunk_length_bs_definition = /* fake nam
 static byte_swap_code riff_chunk_bs_codes[] = /* fake name */
 {
 	_begin_bs_array, 1,
-		_2byte,
-		_2byte,
-		_4byte,
-		_4byte,
-		_2byte,
-		_2byte,
-		_2byte,
+	_2byte,
+	_2byte,
+	_4byte,
+	_4byte,
+	_2byte,
+	_2byte,
+	_2byte,
 	_end_bs_array
 };
 
 static struct byte_swap_definition riff_chunk_bs_definition = /* fake name */
 {
 	"riff chunk",
-	18,
+	sizeof(struct riff_chunk),
 	riff_chunk_bs_codes,
 	BYTE_SWAP_DEFINITION_SIGNATURE,
 	FALSE
@@ -120,7 +132,7 @@ boolean sound_file_is_wave(
 		if (file_read_from_position(file, 0, sizeof(chunk), &chunk))
 		{
 			byte_swap_data(&riff_container_chunk_bs_definition, &chunk, 1);
-			if (chunk.chunk_type == 'RIFF' && chunk.container_type == 'WAVE')
+			if (chunk.chunk_type == RIFF_CHUNK_TYPE && chunk.container_type == WAVE_CONTAINER_TYPE)
 			{
 				result = TRUE;
 			}
@@ -150,12 +162,12 @@ boolean sound_file_wave_info_get(
 			if (file_read_from_position(file, offset, sizeof(chunk_length), &chunk_length))
 			{
 				byte_swap_data(&riff_chunk_type_bs_definition, &chunk_type, 1);
-				if (chunk_type == 'fmt ')
+				if (chunk_type == WAVE_FORMAT_CHUNK_TYPE)
 				{
 					struct riff_chunk format_info;
 
 					offset += sizeof(chunk_length);
-					if (file_read_from_position(file, offset, 18, &format_info))
+					if (file_read_from_position(file, offset, sizeof(format_info), &format_info))
 					{
 						if (format_info.samples_per_second == 11025 ||
 							format_info.samples_per_second == 22050 ||
@@ -208,7 +220,7 @@ boolean sound_file_wave_raw_data_get(
 			if (file_read_from_position(file, offset, sizeof(chunk_length), &chunk_length))
 			{
 				byte_swap_data(&riff_chunk_type_bs_definition, &chunk_type, 1);
-				if (chunk_type == 'data')
+				if (chunk_type == WAVE_DATA_CHUNK_TYPE)
 				{
 					*size = chunk_length;
 					offset += sizeof(chunk_length);
@@ -246,7 +258,7 @@ void sound_file_wave_format(
 		{
 			long sample = (*source << 8) + *source;
 
-			sample -= 0x8080;
+			sample -= WAVE_8BIT_SAMPLE_BIAS;
 			*destination = (short)sample;
 			destination--;
 			source--;

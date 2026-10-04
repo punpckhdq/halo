@@ -212,8 +212,8 @@ static void interrupt_time_error(
 static boolean dsound_initialize(
 	struct sound_preferences *preferences)
 {
-	boolean success = FALSE;
 	HRESULT result;
+	boolean success = FALSE;
 
 	dsound_globals.initialized = FALSE;
 	dsound_globals.paused = FALSE;
@@ -400,10 +400,7 @@ static void set_listener_properties_dsound(
 		REAL_CMP_EPSILON(properties->up.k, dsound_globals.listener.up.k, 0.05f) ||
 		!dsound_globals.initialized)
 	{
-		result = IDirectSound_SetOrientation(dsound_globals.dsound_object,
-			properties->forward.i, (properties->forward.k), (properties->forward.j),
-			properties->up.i, (properties->up.k), (properties->up.j),
-			DS3D_DEFERRED);
+		result = IDirectSound_SetOrientation(dsound_globals.dsound_object, properties->forward.i, (properties->forward.k), (properties->forward.j), properties->up.i, (properties->up.k), (properties->up.j), DS3D_DEFERRED);
 		if (FAILED(result))
 		{
 			dsound_error(result, "couldn't set listener orientation.");
@@ -427,8 +424,8 @@ static void set_listener_properties_dsound(
 
 	if (memcmp(properties->sound_environment, &dsound_globals.sound_environment, sizeof(struct sound_environment)) || !dsound_globals.initialized)
 	{
-		struct sound_environment const *environment = properties->sound_environment;
 		DSI3DL2LISTENER listener;
+		struct sound_environment const *environment = properties->sound_environment;
 
 		dsound_globals.sound_environment = *environment;
 
@@ -453,10 +450,10 @@ static void set_listener_properties_dsound(
 static boolean create_inanity_channel(
 	void)
 {
-	boolean success = FALSE;
 	WAVEFORMATEX wfm;
 	DSBUFFERDESC desc;
 	HRESULT result;
+	boolean success = FALSE;
 
 	wfm.wFormatTag = WAVE_FORMAT_PCM;
 	wfm.wBitsPerSample = 16;
@@ -505,7 +502,7 @@ static void begin_scene_dsound(
 	{
 		dsound_error(interrupt_result, interrupt_error_string);
 	}
-	interrupt_error_string[0] = 0;
+	interrupt_error_string[0] = '\0';
 	interrupt_result = S_OK;
 
 	return;
@@ -555,9 +552,9 @@ static void end_scene_dsound(
 
 	if (debug_sound_channels)
 	{
-		short tab_stops[3] = {280};
 		char buffer[8192];
 		short channel_index;
+		short tab_stops[3] = {280};
 
 		draw_string_set_tab_stops(tab_stops, 1);
 		buffer[0] = 0;
@@ -695,9 +692,9 @@ static void channel_set_location(
 	real occlusion,
 	boolean underwater)
 {
+	HRESULT result;
 	struct dsound_channel *channel = channel_get(channel_index);
 	boolean mode_changed = FALSE;
-	HRESULT result;
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 906, TEST_FLAG(channel->type_flags, _sound_channel_3d_bit));
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 907, channel->stream);
@@ -789,9 +786,9 @@ static void channel_set_properties(
 	struct platform_sound_channel_properties const *properties,
 	boolean gain_only)
 {
+	HRESULT result;
 	struct dsound_channel *channel = channel_get(channel_index);
 	real gain = dsound_globals.pause_gain*properties->gain;
-	HRESULT result;
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 980, properties->gain>=0.f && properties->gain<=1.f);
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 981, dsound_globals.pause_gain>=0 && dsound_globals.pause_gain<=1.f);
@@ -880,8 +877,8 @@ static void channel_set_properties(
 static void channel_update_i3dl2_source(
 	short channel_index)
 {
-	struct dsound_channel *channel = channel_get(channel_index);
 	DSI3DL2BUFFER source;
+	struct dsound_channel *channel = channel_get(channel_index);
 
 	memset(&source, 0, sizeof(source));
 	source.lDirect = 0;
@@ -938,8 +935,8 @@ static void channel_queue_sound(
 	short channel_index,
 	struct sound_permutation *sound)
 {
-	struct dsound_channel *channel = channel_get(channel_index);
 	HRESULT result;
+	struct dsound_channel *channel = channel_get(channel_index);
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1111, !dsound_globals.paused);
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1112, sound);
@@ -1012,11 +1009,11 @@ static boolean channel_queue_packet(
 			if ((byte *)channel->playing_permutation->cache_base_address>=(byte *)physical_memory_get_sound_cache_base_address() &&
 				(byte *)channel->playing_permutation->cache_base_address + channel->playing_permutation->samples.size<=(byte *)physical_memory_get_sound_cache_base_address() + SOUND_CACHE_SIZE)
 			{
+				XMEDIAPACKET packet;
+				HRESULT result;
 				struct sound_permutation *permutation = channel->playing_permutation;
 				long sample_offset = channel->sample_offset;
 				long remaining_size = permutation->samples.size - sample_offset;
-				XMEDIAPACKET packet;
-				HRESULT result;
 
 				channel->queued_packet_count++;
 
@@ -1155,8 +1152,8 @@ static void channel_stop(
 static boolean channel_stop_finished(
 	short channel_index)
 {
-	struct dsound_channel *channel = channel_get(channel_index);
 	boolean finished;
+	struct dsound_channel *channel = channel_get(channel_index);
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1212, channel->stopping);
 
@@ -1182,8 +1179,8 @@ static void dsound_error(
 	...)
 {
 	char temporary[4096];
-	char const *error_string = "<unknown error>";
 	va_list arguments;
+	char const *error_string = "<unknown error>";
 
 	va_start(arguments, format);
 	vsprintf(temporary, format, arguments);
@@ -1222,8 +1219,8 @@ static void dsound_error(
 static void vchannel_find_channel(
 	short virtual_channel_index)
 {
-	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
 	short channel_index;
+	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1420, vchannel->channel_index==NONE);
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1421, vchannel->type_index>=0 && vchannel->type_index<NUMBER_OF_SOUND_CHANNEL_TYPES);
@@ -1299,8 +1296,8 @@ static void dsound_virtual_stop(
 static short dsound_virtual_get_state(
 	short virtual_channel_index)
 {
-	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
 	short state;
+	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
 
 	if (vchannel->channel_index!=NONE)
 	{
@@ -1320,11 +1317,11 @@ static boolean channel_new(
 	short channel_index,
 	short type_flags)
 {
-	struct dsound_channel *channel = channel_get(channel_index);
-	boolean success = FALSE;
 	XBOXADPCMWAVEFORMAT wfm;
 	DSSTREAMDESC desc;
 	HRESULT result;
+	struct dsound_channel *channel = channel_get(channel_index);
+	boolean success = FALSE;
 
 	channel->type_flags = type_flags;
 	channel->virtual_channel_index = NONE;
