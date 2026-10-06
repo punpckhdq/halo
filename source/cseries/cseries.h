@@ -236,6 +236,10 @@ void debug_dump_memory(void);
 
 void stack_walk_disregard_symbol_names(boolean disregard);
 
+/* ---------- prototypes/SORT.C */
+
+void qsort_4byte(void *base, unsigned int count, boolean (*compare)(long, long));
+
 /* ---------- macros */
 
 #define memcmp csmemcmp

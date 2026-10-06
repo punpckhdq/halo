@@ -28,6 +28,7 @@ enum
 /* ---------- prototypes/RASTERIZER_XBOX.C */
 
 void rasterizer_preinitialize__fill_you_up_with_the_devils_cock(void);
+void *rasterizer_get_bitmap_default_hardware_format(struct bitmap_data const *bitmap);
 union point2d *rasterizer_set_texture(short stage, short type, short usage, long bitmap_group_index, short bitmap_index);
 void rasterizer_set_stencil_mode(short stencil_mode);
 void rasterizer_set_framebuffer_blend_function(short framebuffer_blend_function);
@@ -47,6 +48,7 @@ void rasterizer_xbox_bitmap_swizzle3d_byte(void *destination, void const *source
 void rasterizer_xbox_bitmap_swizzle3d_word(void *destination, void const *source, short width, short height, short depth);
 void rasterizer_xbox_bitmap_swizzle3d_long(void *destination, void const *source, short width, short height, short depth);
 short rasterizer_xbox_bitmap_get_max_mipmap_count(struct bitmap_data const *bitmap);
+long rasterizer_xbox_bitmap_get_pixel_data_size(struct bitmap_data const *bitmap);
 
 /* ---------- prototypes/RASTERIZER_XBOX_PROFILE.C */
 

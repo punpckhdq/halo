@@ -101,10 +101,12 @@ char *tiff_export(struct file_reference *file, struct bitmap_data *in_bitmap);
 short bitmap_format_get_bits_per_pixel(short format);
 char *bitmap_cube_map_address(struct bitmap_data const *bitmap, short x, short y, short face_index, short mipmap_index);
 void *bitmap_mipmap_address(struct bitmap_data const *bitmap, short mipmap_index);
+long bitmap_get_pixel_data_size(struct bitmap_data const *bitmap);
 short bitmap_mipmap_get_width(struct bitmap_data const *bitmap, short mipmap_index);
 short bitmap_mipmap_get_height(struct bitmap_data const *bitmap, short mipmap_index);
 short bitmap_mipmap_get_depth(struct bitmap_data const *bitmap, short mipmap_index);
 long bitmap_mipmap_get_pixel_data_size(struct bitmap_data const *bitmap, short mipmap_index);
+long bitmap_mipmap_get_row_pitch(struct bitmap_data const *bitmap, short mipmap_index);
 
 /* ---------- prototypes/BITMAP_UTILITIES.C */
 

@@ -1,35 +1,5 @@
 /*
 PHYSICAL_MEMORY_MAP.C
-
-symbols in this file:
-001AD660 00f0:
-	_physical_memory_allocate (0000)
-001AD750 00a0:
-	_physical_memory_verify (0000)
-001AD7F0 0040:
-	_physical_memory_free (0000)
-001AD830 0010:
-	_physical_memory_get_game_state_base_address (0000)
-001AD840 0010:
-	_physical_memory_get_tag_cache_base_address (0000)
-001AD850 0010:
-	_physical_memory_get_texture_cache_base_address (0000)
-001AD860 0010:
-	_physical_memory_get_sound_cache_base_address (0000)
-002A76A0 0035:
-	??_C@_0DF@JIMKNOMI@physical_memory_map_globals?4soun@ (0000)
-002A76D8 0037:
-	??_C@_0DH@HFDEEEDC@physical_memory_map_globals?4text@ (0000)
-002A7710 005a:
-	??_C@_0FK@BLCIEIND@?$CIunsigned?5long?$CJphysical_memory_m@ (0000)
-002A7770 005c:
-	??_C@_0FM@EHFFGLDK@?$CIunsigned?5long?$CJphysical_memory_m@ (0000)
-002A77CC 002b:
-	??_C@_0CL@BKHLOEEB@c?3?2halo?2SOURCE?2cache?2physical_me@ (0000)
-002A77F8 001e:
-	??_C@_0BO@DKDCAKMK@page_status?5?$DN?$DN?5PAGE_READWRITE?$AA@ (0000)
-004D1074 0010:
-	_bss_004d1074 (0000)
 */
 
 /* ---------- headers */
@@ -40,14 +10,140 @@ symbols in this file:
 
 /* ---------- constants */
 
+#define PHYSICAL_MEMORY_BASE_ADDRESS 0x80000000 /* fake name */
+
+enum
+{
+	GAME_STATE_SIZE = 0x345000, /* fake name */
+	GAME_STATE_CPU_SIZE = 0x305000,
+	TEXTURE_CACHE_SIZE = 0x1600000, /* fake name */
+	SOUND_CACHE_SIZE = 0x400000, /* fake name */
+
+	PHYSICAL_MEMORY_PAGE_SIZE = 0x1000, /* fake name */
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct physical_memory_map_globals
+{
+	void *game_state_base_address;
+	void *tag_cache_base_address;
+	void *texture_cache_base_address;
+	void *sound_cache_base_address;
+};
 
 /* ---------- prototypes */
 
 /* ---------- globals */
 
+static struct physical_memory_map_globals physical_memory_map_globals;
+
 /* ---------- public code */
+
+void physical_memory_allocate(
+	void)
+{
+	physical_memory_map_globals.game_state_base_address = XPhysicalAlloc(
+		GAME_STATE_SIZE,
+		GAME_STATE_BASE_ADDRESS - PHYSICAL_MEMORY_BASE_ADDRESS,
+		0,
+		PAGE_READWRITE);
+	match_assert("c:\\halo\\SOURCE\\cache\\physical_memory_map.c", 46, (unsigned long)physical_memory_map_globals.game_state_base_address==GAME_STATE_BASE_ADDRESS);
+
+	physical_memory_map_globals.tag_cache_base_address = XPhysicalAlloc(
+		TAG_CACHE_SIZE,
+		TAG_CACHE_BASE_ADDRESS - PHYSICAL_MEMORY_BASE_ADDRESS,
+		0,
+		PAGE_READWRITE);
+	match_assert("c:\\halo\\SOURCE\\cache\\physical_memory_map.c", 50, (unsigned long)physical_memory_map_globals.tag_cache_base_address==TAG_CACHE_BASE_ADDRESS);
+
+	physical_memory_map_globals.texture_cache_base_address = XPhysicalAlloc(
+		TEXTURE_CACHE_SIZE,
+		MAXULONG_PTR,
+		0,
+		PAGE_READWRITE | PAGE_WRITECOMBINE);
+	match_assert("c:\\halo\\SOURCE\\cache\\physical_memory_map.c", 55, physical_memory_map_globals.texture_cache_base_address);
+
+	physical_memory_map_globals.sound_cache_base_address = XPhysicalAlloc(
+		SOUND_CACHE_SIZE,
+		MAXULONG_PTR,
+		0,
+		PAGE_READWRITE);
+	match_assert("c:\\halo\\SOURCE\\cache\\physical_memory_map.c", 58, physical_memory_map_globals.sound_cache_base_address);
+}
+
+void physical_memory_verify(
+	void)
+{
+	byte *address;
+
+	for (address = (byte *)physical_memory_map_globals.tag_cache_base_address;
+		address < (byte *)physical_memory_map_globals.tag_cache_base_address + TAG_CACHE_SIZE;
+		address += PHYSICAL_MEMORY_PAGE_SIZE)
+	{
+		unsigned long page_status = XQueryMemoryProtect(address);
+
+		match_assert("c:\\halo\\SOURCE\\cache\\physical_memory_map.c", 77, page_status == PAGE_READWRITE);
+	}
+
+	for (address = (byte *)physical_memory_map_globals.game_state_base_address;
+		address < (byte *)physical_memory_map_globals.game_state_base_address + GAME_STATE_CPU_SIZE;
+		address += PHYSICAL_MEMORY_PAGE_SIZE)
+	{
+		unsigned long page_status = XQueryMemoryProtect(address);
+
+		match_assert("c:\\halo\\SOURCE\\cache\\physical_memory_map.c", 86, page_status == PAGE_READWRITE);
+	}
+}
+
+void physical_memory_free(
+	void)
+{
+	if (physical_memory_map_globals.game_state_base_address)
+	{
+		XPhysicalFree(physical_memory_map_globals.game_state_base_address);
+	}
+
+	if (physical_memory_map_globals.tag_cache_base_address)
+	{
+		XPhysicalFree(physical_memory_map_globals.tag_cache_base_address);
+	}
+
+	if (physical_memory_map_globals.texture_cache_base_address)
+	{
+		XPhysicalFree(physical_memory_map_globals.texture_cache_base_address);
+	}
+
+	if (physical_memory_map_globals.sound_cache_base_address)
+	{
+		XPhysicalFree(physical_memory_map_globals.sound_cache_base_address);
+	}
+}
+
+void *physical_memory_get_game_state_base_address(
+	void)
+{
+	return physical_memory_map_globals.game_state_base_address;
+}
+
+void *physical_memory_get_tag_cache_base_address(
+	void)
+{
+	return physical_memory_map_globals.tag_cache_base_address;
+}
+
+void *physical_memory_get_texture_cache_base_address(
+	void)
+{
+	return physical_memory_map_globals.texture_cache_base_address;
+}
+
+void *physical_memory_get_sound_cache_base_address(
+	void)
+{
+	return physical_memory_map_globals.sound_cache_base_address;
+}
 
 /* ---------- private code */
