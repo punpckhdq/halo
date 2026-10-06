@@ -291,7 +291,7 @@ void animation_get_node_orientations(
 		{
 			real_orientation *orientation = &node_orientations[node_index];
 
-			if (!(node_index&(LONG_BITS-1)))
+			if (!(node_index&MASK(LONG_BITS_BITS)))
 			{
 				short flags_index = node_index>>LONG_BITS_BITS;
 
@@ -411,7 +411,7 @@ void replacement_animation_apply(
 		{
 			real_orientation *orientation = &node_orientations[node_index];
 
-			if (!(node_index&(LONG_BITS-1)))
+			if (!(node_index&MASK(LONG_BITS_BITS)))
 			{
 				short flags_index = node_index>>LONG_BITS_BITS;
 
@@ -493,7 +493,7 @@ void overlay_animation_apply(
 			real scale;
 			real_orientation *orientation = &node_orientations[node_index];
 
-			if (!(node_index&(LONG_BITS-1)))
+			if (!(node_index&MASK(LONG_BITS_BITS)))
 			{
 				short flags_index = node_index>>LONG_BITS_BITS;
 
@@ -526,11 +526,11 @@ void overlay_animation_apply(
 				else
 				{
 					translation = *(real_point3d *)data;
-					data += sizeof(real_point3d);
+					data += sizeof(translation);
 				}
-				orientation->translation.x = translation.x + orientation->translation.x;
-				orientation->translation.y = translation.y + orientation->translation.y;
-				orientation->translation.z = translation.z + orientation->translation.z;
+				orientation->translation.x += translation.x;
+				orientation->translation.y += translation.y;
+				orientation->translation.z += translation.z;
 			}
 			nodes_with_translation_flags >>= 1;
 
@@ -543,9 +543,9 @@ void overlay_animation_apply(
 				else
 				{
 					scale = *(real *)data;
-					data += sizeof(real);
+					data += sizeof(scale);
 				}
-				orientation->scale = scale*orientation->scale;
+				orientation->scale *= scale;
 			}
 			nodes_with_scale_flags >>= 1;
 		}
@@ -583,7 +583,7 @@ void overlay_animation_apply_scaled(
 			real scale;
 			real_orientation *orientation = &node_orientations[node_index];
 
-			if (!(node_index&(LONG_BITS-1)))
+			if (!(node_index&MASK(LONG_BITS_BITS)))
 			{
 				short flags_index = node_index>>LONG_BITS_BITS;
 
@@ -617,11 +617,11 @@ void overlay_animation_apply_scaled(
 				else
 				{
 					translation = *(real_point3d *)data;
-					data += sizeof(real_point3d);
+					data += sizeof(translation);
 				}
-				orientation->translation.x = translation.x*animation_scale + orientation->translation.x;
-				orientation->translation.y = translation.y*animation_scale + orientation->translation.y;
-				orientation->translation.z = translation.z*animation_scale + orientation->translation.z;
+				orientation->translation.x += translation.x*animation_scale;
+				orientation->translation.y += translation.y*animation_scale;
+				orientation->translation.z += translation.z*animation_scale;
 			}
 			nodes_with_translation_flags >>= 1;
 
@@ -634,9 +634,9 @@ void overlay_animation_apply_scaled(
 				else
 				{
 					scale = *(real *)data;
-					data += sizeof(real);
+					data += sizeof(scale);
 				}
-				orientation->scale = (scale*animation_scale + inverse_animation_scale)*orientation->scale;
+				orientation->scale *= scale*animation_scale + inverse_animation_scale;
 			}
 			nodes_with_scale_flags >>= 1;
 		}
@@ -688,7 +688,7 @@ void overlay_animation_apply_continuous(
 			real scale;
 			real_orientation *orientation = &node_orientations[node_index];
 
-			if (!(node_index&(LONG_BITS-1)))
+			if (!(node_index&MASK(LONG_BITS_BITS)))
 			{
 				short flags_index = node_index>>LONG_BITS_BITS;
 
@@ -733,9 +733,9 @@ void overlay_animation_apply_continuous(
 					next_data += sizeof(real_point3d);
 					points_interpolate(this_translation, next_translation, fraction, &translation);
 				}
-				orientation->translation.x = translation.x + orientation->translation.x;
-				orientation->translation.y = translation.y + orientation->translation.y;
-				orientation->translation.z = translation.z + orientation->translation.z;
+				orientation->translation.x += translation.x;
+				orientation->translation.y += translation.y;
+				orientation->translation.z += translation.z;
 			}
 			nodes_with_translation_flags >>= 1;
 
@@ -756,7 +756,7 @@ void overlay_animation_apply_continuous(
 					next_data += sizeof(real);
 					scalars_interpolate(this_scale, next_scale, fraction, &scale);
 				}
-				orientation->scale = scale*orientation->scale;
+				orientation->scale *= scale;
 			}
 			nodes_with_scale_flags >>= 1;
 		}
@@ -811,7 +811,7 @@ void overlay_animation_apply_continuous_scaled(
 			real scale;
 			real_orientation *orientation = &node_orientations[node_index];
 
-			if (!(node_index&(LONG_BITS-1)))
+			if (!(node_index&MASK(LONG_BITS_BITS)))
 			{
 				short flags_index = node_index>>LONG_BITS_BITS;
 
@@ -857,9 +857,9 @@ void overlay_animation_apply_continuous_scaled(
 					next_data += sizeof(real_point3d);
 					points_interpolate(this_translation, next_translation, fraction, &translation);
 				}
-				orientation->translation.x = translation.x*animation_scale + orientation->translation.x;
-				orientation->translation.y = translation.y*animation_scale + orientation->translation.y;
-				orientation->translation.z = translation.z*animation_scale + orientation->translation.z;
+				orientation->translation.x += translation.x*animation_scale;
+				orientation->translation.y += translation.y*animation_scale;
+				orientation->translation.z += translation.z*animation_scale;
 			}
 			nodes_with_translation_flags >>= 1;
 
@@ -880,7 +880,7 @@ void overlay_animation_apply_continuous_scaled(
 					next_data += sizeof(real);
 					scalars_interpolate(this_scale, next_scale, fraction, &scale);
 				}
-				orientation->scale = (scale*animation_scale + inverse_animation_scale)*orientation->scale;
+				orientation->scale *= scale*animation_scale + inverse_animation_scale;
 			}
 			nodes_with_scale_flags >>= 1;
 		}
@@ -979,7 +979,7 @@ void aiming_screen_apply(
 			{
 				real_orientation *orientation = &node_orientations[node_index];
 
-				if (!(node_index&(LONG_BITS-1)))
+				if (!(node_index&MASK(LONG_BITS_BITS)))
 				{
 					short flags_index = node_index>>LONG_BITS_BITS;
 
@@ -1044,18 +1044,18 @@ void aiming_screen_apply(
 					else
 					{
 						d0_e0_translation = *(real_point3d *)d0_e0_data;
-						d0_e0_data += sizeof(real_point3d);
+						d0_e0_data += sizeof(d0_e0_translation);
 						d1_e0_translation = *(real_point3d *)d1_e0_data;
-						d1_e0_data += sizeof(real_point3d);
+						d1_e0_data += sizeof(d1_e0_translation);
 						d0_e1_translation = *(real_point3d *)d0_e1_data;
-						d0_e1_data += sizeof(real_point3d);
+						d0_e1_data += sizeof(d0_e1_translation);
 						d1_e1_translation = *(real_point3d *)d1_e1_data;
-						d1_e1_data += sizeof(real_point3d);
+						d1_e1_data += sizeof(d1_e1_translation);
 					}
 
-					orientation->translation.x = (d0_e0_translation.x*inverse_d_fraction + d1_e0_translation.x*d_fraction)*inverse_e_fraction + (d0_e1_translation.x*inverse_d_fraction + d1_e1_translation.x*d_fraction)*e_fraction + orientation->translation.x;
-					orientation->translation.y = (d0_e0_translation.y*inverse_d_fraction + d1_e0_translation.y*d_fraction)*inverse_e_fraction + (d0_e1_translation.y*inverse_d_fraction + d1_e1_translation.y*d_fraction)*e_fraction + orientation->translation.y;
-					orientation->translation.z = (d0_e0_translation.z*inverse_d_fraction + d1_e0_translation.z*d_fraction)*inverse_e_fraction + (d0_e1_translation.z*inverse_d_fraction + d1_e1_translation.z*d_fraction)*e_fraction + orientation->translation.z;
+					orientation->translation.x += (d0_e0_translation.x*inverse_d_fraction + d1_e0_translation.x*d_fraction)*inverse_e_fraction + (d0_e1_translation.x*inverse_d_fraction + d1_e1_translation.x*d_fraction)*e_fraction;
+					orientation->translation.y += (d0_e0_translation.y*inverse_d_fraction + d1_e0_translation.y*d_fraction)*inverse_e_fraction + (d0_e1_translation.y*inverse_d_fraction + d1_e1_translation.y*d_fraction)*e_fraction;
+					orientation->translation.z += (d0_e0_translation.z*inverse_d_fraction + d1_e0_translation.z*d_fraction)*inverse_e_fraction + (d0_e1_translation.z*inverse_d_fraction + d1_e1_translation.z*d_fraction)*e_fraction;
 				}
 				nodes_with_translation_flags >>= 1;
 			}

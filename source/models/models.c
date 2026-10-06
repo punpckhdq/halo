@@ -16,6 +16,10 @@ MODELS.C
 #include "render_debug.h"
 #include "triangle_strips.h"
 
+/* ---------- macros */
+
+#define CORTANA_NODE_LIST_CHECKSUM 0x769c097 /* fake name */
+
 /* ---------- structures */
 
 enum
@@ -68,7 +72,7 @@ void render_model(
 
 	match_assert("c:\\halo\\SOURCE\\models\\models.c", 82, lighting);
 
-	rasterizer_model_cortana_hack = model->node_list_checksum==0x769c097 && TEST_FLAG(global_scenario_get()->flags, _scenario_cortana_hack_bit);
+	rasterizer_model_cortana_hack = model->node_list_checksum==CORTANA_NODE_LIST_CHECKSUM && TEST_FLAG(global_scenario_get()->flags, _scenario_cortana_hack_bit);
 
 	if (level_of_detail_pixels>=model->detail_cutoff_pixels[0] || TEST_FLAG(flags, _render_model_shadow_bit))
 	{
@@ -225,7 +229,7 @@ void render_model(
 									index_count += part->triangle_buffer.count+2;
 									break;
 								default:
-									match_assert("c:\\halo\\SOURCE\\models\\models.c", 276, !"unreachable");
+									match_unreachable("c:\\halo\\SOURCE\\models\\models.c", 276);
 								}
 							}
 						}
@@ -371,6 +375,8 @@ static void render_model_parts(
 									real_point3d centroid;
 
 									match_assert("c:\\halo\\SOURCE\\models\\models.c", 442, !TEST_FLAG(flags, _render_model_shadow_bit));
+
+
 									match_assert("c:\\halo\\SOURCE\\models\\models.c", 445, part->centroid_primary_node_index>=0 && part->centroid_primary_node_index<model->nodes.count);
 									match_assert("c:\\halo\\SOURCE\\models\\models.c", 446, part->centroid_secondary_node_index>=0 && part->centroid_secondary_node_index<model->nodes.count);
 									matrix4x3_transform_point(&skinning->node_matrices[part->centroid_primary_node_index], &part->centroid, &centroid);
@@ -707,12 +713,6 @@ short model_find_node(
 	return NONE;
 }
 
-__inline static void model_geometry_part_build_tangent_matrices(
-	struct model_geometry_part *part)
-{
-	return;
-}
-
 void model_build_tangent_matrices(
 	struct model *model)
 {
@@ -729,5 +729,13 @@ void model_build_tangent_matrices(
 		}
 	}
 
+	return;
+}
+
+/* ---------- private code */
+
+static void model_geometry_part_build_tangent_matrices(
+	struct model_geometry_part *part)
+{
 	return;
 }
