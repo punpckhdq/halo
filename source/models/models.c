@@ -305,7 +305,7 @@ void render_model(
 		}
 		else
 		{
-			rasterizer_model_begin(&model_parameters, NULL);
+			rasterizer_model_begin(&model_parameters, FALSE);
 		}
 
 		render_model_parts(model, region_permutation_indices, &model_parameters.skinning, object_index, geometry_detail_level_index, forced_shader_permutation_index, flags);

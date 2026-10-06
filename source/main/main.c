@@ -1378,7 +1378,7 @@ void set_window_camera_values(
 	return;
 }
 
-long main_get_window_count(
+short main_get_window_count(
 	void)
 {
 	boolean single_screen = game_engine_force_single_screen() || cinematic_in_progress();

@@ -10,6 +10,21 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_widget_type_flag = 0,
+	_widget_type_antenna,
+	_widget_type_glow,
+	_widget_type_light_volume,
+	_widget_type_lightning,
+	NUMBER_OF_WIDGET_TYPES,
+
+	_widget_type_internal_sprite = NUMBER_OF_WIDGET_TYPES,
+	_widget_type_internal_occlusion_test,
+	_widget_type_internal____,
+	NUMBER_OF_INTERNAL_WIDGET_TYPES,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

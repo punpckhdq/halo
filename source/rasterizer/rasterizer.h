@@ -16,6 +16,43 @@ header included in hcex build.
 
 enum
 {
+	_lens_flare_parameters_light_index_structure_bit = 15,
+	_lens_flare_parameters_light_index_mask = 32767,
+};
+
+enum
+{
+	_lens_flare_window_index_first_person_bit = 7,
+	_lens_flare_window_index_mask = -129,
+};
+
+enum
+{
+	_rasterizer_statistics_mode_none = 0,
+	_rasterizer_statistics_mode_fps_only,
+	_rasterizer_statistics_mode_full,
+	_rasterizer_statistics_mode_profile,
+	_rasterizer_statistics_mode_memory,
+	NUMBER_OF_RASTERIZER_STATISTICS_MODES,
+};
+
+enum
+{
+	_rasterizer_drawing_mode_normal = 0,
+	_rasterizer_drawing_mode_overdraw,
+	_rasterizer_drawing_mode_bump_color,
+	_rasterizer_drawing_mode_specular_mask,
+	_rasterizer_drawing_mode_specular_mask_times_bump_color,
+	_rasterizer_drawing_mode_diffuse_texture_times_bump_color,
+	_rasterizer_drawing_mode_bump_edge,
+	_rasterizer_drawing_mode_specular_mask_times_bump_edge,
+	_rasterizer_drawing_mode_diffuse_texture_times_bump_edge,
+	_rasterizer_drawing_mode_vectors,
+	NUMBER_OF_RASTERIZER_DRAWING_MODES,
+};
+
+enum
+{
 	_rasterizer_geometry_no_sort_bit = 0,
 	_rasterizer_geometry_no_queue_bit,
 	_rasterizer_geometry_no_fog_bit,
@@ -237,6 +274,13 @@ struct rasterizer_debug_options_struct
 	short freeze_flying_camera;
 	boolean zsprite_enabled;
 	boolean filthy_decal_fog_hack_enabled;
+	boolean smart_states_enabled;
+	boolean splitscreen_VB_optimization_enabled;
+	boolean profile_print_locks;
+	real profile_objectlock_time;
+	real pad3_scale;
+	real f[6];
+	boolean __unknown88;
 };
 
 struct rasterizer_frame_statistics_s
@@ -266,6 +310,12 @@ struct rasterizer_frame_statistics_s
 	long decal_primitive_count;
 	long decal_shader_count;
 	long decal_texture_count;
+	long __unknown60[56];
+	long debug_primitive_count; /* fake name */
+	long __unknown144;
+	long dynamic_light_count; /* fake name */
+	long lens_flare_count; /* fake name */
+	long __unknown150[8];
 };
 
 struct rasterizer_model_begin_parameters
@@ -279,6 +329,61 @@ struct rasterizer_model_begin_parameters
 	real_point3d centroid;
 	real radius;
 	real_vector2d base_map_scale;
+};
+
+struct transparent_geometry_group
+{
+	unsigned long geometry_flags;
+	long object_index;
+	long source_object_index;
+	struct shader const *shader;
+	short shader_permutation_index;
+	struct render_model_effect effect;
+	real_vector2d model_base_map_scale;
+	long dynamic_triangle_buffer_index;
+	struct triangle_buffer const *triangle_buffer;
+	long first_triangle_index;
+	long triangle_count;
+	long dynamic_vertex_buffer_index;
+	struct vertex_buffer const *vertex_buffers;
+	struct bitmap_data const *lightmap;
+	real_matrix4x3 const *node_matrices;
+	short node_matrix_count;
+	struct render_lighting const *lighting;
+	struct render_animation const *animation;
+	real z_sort;
+	real_point3d centroid;
+	real_plane3d plane;
+	long sorted_index;
+	short prev_group_presorted_index;
+	short next_group_presorted_index;
+	long active_camouflage_transparent_source_object_index;
+	boolean sort_last;
+	boolean cortana_hack;
+};
+
+struct rasterizer_global_defaults
+{
+	real z_near;
+	real z_far;
+	real z_near_first_person;
+	real z_far_first_person;
+};
+
+struct rasterizer_light_submit_parameters
+{
+	struct point_light_definition *definition;
+	real_point3d position;
+	real_vector3d forward;
+	real_vector3d up;
+	real_rgb_color color;
+	real radius;
+};
+
+struct rasterizer_lights
+{
+	long light_count;
+	struct rasterizer_light_submit_parameters lights[MAXIMUM_LIGHTS_PER_WINDOW];
 };
 
 struct rasterizer_lens_flare_submit_parameters
@@ -298,34 +403,170 @@ struct rasterizer_lens_flare_submit_parameters
 
 /* ---------- prototypes/RASTERIZER.C */
 
-void rasterizer_reset_state(void);
-void rasterizer_set_vblank_callback(void (*callback)(unsigned long));
-void rasterizer_debug_draw(void);
-void rasterizer_transparent_geometry_draw(boolean water);
-
 boolean rasterizer_initialize(void);
-
+void rasterizer_reset_state(void);
 void rasterizer_frame_begin(const struct rasterizer_frame_begin_parameters *parameters);
 boolean rasterizer_windows_begin(void);
 void rasterizer_window_begin(const struct rasterizer_window_begin_parameters *parameters);
-
+void rasterizer_window_get_fog(struct render_fog *fog);
+void rasterizer_window_set_fog(struct render_fog const *fog);
 void rasterizer_window_end(void);
 void rasterizer_windows_end(void);
 void rasterizer_frame_end(void);
-
 void rasterizer_present(struct bitmap_data *screenshot_bitmap, const point2d *screenshot_index);
 void rasterizer_dispose(void);
-
+void rasterizer_set_vblank_callback(void (*callback)(unsigned long));
+void rasterizer_profile_enable(boolean enable);
+long rasterizer_dynamic_triangles_new(long count);
+struct rasterizer_triangle *rasterizer_dynamic_triangles_lock(long dynamic_triangle_buffer_index);
+void rasterizer_dynamic_triangles_unlock(long dynamic_triangle_buffer_index);
+void rasterizer_dynamic_triangles_delete(long dynamic_triangle_buffer_index);
+long rasterizer_dynamic_vertices_new(short type, long count);
+short rasterizer_dynamic_vertices_get_type(long dynamic_vertex_buffer_index);
+void *rasterizer_dynamic_vertices_lock(long dynamic_vertex_buffer_index);
+void rasterizer_dynamic_vertices_unlock(long dynamic_vertex_buffer_index);
+void rasterizer_dynamic_vertices_delete(long dynamic_vertex_buffer_index);
+void rasterizer_debug_immediate_begin(void);
+void rasterizer_debug_immediate_point(real_point3d const *p, real size, real_rgb_color const *color);
+void rasterizer_debug_immediate_vector(real_point3d const *p, real_vector3d const *v, real size, real_rgb_color const *color);
+void rasterizer_debug_immediate_line(real_point3d const *p0, real_point3d const *p1, real_rgb_color const *color0, real_rgb_color const *color1);
+void rasterizer_debug_immediate_triangle(real_point3d const *p0, real_point3d const *p1, real_point3d const *p2, real_rgb_color const *color0, real_rgb_color const *color1, real_rgb_color const *color2);
+void rasterizer_debug_immediate_end(void);
+void rasterizer_debug_immediate_begin_screenspace(void);
+void rasterizer_debug_immediate_line_screenspace(point2d const *p0, point2d const *p1, real_rgb_color const *color0, real_rgb_color const *color1);
+void rasterizer_debug_immediate_linestrip_screenspace(point2d const *points, short point_count, real_rgb_color const *color);
+void rasterizer_debug_immediate_end_screenspace(void);
+void rasterizer_decals_initialize(void);
 void rasterizer_decals_update_function_pointers(void);
-
-void rasterizer_model_begin(struct rasterizer_model_begin_parameters const *parameters, void *arg1);
-void rasterizer_model_draw(struct shader const *shader, short permutation_index, struct triangle_buffer const *triangles, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertices, long node_table_index);
-void rasterizer_model_transparent_geometry_submit(struct shader const *shader, short permutation_index, struct triangle_buffer const *triangles, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertices, long node_table_index, real_point3d const *centroid, struct render_sort_filth *sort_filth);
+void rasterizer_decals_initialize_for_new_map(void);
+void rasterizer_decals_dispose_from_old_map(void);
+void rasterizer_decals_flush(void);
+void rasterizer_decals_dispose(void);
+long rasterizer_decal_vertices_new(long cache_size);
+void *rasterizer_decal_vertices_lock(long cache_index, long cache_size);
+void rasterizer_decal_vertices_unlock(void);
+void rasterizer_decal_vertices_delete(long cache_index);
+void rasterizer_decals_begin(short layer);
+void rasterizer_decals_draw(short cluster_index);
+void rasterizer_decals_end(void);
+void rasterizer_detail_objects_begin(void);
+void rasterizer_detail_objects_rebuild_vertices(struct detail_object_view_data const *detail_object_view_data);
+void rasterizer_detail_objects_draw(struct detail_object_view_data const *detail_object_view_data);
+void rasterizer_detail_objects_end(void);
+void rasterizer_screen_effect(struct rasterizer_screen_effect_parameters const *parameters);
+void rasterizer_screen_flash(void);
+void rasterizer_models_begin(boolean sky);
+void rasterizer_model_begin(struct rasterizer_model_begin_parameters const *parameters, boolean do_not_change_z_stencil_states);
+void rasterizer_model_draw(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, long dynamic_triangle_buffer_index, long triangle_count, struct vertex_buffer const *vertex_buffer, long dynamic_vertex_buffer_index);
+void rasterizer_model_transparent_geometry_submit(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, long dynamic_triangle_buffer_index, long triangle_count, struct vertex_buffer const *vertex_buffer, long dynamic_vertex_buffer_index, real_point3d const *centroid, struct render_sort_filth *sort_filth);
 void rasterizer_model_end(void);
+void rasterizer_models_end(void);
+void rasterizer_debug_model_vertices(long target_object_index, struct render_skinning const *skinning, struct model_geometry_part const *part);
+void rasterizer_environment_lightmaps_begin(void);
+void rasterizer_environment_lightmap_begin(struct bitmap_data const *lightmap);
+void rasterizer_environment_lightmap_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffers);
+void rasterizer_environment_lightmap_end(void);
+void rasterizer_environment_lightmaps_end(void);
+void rasterizer_environment_diffuse_lights_begin(void);
+void rasterizer_environment_diffuse_light_begin(long light_index);
+void rasterizer_environment_diffuse_light_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_diffuse_light_end(void);
+void rasterizer_environment_diffuse_lights_end(void);
+void rasterizer_environment_shadows_begin(void);
+boolean rasterizer_environment_shadow_begin(long object_index, real_matrix4x3 const *shadow_matrix, real_rgb_color const *light_color, real object_bounding_radius, real *shadow_volume_bounding_radius);
 void rasterizer_environment_shadow_model_begin(struct rasterizer_model_begin_parameters const *parameters);
-void rasterizer_environment_shadow_model_draw(struct shader const *shader, short permutation_index, struct triangle_buffer const *triangles, struct vertex_buffer const *vertices);
+void rasterizer_environment_shadow_model_draw(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, struct vertex_buffer const *vertex_buffer);
 void rasterizer_environment_shadow_model_end(void);
-void rasterizer_debug_model_vertices(long object_index, struct render_skinning const *skinning, struct model_geometry_part const *part);
+void rasterizer_environment_shadow_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_shadow_end(void);
+void rasterizer_environment_shadows_end(void);
+void rasterizer_environment_diffuse_textures_begin(void);
+void rasterizer_environment_diffuse_texture_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_diffuse_textures_end(void);
+void rasterizer_environment_specular_lights_begin(void);
+void rasterizer_environment_specular_light_begin(long light_index);
+void rasterizer_environment_specular_light_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_specular_light_end(void);
+void rasterizer_environment_specular_lights_end(void);
+void rasterizer_environment_specular_lightmaps_begin(void);
+void rasterizer_environment_specular_lightmap_begin(struct bitmap_data const *lightmap);
+void rasterizer_environment_specular_lightmap_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_specular_lightmap_end(void);
+void rasterizer_environment_specular_lightmaps_end(void);
+void rasterizer_environment_reflection_lightmap_masks_begin(void);
+void rasterizer_environment_reflection_lightmap_mask_begin(struct bitmap_data const *lightmap);
+void rasterizer_environment_reflection_lightmap_mask_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_reflection_lightmap_mask_end(void);
+void rasterizer_environment_reflection_lightmap_masks_end(void);
+void rasterizer_environment_reflection_mirrors_begin(void);
+void rasterizer_environment_reflection_mirror_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_reflection_mirrors_end(void);
+void rasterizer_environment_reflections_begin(void);
+void rasterizer_environment_reflection_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_reflections_end(void);
+void rasterizer_environment_transparent_geometry_begin(void);
+void rasterizer_environment_transparent_geometry_submit(struct shader const *shader, short shader_permutation_index, struct bitmap_data const *lightmap, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffers, real_point3d const *centroid, real_plane3d const *plane, real_vector3d const *vector, struct render_lighting const *lighting, unsigned long geometry_flags);
+void rasterizer_environment_transparent_geometry_end(void);
+void rasterizer_environment_fog_begin(void);
+void rasterizer_environment_fog_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_fog_end(void);
+void rasterizer_environment_fog_screen_wind_get_vector(short window_index, real dt, real_vector3d *wind_vector);
+void rasterizer_environment_fog_screen_begin(short pass);
+void rasterizer_environment_fog_screen_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
+void rasterizer_environment_fog_screen_end(void);
+void rasterizer_hud_begin(void);
+void rasterizer_hud_end(void);
+void rasterizer_dynamic_unlit_geometry_draw(struct shader const *shader, struct bitmap_data const *primary_map, struct render_animation const *animation, long dynamic_triangle_buffer_index, long dynamic_vertex_buffer_index, long triangle_count, real_point3d const *centroid, unsigned long geometry_flags);
+void rasterizer_dynamic_lit_geometry_draw(struct shader const *shader, struct bitmap_data const *primary_map, struct render_animation const *animation, struct render_lighting const *lighting, long dynamic_triangle_buffer_index, long dynamic_vertex_buffer_index, long triangle_count, real_point3d const *centroid, unsigned long geometry_flags);
+void rasterizer_dynamic_screen_geometry_draw(struct rasterizer_dynamic_screen_geometry_parameters const *parameters, long dynamic_triangle_buffer_index, long dynamic_vertex_buffer_index, long triangle_count);
+void rasterizer_dynamic_screen_geometry_add_multitexture_params_to_base(struct rasterizer_dynamic_screen_geometry_parameters *base, struct rasterizer_dynamic_screen_geometry_parameters const *multitext_params);
+void rasterizer_psuedo_dynamic_screen_quad_draw(struct rasterizer_dynamic_screen_geometry_parameters const *parameters, struct dynamic_screen_vertex *verts);
+void rasterizer_widget_submit(long object_index, long widget_index, real_point3d const *centroid, void (*render_proc)(long, long));
+void rasterizer_widget_begin(short type, word flags);
+boolean rasterizer_widget_set_texture(short stage_index, long bitmap_group_index, short sequence_index);
+void rasterizer_widget_set_tint_factor(real tint_factor);
+void rasterizer_widget_set_zbuffer_enable(boolean zbuffer_enable);
+void rasterizer_widget_draw_sprite2d(real_point2d const *point, real radius, real_vector2d const *scale, real_vector2d const *texture_size, real rotation, pixel32 color);
+void rasterizer_widget_draw_sprite3d(real_point3d const *point, real radius, real_vector2d const *scale, real rotation, pixel32 color);
+void rasterizer_widget_end(void);
+long rasterizer_widget_submit_occlusion_test(real_point3d const *point, real radius, long index);
+long rasterizer_widget_get_occlusion_test_result(long index);
+void rasterizer_hud_motion_sensor_blip_begin(void);
+void rasterizer_hud_motion_sensor_blip_draw(real_point2d const *blip_position, real fade, real radius, real_rgb_color const *blip_color, boolean custom);
+void rasterizer_hud_motion_sensor_blip_end(real_point2d const *center_point, real theta);
+
+/* ---------- prototypes/RASTERIZER_DEBUG.C */
+
+long rasterizer_debug_new_primitive(long *count);
+boolean rasterizer_debug_initialize(void);
+void rasterizer_debug_begin(void);
+void rasterizer_debug_end(void);
+void rasterizer_debug_dispose(void);
+void rasterizer_debug_line(real_point3d const *p0, real_point3d const *p1, real_argb_color const *color);
+void rasterizer_debug_line_shaded(real_point3d const *p0, real_point3d const *p1, real_argb_color const *color0, real_argb_color const *color1);
+void rasterizer_debug_triangle(real_point3d const *p0, real_point3d const *p1, real_point3d const *p2, real_argb_color const *color);
+void rasterizer_debug_triangle_shaded(real_point3d const *p0, real_point3d const *p1, real_point3d const *p2, real_argb_color const *color0, real_argb_color const *color1, real_argb_color const *color2);
+void rasterizer_debug_test(void);
+void rasterizer_debug_draw(void);
+
+/* ---------- prototypes/RASTERIZER_TRANSPARENT_GEOMETRY.C */
+
+boolean rasterizer_transparent_geometry_initialize(void);
+void rasterizer_transparent_geometry_begin(void);
+struct transparent_geometry_group *rasterizer_transparent_geometry_new_group(void);
+struct transparent_geometry_group *rasterizer_transparent_geometry_new_group2(void);
+struct transparent_geometry_group const *rasterizer_transparent_geometry_get_groups2(short *count);
+struct transparent_geometry_group const *rasterizer_transparent_geometry_next_group(struct transparent_geometry_group const *group);
+struct transparent_geometry_group *rasterizer_transparent_geometry_get_groups(void);
+struct transparent_geometry_group const *rasterizer_transparent_geometry_get_group_from_presorted_index(short group_presorted_index);
+short rasterizer_transparent_geometry_get_group_presorted_index(struct transparent_geometry_group const *group);
+boolean rasterizer_transparent_geometry_get_group_pending_status(struct transparent_geometry_group const *group);
+void rasterizer_transparent_geometry_set_group_pending_status(struct transparent_geometry_group const *group, boolean status);
+short rasterizer_transparent_geometry_get_primary_vertex_type(struct transparent_geometry_group const *group);
+void rasterizer_transparent_geometry_end(void);
+void rasterizer_transparent_geometry_dispose(void);
+void rasterizer_transparent_geometry_draw(boolean water);
+void rasterizer_transparent_geometry_stop(void);
 
 /* ---------- prototypes/RASTERIZER_XBOX_HARDWARE_BITMAPS.C */
 
@@ -335,13 +576,12 @@ void rasterizer_bitmap_changed(struct bitmap_data *bitmap);
 
 /* ---------- prototypes/RASTERIZER_TEXT.C */
 
+boolean rasterizer_text_cache_initialize(void);
+void rasterizer_text_set_shadow_color(pixel32 color);
 void rasterizer_draw_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, char const *string);
 void rasterizer_draw_unicode_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, wchar_t const *string);
-void rasterizer_text_set_shadow_color(pixel32 color);
-
-/* ---------- prototypes/RASTERIZER_XBOX_DYNAVOBGEOM.C */
-
-void rasterizer_psuedo_dynamic_screen_quad_draw(struct rasterizer_dynamic_screen_geometry_parameters const *parameters, struct dynamic_screen_vertex *vertices);
+void rasterizer_text_cache_flush(void);
+void rasterizer_text_cache_dispose(void);
 
 /* ---------- prototypes/RASTERIZER_MEMORY_POOL.C */
 
@@ -355,10 +595,14 @@ void rasterizer_memory_pool_dispose(void);
 /* ---------- prototypes/RASTERIZER_LIGHTS.C */
 
 void rasterizer_lights_reset_for_new_map(void);
-
-/* ---------- prototypes/RASTERIZER_TEXT.C */
-
-void rasterizer_text_cache_flush(void);
+void rasterizer_lights_begin_for_new_frame(void);
+void rasterizer_lights_begin(void);
+long rasterizer_light_submit(struct rasterizer_light_submit_parameters const *parameters);
+void rasterizer_lens_flare_submit(struct rasterizer_lens_flare_submit_parameters const *parameters);
+void rasterizer_lens_flare_submit_for_cluster(short cluster_index);
+void rasterizer_lights_end(void);
+void rasterizer_lens_flares_submit_occlusion_tests(void);
+void rasterizer_lens_flares_draw(void);
 
 /* ---------- globals */
 
@@ -373,15 +617,27 @@ struct rasterizer_globals_struct
 	unsigned long flip_index;
 	volatile __int64 vblank_index;
 	volatile __int64 flip_vblank_index;
-	byte __unknown38[5];
+	short __unknown38;
+	short __unknown3a;
+	boolean __unknown3c;
 	boolean use_rasterizer_frame_rate_throttle;
 	boolean use_rasterizer_frame_rate_stabilization;
 	short refresh_rate;
 	real z_near;
 	real z_far;
+	real z_near_first_person;
+	real z_far_first_person;
+	void *default_white_hardware_format;
+	void *default_2d_hardware_format;
+	void *default_3d_hardware_format;
+	void *default_cm_hardware_format;
+	short lightmap_mode;
+	short maximum_nodes_per_model;
 };
 
 extern struct rasterizer_globals_struct rasterizer_globals;
+extern struct rasterizer_lights rasterizer_lights;
+extern const struct rasterizer_global_defaults rasterizer_global_defaults;
 
 extern real_argb_color *global_rasterizer_model_ambient_reflection_tint;
 

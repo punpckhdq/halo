@@ -61,6 +61,20 @@ enum
 
 /* ---------- structures */
 
+struct structure_lens_flare
+{
+	struct tag_reference lens_flare;
+};
+
+struct structure_lens_flare_marker
+{
+	real_point3d position;
+	char i_direction;
+	char j_direction;
+	char k_direction;
+	byte lens_flare_index;
+};
+
 struct structure_cluster
 {
 	short sky_index;

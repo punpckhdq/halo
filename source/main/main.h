@@ -82,7 +82,7 @@ void main_roll_credits(void);
 void compute_window_bounds(long player_index, long num_players, rectangle2d *pixel_bounds, rectangle2d *safe_frame_bounds);
 void main_pregame_render(void);
 void set_window_camera_values(struct render_window *current_window, struct observer_result const *observer);
-long main_get_window_count(void);
+short main_get_window_count(void);
 void main_present_frame(void);
 void main_rasterizer_throttle(void);
 boolean main_taking_screenshot(void);

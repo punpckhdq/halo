@@ -98,6 +98,7 @@ struct bitmap_data *bitmap_2d_new(short width, short height, short mipmap_count,
 void bitmap_delete(struct bitmap_data *bitmap);
 char *tiff_export(struct file_reference *file, struct bitmap_data *in_bitmap);
 
+void *bitmap_2d_address(struct bitmap_data const *bitmap, short x, short y, short mipmap_index);
 short bitmap_format_get_bits_per_pixel(short format);
 char *bitmap_cube_map_address(struct bitmap_data const *bitmap, short x, short y, short face_index, short mipmap_index);
 void *bitmap_mipmap_address(struct bitmap_data const *bitmap, short mipmap_index);
@@ -105,6 +106,8 @@ short bitmap_mipmap_get_width(struct bitmap_data const *bitmap, short mipmap_ind
 short bitmap_mipmap_get_height(struct bitmap_data const *bitmap, short mipmap_index);
 short bitmap_mipmap_get_depth(struct bitmap_data const *bitmap, short mipmap_index);
 long bitmap_mipmap_get_pixel_data_size(struct bitmap_data const *bitmap, short mipmap_index);
+long bitmap_mipmap_get_row_pitch(struct bitmap_data const *bitmap, short mipmap_index);
+boolean bitmap_verify(struct bitmap_data const *bitmap, boolean verify_data);
 
 /* ---------- prototypes/BITMAP_UTILITIES.C */
 
