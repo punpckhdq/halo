@@ -73,6 +73,8 @@ enum
 
 /* ---------- macros */
 
+#define lens_flare_definition_get(index) ((struct lens_flare_definition *)tag_get(LENS_FLARE_DEFINITION_TAG, (index))) /* fake name */
+
 /* ---------- structures */
 
 struct lens_flare_reflection

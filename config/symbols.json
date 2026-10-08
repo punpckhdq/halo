@@ -6157,7 +6157,7 @@
 { "file_offset": 1497216, "flags": 32, "name": "_rasterizer_debug_end" },
 { "file_offset": 1497232, "flags": 32, "name": "_rasterizer_debug_dispose" },
 { "file_offset": 1497456, "flags": 32, "name": "_rasterizer_debug_test" },
-{ "file_offset": 1497472, "flags": 32, "name": "_debug_primitive_compare", "static": true },
+{ "file_offset": 1497472, "flags": 32, "name": "_compare_debug_primitives", "static": true },
 { "file_offset": 1497568, "flags": 32, "name": "_rasterizer_debug_draw" },
 { "file_offset": 1498624, "flags": 32, "name": "_rasterizer_debug_line_shaded" },
 { "file_offset": 1499216, "flags": 32, "name": "_rasterizer_debug_triangle_shaded" },

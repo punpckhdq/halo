@@ -64,7 +64,7 @@ void rasterizer_screen_effect_set_filter(real filter_light_enhancement_intensity
 void rasterizer_screen_effect_set_filter_desaturation_tint(real red, real green, real blue);
 void rasterizer_screen_effect_set_video(short video_overbright_mode, real video_noise_intensity);
 void rasterizer_screen_effect_stop(void);
-const struct rasterizer_screen_effect_parameters *rasterizer_screen_effect_get_cinematic_parameters(const struct rasterizer_screen_effect_parameters *parameters);
+struct rasterizer_screen_effect_parameters const *rasterizer_screen_effect_get_cinematic_parameters(struct rasterizer_screen_effect_parameters const *parameters);
 void rasterizer_set_near_clip_distance(real near_clip_distance);
 real rasterizer_get_near_clip_distance(void);
 

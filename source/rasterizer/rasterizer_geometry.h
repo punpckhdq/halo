@@ -133,6 +133,26 @@ struct vertex_buffer
 	void *hardware_format;
 };
 
+struct dynamic_lit_vertex /* fake name */
+{
+	real_point3d position;
+	real_vector3d normal;
+	pixel32 color;
+	real_point2d texcoord;
+};
+
+struct debug_vertex /* fake name */
+{
+	real_point3d point;
+	pixel32 color;
+};
+
+struct detail_object_vertex
+{
+	byte __unknown0[6];
+	word __unknown6;
+};
+
 /* ---------- prototypes/RASTERIZER_GEOMETRY.C */
 
 byte compress_real_to_int8(real z);

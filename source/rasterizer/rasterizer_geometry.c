@@ -10,6 +10,7 @@ RASTERIZER_GEOMETRY.C
 #include "objects.h"
 #include "collision_bsp.h"
 #include "render.h"
+#include "decals.h"
 
 /* ---------- public code */
 
@@ -124,12 +125,12 @@ long rasterizer_geometry_get_vertex_size(
 		sizeof(struct environment_lightmap_vertex_compressed),
 		sizeof(struct model_vertex_uncompressed),
 		sizeof(struct model_vertex_compressed),
-		24,
-		36,
+		sizeof(struct dynamic_unlit_vertex),
+		sizeof(struct dynamic_lit_vertex),
 		sizeof(struct dynamic_screen_vertex),
-		16,
-		16,
-		8
+		sizeof(struct debug_vertex),
+		sizeof(struct decal_vertex),
+		sizeof(struct detail_object_vertex)
 	};
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 170, type>=0 && type<NUMBER_OF_RASTERIZER_VERTEX_TYPES);

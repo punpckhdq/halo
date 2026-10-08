@@ -18,7 +18,8 @@ header included in hcex build.
 
 enum
 {
-	STRUCTURE_BSP_TAG = 'sbsp'
+	STRUCTURE_BSP_TAG = 'sbsp',
+	STRUCTURE_BSP_VERSION = 5,
 };
 
 enum

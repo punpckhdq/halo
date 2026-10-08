@@ -29,19 +29,19 @@ enum
 
 boolean _rasterizer_initialize(void);
 void _rasterizer_reset_state(void);
-void _rasterizer_frame_begin(const struct rasterizer_frame_begin_parameters *parameters);
+void _rasterizer_frame_begin(struct rasterizer_frame_begin_parameters const *parameters);
 boolean _rasterizer_windows_begin(void);
-void _rasterizer_window_begin(const struct rasterizer_window_begin_parameters *parameters);
+void _rasterizer_window_begin(struct rasterizer_window_begin_parameters const *parameters);
 void _rasterizer_window_get_fog(struct render_fog *fog);
 void _rasterizer_window_set_fog(struct render_fog const *fog);
 void _rasterizer_window_end(void);
 void _rasterizer_windows_end(void);
 void _rasterizer_frame_end(void);
-void _rasterizer_present(struct bitmap_data *screenshot_bitmap, const point2d *screenshot_index);
+void _rasterizer_present(struct bitmap_data *screenshot_bitmap, point2d const *screenshot_index);
 void _rasterizer_dispose(void);
 void _rasterizer_set_vblank_callback(void (*callback)(unsigned long));
 void rasterizer_preinitialize__fill_you_up_with_the_devils_cock(void);
-union point2d *rasterizer_set_texture(short stage, short type, short usage, long bitmap_group_index, short bitmap_index);
+point2d *rasterizer_set_texture(short stage, short type, short usage, long bitmap_group_index, short bitmap_index);
 void rasterizer_set_stencil_mode(short stencil_mode);
 void rasterizer_set_framebuffer_blend_function(short framebuffer_blend_function);
 void rasterizer_set_pixel_shader(D3DPIXELSHADERDEF const *shader);

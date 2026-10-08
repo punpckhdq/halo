@@ -146,7 +146,7 @@ static real lens_flare_evaluate_corona_rotation_function(
 void rasterizer_lights_reset_for_new_map(
 	void)
 {
-	memset(local_lens_flare_occlusion_test_results, 0, (MAXIMUM_LIGHTS_PER_MAP+1)*sizeof(struct lens_flare_occlusion_test_results));
+	memset(local_lens_flare_occlusion_test_results, 0, (MAXIMUM_LIGHTS_PER_MAP+1)*sizeof(*local_lens_flare_occlusion_test_results));
 	memset(local_lens_flare_occlusion_test_results2, 0, sizeof(local_lens_flare_occlusion_test_results2));
 	local_lens_flare_count = 0;
 
@@ -171,9 +171,9 @@ void rasterizer_lights_begin_for_new_frame(
 			if (lens_flare_parameters->internal__occlusion_pixels>0)
 			{
 				long result = rasterizer_widget_get_occlusion_test_result(lens_flare_index);
-				long occlusion_pixels = lens_flare_parameters->internal__occlusion_pixels; /* fake name */
+				long occlusion_pixels = lens_flare_parameters->internal__occlusion_pixels;
 
-				new_occlusion = (byte)MIN(255, (255*result + (occlusion_pixels>>1))/occlusion_pixels);
+				new_occlusion = (byte)MIN(UNSIGNED_CHAR_MAX, (UNSIGNED_CHAR_MAX*result + (occlusion_pixels>>1))/occlusion_pixels);
 			}
 			else
 			{
@@ -332,7 +332,7 @@ void rasterizer_lens_flare_submit_for_cluster(
 				normalize3d(&up);
 				parameters.compressed_direction = compress_real_vector3d_to_int32_clamp(&direction);
 				parameters.compressed_up = compress_real_vector3d_to_int32_clamp(&up);
-				parameters.definition = tag_get(LENS_FLARE_DEFINITION_TAG, lens_flare->lens_flare.index);
+				parameters.definition = lens_flare_definition_get(lens_flare->lens_flare.index);
 				parameters.position = marker->position;
 				parameters.compressed_light_color = 0xffffffff;
 				parameters.compressed_light_scale = 0;
@@ -465,8 +465,8 @@ void rasterizer_lens_flares_draw(
 						for (reflection_index = 0; reflection_index<definition->reflections.count; reflection_index++)
 						{
 							struct lens_flare_reflection *reflection = TAG_BLOCK_GET_ELEMENT(&definition->reflections, reflection_index, struct lens_flare_reflection);
-							real brightness_lower_bound = reflection->brightness_lower_bounds; /* fake name */
-							real brightness_upper_bound = reflection->brightness_upper_bounds; /* fake name */
+							real brightness_lower_bound = reflection->brightness_lower_bounds;
+							real brightness_upper_bound = reflection->brightness_upper_bounds;
 							real brightness = (brightness_upper_bound-brightness_lower_bound)*brightness_scale + brightness_lower_bound;
 
 							brightness *= scale_functions[reflection->brightness_scale_function];
@@ -479,14 +479,14 @@ void rasterizer_lens_flares_draw(
 
 							if (brightness>0.f)
 							{
-								real radius_lower_bound = reflection->radius_lower_bounds; /* fake name */
-								real radius_upper_bound = reflection->radius_upper_bounds; /* fake name */
-								real radius = (radius_upper_bound-radius_lower_bound)*brightness_scale + radius_lower_bound;
 								real_point3d point;
 								real_vector2d reflection_scale;
 								real reflection_rotation;
 								real tint_factor;
 								pixel32 color;
+								real radius_lower_bound = reflection->radius_lower_bounds;
+								real radius_upper_bound = reflection->radius_upper_bounds;
+								real radius = (radius_upper_bound-radius_lower_bound)*brightness_scale + radius_lower_bound;
 
 								if (reflection->tint_color.alpha==0.f && reflection->tint_color.red==0.f && reflection->tint_color.green==0.f && reflection->tint_color.blue==0.f)
 								{

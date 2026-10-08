@@ -17,13 +17,13 @@ header included in hcex build.
 enum
 {
 	_lens_flare_parameters_light_index_structure_bit = 15,
-	_lens_flare_parameters_light_index_mask = 32767,
+	_lens_flare_parameters_light_index_mask = MASK(_lens_flare_parameters_light_index_structure_bit),
 };
 
 enum
 {
 	_lens_flare_window_index_first_person_bit = 7,
-	_lens_flare_window_index_mask = -129,
+	_lens_flare_window_index_mask = ~FLAG(_lens_flare_window_index_first_person_bit),
 };
 
 enum
@@ -161,6 +161,13 @@ struct rasterizer_frame_begin_parameters
 {
 	real game_time_sec;
 	real dt;
+};
+
+struct dynamic_unlit_vertex
+{
+	real_point3d position;
+	pixel32 color;
+	real_point2d texcoord;
 };
 
 struct dynamic_screen_vertex
@@ -405,15 +412,15 @@ struct rasterizer_lens_flare_submit_parameters
 
 boolean rasterizer_initialize(void);
 void rasterizer_reset_state(void);
-void rasterizer_frame_begin(const struct rasterizer_frame_begin_parameters *parameters);
+void rasterizer_frame_begin(struct rasterizer_frame_begin_parameters const *parameters);
 boolean rasterizer_windows_begin(void);
-void rasterizer_window_begin(const struct rasterizer_window_begin_parameters *parameters);
+void rasterizer_window_begin(struct rasterizer_window_begin_parameters const *parameters);
 void rasterizer_window_get_fog(struct render_fog *fog);
 void rasterizer_window_set_fog(struct render_fog const *fog);
 void rasterizer_window_end(void);
 void rasterizer_windows_end(void);
 void rasterizer_frame_end(void);
-void rasterizer_present(struct bitmap_data *screenshot_bitmap, const point2d *screenshot_index);
+void rasterizer_present(struct bitmap_data *screenshot_bitmap, point2d const *screenshot_index);
 void rasterizer_dispose(void);
 void rasterizer_set_vblank_callback(void (*callback)(unsigned long));
 void rasterizer_profile_enable(boolean enable);
@@ -578,8 +585,8 @@ void rasterizer_bitmap_changed(struct bitmap_data *bitmap);
 
 boolean rasterizer_text_cache_initialize(void);
 void rasterizer_text_set_shadow_color(pixel32 color);
-void rasterizer_draw_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, char const *string);
-void rasterizer_draw_unicode_string(union rectangle2d const *bounds, union rectangle2d const *clip, union point2d *cursor_reference, short height_adjust, wchar_t const *string);
+void rasterizer_draw_string(rectangle2d const *bounds, rectangle2d const *clip, point2d *cursor_reference, short height_adjust, char const *string);
+void rasterizer_draw_unicode_string(rectangle2d const *bounds, rectangle2d const *clip, point2d *cursor_reference, short height_adjust, wchar_t const *string);
 void rasterizer_text_cache_flush(void);
 void rasterizer_text_cache_dispose(void);
 
@@ -637,7 +644,7 @@ struct rasterizer_globals_struct
 
 extern struct rasterizer_globals_struct rasterizer_globals;
 extern struct rasterizer_lights rasterizer_lights;
-extern const struct rasterizer_global_defaults rasterizer_global_defaults;
+extern struct rasterizer_global_defaults const rasterizer_global_defaults;
 
 extern real_argb_color *global_rasterizer_model_ambient_reflection_tint;
 

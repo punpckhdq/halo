@@ -20,6 +20,13 @@ RASTERIZER_CINEMATICS.C
 #include "game.h"
 #include "game_globals.h"
 
+/* ---------- constants */
+
+enum
+{
+	NUMBER_OF_SCRIPT_SCREEN_EFFECT_VALUES = 4, /* fake name */
+};
+
 /* ---------- structures */
 
 struct cinematic_screen_effect_globals
@@ -32,7 +39,7 @@ struct cinematic_screen_effect_globals
 	real filter_light_enhancement_intensity[2];
 	real filter_desaturation_intensity[2];
 	real filter_time[2];
-	real script_values[4];
+	real script_values[NUMBER_OF_SCRIPT_SCREEN_EFFECT_VALUES];
 	real near_clip_distance;
 };
 
@@ -88,7 +95,7 @@ void rasterizer_script_screen_effect_set_value(
 	short index,
 	real value)
 {
-	if (cinematic_screen_effect_globals && index>=0 && index<4)
+	if (cinematic_screen_effect_globals && index>=0 && index<NUMBER_OF_SCRIPT_SCREEN_EFFECT_VALUES)
 	{
 		cinematic_screen_effect_globals->script_values[index] = value;
 	}
@@ -101,7 +108,7 @@ real rasterizer_script_screen_effect_get_value(
 {
 	real value = 0.f;
 
-	if (cinematic_screen_effect_globals && index>=0 && index<4)
+	if (cinematic_screen_effect_globals && index>=0 && index<NUMBER_OF_SCRIPT_SCREEN_EFFECT_VALUES)
 	{
 		value = cinematic_screen_effect_globals->script_values[index];
 	}
@@ -219,10 +226,10 @@ void rasterizer_screen_effect_set_video(
 			cinematic_screen_effect_globals->filter_time[1] = 0.f;
 			cinematic_screen_effect_globals->parameters.video_on = TRUE;
 			cinematic_screen_effect_globals->parameters.video_overbright_mode = video_overbright_mode;
-			cinematic_screen_effect_globals->parameters.video_scanline_map = TAG_BLOCK_GET_ELEMENT(&((struct bitmap_group *)tag_get(BITMAP_GROUP_TAG, global_rasterizer_data->screen_effect_video_scanline_map.index))->bitmaps, 0, struct bitmap_data);
+			cinematic_screen_effect_globals->parameters.video_scanline_map = TAG_BLOCK_GET_ELEMENT(&bitmap_group_get(global_rasterizer_data->screen_effect_video_scanline_map.index)->bitmaps, 0, struct bitmap_data);
 			cinematic_screen_effect_globals->parameters.video_noise_intensity = video_noise_intensity;
 			cinematic_screen_effect_globals->parameters.video_noise_map_scale = 1.f;
-			cinematic_screen_effect_globals->parameters.video_noise_map = TAG_BLOCK_GET_ELEMENT(&((struct bitmap_group *)tag_get(BITMAP_GROUP_TAG, global_rasterizer_data->screen_effect_video_noise_map.index))->bitmaps, 0, struct bitmap_data);
+			cinematic_screen_effect_globals->parameters.video_noise_map = TAG_BLOCK_GET_ELEMENT(&bitmap_group_get(global_rasterizer_data->screen_effect_video_noise_map.index)->bitmaps, 0, struct bitmap_data);
 		}
 		else
 		{
@@ -244,8 +251,8 @@ void rasterizer_screen_effect_stop(
 	return;
 }
 
-const struct rasterizer_screen_effect_parameters *rasterizer_screen_effect_get_cinematic_parameters(
-	const struct rasterizer_screen_effect_parameters *parameters)
+struct rasterizer_screen_effect_parameters const *rasterizer_screen_effect_get_cinematic_parameters(
+	struct rasterizer_screen_effect_parameters const *parameters)
 {
 	if (cinematic_screen_effect_globals && cinematic_screen_effect_globals->has_control)
 	{

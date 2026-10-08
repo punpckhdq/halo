@@ -136,7 +136,7 @@ void rasterizer_draw_string(
 	struct rasterizer_dynamic_screen_geometry_parameters parameters;
 	struct bitmap_data *bitmap;
 	long string_length;
-	long maximum_vertex_count; /* fake name */
+	long maximum_vertex_count;
 	rectangle2d adjusted_bounds;
 	rectangle2d adjusted_clip;
 	draw_character_proc draw_character;
@@ -153,12 +153,12 @@ void rasterizer_draw_string(
 			string_length = strlen(string);
 			if (use_dropshadow)
 			{
-				maximum_vertex_count = 4*string_length*2;
+				maximum_vertex_count = NUMBER_OF_VERTICES_PER_QUADRILATERAL*string_length*2;
 				draw_character = rasterizer_draw_character_with_dropshadow;
 			}
 			else
 			{
-				maximum_vertex_count = 4*string_length;
+				maximum_vertex_count = NUMBER_OF_VERTICES_PER_QUADRILATERAL*string_length;
 				draw_character = rasterizer_draw_character;
 			}
 
@@ -232,7 +232,7 @@ void rasterizer_draw_unicode_string(
 	struct rasterizer_dynamic_screen_geometry_parameters parameters;
 	struct bitmap_data *bitmap;
 	long string_length;
-	long maximum_vertex_count; /* fake name */
+	long maximum_vertex_count;
 	rectangle2d adjusted_bounds;
 	rectangle2d adjusted_clip;
 	draw_character_proc draw_character;
@@ -249,12 +249,12 @@ void rasterizer_draw_unicode_string(
 			string_length = ustrlen(string);
 			if (use_dropshadow)
 			{
-				maximum_vertex_count = 4*string_length*2;
+				maximum_vertex_count = NUMBER_OF_VERTICES_PER_QUADRILATERAL*string_length*2;
 				draw_character = rasterizer_draw_character_with_dropshadow;
 			}
 			else
 			{
-				maximum_vertex_count = 4*string_length;
+				maximum_vertex_count = NUMBER_OF_VERTICES_PER_QUADRILATERAL*string_length;
 				draw_character = rasterizer_draw_character;
 			}
 

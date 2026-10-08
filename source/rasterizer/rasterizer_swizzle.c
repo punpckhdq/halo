@@ -511,7 +511,7 @@ long rasterizer_xbox_bitmap_get_pixel_data_size(
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 507, !TEST_FLAG(bitmap->flags, _bitmap_compressed_bit));
 
 			row_pitch = bitmap_mipmap_get_row_pitch(bitmap, mipmap_index);
-			padding = (64-row_pitch)&63;
+			padding = (D3DTEXTURE_PITCH_ALIGNMENT-row_pitch)&(D3DTEXTURE_PITCH_ALIGNMENT-1);
 			mipmap_size += bitmap_mipmap_get_height(bitmap, mipmap_index)*padding;
 		}
 
@@ -522,7 +522,7 @@ long rasterizer_xbox_bitmap_get_pixel_data_size(
 		size += mipmap_size;
 	}
 
-	size += (128-size)&127;
+	size += (D3DTEXTURE_ALIGNMENT-size)&(D3DTEXTURE_ALIGNMENT-1);
 	if (bitmap->type==_bitmap_type_cube_map)
 	{
 		size *= NUMBER_OF_FACES_PER_CUBE;
@@ -576,7 +576,7 @@ boolean rasterizer_xbox_bitmap_rebuild_hardware_format(
 					match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 590, !TEST_FLAG(bitmap->flags, _bitmap_compressed_bit));
 
 					row_pitch = bitmap_mipmap_get_row_pitch(bitmap, mipmap_index);
-					row_padding = (64-row_pitch)&63;
+					row_padding = (D3DTEXTURE_PITCH_ALIGNMENT-row_pitch)&(D3DTEXTURE_PITCH_ALIGNMENT-1);
 					for (row = 0; row<bitmap->height; row++)
 					{
 						memcpy(buffer+offset, mipmap_address, row_pitch);
@@ -594,7 +594,7 @@ boolean rasterizer_xbox_bitmap_rebuild_hardware_format(
 			}
 
 			{
-				long padding = (128-offset)&127;
+				long padding = (D3DTEXTURE_ALIGNMENT-offset)&(D3DTEXTURE_ALIGNMENT-1);
 
 				memset(buffer+offset, 0, padding);
 				offset += padding;

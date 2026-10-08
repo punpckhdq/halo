@@ -19,12 +19,6 @@ RASTERIZER_DEBUG.C
 
 /* ---------- structures */
 
-struct debug_vertex /* fake name */
-{
-	real_point3d point;
-	pixel32 color;
-};
-
 struct debug_primitive /* fake name */
 {
 	struct debug_vertex vertices[3];
@@ -247,7 +241,7 @@ void rasterizer_debug_test(
 	return;
 }
 
-static long debug_primitive_compare( /* fake name */
+static long compare_debug_primitives(
 	struct debug_primitive const *a,
 	struct debug_primitive const *b)
 {
@@ -298,13 +292,13 @@ void rasterizer_debug_draw(
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 325, debug_data.non_opaque_primitive_count<=RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES);
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 326, debug_data.primitive_count <=RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES);
 
-		qsort(debug_data.non_opaque_primitives, debug_data.non_opaque_primitive_count, sizeof(struct debug_primitive), (int(__cdecl *)(const void *, const void *))debug_primitive_compare);
+		qsort(debug_data.non_opaque_primitives, debug_data.non_opaque_primitive_count, sizeof(*debug_data.non_opaque_primitives), (int(__cdecl *)(const void *, const void *))compare_debug_primitives);
 
 		rasterizer_globals.current_lock_operation = _rasterizer_lock_debug;
 
 		if (success && debug_data.opaque_triangle_count>0)
 		{
-			long dynamic_vertex_buffer_index = rasterizer_dynamic_vertices_new(_rasterizer_vertex_type_debug, 3*debug_data.opaque_triangle_count);
+			long dynamic_vertex_buffer_index = rasterizer_dynamic_vertices_new(_rasterizer_vertex_type_debug, NUMBER_OF_VERTICES_PER_TRIANGLE*debug_data.opaque_triangle_count);
 
 			if (dynamic_vertex_buffer_index!=NONE)
 			{
@@ -319,12 +313,12 @@ void rasterizer_debug_draw(
 					{
 						struct debug_primitive *primitive = &debug_data.opaque_triangles[primitive_index];
 
-						memcpy(&vertices[vertex_index], primitive, primitive->vertex_count*sizeof(struct debug_vertex));
+						memcpy(&vertices[vertex_index], primitive, primitive->vertex_count*sizeof(*vertices));
 						vertex_index += primitive->vertex_count;
 					}
 					rasterizer_dynamic_vertices_unlock(dynamic_vertex_buffer_index);
 					rasterizer_debug_drawing_begin(TRUE, 0);
-					rasterizer_draw_dynamic_vertices(0, primitive_count, dynamic_vertex_buffer_index, 3);
+					rasterizer_draw_dynamic_vertices(0, primitive_count, dynamic_vertex_buffer_index, NUMBER_OF_VERTICES_PER_TRIANGLE);
 					rasterizer_debug_drawing_end();
 				}
 				else
@@ -342,7 +336,7 @@ void rasterizer_debug_draw(
 
 		if (success && debug_data.opaque_line_count>0)
 		{
-			long dynamic_vertex_buffer_index = rasterizer_dynamic_vertices_new(_rasterizer_vertex_type_debug, 2*debug_data.opaque_line_count);
+			long dynamic_vertex_buffer_index = rasterizer_dynamic_vertices_new(_rasterizer_vertex_type_debug, NUMBER_OF_VERTICES_PER_LINE*debug_data.opaque_line_count);
 
 			if (dynamic_vertex_buffer_index!=NONE)
 			{
@@ -357,12 +351,12 @@ void rasterizer_debug_draw(
 					{
 						struct debug_primitive *primitive = &debug_data.opaque_lines[primitive_index];
 
-						memcpy(&vertices[vertex_index], primitive, primitive->vertex_count*sizeof(struct debug_vertex));
+						memcpy(&vertices[vertex_index], primitive, primitive->vertex_count*sizeof(*vertices));
 						vertex_index += primitive->vertex_count;
 					}
 					rasterizer_dynamic_vertices_unlock(dynamic_vertex_buffer_index);
 					rasterizer_debug_drawing_begin(TRUE, 16);
-					rasterizer_draw_dynamic_vertices(0, primitive_count, dynamic_vertex_buffer_index, 2);
+					rasterizer_draw_dynamic_vertices(0, primitive_count, dynamic_vertex_buffer_index, NUMBER_OF_VERTICES_PER_LINE);
 					rasterizer_debug_drawing_end();
 				}
 				else
@@ -389,7 +383,7 @@ void rasterizer_debug_draw(
 
 				if (vertices)
 				{
-					memcpy(vertices, primitive, primitive->vertex_count*sizeof(struct debug_vertex));
+					memcpy(vertices, primitive, primitive->vertex_count*sizeof(*vertices));
 					rasterizer_dynamic_vertices_unlock(dynamic_vertex_buffer_index);
 					rasterizer_debug_drawing_begin(FALSE, 0);
 					rasterizer_draw_dynamic_vertices(0, 1, dynamic_vertex_buffer_index, primitive->vertex_count);

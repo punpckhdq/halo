@@ -47,109 +47,109 @@ struct debug_vertex_info /* fake name */
 static long rasterizer_debug_model_vertices_object_index; /* fake name */
 
 struct rasterizer_globals_struct rasterizer_globals = {
-	FALSE,
-	_rasterizer_lock_none,
-	{0},
-	{0},
-	{0},
-	0,
-	0,
-	0,
-	0,
-	768,
-	0,
-	FALSE,
-	TRUE,
-	FALSE,
-	0,
-	0.0625f,
-	1024.f,
-	0.01171875f,
-	1024.f
+	FALSE,					/* active */
+	_rasterizer_lock_none,	/* current_lock_operation */
+	{0},					/* screen_bounds */
+	{0},					/* frame_bounds */
+	{0},					/* __unknown14 */
+	0,						/* frame_index */
+	0,						/* flip_index */
+	0,						/* vblank_index */
+	0,						/* flip_vblank_index */
+	768,					/* __unknown38 */
+	0,						/* __unknown3a */
+	FALSE,					/* __unknown3c */
+	TRUE,					/* use_rasterizer_frame_rate_throttle */
+	FALSE,					/* use_rasterizer_frame_rate_stabilization */
+	0,						/* refresh_rate */
+	0.0625f,				/* z_near */
+	1024.f,					/* z_far */
+	0.01171875f,			/* z_near_first_person */
+	1024.f					/* z_far_first_person */
 };
 
 struct rasterizer_debug_options_struct rasterizer_debug_options = {
-	FALSE,
-	_rasterizer_statistics_mode_none,
-	_rasterizer_drawing_mode_normal,
-	FALSE,
-	FALSE,
-	NONE,
-	FALSE,
-	FALSE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	2,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	FALSE,
-	TRUE,
-	TRUE,
-	TRUE,
-	1.f,
-	0,
-	0,
-	TRUE,
-	TRUE,
-	0.f,
-	TRUE,
-	TRUE,
-	TRUE,
-	FALSE,
-	FALSE,
-	TRUE,
-	TRUE,
-	TRUE,
-	TRUE,
-	FALSE,
-	TRUE,
-	TRUE,
-	TRUE,
-	FALSE,
-	FALSE,
-	FALSE,
-	FALSE,
-	0.4f,
-	8,
-	0.00390625f,
-	FALSE,
-	FALSE,
-	0,
-	TRUE,
-	TRUE,
-	TRUE,
-	FALSE,
-	FALSE,
-	0.f,
-	1.f
+	FALSE,								/* fps_accumulation */
+	_rasterizer_statistics_mode_none,	/* statistics_mode */
+	_rasterizer_drawing_mode_normal,	/* drawing_mode */
+	FALSE,								/* wireframe_enabled */
+	FALSE,								/* debug_model_vertices_enabled */
+	NONE,								/* debug_model_lod */
+	FALSE,								/* debug_transparent_geometry_enabled */
+	FALSE,								/* debug_meter_shader_enabled */
+	TRUE,								/* draw_models */
+	TRUE,								/* draw_model_transparent_geometry */
+	TRUE,								/* draw_first_person_weapon_first */
+	TRUE,								/* stencil_mask_enabled */
+	2,									/* draw_environment */
+	TRUE,								/* draw_environment_lightmaps */
+	TRUE,								/* draw_environment_shadows */
+	TRUE,								/* draw_environment_diffuse_lights */
+	TRUE,								/* draw_environment_textures */
+	TRUE,								/* draw_environment_decals */
+	TRUE,								/* draw_environment_specular_lights */
+	TRUE,								/* draw_environment_specular_lightmaps */
+	TRUE,								/* draw_environment_reflection_lightmap_masks */
+	TRUE,								/* draw_environment_reflection_mirrors */
+	TRUE,								/* draw_environment_reflections */
+	TRUE,								/* draw_environment_transparent_geometry */
+	TRUE,								/* draw_environment_fog */
+	TRUE,								/* draw_environment_fog_screen */
+	TRUE,								/* draw_water */
+	TRUE,								/* draw_lens_flares */
+	TRUE,								/* draw_dynamic_unlit_geometry */
+	TRUE,								/* draw_dynamic_lit_geometry */
+	TRUE,								/* draw_dynamic_screen_geometry */
+	TRUE,								/* draw_hud_motion_sensor */
+	TRUE,								/* draw_detail_objects */
+	TRUE,								/* draw_debug_geometry */
+	FALSE,								/* debug_geometry_multipass */
+	TRUE,								/* fog_atmospheric_enabled */
+	TRUE,								/* fog_planar_enabled */
+	TRUE,								/* bump_mapping_enabled */
+	1.f,								/* lightmap_ambient */
+	0,									/* _lightmap_mode */
+	0,									/* pad3 */
+	TRUE,								/* lightmap_incident_radiosity_enabled */
+	TRUE,								/* lightmap_filtering_enabled */
+	0.f,								/* model_lighting_ambient */
+	TRUE,								/* environment_alpha_testing_enabled */
+	TRUE,								/* environment_specular_mask_enabled */
+	TRUE,								/* shadow_convolution_enabled */
+	FALSE,								/* shadow_debug_enabled */
+	FALSE,								/* water_mipmapping_enabled */
+	TRUE,								/* active_camouflage_enabled */
+	TRUE,								/* active_camouflage_multipass_enabled */
+	TRUE,								/* plasma_energy_enabled */
+	TRUE,								/* lens_flare_occlusion_enabled */
+	FALSE,								/* lens_flare_occlusion_debug */
+	TRUE,								/* lens_flare_sun_glow_enabled */
+	TRUE,								/* screen_flash_enabled */
+	TRUE,								/* screen_effects_enabled */
+	FALSE,								/* DXTC_noise_enabled */
+	FALSE,								/* soft_filter_enabled */
+	FALSE,								/* secondary_render_target_debug_enabled */
+	FALSE,								/* profile_log_enabled */
+	0.4f,								/* detail_object_screen_facing_offset_multiplier */
+	8,									/* zbias */
+	0.00390625f,						/* zoffset */
+	FALSE,								/* force_all_player_views_to_default_player */
+	FALSE,								/* safe_frame_bounds_adjust_enabled */
+	0,									/* freeze_flying_camera */
+	TRUE,								/* zsprite_enabled */
+	TRUE,								/* filthy_decal_fog_hack_enabled */
+	TRUE,								/* smart_states_enabled */
+	FALSE,								/* splitscreen_VB_optimization_enabled */
+	FALSE,								/* profile_print_locks */
+	0.f,								/* profile_objectlock_time */
+	1.f									/* pad3_scale */
 };
 
-const struct rasterizer_global_defaults rasterizer_global_defaults = {
-	0.0625f,
-	1024.f,
-	0.01171875f,
-	1024.f
+struct rasterizer_global_defaults const rasterizer_global_defaults = {
+	0.0625f,		/* z_near */
+	1024.f,			/* z_far */
+	0.01171875f,	/* z_near_first_person */
+	1024.f			/* z_far_first_person */
 };
 
 real_argb_color *global_rasterizer_model_ambient_reflection_tint = NULL;
@@ -174,7 +174,7 @@ void rasterizer_reset_state(
 }
 
 void rasterizer_frame_begin(
-	const struct rasterizer_frame_begin_parameters *parameters)
+	struct rasterizer_frame_begin_parameters const *parameters)
 {
 	switch (rasterizer_debug_options.draw_environment)
 	{
@@ -229,7 +229,7 @@ boolean rasterizer_windows_begin(
 }
 
 void rasterizer_window_begin(
-	const struct rasterizer_window_begin_parameters *parameters)
+	struct rasterizer_window_begin_parameters const *parameters)
 {
 	_rasterizer_window_begin(parameters);
 
@@ -278,7 +278,7 @@ void rasterizer_frame_end(
 
 void rasterizer_present(
 	struct bitmap_data *screenshot_bitmap,
-	const point2d *screenshot_index)
+	point2d const *screenshot_index)
 {
 	_rasterizer_present(screenshot_bitmap, screenshot_index);
 
@@ -851,21 +851,21 @@ void rasterizer_debug_model_vertices(
 			{
 				short index;
 
-				csstrcpy(temporary, "I=");
+				strcpy(temporary, "I=");
 				for (index = 0; index<info->triangle_index_count; index++)
 				{
 					char temp2[256];
 
 					sprintf(temp2, "%d%c", info->triangle_indices[index], index==info->triangle_index_count-1 ? ' ' : ',');
-					csstrcat(temporary, temp2);
+					strcat(temporary, temp2);
 				}
-				csstrcat(temporary, "\nV=");
+				strcat(temporary, "\nV=");
 				for (index = 0; index<info->vertex_index_count; index++)
 				{
 					char temp2[256];
 
 					sprintf(temp2, "%d%c", info->vertex_indices[index], index==info->vertex_index_count-1 ? ' ' : ',');
-					csstrcat(temporary, temp2);
+					strcat(temporary, temp2);
 				}
 				render_debug_point(FALSE, &info->position, 0.03125f, global_real_argb_red);
 				render_debug_string_at_point(FALSE, &info->position, temporary, global_real_argb_yellow);
