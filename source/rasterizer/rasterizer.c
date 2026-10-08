@@ -56,9 +56,9 @@ struct rasterizer_globals_struct rasterizer_globals = {
 	0,						/* flip_index */
 	0,						/* vblank_index */
 	0,						/* flip_vblank_index */
-	768,					/* __unknown38 */
-	0,						/* __unknown3a */
-	FALSE,					/* __unknown3c */
+	768,					/* pushbuffer_size */
+	0,						/* pushbuffer_kickoff_size */
+	FALSE,					/* use_floating_point_zbuffer */
 	TRUE,					/* use_rasterizer_frame_rate_throttle */
 	FALSE,					/* use_rasterizer_frame_rate_stabilization */
 	0,						/* refresh_rate */

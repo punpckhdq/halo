@@ -625,9 +625,9 @@ struct rasterizer_globals_struct
 	unsigned long flip_index;
 	volatile __int64 vblank_index;
 	volatile __int64 flip_vblank_index;
-	short __unknown38;
-	short __unknown3a;
-	boolean __unknown3c;
+	short pushbuffer_size;
+	short pushbuffer_kickoff_size;
+	boolean use_floating_point_zbuffer;
 	boolean use_rasterizer_frame_rate_throttle;
 	boolean use_rasterizer_frame_rate_stabilization;
 	short refresh_rate;

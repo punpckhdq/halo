@@ -75,9 +75,9 @@ boolean rasterizer_debug_initialize(
 {
 	boolean success = TRUE;
 
-	debug_data.opaque_triangles = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 96, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(struct debug_primitive));
-	debug_data.opaque_lines = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 97, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(struct debug_primitive));
-	debug_data.non_opaque_primitives = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 98, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(struct debug_primitive));
+	debug_data.opaque_triangles = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 96, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(*debug_data.opaque_triangles));
+	debug_data.opaque_lines = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 97, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(*debug_data.opaque_lines));
+	debug_data.non_opaque_primitives = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 98, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(*debug_data.non_opaque_primitives));
 
 	if (debug_data.opaque_triangles && debug_data.opaque_lines && debug_data.non_opaque_primitives)
 	{
