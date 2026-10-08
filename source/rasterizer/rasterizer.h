@@ -288,6 +288,7 @@ struct rasterizer_debug_options_struct
 	real pad3_scale;
 	real f[6];
 	boolean __unknown88;
+	boolean transparent_pixel_counter_enabled; /* fake name */
 };
 
 struct rasterizer_frame_statistics_s
