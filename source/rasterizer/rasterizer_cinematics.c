@@ -257,10 +257,18 @@ struct rasterizer_screen_effect_parameters const *rasterizer_screen_effect_get_c
 	if (cinematic_screen_effect_globals && cinematic_screen_effect_globals->has_control)
 	{
 		real convolution_t = cinematic_screen_effect_globals->convolution_time[1]!=cinematic_screen_effect_globals->convolution_time[0] ?
-			PIN((rasterizer_screen_effects_time()-cinematic_screen_effect_globals->convolution_time[0])/(cinematic_screen_effect_globals->convolution_time[1]-cinematic_screen_effect_globals->convolution_time[0]), 0.f, 1.f) :
+			PIN(
+				(rasterizer_screen_effects_time()-cinematic_screen_effect_globals->convolution_time[0])/
+				(cinematic_screen_effect_globals->convolution_time[1]-cinematic_screen_effect_globals->convolution_time[0]),
+				0.f,
+				1.f) :
 			1.f;
 		real filter_t = cinematic_screen_effect_globals->filter_time[1]!=cinematic_screen_effect_globals->filter_time[0] ?
-			PIN((rasterizer_screen_effects_time()-cinematic_screen_effect_globals->filter_time[0])/(cinematic_screen_effect_globals->filter_time[1]-cinematic_screen_effect_globals->filter_time[0]), 0.f, 1.f) :
+			PIN(
+				(rasterizer_screen_effects_time()-cinematic_screen_effect_globals->filter_time[0])/
+				(cinematic_screen_effect_globals->filter_time[1]-cinematic_screen_effect_globals->filter_time[0]),
+				0.f,
+				1.f) :
 			1.f;
 
 		scalars_interpolate(cinematic_screen_effect_globals->convolution_radius[0], cinematic_screen_effect_globals->convolution_radius[1], convolution_t, &cinematic_screen_effect_globals->parameters.convolution_radius);
