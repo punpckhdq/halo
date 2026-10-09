@@ -29,6 +29,39 @@ enum
 	NUMBER_OF_DAMAGE_PARTS,
 };
 
+enum
+{
+	_damage_resistance_takes_shield_damage_for_children_bit = 0,
+	_damage_resistance_takes_body_damage_for_children_bit,
+	_damage_resistance_always_shields_friendly_damage_bit,
+	_damage_resistance_children_take_area_damage_bit,
+	_damage_resistance_parent_never_takes_body_damage_for_us_bit,
+	_damage_resistance_only_hurt_by_explosives_bit,
+	_damage_resistance_only_hurt_while_occupied_bit,
+	NUMBER_OF_DAMAGE_RESISTANCE_FLAGS,
+};
+
+enum
+{
+	_damage_material_head_bit = 0,
+	NUMBER_OF_DAMAGE_MATERIAL_FLAGS,
+};
+
+enum
+{
+	_object_region_lives_until_object_dies_bit = 0,
+	_object_region_forces_object_to_die_bit,
+	_object_region_dies_when_object_dies_bit,
+	_object_region_dies_when_object_is_damaged_bit,
+	_object_region_missing_when_shield_is_zero_bit,
+	_object_region_inhibits_melee_attack_bit,
+	_object_region_inhibits_ranged_attack_bit,
+	_object_region_inhibits_walking_bit,
+	_object_region_forces_drop_weapon_bit,
+	_object_region_head_destroyed_scream_bit,
+	NUMBER_OF_DAMAGE_REGION_FLAGS,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -44,6 +77,17 @@ struct damage_material
 	real shield_unused[3];
 	real body_damage_multiplier;
 	long body_unused[2];
+};
+
+struct damage_region
+{
+	char name[TAG_STRING_LENGTH+1];
+	unsigned long flags;
+	long pad;
+	real damage_threshold;
+	long unused[3];
+	struct tag_reference destroyed_effect;
+	struct tag_block permutations;
 };
 
 struct damage_resistance
@@ -87,8 +131,8 @@ struct damage_resistance
 	unsigned long unused2[2];
 	real runtime_shield_recharge_velocity;
 	unsigned long unused[28];
-	struct tag_block materials;
-	struct tag_block regions;
+	struct tag_block materials;		// damage_material
+	struct tag_block regions;		// damage_region
 	struct tag_block modifiers;
 };
 

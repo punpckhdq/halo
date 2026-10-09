@@ -74,6 +74,22 @@ struct biped_datum
 
 /* ---------- prototypes/BIPEDS.C */
 
+void bipeds_initialize(void);
+void bipeds_dispose(void);
+void bipeds_initialize_for_new_map(void);
+void bipeds_dispose_from_old_map(void);
+
+void biped_adjust_placement(long object_index, struct object_placement_data *data);
+boolean biped_new(long biped_index);
+void biped_place(long biped_index, struct scenario_biped_datum *scenario_biped);
+void biped_delete(long biped_index);
+boolean biped_update(long biped_index);
+void biped_export_function_values(long biped_index);
+void biped_preprocess_node_orientations(long biped_index, struct real_orientation *node_orientations);
+void biped_reset(long biped_index);
+void biped_disconnect_from_structure_bsp(long biped_index);
+void biped_render_debug(long biped_index);
+
 void biped_get_sight_position(
 	long biped_index,
 	short estimate_mode,

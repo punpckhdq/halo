@@ -58,6 +58,15 @@ struct item_datum
 
 /* ---------- prototypes/ITEMS.C */
 
+void items_initialize(void);
+void items_dispose(void);
+void items_initialize_for_new_map(void);
+void items_dispose_from_old_map(void);
+
+boolean item_new(long item_index);
+void item_delete(long item_index);
+boolean item_update(long item_index);
+
 void item_in_unit_inventory(long item_index, long owner_unit_index);
 void item_accelerate(long item_index, real_vector3d const *acceleration, boolean detonates_explosives);
 

@@ -14,6 +14,12 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	SOUND_SCENERY_DEFINITION_TAG = 'ssce',
+	SOUND_SCENERY_DEFINITION_VERSION = 1,
+};
+
 /* ---------- macros */
 
 #define sound_scenery_get(index)	((struct sound_scenery_datum*)object_get_and_verify_type(index, _object_mask_sound_scenery))

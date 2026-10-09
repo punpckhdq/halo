@@ -22,6 +22,7 @@ void player_effect_get_camera_effect_matrix(short local_player_index, real_matri
 
 void player_effect_get_damage_indicators(short local_player_index, byte *damage_indicators);
 void player_effect_clear_damage_indicators(short local_player_index);
+void player_effect_start(long player_index, struct damage_data const *damage_data, real_vector3d const *direction, real scale, real total_damage);
 
 /* ---------- globals */
 

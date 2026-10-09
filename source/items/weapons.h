@@ -196,6 +196,18 @@ struct weapon_datum
 
 /* ---------- prototypes/WEAPONS.C */
 
+void weapons_initialize(void);
+void weapons_dispose(void);
+void weapons_initialize_for_new_map(void);
+void weapons_dispose_from_old_map(void);
+
+boolean weapon_new(long weapon_index);
+void weapon_place(long weapon_index, struct scenario_weapon_datum *scenario_weapon);
+void weapon_delete(long weapon_index);
+boolean weapon_update(long weapon_index);
+void weapon_export_function_values(long weapon_index);
+void weapon_preprocess_node_orientations(long weapon_index, struct real_orientation *node_orientations);
+
 boolean weapon_must_be_readied(long weapon_index);
 boolean weapon_is_flag(long weapon_index);
 

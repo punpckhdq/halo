@@ -18,6 +18,17 @@ enum
 
 enum
 {
+	_light_dynamic_bit = 0,
+	_light_no_specular_bit,
+	_light_no_reflexive_bit,
+	_light_supersize_in_first_person_bit,
+	_light_is_first_person_flashlight_bit,
+	_light_dont_fade_active_camouflage_bit,
+	NUMBER_OF_LIGHT_DEFINITION_FLAGS,
+};
+
+enum
+{
 	LENS_FLARE_DEFINITION_TAG = 'lens',
 	LENS_FLARE_DEFINITION_VERSION = 2,
 };
@@ -73,9 +84,85 @@ enum
 
 /* ---------- macros */
 
+#define point_light_definition_get(index) ((struct point_light_definition *)tag_get(LIGHT_DEFINITION_TAG, (index))) /* fake name */
 #define lens_flare_definition_get(index) ((struct lens_flare_definition *)tag_get(LENS_FLARE_DEFINITION_TAG, (index))) /* fake name */
 
 /* ---------- structures */
+
+struct point_light_geometry_parameters
+{
+	real radius;
+	real radius_modifier_lower_bound;
+	real radius_modifier_upper_bound;
+	real falloff_angle;
+	real cutoff_angle;
+	real lens_flare_radius;
+	real runtime_cosine_falloff_angle;
+	real runtime_cosine_cutoff_angle;
+	real specular_radius_multiplier;
+	real runtime_sine_cutoff_angle;
+	long unused[2];
+};
+
+struct point_light_color_parameters
+{
+	unsigned long interpolation_flags;
+	real_argb_color lower_bound;
+	real_argb_color upper_bound;
+	long unused[3];
+};
+
+struct point_light_gel_parameters
+{
+	struct tag_reference map;
+	word pad0;
+	short texture_animation_function;
+	real texture_animation_rate;
+	struct tag_reference secondary_map;
+	word pad1;
+	short yaw_function;
+	real yaw_period;
+	word pad2;
+	short roll_function;
+	real roll_period;
+	word pad3;
+	short pitch_function;
+	real pitch_period;
+	long unused[2];
+};
+
+struct point_light_lens_flare_parameters
+{
+	struct tag_reference reference;
+	long unused[6];
+};
+
+struct point_light_radiosity_parameters
+{
+	real intensity;
+	real_rgb_color color;
+	long unused[4];
+};
+
+struct point_light_effect_parameters
+{
+	real duration;
+	word pad;
+	short falloff_function;
+	real unused[2];
+};
+
+struct point_light_definition
+{
+	unsigned long flags;
+	struct point_light_geometry_parameters geometry;
+	struct point_light_color_parameters color;
+	struct point_light_gel_parameters gel;
+	struct point_light_lens_flare_parameters lens_flare;
+	struct point_light_radiosity_parameters radiosity;
+	struct point_light_effect_parameters effect;
+	long unused[23];
+};
 
 struct lens_flare_reflection
 {

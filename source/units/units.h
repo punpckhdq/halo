@@ -539,11 +539,28 @@ struct unit_datum
 
 /* ---------- prototypes/UNITS.C */
 
+void units_initialize(void);
+void units_dispose(void);
+void units_initialize_for_new_map(void);
+void units_dispose_from_old_map(void);
+
+boolean unit_new(long unit_index);
+void unit_delete(long unit_index);
+void unit_export_function_values(long unit_index);
+void unit_handle_deleted_object(long unit_index, long deleted_object_index);
+void unit_handle_region_destroyed(long unit_index, short region_index, unsigned long region_damage_flags);
+void unit_preprocess_node_orientations(long object_index, struct real_orientation *node_orientations);
+void unit_postprocess_node_matrices(long object_index, struct real_matrix4x3 *node_matrices);
+void unit_render_debug(long unit_index);
+
 void units_update(void);
 
 void unit_set_mouth_aperture(long unit_index, real aperture);
 
 boolean unit_update(long unit_index);
+void unit_kill(long unit_index);
+boolean unit_unsuspecting(long unit_index, real_point3d const *attacker);
+void unit_damage_aftermath(long unit_index, struct damage_data *damage_data, unsigned long being_damaged_flags, real shield_damage, real body_damage, real body_damage_multiplier, short body_part);
 
 void unit_euler_aiming_update(
 	real_matrix4x3 const *orientation,

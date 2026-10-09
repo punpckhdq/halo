@@ -10,6 +10,12 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	GARBAGE_DEFINITION_TAG = 'garb',
+	GARBAGE_DEFINITION_VERSION = 1,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

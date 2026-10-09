@@ -68,7 +68,11 @@ void object_type_adjust_placement(long object_index, struct object_placement_dat
 boolean object_type_new(long object_index);
 void object_type_place(long object_index, struct scenario_object_datum *scenario_object);
 
+long object_type_synchronize(long object_index, struct scenario_object_datum *scenario_object, struct tag_block *palette, short object_type, short scenario_datum_index);
+
 void object_type_handle_deleted_object(long object_index, long deleted_object_index);
+void object_type_handle_region_destroyed(long object_index, short region_index, unsigned long damage_region_flags);
+boolean object_type_handle_parent_destroyed(long object_index);
 void object_type_notify_impulse_sound(long object_index, long sound_definition_index, long impulse_sound_index);
 
 void object_type_delete(long object_index);
@@ -79,8 +83,18 @@ void object_type_preprocess_node_orientations(long object_index, struct real_ori
 void object_type_postprocess_node_matrices(long object_index, struct real_matrix4x3 *node_matrices);
 void object_type_reset(long object_index);
 void object_type_disconnect_from_structure_bsp(long object_index);
+void object_type_render_debug(long object_index);
+
+short object_definition_index_to_object_type(long definition_index);
 
 struct tag_block *scenario_get_object_type_scenario_datums(struct scenario *scenario, short object_type, long *size);
 struct tag_block *scenario_get_object_type_scenario_palette(struct scenario *scenario, short object_type);
+
+void object_names_postprocess(struct scenario *scenario, boolean editing);
+void object_types_place_objects(boolean place);
+
+/* ---------- globals */
+
+extern struct object_type_definition *first_object_type_definition;
 
 #endif // __OBJECT_TYPES_H

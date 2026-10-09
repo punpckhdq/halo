@@ -97,6 +97,48 @@ struct scenario_equipment_datum
 	struct scenario_object_datum object;
 };
 
+struct scenario_sound_scenery_datum /* fake name */
+{
+	struct scenario_object_datum object;
+};
+
+struct scenario_unit_datum
+{
+	real body_vitality;
+	unsigned long flags;
+	unsigned long unused[2];
+};
+
+struct scenario_biped_datum
+{
+	struct scenario_object_datum object;
+	struct scenario_object_permutation permutation;
+	struct scenario_unit_datum unit;
+	long unused[8];
+};
+
+struct scenario_vehicle_datum
+{
+	struct scenario_object_datum object;
+	struct scenario_object_permutation permutation;
+	struct scenario_unit_datum unit;
+	byte multiplayer_team_index;
+	byte unused_byte;
+	word multiplayer_spawn_flags;
+	long unused[7];
+};
+
+struct scenario_weapon_datum
+{
+	struct scenario_object_datum object;
+	struct scenario_object_permutation permutation;
+	short rounds_total;
+	short rounds_loaded;
+	word flags;
+	word pad;
+	unsigned long unused[3];
+};
+
 struct scenario_device_group
 {
 	char name[TAG_STRING_LENGTH+1];

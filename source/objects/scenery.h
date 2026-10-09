@@ -16,6 +16,12 @@ header included in hcex build.
 
 enum
 {
+	SCENERY_DEFINITION_TAG = 'scen',
+	SCENERY_DEFINITION_VERSION = 1,
+};
+
+enum
+{
 	_scenery_self_animated_bit = 0,
 	NUMBER_OF_SCENERY_FLAGS,
 };

@@ -1,11 +1,5 @@
 /*
 OBJECT_DELETED_PROCS.C
-
-symbols in this file:
-00128700 0030:
-	_object_deleted_procs_call (0000)
-0030B378 000c:
-	_object_deleted_procs (0000)
 */
 
 /* ---------- headers */
@@ -15,6 +9,8 @@ symbols in this file:
 #include "network_game_globals.h"
 #include "units.h"
 #include "players.h"
+#include "objects.h"
+#include "ai.h"
 
 /* ---------- constants */
 
@@ -26,21 +22,24 @@ symbols in this file:
 
 /* ---------- globals */
 
-object_deleted_proc object_deleted_procs[3];
+object_deleted_proc object_deleted_procs[] =
+{
+	objects_fix_for_deleted_object,
+	ai_handle_deleted_object,
+	players_handle_deleted_object
+};
 
 /* ---------- public code */
 
 void object_deleted_procs_call(
 	long deleted_object_index)
 {
-	long i =0;
+	short proc_index;
 
-	do
+	for (proc_index = 0; proc_index < NUMBEROF(object_deleted_procs); proc_index++)
 	{
-		(object_deleted_procs[i])(deleted_object_index);
-		i++;
+		object_deleted_procs[proc_index](deleted_object_index);
 	}
-	while (i<NUMBEROF(object_deleted_procs));
 
 	return;
 }

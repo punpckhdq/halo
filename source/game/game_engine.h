@@ -102,6 +102,10 @@ long game_engine_remap_weapon(long weapon_definition_index);
 
 
 boolean game_engine_allow_integrated_lights(long object_index);
+boolean game_engine_allow_dynamic_lighting(void);
+boolean game_engine_can_score(void);
+void game_engine_player_killed(long killing_player_index, long killing_object_index, long dead_player_index, boolean friendly_fire);
+real game_engine_get_damage_multiplier(long attacker_index, long defender_index);
 
 /* ---------- prototypes/GAME_ENGINE_MULTIPLAYER_SOUNDS.C */
 

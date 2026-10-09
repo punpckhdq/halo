@@ -61,6 +61,45 @@ enum
 
 enum
 {
+	_game_difficulty_enemy_damage_scale = 0,
+	_game_difficulty_enemy_vitality_scale,
+	_game_difficulty_enemy_shield_scale,
+	_game_difficulty_enemy_recharge_scale,
+	_game_difficulty_friend_damage_scale,
+	_game_difficulty_friend_vitality_scale,
+	_game_difficulty_friend_shield_scale,
+	_game_difficulty_friend_recharge_scale,
+	_game_difficulty_infection_form_toughness,
+	_game_difficulty_health_unused6,
+	_game_difficulty_rate_of_fire_scale,
+	_game_difficulty_fire_projectile_error_scale,
+	_game_difficulty_burst_error_scale,
+	_game_difficulty_new_target_delay_scale,
+	_game_difficulty_burst_separation_delay_scale,
+	_game_difficulty_target_tracking_bonus,
+	_game_difficulty_target_leading_bonus,
+	_game_difficulty_overcharge_chance_scale,
+	_game_difficulty_special_fire_delay_scale,
+	_game_difficulty_projectile_guidance_vs_player_scale,
+	_game_difficulty_melee_delay_bonus,
+	_game_difficulty_melee_delay_scale,
+	_game_difficulty_fire_unused6,
+	_game_difficulty_grenade_chance_scale,
+	_game_difficulty_grenade_timer_scale,
+	_game_difficulty_grenade_unused1,
+	_game_difficulty_grenade_unused2,
+	_game_difficulty_grenade_unused3,
+	_game_difficulty_major_normal_placement,
+	_game_difficulty_major_few_placement,
+	_game_difficulty_major_many_placement,
+	_game_difficulty_unused1,
+	_game_difficulty_unused2,
+	_game_difficulty_unused3,
+	_game_difficulty_unused4,
+};
+
+enum
+{
 	_multiplayer_sound_oddball_spawn = 0,
 	_multiplayer_sound_game_over,
 	_multiplayer_sound_60_seconds,
@@ -305,7 +344,9 @@ struct game_globals
 
 /* ---------- prototypes/EXAMPLE.C */
 
+real game_difficulty_get_team_value(short value_type, short team_index);
 char const *material_get_name(short material_type);
+real game_difficulty_get_value(short value_type);
 
 /* ---------- globals */
 

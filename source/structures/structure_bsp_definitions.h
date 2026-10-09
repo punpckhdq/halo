@@ -164,6 +164,11 @@ struct structure_leaf
 	long first_surface_reference_index;
 };
 
+struct structure_surface
+{
+	word vertex_indices[3];
+};
+
 struct structure_material
 {
 	struct tag_reference shader;	// _shader

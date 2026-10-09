@@ -34,16 +34,6 @@ enum
 
 /* ---------- structures */
 
-struct vehicle_datum_network_data
-{
-	boolean at_rest_bit;
-	real_point3d position;
-	real_vector3d translational_velocity;
-	real_vector3d angular_velocity;
-	real_vector3d forward;
-	real_vector3d up;
-};
-
 struct _vehicle_datum
 {
 	word flags;
@@ -65,20 +55,6 @@ struct _vehicle_datum
 	real_vector3d collision_force;
 	real_vector3d collision_torque;
 	unsigned long stuck_mass_point_flags;
-	boolean has_been_accelerated_since_last_incremental;
-	boolean baseline_valid;
-	byte baseline_index;
-	byte message_index;
-	struct vehicle_datum_network_data baseline;
-	boolean last_network_data_valid;
-	struct vehicle_datum_network_data last_network_data;
-	long last_controlled_time;
-	union
-	{
-		short vehicle_scenario_datum_index;
-		short vehicle_netgame_flag_index;
-	};
-	real_point3d spawn_position;
 };
 
 struct vehicle_datum
@@ -91,7 +67,22 @@ struct vehicle_datum
 
 /* ---------- prototypes/VEHICLES.C */
 
+void vehicles_initialize(void);
+void vehicles_dispose(void);
+void vehicles_initialize_for_new_map(void);
+void vehicles_dispose_from_old_map(void);
+
+boolean vehicle_new(long vehicle_index);
+void vehicle_place(long vehicle_index, struct scenario_vehicle_datum *scenario_vehicle);
+void vehicle_delete(long vehicle_index);
+boolean vehicle_update(long vehicle_index);
+void vehicle_export_function_values(long vehicle_index);
+void vehicle_preprocess_node_orientations(long vehicle_index, struct real_orientation *node_orientations);
+void vehicle_reset(long vehicle_index);
+void vehicle_render_debug(long vehicle_index);
+
 void vehicle_hover(long vehicle_index, boolean hover);
+void vehicle_accelerate(long vehicle_index, real_vector3d const *acceleration);
 
 /* ---------- globals */
 

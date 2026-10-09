@@ -8,11 +8,28 @@ header included in hcex build.
 #define __PLACEHOLDER_DEFINITIONS_H
 #pragma once
 
+/* ---------- headers */
+
+#include "objects.h"
+
 /* ---------- constants */
+
+enum
+{
+	PLACEHOLDER_DEFINITION_TAG = 'plac',
+	PLACEHOLDER_DEFINITION_VERSION = 2,
+};
 
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct placeholder_datum /* fake name */
+{
+	long definition_index;
+	struct _object_datum object;
+	byte unknown[88];
+};
 
 /* ---------- prototypes/PLACEHOLDER_DEFINITIONS.C */
 

@@ -23,6 +23,8 @@ void object_lists_dispose_from_old_map(void);
 long object_list_new(void);
 void object_list_delete(long list_index);
 void object_list_add(long object_list_index, long object_index);
+long object_list_get_first(long object_list_index, long *reference_index);
+long object_list_get_next(long object_list_index, long *reference_index);
 
 
 /* ---------- globals */

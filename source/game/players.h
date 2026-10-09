@@ -124,6 +124,7 @@ void player_control_get_unit_camera_info(short local_player_index, struct unit_c
 long player_new(long machine_index, long player_index, short local_player_index, struct network_player *network_player_data);
 void local_player_set_player_index(short local_player_index, long player_index);
 boolean players_respawn_coop(void);
+void players_handle_deleted_object(long deleted_object_index);
 
 boolean local_player_exists(long local_player_index);
 short local_player_count(void);

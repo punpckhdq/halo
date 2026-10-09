@@ -10,9 +10,31 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	MAXIMUM_ACTIVE_CINEMATIC_TITLES = 4 /* fake name */
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct cinematic_title_datum
+{
+	short title_index;
+	short title_timer;
+};
+
+struct cinematic_globals_definition
+{
+	real letter_box_amount;
+	long letter_box_last_game_time;
+	boolean letter_box;
+	boolean cinematic_in_progress;
+	boolean cinematic_skip_in_progress;
+	boolean cinematic_suppress_bsp_object_creation;
+	struct cinematic_title_datum active_titles[MAXIMUM_ACTIVE_CINEMATIC_TITLES];
+};
 
 /* ---------- prototypes/CINEMATICS.C */
 
@@ -35,6 +57,8 @@ void cinematic_set_title(short index);
 void cinematic_render(void);
 
 /* ---------- globals */
+
+extern struct cinematic_globals_definition *cinematic_globals;
 
 /* ---------- public code */
 
