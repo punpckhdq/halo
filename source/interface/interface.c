@@ -15,17 +15,17 @@ symbols in this file:
 000CE2D0 0050:
 	_interface_set_bitmap_text_draw_mode (0000)
 000CE320 01c0:
-	_code_000ce320 (0000)
+	_interface_get_weapon_hud_index (0000)
 000CE4E0 03a0:
 	_interface_draw_screen (0000)
 000CE880 0080:
 	_profile_graph_toggle (0000)
 000CE900 0110:
-	_code_000ce900 (0000)
+	_render_debug_profile_stall_tick (0000)
 000CEA10 08e0:
-	_code_000cea10 (0000)
+	_render_debug_profile (0000)
 000CF2F0 00e0:
-	_code_000cf2f0 (0000)
+	_interface_splitscreen_render (0000)
 000CF3D0 0060:
 	_interface_initialize_for_new_map (0000)
 000CF430 0070:

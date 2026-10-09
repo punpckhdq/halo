@@ -13,9 +13,9 @@ symbols in this file:
 0010DBE0 0030:
 	_memory_pool_get_contiguous_free_size (0000)
 0010DC10 0010:
-	_code_0010dc10 (0000)
+	_memory_pool_block_compute_actual_size (0000)
 0010DC20 0030:
-	_code_0010dc20 (0000)
+	_memory_pool_block_new (0000)
 0010DC50 0170:
 	_code_0010dc50 (0000)
 0010DDC0 00b0:

@@ -23,7 +23,7 @@ symbols in this file:
 00000800 0150:
 	_action_alert_update (0000)
 00000950 0310:
-	_code_00000950 (0000)
+	_action_alert_next_position (0000)
 00000C60 0260:
 	_action_alert_perform (0000)
 00242EEC 000b:

@@ -5,7 +5,7 @@ symbols in this file:
 00125770 0030:
 	_tag_group_to_widget_type (0000)
 001257A0 0040:
-	_code_001257a0 (0000)
+	_widget_type_definition_get (0000)
 001257E0 00b0:
 	_widgets_initialize (0000)
 00125890 0060:

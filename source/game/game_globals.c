@@ -5,7 +5,7 @@ symbols in this file:
 000A4800 0050:
 	_material_get_name (0000)
 000A4850 00b0:
-	_code_000a4850 (0000)
+	_game_difficulty_get_value_by_difficulty (0000)
 000A4900 0020:
 	_game_difficulty_get_value (0000)
 000A4920 0090:

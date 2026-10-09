@@ -15,9 +15,9 @@ symbols in this file:
 00124470 0020:
 	_light_volume_delete (0000)
 00124490 0210:
-	_code_00124490 (0000)
+	_light_volume_interpolate_frames (0000)
 001246A0 0030:
-	_code_001246a0 (0000)
+	_pow1 (0000)
 001246D0 0390:
 	_light_volume_render (0000)
 00124A60 0110:

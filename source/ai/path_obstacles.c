@@ -15,9 +15,9 @@ symbols in this file:
 00050530 0050:
 	_point_in_sphere (0000)
 00050580 0090:
-	_code_00050580 (0000)
+	_circle_intersect_ray (0000)
 00050610 0080:
-	_code_00050610 (0000)
+	_circle_tangents (0000)
 00050690 00d0:
 	_obstacles_add_disc (0000)
 00050760 0320:

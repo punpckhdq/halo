@@ -5,17 +5,17 @@ symbols in this file:
 00128730 0030:
 	_texture_cache_bitmap_load (0000)
 00128760 0020:
-	_code_00128760 (0000)
+	_shade_scalar (0000)
 00128780 0040:
-	_code_00128780 (0000)
+	_shade_vector2d (0000)
 001287C0 0060:
-	_code_001287c0 (0000)
+	_shade_vector3d (0000)
 00128820 0100:
 	_sample_lightmap (0000)
 00128920 00f0:
 	_sample_diffuse_texture (0000)
 00128A10 0020:
-	_code_00128a10 (0000)
+	_should_render_lights (0000)
 00128A30 00c0:
 	_lights_initialize (0000)
 00128AF0 0010:
@@ -29,7 +29,7 @@ symbols in this file:
 00128B60 0040:
 	_light_delete (0000)
 00128BA0 0060:
-	_code_00128ba0 (0000)
+	_light_build_cluster_array (0000)
 00128C00 00d0:
 	_object_get_self_illumination (0000)
 00128CD0 0260:
@@ -39,33 +39,33 @@ symbols in this file:
 00128F90 00b0:
 	_lights_disconnect_from_structure_bsp (0000)
 00129040 0020:
-	_code_00129040 (0000)
+	_light_attenuation (0000)
 00129060 00a0:
-	_code_00129060 (0000)
+	_brighten_real_rgb_color (0000)
 00129100 0020:
-	_code_00129100 (0000)
+	_cluster_get_first_light (0000)
 00129120 0020:
-	_code_00129120 (0000)
+	_cluster_get_next_light (0000)
 00129140 0040:
-	_code_00129140 (0000)
+	_light_marker_begin (0000)
 00129180 0060:
-	_code_00129180 (0000)
+	_light_unmarked (0000)
 001291E0 0060:
-	_code_001291e0 (0000)
+	_light_mark (0000)
 00129240 0040:
-	_code_00129240 (0000)
+	_light_marker_end (0000)
 00129280 0110:
-	_code_00129280 (0000)
+	_render_debug_light (0000)
 00129390 00e0:
 	_lights_queue_lens_flare (0000)
 00129470 0230:
-	_code_00129470 (0000)
+	_find_point_lights_for_object_in_cluster (0000)
 001296A0 0400:
-	_code_001296a0 (0000)
+	_build_distant_lights (0000)
 00129AA0 00f0:
-	_code_00129aa0 (0000)
+	_light_compute_bounding_sphere (0000)
 00129B90 00e0:
-	_code_00129b90 (0000)
+	_light_get_bounding_sphere (0000)
 00129C70 01d0:
 	_lights_render_diffuse (0000)
 00129E40 0150:

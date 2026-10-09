@@ -13,7 +13,7 @@ symbols in this file:
 00004170 0040:
 	_action_guard_end (0000)
 000041B0 0140:
-	_code_000041b0 (0000)
+	_action_guard_speak_post_combat (0000)
 000042F0 01d0:
 	_action_guard_update (0000)
 000044C0 0080:

@@ -7,29 +7,29 @@ symbols in this file:
 00015EF0 0130:
 	_actor_look_compute_prop_interest (0000)
 00016020 0050:
-	_code_00016020 (0000)
+	_actor_look_get_looking_definition (0000)
 00016070 0370:
 	_actor_look_secondary (0000)
 000163E0 0080:
-	_code_000163e0 (0000)
+	_actor_look_valid_aim_vector (0000)
 00016460 00f0:
-	_code_00016460 (0000)
+	_actor_look_valid_look_vector (0000)
 00016550 00b0:
 	_actor_looking_test_validity (0000)
 00016600 0260:
-	_code_00016600 (0000)
+	_actor_look_idle_find_prop (0000)
 00016860 0160:
-	_code_00016860 (0000)
+	_actor_look_idle_timer (0000)
 000169C0 0260:
-	_code_000169c0 (0000)
+	_actor_look_find_random_vector (0000)
 00016C20 0050:
 	_valid_real_normal2d (0000)
 00016C70 0660:
-	_code_00016c70 (0000)
+	_actor_look_decode_direction (0000)
 000172D0 0210:
-	_code_000172d0 (0000)
+	_actor_look_idle_new_major_direction (0000)
 000174E0 0170:
-	_code_000174e0 (0000)
+	_actor_look_idle_new_minor_direction (0000)
 00017650 1270:
 	_actor_look_update (0000)
 000188C0 0080:

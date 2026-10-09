@@ -35,9 +35,9 @@ symbols in this file:
 000A5070 0050:
 	_game_time_set_speed (0000)
 000A50C0 0010:
-	_code_000a50c0 (0000)
+	_game_time_statistics_new (0000)
 000A50D0 01e0:
-	_code_000a50d0 (0000)
+	_game_time_statistics_frame (0000)
 000A52B0 00e0:
 	_game_time_start (0000)
 000A5390 0360:
@@ -295,7 +295,7 @@ void game_time_set_speed(
 	return;
 }
 
-static void code_000a50c0(
+static void game_time_statistics_new(
 	void)
 {
 	game_time_statistics.first_line = TRUE;
@@ -304,7 +304,7 @@ static void code_000a50c0(
 	return;
 }
 
-//code_000a50d0
+//game_time_statistics_frame
 
 void game_time_start(
 	void)

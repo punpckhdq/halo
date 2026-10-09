@@ -3,7 +3,7 @@ NETWORK_CLIENT_MANAGER.C
 
 symbols in this file:
 001141C0 0040:
-	_code_001141c0 (0000)
+	_check_networking_and_generate_error (0000)
 00114200 0060:
 	_network_game_client_dispose (0000)
 00114260 0020:
@@ -71,13 +71,13 @@ symbols in this file:
 00115500 0030:
 	_network_game_client_advertised_game_is_valid (0000)
 00115530 02d0:
-	_code_00115530 (0000)
+	_add_advertised_game (0000)
 00115800 0050:
-	_code_00115800 (0000)
+	_network_game_client_set_error (0000)
 00115850 00c0:
-	_code_00115850 (0000)
+	_network_game_client_update_precache_status (0000)
 00115910 0080:
-	_code_00115910 (0000)
+	_network_game_client_process_incoming_messages (0000)
 00115990 0260:
 	_network_game_client_leave_game (0000)
 00115BF0 01f0:
@@ -91,15 +91,15 @@ symbols in this file:
 00116010 00e0:
 	_network_game_client_reset (0000)
 001160F0 02c0:
-	_code_001160f0 (0000)
+	_network_game_client_idle_searching (0000)
 001163B0 0180:
-	_code_001163b0 (0000)
+	_network_game_client_idle_joining (0000)
 00116530 00d0:
-	_code_00116530 (0000)
+	_network_game_client_idle_pregame (0000)
 00116600 0190:
-	_code_00116600 (0000)
+	_network_game_client_idle_ingame (0000)
 00116790 00a0:
-	_code_00116790 (0000)
+	_network_game_client_idle_postgame (0000)
 00116830 0090:
 	_network_game_client_create (0000)
 001168C0 0130:

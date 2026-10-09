@@ -23,11 +23,11 @@ symbols in this file:
 001A4F00 0050:
 	_vehicle_hover (0000)
 001A4F50 0020:
-	_code_001a4f50 (0000)
+	_update_turret_physics (0000)
 001A4F70 0030:
 	_vehicle_is_flipped (0000)
 001A4FA0 00a0:
-	_code_001a4fa0 (0000)
+	_compute_airborne_ticks (0000)
 001A5040 0020:
 	_set_real_quaternion (0000)
 001A5060 00b0:
@@ -43,29 +43,29 @@ symbols in this file:
 001A56E0 0130:
 	_vehicle_find_pathfinding_surface_index (0000)
 001A5810 00d0:
-	_code_001a5810 (0000)
+	_compute_acceleration (0000)
 001A58E0 0150:
-	_code_001a58e0 (0000)
+	_update_human_tank_physics (0000)
 001A5A30 0110:
-	_code_001a5a30 (0000)
+	_update_human_jeep_physics (0000)
 001A5B40 0310:
-	_code_001a5b40 (0000)
+	_update_human_boat_physics (0000)
 001A5E50 0440:
-	_code_001a5e50 (0000)
+	_update_alien_fighter_physics_new (0000)
 001A6290 0300:
-	_code_001a6290 (0000)
+	_update_alien_fighter_physics_old (0000)
 001A6590 0180:
-	_code_001a6590 (0000)
+	_slowly_stop_vehicle (0000)
 001A6710 0200:
-	_code_001a6710 (0000)
+	_create_pelican_effect (0000)
 001A6910 0290:
-	_code_001a6910 (0000)
+	_create_ghost_effect (0000)
 001A6BA0 0220:
-	_code_001a6ba0 (0000)
+	_create_crashing_effects (0000)
 001A6DC0 0320:
-	_code_001a6dc0 (0000)
+	_update_suspension (0000)
 001A70E0 01d0:
-	_code_001a70e0 (0000)
+	_create_slipping_effects (0000)
 001A72B0 0520:
 	_vehicle_export_function_values (0000)
 001A77D0 0180:
@@ -73,11 +73,11 @@ symbols in this file:
 001A7950 0170:
 	_vehicle_stuck (0000)
 001A7AC0 03a0:
-	_code_001a7ac0 (0000)
+	_update_human_plane_physics (0000)
 001A7E60 09a0:
-	_code_001a7e60 (0000)
+	_update_alien_scout_physics (0000)
 001A8800 0070:
-	_code_001a8800 (0000)
+	_update_alien_fighter_physics (0000)
 001A8870 0910:
 	_vehicle_update (0000)
 002A6200 000f:

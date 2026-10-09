@@ -11,13 +11,13 @@ symbols in this file:
 0010B220 0050:
 	_default_hash_function (0000)
 0010B270 0120:
-	_code_0010b270 (0000)
+	_hashtable_search (0000)
 0010B390 00b0:
 	_hashtable_get (0000)
 0010B440 01f0:
 	_hashtable_remove (0000)
 0010B630 00a0:
-	_code_0010b630 (0000)
+	_hashtable_capacious_put (0000)
 0010B6D0 0240:
 	_hashtable_grow (0000)
 0010B910 00c0:

@@ -13,35 +13,35 @@ symbols in this file:
 0017A850 0010:
 	_render_objects_dispose (0000)
 0017A860 0070:
-	_code_0017a860 (0000)
+	_object_is_first_person_camera (0000)
 0017A8D0 00b0:
-	_code_0017a8d0 (0000)
+	_find_rendered_objects (0000)
 0017A980 0060:
-	_code_0017a980 (0000)
+	_object_get_level_of_detail_pixels (0000)
 0017A9E0 0480:
-	_code_0017a9e0 (0000)
+	_render_object_list (0000)
 0017AE60 00a0:
-	_code_0017ae60 (0000)
+	_interpolate_real_rgb_color (0000)
 0017AF00 00d0:
-	_code_0017af00 (0000)
+	_interpolate_real_argb_color (0000)
 0017AFD0 00b0:
-	_code_0017afd0 (0000)
+	_interpolate_normal (0000)
 0017B080 0100:
-	_code_0017b080 (0000)
+	_render_object_shadow_begin (0000)
 0017B180 0060:
-	_code_0017b180 (0000)
+	_bounding_planes_from_point_and_normal (0000)
 0017B1E0 02d0:
-	_code_0017b1e0 (0000)
+	_render_object_shadow_end (0000)
 0017B4B0 0320:
-	_code_0017b4b0 (0000)
+	_object_render_state_refresh (0000)
 0017B7D0 0130:
-	_code_0017b7d0 (0000)
+	_object_get_cached_render_state (0000)
 0017B900 0050:
 	_object_get_cached_render_lighting (0000)
 0017B950 0270:
-	_code_0017b950 (0000)
+	_render_object (0000)
 0017BBC0 0030:
-	_code_0017bbc0 (0000)
+	_process_rendered_objects (0000)
 0017BBF0 00c0:
 	_render_objects (0000)
 0017BCB0 0070:

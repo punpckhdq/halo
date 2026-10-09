@@ -36,7 +36,7 @@ struct lens_flare_occlusion_test_results
 /* ---------- prototypes */
 
 static boolean screenshot_in_progress(void);
-__inline static struct rasterizer_lens_flare_submit_parameters *lens_flare_submit_parameter_get(short lens_flare_index); /* fake name */
+__inline static struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters_get(short lens_flare_index);
 static byte *lens_flare_occlusion_test_results_get(struct rasterizer_lens_flare_submit_parameters const *lens_flare_parameters);
 static real lens_flare_evaluate_corona_rotation_function(short function, struct rasterizer_lens_flare_submit_parameters const *lens_flare_parameters);
 
@@ -55,7 +55,7 @@ static boolean screenshot_in_progress(
 	return global_screenshot_count>1 || (global_screenshot_count==1 && global_screenshot_size>1);
 }
 
-__inline static struct rasterizer_lens_flare_submit_parameters *lens_flare_submit_parameter_get( /* fake name */
+__inline static struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters_get(
 	short lens_flare_index)
 {
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c", 67, lens_flare_index>=0 && lens_flare_index<local_lens_flare_count);
@@ -164,7 +164,7 @@ void rasterizer_lights_begin_for_new_frame(
 
 		for (lens_flare_index = 0; lens_flare_index<local_lens_flare_count; lens_flare_index++)
 		{
-			struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_submit_parameter_get(lens_flare_index);
+			struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_parameters_get(lens_flare_index);
 			byte *occlusion = lens_flare_occlusion_test_results_get(lens_flare_parameters);
 			byte new_occlusion;
 
@@ -259,7 +259,7 @@ void rasterizer_lens_flare_submit(
 				(parameters->compressed_light_color>>24)>0)
 			{
 				long lens_flare_index = local_lens_flare_count++;
-				struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_submit_parameter_get((short)lens_flare_index);
+				struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_parameters_get((short)lens_flare_index);
 
 				memcpy(lens_flare_parameters, parameters, sizeof(*lens_flare_parameters));
 				if (parameters->light_identifier==NONE)
@@ -366,7 +366,7 @@ void rasterizer_lens_flares_submit_occlusion_tests(
 		rasterizer_widget_begin(_widget_type_internal_occlusion_test, 1);
 		for (lens_flare_index = 0; lens_flare_index<local_lens_flare_count; lens_flare_index++)
 		{
-			struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_submit_parameter_get(lens_flare_index);
+			struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_parameters_get(lens_flare_index);
 			struct lens_flare_definition *definition = lens_flare_parameters->definition;
 			real_vector3d direction = uncompress_int32_to_real_vector3d(lens_flare_parameters->compressed_direction);
 
@@ -413,7 +413,7 @@ void rasterizer_lens_flares_draw(
 		rasterizer_widget_begin(_widget_type_internal_sprite, 0);
 		for (lens_flare_index = 0; lens_flare_index<local_lens_flare_count; lens_flare_index++)
 		{
-			struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_submit_parameter_get(lens_flare_index);
+			struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_parameters_get(lens_flare_index);
 			byte *occlusion_test_result = lens_flare_occlusion_test_results_get(lens_flare_parameters);
 			real_vector3d direction = uncompress_int32_to_real_vector3d(lens_flare_parameters->compressed_direction);
 
@@ -581,7 +581,7 @@ void rasterizer_lens_flares_draw(
 		{
 			for (lens_flare_index = 0; lens_flare_index<local_lens_flare_count; lens_flare_index++)
 			{
-				struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_submit_parameter_get(lens_flare_index);
+				struct rasterizer_lens_flare_submit_parameters *lens_flare_parameters = lens_flare_parameters_get(lens_flare_index);
 
 				if (lens_flare_parameters->internal__occlusion_pixels>0 &&
 					(lens_flare_parameters->compressed_window_index&_lens_flare_window_index_mask)==global_window_parameters.window_index &&

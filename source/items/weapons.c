@@ -59,27 +59,27 @@ symbols in this file:
 000EAC90 0040:
 	_code_000eac90 (0000)
 000EACD0 0050:
-	_code_000eacd0 (0000)
+	_weapon_get_projectile_owner_object_index (0000)
 000EAD20 0090:
-	_code_000ead20 (0000)
+	_weapon_trigger_get_charged_fraction (0000)
 000EADB0 00f0:
-	_code_000eadb0 (0000)
+	_weapon_trigger_can_fire_again (0000)
 000EAEA0 0050:
-	_code_000eaea0 (0000)
+	_weapon_magazine_idle (0000)
 000EAEF0 00f0:
 	_code_000eaef0 (0000)
 000EAFE0 0070:
-	_code_000eafe0 (0000)
+	_weapon_effect_looping_new (0000)
 000EB050 0040:
-	_code_000eb050 (0000)
+	_weapon_detonate (0000)
 000EB090 0090:
-	_code_000eb090 (0000)
+	_weapon_trigger_change_state (0000)
 000EB120 0080:
-	_code_000eb120 (0000)
+	_weapon_trigger_start_ejection_port (0000)
 000EB1A0 0050:
-	_code_000eb1a0 (0000)
+	_weapon_state_key_frame (0000)
 000EB1F0 0020:
-	_code_000eb1f0 (0000)
+	_weapon_magazine_state_interruptable (0000)
 000EB210 0020:
 	_code_000eb210 (0000)
 000EB230 01b0:
@@ -113,27 +113,27 @@ symbols in this file:
 000EC140 0060:
 	_weapon_prevents_melee_attack (0000)
 000EC1A0 0160:
-	_code_000ec1a0 (0000)
+	_weapon_magazine_start_reload (0000)
 000EC300 00e0:
-	_code_000ec300 (0000)
+	_weapon_magazine_finish_reload (0000)
 000EC3E0 00c0:
-	_code_000ec3e0 (0000)
+	_weapon_magazine_start_chamber (0000)
 000EC4A0 0080:
-	_code_000ec4a0 (0000)
+	_weapon_magazine_finish_chamber (0000)
 000EC520 00c0:
-	_code_000ec520 (0000)
+	_weapon_trigger_fully_charged (0000)
 000EC5E0 0090:
-	_code_000ec5e0 (0000)
+	_weapon_trigger_idle (0000)
 000EC670 0060:
-	_code_000ec670 (0000)
+	_weapon_trigger_locked (0000)
 000EC6D0 0060:
-	_code_000ec6d0 (0000)
+	_weapon_trigger_recover (0000)
 000EC730 0190:
 	_code_000ec730 (0000)
 000EC8C0 00a0:
-	_code_000ec8c0 (0000)
+	_projectile_distribute (0000)
 000EC960 0030:
-	_code_000ec960 (0000)
+	_weapon_state_next (0000)
 000EC990 0160:
 	_weapon_set_current_amount (0000)
 000ECAF0 0080:
@@ -145,19 +145,19 @@ symbols in this file:
 000ECD20 0010:
 	_weapon_stop_reload (0000)
 000ECD30 0050:
-	_code_000ecd30 (0000)
+	_weapon_trigger_finish_tracking (0000)
 000ECD80 0720:
-	_code_000ecd80 (0000)
+	_trigger_create_projectiles (0000)
 000ED4A0 07c0:
-	_code_000ed4a0 (0000)
+	_weapon_trigger_fire (0000)
 000EDC60 0270:
-	_code_000edc60 (0000)
+	_weapon_trigger_begin_firing (0000)
 000EDED0 00d0:
-	_code_000eded0 (0000)
+	_weapon_trigger_overload (0000)
 000EDFA0 0100:
-	_code_000edfa0 (0000)
+	_weapon_trigger_release_charge (0000)
 000EE0A0 0080:
-	_code_000ee0a0 (0000)
+	_weapon_trigger_overcharged (0000)
 000EE120 0af0:
 	_weapon_update (0000)
 00279248 000e:

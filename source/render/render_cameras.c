@@ -3,7 +3,7 @@ RENDER_CAMERAS.C
 
 symbols in this file:
 00174FC0 00a0:
-	_code_00174fc0 (0000)
+	_render_camera_warn_once (0000)
 00175060 0020:
 	_render_camera_new (0000)
 00175080 0120:

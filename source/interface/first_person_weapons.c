@@ -13,25 +13,25 @@ symbols in this file:
 000CBD20 0010:
 	_first_person_weapons_dispose_from_old_map (0000)
 000CBD30 00c0:
-	_code_000cbd30 (0000)
+	_first_person_weapon_state_from_weapon_message (0000)
 000CBDF0 0110:
-	_code_000cbdf0 (0000)
+	_first_person_animation_type_from_weapon_state (0000)
 000CBF00 0120:
-	_code_000cbf00 (0000)
+	_weapon_play_first_person_weapon_sound (0000)
 000CC020 0040:
-	_code_000cc020 (0000)
+	_first_person_weapon_get (0000)
 000CC060 00a0:
-	_code_000cc060 (0000)
+	_first_person_weapon_set_visibility (0000)
 000CC100 00b0:
-	_code_000cc100 (0000)
+	_model_remap_node_matrices_to_match_animation_graph (0000)
 000CC1B0 00e0:
-	_code_000cc1b0 (0000)
+	_model_build_remapping_table_for_animation_graph (0000)
 000CC290 0060:
-	_code_000cc290 (0000)
+	_first_person_weapon_index_from_weapon_index (0000)
 000CC2F0 0040:
-	_code_000cc2f0 (0000)
+	_first_person_weapon_index_from_unit_index (0000)
 000CC330 0080:
-	_code_000cc330 (0000)
+	_first_person_weapon_predict (0000)
 000CC3B0 0290:
 	_first_person_weapon_draw (0000)
 000CC640 0080:
@@ -45,29 +45,29 @@ symbols in this file:
 000CC940 00c0:
 	_first_person_weapon_get_node_matrix (0000)
 000CCA00 00b0:
-	_code_000cca00 (0000)
+	_first_person_weapon_start_interpolation (0000)
 000CCAB0 0560:
-	_code_000ccab0 (0000)
+	_first_person_weapon_build_node_matrices (0000)
 000CD010 00b0:
 	_first_person_weapon_render_update (0000)
 000CD0C0 0040:
 	_first_person_weapon_get_marker_by_name_render (0000)
 000CD100 02b0:
-	_code_000cd100 (0000)
+	_first_person_weapon_set_state (0000)
 000CD3B0 0260:
-	_code_000cd3b0 (0000)
+	_first_person_weapon_switch_weapons (0000)
 000CD610 0060:
-	_code_000cd610 (0000)
+	_first_person_weapon_new_unit (0000)
 000CD670 0220:
-	_code_000cd670 (0000)
+	_first_person_weapon_message (0000)
 000CD890 0050:
 	_first_person_weapon_message_from_unit (0000)
 000CD8E0 0040:
 	_first_person_weapon_message_from_weapon (0000)
 000CD920 0170:
-	_code_000cd920 (0000)
+	_first_person_weapon_next_state (0000)
 000CDA90 0600:
-	_code_000cda90 (0000)
+	_first_person_weapon_update (0000)
 000CE090 00f0:
 	_first_person_weapons_update (0000)
 0027076C 0015:

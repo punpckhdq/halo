@@ -3,9 +3,9 @@ WEATHER_PARTICLE_SYSTEMS.C
 
 symbols in this file:
 000924D0 0040:
-	_code_000924d0 (0000)
+	_weather_particle_system_get (0000)
 00092510 0050:
-	_code_00092510 (0000)
+	_weather_particle_system_get_type (0000)
 00092560 0030:
 	_weather_particle_systems_initialize (0000)
 00092590 0070:
@@ -15,31 +15,31 @@ symbols in this file:
 00092620 0020:
 	_weather_particle_systems_dispose (0000)
 00092640 0030:
-	_code_00092640 (0000)
+	_weather_particle_system_type_delete_particle (0000)
 00092670 00a0:
-	_code_00092670 (0000)
+	_weather_particle_system_wrap_point (0000)
 00092710 0160:
 	_weather_particle_system_new (0000)
 00092870 0110:
 	_weather_particle_system_delete (0000)
 00092980 02c0:
-	_code_00092980 (0000)
+	_weather_particle_system_new_particle (0000)
 00092C40 0040:
-	_code_00092c40 (0000)
+	_weather_particle_system_box_offset_from_point3d (0000)
 00092C80 02b0:
-	_code_00092c80 (0000)
+	_weather_particle_update_physics (0000)
 00092F30 0100:
-	_code_00092f30 (0000)
+	_weather_particle_system_build_clipping_planes (0000)
 00093030 0040:
-	_code_00093030 (0000)
+	_weather_particle_system_transform_clip_planes_to_box (0000)
 00093070 00b0:
-	_code_00093070 (0000)
+	_weather_polyhedra_find (0000)
 00093120 0130:
-	_code_00093120 (0000)
+	_weather_particle_system_update_particle_count (0000)
 00093250 0240:
-	_code_00093250 (0000)
+	_weather_particle_system_update (0000)
 00093490 0690:
-	_code_00093490 (0000)
+	_weather_particle_system_render (0000)
 00093B20 00e0:
 	_weather_particle_systems_render (0000)
 0025AAFC 0004:

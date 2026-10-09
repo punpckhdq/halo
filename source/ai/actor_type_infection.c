@@ -5,11 +5,11 @@ symbols in this file:
 00027280 0130:
 	_infection_decide_action (0000)
 000273B0 0060:
-	_code_000273b0 (0000)
+	_infection_wander_pause_time (0000)
 00027410 0060:
-	_code_00027410 (0000)
+	_infection_wander_move_time (0000)
 00027470 0e20:
-	_code_00027470 (0000)
+	_infection_swarm_control (0000)
 00028290 02b0:
 	_infection_swarm_aim_jump (0000)
 0024644C 000a:

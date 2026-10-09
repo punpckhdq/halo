@@ -5,9 +5,9 @@ symbols in this file:
 001777D0 0090:
 	_contrail_fade (0000)
 00177860 07a0:
-	_code_00177860 (0000)
+	_render_contrail (0000)
 00178000 00b0:
-	_code_00178000 (0000)
+	_render_contrails (0000)
 001780B0 0010:
 	_render_contrails_ground_mapped (0000)
 001780C0 0010:

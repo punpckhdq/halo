@@ -3,9 +3,9 @@ UI_WIDGET.C
 
 symbols in this file:
 000D32C0 0020:
-	_code_000d32c0 (0000)
+	_pool_alloc (0000)
 000D32E0 0020:
-	_code_000d32e0 (0000)
+	_pool_free (0000)
 000D3300 0030:
 	_event_controller_index_compatible_with_widget (0000)
 000D3330 0030:
@@ -33,7 +33,7 @@ symbols in this file:
 000D3590 0050:
 	_ui_widgets_inhibit_processing (0000)
 000D35E0 0020:
-	_code_000d35e0 (0000)
+	_compute_offset_coordinate (0000)
 000D3600 0490:
 	_draw_bitmap_in_rect (0000)
 000D3A90 0020:
@@ -55,7 +55,7 @@ symbols in this file:
 000D3C00 0010:
 	_filesystem_check_thread_is_active (0000)
 000D3C10 0040:
-	_code_000d3c10 (0000)
+	_transition_to_game_in_progress (0000)
 000D3C50 0030:
 	_display_error_when_main_menu_loaded (0000)
 000D3C80 0090:
@@ -71,67 +71,67 @@ symbols in this file:
 000D3E30 0040:
 	_ui_widgets_disable_pause_game (0000)
 000D3E70 0080:
-	_code_000d3e70 (0000)
+	_push_widget (0000)
 000D3EF0 0060:
-	_code_000d3ef0 (0000)
+	_pop_widget (0000)
 000D3F50 0030:
-	_code_000d3f50 (0000)
+	_dispose_widget_stack (0000)
 000D3F80 0090:
-	_code_000d3f80 (0000)
+	_ui_widget_add_child (0000)
 000D4010 0080:
-	_code_000d4010 (0000)
+	_ui_widget_delete_children_recursive (0000)
 000D4090 0050:
-	_code_000d4090 (0000)
+	_widget_instance_find_by_tag_index_recursive (0000)
 000D40E0 0020:
-	_code_000d40e0 (0000)
+	_widget_instance_get_cumulative_alpha_modifier (0000)
 000D4100 0080:
-	_code_000d4100 (0000)
+	_widget_instance_can_receive_events (0000)
 000D4180 0040:
-	_code_000d4180 (0000)
+	_widget_instance_can_handle_events (0000)
 000D41C0 0040:
-	_code_000d41c0 (0000)
+	_widget_instance_text_box_is_focused (0000)
 000D4200 0050:
-	_code_000d4200 (0000)
+	_get_icon_type (0000)
 000D4250 01a0:
-	_code_000d4250 (0000)
+	_render_state_bitmap (0000)
 000D43F0 0070:
-	_code_000d43f0 (0000)
+	_render_state_text (0000)
 000D4460 0060:
-	_code_000d4460 (0000)
+	_string_has_icons_to_draw (0000)
 000D44C0 0060:
-	_code_000d44c0 (0000)
+	_should_flip_sticks_for_local_player (0000)
 000D4520 0130:
 	_remap_sticks_for_local_player (0000)
 000D4650 0030:
-	_code_000d4650 (0000)
+	_widget_instance_update_animation_parameters (0000)
 000D4680 0010:
-	_code_000d4680 (0000)
+	_widget_instance_reload_recursive (0000)
 000D4690 0010:
-	_code_000d4690 (0000)
+	_ui_widget_reload_by_tag (0000)
 000D46A0 0170:
-	_code_000d46a0 (0000)
+	_widget_instance_give_focus_directly (0000)
 000D4810 00d0:
-	_code_000d4810 (0000)
+	_widget_instance_set_focused_child_by_index (0000)
 000D48E0 0020:
-	_code_000d48e0 (0000)
+	_play_sound_tag (0000)
 000D4900 01d0:
-	_code_000d4900 (0000)
+	_search_and_replace (0000)
 000D4AD0 0030:
-	_code_000d4ad0 (0000)
+	_spinner_list_update (0000)
 000D4B00 0040:
-	_code_000d4b00 (0000)
+	_column_list_update (0000)
 000D4B40 0020:
-	_code_000d4b40 (0000)
+	_widget_instance_get_tail_child_widget (0000)
 000D4B60 0060:
-	_code_000d4b60 (0000)
+	_widget_instance_tab_to_next_valid_widget (0000)
 000D4BC0 00a0:
-	_code_000d4bc0 (0000)
+	_widget_instance_tab_to_previous_valid_widget (0000)
 000D4C60 0050:
 	_get_ui_rgb_white (0000)
 000D4CB0 0060:
 	_get_ui_argb_white (0000)
 000D4D10 0050:
-	_code_000d4d10 (0000)
+	_filesystem_initialization_thread_proc@4 (0000)
 000D4D60 0040:
 	_modulate_pixel32_by_real_alpha (0000)
 000D4DA0 02a0:
@@ -149,21 +149,21 @@ symbols in this file:
 000D5230 0060:
 	_ui_play_audio_feedback_sound (0000)
 000D5290 02a0:
-	_code_000d5290 (0000)
+	_ui_widget_load_children_recursive (0000)
 000D5530 0030:
-	_code_000d5530 (0000)
+	_widget_instance_find_by_tag_index (0000)
 000D5560 0360:
 	_draw_string_and_hack_in_icons (0000)
 000D58C0 0310:
-	_code_000d58c0 (0000)
+	_widget_instance_render_text_box (0000)
 000D5BD0 0440:
-	_code_000d5bd0 (0000)
+	_widget_instance_render_spinner_list (0000)
 000D6010 0050:
-	_code_000d6010 (0000)
+	_widget_instance_give_focus_by_tag (0000)
 000D6060 00a0:
-	_code_000d6060 (0000)
+	_widget_instance_go_back_to_previous (0000)
 000D6100 00e0:
-	_code_000d6100 (0000)
+	_perform_filesystem_initialization (0000)
 000D61E0 0050:
 	_ui_widgets_dispose (0000)
 000D6230 0200:
@@ -171,19 +171,19 @@ symbols in this file:
 000D6430 0220:
 	_widget_event_function_list_widget_goto_previous_item (0000)
 000D6650 04f0:
-	_code_000d6650 (0000)
+	_event_handler_dispatch (0000)
 000D6B40 02f0:
-	_code_000d6b40 (0000)
+	_widget_instance_render_recursive (0000)
 000D6E30 00b0:
-	_code_000d6e30 (0000)
+	_widget_instance_render_column_list (0000)
 000D6EE0 0180:
 	_render_ui_widgets_postgame (0000)
 000D7060 0230:
 	_render_ui_widgets (0000)
 000D7290 01f0:
-	_code_000d7290 (0000)
+	_widget_instance_initialize (0000)
 000D7480 07e0:
-	_code_000d7480 (0000)
+	_widget_instance_process_one_event_recursive (0000)
 000D7C60 0220:
 	_ui_widget_load_by_name_or_tag (0000)
 000D7E80 0130:
@@ -201,9 +201,9 @@ symbols in this file:
 000D85A0 0260:
 	_display_scenario_help (0000)
 000D8800 02a0:
-	_code_000d8800 (0000)
+	_ui_check_for_pause_game (0000)
 000D8AA0 0130:
-	_code_000d8aa0 (0000)
+	_ui_widget_launch_widget (0000)
 000D8BD0 03c0:
 	_process_ui_widgets (0000)
 00271380 0012:

@@ -3,31 +3,31 @@ RASTERIZER_XBOX_LIGHTS.C
 
 symbols in this file:
 00158850 01b0:
-	_code_00158850 (0000)
+	_D3DDevice_SetRenderState (0000)
 00158A00 0050:
-	_code_00158a00 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 00158A50 01c0:
-	_code_00158a50 (0000)
+	_rasterizer_project_billboard (0000)
 00158C10 0220:
-	_code_00158c10 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 00158E30 0060:
-	_code_00158e30 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00158E90 0010:
-	_code_00158e90 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00158EA0 0020:
-	_code_00158ea0 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 00158EC0 0030:
-	_code_00158ec0 (0000)
+	_IDirect3DDevice8_SetVertexData4f@24 (0000)
 00158EF0 0010:
-	_code_00158ef0 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 00158F00 0010:
-	_code_00158f00 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 00158F10 0010:
-	_code_00158f10 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 00158F20 0380:
-	_code_00158f20 (0000)
+	_rasterizer_sun_glow_copy_source (0000)
 001592A0 0580:
-	_code_001592a0 (0000)
+	_rasterizer_sun_glow_convolve (0000)
 00159820 0930:
 	_rasterizer_sun_glow_draw (0000)
 002911D0 0038:

@@ -11,7 +11,7 @@ symbols in this file:
 0008AD50 0020:
 	_effects_dispose (0000)
 0008AD70 0050:
-	_code_0008ad70 (0000)
+	_effects_object_is_corpse (0000)
 0008ADC0 00c0:
 	_effect_delete (0000)
 0008AE80 0100:
@@ -21,27 +21,27 @@ symbols in this file:
 0008B000 0010:
 	_effects_disconnect_from_structure_bsp (0000)
 0008B010 0030:
-	_code_0008b010 (0000)
+	_effect_scale (0000)
 0008B040 0020:
-	_code_0008b040 (0000)
+	_effect_get_random_seed (0000)
 0008B060 0080:
-	_code_0008b060 (0000)
+	_effect_real_random_range (0000)
 0008B0E0 0080:
-	_code_0008b0e0 (0000)
+	_effect_random_angular_velocity (0000)
 0008B160 0080:
-	_code_0008b160 (0000)
+	_effect_allowed_by_environment (0000)
 0008B1E0 0020:
-	_code_0008b1e0 (0000)
+	_effect_part_allowed_by_disposition (0000)
 0008B200 0090:
-	_code_0008b200 (0000)
+	_effect_set_event (0000)
 0008B290 0080:
-	_code_0008b290 (0000)
+	_effect_build_location (0000)
 0008B310 00e0:
-	_code_0008b310 (0000)
+	_effect_location_get_next_instance (0000)
 0008B3F0 0050:
-	_code_0008b3f0 (0000)
+	_effect_get_node_matrix (0000)
 0008B440 00b0:
-	_code_0008b440 (0000)
+	_effect_evaluate_function_integral (0000)
 0008B4F0 0010:
 	_real_local_random (0000)
 0008B500 0020:
@@ -53,27 +53,27 @@ symbols in this file:
 0008B670 01f0:
 	_dangerous_effects_near_player (0000)
 0008B860 00e0:
-	_code_0008b860 (0000)
+	_effect_random_translational_velocity (0000)
 0008B940 0160:
-	_code_0008b940 (0000)
+	_effect_allocate (0000)
 0008BAA0 00b0:
-	_code_0008baa0 (0000)
+	_impulse_effect_initialize (0000)
 0008BB50 00b0:
-	_code_0008bb50 (0000)
+	_effect_build_locations (0000)
 0008BC00 0760:
-	_code_0008bc00 (0000)
+	_effect_generate_particles (0000)
 0008C360 03e0:
-	_code_0008c360 (0000)
+	_effect_generate_part (0000)
 0008C740 00b0:
 	_effects_start_on_first_person_weapon (0000)
 0008C7F0 0190:
-	_code_0008c7f0 (0000)
+	_effect_marker_list_get_marker (0000)
 0008C980 0250:
-	_code_0008c980 (0000)
+	_effect_generate_parts (0000)
 0008CBD0 00b0:
-	_code_0008cbd0 (0000)
+	_effect_marker_list_get_markers_by_name (0000)
 0008CC80 0530:
-	_code_0008cc80 (0000)
+	_effect_update (0000)
 0008D1B0 00f0:
 	_effect_new_looping (0000)
 0008D2A0 0210:

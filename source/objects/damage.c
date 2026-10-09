@@ -25,9 +25,9 @@ symbols in this file:
 00126030 0060:
 	_object_double_charge_shield (0000)
 00126090 0050:
-	_code_00126090 (0000)
+	_object_destroy_notify_children (0000)
 001260E0 0050:
-	_code_001260e0 (0000)
+	_get_player_index_from_object_or_parents (0000)
 00126130 0050:
 	_object_can_take_damage (0000)
 00126180 0050:
@@ -37,9 +37,9 @@ symbols in this file:
 00126200 0030:
 	_object_set_melee_attack_inhibited (0000)
 00126230 0020:
-	_code_00126230 (0000)
+	_damage_effect_new_on_object (0000)
 00126250 0080:
-	_code_00126250 (0000)
+	_object_permutation_shield_regions (0000)
 001262D0 0060:
 	_object_get_actual_body_vitality (0000)
 00126330 0060:
@@ -47,11 +47,11 @@ symbols in this file:
 00126390 0080:
 	_object_deplete_shield (0000)
 00126410 0380:
-	_code_00126410 (0000)
+	_object_damage_shield (0000)
 00126790 0230:
-	_code_00126790 (0000)
+	_object_damage_aftermath (0000)
 001269C0 0200:
-	_code_001269c0 (0000)
+	_damage_effect_new_at_location (0000)
 00126BC0 01d0:
 	_render_debug_object_damage (0000)
 00126D90 00e0:
@@ -59,15 +59,15 @@ symbols in this file:
 00126E70 0070:
 	_object_destroy (0000)
 00126EE0 0140:
-	_code_00126ee0 (0000)
+	_object_destroy_region (0000)
 00127020 0550:
-	_code_00127020 (0000)
+	_object_damage_body (0000)
 00127570 07c0:
 	_object_cause_damage (0000)
 00127D30 0420:
 	_object_damage_update (0000)
 00128150 0530:
-	_code_00128150 (0000)
+	_area_of_effect_cause_damage_to_object (0000)
 00128680 0080:
 	_area_of_effect_cause_damage (0000)
 00289410 006f:

@@ -3,7 +3,7 @@ HS_SCENARIO_DEFINITIONS.C
 
 symbols in this file:
 000BD310 00e0:
-	_code_000bd310 (0000)
+	_byte_swap_script_syntax_data (0000)
 0026F0D0 001a:
 	??_C@_0BK@HCHIMFOO@hs_string_data_definition?$AA@ (0000)
 0026F0EC 001a:

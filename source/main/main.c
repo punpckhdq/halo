@@ -129,7 +129,7 @@ struct _main_globals
 
 /* ---------- prototypes */
 
-static long sort_controllers_ascending(short const *a, short const *b);
+static long sort_desired_local_player_controllers(short const *a, short const *b);
 static void create_local_players(void);
 static void main_queue_map_private(void);
 static void compute_subframe_counts(long num_players, long *out_horizontal_count, long *out_vertical_count);
@@ -138,7 +138,7 @@ static void main_new_map(struct game_options *options);
 static void main_change_map_name(void);
 static void main_revert_map_private(void);
 static void main_skip_cinematic_private(void);
-static void main_cutscene_skip_private(void); /* fake name */
+static void main_skip_private(void);
 static void main_saving_map_private(void);
 static void main_save_map_private(void);
 static void main_switch_to_structure_bsp_private(void);
@@ -307,7 +307,7 @@ void main_loop(
 
 			if (main_globals.cutscene_skip)
 			{
-				main_cutscene_skip_private();
+				main_skip_private();
 			}
 
 			if (main_globals.queue_map)
@@ -619,7 +619,7 @@ void main_load_last_solo_map(
 	return;
 }
 
-static long sort_controllers_ascending(
+static long sort_desired_local_player_controllers(
 	short const *a,
 	short const *b)
 {
@@ -704,7 +704,7 @@ static void create_local_players(
 			}
 		}
 
-		qsort(desired_controllers, NUMBEROF(desired_controllers), sizeof(desired_controllers[0]), (int(__cdecl *)(const void *, const void *))sort_controllers_ascending);
+		qsort(desired_controllers, NUMBEROF(desired_controllers), sizeof(desired_controllers[0]), (int(__cdecl *)(const void *, const void *))sort_desired_local_player_controllers);
 
 		for (i = 0; i<player_spawn_count; i++)
 		{
@@ -1619,7 +1619,7 @@ static void main_skip_cinematic_private(
 	return;
 }
 
-static void main_cutscene_skip_private(
+static void main_skip_private(
 	void)
 {
 	if (main_globals.skip_ticks && cinematic_in_progress())

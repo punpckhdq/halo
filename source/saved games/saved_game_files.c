@@ -35,43 +35,43 @@ symbols in this file:
 001B2C50 0090:
 	_saved_game_file_generate_checksum (0000)
 001B2CE0 0060:
-	_code_001b2ce0 (0000)
+	_find_and_create_directory_if_necessary (0000)
 001B2D40 00d0:
-	_code_001b2d40 (0000)
+	_enumerate_saved_game_files_start (0000)
 001B2E10 0090:
-	_code_001b2e10 (0000)
+	_enumerate_saved_game_files_end (0000)
 001B2EA0 0080:
-	_code_001b2ea0 (0000)
+	_enumerate_saved_game_file (0000)
 001B2F20 00d0:
-	_code_001b2f20 (0000)
+	_enumerate_mapfile_start (0000)
 001B2FF0 00a0:
-	_code_001b2ff0 (0000)
+	_enumerate_mapfile_end (0000)
 001B3090 0070:
-	_code_001b3090 (0000)
+	_enumerate_saved_game_file_from_mapfile (0000)
 001B3100 00d0:
-	_code_001b3100 (0000)
+	_count_enumerated_profiles_in_mapfile (0000)
 001B31D0 0020:
-	_code_001b31d0 (0000)
+	_saved_game_files_take_mapfile_mutex (0000)
 001B31F0 0010:
-	_code_001b31f0 (0000)
+	_saved_game_files_release_mapfile_mutex (0000)
 001B3200 0040:
-	_code_001b3200 (0000)
+	_build_saved_game_file_index (0000)
 001B3240 0180:
 	_saved_game_files_initialize (0000)
 001B33C0 0160:
 	_saved_game_file_find_profile_index_for_directory_path (0000)
 001B3520 0210:
-	_code_001b3520 (0000)
+	_enumerate_default_playlist_profiles (0000)
 001B3730 0200:
-	_code_001b3730 (0000)
+	_enumerate_default_player_profiles (0000)
 001B3930 01f0:
-	_code_001b3930 (0000)
+	_get_nth_entry_in_mapfile (0000)
 001B3B20 01e0:
-	_code_001b3b20 (0000)
+	_set_nth_entry_in_mapfile (0000)
 001B3D00 01e0:
-	_code_001b3d00 (0000)
+	_append_entry_to_mapfile (0000)
 001B3EE0 0210:
-	_code_001b3ee0 (0000)
+	_remove_nth_entry_in_mapfile (0000)
 001B40F0 00c0:
 	_saved_game_file_get_display_name (0000)
 001B41B0 0190:
@@ -83,11 +83,11 @@ symbols in this file:
 001B4890 0170:
 	_saved_game_file_get_path_to_enclosing_directory (0000)
 001B4A00 0020:
-	_code_001b4a00 (0000)
+	_enumerate_default_profiles (0000)
 001B4A20 00e0:
 	_saved_game_files_delete_all_custom_profiles (0000)
 001B4B00 03e0:
-	_code_001b4b00 (0000)
+	_enumerate_memory_units (0000)
 001B4EE0 0170:
 	_saved_game_files_enumerate_available_to_local_player_index (0000)
 001B5050 0390:

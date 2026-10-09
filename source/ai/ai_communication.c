@@ -17,31 +17,31 @@ symbols in this file:
 00031330 0060:
 	_ai_communication_packet_new (0000)
 00031390 0070:
-	_code_00031390 (0000)
+	_reply_filter_close (0000)
 00031400 0070:
-	_code_00031400 (0000)
+	_reply_filter_not_close (0000)
 00031470 0050:
-	_code_00031470 (0000)
+	_reply_filter_searching (0000)
 000314C0 0090:
-	_code_000314c0 (0000)
+	_reply_filter_same_platoon (0000)
 00031550 0020:
-	_code_00031550 (0000)
+	_reply_filter_fighting (0000)
 00031570 0040:
-	_code_00031570 (0000)
+	_reply_filter_fighting_close (0000)
 000315B0 00b0:
-	_code_000315b0 (0000)
+	_reply_filter_same_target (0000)
 00031660 0040:
-	_code_00031660 (0000)
+	_reply_filter_no_certain_target (0000)
 000316A0 0040:
-	_code_000316a0 (0000)
+	_reply_filter_flee_leader (0000)
 000316E0 01a0:
-	_code_000316e0 (0000)
+	_ai_communication_consider_speech (0000)
 00031880 0040:
 	_actor_communication_team (0000)
 000318C0 00b0:
-	_code_000318c0 (0000)
+	_ai_communication_look_secondary_at_unit (0000)
 00031970 0050:
-	_code_00031970 (0000)
+	_ai_communication_look_secondary_at_object (0000)
 000319C0 0110:
 	_ai_conversation_status (0000)
 00031AD0 0060:
@@ -51,21 +51,21 @@ symbols in this file:
 00031BC0 0190:
 	_ai_conversation_finish (0000)
 00031D50 0130:
-	_code_00031d50 (0000)
+	_ai_conversation_new (0000)
 00031E80 01b0:
-	_code_00031e80 (0000)
+	_ai_conversation_line_begin (0000)
 00032030 0290:
-	_code_00032030 (0000)
+	_ai_conversation_line_perform (0000)
 000322C0 0030:
-	_code_000322c0 (0000)
+	_ai_conversation_line_end (0000)
 000322F0 00d0:
-	_code_000322f0 (0000)
+	_actor_reset_idle_vocalization_timer (0000)
 000323C0 00f0:
 	_actor_communication_update (0000)
 000324B0 0080:
-	_code_000324b0 (0000)
+	_ai_communication_handle_received_looking (0000)
 00032530 02a0:
-	_code_00032530 (0000)
+	_ai_communication_update_speech_timers (0000)
 000327D0 0340:
 	_ai_communication_get_player_rating (0000)
 00032B10 0090:
@@ -75,21 +75,21 @@ symbols in this file:
 00032C70 0170:
 	_ai_conversation_unit_died (0000)
 00032DE0 0800:
-	_code_00032de0 (0000)
+	_ai_conversation_find_participant (0000)
 000335E0 02c0:
 	_ai_communication_started (0000)
 000338A0 0210:
 	_ai_communication_notify (0000)
 00033AB0 0390:
-	_code_00033ab0 (0000)
+	_ai_communication_actor_talk_weight (0000)
 00033E40 00c0:
-	_code_00033e40 (0000)
+	_ai_communication_find_specific_actor_to_talk (0000)
 00033F00 0120:
-	_code_00033f00 (0000)
+	_ai_communication_find_global_actor_to_talk (0000)
 00034020 06d0:
-	_code_00034020 (0000)
+	_ai_conversation_begin (0000)
 000346F0 0450:
-	_code_000346f0 (0000)
+	_ai_communication_find_actor_to_reply_to_player (0000)
 00034B40 0630:
 	_ai_communication_finished (0000)
 00035170 0150:

@@ -9,9 +9,9 @@ symbols in this file:
 0010CD10 0040:
 	_lruv_has_locked_proc (0000)
 0010CD50 0020:
-	_code_0010cd50 (0000)
+	_lruv_cache_bytes_to_pages (0000)
 0010CD70 0230:
-	_code_0010cd70 (0000)
+	_lruv_cache_verify (0000)
 0010CFA0 0110:
 	_lruv_initialize (0000)
 0010D0B0 0040:

@@ -3,19 +3,19 @@ RENDER_SPRITE.C
 
 symbols in this file:
 0017C760 0130:
-	_code_0017c760 (0000)
+	_build_sprite_transform_origin_and_direction (0000)
 0017C890 0070:
-	_code_0017c890 (0000)
+	_build_sprite_compute_scale (0000)
 0017C900 0090:
 	_build_sprite_prepare_for_window (0000)
 0017C990 0180:
-	_code_0017c990 (0000)
+	_build_sprite_get_group (0000)
 0017CB10 00a0:
 	_build_sprites_begin (0000)
 0017CBB0 0130:
 	_build_sprites_end (0000)
 0017CCE0 01e0:
-	_code_0017cce0 (0000)
+	_build_sprite_compute_basis (0000)
 0017CEC0 0070:
 	_build_sprite_compute_vertex_fade (0000)
 0017CF30 0610:

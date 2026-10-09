@@ -21,9 +21,9 @@ symbols in this file:
 00117EF0 0040:
 	_network_connection_going_stale (0000)
 00117F30 0200:
-	_code_00117f30 (0000)
+	_network_client_unreliable_connection_read (0000)
 00118130 0440:
-	_code_00118130 (0000)
+	_network_connection_log_traffic_event (0000)
 00118570 0010:
 	_network_connection_keep_alive (0000)
 00118580 00d0:
@@ -33,11 +33,11 @@ symbols in this file:
 00118980 0140:
 	_network_server_close_client_connection (0000)
 00118AC0 0080:
-	_code_00118ac0 (0000)
+	_network_connection_create_client_from_endpoint (0000)
 00118B40 01e0:
-	_code_00118b40 (0000)
+	_network_client_reliable_connection_read (0000)
 00118D20 01e0:
-	_code_00118d20 (0000)
+	_network_connection_idle_client_reliable_endpoint (0000)
 00118F00 0240:
 	_network_connection_new (0000)
 00119140 0090:
@@ -45,7 +45,7 @@ symbols in this file:
 001191D0 00b0:
 	_network_connection_disconnect (0000)
 00119280 02c0:
-	_code_00119280 (0000)
+	_network_connection_idle_server_reliable_endpoint (0000)
 00119540 0310:
 	_network_connection_idle (0000)
 00282D74 003d:

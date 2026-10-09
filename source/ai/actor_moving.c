@@ -35,11 +35,11 @@ symbols in this file:
 000192F0 0100:
 	_actor_aim_jump (0000)
 000193F0 0240:
-	_code_000193f0 (0000)
+	_actor_move_avoidance_setup (0000)
 00019630 02f0:
-	_code_00019630 (0000)
+	_actor_move_test_avoidance_vector (0000)
 00019920 00f0:
-	_code_00019920 (0000)
+	_actor_move_vector_avoidance_find_direction (0000)
 00019A10 0090:
 	_actor_move_transform_avoidance_vector (0000)
 00019AA0 0140:
@@ -49,11 +49,11 @@ symbols in this file:
 00019D30 0110:
 	_actor_path_3d_available (0000)
 00019E40 0280:
-	_code_00019e40 (0000)
+	_actor_move_calculate_controlled_by_aiming (0000)
 0001A0C0 02d0:
-	_code_0001a0c0 (0000)
+	_actor_move_calculate_free (0000)
 0001A390 1030:
-	_code_0001a390 (0000)
+	_actor_move_vector_avoidance (0000)
 0001B3C0 05a0:
 	_actor_path_refresh (0000)
 0001B960 03d0:
@@ -67,7 +67,7 @@ symbols in this file:
 0001BFC0 00f0:
 	_actor_move_to_prop (0000)
 0001C0B0 0ac0:
-	_code_0001c0b0 (0000)
+	_actor_move_calculate_movement (0000)
 0001CB70 0c40:
 	_actor_move_update (0000)
 0001D7B0 0090:

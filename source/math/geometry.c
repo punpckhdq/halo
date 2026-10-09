@@ -13,11 +13,11 @@ symbols in this file:
 000F5010 0040:
 	_vector_intersect_plane3d (0000)
 000F5050 0150:
-	_code_000f5050 (0000)
+	_calculate_vertex (0000)
 000F51A0 0300:
 	_build_torus (0000)
 000F54A0 00a0:
-	_code_000f54a0 (0000)
+	_points_dimension2d (0000)
 000F5540 0310:
 	_convex_hull2d (0000)
 000F5850 0100:
@@ -53,13 +53,13 @@ symbols in this file:
 000F75D0 0110:
 	_convex_hull3d_test_vector (0000)
 000F76E0 01a0:
-	_code_000f76e0 (0000)
+	_get_edge_vertex (0000)
 000F7880 0210:
 	_convex_hull2d_intersect (0000)
 000F7A90 0190:
-	_code_000f7a90 (0000)
+	_get_face_vertex (0000)
 000F7C20 03b0:
-	_code_000f7c20 (0000)
+	_subdivide_triangle (0000)
 000F7FD0 01f0:
 	_geosphere_new (0000)
 0027A2B8 0078:

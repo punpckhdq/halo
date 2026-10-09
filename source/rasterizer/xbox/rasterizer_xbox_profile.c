@@ -3,13 +3,13 @@ RASTERIZER_XBOX_PROFILE.C
 
 symbols in this file:
 0015ECD0 0080:
-	_code_0015ecd0 (0000)
+	_profile_assert (0000)
 0015ED50 0110:
-	_code_0015ed50 (0000)
+	_callback_function (0000)
 0015EE60 0090:
-	_code_0015ee60 (0000)
+	_frame_callback_function (0000)
 0015EEF0 0020:
-	_code_0015eef0 (0000)
+	_rasterizer_profile_enabled (0000)
 0015EF10 0070:
 	_rasterizer_profile_initialize (0000)
 0015EF80 0150:

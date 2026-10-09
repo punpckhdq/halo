@@ -29,9 +29,9 @@ symbols in this file:
 001AF4D0 0020:
 	_game_state_reverted (0000)
 001AF4F0 0160:
-	_code_001af4f0 (0000)
+	_game_state_header_valid (0000)
 001AF650 0070:
-	_code_001af650 (0000)
+	_game_state_allocation_record (0000)
 001AF6C0 0020:
 	_code_001af6c0 (0000)
 001AF6E0 0110:
@@ -367,8 +367,8 @@ boolean game_state_reverted(
 	return (game_state_globals.revert_time==game_time_get());
 }
 
-// _code_001af4f0
-// _code_001af650
+// _game_state_header_valid
+// _game_state_allocation_record
 
 static void game_state_set_revert_time(
 	void)

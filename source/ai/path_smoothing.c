@@ -3,15 +3,15 @@ PATH_SMOOTHING.C
 
 symbols in this file:
 00051190 0080:
-	_code_00051190 (0000)
+	_surface_is_walkable (0000)
 00051210 0150:
-	_code_00051210 (0000)
+	_find_tangent_point (0000)
 00051360 0120:
-	_code_00051360 (0000)
+	_find_avoidance_point (0000)
 00051480 0220:
-	_code_00051480 (0000)
+	_choose_turning_point (0000)
 000516A0 0380:
-	_code_000516a0 (0000)
+	_find_turning_point (0000)
 00051A20 0360:
 	_path_smooth (0000)
 0024EAB0 0046:

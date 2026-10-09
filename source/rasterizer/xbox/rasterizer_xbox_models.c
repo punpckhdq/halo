@@ -3,17 +3,17 @@ RASTERIZER_XBOX_MODELS.C
 
 symbols in this file:
 0015A150 01b0:
-	_code_0015a150 (0000)
+	_D3DDevice_SetRenderState (0000)
 0015A300 0050:
-	_code_0015a300 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 0015A350 03f0:
-	_code_0015a350 (0000)
+	_rasterizer_model_set_pixel_shader (0000)
 0015A740 0220:
-	_code_0015a740 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 0015A960 0060:
-	_code_0015a960 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 0015A9C0 0010:
-	_code_0015a9c0 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 0015A9D0 0040:
 	__rasterizer_models_begin (0000)
 0015AA10 0080:

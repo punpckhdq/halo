@@ -7,7 +7,7 @@ symbols in this file:
 0011AEA0 0060:
 	_network_event (0000)
 0011AF00 0050:
-	_code_0011af00 (0000)
+	_encode_network_game_message (0000)
 0011AF50 05e0:
 	_create_network_game_message (0000)
 0011B530 00a0:

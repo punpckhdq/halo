@@ -15,7 +15,7 @@ symbols in this file:
 00094DD0 0060:
 	_cheat_active_camouflage_local_player (0000)
 00094E30 0060:
-	_code_00094e30 (0000)
+	_cheat_player_index (0000)
 00094E90 0010:
 	_cheats_initialize_for_new_map (0000)
 00094EA0 00b0:
@@ -23,7 +23,7 @@ symbols in this file:
 00094F50 0050:
 	_cheat_active_camouflage (0000)
 00094FA0 0150:
-	_code_00094fa0 (0000)
+	_cheat_objects (0000)
 000950F0 00d0:
 	_cheat_all_weapons (0000)
 000951C0 0050:

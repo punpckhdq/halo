@@ -19,11 +19,11 @@ symbols in this file:
 001B0D70 0010:
 	_player_profile_get_enclosing_directory_path (0000)
 001B0D80 00b0:
-	_code_001b0d80 (0000)
+	_build_default_profile (0000)
 001B0E30 0280:
-	_code_001b0e30 (0000)
+	_player_profile_read (0000)
 001B10B0 0160:
-	_code_001b10b0 (0000)
+	_player_profile_write_thread_proc@4 (0000)
 001B1210 01d0:
 	_player_profile_new (0000)
 001B13E0 0060:
@@ -35,9 +35,9 @@ symbols in this file:
 001B14B0 0020:
 	_player_profile_get_random_color (0000)
 001B14D0 0120:
-	_code_001b14d0 (0000)
+	_player_profile_create_default_profiles_on_disk (0000)
 001B15F0 00a0:
-	_code_001b15f0 (0000)
+	_player_profile_write (0000)
 001B1690 0020:
 	_player_profiles_initialize (0000)
 001B16B0 0040:

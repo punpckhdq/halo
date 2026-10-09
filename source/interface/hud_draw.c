@@ -7,15 +7,15 @@ symbols in this file:
 000C08F0 0030:
 	_check_stack_buffer (0000)
 000C0920 0110:
-	_code_000c0920 (0000)
+	_get_sprite_clip_rect (0000)
 000C0A30 0010:
 	_hud_globals_get_scale (0000)
 000C0A40 01f0:
 	_hud_retrieve_bitmap_and_bounding_rect (0000)
 000C0C30 01e0:
-	_code_000c0c30 (0000)
+	_hud_calculate_bitmap_bounds (0000)
 000C0E10 01e0:
-	_code_000c0e10 (0000)
+	_hud_draw_multitexture_overlay_get_current_weapon_definition (0000)
 000C0FF0 0038:
 	_fast_ftol_C (0000)
 000C1030 0140:
@@ -31,11 +31,11 @@ symbols in this file:
 000C16C0 0260:
 	_get_flash_color (0000)
 000C1920 0220:
-	_code_000c1920 (0000)
+	_hud_draw_bitmap_internal (0000)
 000C1B40 08e0:
-	_code_000c1b40 (0000)
+	_hud_draw_multitexture_overlay (0000)
 000C2420 0180:
-	_code_000c2420 (0000)
+	_hud_draw_bitmap_with_meter (0000)
 000C25A0 0140:
 	_hud_draw_bitmap_direct (0000)
 000C26E0 0520:

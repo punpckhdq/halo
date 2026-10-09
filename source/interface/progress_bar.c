@@ -3,37 +3,37 @@ PROGRESS_BAR.C
 
 symbols in this file:
 000D0D10 01b0:
-	_code_000d0d10 (0000)
+	_D3DDevice_SetRenderState (0000)
 000D0EC0 0050:
-	_code_000d0ec0 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 000D0F10 0010:
-	_code_000d0f10 (0000)
+	_IDirect3DDevice8_GetBackBuffer@16 (0000)
 000D0F20 0020:
-	_code_000d0f20 (0000)
+	_IDirect3DDevice8_CreateTexture@32 (0000)
 000D0F40 0010:
-	_code_000d0f40 (0000)
+	_IDirect3DDevice8_SetRenderTarget@12 (0000)
 000D0F50 00d0:
 	_tgaLoadHeader (0000)
 000D1020 0010:
-	_code_000d1020 (0000)
+	_IDirect3DDevice8_GetDepthStencilSurface@8 (0000)
 000D1030 0020:
-	_code_000d1030 (0000)
+	_IDirect3DDevice8_Clear@28 (0000)
 000D1050 0090:
 	_tgaLoadImageData (0000)
 000D10E0 0010:
-	_code_000d10e0 (0000)
+	_IDirect3DDevice8_SetTransform@12 (0000)
 000D10F0 0010:
-	_code_000d10f0 (0000)
+	_IDirect3DDevice8_GetTransform@12 (0000)
 000D1100 0050:
 	_tgaLoad (0000)
 000D1150 0010:
-	_code_000d1150 (0000)
+	_progress_bar_is_stuff_ready (0000)
 000D1160 0220:
-	_code_000d1160 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 000D1380 0010:
-	_code_000d1380 (0000)
+	_IDirect3DDevice8_SetTexture@12 (0000)
 000D1390 0060:
-	_code_000d1390 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 000D13F0 0090:
 	_progress_bar_initialize (0000)
 000D1480 0010:
@@ -41,7 +41,7 @@ symbols in this file:
 000D1490 0030:
 	_progress_bar_begin (0000)
 000D14C0 0010:
-	_code_000d14c0 (0000)
+	_IDirect3DDevice8_SetVertexShader@8 (0000)
 000D14D0 0020:
 	_progress_bar_end (0000)
 000D14F0 0010:
@@ -51,47 +51,47 @@ symbols in this file:
 000D1550 0110:
 	_generate_gravy_rect (0000)
 000D1660 0010:
-	_code_000d1660 (0000)
+	_IDirect3DDevice8_SetPixelShaderProgram@8 (0000)
 000D1670 0010:
-	_code_000d1670 (0000)
+	_IDirect3DDevice8_BlockUntilVerticalBlank@4 (0000)
 000D1680 0020:
-	_code_000d1680 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 000D16A0 0030:
-	_code_000d16a0 (0000)
+	_IDirect3DDevice8_SetVertexData4f@24 (0000)
 000D16D0 0010:
-	_code_000d16d0 (0000)
+	_progress_bar_create_noise_texture (0000)
 000D16E0 0010:
-	_code_000d16e0 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 000D16F0 0010:
-	_code_000d16f0 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 000D1700 0030:
 	_gen_cloud_coord (0000)
 000D1730 0040:
 	_gen_mask_coord (0000)
 000D1770 0160:
-	_code_000d1770 (0000)
+	_draw_layer_int (0000)
 000D18D0 0060:
-	_code_000d18d0 (0000)
+	_draw_layer (0000)
 000D1930 0060:
-	_code_000d1930 (0000)
+	_draw_initial_layer (0000)
 000D1990 0030:
-	_code_000d1990 (0000)
+	_this_is_awful (0000)
 000D19C0 00a0:
-	_code_000d19c0 (0000)
+	_do_convoluation_coords (0000)
 000D1A60 0130:
-	_code_000d1a60 (0000)
+	_draw_fade_layer (0000)
 000D1B90 0010:
 	_progress_bar_enable (0000)
 000D1BA0 0010:
-	_code_000d1ba0 (0000)
+	_D3DTexture_UnlockRect@8 (0000)
 000D1BB0 0010:
-	_code_000d1bb0 (0000)
+	_IDirect3DTexture8_Release@4 (0000)
 000D1BC0 0010:
-	_code_000d1bc0 (0000)
+	_IDirect3DTexture8_GetLevelDesc@12 (0000)
 000D1BD0 0020:
-	_code_000d1bd0 (0000)
+	_IDirect3DTexture8_LockRect@20 (0000)
 000D1BF0 0010:
-	_code_000d1bf0 (0000)
+	_IDirect3DTexture8_UnlockRect@8 (0000)
 000D1C00 0040:
 	_D3DXMatrixIdentity (0000)
 000D1C40 0250:
@@ -99,15 +99,15 @@ symbols in this file:
 000D1E90 0070:
 	_SetTextureStageStateSmart (0000)
 000D1F00 04b0:
-	_code_000d1f00 (0000)
+	_progress_bar_render (0000)
 000D23B0 00b0:
 	_code_000d23b0 (0000)
 000D2460 00d0:
-	_code_000d2460 (0000)
+	_progress_bar_create_mask_texture (0000)
 000D2530 00c0:
 	_progress_bar_eachframe (0000)
 000D25F0 0490:
-	_code_000d25f0 (0000)
+	_progress_bar_make_stuff_ready (0000)
 000D2A80 00a0:
 	_progress_bar_display (0000)
 00271088 0148:

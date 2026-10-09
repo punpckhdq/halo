@@ -23,11 +23,11 @@ symbols in this file:
 001B0210 0010:
 	_game_state_get_persistent_storage_filename (0000)
 001B0220 0020:
-	_code_001b0220 (0000)
+	_game_state_get_persistent_storage_path (0000)
 001B0240 0030:
-	_code_001b0240 (0000)
+	_delete_persistent_storage (0000)
 001B0270 0190:
-	_code_001b0270 (0000)
+	_game_state_open_persistent_storage (0000)
 001B0400 01b0:
 	_game_state_read_header_from_persistent_storage (0000)
 001B05B0 0160:

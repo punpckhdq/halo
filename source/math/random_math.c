@@ -29,7 +29,7 @@ symbols in this file:
 000FAAF0 0030:
 	_seed_random_range (0000)
 000FAB20 0080:
-	_code_000fab20 (0000)
+	_direction3d_from_table (0000)
 000FABA0 0040:
 	_seed_random_direction3d (0000)
 000FABE0 0100:

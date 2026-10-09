@@ -3,787 +3,787 @@ HS.C
 
 symbols in this file:
 000AD290 0050:
-	_code_000ad290 (0000)
+	_hs_not_evaluate (0000)
 000AD2E0 0040:
-	_code_000ad2e0 (0000)
+	_hs_print_evaluate (0000)
 000AD320 0020:
-	_code_000ad320 (0000)
+	_hs_players_evaluate (0000)
 000AD340 0040:
-	_code_000ad340 (0000)
+	_hs_teleport_players_not_in_trigger_volume_evaluate (0000)
 000AD380 0050:
-	_code_000ad380 (0000)
+	_scenario_trigger_volume_test_object_evaluate (0000)
 000AD3D0 0050:
-	_code_000ad3d0 (0000)
+	_hs_trigger_volume_test_objects_any_evaluate (0000)
 000AD420 0050:
-	_code_000ad420 (0000)
+	_hs_trigger_volume_test_objects_all_evaluate (0000)
 000AD470 0040:
-	_code_000ad470 (0000)
+	_hs_object_create_evaluate (0000)
 000AD4B0 0040:
-	_code_000ad4b0 (0000)
+	_hs_object_destroy_evaluate (0000)
 000AD4F0 0040:
-	_code_000ad4f0 (0000)
+	_hs_object_create_anew_evaluate (0000)
 000AD530 0040:
-	_code_000ad530 (0000)
+	_hs_object_create_containing_evaluate (0000)
 000AD570 0040:
-	_code_000ad570 (0000)
+	_hs_object_create_anew_containing_evaluate (0000)
 000AD5B0 0040:
-	_code_000ad5b0 (0000)
+	_hs_object_destroy_containing_evaluate (0000)
 000AD5F0 0020:
-	_code_000ad5f0 (0000)
+	_hs_object_destroy_all_evaluate (0000)
 000AD610 0040:
-	_code_000ad610 (0000)
+	_hs_object_teleport_evaluate (0000)
 000AD650 0040:
-	_code_000ad650 (0000)
+	_hs_object_set_facing_evaluate (0000)
 000AD690 0040:
-	_code_000ad690 (0000)
+	_hs_object_set_shield_evaluate (0000)
 000AD6D0 0040:
-	_code_000ad6d0 (0000)
+	_hs_object_set_permutation_evaluate (0000)
 000AD710 0040:
-	_code_000ad710 (0000)
+	_hs_object_list_get_element_evaluate (0000)
 000AD750 0050:
-	_code_000ad750 (0000)
+	_object_list_count_evaluate (0000)
 000AD7A0 0040:
-	_code_000ad7a0 (0000)
+	_hs_effect_new_evaluate (0000)
 000AD7E0 0040:
-	_code_000ad7e0 (0000)
+	_hs_effect_new_from_object_marker_evaluate (0000)
 000AD820 0040:
-	_code_000ad820 (0000)
+	_hs_damage_new_evaluate (0000)
 000AD860 0040:
-	_code_000ad860 (0000)
+	_hs_damage_object_evaluate (0000)
 000AD8A0 0050:
-	_code_000ad8a0 (0000)
+	_hs_objects_can_see_object_evaluate (0000)
 000AD8F0 0050:
-	_code_000ad8f0 (0000)
+	_hs_objects_can_see_flag_evaluate (0000)
 000AD940 0040:
-	_code_000ad940 (0000)
+	_hs_objects_delete_by_definition_evaluate (0000)
 000AD980 0040:
-	_code_000ad980 (0000)
+	_hs_sound_set_gain_evaluate (0000)
 000AD9C0 0040:
-	_code_000ad9c0 (0000)
+	_hs_sound_get_gain_evaluate (0000)
 000ADA00 0040:
-	_code_000ada00 (0000)
+	_numeric_countdown_timer_set_evaluate (0000)
 000ADA40 0050:
-	_code_000ada40 (0000)
+	_numeric_countdown_timer_get_evaluate (0000)
 000ADA90 0020:
-	_code_000ada90 (0000)
+	_numeric_countdown_timer_stop_evaluate (0000)
 000ADAB0 0020:
-	_code_000adab0 (0000)
+	_numeric_countdown_timer_restart_evaluate (0000)
 000ADAD0 0040:
-	_code_000adad0 (0000)
+	_breakable_surfaces_enable_evaluate (0000)
 000ADB10 0050:
-	_code_000adb10 (0000)
+	_recorded_animation_play_evaluate (0000)
 000ADB60 0050:
-	_code_000adb60 (0000)
+	_recorded_animation_play_and_delete_evaluate (0000)
 000ADBB0 0050:
-	_code_000adbb0 (0000)
+	_recorded_animation_play_and_hover_evaluate (0000)
 000ADC00 0040:
-	_code_000adc00 (0000)
+	_recorded_animation_kill_evaluate (0000)
 000ADC40 0050:
-	_code_000adc40 (0000)
+	_recorded_animation_get_time_left_evaluate (0000)
 000ADC90 0040:
-	_code_000adc90 (0000)
+	_object_set_ranged_attack_inhibited_evaluate (0000)
 000ADCD0 0040:
-	_code_000adcd0 (0000)
+	_object_set_melee_attack_inhibited_evaluate (0000)
 000ADD10 0020:
-	_code_000add10 (0000)
+	_objects_dump_memory_evaluate (0000)
 000ADD30 0040:
-	_code_000add30 (0000)
+	_object_scripting_set_collideable_evaluate (0000)
 000ADD70 0040:
-	_code_000add70 (0000)
+	_objects_scripting_set_scale_evaluate (0000)
 000ADDB0 0040:
-	_code_000addb0 (0000)
+	_objects_scripting_attach_evaluate (0000)
 000ADDF0 0040:
-	_code_000addf0 (0000)
+	_objects_scripting_detach_evaluate (0000)
 000ADE30 0020:
-	_code_000ade30 (0000)
+	_garbage_collect_now_evaluate (0000)
 000ADE50 0040:
-	_code_000ade50 (0000)
+	_object_cannot_take_damage_evaluate (0000)
 000ADE90 0040:
-	_code_000ade90 (0000)
+	_object_can_take_damage_evaluate (0000)
 000ADED0 0040:
-	_code_000aded0 (0000)
+	_object_beautify_evaluate (0000)
 000ADF10 0040:
-	_code_000adf10 (0000)
+	_hs_objects_predict_evaluate (0000)
 000ADF50 0040:
-	_code_000adf50 (0000)
+	_object_definition_predict_evaluate (0000)
 000ADF90 0040:
-	_code_000adf90 (0000)
+	_object_pvs_set_object_evaluate (0000)
 000ADFD0 0040:
-	_code_000adfd0 (0000)
+	_object_pvs_set_camera_point_evaluate (0000)
 000AE010 0020:
-	_code_000ae010 (0000)
+	_object_pvs_clear_evaluate (0000)
 000AE030 0040:
-	_code_000ae030 (0000)
+	_object_pvs_activate_evaluate (0000)
 000AE070 0050:
-	_code_000ae070 (0000)
+	_lights_enable_evaluate (0000)
 000AE0C0 0050:
-	_code_000ae0c0 (0000)
+	_scenery_get_animation_time_evaluate (0000)
 000AE110 0040:
-	_code_000ae110 (0000)
+	_scenery_animation_start_evaluate (0000)
 000AE150 0050:
-	_code_000ae150 (0000)
+	_scenery_animation_start_at_frame_evaluate (0000)
 000AE1A0 0040:
-	_code_000ae1a0 (0000)
+	_render_effects_evaluate (0000)
 000AE1E0 0040:
-	_code_000ae1e0 (0000)
+	_unit_scripting_can_blink_evaluate (0000)
 000AE220 0040:
-	_code_000ae220 (0000)
+	_unit_open_evaluate (0000)
 000AE260 0040:
-	_code_000ae260 (0000)
+	_unit_close_evaluate (0000)
 000AE2A0 0040:
-	_code_000ae2a0 (0000)
+	_unit_kill_evaluate (0000)
 000AE2E0 0040:
-	_code_000ae2e0 (0000)
+	_unit_kill_silent_evaluate (0000)
 000AE320 0050:
-	_code_000ae320 (0000)
+	_unit_get_custom_animation_time_evaluate (0000)
 000AE370 0040:
-	_code_000ae370 (0000)
+	_unit_stop_custom_animation_evaluate (0000)
 000AE3B0 0050:
-	_code_000ae3b0 (0000)
+	_unit_start_user_animation_evaluate (0000)
 000AE400 0050:
-	_code_000ae400 (0000)
+	_unit_scripting_start_user_animation_list_evaluate (0000)
 000AE450 0060:
-	_code_000ae450 (0000)
+	_unit_custom_animation_at_frame_evaluate (0000)
 000AE4B0 0050:
-	_code_000ae4b0 (0000)
+	_unit_is_playing_custom_animation_evaluate (0000)
 000AE500 0040:
-	_code_000ae500 (0000)
+	_unit_aim_without_turning_evaluate (0000)
 000AE540 0040:
-	_code_000ae540 (0000)
+	_unit_set_emotion_evaluate (0000)
 000AE580 0040:
-	_code_000ae580 (0000)
+	_unit_set_enterable_by_player_evaluate (0000)
 000AE5C0 0040:
-	_code_000ae5c0 (0000)
+	_unit_scripting_enter_vehicle_evaluate (0000)
 000AE600 0050:
-	_code_000ae600 (0000)
+	_unit_scripting_vehicle_test_seat_list_evaluate (0000)
 000AE650 0050:
-	_code_000ae650 (0000)
+	_unit_scripting_vehicle_test_seat_evaluate (0000)
 000AE6A0 0040:
-	_code_000ae6a0 (0000)
+	_unit_scripting_set_emotion_animation_evaluate (0000)
 000AE6E0 0040:
-	_code_000ae6e0 (0000)
+	_unit_scripting_exit_vehicle_evaluate (0000)
 000AE720 0050:
-	_code_000ae720 (0000)
+	_unit_scripting_set_maximum_vitality_evaluate (0000)
 000AE770 0050:
-	_code_000ae770 (0000)
+	_units_scripting_set_maximum_vitality_evaluate (0000)
 000AE7C0 0050:
-	_code_000ae7c0 (0000)
+	_unit_scripting_set_current_vitality_evaluate (0000)
 000AE810 0050:
-	_code_000ae810 (0000)
+	_units_scripting_set_current_vitality_evaluate (0000)
 000AE860 0050:
-	_code_000ae860 (0000)
+	_vehicle_scripting_load_magic_evaluate (0000)
 000AE8B0 0050:
-	_code_000ae8b0 (0000)
+	_vehicle_scripting_unload_evaluate (0000)
 000AE900 0040:
-	_code_000ae900 (0000)
+	_scripting_set_magic_base_seat_evaluate (0000)
 000AE940 0040:
-	_code_000ae940 (0000)
+	_unit_scripting_set_seat_evaluate (0000)
 000AE980 0020:
-	_code_000ae980 (0000)
+	_scripting_magic_melee_attack_evaluate (0000)
 000AE9A0 0040:
-	_code_000ae9a0 (0000)
+	_unit_scripting_unit_riders_evaluate (0000)
 000AE9E0 0040:
-	_code_000ae9e0 (0000)
+	_unit_scripting_unit_driver_evaluate (0000)
 000AEA20 0040:
-	_code_000aea20 (0000)
+	_unit_scripting_unit_gunner_evaluate (0000)
 000AEA60 0040:
-	_code_000aea60 (0000)
+	_unit_scripting_get_health_evaluate (0000)
 000AEAA0 0040:
-	_code_000aeaa0 (0000)
+	_unit_scripting_get_shield_evaluate (0000)
 000AEAE0 0050:
-	_code_000aeae0 (0000)
+	_unit_scripting_get_grenade_count_evaluate (0000)
 000AEB30 0050:
-	_code_000aeb30 (0000)
+	_unit_scripting_has_weapon_evaluate (0000)
 000AEB80 0050:
-	_code_000aeb80 (0000)
+	_unit_scripting_has_weapon_readied_evaluate (0000)
 000AEBD0 0040:
-	_code_000aebd0 (0000)
+	_unit_scripting_doesnt_drop_items_evaluate (0000)
 000AEC10 0040:
-	_code_000aec10 (0000)
+	_unit_scripting_impervious_evaluate (0000)
 000AEC50 0040:
-	_code_000aec50 (0000)
+	_unit_scripting_suspended_evaluate (0000)
 000AEC90 0030:
-	_code_000aec90 (0000)
+	_unit_solo_player_integrated_night_vision_is_active_evaluate (0000)
 000AECC0 0040:
-	_code_000aecc0 (0000)
+	_units_set_desired_flashlight_state_evaluate (0000)
 000AED00 0040:
-	_code_000aed00 (0000)
+	_unit_set_desired_flashlight_state_evaluate (0000)
 000AED40 0050:
-	_code_000aed40 (0000)
+	_unit_get_current_flashlight_state_evaluate (0000)
 000AED90 0040:
-	_code_000aed90 (0000)
+	_device_set_never_appears_locked_evaluate (0000)
 000AEDD0 0040:
-	_code_000aedd0 (0000)
+	_device_set_power_evaluate (0000)
 000AEE10 0040:
-	_code_000aee10 (0000)
+	_device_get_power_evaluate (0000)
 000AEE50 0050:
-	_code_000aee50 (0000)
+	_device_set_desired_position_evaluate (0000)
 000AEEA0 0040:
-	_code_000aeea0 (0000)
+	_device_get_position_evaluate (0000)
 000AEEE0 0040:
-	_code_000aeee0 (0000)
+	_device_set_actual_position_evaluate (0000)
 000AEF20 0040:
-	_code_000aef20 (0000)
+	_device_group_get_value_evaluate (0000)
 000AEF60 0050:
-	_code_000aef60 (0000)
+	_device_group_set_desired_value_evaluate (0000)
 000AEFB0 0040:
-	_code_000aefb0 (0000)
+	_device_group_set_actual_value_evaluate (0000)
 000AEFF0 0040:
-	_code_000aeff0 (0000)
+	_device_one_sided_set_evaluate (0000)
 000AF030 0040:
-	_code_000af030 (0000)
+	_device_operates_automatically_set_evaluate (0000)
 000AF070 0040:
-	_code_000af070 (0000)
+	_device_group_change_only_once_more_set_evaluate (0000)
 000AF0B0 0020:
-	_code_000af0b0 (0000)
+	_breakable_surfaces_reset_evaluate (0000)
 000AF0D0 0020:
-	_code_000af0d0 (0000)
+	_cheat_all_powerups_evaluate (0000)
 000AF0F0 0020:
-	_code_000af0f0 (0000)
+	_cheat_all_weapons_evaluate (0000)
 000AF110 0020:
-	_code_000af110 (0000)
+	_cheat_all_vehicles_evaluate (0000)
 000AF130 0020:
-	_code_000af130 (0000)
+	_cheat_teleport_to_camera_evaluate (0000)
 000AF150 0020:
-	_code_000af150 (0000)
+	_cheat_active_camouflage_evaluate (0000)
 000AF170 0040:
-	_code_000af170 (0000)
+	_cheat_active_camouflage_local_player_evaluate (0000)
 000AF1B0 0020:
-	_code_000af1b0 (0000)
+	_cheats_load_evaluate (0000)
 000AF1D0 0040:
-	_code_000af1d0 (0000)
+	_ai_globals_ai_active_evaluate (0000)
 000AF210 0040:
-	_code_000af210 (0000)
+	_ai_globals_dialogue_triggers_enabled_evaluate (0000)
 000AF250 0040:
-	_code_000af250 (0000)
+	_ai_globals_grenades_enabled_evaluate (0000)
 000AF290 0040:
-	_code_000af290 (0000)
+	_ai_scripting_free_evaluate (0000)
 000AF2D0 0040:
-	_code_000af2d0 (0000)
+	_ai_scripting_free_units_evaluate (0000)
 000AF310 0040:
-	_code_000af310 (0000)
+	_ai_scripting_attach_unit_evaluate (0000)
 000AF350 0040:
-	_code_000af350 (0000)
+	_ai_scripting_attach_units_evaluate (0000)
 000AF390 0040:
-	_code_000af390 (0000)
+	_ai_scripting_attach_free_evaluate (0000)
 000AF3D0 0040:
-	_code_000af3d0 (0000)
+	_ai_scripting_detach_unit_evaluate (0000)
 000AF410 0040:
-	_code_000af410 (0000)
+	_ai_scripting_detach_units_evaluate (0000)
 000AF450 0040:
-	_code_000af450 (0000)
+	_ai_scripting_place_evaluate (0000)
 000AF490 0040:
-	_code_000af490 (0000)
+	_ai_scripting_kill_evaluate (0000)
 000AF4D0 0040:
-	_code_000af4d0 (0000)
+	_ai_scripting_kill_silent_evaluate (0000)
 000AF510 0040:
-	_code_000af510 (0000)
+	_ai_scripting_erase_evaluate (0000)
 000AF550 0020:
-	_code_000af550 (0000)
+	_ai_scripting_erase_all_evaluate (0000)
 000AF570 0040:
-	_code_000af570 (0000)
+	_ai_scripting_select_evaluate (0000)
 000AF5B0 0020:
-	_code_000af5b0 (0000)
+	_ai_scripting_deselect_evaluate (0000)
 000AF5D0 0040:
-	_code_000af5d0 (0000)
+	_ai_scripting_spawn_actor_evaluate (0000)
 000AF610 0040:
-	_code_000af610 (0000)
+	_ai_scripting_set_respawn_evaluate (0000)
 000AF650 0040:
-	_code_000af650 (0000)
+	_ai_scripting_set_deaf_evaluate (0000)
 000AF690 0040:
-	_code_000af690 (0000)
+	_ai_scripting_set_blind_evaluate (0000)
 000AF6D0 0040:
-	_code_000af6d0 (0000)
+	_ai_scripting_magically_see_encounter_evaluate (0000)
 000AF710 0040:
-	_code_000af710 (0000)
+	_ai_scripting_magically_see_players_evaluate (0000)
 000AF750 0040:
-	_code_000af750 (0000)
+	_ai_scripting_magically_see_unit_evaluate (0000)
 000AF790 0040:
-	_code_000af790 (0000)
+	_ai_scripting_magically_see_units_evaluate (0000)
 000AF7D0 0040:
-	_code_000af7d0 (0000)
+	_ai_scripting_timer_start_evaluate (0000)
 000AF810 0040:
-	_code_000af810 (0000)
+	_ai_scripting_timer_expire_evaluate (0000)
 000AF850 0040:
-	_code_000af850 (0000)
+	_ai_scripting_attack_evaluate (0000)
 000AF890 0040:
-	_code_000af890 (0000)
+	_ai_scripting_defend_evaluate (0000)
 000AF8D0 0040:
-	_code_000af8d0 (0000)
+	_ai_scripting_retreat_evaluate (0000)
 000AF910 0040:
-	_code_000af910 (0000)
+	_ai_scripting_maneuver_evaluate (0000)
 000AF950 0040:
-	_code_000af950 (0000)
+	_ai_scripting_maneuver_enable_evaluate (0000)
 000AF990 0040:
-	_code_000af990 (0000)
+	_ai_scripting_migrate_evaluate (0000)
 000AF9D0 0040:
-	_code_000af9d0 (0000)
+	_ai_scripting_migrate_and_speak_evaluate (0000)
 000AFA10 0040:
-	_code_000afa10 (0000)
+	_ai_scripting_migrate_by_unit_evaluate (0000)
 000AFA50 0040:
-	_code_000afa50 (0000)
+	_ai_scripting_allegiance_evaluate (0000)
 000AFA90 0040:
-	_code_000afa90 (0000)
+	_ai_scripting_allegiance_remove_evaluate (0000)
 000AFAD0 0040:
-	_code_000afad0 (0000)
+	_ai_scripting_go_to_vehicle_evaluate (0000)
 000AFB10 0040:
-	_code_000afb10 (0000)
+	_ai_scripting_go_to_vehicle_override_evaluate (0000)
 000AFB50 0040:
-	_code_000afb50 (0000)
+	_ai_scripting_exit_vehicle_evaluate (0000)
 000AFB90 0040:
-	_code_000afb90 (0000)
+	_ai_scripting_braindead_evaluate (0000)
 000AFBD0 0040:
-	_code_000afbd0 (0000)
+	_ai_scripting_braindead_by_unit_evaluate (0000)
 000AFC10 0040:
-	_code_000afc10 (0000)
+	_ai_scripting_ignore_evaluate (0000)
 000AFC50 0040:
-	_code_000afc50 (0000)
+	_ai_scripting_prefer_target_evaluate (0000)
 000AFC90 0040:
-	_code_000afc90 (0000)
+	_ai_scripting_teleport_starting_location_evaluate (0000)
 000AFCD0 0040:
-	_code_000afcd0 (0000)
+	_ai_scripting_teleport_starting_location_if_unsupported_evaluate (0000)
 000AFD10 0040:
-	_code_000afd10 (0000)
+	_ai_scripting_renew_evaluate (0000)
 000AFD50 0040:
-	_code_000afd50 (0000)
+	_ai_scripting_try_to_fight_nothing_evaluate (0000)
 000AFD90 0040:
-	_code_000afd90 (0000)
+	_ai_scripting_try_to_fight_evaluate (0000)
 000AFDD0 0040:
-	_code_000afdd0 (0000)
+	_ai_scripting_try_to_fight_player_evaluate (0000)
 000AFE10 0040:
-	_code_000afe10 (0000)
+	_ai_scripting_command_list_evaluate (0000)
 000AFE50 0040:
-	_code_000afe50 (0000)
+	_ai_scripting_command_list_by_unit_evaluate (0000)
 000AFE90 0040:
-	_code_000afe90 (0000)
+	_ai_scripting_command_list_advance_evaluate (0000)
 000AFED0 0040:
-	_code_000afed0 (0000)
+	_ai_scripting_command_list_advance_by_unit_evaluate (0000)
 000AFF10 0040:
-	_code_000aff10 (0000)
+	_ai_scripting_force_active_evaluate (0000)
 000AFF50 0040:
-	_code_000aff50 (0000)
+	_ai_scripting_force_active_by_unit_evaluate (0000)
 000AFF90 0040:
-	_code_000aff90 (0000)
+	_ai_scripting_set_return_state_evaluate (0000)
 000AFFD0 0040:
-	_code_000affd0 (0000)
+	_ai_scripting_set_current_state_evaluate (0000)
 000B0010 0040:
-	_code_000b0010 (0000)
+	_ai_scripting_playfight_evaluate (0000)
 000B0050 0020:
-	_code_000b0050 (0000)
+	_ai_scripting_reconnect_evaluate (0000)
 000B0070 0040:
-	_code_000b0070 (0000)
+	_ai_scripting_vehicle_encounter_evaluate (0000)
 000B00B0 0040:
-	_code_000b00b0 (0000)
+	_ai_scripting_vehicle_enterable_distance_evaluate (0000)
 000B00F0 0040:
-	_code_000b00f0 (0000)
+	_ai_scripting_vehicle_enterable_team_evaluate (0000)
 000B0130 0040:
-	_code_000b0130 (0000)
+	_ai_scripting_vehicle_enterable_actor_type_evaluate (0000)
 000B0170 0040:
-	_code_000b0170 (0000)
+	_ai_scripting_vehicle_enterable_actors_evaluate (0000)
 000B01B0 0040:
-	_code_000b01b0 (0000)
+	_ai_scripting_vehicle_enterable_disable_evaluate (0000)
 000B01F0 0040:
-	_code_000b01f0 (0000)
+	_ai_scripting_look_at_object_evaluate (0000)
 000B0230 0040:
-	_code_000b0230 (0000)
+	_ai_scripting_stop_looking_evaluate (0000)
 000B0270 0040:
-	_code_000b0270 (0000)
+	_ai_scripting_automatic_migration_target_evaluate (0000)
 000B02B0 0040:
-	_code_000b02b0 (0000)
+	_ai_scripting_follow_target_disable_evaluate (0000)
 000B02F0 0040:
-	_code_000b02f0 (0000)
+	_ai_scripting_follow_target_players_evaluate (0000)
 000B0330 0040:
-	_code_000b0330 (0000)
+	_ai_scripting_follow_target_unit_evaluate (0000)
 000B0370 0040:
-	_code_000b0370 (0000)
+	_ai_scripting_follow_target_ai_evaluate (0000)
 000B03B0 0040:
-	_code_000b03b0 (0000)
+	_ai_scripting_follow_distance_evaluate (0000)
 000B03F0 0040:
-	_code_000b03f0 (0000)
+	_ai_scripting_conversation_stop_evaluate (0000)
 000B0430 0040:
-	_code_000b0430 (0000)
+	_ai_scripting_conversation_advance_evaluate (0000)
 000B0470 0040:
-	_code_000b0470 (0000)
+	_ai_scripting_link_activation_evaluate (0000)
 000B04B0 0040:
-	_code_000b04b0 (0000)
+	_ai_scripting_berserk_evaluate (0000)
 000B04F0 0040:
-	_code_000b04f0 (0000)
+	_ai_scripting_set_team_evaluate (0000)
 000B0530 0040:
-	_code_000b0530 (0000)
+	_ai_scripting_allow_charge_evaluate (0000)
 000B0570 0040:
-	_code_000b0570 (0000)
+	_ai_scripting_allow_dormant_evaluate (0000)
 000B05B0 0050:
-	_code_000b05b0 (0000)
+	_ai_scripting_is_attacking_evaluate (0000)
 000B0600 0050:
-	_code_000b0600 (0000)
+	_ai_scripting_command_list_status_evaluate (0000)
 000B0650 0050:
-	_code_000b0650 (0000)
+	_ai_scripting_going_to_vehicle_evaluate (0000)
 000B06A0 0050:
-	_code_000b06a0 (0000)
+	_ai_scripting_living_count_evaluate (0000)
 000B06F0 0040:
-	_code_000b06f0 (0000)
+	_ai_scripting_living_fraction_evaluate (0000)
 000B0730 0040:
-	_code_000b0730 (0000)
+	_ai_scripting_strength_evaluate (0000)
 000B0770 0050:
-	_code_000b0770 (0000)
+	_ai_scripting_swarm_count_evaluate (0000)
 000B07C0 0050:
-	_code_000b07c0 (0000)
+	_ai_scripting_nonswarm_count_evaluate (0000)
 000B0810 0040:
-	_code_000b0810 (0000)
+	_object_list_from_ai_reference_evaluate (0000)
 000B0850 0050:
-	_code_000b0850 (0000)
+	_ai_scripting_status_evaluate (0000)
 000B08A0 0050:
-	_code_000b08a0 (0000)
+	_ai_scripting_conversation_evaluate (0000)
 000B08F0 0050:
-	_code_000b08f0 (0000)
+	_ai_scripting_conversation_line_evaluate (0000)
 000B0940 0050:
-	_code_000b0940 (0000)
+	_ai_scripting_conversation_status_evaluate (0000)
 000B0990 0050:
-	_code_000b0990 (0000)
+	_ai_scripting_allegiance_broken_evaluate (0000)
 000B09E0 0040:
-	_code_000b09e0 (0000)
+	_director_script_camera_evaluate (0000)
 000B0A20 0040:
-	_code_000b0a20 (0000)
+	_scripted_camera_set_absolute_evaluate (0000)
 000B0A60 0040:
-	_code_000b0a60 (0000)
+	_scripted_camera_set_evaluate (0000)
 000B0AA0 0040:
-	_code_000b0aa0 (0000)
+	_scripted_camera_set_animation_evaluate (0000)
 000B0AE0 0040:
-	_code_000b0ae0 (0000)
+	_scripted_camera_set_first_person_evaluate (0000)
 000B0B20 0040:
-	_code_000b0b20 (0000)
+	_scripted_camera_set_dead_evaluate (0000)
 000B0B60 0030:
-	_code_000b0b60 (0000)
+	_scripted_camera_time_evaluate (0000)
 000B0B90 0020:
-	_code_000b0b90 (0000)
+	_director_save_camera_evaluate (0000)
 000B0BB0 0020:
-	_code_000b0bb0 (0000)
+	_director_load_camera_evaluate (0000)
 000B0BD0 0040:
-	_code_000b0bd0 (0000)
+	_game_time_set_speed_evaluate (0000)
 000B0C10 0040:
-	_code_000b0c10 (0000)
+	_game_set_game_variant_from_name_evaluate (0000)
 000B0C50 0020:
-	_code_000b0c50 (0000)
+	_game_time_get_evaluate (0000)
 000B0C70 0030:
-	_code_000b0c70 (0000)
+	_game_difficulty_level_get_ignore_easy_evaluate (0000)
 000B0CA0 0030:
-	_code_000b0ca0 (0000)
+	_game_difficulty_level_get_evaluate (0000)
 000B0CD0 0020:
-	_code_000b0cd0 (0000)
+	_players_unzoom_all_evaluate (0000)
 000B0CF0 0040:
-	_code_000b0cf0 (0000)
+	_player_input_enable_evaluate (0000)
 000B0D30 0050:
-	_code_000b0d30 (0000)
+	_scripted_player_control_set_camera_control_evaluate (0000)
 000B0D80 0020:
-	_code_000b0d80 (0000)
+	_player_control_action_test_reset_evaluate (0000)
 000B0DA0 0030:
-	_code_000b0da0 (0000)
+	_player_control_action_test_jump_evaluate (0000)
 000B0DD0 0030:
-	_code_000b0dd0 (0000)
+	_player_control_action_test_primary_trigger_evaluate (0000)
 000B0E00 0030:
-	_code_000b0e00 (0000)
+	_player_control_action_test_grenade_trigger_evaluate (0000)
 000B0E30 0030:
-	_code_000b0e30 (0000)
+	_player_control_action_test_zoom_evaluate (0000)
 000B0E60 0030:
-	_code_000b0e60 (0000)
+	_player_control_action_test_action_evaluate (0000)
 000B0E90 0030:
-	_code_000b0e90 (0000)
+	_player_control_action_test_accept_evaluate (0000)
 000B0EC0 0030:
-	_code_000b0ec0 (0000)
+	_player_control_action_test_back_evaluate (0000)
 000B0EF0 0030:
-	_code_000b0ef0 (0000)
+	_player_control_action_test_look_relative_up_evaluate (0000)
 000B0F20 0030:
-	_code_000b0f20 (0000)
+	_player_control_action_test_look_relative_down_evaluate (0000)
 000B0F50 0030:
-	_code_000b0f50 (0000)
+	_player_control_action_test_look_relative_left_evaluate (0000)
 000B0F80 0030:
-	_code_000b0f80 (0000)
+	_player_control_action_test_look_relative_right_evaluate (0000)
 000B0FB0 0030:
-	_code_000b0fb0 (0000)
+	_player_control_action_test_look_relative_all_directions_evaluate (0000)
 000B0FE0 0030:
-	_code_000b0fe0 (0000)
+	_player_control_action_test_move_relative_all_directions_evaluate (0000)
 000B1010 0040:
-	_code_000b1010 (0000)
+	_player_add_equipment_evaluate (0000)
 000B1050 0040:
-	_code_000b1050 (0000)
+	_debug_player_teleport_evaluate (0000)
 000B1090 0020:
-	_code_000b1090 (0000)
+	_main_reset_map_evaluate (0000)
 000B10B0 0040:
-	_code_000b10b0 (0000)
+	_main_set_map_name_evaluate (0000)
 000B10F0 0040:
-	_code_000b10f0 (0000)
+	_main_set_multiplayer_map_name_evaluate (0000)
 000B1130 0040:
-	_code_000b1130 (0000)
+	_main_set_difficulty_evaluate (0000)
 000B1170 0040:
-	_code_000b1170 (0000)
+	_main_crash_evaluate (0000)
 000B11B0 0040:
-	_code_000b11b0 (0000)
+	_scenario_switch_structure_bsp_evaluate (0000)
 000B11F0 0030:
-	_code_000b11f0 (0000)
+	_global_structure_bsp_index_get_evaluate (0000)
 000B1220 0020:
-	_code_000b1220 (0000)
+	_main_print_version_evaluate (0000)
 000B1240 0020:
-	_code_000b1240 (0000)
+	_main_set_game_connection_to_film_playback_evaluate (0000)
 000B1260 0020:
-	_code_000b1260 (0000)
+	_texture_cache_flush_evaluate (0000)
 000B1280 0020:
-	_code_000b1280 (0000)
+	_sound_cache_flush_evaluate (0000)
 000B12A0 0020:
-	_code_000b12a0 (0000)
+	_debug_dump_memory_evaluate (0000)
 000B12C0 0020:
-	_code_000b12c0 (0000)
+	_debug_dump_memory_by_file_evaluate (0000)
 000B12E0 0040:
-	_code_000b12e0 (0000)
+	_debug_dump_memory_for_file_evaluate (0000)
 000B1320 0020:
-	_code_000b1320 (0000)
+	_tag_groups_dump_memory_evaluate (0000)
 000B1340 0020:
-	_code_000b1340 (0000)
+	_profile_initialize_evaluate (0000)
 000B1360 0040:
-	_code_000b1360 (0000)
+	_profile_dump_to_file_evaluate (0000)
 000B13A0 0040:
-	_code_000b13a0 (0000)
+	_profile_sections_activate_evaluate (0000)
 000B13E0 0040:
-	_code_000b13e0 (0000)
+	_profile_sections_deactivate_evaluate (0000)
 000B1420 0040:
-	_code_000b1420 (0000)
+	_profile_graph_toggle_evaluate (0000)
 000B1460 0040:
-	_code_000b1460 (0000)
+	_debug_pvs_evaluate (0000)
 000B14A0 0020:
-	_code_000b14a0 (0000)
+	_radiosity_hack_start_evaluate (0000)
 000B14C0 0020:
-	_code_000b14c0 (0000)
+	_radiosity_hack_save_evaluate (0000)
 000B14E0 0020:
-	_code_000b14e0 (0000)
+	_radiosity_hack_find_point_evaluate (0000)
 000B1500 0020:
-	_code_000b1500 (0000)
+	_ai_profile_change_render_spray_evaluate (0000)
 000B1520 0020:
-	_code_000b1520 (0000)
+	_ai_debug_sound_point_set_evaluate (0000)
 000B1540 0040:
-	_code_000b1540 (0000)
+	_ai_debug_vocalize_evaluate (0000)
 000B1580 0040:
-	_code_000b1580 (0000)
+	_ai_debug_teleport_to_evaluate (0000)
 000B15C0 0040:
-	_code_000b15c0 (0000)
+	_ai_debug_speak_evaluate (0000)
 000B1600 0040:
-	_code_000b1600 (0000)
+	_ai_debug_speak_list_evaluate (0000)
 000B1640 0050:
-	_code_000b1640 (0000)
+	_player_effect_screen_fade_in_evaluate (0000)
 000B1690 0050:
-	_code_000b1690 (0000)
+	_player_effect_screen_fade_out_evaluate (0000)
 000B16E0 0020:
-	_code_000b16e0 (0000)
+	_cinematic_start_evaluate (0000)
 000B1700 0020:
-	_code_000b1700 (0000)
+	_cinematic_stop_evaluate (0000)
 000B1720 0020:
-	_code_000b1720 (0000)
+	_cinematic_skip_start_evaluate (0000)
 000B1740 0020:
-	_code_000b1740 (0000)
+	_cinematic_skip_stop_evaluate (0000)
 000B1760 0040:
-	_code_000b1760 (0000)
+	_cinematic_show_letterbox_evaluate (0000)
 000B17A0 0040:
-	_code_000b17a0 (0000)
+	_cinematic_set_title_evaluate (0000)
 000B17E0 0040:
-	_code_000b17e0 (0000)
+	_cinematic_set_title_delayed_evaluate (0000)
 000B1820 0040:
-	_code_000b1820 (0000)
+	_cinematic_suppress_bsp_object_creation_evaluate (0000)
 000B1860 0020:
-	_code_000b1860 (0000)
+	_attract_mode_start_evaluate (0000)
 000B1880 0020:
-	_code_000b1880 (0000)
+	_main_won_map_evaluate (0000)
 000B18A0 0020:
-	_code_000b18a0 (0000)
+	_main_lost_map_evaluate (0000)
 000B18C0 0030:
-	_code_000b18c0 (0000)
+	_game_safe_to_save_evaluate (0000)
 000B18F0 0030:
-	_code_000b18f0 (0000)
+	_game_all_quiet_evaluate (0000)
 000B1920 0030:
-	_code_000b1920 (0000)
+	_game_safe_to_speak_evaluate (0000)
 000B1950 0030:
-	_code_000b1950 (0000)
+	_game_is_cooperative_evaluate (0000)
 000B1980 0020:
-	_code_000b1980 (0000)
+	_main_save_map_safe_evaluate (0000)
 000B19A0 0020:
-	_code_000b19a0 (0000)
+	_main_save_cancel_evaluate (0000)
 000B19C0 0020:
-	_code_000b19c0 (0000)
+	_main_save_map_no_timeout_evaluate (0000)
 000B19E0 0020:
-	_code_000b19e0 (0000)
+	_main_save_map_nonsafe_evaluate (0000)
 000B1A00 0030:
-	_code_000b1a00 (0000)
+	_main_saving_map_evaluate (0000)
 000B1A30 0020:
-	_code_000b1a30 (0000)
+	_main_revert_map_evaluate (0000)
 000B1A50 0020:
-	_code_000b1a50 (0000)
+	_main_load_core_evaluate (0000)
 000B1A70 0020:
-	_code_000b1a70 (0000)
+	_main_load_core_at_startup_evaluate (0000)
 000B1A90 0040:
-	_code_000b1a90 (0000)
+	_main_load_core_name_evaluate (0000)
 000B1AD0 0040:
-	_code_000b1ad0 (0000)
+	_main_load_core_name_at_startup_evaluate (0000)
 000B1B10 0020:
-	_code_000b1b10 (0000)
+	_main_save_core_evaluate (0000)
 000B1B30 0040:
-	_code_000b1b30 (0000)
+	_main_save_core_name_evaluate (0000)
 000B1B70 0040:
-	_code_000b1b70 (0000)
+	_main_skip_evaluate (0000)
 000B1BB0 0030:
-	_code_000b1bb0 (0000)
+	_game_state_reverted_evaluate (0000)
 000B1BE0 0040:
-	_code_000b1be0 (0000)
+	_scripted_sound_new_evaluate (0000)
 000B1C20 0040:
-	_code_000b1c20 (0000)
+	_scripted_sound_time_evaluate (0000)
 000B1C60 0040:
-	_code_000b1c60 (0000)
+	_scripted_sound_stop_evaluate (0000)
 000B1CA0 0040:
 	_code_000b1ca0 (0000)
 000B1CE0 0040:
-	_code_000b1ce0 (0000)
+	_scripted_looping_sound_start_evaluate (0000)
 000B1D20 0040:
-	_code_000b1d20 (0000)
+	_scripted_looping_sound_stop_evaluate (0000)
 000B1D60 0040:
-	_code_000b1d60 (0000)
+	_scripted_looping_sound_set_scale_evaluate (0000)
 000B1DA0 0040:
-	_code_000b1da0 (0000)
+	_scripted_looping_sound_set_alternate_evaluate (0000)
 000B1DE0 0040:
-	_code_000b1de0 (0000)
+	_debug_sound_classes_enable_evaluate (0000)
 000B1E20 0050:
-	_code_000b1e20 (0000)
+	_debug_sound_classes_set_distances_evaluate (0000)
 000B1E70 0040:
-	_code_000b1e70 (0000)
+	_debug_sound_classes_set_wet_evaluate (0000)
 000B1EB0 0040:
-	_code_000b1eb0 (0000)
+	_sound_class_set_gain_evaluate (0000)
 000B1EF0 0040:
-	_code_000b1ef0 (0000)
+	_sound_enable_evaluate (0000)
 000B1F30 0040:
-	_code_000b1f30 (0000)
+	_vehicle_hover_evaluate (0000)
 000B1F70 0050:
-	_code_000b1f70 (0000)
+	_scripted_show_hud_evaluate (0000)
 000B1FC0 0050:
-	_code_000b1fc0 (0000)
+	_scripted_show_hud_help_text_evaluate (0000)
 000B2010 0040:
-	_code_000b2010 (0000)
+	_scripted_hud_set_flashing_state_evaluate (0000)
 000B2050 0020:
-	_code_000b2050 (0000)
+	_scripted_hud_restart_flashing_evaluate (0000)
 000B2070 0050:
-	_code_000b2070 (0000)
+	_hud_unit_activate_nav_point_with_flag_evaluate (0000)
 000B20C0 0050:
-	_code_000b20c0 (0000)
+	_hud_unit_activate_nav_point_with_object_evaluate (0000)
 000B2110 0050:
-	_code_000b2110 (0000)
+	_hud_activate_team_nav_point_with_flag_evaluate (0000)
 000B2160 0050:
-	_code_000b2160 (0000)
+	_hud_activate_team_nav_point_with_object_evaluate (0000)
 000B21B0 0040:
-	_code_000b21b0 (0000)
+	_hud_unit_deactivate_nav_point_with_flag_evaluate (0000)
 000B21F0 0040:
-	_code_000b21f0 (0000)
+	_hud_unit_deactivate_nav_point_with_object_evaluate (0000)
 000B2230 0040:
-	_code_000b2230 (0000)
+	_hud_deactivate_team_nav_point_with_flag_evaluate (0000)
 000B2270 0040:
-	_code_000b2270 (0000)
+	_hud_deactivate_team_nav_point_with_object_evaluate (0000)
 000B22B0 0020:
-	_code_000b22b0 (0000)
+	_terminal_clear_evaluate (0000)
 000B22D0 0040:
-	_code_000b22d0 (0000)
+	_errors_overflow_suppression_enable_evaluate (0000)
 000B2310 0020:
-	_code_000b2310 (0000)
+	_structure_lens_flares_place_evaluate (0000)
 000B2330 0050:
-	_code_000b2330 (0000)
+	_scripted_player_effect_set_translation_evaluate (0000)
 000B2380 0050:
-	_code_000b2380 (0000)
+	_scripted_player_effect_set_rotation_evaluate (0000)
 000B23D0 0040:
-	_code_000b23d0 (0000)
+	_scripted_player_effect_set_rumble_evaluate (0000)
 000B2410 0040:
-	_code_000b2410 (0000)
+	_scripted_player_effect_start_evaluate (0000)
 000B2450 0040:
-	_code_000b2450 (0000)
+	_scripted_player_effect_stop_evaluate (0000)
 000B2490 0040:
-	_code_000b2490 (0000)
+	_scripted_hud_show_health_evaluate (0000)
 000B24D0 0040:
-	_code_000b24d0 (0000)
+	_scripted_hud_blink_health_evaluate (0000)
 000B2510 0040:
-	_code_000b2510 (0000)
+	_scripted_hud_show_shield_evaluate (0000)
 000B2550 0040:
-	_code_000b2550 (0000)
+	_scripted_hud_blink_shield_evaluate (0000)
 000B2590 0040:
-	_code_000b2590 (0000)
+	_scripted_hud_show_motion_sensor_evaluate (0000)
 000B25D0 0040:
-	_code_000b25d0 (0000)
+	_scripted_hud_blink_motion_sensor_evaluate (0000)
 000B2610 0040:
-	_code_000b2610 (0000)
+	_scripted_hud_show_crosshair_evaluate (0000)
 000B2650 0020:
-	_code_000b2650 (0000)
+	_scripted_hud_messages_clear_evaluate (0000)
 000B2670 0040:
-	_code_000b2670 (0000)
+	_scripted_hud_set_state_message_evaluate (0000)
 000B26B0 0040:
-	_code_000b26b0 (0000)
+	_scripted_hud_set_objective_evaluate (0000)
 000B26F0 0040:
-	_code_000b26f0 (0000)
+	_scripted_hud_set_timer_time_evaluate (0000)
 000B2730 0040:
-	_code_000b2730 (0000)
+	_scripted_hud_set_timer_warning_cutoff_evaluate (0000)
 000B2770 0050:
-	_code_000b2770 (0000)
+	_scripted_hud_set_timer_position_evaluate (0000)
 000B27C0 0040:
-	_code_000b27c0 (0000)
+	_scripted_hud_show_timer_evaluate (0000)
 000B2800 0040:
-	_code_000b2800 (0000)
+	_scripted_hud_pause_timer_evaluate (0000)
 000B2840 0030:
-	_code_000b2840 (0000)
+	_scripted_hud_get_timer_ticks_evaluate (0000)
 000B2870 0040:
-	_code_000b2870 (0000)
+	_scripted_hud_time_code_show_evaluate (0000)
 000B28B0 0040:
-	_code_000b28b0 (0000)
+	_scripted_hud_time_code_start_evaluate (0000)
 000B28F0 0020:
-	_code_000b28f0 (0000)
+	_scripted_hud_time_code_reset_evaluate (0000)
 000B2910 0020:
-	_code_000b2910 (0000)
+	_rasterizer_decals_flush_evaluate (0000)
 000B2930 0020:
-	_code_000b2930 (0000)
+	_rasterizer_fps_accumulate_evaluate (0000)
 000B2950 0050:
-	_code_000b2950 (0000)
+	_rasterizer_model_ambient_reflection_tint_evaluate (0000)
 000B29A0 0020:
-	_code_000b29a0 (0000)
+	_rasterizer_lights_reset_for_new_map_evaluate (0000)
 000B29C0 0040:
-	_code_000b29c0 (0000)
+	_rasterizer_script_screen_effect_set_value_evaluate (0000)
 000B2A00 0040:
-	_code_000b2a00 (0000)
+	_rasterizer_screen_effect_start_evaluate (0000)
 000B2A40 0060:
-	_code_000b2a40 (0000)
+	_rasterizer_screen_effect_set_convolution_evaluate (0000)
 000B2AA0 0060:
-	_code_000b2aa0 (0000)
+	_rasterizer_screen_effect_set_filter_evaluate (0000)
 000B2B00 0050:
-	_code_000b2b00 (0000)
+	_rasterizer_screen_effect_set_filter_desaturation_tint_evaluate (0000)
 000B2B50 0040:
-	_code_000b2b50 (0000)
+	_rasterizer_screen_effect_set_video_evaluate (0000)
 000B2B90 0020:
-	_code_000b2b90 (0000)
+	_rasterizer_screen_effect_stop_evaluate (0000)
 000B2BB0 0040:
-	_code_000b2bb0 (0000)
+	_rasterizer_set_near_clip_distance_evaluate (0000)
 000B2BF0 0020:
-	_code_000b2bf0 (0000)
+	_enumerate_memory_units_test_evaluate (0000)
 000B2C10 0020:
-	_code_000b2c10 (0000)
+	_saved_game_files_delete_all_custom_profiles_evaluate (0000)
 000B2C30 0020:
-	_code_000b2c30 (0000)
+	_player_ui_fast_setup_network_server_evaluate (0000)
 000B2C50 0020:
-	_code_000b2c50 (0000)
+	_player_ui_activate_all_solo_levels_evaluate (0000)
 000B2C70 0040:
-	_code_000b2c70 (0000)
+	_player0_look_invert_pitch_evaluate (0000)
 000B2CB0 0030:
-	_code_000b2cb0 (0000)
+	_player0_look_pitch_is_inverted_evaluate (0000)
 000B2CE0 0030:
-	_code_000b2ce0 (0000)
+	_player0_joystick_set_is_normal_evaluate (0000)
 000B2D10 0040:
-	_code_000b2d10 (0000)
+	_ui_widget_debug_show_path_evaluate (0000)
 000B2D50 0040:
-	_code_000b2d50 (0000)
+	_display_scenario_help_evaluate (0000)
 000B2D90 0020:
-	_code_000b2d90 (0000)
+	_network_game_client_request_immediate_start_evaluate (0000)
 000B2DB0 0040:
-	_code_000b2db0 (0000)
+	_xbox_set_machine_name_evaluate (0000)
 000B2DF0 0110:
 	_hs_scenario_merge (0000)
 000B2F00 00d0:
-	_code_000b2f00 (0000)
+	_hs_allocate (0000)
 000B2FD0 0010:
 	_hs_dispose (0000)
 000B2FE0 0010:
@@ -809,75 +809,75 @@ symbols in this file:
 000B3360 0050:
 	_hs_find_function_by_name (0000)
 000B33B0 0020:
-	_code_000b33b0 (0000)
+	_alphabetize (0000)
 000B33D0 0080:
-	_code_000b33d0 (0000)
+	_hs_tokens_enumerate_add_string (0000)
 000B3450 0040:
-	_code_000b3450 (0000)
+	_hs_enumerate_from_string_list (0000)
 000B3490 0040:
-	_code_000b3490 (0000)
+	_hs_enumerate_block_data (0000)
 000B34D0 0030:
-	_code_000b34d0 (0000)
+	_hs_enumerate_scenario_data (0000)
 000B3500 0020:
-	_code_000b3500 (0000)
+	_hs_enumerate_special_form_names (0000)
 000B3520 0030:
-	_code_000b3520 (0000)
+	_hs_enumerate_script_type_names (0000)
 000B3550 0030:
-	_code_000b3550 (0000)
+	_hs_enumerate_type_names (0000)
 000B3580 0060:
-	_code_000b3580 (0000)
+	_hs_enumerate_function_names (0000)
 000B35E0 0030:
-	_code_000b35e0 (0000)
+	_hs_enumerate_script_names (0000)
 000B3610 00b0:
-	_code_000b3610 (0000)
+	_hs_enumerate_variable_names (0000)
 000B36C0 0030:
-	_code_000b36c0 (0000)
+	_hs_enumerate_ai_names (0000)
 000B36F0 0030:
-	_code_000b36f0 (0000)
+	_hs_enumerate_ai_command_list_names (0000)
 000B3720 0030:
-	_code_000b3720 (0000)
+	_hs_enumerate_starting_profile_names (0000)
 000B3750 0030:
-	_code_000b3750 (0000)
+	_hs_enumerate_conversation_names (0000)
 000B3780 0030:
-	_code_000b3780 (0000)
+	_hs_enumerate_object_names (0000)
 000B37B0 0030:
-	_code_000b37b0 (0000)
+	_hs_enumerate_trigger_volume_names (0000)
 000B37E0 0030:
-	_code_000b37e0 (0000)
+	_hs_enumerate_cutscene_flag_names (0000)
 000B3810 0030:
-	_code_000b3810 (0000)
+	_hs_enumerate_cutscene_camera_point_names (0000)
 000B3840 0030:
-	_code_000b3840 (0000)
+	_hs_enumerate_cutscene_title_names (0000)
 000B3870 0030:
-	_code_000b3870 (0000)
+	_hs_enumerate_cutscene_recording_names (0000)
 000B38A0 0040:
-	_code_000b38a0 (0000)
+	_hs_enumerate_navpoints (0000)
 000B38E0 0040:
-	_code_000b38e0 (0000)
+	_hs_enumerate_hud_messages (0000)
 000B3920 00e0:
 	_hs_tokens_enumerate (0000)
 000B3A00 0110:
-	_code_000b3a00 (0000)
+	_hs_rebuild_source_file (0000)
 000B3B10 0050:
-	_code_000b3b10 (0000)
+	_alphabetize_file_references (0000)
 000B3B60 0140:
-	_code_000b3b60 (0000)
+	_hs_rebuild_source (0000)
 000B3CA0 0070:
-	_code_000b3ca0 (0000)
+	_hs_compile_source_error (0000)
 000B3D10 00d0:
-	_code_000b3d10 (0000)
+	_hs_compile_source (0000)
 000B3DE0 00a0:
-	_code_000b3de0 (0000)
+	_hs_get_function_parameters_string (0000)
 000B3E80 0020:
-	_code_000b3e80 (0000)
+	_hs_get_function_documentation_string (0000)
 000B3EA0 0040:
 	_hs_evaluate_by_name (0000)
 000B3EE0 0020:
-	_code_000b3ee0 (0000)
+	_hs_recompile_evaluate (0000)
 000B3F00 0050:
-	_code_000b3f00 (0000)
+	_random_range_evaluate (0000)
 000B3F50 0060:
-	_code_000b3f50 (0000)
+	_real_random_range_evaluate (0000)
 000B3FB0 0180:
 	_hs_scenario_postprocess (0000)
 000B4130 0040:
@@ -891,9 +891,9 @@ symbols in this file:
 000B4330 0060:
 	_hs_hack (0000)
 000B4390 0020:
-	_code_000b4390 (0000)
+	_hs_doc_evaluate (0000)
 000B43B0 0040:
-	_code_000b43b0 (0000)
+	_hs_help_evaluate (0000)
 000B43F0 0070:
 	_hs_initialize (0000)
 000B4460 0250:

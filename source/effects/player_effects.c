@@ -29,13 +29,13 @@ symbols in this file:
 000910E0 0020:
 	_player_effect_clear_damage_indicators (0000)
 00091100 0020:
-	_code_00091100 (0000)
+	_effect_scale_factor (0000)
 00091120 00f0:
-	_code_00091120 (0000)
+	_player_effect_update_screen_flash (0000)
 00091210 00d0:
-	_code_00091210 (0000)
+	_player_effect_update_camera_shake (0000)
 000912E0 0030:
-	_code_000912e0 (0000)
+	_effect_scale_value (0000)
 00091310 0090:
 	_player_effect_update (0000)
 000913A0 0090:
@@ -53,11 +53,11 @@ symbols in this file:
 00091630 0320:
 	_player_effect_get_screen_flash (0000)
 00091950 0090:
-	_code_00091950 (0000)
+	_get_shake_matrix (0000)
 000919E0 0520:
 	_player_effect_get_camera_effect_matrix (0000)
 00091F00 02f0:
-	_code_00091f00 (0000)
+	_player_effect_update_camera_impulse (0000)
 000921F0 02e0:
 	_player_effect_start (0000)
 0025AA2C 0016:

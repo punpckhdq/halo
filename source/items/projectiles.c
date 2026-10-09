@@ -29,13 +29,13 @@ symbols in this file:
 000E7600 0030:
 	_projectile_handle_deleted_object (0000)
 000E7630 0020:
-	_code_000e7630 (0000)
+	_projectile_set_action (0000)
 000E7650 0060:
-	_code_000e7650 (0000)
+	_projectile_effect_new (0000)
 000E76B0 00e0:
 	_projectile_export_function_values (0000)
 000E7790 0060:
-	_code_000e7790 (0000)
+	_projectile_calculate_deceleration_from_distances (0000)
 000E77F0 0070:
 	_projectile_handle_parent_destroyed (0000)
 000E7860 0030:
@@ -47,19 +47,19 @@ symbols in this file:
 000E7CC0 00c0:
 	_projectile_aim (0000)
 000E7D80 00b0:
-	_code_000e7d80 (0000)
+	_projectile_adjust_for_angular_velocity_change (0000)
 000E7E30 00e0:
-	_code_000e7e30 (0000)
+	_projectile_calculate_deceleration (0000)
 000E7F10 0200:
-	_code_000e7f10 (0000)
+	_projectile_collision_test_line (0000)
 000E8110 0410:
-	_code_000e8110 (0000)
+	_projectile_detonate (0000)
 000E8520 01b0:
 	_projectile_new (0000)
 000E86D0 01f0:
 	_projectile_accelerate (0000)
 000E88C0 0b70:
-	_code_000e88c0 (0000)
+	_projectile_collision (0000)
 000E9430 0fe0:
 	_projectile_update (0000)
 00279028 000b:

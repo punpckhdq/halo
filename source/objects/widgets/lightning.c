@@ -17,7 +17,7 @@ symbols in this file:
 00124C60 0010:
 	_lightning_render (0000)
 00124C70 00f0:
-	_code_00124c70 (0000)
+	_lightning_offset_marker_position (0000)
 00124D60 0a10:
 	_lightning_submit (0000)
 00289208 0021:

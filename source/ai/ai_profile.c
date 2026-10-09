@@ -15,37 +15,37 @@ symbols in this file:
 00041E00 0070:
 	_ai_profile_display (0000)
 00041E70 0090:
-	_code_00041e70 (0000)
+	_ai_profile_string (0000)
 00041F00 0040:
 	_ai_profile_change_render_spray (0000)
 00041F40 0010:
-	_code_00041f40 (0000)
+	_ai_meter_encounter (0000)
 00041F50 0010:
-	_code_00041f50 (0000)
+	_ai_meter_actor (0000)
 00041F60 0050:
-	_code_00041f60 (0000)
+	_ai_meter_unit (0000)
 00041FB0 0010:
-	_code_00041fb0 (0000)
+	_ai_meter_prop (0000)
 00041FC0 0010:
-	_code_00041fc0 (0000)
+	_ai_meter_swarm_cache (0000)
 00041FD0 0050:
-	_code_00041fd0 (0000)
+	_ai_meter_swarm_actor (0000)
 00042020 0010:
-	_code_00042020 (0000)
+	_ai_meter_swarm_component (0000)
 00042030 0060:
-	_code_00042030 (0000)
+	_ai_profile_show_stats (0000)
 00042090 0070:
-	_code_00042090 (0000)
+	_ai_profile_show_actors (0000)
 00042100 0060:
-	_code_00042100 (0000)
+	_ai_profile_show_swarms (0000)
 00042160 0090:
-	_code_00042160 (0000)
+	_ai_profile_show_prop_types (0000)
 000421F0 0070:
-	_code_000421f0 (0000)
+	_ai_profile_show_line_of_sight (0000)
 00042260 0060:
-	_code_00042260 (0000)
+	_ai_profile_show_paths (0000)
 000422C0 0150:
-	_code_000422c0 (0000)
+	_ai_profile_render_spray (0000)
 00042410 0080:
 	_ai_profile_render (0000)
 0024BBC8 0012:

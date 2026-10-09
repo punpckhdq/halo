@@ -17,37 +17,37 @@ symbols in this file:
 001AE600 0060:
 	_texture_cache_return_memory (0000)
 001AE660 0030:
-	_code_001ae660 (0000)
+	_texture_cache_name_block_proc (0000)
 001AE690 0090:
 	_bitmap_format_to_d3d_format (0000)
 001AE720 0090:
 	_bitmap_format_to_d3d_linear_format (0000)
 001AE7B0 0030:
-	_code_001ae7b0 (0000)
+	_compare (0000)
 001AE7E0 0010:
-	_code_001ae7e0 (0000)
+	_IDirect3DDevice8_IsBusy@4 (0000)
 001AE7F0 0010:
-	_code_001ae7f0 (0000)
+	_IDirect3DDevice8_KickPushBuffer@4 (0000)
 001AE800 0010:
-	_code_001ae800 (0000)
+	_IDirect3DBaseTexture8_IsBusy@4 (0000)
 001AE810 0010:
-	_code_001ae810 (0000)
+	_IDirect3DBaseTexture8_Register@8 (0000)
 001AE820 0020:
 	_texture_cache_flush (0000)
 001AE840 0040:
-	_code_001ae840 (0000)
+	_texture_cache_locked_block_proc (0000)
 001AE880 00a0:
-	_code_001ae880 (0000)
+	_texture_cache_delete_block_proc (0000)
 001AE920 0150:
-	_code_001ae920 (0000)
+	_texture_cache_initialize_hardware_format (0000)
 001AEA70 0100:
-	_code_001aea70 (0000)
+	_render_inverse_transform_screen_point (0000)
 001AEB70 00b0:
 	_texture_cache_new (0000)
 001AEC20 0050:
 	_texture_cache_close (0000)
 001AEC70 00e0:
-	_code_001aec70 (0000)
+	_texture_cache_start_loading_bitmap (0000)
 001AED50 0310:
 	_texture_cache_debug_render (0000)
 001AF060 01f0:

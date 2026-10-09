@@ -3,9 +3,9 @@ RASTERIZER_XBOX_DRAW_PRIMITIVES.C
 
 symbols in this file:
 0014C870 0020:
-	_code_0014c870 (0000)
+	_IDirect3DDevice8_CreateVertexBuffer@24 (0000)
 0014C890 0020:
-	_code_0014c890 (0000)
+	_IDirect3DDevice8_CreateIndexBuffer@24 (0000)
 0014C8B0 01e0:
 	_rasterizer_dynamic_geometry_initialize (0000)
 0014CA90 0100:
@@ -15,21 +15,21 @@ symbols in this file:
 0014CBA0 0130:
 	__rasterizer_dynamic_triangles_new (0000)
 0014CCD0 0030:
-	_code_0014ccd0 (0000)
+	_IDirect3DDevice8_DrawPrimitive@16 (0000)
 0014CD00 0030:
-	_code_0014cd00 (0000)
+	_IDirect3DDevice8_DrawIndexedPrimitive@24 (0000)
 0014CD30 0010:
 	__rasterizer_dynamic_triangles_delete (0000)
 0014CD40 0170:
 	__rasterizer_dynamic_vertices_new (0000)
 0014CEB0 0010:
-	_code_0014ceb0 (0000)
+	_IDirect3DDevice8_SetStreamSource@16 (0000)
 0014CEC0 0010:
-	_code_0014cec0 (0000)
+	_IDirect3DDevice8_SetIndices@12 (0000)
 0014CED0 00b0:
 	__rasterizer_dynamic_vertices_get_type (0000)
 0014CF80 0050:
-	_code_0014cf80 (0000)
+	_rasterizer_dynamic_vertices_get_buffer (0000)
 0014CFD0 0010:
 	__rasterizer_dynamic_vertices_delete (0000)
 0014CFE0 0300:
@@ -47,23 +47,23 @@ symbols in this file:
 0014E080 0100:
 	_rasterizer_draw (0000)
 0014E180 0010:
-	_code_0014e180 (0000)
+	_D3DVertexBuffer_Unlock@4 (0000)
 0014E190 0010:
-	_code_0014e190 (0000)
+	_IDirect3DVertexBuffer8_Release@4 (0000)
 0014E1A0 0020:
-	_code_0014e1a0 (0000)
+	_IDirect3DVertexBuffer8_Lock@20 (0000)
 0014E1C0 0010:
-	_code_0014e1c0 (0000)
+	_IDirect3DVertexBuffer8_Unlock@4 (0000)
 0014E1D0 0010:
-	_code_0014e1d0 (0000)
+	_D3DIndexBuffer_Lock@20 (0000)
 0014E1E0 0010:
-	_code_0014e1e0 (0000)
+	_D3DIndexBuffer_Unlock@4 (0000)
 0014E1F0 0010:
-	_code_0014e1f0 (0000)
+	_IDirect3DIndexBuffer8_Release@4 (0000)
 0014E200 0020:
-	_code_0014e200 (0000)
+	_IDirect3DIndexBuffer8_Lock@20 (0000)
 0014E220 0010:
-	_code_0014e220 (0000)
+	_IDirect3DIndexBuffer8_Unlock@4 (0000)
 0014E230 0090:
 	_rasterizer_dynamic_geometry_dispose (0000)
 0014E2C0 0120:

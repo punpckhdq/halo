@@ -17,7 +17,7 @@ symbols in this file:
 000E6140 0010:
 	_item_delete (0000)
 000E6150 0010:
-	_code_000e6150 (0000)
+	_verify_item_location (0000)
 000E6160 0050:
 	_dangerous_items_near_player (0000)
 000E61B0 00a0:
@@ -27,7 +27,7 @@ symbols in this file:
 000E62E0 0090:
 	_item_detonate (0000)
 000E6370 00c0:
-	_code_000e6370 (0000)
+	_item_adjust_for_angular_velocity_change (0000)
 000E6430 00c0:
 	_valid_real_vector3d_axes3 (0000)
 000E64F0 0060:
@@ -35,7 +35,7 @@ symbols in this file:
 000E6550 03b0:
 	_item_accelerate (0000)
 000E6900 0230:
-	_code_000e6900 (0000)
+	_item_align_to_normal_and_point (0000)
 000E6B30 0930:
 	_item_update (0000)
 00278FB0 0004:

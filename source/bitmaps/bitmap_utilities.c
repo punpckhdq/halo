@@ -9,45 +9,45 @@ symbols in this file:
 00065C00 0190:
 	_bitmap_clone (0000)
 00065D90 0290:
-	_code_00065d90 (0000)
+	_bitmap_2d_shrink (0000)
 00066020 0320:
-	_code_00066020 (0000)
+	_bitmap_3d_shrink (0000)
 00066340 0190:
-	_code_00066340 (0000)
+	_bitmap_cm_shrink (0000)
 000664D0 0190:
 	_bitmap_fade (0000)
 00066660 0470:
-	_code_00066660 (0000)
+	_bitmap_2d_smooth (0000)
 00066AD0 0720:
-	_code_00066ad0 (0000)
+	_bitmap_3d_smooth (0000)
 000671F0 00b0:
-	_code_000671f0 (0000)
+	_bitmap_cm_smooth (0000)
 000672A0 0480:
-	_code_000672a0 (0000)
+	_bitmap_2d_sharpen (0000)
 00067720 00d0:
-	_code_00067720 (0000)
+	_bitmap_3d_sharpen (0000)
 000677F0 00d0:
-	_code_000677f0 (0000)
+	_bitmap_cm_sharpen (0000)
 000678C0 0230:
-	_code_000678c0 (0000)
+	_bitmap_2d_alpha_bleed (0000)
 00067AF0 0110:
-	_code_00067af0 (0000)
+	_bitmap_3d_alpha_bleed (0000)
 00067C00 00a0:
-	_code_00067c00 (0000)
+	_bitmap_cm_alpha_bleed (0000)
 00067CA0 00b0:
-	_code_00067ca0 (0000)
+	_bitmap_cm_height_map (0000)
 00067D50 0200:
-	_code_00067d50 (0000)
+	_bitmap_2d_compress_to_mipmap (0000)
 00067F50 02d0:
-	_code_00067f50 (0000)
+	_bitmap_3d_compress_to_mipmap (0000)
 00068220 02c0:
-	_code_00068220 (0000)
+	_bitmap_cm_compress_to_mipmap (0000)
 000684E0 0370:
-	_code_000684e0 (0000)
+	_bitmap_2d_uncompress_from_mipmap (0000)
 00068850 02c0:
-	_code_00068850 (0000)
+	_bitmap_3d_uncompress_from_mipmap (0000)
 00068B10 02b0:
-	_code_00068b10 (0000)
+	_bitmap_cm_uncompress_from_mipmap (0000)
 00068DC0 0030:
 	_real_rgb_color_brightness (0000)
 00068DF0 01f0:
@@ -77,15 +77,15 @@ symbols in this file:
 00069AE0 00a0:
 	_bitmap_alpha_bleed (0000)
 00069B80 0430:
-	_code_00069b80 (0000)
+	_bitmap_2d_height_map (0000)
 00069FB0 0110:
-	_code_00069fb0 (0000)
+	_bitmap_3d_height_map (0000)
 0006A0C0 0260:
-	_code_0006a0c0 (0000)
+	_bitmap_2d_vector_map (0000)
 0006A320 00e0:
-	_code_0006a320 (0000)
+	_bitmap_3d_vector_map (0000)
 0006A400 00d0:
-	_code_0006a400 (0000)
+	_bitmap_cm_vector_map (0000)
 0006A4D0 0210:
 	_bitmap_compress_to_mipmap (0000)
 0006A6E0 0200:

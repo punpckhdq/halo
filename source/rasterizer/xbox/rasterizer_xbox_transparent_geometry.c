@@ -3,35 +3,35 @@ RASTERIZER_XBOX_TRANSPARENT_GEOMETRY.C
 
 symbols in this file:
 00163B40 01b0:
-	_code_00163b40 (0000)
+	_D3DDevice_SetRenderState (0000)
 00163CF0 0050:
-	_code_00163cf0 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 00163D40 0020:
-	_code_00163d40 (0000)
+	_IDirect3DDevice8_CreateVertexBuffer@24 (0000)
 00163D60 0180:
 	_rasterizer_transparent_geometry_group_draw__internal (0000)
 00163EE0 0220:
-	_code_00163ee0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 00164100 0060:
-	_code_00164100 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00164160 0010:
-	_code_00164160 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00164170 0010:
-	_code_00164170 (0000)
+	_IDirect3DDevice8_SetStreamSource@16 (0000)
 00164180 0010:
-	_code_00164180 (0000)
+	_IDirect3DDevice8_BeginVisibilityTest@4 (0000)
 00164190 0010:
-	_code_00164190 (0000)
+	_IDirect3DDevice8_EndVisibilityTest@8 (0000)
 001641A0 0010:
-	_code_001641a0 (0000)
+	_IDirect3DDevice8_GetVisibilityTestResult@16 (0000)
 001641B0 0010:
-	_code_001641b0 (0000)
+	_D3DVertexBuffer_Unlock@4 (0000)
 001641C0 0010:
-	_code_001641c0 (0000)
+	_IDirect3DVertexBuffer8_Release@4 (0000)
 001641D0 0020:
-	_code_001641d0 (0000)
+	_IDirect3DVertexBuffer8_Lock@20 (0000)
 001641F0 0010:
-	_code_001641f0 (0000)
+	_IDirect3DVertexBuffer8_Unlock@4 (0000)
 00164200 01b0:
 	_rasterizer_transparent_geometry_groups_end (0000)
 001643B0 0030:

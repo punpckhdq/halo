@@ -9,9 +9,9 @@ symbols in this file:
 000031A0 0070:
 	_action_flee_modify_color (0000)
 00003210 0280:
-	_code_00003210 (0000)
+	_action_flee_find_flee_position (0000)
 00003490 0160:
-	_code_00003490 (0000)
+	_action_flee_current_position_exposed (0000)
 000035F0 0030:
 	_action_flee_replace_prop (0000)
 00003620 0020:
@@ -25,7 +25,7 @@ symbols in this file:
 00003850 0190:
 	_action_flee_control (0000)
 000039E0 0140:
-	_code_000039e0 (0000)
+	_action_flee_at_flee_position (0000)
 00003B20 0360:
 	_action_flee_perform (0000)
 002430A4 0020:

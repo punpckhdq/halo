@@ -13,33 +13,33 @@ symbols in this file:
 000E4E00 0010:
 	_virtual_keyboard_last_exit_saved_text (0000)
 000E4E10 0050:
-	_code_000e4e10 (0000)
+	_virtual_keyboard_tab_left (0000)
 000E4E60 0050:
-	_code_000e4e60 (0000)
+	_virtual_keyboard_tab_right (0000)
 000E4EB0 0050:
-	_code_000e4eb0 (0000)
+	_virtual_keyboard_tab_up (0000)
 000E4F00 0050:
-	_code_000e4f00 (0000)
+	_virtual_keyboard_tab_down (0000)
 000E4F50 0060:
-	_code_000e4f50 (0000)
+	_virtual_keyboard_cancel (0000)
 000E4FB0 00d0:
-	_code_000e4fb0 (0000)
+	_virtual_keyboard_get_character (0000)
 000E5080 0030:
-	_code_000e5080 (0000)
+	_virtual_keyboard_get_current_character (0000)
 000E50B0 0650:
-	_code_000e50b0 (0000)
+	_virtual_keyboard_render_internal (0000)
 000E5700 0020:
-	_code_000e5700 (0000)
+	_virtual_keyboard_free_space_in_text_buffer (0000)
 000E5720 0060:
-	_code_000e5720 (0000)
+	_virtual_keyboard_backspace (0000)
 000E5780 0010:
 	_virtual_keyboard_close (0000)
 000E5790 0010:
 	_virtual_keyboard_render (0000)
 000E57A0 0440:
-	_code_000e57a0 (0000)
+	_virtual_keyboard_select (0000)
 000E5BE0 0350:
-	_code_000e5be0 (0000)
+	_virtual_keyboard_process_internal (0000)
 000E5F30 0010:
 	_virtual_keyboard_process (0000)
 00278CC0 0037:

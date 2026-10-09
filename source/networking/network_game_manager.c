@@ -17,7 +17,7 @@ symbols in this file:
 0011A410 00b0:
 	_network_game_reset_for_next_round (0000)
 0011A4C0 0010:
-	_code_0011a4c0 (0000)
+	_network_game_assign_players_to_team (0000)
 0011A4D0 0030:
 	_network_player_is_valid (0000)
 0011A500 00b0:
@@ -25,7 +25,7 @@ symbols in this file:
 0011A5B0 01a0:
 	_network_game_add_player (0000)
 0011A750 0140:
-	_code_0011a750 (0000)
+	_sort_network_players (0000)
 0011A890 0080:
 	_network_game_spawn_player (0000)
 0011A910 0090:

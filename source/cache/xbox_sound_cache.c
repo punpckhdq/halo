@@ -19,13 +19,13 @@ symbols in this file:
 001ADC30 0030:
 	_sound_cache_sound_hardware_unlock (0000)
 001ADC60 0040:
-	_code_001adc60 (0000)
+	_sound_cache_locked_block_proc (0000)
 001ADCA0 00c0:
-	_code_001adca0 (0000)
+	_sound_cache_delete_block_proc (0000)
 001ADD60 0040:
-	_code_001add60 (0000)
+	_cache_block_get_sound_permutation_name (0000)
 001ADDA0 0130:
-	_code_001adda0 (0000)
+	_sound_cache_start_loading_sound (0000)
 001ADED0 00b0:
 	_sound_cache_new (0000)
 001ADF80 0060:
@@ -35,7 +35,7 @@ symbols in this file:
 001AE040 0160:
 	__sound_cache_sound_request (0000)
 001AE1A0 0100:
-	_code_001ae1a0 (0000)
+	_render_inverse_transform_screen_point (0000)
 001AE2A0 0170:
 	_sound_cache_debug_render (0000)
 002A7818 0028:

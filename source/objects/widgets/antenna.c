@@ -15,11 +15,11 @@ symbols in this file:
 00120980 0020:
 	_antenna_delete (0000)
 001209A0 0130:
-	_code_001209a0 (0000)
+	_antenna_update_attachment (0000)
 00120AD0 0170:
-	_code_00120ad0 (0000)
+	_antenna_render_proper (0000)
 00120C40 0310:
-	_code_00120c40 (0000)
+	_antenna_update (0000)
 00120F50 0090:
 	_antenna_render (0000)
 00120FE0 00b0:

@@ -3,21 +3,21 @@ SHADER_TRANSPARENT_GENERIC_PREPROCESSOR.C
 
 symbols in this file:
 0016B6A0 0080:
-	_code_0016b6a0 (0000)
+	_shader_stage_color_input (0000)
 0016B720 0050:
-	_code_0016b720 (0000)
+	_shader_stage_color_output (0000)
 0016B770 00e0:
-	_code_0016b770 (0000)
+	_shader_stage_color_output_flags (0000)
 0016B850 0080:
-	_code_0016b850 (0000)
+	_shader_stage_alpha_input (0000)
 0016B8D0 0050:
-	_code_0016b8d0 (0000)
+	_shader_stage_alpha_output (0000)
 0016B920 0070:
-	_code_0016b920 (0000)
+	_shader_stage_alpha_output_flags (0000)
 0016B990 0070:
-	_code_0016b990 (0000)
+	_shader_map_verify (0000)
 0016BA00 0140:
-	_code_0016ba00 (0000)
+	_shader_stage_verify (0000)
 0016BB40 04a0:
 	_shader_transparent_generic_create (0000)
 0029CF50 0228:

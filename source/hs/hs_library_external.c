@@ -19,7 +19,7 @@ symbols in this file:
 000B8BE0 00a0:
 	_hs_objects_can_see_flag (0000)
 000B8C80 00b0:
-	_code_000b8c80 (0000)
+	_object_is_or_contains_player (0000)
 000B8D30 0050:
 	_hs_object_create (0000)
 000B8D80 0040:
@@ -29,7 +29,7 @@ symbols in this file:
 000B8DF0 00c0:
 	_hs_object_destroy_all (0000)
 000B8EB0 0080:
-	_code_000b8eb0 (0000)
+	_hs_object_iterate_names_containing (0000)
 000B8F30 0020:
 	_hs_object_create_containing (0000)
 000B8F50 0020:
@@ -53,7 +53,7 @@ symbols in this file:
 000B92D0 0060:
 	_hs_damage_object (0000)
 000B9330 0080:
-	_code_000b9330 (0000)
+	_hs_sound_get_gain_reference (0000)
 000B93B0 0020:
 	_hs_sound_get_gain (0000)
 000B93D0 0020:
@@ -67,7 +67,7 @@ symbols in this file:
 000B94E0 0020:
 	_hs_object_create_anew_containing (0000)
 000B9500 0290:
-	_code_000b9500 (0000)
+	_hs_object_orient (0000)
 000B9790 0020:
 	_hs_object_teleport (0000)
 000B97B0 0020:

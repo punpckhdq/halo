@@ -3,7 +3,7 @@ BINK_PLAYBACK.C
 
 symbols in this file:
 001B53F0 0040:
-	_code_001b53f0 (0000)
+	_bink_get_memory_available (0000)
 001B5430 0020:
 	_bink_playback_active (0000)
 001B5450 0020:
@@ -11,39 +11,39 @@ symbols in this file:
 001B5470 0010:
 	_bink_playback_in_progress (0000)
 001B5480 00f0:
-	_code_001b5480 (0000)
+	_bink_alloc_permanent (0000)
 001B5570 0030:
-	_code_001b5570 (0000)
+	_is_all_bink_memory_free (0000)
 001B55A0 01f0:
-	_code_001b55a0 (0000)
+	_bink_alloc@4 (0000)
 001B5790 00c0:
-	_code_001b5790 (0000)
+	_bink_free@4 (0000)
 001B5850 0010:
-	_code_001b5850 (0000)
+	_bink_decompress_audio_frame (0000)
 001B5860 0390:
-	_code_001b5860 (0000)
+	_bink_draw_frame (0000)
 001B5BF0 0010:
-	_code_001b5bf0 (0000)
+	_IDirect3DBaseTexture8_Register@8 (0000)
 001B5C00 0050:
-	_code_001b5c00 (0000)
+	_bink_query_analog_controller_buttons (0000)
 001B5C50 0010:
-	_code_001b5c50 (0000)
+	_D3DTexture_UnlockRect@8 (0000)
 001B5C60 0020:
-	_code_001b5c60 (0000)
+	_IDirect3DTexture8_LockRect@20 (0000)
 001B5C80 0010:
-	_code_001b5c80 (0000)
+	_IDirect3DTexture8_UnlockRect@8 (0000)
 001B5C90 0030:
 	_bink_playback_initialize (0000)
 001B5CC0 0060:
-	_code_001b5cc0 (0000)
+	_bink_free_texture_cache (0000)
 001B5D20 0070:
-	_code_001b5d20 (0000)
+	_bink_decompress_video_frame (0000)
 001B5D90 0070:
 	_bink_playback_stop (0000)
 001B5E00 0030:
 	_bink_playback_dispose (0000)
 001B5E30 00a0:
-	_code_001b5e30 (0000)
+	_bink_playback_update__internal (0000)
 001B5ED0 0060:
 	_bink_playback_render (0000)
 001B5F30 0430:

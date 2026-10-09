@@ -19,33 +19,33 @@ symbols in this file:
 0004E870 0060:
 	_heap_cost (0000)
 0004E8D0 00d0:
-	_code_0004e8d0 (0000)
+	_error_heap (0000)
 0004E9A0 01b0:
-	_code_0004e9a0 (0000)
+	_heap_verify (0000)
 0004EB50 0190:
-	_code_0004eb50 (0000)
+	_heap_up (0000)
 0004ECE0 02a0:
-	_code_0004ece0 (0000)
+	_heap_down (0000)
 0004EF80 0060:
-	_code_0004ef80 (0000)
+	_heap_insert (0000)
 0004EFE0 0070:
-	_code_0004efe0 (0000)
+	_heap_remove (0000)
 0004F050 0260:
 	_render_debug_path (0000)
 0004F2B0 0040:
 	_valid_real_point2d (0000)
 0004F2F0 0220:
-	_code_0004f2f0 (0000)
+	_path_add_step (0000)
 0004F510 01e0:
-	_code_0004f510 (0000)
+	_path_new (0000)
 0004F6F0 0200:
-	_code_0004f6f0 (0000)
+	_path_test_pill2d (0000)
 0004F8F0 0330:
-	_code_0004f8f0 (0000)
+	_path_add_steps (0000)
 0004FC20 0130:
-	_code_0004fc20 (0000)
+	_path_iterate (0000)
 0004FD50 0070:
-	_code_0004fd50 (0000)
+	_path_find (0000)
 0004FDC0 0550:
 	_path_avoid_obstacles (0000)
 00050310 00e0:

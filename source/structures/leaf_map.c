@@ -3,29 +3,29 @@ LEAF_MAP.C
 
 symbols in this file:
 00181320 0050:
-	_code_00181320 (0000)
+	_node_stack_push (0000)
 00181370 0040:
-	_code_00181370 (0000)
+	_node_stack_pop (0000)
 001813B0 0040:
-	_code_001813b0 (0000)
+	_node_stack_read (0000)
 001813F0 0030:
 	_leaf_map_delete (0000)
 00181420 00a0:
-	_code_00181420 (0000)
+	_find_like_crossing (0000)
 001814C0 0040:
-	_code_001814c0 (0000)
+	_map_leaf_find_face_on_node (0000)
 00181500 00d0:
 	_leaf_map_close_portal (0000)
 001815D0 0060:
 	_leaf_map_leaf_is_closed (0000)
 00181630 00b0:
-	_code_00181630 (0000)
+	_leaf_map_family_mark (0000)
 001816E0 0160:
 	_render_debug_leaf_portal (0000)
 00181840 0060:
 	_render_debug_leaf_portals (0000)
 001818A0 0340:
-	_code_001818a0 (0000)
+	_leaf_map_build_portal_from_leaves (0000)
 00181BE0 0310:
 	_leaf_map_get_leaf_bounds (0000)
 00181EF0 0070:
@@ -33,23 +33,23 @@ symbols in this file:
 00181F60 0290:
 	_leaf_map_leaf_spans_polygon (0000)
 001821F0 00b0:
-	_code_001821f0 (0000)
+	_leaf_face_get_vertex3d (0000)
 001822A0 0160:
 	_render_debug_leaf_faces (0000)
 00182400 0080:
-	_code_00182400 (0000)
+	_normalize_three_dee (0000)
 00182480 0170:
-	_code_00182480 (0000)
+	_intersect_planes3d (0000)
 001825F0 01e0:
-	_code_001825f0 (0000)
+	_leaf_map_build_portals_from_leaf (0000)
 001827D0 0260:
-	_code_001827d0 (0000)
+	_leaf_map_build_leaf_face_for_leaf_on_node (0000)
 00182A30 00f0:
-	_code_00182a30 (0000)
+	_leaf_map_build_portals (0000)
 00182B20 0070:
-	_code_00182b20 (0000)
+	_leaf_map_build_leaf_faces_for_leaf (0000)
 00182B90 00e0:
-	_code_00182b90 (0000)
+	_leaf_map_build_leaf_faces (0000)
 00182C70 0130:
 	_leaf_map_initialize_from_bsp (0000)
 002A0C84 0012:

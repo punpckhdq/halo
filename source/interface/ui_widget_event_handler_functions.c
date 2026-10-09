@@ -5,203 +5,203 @@ symbols in this file:
 000D8F90 0090:
 	_ui_widget_event_handler_function_invoke (0000)
 000D9020 0010:
-	_code_000d9020 (0000)
+	_widget_event_function_null (0000)
 000D9030 0010:
 	_reset_last_player1_profile_index (0000)
 000D9040 01a0:
-	_code_000d9040 (0000)
+	_solo_level_initialize_list_coop (0000)
 000D91E0 0030:
-	_code_000d91e0 (0000)
+	_solo_level_dispose_list (0000)
 000D9210 0140:
-	_code_000d9210 (0000)
+	_solo_level_set_next_map_name (0000)
 000D9350 0060:
-	_code_000d9350 (0000)
+	_difficulty_set (0000)
 000D93B0 0030:
-	_code_000d93b0 (0000)
+	_start_new_game (0000)
 000D93E0 0010:
-	_code_000d93e0 (0000)
+	_pause_game_restart_at_checkpoint (0000)
 000D93F0 0010:
-	_code_000d93f0 (0000)
+	_pause_game_restart_level (0000)
 000D9400 0010:
-	_code_000d9400 (0000)
+	_pause_game_quit_to_main_menu (0000)
 000D9410 0020:
-	_code_000d9410 (0000)
+	_clear_multiplayer_player_joins (0000)
 000D9430 0050:
-	_code_000d9430 (0000)
+	_player_wants_to_join_multiplayer_game (0000)
 000D9480 0040:
-	_code_000d9480 (0000)
+	_network_game_server_list_initialize (0000)
 000D94C0 0090:
-	_code_000d94c0 (0000)
+	_network_game_start_new_server (0000)
 000D9550 0200:
-	_code_000d9550 (0000)
+	_network_game_join_game_from_server_list (0000)
 000D9750 0020:
-	_code_000d9750 (0000)
+	_network_server_list_dispose (0000)
 000D9770 0020:
-	_code_000d9770 (0000)
+	_network_game_cancel (0000)
 000D9790 0070:
-	_code_000d9790 (0000)
+	_split_screen_game_initialize (0000)
 000D9800 0010:
-	_code_000d9800 (0000)
+	_coop_game_initialize (0000)
 000D9810 0040:
-	_code_000d9810 (0000)
+	_main_menu_initialize (0000)
 000D9850 0010:
-	_code_000d9850 (0000)
+	_multiplayer_type_menu_initialize (0000)
 000D9860 0020:
-	_code_000d9860 (0000)
+	_multiplayer_pick_quick_start_play_stage (0000)
 000D9880 00f0:
-	_code_000d9880 (0000)
+	_multiplayer_level_list_initialize (0000)
 000D9970 0020:
-	_code_000d9970 (0000)
+	_multiplayer_level_list_dispose (0000)
 000D9990 01d0:
-	_code_000d9990 (0000)
+	_multiplayer_level_select (0000)
 000D9B60 0160:
-	_code_000d9b60 (0000)
+	_multiplayer_profiles_list_initialize (0000)
 000D9CC0 0030:
-	_code_000d9cc0 (0000)
+	_multiplayer_profiles_list_dispose (0000)
 000D9CF0 02a0:
-	_code_000d9cf0 (0000)
+	_multiplayer_profile_set_for_game (0000)
 000D9F90 00f0:
-	_code_000d9f90 (0000)
+	_multiplayer_game_swap_teams (0000)
 000DA080 0110:
-	_code_000da080 (0000)
+	_netgame_join_player (0000)
 000DA190 0160:
-	_code_000da190 (0000)
+	_player_profiles_list_initialize (0000)
 000DA2F0 0030:
-	_code_000da2f0 (0000)
+	_player_profiles_list_dispose (0000)
 000DA320 01c0:
-	_code_000da320 (0000)
+	_player_profile_set_for_game_3wide (0000)
 000DA4E0 0160:
-	_code_000da4e0 (0000)
+	_player_profile_set_for_game_1wide (0000)
 000DA640 0140:
-	_code_000da640 (0000)
+	_playlist_profile_begin_editing (0000)
 000DA780 0020:
-	_code_000da780 (0000)
+	_playlist_profile_end_editing (0000)
 000DA7A0 00e0:
-	_code_000da7a0 (0000)
+	_playlist_profile_set_game_engine (0000)
 000DA880 0050:
-	_code_000da880 (0000)
+	_playlist_profile_change_name (0000)
 000DA8D0 03a0:
-	_code_000da8d0 (0000)
+	_playlist_profile_change_ctf_rules (0000)
 000DAC70 0220:
-	_code_000dac70 (0000)
+	_playlist_profile_change_koth_rules (0000)
 000DAE90 0360:
-	_code_000dae90 (0000)
+	_playlist_profile_change_slayer_rules (0000)
 000DB1F0 0580:
-	_code_000db1f0 (0000)
+	_playlist_profile_change_oddball_rules (0000)
 000DB770 02d0:
-	_code_000db770 (0000)
+	_playlist_profile_change_racing_rules (0000)
 000DBA40 0580:
-	_code_000dba40 (0000)
+	_playlist_profile_change_player_options (0000)
 000DBFC0 0320:
-	_code_000dbfc0 (0000)
+	_playlist_profile_change_item_options (0000)
 000DC2E0 01f0:
-	_code_000dc2e0 (0000)
+	_playlist_profile_change_indicator_options (0000)
 000DC4D0 00c0:
-	_code_000dc4d0 (0000)
+	_playlist_profile_initialize_game_engine (0000)
 000DC590 00a0:
-	_code_000dc590 (0000)
+	_playlist_profile_initialize_name (0000)
 000DC630 0390:
-	_code_000dc630 (0000)
+	_playlist_profile_initialize_ctf_rules (0000)
 000DC9C0 0230:
-	_code_000dc9c0 (0000)
+	_playlist_profile_initialize_koth_rules (0000)
 000DCBF0 0350:
-	_code_000dcbf0 (0000)
+	_playlist_profile_initialize_slayer_rules (0000)
 000DCF40 0510:
-	_code_000dcf40 (0000)
+	_playlist_profile_initialize_oddball_rules (0000)
 000DD450 02e0:
-	_code_000dd450 (0000)
+	_playlist_profile_initialize_racing_rules (0000)
 000DD730 0550:
-	_code_000dd730 (0000)
+	_playlist_profile_initialize_player_options (0000)
 000DDC80 0310:
-	_code_000ddc80 (0000)
+	_playlist_profile_initialize_item_options (0000)
 000DDF90 0200:
-	_code_000ddf90 (0000)
+	_playlist_profile_initialize_indicator_options (0000)
 000DE190 00c0:
-	_code_000de190 (0000)
+	_playlist_profile_save_changes (0000)
 000DE250 0110:
-	_code_000de250 (0000)
+	_player_profile_color_picker_menu_initialize (0000)
 000DE360 0030:
-	_code_000de360 (0000)
+	_player_profile_color_picker_menu_dispose (0000)
 000DE390 0100:
-	_code_000de390 (0000)
+	_player_profile_color_picker_select_color (0000)
 000DE490 0130:
-	_code_000de490 (0000)
+	_player_profile_begin_editing (0000)
 000DE5C0 0020:
-	_code_000de5c0 (0000)
+	_player_profile_end_editing (0000)
 000DE5E0 0050:
-	_code_000de5e0 (0000)
+	_player_profile_change_name (0000)
 000DE630 0080:
-	_code_000de630 (0000)
+	_player_profile_save_changes (0000)
 000DE6B0 01e0:
-	_code_000de6b0 (0000)
+	_player_profile_initialize_controller_settings (0000)
 000DE890 02e0:
-	_code_000de890 (0000)
+	_player_profile_initialize_advanced_controller_settings (0000)
 000DEB70 01d0:
-	_code_000deb70 (0000)
+	_player_profile_change_controller_settings (0000)
 000DED40 0340:
-	_code_000ded40 (0000)
+	_player_profile_change_advanced_controller_settings (0000)
 000DF080 0050:
-	_code_000df080 (0000)
+	_network_game_remove_local_player (0000)
 000DF0D0 0020:
-	_code_000df0d0 (0000)
+	_switch_from_main_menu_to_single_player (0000)
 000DF0F0 0110:
-	_code_000df0f0 (0000)
+	_delete_player_profile_request (0000)
 000DF200 0140:
-	_code_000df200 (0000)
+	_delete_playlist_profile_request (0000)
 000DF340 0050:
-	_code_000df340 (0000)
+	_delete_player_profile_final (0000)
 000DF390 0040:
-	_code_000df390 (0000)
+	_delete_playlist_profile_final (0000)
 000DF3D0 0010:
-	_code_000df3d0 (0000)
+	_cancel_profile_delete (0000)
 000DF3E0 0180:
-	_code_000df3e0 (0000)
+	_create_and_begin_editing_new_gametype_profile (0000)
 000DF560 00f0:
-	_code_000df560 (0000)
+	_create_and_begin_editing_new_player_profile (0000)
 000DF650 00a0:
-	_code_000df650 (0000)
+	_network_game_start_faster (0000)
 000DF6F0 00a0:
-	_code_000df6f0 (0000)
+	_network_game_start_slower (0000)
 000DF790 0020:
-	_code_000df790 (0000)
+	_network_game_server_accept_connections (0000)
 000DF7B0 0020:
-	_code_000df7b0 (0000)
+	_network_game_server_defer_game_start (0000)
 000DF7D0 0020:
-	_code_000df7d0 (0000)
+	_network_game_server_allow_game_start (0000)
 000DF7F0 0020:
-	_code_000df7f0 (0000)
+	_disable_widget_if_no_xdemos (0000)
 000DF810 0010:
-	_code_000df810 (0000)
+	_run_xdemos (0000)
 000DF820 0010:
-	_code_000df820 (0000)
+	_single_player_reset_controller_choices (0000)
 000DF830 0050:
-	_code_000df830 (0000)
+	_single_player_set_player1_controller_choice (0000)
 000DF880 0070:
-	_code_000df880 (0000)
+	_single_player_set_player2_controller_choice (0000)
 000DF8F0 0060:
-	_code_000df8f0 (0000)
+	_display_error_if_no_network_connection (0000)
 000DF950 0080:
-	_code_000df950 (0000)
+	_start_network_game_if_no_advertised_servers (0000)
 000DF9D0 0180:
-	_code_000df9d0 (0000)
+	_netgame_unjoin_player (0000)
 000DFB50 0050:
-	_code_000dfb50 (0000)
+	_close_calling_widget_if_not_editing_profile (0000)
 000DFBA0 0010:
-	_code_000dfba0 (0000)
+	_exit_to_xbox_dashboard (0000)
 000DFBB0 0090:
-	_code_000dfbb0 (0000)
+	_new_campaign_chosen (0000)
 000DFC40 0160:
-	_code_000dfc40 (0000)
+	_new_campaign_decision (0000)
 000DFDA0 0020:
-	_code_000dfda0 (0000)
+	_go_back_twice_next_time (0000)
 000DFDC0 00e0:
-	_code_000dfdc0 (0000)
+	_difficulty_menu_initialize (0000)
 000DFEA0 0020:
-	_code_000dfea0 (0000)
+	_begin_music_fade_out (0000)
 000DFEC0 0050:
-	_code_000dfec0 (0000)
+	_new_campaign_if_no_custom_player_profiles_exist (0000)
 000DFF10 02a0:
-	_code_000dff10 (0000)
+	_solo_level_initialize_list_single_player (0000)
 00273234 001c:
 	??_C@_0BM@CKKFJKOP@levels?2test?2longest?2longest?$AA@ (0000)
 00273250 001a:

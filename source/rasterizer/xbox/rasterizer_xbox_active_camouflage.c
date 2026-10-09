@@ -5,23 +5,23 @@ symbols in this file:
 001488C0 0070:
 	_real_alpha_to_pixel32 (0000)
 00148930 01b0:
-	_code_00148930 (0000)
+	_D3DDevice_SetRenderState (0000)
 00148AE0 0050:
-	_code_00148ae0 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 00148B30 0020:
 	_rasterizer_active_camouflage_set_visibility (0000)
 00148B50 0220:
-	_code_00148b50 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 00148D70 0060:
-	_code_00148d70 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00148DD0 0010:
-	_code_00148dd0 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00148DE0 0010:
-	_code_00148de0 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 00148DF0 0010:
-	_code_00148df0 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 00148E00 0010:
-	_code_00148e00 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 00148E10 0340:
 	_rasterizer_active_camouflage_cache_primary_render_target (0000)
 00149150 07e0:

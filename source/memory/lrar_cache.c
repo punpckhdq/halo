@@ -3,21 +3,21 @@ LRAR_CACHE.C
 
 symbols in this file:
 0010BFA0 0010:
-	_code_0010bfa0 (0000)
+	_lrar_default_new_block_proc (0000)
 0010BFB0 0010:
-	_code_0010bfb0 (0000)
+	_lrar_default_purge_block_proc (0000)
 0010BFC0 0020:
-	_code_0010bfc0 (0000)
+	_lrar_purge_block (0000)
 0010BFE0 0060:
-	_code_0010bfe0 (0000)
+	_verify_lrar_cache_block (0000)
 0010C040 0050:
-	_code_0010c040 (0000)
+	_verify_lrar_cache (0000)
 0010C090 01b0:
 	_lrar_new (0000)
 0010C240 0040:
 	_lrar_dispose (0000)
 0010C280 0050:
-	_code_0010c280 (0000)
+	_get_lrar_cache_block (0000)
 0010C2D0 0140:
 	_lrar_flush (0000)
 0010C410 0310:

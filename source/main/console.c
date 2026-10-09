@@ -49,7 +49,7 @@ struct console_globals
 
 static boolean console_process_command(const char *command);
 
-static char *console_get_text_to_autocomplete(void);
+static char *console_get_token(void);
 
 static void console_complete(void);
 
@@ -185,7 +185,7 @@ static boolean console_process_command(
 	return hs_compile_and_evaluate(command);
 }
 
-static char *console_get_text_to_autocomplete(
+static char *console_get_token(
 	void)
 {
 	char *result = console_globals.input_state.result;
@@ -215,7 +215,7 @@ static void console_complete(
 	char *matching_items[256];
 	char print_buffer[1024];
 
-	char *token = console_get_text_to_autocomplete();
+	char *token = console_get_token();
 	short count = hs_tokens_enumerate(token, NONE, matching_items, NUMBEROF(matching_items));
 
 	if (count)

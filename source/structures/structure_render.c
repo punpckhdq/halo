@@ -5,15 +5,15 @@ symbols in this file:
 00184D30 0050:
 	_structure_render_set_fog_offset (0000)
 00184D80 0020:
-	_code_00184d80 (0000)
+	_compare_surface_indices (0000)
 00184DA0 0100:
-	_code_00184da0 (0000)
+	_structure_render_dynamic_triangles_from_bitvector (0000)
 00184EA0 0080:
-	_code_00184ea0 (0000)
+	_structure_render_dynamic_triangles_from_indices (0000)
 00184F20 00c0:
-	_code_00184f20 (0000)
+	_structure_render_build_dynamic_triangles (0000)
 00184FE0 0260:
-	_code_00184fe0 (0000)
+	_structure_render_pass (0000)
 00185240 0120:
 	_structure_render_preprocess (0000)
 00185360 00b0:

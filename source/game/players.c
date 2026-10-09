@@ -13,7 +13,7 @@ symbols in this file:
 000A95E0 0020:
 	_machine_get_player_list (0000)
 000A9600 0050:
-	_code_000a9600 (0000)
+	_machine_add_player (0000)
 000A9650 0060:
 	_local_player_exists (0000)
 000A96B0 0050:
@@ -51,9 +51,9 @@ symbols in this file:
 000A9B70 0050:
 	_any_player_is_dead (0000)
 000A9BC0 0040:
-	_code_000a9bc0 (0000)
+	_is_player_in_trigger (0000)
 000A9C00 00e0:
-	_code_000a9c00 (0000)
+	_player_pseudo_kill (0000)
 000A9CE0 0120:
 	_player_control_fix_for_loaded_game_state (0000)
 000A9E00 0050:
@@ -63,31 +63,31 @@ symbols in this file:
 000A9F10 0070:
 	_placement_data_set_change_color (0000)
 000A9F80 0070:
-	_code_000a9f80 (0000)
+	_create_weapon (0000)
 000A9FF0 0170:
-	_code_000a9ff0 (0000)
+	_players_compute_combined_pvs (0000)
 000AA160 0020:
-	_code_000aa160 (0000)
+	_players_compute_local_player_count (0000)
 000AA180 0010:
-	_code_000aa180 (0000)
+	_player_examine_nearby_unit (0000)
 000AA190 0090:
 	_unit_should_autopick_weapon (0000)
 000AA220 0020:
-	_code_000aa220 (0000)
+	_player_reset_action_result (0000)
 000AA240 00c0:
-	_code_000aa240 (0000)
+	_player_handle_weapon_swap (0000)
 000AA300 00b0:
-	_code_000aa300 (0000)
+	_player_over_shield_screen_effect (0000)
 000AA3B0 00b0:
-	_code_000aa3b0 (0000)
+	_player_active_camo_screen_effect (0000)
 000AA460 0090:
-	_code_000aa460 (0000)
+	_player_health_pack_screen_effect (0000)
 000AA4F0 0040:
-	_code_000aa4f0 (0000)
+	_player_powerup_on (0000)
 000AA530 0030:
-	_code_000aa530 (0000)
+	_player_powerup_additional (0000)
 000AA560 0030:
-	_code_000aa560 (0000)
+	_player_powerup_off (0000)
 000AA590 0070:
 	_players_handle_deleted_object (0000)
 000AA600 0020:
@@ -101,23 +101,23 @@ symbols in this file:
 000AA8D0 0110:
 	_player_aiming_vector_from_facing (0000)
 000AA9E0 0510:
-	_code_000aa9e0 (0000)
+	_player_teleport_internal (0000)
 000AAEF0 0060:
 	_player_teleport (0000)
 000AAF50 00d0:
 	_find_best_starting_location_index (0000)
 000AB020 0330:
-	_code_000ab020 (0000)
+	_player_spawn (0000)
 000AB350 00f0:
-	_code_000ab350 (0000)
+	_player_set_action_result (0000)
 000AB440 0250:
-	_code_000ab440 (0000)
+	_player_handle_action (0000)
 000AB690 00f0:
 	_player_handle_powerup (0000)
 000AB780 00a0:
 	_player_handle_powerup_minor (0000)
 000AB820 0070:
-	_code_000ab820 (0000)
+	_player_update_powerups (0000)
 000AB890 01a0:
 	_players_debug_render (0000)
 000ABA30 0090:
@@ -125,21 +125,21 @@ symbols in this file:
 000ABAC0 01d0:
 	_players_respawn_coop (0000)
 000ABC90 0140:
-	_code_000abc90 (0000)
+	_player_teleport_on_bsp_switch (0000)
 000ABDD0 02e0:
 	_players_reconnect_to_structure_bsp (0000)
 000AC0B0 01c0:
-	_code_000ac0b0 (0000)
+	_player_examine_nearby_vehicle (0000)
 000AC270 00b0:
-	_code_000ac270 (0000)
+	_player_examine_nearby_device (0000)
 000AC320 0150:
-	_code_000ac320 (0000)
+	_player_handle_powerup_equipment (0000)
 000AC470 06e0:
 	_players_update_before_game (0000)
 000ACB50 0320:
-	_code_000acb50 (0000)
+	_player_examine_nearby_item (0000)
 000ACE70 00f0:
-	_code_000ace70 (0000)
+	_player_examine_nearby_objects (0000)
 000ACF60 0330:
 	_players_update_after_game (0000)
 0025CED8 006c:

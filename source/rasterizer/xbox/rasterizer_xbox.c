@@ -3,87 +3,87 @@ RASTERIZER_XBOX.C
 
 symbols in this file:
 001448F0 0010:
-	_code_001448f0 (0000)
+	_Direct3D_Release@0 (0000)
 00144900 0010:
-	_code_00144900 (0000)
+	_IDirect3D8_Release@4 (0000)
 00144910 0020:
-	_code_00144910 (0000)
+	_IDirect3D8_CreateDevice@28 (0000)
 00144930 0010:
-	_code_00144930 (0000)
+	_D3DDevice_BeginScene@0 (0000)
 00144940 0010:
-	_code_00144940 (0000)
+	_D3DDevice_EndScene@0 (0000)
 00144950 0010:
-	_code_00144950 (0000)
+	_D3DDevice_GetRenderState (0000)
 00144960 0020:
-	_code_00144960 (0000)
+	_D3DDevice_GetTextureStageState (0000)
 00144980 01b0:
-	_code_00144980 (0000)
+	_D3DDevice_SetRenderState (0000)
 00144B30 0050:
-	_code_00144b30 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 00144B80 0010:
-	_code_00144b80 (0000)
+	_IDirect3DDevice8_Release@4 (0000)
 00144B90 0010:
-	_code_00144b90 (0000)
+	_IDirect3DDevice8_GetDeviceCaps@8 (0000)
 00144BA0 0020:
-	_code_00144ba0 (0000)
+	_IDirect3DDevice8_Present@20 (0000)
 00144BC0 0010:
-	_code_00144bc0 (0000)
+	_IDirect3DDevice8_GetBackBuffer@16 (0000)
 00144BD0 0020:
-	_code_00144bd0 (0000)
+	_IDirect3DDevice8_CreateTexture@32 (0000)
 00144BF0 0030:
-	_code_00144bf0 (0000)
+	_IDirect3DDevice8_CreateVolumeTexture@36 (0000)
 00144C20 0020:
-	_code_00144c20 (0000)
+	_IDirect3DDevice8_CreateCubeTexture@28 (0000)
 00144C40 0010:
-	_code_00144c40 (0000)
+	_IDirect3DDevice8_CreatePalette@12 (0000)
 00144C50 0010:
-	_code_00144c50 (0000)
+	_IDirect3DDevice8_SetRenderTarget@12 (0000)
 00144C60 0120:
 	_rasterizer_preinitialize__fill_you_up_with_the_devils_cock (0000)
 00144D80 0010:
-	_code_00144d80 (0000)
+	_IDirect3DDevice8_GetDepthStencilSurface@8 (0000)
 00144D90 0010:
-	_code_00144d90 (0000)
+	_IDirect3DDevice8_BeginScene@4 (0000)
 00144DA0 0010:
-	_code_00144da0 (0000)
+	_IDirect3DDevice8_EndScene@4 (0000)
 00144DB0 0020:
-	_code_00144db0 (0000)
+	_IDirect3DDevice8_Clear@28 (0000)
 00144DD0 0010:
-	_code_00144dd0 (0000)
+	_IDirect3DDevice8_SetViewport@8 (0000)
 00144DE0 00a0:
 	_rasterizer_get_bitmap_default_hardware_format (0000)
 00144E80 0220:
-	_code_00144e80 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 001450A0 0010:
-	_code_001450a0 (0000)
+	_IDirect3DDevice8_GetRenderState@12 (0000)
 001450B0 0010:
-	_code_001450b0 (0000)
+	_IDirect3DDevice8_SetTexture@12 (0000)
 001450C0 0010:
-	_code_001450c0 (0000)
+	_IDirect3DDevice8_SetPalette@12 (0000)
 001450D0 0020:
-	_code_001450d0 (0000)
+	_IDirect3DDevice8_GetTextureStageState@16 (0000)
 001450F0 0060:
-	_code_001450f0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00145150 0010:
-	_code_00145150 (0000)
+	_IDirect3DDevice8_SetVertexShader@8 (0000)
 00145160 0010:
-	_code_00145160 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00145170 0010:
-	_code_00145170 (0000)
+	_IDirect3DDevice8_SetShaderConstantMode@8 (0000)
 00145180 0010:
-	_code_00145180 (0000)
+	_IDirect3DDevice8_SetStreamSource@16 (0000)
 00145190 0010:
-	_code_00145190 (0000)
+	_IDirect3DDevice8_SetIndices@12 (0000)
 001451A0 0010:
-	_code_001451a0 (0000)
+	_IDirect3DDevice8_SetPixelShaderProgram@8 (0000)
 001451B0 0010:
-	_code_001451b0 (0000)
+	_IDirect3DDevice8_SetVerticalBlankCallback@8 (0000)
 001451C0 0010:
-	_code_001451c0 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 001451D0 0010:
-	_code_001451d0 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 001451E0 0010:
-	_code_001451e0 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 001451F0 0010:
 	__rasterizer_reset_state (0000)
 00145200 0010:
@@ -95,51 +95,51 @@ symbols in this file:
 00145250 0040:
 	__rasterizer_window_get_fog (0000)
 00145290 0010:
-	_code_00145290 (0000)
+	_D3DTexture_UnlockRect@8 (0000)
 001452A0 0030:
 	__rasterizer_windows_end (0000)
 001452D0 00d0:
 	__rasterizer_frame_end (0000)
 001453A0 0010:
-	_code_001453a0 (0000)
+	_IDirect3DTexture8_GetSurfaceLevel@12 (0000)
 001453B0 0020:
-	_code_001453b0 (0000)
+	_IDirect3DTexture8_LockRect@20 (0000)
 001453D0 0010:
-	_code_001453d0 (0000)
+	_IDirect3DTexture8_UnlockRect@8 (0000)
 001453E0 0010:
-	_code_001453e0 (0000)
+	_D3DVolumeTexture_UnlockBox@8 (0000)
 001453F0 0070:
 	__rasterizer_dispose (0000)
 00145460 0010:
 	__rasterizer_set_vblank_callback (0000)
 00145470 0020:
-	_code_00145470 (0000)
+	_IDirect3DVolumeTexture8_LockBox@20 (0000)
 00145490 0010:
-	_code_00145490 (0000)
+	_IDirect3DVolumeTexture8_UnlockBox@8 (0000)
 001454A0 00a0:
 	_rasterizer_set_texture_bitmap_data (0000)
 00145540 00b0:
 	_rasterizer_set_texture_direct (0000)
 001455F0 0010:
-	_code_001455f0 (0000)
+	_D3DCubeTexture_UnlockRect@12 (0000)
 00145600 00d0:
 	_rasterizer_set_texture_direct_non_blocking (0000)
 001456D0 01f0:
 	_rasterizer_set_texture (0000)
 001458C0 0020:
-	_code_001458c0 (0000)
+	_IDirect3DCubeTexture8_LockRect@24 (0000)
 001458E0 0010:
-	_code_001458e0 (0000)
+	_IDirect3DCubeTexture8_UnlockRect@12 (0000)
 001458F0 01b0:
 	_rasterizer_set_texture_non_blocking (0000)
 00145AA0 01c0:
 	_rasterizer_get_target (0000)
 00145C60 0010:
-	_code_00145c60 (0000)
+	_D3DPalette_Unlock@4 (0000)
 00145C70 0010:
-	_code_00145c70 (0000)
+	_IDirect3DPalette8_Lock@12 (0000)
 00145C80 0010:
-	_code_00145c80 (0000)
+	_IDirect3DPalette8_Unlock@4 (0000)
 00145C90 00d0:
 	_rasterizer_set_vertex_shader (0000)
 00145D60 0200:
@@ -147,17 +147,17 @@ symbols in this file:
 00145F60 0140:
 	_rasterizer_set_model_skinning (0000)
 001460A0 0010:
-	_code_001460a0 (0000)
+	_D3DSurface_UnlockRect@4 (0000)
 001460B0 0010:
-	_code_001460b0 (0000)
+	_IDirect3DSurface8_Release@4 (0000)
 001460C0 0180:
 	_rasterizer_set_model_lighting_point_light (0000)
 00146240 0010:
-	_code_00146240 (0000)
+	_IDirect3DSurface8_GetDesc@8 (0000)
 00146250 0020:
-	_code_00146250 (0000)
+	_IDirect3DSurface8_LockRect@16 (0000)
 00146270 0010:
-	_code_00146270 (0000)
+	_IDirect3DSurface8_UnlockRect@4 (0000)
 00146280 0090:
 	_rasterizer_set_model_lighting_distant_light (0000)
 00146310 0170:
@@ -169,7 +169,7 @@ symbols in this file:
 001465D0 0080:
 	_SetupSmartStates (0000)
 00146650 0210:
-	_code_00146650 (0000)
+	_rasterizer_filthy_bitmap_defaults_initialize (0000)
 00146860 0930:
 	__rasterizer_initialize (0000)
 00147190 0090:

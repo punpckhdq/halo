@@ -3,11 +3,11 @@ BITMAP_GROUP.C
 
 symbols in this file:
 00065210 0010:
-	_code_00065210 (0000)
+	_postprocess_bitmap (0000)
 00065220 0020:
-	_code_00065220 (0000)
+	_delete_bitmap (0000)
 00065240 0420:
-	_code_00065240 (0000)
+	_postprocess_bitmap_group (0000)
 00065660 0050:
 	_bitmap_group_try_and_get_bitmap (0000)
 000656B0 00e0:

@@ -3,93 +3,93 @@ HS_COMPILE.C
 
 symbols in this file:
 000B46B0 02c0:
-	_code_000b46b0 (0000)
+	_hs_parse_cond_recursive (0000)
 000B4970 00b0:
-	_code_000b4970 (0000)
+	_hs_get_parameter_indices (0000)
 000B4A20 00b0:
 	_hs_compile_initialize (0000)
 000B4AD0 0070:
-	_code_000b4ad0 (0000)
+	_hs_compile_add_source (0000)
 000B4B40 0030:
 	_hs_verify_source_offset (0000)
 000B4B70 0050:
-	_code_000b4b70 (0000)
+	_hs_find_string_constant (0000)
 000B4BC0 0020:
-	_code_000b4bc0 (0000)
+	_character_in_list (0000)
 000B4BE0 0120:
-	_code_000b4be0 (0000)
+	_hs_parse_variable (0000)
 000B4D00 00c0:
-	_code_000b4d00 (0000)
+	_hs_parse_call_predicate (0000)
 000B4DC0 0130:
-	_code_000b4dc0 (0000)
+	_hs_parse_boolean (0000)
 000B4EF0 00f0:
-	_code_000b4ef0 (0000)
+	_hs_parse_real (0000)
 000B4FE0 0120:
-	_code_000b4fe0 (0000)
+	_hs_parse_integer (0000)
 000B5100 0080:
-	_code_000b5100 (0000)
+	_hs_parse_string (0000)
 000B5180 00b0:
-	_code_000b5180 (0000)
+	_hs_parse_script (0000)
 000B5230 00d0:
-	_code_000b5230 (0000)
+	_hs_parse_tag_reference (0000)
 000B5300 01d0:
-	_code_000b5300 (0000)
+	_hs_parse_enum (0000)
 000B54D0 0100:
-	_code_000b54d0 (0000)
+	_hs_parse_scenario_datum (0000)
 000B55D0 0070:
-	_code_000b55d0 (0000)
+	_hs_parse_trigger_volume (0000)
 000B5640 0070:
-	_code_000b5640 (0000)
+	_hs_parse_cutscene_flag (0000)
 000B56B0 0070:
-	_code_000b56b0 (0000)
+	_hs_parse_cutscene_camera_point (0000)
 000B5720 0070:
-	_code_000b5720 (0000)
+	_hs_parse_cutscene_title (0000)
 000B5790 0070:
-	_code_000b5790 (0000)
+	_hs_parse_cutscene_recording (0000)
 000B5800 0070:
-	_code_000b5800 (0000)
+	_hs_parse_device_group (0000)
 000B5870 00b0:
-	_code_000b5870 (0000)
+	_hs_parse_ai (0000)
 000B5920 0070:
-	_code_000b5920 (0000)
+	_hs_parse_ai_command_list (0000)
 000B5990 0070:
-	_code_000b5990 (0000)
+	_hs_parse_starting_profile (0000)
 000B5A00 0070:
-	_code_000b5a00 (0000)
+	_hs_parse_conversation (0000)
 000B5A70 0140:
-	_code_000b5a70 (0000)
+	_hs_parse_object_name (0000)
 000B5BB0 00a0:
-	_code_000b5bb0 (0000)
+	_hs_parse_object (0000)
 000B5C50 0090:
-	_code_000b5c50 (0000)
+	_hs_parse_navpoint (0000)
 000B5CE0 0090:
-	_code_000b5ce0 (0000)
+	_hs_parse_hud_message (0000)
 000B5D70 0060:
-	_code_000b5d70 (0000)
+	_hs_parse_object_list (0000)
 000B5DD0 0040:
-	_code_000b5dd0 (0000)
+	_string_list_find (0000)
 000B5E10 0090:
-	_code_000b5e10 (0000)
+	_hs_concatenate_string_constant (0000)
 000B5EA0 0290:
-	_code_000b5ea0 (0000)
+	_hs_add_global (0000)
 000B6130 0430:
-	_code_000b6130 (0000)
+	_hs_add_script (0000)
 000B6560 00f0:
-	_code_000b6560 (0000)
+	_hs_tokenize_primitive (0000)
 000B6650 00f0:
-	_code_000b6650 (0000)
+	_skip_whitespace (0000)
 000B6740 0120:
-	_code_000b6740 (0000)
+	_hs_parse_primitive (0000)
 000B6860 0380:
-	_code_000b6860 (0000)
+	_hs_parse_nonprimitive (0000)
 000B6BE0 02d0:
 	_hs_compile_postprocess (0000)
 000B6EB0 00d0:
-	_code_000b6eb0 (0000)
+	_hs_concatenate_expression (0000)
 000B6F80 00c0:
-	_code_000b6f80 (0000)
+	_hs_tokenize (0000)
 000B7040 00e0:
-	_code_000b7040 (0000)
+	_hs_tokenize_nonprimitive (0000)
 000B7120 00d0:
 	_hs_parse (0000)
 000B71F0 0120:
@@ -127,7 +127,7 @@ symbols in this file:
 000B8650 0140:
 	_hs_compile (0000)
 000B8790 0100:
-	_code_000b8790 (0000)
+	_hs_compile_finish (0000)
 000B8890 00d0:
 	_hs_compile_dispose (0000)
 00269F98 00cc:

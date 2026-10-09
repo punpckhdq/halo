@@ -23,9 +23,9 @@ symbols in this file:
 000A8360 0050:
 	_player_new_queue (0000)
 000A83B0 0060:
-	_code_000a83b0 (0000)
+	_update_server_get_update (0000)
 000A8410 0030:
-	_code_000a8410 (0000)
+	_update_client_get_update (0000)
 000A8440 0080:
 	_update_server_new (0000)
 000A84C0 0060:

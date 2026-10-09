@@ -5,7 +5,7 @@ symbols in this file:
 00001080 0050:
 	_action_charge_begin (0000)
 000010D0 0110:
-	_code_000010d0 (0000)
+	_action_charge_find_target_range (0000)
 000011E0 0050:
 	_action_charge_update (0000)
 00001230 0220:
@@ -43,7 +43,7 @@ symbols in this file:
 00001720 0cb0:
 	_action_charge_perform (0000)
 000023D0 0120:
-	_code_000023d0 (0000)
+	_action_charge_valid_melee_destination (0000)
 000024F0 03b0:
 	_action_charge_setup (0000)
 00242F60 0004:

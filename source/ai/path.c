@@ -25,19 +25,19 @@ symbols in this file:
 0004C740 0030:
 	_path_state_destination (0000)
 0004C770 0040:
-	_code_0004c770 (0000)
+	_path_state_reset (0000)
 0004C7B0 0010:
-	_code_0004c7b0 (0000)
+	_path_heap_verify (0000)
 0004C7C0 01e0:
-	_code_0004c7c0 (0000)
+	_path_heap_bubble_up (0000)
 0004C9A0 0230:
-	_code_0004c9a0 (0000)
+	_path_heap_bubble_down (0000)
 0004CBD0 0120:
-	_code_0004cbd0 (0000)
+	_path_heap_pop_cheapest_node (0000)
 0004CCF0 0080:
-	_code_0004ccf0 (0000)
+	_path_heap_insert (0000)
 0004CD70 0060:
-	_code_0004cd70 (0000)
+	_surface_is_broken (0000)
 0004CDD0 0080:
 	_path_get_node (0000)
 0004CE50 0050:
@@ -51,11 +51,11 @@ symbols in this file:
 0004D150 04a0:
 	_path_state_build_path (0000)
 0004D5F0 0250:
-	_code_0004d5f0 (0000)
+	_path_state_begin (0000)
 0004D840 0070:
-	_code_0004d840 (0000)
+	_closest_available_point_on_surface (0000)
 0004D8B0 0180:
-	_code_0004d8b0 (0000)
+	_build_path_edges_for_surface (0000)
 0004DA30 00d0:
 	_closest_point_to_attractor (0000)
 0004DB00 00c0:
@@ -63,7 +63,7 @@ symbols in this file:
 0004DBC0 01f0:
 	_path_state_estimated_distance (0000)
 0004DDB0 0830:
-	_code_0004ddb0 (0000)
+	_path_state_traverse (0000)
 0004E5E0 0100:
 	_path_state_find (0000)
 0024DAB8 0054:

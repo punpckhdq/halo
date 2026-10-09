@@ -9,9 +9,9 @@ symbols in this file:
 0001DA80 0140:
 	_actor_get_vision_distances (0000)
 0001DBC0 0040:
-	_code_0001dbc0 (0000)
+	_actor_perception_qsort_compare_optional_props (0000)
 0001DC00 00f0:
-	_code_0001dc00 (0000)
+	_actor_perception_assess_suicide_danger (0000)
 0001DCF0 0230:
 	_actor_perception_desire_prop (0000)
 0001DF20 00a0:
@@ -45,11 +45,11 @@ symbols in this file:
 0001F320 0150:
 	_actor_emotion_flee_with_friends (0000)
 0001F470 0080:
-	_code_0001f470 (0000)
+	_actor_emotion_get_unopposable_enemy (0000)
 0001F4F0 0070:
-	_code_0001f4f0 (0000)
+	_actor_emotion_assess_unopposable_danger (0000)
 0001F560 04f0:
-	_code_0001f560 (0000)
+	_actor_emotion_unopposable_retreat (0000)
 0001FA50 00b0:
 	_actor_berserk (0000)
 0001FB00 0360:
@@ -59,13 +59,13 @@ symbols in this file:
 000200A0 0170:
 	_actor_perception_find_sense_position (0000)
 00020210 01f0:
-	_code_00020210 (0000)
+	_actor_perception_unit_from_swarm (0000)
 00020400 0380:
 	_prop_position_refresh (0000)
 00020780 0210:
-	_code_00020780 (0000)
+	_actor_perception_assess_vehicle_danger (0000)
 00020990 05c0:
-	_code_00020990 (0000)
+	_actor_perception_refresh_danger_zone (0000)
 00020F50 0180:
 	_actor_expected_acknowledgement (0000)
 000210D0 0090:
@@ -83,11 +83,11 @@ symbols in this file:
 00021A50 0e60:
 	_prop_status_refresh (0000)
 000228B0 06d0:
-	_code_000228b0 (0000)
+	_actor_perception_refresh_test_object (0000)
 00022F80 0310:
 	_actor_perception_create_orphan_from_friend (0000)
 00023290 0970:
-	_code_00023290 (0000)
+	_actor_perception_refresh (0000)
 00023C00 1270:
 	_actor_perception_update (0000)
 00245AB8 0038:

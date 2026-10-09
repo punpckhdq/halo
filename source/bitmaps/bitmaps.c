@@ -27,11 +27,11 @@ symbols in this file:
 0006B970 0100:
 	_palette_find_closest_match (0000)
 0006BA70 0020:
-	_code_0006ba70 (0000)
+	_bitmap_format_type_valid_width (0000)
 0006BA90 0020:
-	_code_0006ba90 (0000)
+	_bitmap_format_type_valid_height (0000)
 0006BAB0 0030:
-	_code_0006bab0 (0000)
+	_bitmap_format_type_valid_depth (0000)
 0006BAE0 0160:
 	_bitmap_verify (0000)
 0006BC40 0080:

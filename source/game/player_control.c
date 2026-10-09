@@ -11,7 +11,7 @@ symbols in this file:
 000A5770 0010:
 	_player_control_dispose_from_old_map (0000)
 000A5780 0020:
-	_code_000a5780 (0000)
+	_player_control_camera_control_is_active (0000)
 000A57A0 0030:
 	_scripted_player_control_set_camera_control (0000)
 000A57D0 0060:
@@ -19,7 +19,7 @@ symbols in this file:
 000A5830 00f0:
 	_evaluate_piecewise_linear_function (0000)
 000A5920 0010:
-	_code_000a5920 (0000)
+	_clear_input_blob (0000)
 000A5930 0060:
 	_player_control_get_aiming_unit_index (0000)
 000A5990 0070:
@@ -71,7 +71,7 @@ symbols in this file:
 000A5F30 0010:
 	_player_control_action_test_look_relative_down (0000)
 000A5F40 0200:
-	_code_000a5f40 (0000)
+	_player_control_action_test_check_reset_input_blob (0000)
 000A6140 0040:
 	_signed_angular_difference (0000)
 000A6180 0050:
@@ -83,7 +83,7 @@ symbols in this file:
 000A6330 00f0:
 	_player_control_new_unit (0000)
 000A6420 0d80:
-	_code_000a6420 (0000)
+	_get_local_player_input_blob (0000)
 000A71A0 00e0:
 	_player_control_get_facing_angles (0000)
 000A7280 0030:
@@ -91,11 +91,11 @@ symbols in this file:
 000A72B0 0050:
 	_player_control_set_desired_weapon (0000)
 000A7300 0630:
-	_code_000a7300 (0000)
+	_player_control_modify_desired_angles (0000)
 000A7930 0090:
 	_player_control_initialize_for_new_map (0000)
 000A79C0 0620:
-	_code_000a79c0 (0000)
+	_handle_one_player_input (0000)
 000A7FE0 0080:
 	_player_control_update (0000)
 000A8060 0040:

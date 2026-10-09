@@ -42,12 +42,12 @@ struct debug_key
 
 /* ---------- prototypes */
 
-static void debug_key_select_actor(boolean key_is_down);
+static void debug_key_select_this_actor(boolean key_is_down);
 static void debug_key_select_prev_encounter(boolean key_is_down);
 static void debug_key_select_next_encounter(boolean key_is_down);
 static void debug_key_select_next_actor(boolean key_is_down);
 static void debug_key_select_prev_actor(boolean key_is_down);
-static void debug_key_show_actor_spray(boolean key_is_down);
+static void debug_key_render_spray(boolean key_is_down);
 static void debug_key_erase_all_actors(boolean key_is_down);
 static void debug_key_play_animation(boolean key_is_down);
 static void debug_key_profile_reset(boolean key_is_down);
@@ -59,12 +59,12 @@ static long *global_debug_key_down;
 
 struct debug_key global_debug_key_list[10] =
 {
-	{ "Select This Actor", _key_f1, _debug_key_no_modifier, &debug_key_select_actor, FALSE, NULL },
+	{ "Select This Actor", _key_f1, _debug_key_no_modifier, &debug_key_select_this_actor, FALSE, NULL },
 	{ "Select Prev Encounter", _key_f2, _debug_key_no_modifier, &debug_key_select_prev_encounter, FALSE, NULL },
 	{ "Select Next Encounter", _key_f3, _debug_key_no_modifier, &debug_key_select_next_encounter, FALSE, NULL },
 	{ "Select Next Actor", _key_f4, _debug_key_no_modifier, &debug_key_select_next_actor, FALSE, NULL },
 	{ "Select Prev Actor", _key_f4, _debug_key_shift, &debug_key_select_prev_actor, FALSE, NULL },
-	{ "Show Actor Spray", _key_f5, _debug_key_no_modifier, &debug_key_show_actor_spray, FALSE, NULL },
+	{ "Show Actor Spray", _key_f5, _debug_key_no_modifier, &debug_key_render_spray, FALSE, NULL },
 	{ "Erase All Actors", _key_f6, _debug_key_no_modifier, &debug_key_erase_all_actors, FALSE, NULL },
 	{ "Play animation", _key_k, _debug_key_no_modifier, &debug_key_play_animation, FALSE, NULL },
 	{ "Profile Reset", _key_f9, _debug_key_no_modifier, &debug_key_profile_reset, FALSE, NULL },
@@ -163,7 +163,7 @@ void debug_keys_update(
 
 /* ---------- private code */
 
-static void debug_key_select_actor(
+static void debug_key_select_this_actor(
 	boolean key_is_down)
 {
 	if (key_is_down)
@@ -218,7 +218,7 @@ static void debug_key_select_prev_actor(
 	return;
 }
 
-static void debug_key_show_actor_spray(
+static void debug_key_render_spray(
 	boolean key_is_down)
 {
 	if (key_is_down)

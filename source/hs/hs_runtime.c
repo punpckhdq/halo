@@ -3,19 +3,19 @@ HS_RUNTIME.C
 
 symbols in this file:
 000B9850 0030:
-	_code_000b9850 (0000)
+	_hs_syntax_nth (0000)
 000B9880 0050:
-	_code_000b9880 (0000)
+	_hs_inspect_boolean (0000)
 000B98D0 0050:
-	_code_000b98d0 (0000)
+	_hs_inspect_real (0000)
 000B9920 0050:
-	_code_000b9920 (0000)
+	_hs_inspect_short_integer (0000)
 000B9970 0050:
-	_code_000b9970 (0000)
+	_hs_inspect_long_integer (0000)
 000B99C0 0050:
-	_code_000b99c0 (0000)
+	_hs_inspect_string (0000)
 000B9A10 0090:
-	_code_000b9a10 (0000)
+	_hs_inspect_enum (0000)
 000B9AA0 0100:
 	_hs_runtime_initialize (0000)
 000B9BA0 0080:
@@ -23,61 +23,61 @@ symbols in this file:
 000B9C20 0010:
 	_hs_runtime_dispose (0000)
 000B9C30 00b0:
-	_code_000b9c30 (0000)
+	_expression_get_function_name (0000)
 000B9CE0 00f0:
-	_code_000b9ce0 (0000)
+	_hs_thread_new (0000)
 000B9DD0 0050:
-	_code_000b9dd0 (0000)
+	_hs_thread_delete (0000)
 000B9E20 0080:
-	_code_000b9e20 (0000)
+	_hs_thread_format (0000)
 000B9EA0 0080:
-	_code_000b9ea0 (0000)
+	_hs_stack_push (0000)
 000B9F20 0020:
-	_code_000b9f20 (0000)
+	_hs_stack_pop (0000)
 000B9F40 0150:
-	_code_000b9f40 (0000)
+	_hs_stack_allocate (0000)
 000BA090 00b0:
-	_code_000ba090 (0000)
+	_hs_wake (0000)
 000BA140 0060:
-	_code_000ba140 (0000)
+	_hs_find_thread_by_script (0000)
 000BA1A0 0080:
-	_code_000ba1a0 (0000)
+	_hs_find_thread_by_name (0000)
 000BA220 0020:
-	_code_000ba220 (0000)
+	_hs_long_to_boolean (0000)
 000BA240 0020:
-	_code_000ba240 (0000)
+	_hs_short_to_boolean (0000)
 000BA260 0020:
-	_code_000ba260 (0000)
+	_hs_string_to_boolean (0000)
 000BA280 0010:
-	_code_000ba280 (0000)
+	_hs_data_to_void (0000)
 000BA290 0020:
-	_code_000ba290 (0000)
+	_hs_short_to_real (0000)
 000BA2B0 0010:
-	_code_000ba2b0 (0000)
+	_hs_long_to_real (0000)
 000BA2C0 0020:
-	_code_000ba2c0 (0000)
+	_hs_enum_to_real (0000)
 000BA2E0 0020:
-	_code_000ba2e0 (0000)
+	_hs_real_to_short (0000)
 000BA300 0010:
-	_code_000ba300 (0000)
+	_hs_real_to_long (0000)
 000BA310 0010:
-	_code_000ba310 (0000)
+	_hs_long_to_short (0000)
 000BA320 0040:
-	_code_000ba320 (0000)
+	_hs_object_name_to_object_list (0000)
 000BA360 0030:
-	_code_000ba360 (0000)
+	_hs_object_to_object_list (0000)
 000BA390 0080:
-	_code_000ba390 (0000)
+	_hs_object_type_can_cast (0000)
 000BA410 0100:
 	_hs_can_cast (0000)
 000BA510 00c0:
 	_hs_cast (0000)
 000BA5D0 0580:
-	_code_000ba5d0 (0000)
+	_hs_global_reconcile_read (0000)
 000BAB50 0190:
-	_code_000bab50 (0000)
+	_hs_global_reconcile_write (0000)
 000BACE0 0040:
-	_code_000bace0 (0000)
+	_script_error (0000)
 000BAD20 0020:
 	_hs_runtime_get_executing_thread_name (0000)
 000BAD40 0020:
@@ -89,15 +89,15 @@ symbols in this file:
 000BB320 0120:
 	_hs_return (0000)
 000BB440 0040:
-	_code_000bb440 (0000)
+	_hs_global_evaluate (0000)
 000BB480 00f0:
 	_hs_evaluate_wake (0000)
 000BB570 0170:
-	_code_000bb570 (0000)
+	_hs_evaluate (0000)
 000BB6E0 0060:
-	_code_000bb6e0 (0000)
+	_hs_script_evaluate (0000)
 000BB740 01c0:
-	_code_000bb740 (0000)
+	_hs_arguments_evaluate (0000)
 000BB900 0030:
 	_hs_macro_function_evaluate (0000)
 000BB930 00d0:
@@ -127,7 +127,7 @@ symbols in this file:
 000BCA60 0180:
 	_hs_evaluate_debug_string (0000)
 000BCBE0 02f0:
-	_code_000bcbe0 (0000)
+	_hs_thread_main (0000)
 000BCED0 02d0:
 	_hs_runtime_initialize_for_new_map (0000)
 000BD1A0 00b0:

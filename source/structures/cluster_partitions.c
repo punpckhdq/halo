@@ -23,7 +23,7 @@ symbols in this file:
 00180F50 0050:
 	_cluster_partition_copy (0000)
 00180FA0 0050:
-	_code_00180fa0 (0000)
+	_cluster_partition_get_first_reference (0000)
 00180FF0 0200:
 	_cluster_partition_reconnect (0000)
 001811F0 00b0:

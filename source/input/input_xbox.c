@@ -59,12 +59,12 @@ struct input_globals_xbox
 /* ---------- prototypes */
 
 static void update_threshold(byte *threshold, boolean down, byte value);
-static void input_update_mouse(void); /* fake name */
-static void input_update_device_connections(void); // [fake name?]
+static void acquire_input_mutex(void);
+static void release_input_mutex(void);
 static void input_update_gamepads(void);
 static void input_update_gamepads_rumble(void);
 static void input_update_keyboard(void);
-static DWORD WINAPI input_rumble_thread(LPVOID parameter); /* fake name */
+static DWORD WINAPI input_update_thread_proc(LPVOID parameter);
 
 /* ---------- globals */
 
@@ -561,7 +561,7 @@ boolean input_initialize(
 
 	input_globals.rumble_this_vertical_blank = TRUE;
 	input_globals.rumble_event = CreateEvent(NULL, FALSE, FALSE, NULL);
-	input_globals.rumble_thread = CreateThread(NULL, INPUT_RUMBLE_THREAD_STACK_SIZE, input_rumble_thread, NULL, CREATE_SUSPENDED, NULL);
+	input_globals.rumble_thread = CreateThread(NULL, INPUT_RUMBLE_THREAD_STACK_SIZE, input_update_thread_proc, NULL, CREATE_SUSPENDED, NULL);
 	SetThreadPriority(input_globals.rumble_thread, THREAD_PRIORITY_HIGHEST);
 	input_globals.rumble_thread_resumed = TRUE;
 	input_globals.unused = 0;
@@ -760,13 +760,13 @@ void input_vertical_blank_interrupt(
 	return;
 }
 
-static void input_update_mouse( /* fake name */
+static void acquire_input_mutex(
 	void)
 {
 	return;
 }
 
-static void input_update_device_connections( // [fake name?]
+static void release_input_mutex(
 	void)
 {
 	return;
@@ -1147,7 +1147,7 @@ void input_update(
 	}
 
 	input_update_keyboard();
-	input_update_mouse();
+	acquire_input_mutex();
 
 	HATRun(&input_globals.gamepads[0]);
 	HATRun(&input_globals.gamepads[1]);
@@ -1160,7 +1160,7 @@ void input_update(
 void input_frame_begin(
 	void)
 {
-	input_update_device_connections();
+	release_input_mutex();
 	input_update_gamepads();
 	input_globals.in_frame = TRUE;
 
@@ -1175,7 +1175,7 @@ void input_frame_end(
 	return;
 }
 
-static DWORD WINAPI input_rumble_thread( /* fake name */
+static DWORD WINAPI input_update_thread_proc(
 	LPVOID parameter)
 {
 	for (;;)

@@ -3,9 +3,9 @@ BITMAPS_QUANTITIZE.C
 
 symbols in this file:
 0006D5D0 0020:
-	_code_0006d5d0 (0000)
+	_row_copy (0000)
 0006D5F0 01d0:
-	_code_0006d5f0 (0000)
+	_row_dither (0000)
 0006D7C0 0250:
 	_bitmap_quantitize (0000)
 00255338 0054:

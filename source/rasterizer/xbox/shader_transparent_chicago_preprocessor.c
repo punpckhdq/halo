@@ -3,7 +3,7 @@ SHADER_TRANSPARENT_CHICAGO_PREPROCESSOR.C
 
 symbols in this file:
 0016B4E0 0010:
-	_code_0016b4e0 (0000)
+	_shader_map_verify (0000)
 0016B4F0 01b0:
 	_shader_transparent_chicago_create (0000)
 0029CE08 00d0:

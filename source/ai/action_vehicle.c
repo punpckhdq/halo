@@ -23,17 +23,17 @@ symbols in this file:
 00009370 0040:
 	_distance3d (0000)
 000093B0 0110:
-	_code_000093b0 (0000)
+	_action_vehicle_desirable (0000)
 000094C0 03d0:
-	_code_000094c0 (0000)
+	_action_vehicle_evaluate_seat (0000)
 00009890 04d0:
-	_code_00009890 (0000)
+	_action_vehicle_find_destination (0000)
 00009D60 0150:
 	_action_vehicle_setup_specific (0000)
 00009EB0 0300:
 	_action_vehicle_perform (0000)
 0000A1B0 0130:
-	_code_0000a1b0 (0000)
+	_action_vehicle_find_impromptu_seat (0000)
 0000A2E0 01d0:
 	_action_vehicle_setup_impromptu (0000)
 00243AA4 0007:

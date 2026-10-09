@@ -5,95 +5,95 @@ symbols in this file:
 000E01B0 0060:
 	_ui_widget_game_data_function_invoke (0000)
 000E0210 0010:
-	_code_000e0210 (0000)
+	_widget_function_null (0000)
 000E0220 0110:
-	_code_000e0220 (0000)
+	_settings_menu_update_extended_description (0000)
 000E0330 00b0:
-	_code_000e0330 (0000)
+	_playlist_settings_menu_update_extended_description (0000)
 000E03E0 00b0:
-	_code_000e03e0 (0000)
+	_playlist_gametype_select_menu_update_extended_description (0000)
 000E0490 0080:
-	_code_000e0490 (0000)
+	_multiplayer_type_menu_update_extended_description (0000)
 000E0510 0110:
-	_code_000e0510 (0000)
+	_difficulty_select_menu_update_extended_description (0000)
 000E0620 0090:
-	_code_000e0620 (0000)
+	_set_textbox_to_build_number (0000)
 000E06B0 07e0:
-	_code_000e06b0 (0000)
+	_server_list_menu_update (0000)
 000E0E90 07c0:
-	_code_000e0e90 (0000)
+	_network_pregame_status_screen_update (0000)
 000E1650 04c0:
-	_code_000e1650 (0000)
+	_splitscreen_pregame_status_screen_update (0000)
 000E1B10 0120:
-	_code_000e1b10 (0000)
+	_netgame_prejoin_players (0000)
 000E1C30 00b0:
-	_code_000e1c30 (0000)
+	_player_profile_edit_select_menu_update_extended_description (0000)
 000E1CE0 0130:
-	_code_000e1ce0 (0000)
+	_game_options_menu_update_text_desc (0000)
 000E1E10 0090:
-	_code_000e1e10 (0000)
+	_solo_game_objective_text (0000)
 000E1EA0 0130:
-	_code_000e1ea0 (0000)
+	_game_options_menu_update_pic_desc (0000)
 000E1FD0 0090:
-	_code_000e1fd0 (0000)
+	_main_menu_animation_fakery (0000)
 000E2060 00b0:
-	_code_000e2060 (0000)
+	_get_active_player_profile_display_name (0000)
 000E2110 00b0:
-	_code_000e2110 (0000)
+	_get_editable_player_profile_display_name (0000)
 000E21C0 00c0:
-	_code_000e21c0 (0000)
+	_get_editable_playlist_profile_display_name (0000)
 000E2280 0090:
-	_code_000e2280 (0000)
+	_get_active_player_profile_color_index (0000)
 000E2310 01c0:
-	_code_000e2310 (0000)
+	_multiplayer_game_set_text_box_for_map_name (0000)
 000E24D0 0110:
-	_code_000e24d0 (0000)
+	_multiplayer_game_set_text_box_for_game_ruleset (0000)
 000E25E0 0070:
-	_code_000e25e0 (0000)
+	_multiplayer_game_set_text_box_for_teams_noteams (0000)
 000E2650 0090:
-	_code_000e2650 (0000)
+	_multiplayer_game_set_text_box_for_score_limit (0000)
 000E26E0 00b0:
-	_code_000e26e0 (0000)
+	_multiplayer_game_set_text_box_for_score_limit_type (0000)
 000E2790 01c0:
-	_code_000e2790 (0000)
+	_multiplayer_game_set_bitmap_for_map (0000)
 000E2950 00b0:
-	_code_000e2950 (0000)
+	_multiplayer_game_set_bitmap_for_ruleset (0000)
 000E2A00 00a0:
-	_code_000e2a00 (0000)
+	_multiplayer_game_set_text_box_for_number_of_players (0000)
 000E2AA0 00b0:
-	_code_000e2aa0 (0000)
+	_multiplayer_edit_profile_set_ruleset_textbox_string_index (0000)
 000E2B50 0030:
-	_code_000e2b50 (0000)
+	_system_link_status_check (0000)
 000E2B80 0140:
-	_code_000e2b80 (0000)
+	_multiplayer_game_directions (0000)
 000E2CC0 0050:
-	_code_000e2cc0 (0000)
+	_teams_no_teams_mp_game_bitmap_update (0000)
 000E2D10 00b0:
-	_code_000e2d10 (0000)
+	_warn_if_difficulty_will_nuke_saved_game (0000)
 000E2DC0 0050:
-	_code_000e2dc0 (0000)
+	_dim_if_no_system_link_cable (0000)
 000E2E10 00b0:
-	_code_000e2e10 (0000)
+	_spinner_list_3wide_determine_displayed_item_indices (0000)
 000E2EC0 0110:
-	_code_000e2ec0 (0000)
+	_player_profile_update_cache_for_nwide_list (0000)
 000E2FD0 0110:
-	_code_000e2fd0 (0000)
+	_variant_profile_update_cache_for_nwide_list (0000)
 000E30E0 0030:
-	_code_000e30e0 (0000)
+	_list_indices_sort_proc (0000)
 000E3110 0030:
-	_code_000e3110 (0000)
+	_filter_invalid_list_indices (0000)
 000E3140 02c0:
-	_code_000e3140 (0000)
+	_solo_level_select_list_update_displayed_items (0000)
 000E3400 0590:
-	_code_000e3400 (0000)
+	_mutliplayer_settings_select_list_update_displayed_items (0000)
 000E3990 04d0:
-	_code_000e3990 (0000)
+	_player_profile_3wide_list_update (0000)
 000E3E60 0480:
-	_code_000e3e60 (0000)
+	_player_profile_1wide_list_update (0000)
 000E42E0 0190:
-	_code_000e42e0 (0000)
+	_player_profile_color_picker_update (0000)
 000E4470 01b0:
-	_code_000e4470 (0000)
+	_mp_level_select_list_update_displayed_items (0000)
 00276E0C 0018:
 	_rdata_00276e0c (0000)
 00276E24 002b:

@@ -104,37 +104,37 @@ extern void WINAPI DirectSoundStopStream(LPDIRECTSOUNDSTREAM stream);
 extern BOOL WINAPI DirectSoundGetStreamVoiceStatus(LPDIRECTSOUNDSTREAM stream);
 
 static struct dsound_channel *channel_get(short index);
-static struct dsound_virtual_channel *vchannel_get(short index); /* fake name */
+static struct dsound_virtual_channel *virtual_channel_get(short index);
 static void interrupt_time_error(HRESULT const *result, char const *string);
-static boolean vchannel_new(short virtual_channel_index, short type_index); /* fake name */
+static boolean dsound_initialize_virtual_channel(short virtual_channel_index, short type_index);
 static boolean dsound_initialize(struct sound_preferences *preferences);
 static void dsound_dispose(void);
-static void set_listener_properties_dsound(struct platform_sound_listener_properties const *properties);
-static void begin_scene_dsound(void);
-static void end_scene_dsound(void);
+static void dsound_set_listener_properties(struct platform_sound_listener_properties const *properties);
+static void dsound_begin_scene(void);
+static void dsound_end_scene(void);
 static void dsound_virtual_queue(short virtual_channel_index, struct sound_permutation *sound);
 static void dsound_virtual_update(short virtual_channel_index);
 static void dsound_virtual_stop(short virtual_channel_index);
 static short dsound_virtual_get_state(short virtual_channel_index);
-static void pause_dsound(boolean paused);
-static void flush_dsound(void);
+static void dsound_pause(boolean paused);
+static void dsound_flush(void);
 static void dsound_virtual_set_location(short virtual_channel_index, boolean spatialize, struct sound_location const *location, real obstruction, real occlusion, boolean underwater);
 static void dsound_virtual_set_properties(short virtual_channel_index, struct platform_sound_channel_properties const *properties, boolean gain_only);
-static void channel_update_i3dl2_source(short channel_index); /* fake name */
-static void channel_stop(short channel_index); /* fake name */
-static boolean channel_stop_finished(short channel_index); /* fake name */
-static short channel_get_state(short channel_index); /* fake name */
-static boolean channel_queue_packet(short channel_index); /* fake name */
+static void dsound_channel_set_I3DL2_properties(short channel_index);
+static void dsound_channel_stop(short channel_index);
+static boolean dsound_channel_stopped(short channel_index);
+static short dsound_channel_get_state(short channel_index);
+static boolean dsound_channel_queue_packet(short channel_index);
 static void dsound_error(HRESULT result, char const *format, ...); /* fake name */
-static void vchannel_find_channel(short virtual_channel_index); /* fake name */
+static void dsound_virtual_remap(short virtual_channel_index);
 static short dsound_virtual_touch(short virtual_channel_index);
-static boolean create_inanity_channel(void); /* fake name */
-static void channel_set_properties(short channel_index, struct platform_sound_channel_properties const *properties, boolean gain_only); /* fake name */
-static void channel_queue_packets(short channel_index); /* fake name */
-static void CALLBACK channel_packet_completion_callback(LPVOID stream_context, LPVOID packet_context, DWORD status); /* fake name */
-static void channel_set_location(short channel_index, struct sound_location const *location, boolean spatialized, real obstruction, real occlusion, boolean underwater); /* fake name */
-static void channel_queue_sound(short channel_index, struct sound_permutation *permutation); /* fake name */
-static boolean channel_new(short channel_index, short type_flags); /* fake name */
+static boolean dsound_fix_rear_speakers(void);
+static void dsound_channel_set_properties(short channel_index, struct platform_sound_channel_properties const *properties, boolean gain_only);
+static void dsound_channel_fill(short channel_index);
+static void CALLBACK dsound_channel_callback(LPVOID stream_context, LPVOID packet_context, DWORD status);
+static void dsound_channel_set_location(short channel_index, struct sound_location const *location, boolean spatialized, real obstruction, real occlusion, boolean underwater);
+static void dsound_channel_queue_sound(short channel_index, struct sound_permutation *permutation);
+static boolean dsound_initialize_channel(short channel_index, short type_flags);
 
 /* ---------- globals */
 
@@ -143,15 +143,15 @@ struct platform_sound_manager_definition platform_sound_dsound=
 	_platform_sound_dsound,
 	dsound_initialize,
 	dsound_dispose,
-	set_listener_properties_dsound,
-	begin_scene_dsound,
-	end_scene_dsound,
+	dsound_set_listener_properties,
+	dsound_begin_scene,
+	dsound_end_scene,
 	dsound_virtual_queue,
 	dsound_virtual_update,
 	dsound_virtual_stop,
 	dsound_virtual_get_state,
-	pause_dsound,
-	flush_dsound,
+	dsound_pause,
+	dsound_flush,
 	dsound_virtual_set_location,
 	dsound_virtual_set_properties
 };
@@ -183,7 +183,7 @@ static struct dsound_channel *channel_get(
 	return &dsound_globals.actual_channels[index];
 }
 
-static struct dsound_virtual_channel *vchannel_get(
+static struct dsound_virtual_channel *virtual_channel_get(
 	short index)
 {
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 114, index>=0 && index<dsound_globals.virtual_channel_count);
@@ -263,7 +263,7 @@ static boolean dsound_initialize(
 
 					IDirectSound_SetMixBinHeadroom(dsound_globals.dsound_object, 0x7fffffff, 0);
 					DirectSoundUseFullHRTF();
-					set_listener_properties_dsound(&listener);
+					dsound_set_listener_properties(&listener);
 
 					success = TRUE;
 
@@ -275,7 +275,7 @@ static boolean dsound_initialize(
 						for (channel_index = 0; channel_index<preferences->virtual_channel_counts[type_index]; channel_index++)
 						{
 							dsound_globals.virtual_channel_count++;
-							success = success && vchannel_new(virtual_channel_index++, type_index);
+							success = success && dsound_initialize_virtual_channel(virtual_channel_index++, type_index);
 						}
 					}
 
@@ -288,11 +288,11 @@ static boolean dsound_initialize(
 						for (channel_index = 0; channel_index<preferences->actual_channel_counts[type_index]; channel_index++)
 						{
 							dsound_globals.actual_channel_count++;
-							success = success && channel_new(actual_channel_index++, sound_channel_type_flags[type_index]);
+							success = success && dsound_initialize_channel(actual_channel_index++, sound_channel_type_flags[type_index]);
 						}
 					}
 
-					success = success && create_inanity_channel();
+					success = success && dsound_fix_rear_speakers();
 				}
 				else
 				{
@@ -326,11 +326,11 @@ static boolean dsound_initialize(
 	return success;
 }
 
-static boolean vchannel_new(
+static boolean dsound_initialize_virtual_channel(
 	short virtual_channel_index,
 	short type_index)
 {
-	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
+	struct dsound_virtual_channel *vchannel = virtual_channel_get(virtual_channel_index);
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 422, type_index>=0 && type_index<NUMBER_OF_SOUND_CHANNEL_TYPES);
 
@@ -374,7 +374,7 @@ static void dsound_dispose(
 	return;
 }
 
-static void set_listener_properties_dsound(
+static void dsound_set_listener_properties(
 	struct platform_sound_listener_properties const *properties)
 {
 	HRESULT result;
@@ -447,7 +447,7 @@ static void set_listener_properties_dsound(
 	return;
 }
 
-static boolean create_inanity_channel(
+static boolean dsound_fix_rear_speakers(
 	void)
 {
 	WAVEFORMATEX wfm;
@@ -493,7 +493,7 @@ static boolean create_inanity_channel(
 	return success;
 }
 
-static void begin_scene_dsound(
+static void dsound_begin_scene(
 	void)
 {
 	DirectSoundDoWork();
@@ -508,7 +508,7 @@ static void begin_scene_dsound(
 	return;
 }
 
-static void end_scene_dsound(
+static void dsound_end_scene(
 	void)
 {
 	HRESULT result;
@@ -583,7 +583,7 @@ static void end_scene_dsound(
 	return;
 }
 
-static void flush_dsound(
+static void dsound_flush(
 	void)
 {
 	short channel_index;
@@ -595,7 +595,7 @@ static void flush_dsound(
 		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 706, channel->stopping || channel->state==_sound_channel_idle);
 		if (channel->stopping)
 		{
-			while (!channel_stop_finished(channel_index));
+			while (!dsound_channel_stopped(channel_index));
 		}
 
 		if (channel->queued_packet_count)
@@ -608,7 +608,7 @@ static void flush_dsound(
 	return;
 }
 
-static void pause_dsound(
+static void dsound_pause(
 	boolean paused)
 {
 	short channel_index;
@@ -623,7 +623,7 @@ static void pause_dsound(
 
 			if (channel->stopping)
 			{
-				while (!channel_stop_finished(channel_index));
+				while (!dsound_channel_stopped(channel_index));
 			}
 		}
 	}
@@ -656,7 +656,7 @@ static void pause_dsound(
 
 			if (channel->state!=_sound_channel_idle)
 			{
-				channel_queue_packets(channel_index);
+				dsound_channel_fill(channel_index);
 			}
 		}
 	}
@@ -678,13 +678,13 @@ static void dsound_virtual_set_location(
 
 	if (channel_index!=NONE)
 	{
-		channel_set_location(channel_index, location, spatialize, obstruction, occlusion, underwater);
+		dsound_channel_set_location(channel_index, location, spatialize, obstruction, occlusion, underwater);
 	}
 
 	return;
 }
 
-static void channel_set_location(
+static void dsound_channel_set_location(
 	short channel_index,
 	struct sound_location const *location,
 	boolean spatialized,
@@ -760,7 +760,7 @@ static void channel_set_location(
 		channel->obstruction = obstruction;
 		channel->occlusion = occlusion;
 		channel->underwater = underwater;
-		channel_update_i3dl2_source(channel_index);
+		dsound_channel_set_I3DL2_properties(channel_index);
 	}
 
 	return;
@@ -775,13 +775,13 @@ static void dsound_virtual_set_properties(
 
 	if (channel_index!=NONE)
 	{
-		channel_set_properties(channel_index, properties, gain_only);
+		dsound_channel_set_properties(channel_index, properties, gain_only);
 	}
 
 	return;
 }
 
-static void channel_set_properties(
+static void dsound_channel_set_properties(
 	short channel_index,
 	struct platform_sound_channel_properties const *properties,
 	boolean gain_only)
@@ -866,7 +866,7 @@ static void channel_set_properties(
 			if (REAL_CMP_EPSILON(properties->reverb_damping_factor, channel->reverb_damping_factor, 0.001f) || !dsound_globals.initialized)
 			{
 				channel->reverb_damping_factor = properties->reverb_damping_factor;
-				channel_update_i3dl2_source(channel_index);
+				dsound_channel_set_I3DL2_properties(channel_index);
 			}
 		}
 	}
@@ -874,7 +874,7 @@ static void channel_set_properties(
 	return;
 }
 
-static void channel_update_i3dl2_source(
+static void dsound_channel_set_I3DL2_properties(
 	short channel_index)
 {
 	DSI3DL2BUFFER source;
@@ -925,13 +925,13 @@ static void dsound_virtual_queue(
 
 	if (channel_index!=NONE)
 	{
-		channel_queue_sound(channel_index, sound);
+		dsound_channel_queue_sound(channel_index, sound);
 	}
 
 	return;
 }
 
-static void channel_queue_sound(
+static void dsound_channel_queue_sound(
 	short channel_index,
 	struct sound_permutation *sound)
 {
@@ -955,7 +955,7 @@ static void channel_queue_sound(
 			dsound_error(result, "couldn't commit deferred settings.");
 		}
 
-		channel_queue_packets(channel_index);
+		dsound_channel_fill(channel_index);
 		break;
 
 	case _sound_channel_playing:
@@ -971,7 +971,7 @@ static void channel_queue_sound(
 	return;
 }
 
-static void channel_queue_packets(
+static void dsound_channel_fill(
 	short channel_index)
 {
 	struct dsound_channel *channel = channel_get(channel_index);
@@ -987,7 +987,7 @@ static void channel_queue_packets(
 			break;
 		}
 
-		if (!(status & XMO_STATUSF_ACCEPT_INPUT_DATA) || !channel_queue_packet(channel_index))
+		if (!(status & XMO_STATUSF_ACCEPT_INPUT_DATA) || !dsound_channel_queue_packet(channel_index))
 		{
 			break;
 		}
@@ -996,7 +996,7 @@ static void channel_queue_packets(
 	return;
 }
 
-static boolean channel_queue_packet(
+static boolean dsound_channel_queue_packet(
 	short channel_index)
 {
 	struct dsound_channel *channel = channel_get(channel_index);
@@ -1083,7 +1083,7 @@ static boolean channel_queue_packet(
 	return success;
 }
 
-static void CALLBACK channel_packet_completion_callback(
+static void CALLBACK dsound_channel_callback(
 	LPVOID stream_context,
 	LPVOID packet_context,
 	DWORD status)
@@ -1107,7 +1107,7 @@ static void CALLBACK channel_packet_completion_callback(
 				}
 				else if (status!=XMEDIAPACKET_STATUS_FLUSHED)
 				{
-					channel_queue_packets(channel_index);
+					dsound_channel_fill(channel_index);
 				}
 			}
 		}
@@ -1132,7 +1132,7 @@ static void CALLBACK channel_packet_completion_callback(
 	return;
 }
 
-static void channel_stop(
+static void dsound_channel_stop(
 	short channel_index)
 {
 	struct dsound_channel *channel = channel_get(channel_index);
@@ -1149,7 +1149,7 @@ static void channel_stop(
 	return;
 }
 
-static boolean channel_stop_finished(
+static boolean dsound_channel_stopped(
 	short channel_index)
 {
 	boolean finished;
@@ -1167,7 +1167,7 @@ static boolean channel_stop_finished(
 	return finished;
 }
 
-static short channel_get_state(
+static short dsound_channel_get_state(
 	short channel_index)
 {
 	return channel_get(channel_index)->state;
@@ -1216,11 +1216,11 @@ static void dsound_error(
 	return;
 }
 
-static void vchannel_find_channel(
+static void dsound_virtual_remap(
 	short virtual_channel_index)
 {
 	short channel_index;
-	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
+	struct dsound_virtual_channel *vchannel = virtual_channel_get(virtual_channel_index);
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1420, vchannel->channel_index==NONE);
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1421, vchannel->type_index>=0 && vchannel->type_index<NUMBER_OF_SOUND_CHANNEL_TYPES);
@@ -1236,7 +1236,7 @@ static void vchannel_find_channel(
 			break;
 		}
 
-		if (channel->virtual_channel_index==NONE && (!channel->stopping || channel_stop_finished(channel_index)))
+		if (channel->virtual_channel_index==NONE && (!channel->stopping || dsound_channel_stopped(channel_index)))
 		{
 			vchannel->channel_index = channel_index;
 		}
@@ -1257,11 +1257,11 @@ static void vchannel_find_channel(
 static short dsound_virtual_touch(
 	short virtual_channel_index)
 {
-	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
+	struct dsound_virtual_channel *vchannel = virtual_channel_get(virtual_channel_index);
 
 	if (vchannel->channel_index==NONE)
 	{
-		vchannel_find_channel(virtual_channel_index);
+		dsound_virtual_remap(virtual_channel_index);
 	}
 
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1468, vchannel->channel_index==NONE || channel_get(vchannel->channel_index)->type_flags==sound_channel_type_flags[vchannel->type_index]);
@@ -1279,13 +1279,13 @@ static void dsound_virtual_update(
 static void dsound_virtual_stop(
 	short virtual_channel_index)
 {
-	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
+	struct dsound_virtual_channel *vchannel = virtual_channel_get(virtual_channel_index);
 
 	if (vchannel->channel_index!=NONE)
 	{
 		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1505, channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
 
-		channel_stop(vchannel->channel_index);
+		dsound_channel_stop(vchannel->channel_index);
 		channel_get(vchannel->channel_index)->virtual_channel_index = NONE;
 		vchannel->channel_index = NONE;
 	}
@@ -1297,13 +1297,13 @@ static short dsound_virtual_get_state(
 	short virtual_channel_index)
 {
 	short state;
-	struct dsound_virtual_channel *vchannel = vchannel_get(virtual_channel_index);
+	struct dsound_virtual_channel *vchannel = virtual_channel_get(virtual_channel_index);
 
 	if (vchannel->channel_index!=NONE)
 	{
 		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1527, channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
 
-		state = channel_get_state(vchannel->channel_index);
+		state = dsound_channel_get_state(vchannel->channel_index);
 	}
 	else
 	{
@@ -1313,7 +1313,7 @@ static short dsound_virtual_get_state(
 	return state;
 }
 
-static boolean channel_new(
+static boolean dsound_initialize_channel(
 	short channel_index,
 	short type_flags)
 {
@@ -1354,7 +1354,7 @@ static boolean channel_new(
 	desc.dwMaxAttachedPackets = MAXIMUM_QUEUED_PACKETS_PER_CHANNEL;
 	desc.lpwfxFormat = (LPWAVEFORMATEX)&wfm;
 	desc.dwFlags = 0;
-	desc.lpfnCallback = channel_packet_completion_callback;
+	desc.lpfnCallback = dsound_channel_callback;
 	desc.lpvContext = (LPVOID)channel_index;
 	if (TEST_FLAG(type_flags, _sound_channel_3d_bit))
 	{
@@ -1372,7 +1372,7 @@ static boolean channel_new(
 
 			memset(&location, 0, sizeof(location));
 			location.forward = *global_forward3d;
-			channel_set_location(channel_index, &location, FALSE, 0.f, 0.f, FALSE);
+			dsound_channel_set_location(channel_index, &location, FALSE, 0.f, 0.f, FALSE);
 		}
 		else
 		{
@@ -1420,7 +1420,7 @@ static boolean channel_new(
 		memset(&properties, 0, sizeof(properties));
 		properties.minimum_distance = 1.f;
 		properties.maximum_distance = 1.f;
-		channel_set_properties(channel_index, &properties, FALSE);
+		dsound_channel_set_properties(channel_index, &properties, FALSE);
 	}
 	else
 	{

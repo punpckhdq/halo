@@ -9,7 +9,7 @@ symbols in this file:
 00120300 00c0:
 	_telnet_console_print (0000)
 001203C0 01f0:
-	_code_001203c0 (0000)
+	_process_telnet_client_buffer (0000)
 001205B0 0160:
 	_telnet_console_process (0000)
 00288D04 003e:

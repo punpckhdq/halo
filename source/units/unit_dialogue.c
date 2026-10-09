@@ -15,7 +15,7 @@ symbols in this file:
 001965F0 0110:
 	_unit_describe_speech (0000)
 00196700 00d0:
-	_code_00196700 (0000)
+	_unit_lose_speech (0000)
 001967D0 01e0:
 	_unit_speak (0000)
 001969B0 00f0:
@@ -25,9 +25,9 @@ symbols in this file:
 00196DB0 0180:
 	_unit_scream (0000)
 00196F30 00e0:
-	_code_00196f30 (0000)
+	_unit_find_dialogue_variant (0000)
 00197010 0060:
-	_code_00197010 (0000)
+	_unit_dialogue_setup (0000)
 00197070 0300:
 	_unit_dialogue_update (0000)
 002A4AF4 0044:

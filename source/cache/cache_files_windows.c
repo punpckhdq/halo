@@ -5,15 +5,15 @@ symbols in this file:
 001ABD40 0050:
 	_cache_files_dispose (0000)
 001ABD90 01a0:
-	_code_001abd90 (0000)
+	_cached_map_issue_async_request (0000)
 001ABF30 0030:
-	_code_001abf30 (0000)
+	_cached_map_block_on_async_request (0000)
 001ABF60 0040:
-	_code_001abf60 (0000)
+	_cache_request_get (0000)
 001ABFA0 0060:
-	_code_001abfa0 (0000)
+	_cache_request_next_free_index (0000)
 001AC000 0080:
-	_code_001ac000 (0000)
+	_cache_requests_flush (0000)
 001AC080 0010:
 	_cache_files_precache_set_priority (0000)
 001AC090 0010:
@@ -23,33 +23,33 @@ symbols in this file:
 001AC0D0 0030:
 	_cache_files_precache_map_queue_end (0000)
 001AC100 0040:
-	_code_001ac100 (0000)
+	_cached_map_file_get (0000)
 001AC140 0040:
-	_code_001ac140 (0000)
+	_cached_map_file_invalidate (0000)
 001AC180 0040:
-	_code_001ac180 (0000)
+	_cached_map_file_get_handle (0000)
 001AC1C0 0050:
-	_code_001ac1c0 (0000)
+	_cached_map_file_get_size (0000)
 001AC210 0020:
-	_code_001ac210 (0000)
+	_cached_map_file_get_path (0000)
 001AC230 0010:
-	_code_001ac230 (0000)
+	_cache_file_windows_thread_wake (0000)
 001AC240 0090:
-	_code_001ac240 (0000)
+	_cache_file_read_io_completion_routine@12 (0000)
 001AC2D0 0070:
-	_code_001ac2d0 (0000)
+	_cache_file_blocking_io_completion_routine@12 (0000)
 001AC340 0020:
-	_code_001ac340 (0000)
+	_scenario_name_to_cache_file_path (0000)
 001AC360 0010:
-	_code_001ac360 (0000)
+	_IDirect3DVertexBuffer8_IsBusy@4 (0000)
 001AC370 0010:
-	_code_001ac370 (0000)
+	_IDirect3DVertexBuffer8_BlockUntilNotBusy@4 (0000)
 001AC380 0010:
-	_code_001ac380 (0000)
+	_IDirect3DVertexBuffer8_Register@8 (0000)
 001AC390 0010:
-	_code_001ac390 (0000)
+	_IDirect3DIndexBuffer8_IsBusy@4 (0000)
 001AC3A0 0010:
-	_code_001ac3a0 (0000)
+	_IDirect3DIndexBuffer8_BlockUntilNotBusy@4 (0000)
 001AC3B0 0020:
 	_cache_file_close (0000)
 001AC3D0 0150:
@@ -57,11 +57,11 @@ symbols in this file:
 001AC520 0050:
 	_cache_file_promote_read (0000)
 001AC570 0090:
-	_code_001ac570 (0000)
+	_cache_file_read_header_from_dvd (0000)
 001AC600 0020:
-	_code_001ac600 (0000)
+	_cached_map_issue_async_read (0000)
 001AC620 0020:
-	_code_001ac620 (0000)
+	_cached_map_issue_async_write (0000)
 001AC640 0060:
 	_cache_file_block_until_not_busy (0000)
 001AC6A0 0060:
@@ -73,25 +73,25 @@ symbols in this file:
 001AC820 0070:
 	_structure_bsp_header_deregister_vertex_buffers (0000)
 001AC890 0060:
-	_code_001ac890 (0000)
+	_cached_map_files_delete (0000)
 001AC8F0 00f0:
 	_code_001ac8f0 (0000)
 001AC9E0 00b0:
 	_cache_files_precache_map_status (0000)
 001ACA90 0070:
-	_code_001aca90 (0000)
+	_cached_map_file_set_modification_date (0000)
 001ACB00 0190:
-	_code_001acb00 (0000)
+	_cached_map_file_read_header (0000)
 001ACC90 0060:
-	_code_001acc90 (0000)
+	_cached_map_files_find_map (0000)
 001ACCF0 0190:
-	_code_001accf0 (0000)
+	_cached_map_files_find_free_map (0000)
 001ACE80 0130:
-	_code_001ace80 (0000)
+	_cache_file_windows_thread_proc@0 (0000)
 001ACFB0 0120:
 	_cache_file_open (0000)
 001AD0D0 02f0:
-	_code_001ad0d0 (0000)
+	_cached_map_files_open_all (0000)
 001AD3C0 0030:
 	_cache_files_precache_map_loaded (0000)
 001AD3F0 0130:
@@ -99,7 +99,7 @@ symbols in this file:
 001AD520 0060:
 	_cache_files_precache_map_end (0000)
 001AD580 0080:
-	_code_001ad580 (0000)
+	_cache_file_windows_thread_create (0000)
 001AD600 0060:
 	_cache_files_initialize (0000)
 002A71F8 002d:

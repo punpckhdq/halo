@@ -27,7 +27,7 @@ symbols in this file:
 0011B9B0 0060:
 	_network_game_server_game_is_valid (0000)
 0011BA10 00d0:
-	_code_0011ba10 (0000)
+	_network_game_server_remove_players_from_machine_ingame (0000)
 0011BAE0 00e0:
 	_network_game_server_start_network_game (0000)
 0011BBC0 00a0:
@@ -39,7 +39,7 @@ symbols in this file:
 0011BDB0 0130:
 	_network_game_server_accept_client_machine_into_game (0000)
 0011BEE0 0040:
-	_code_0011bee0 (0000)
+	_is_name_unique (0000)
 0011BF20 0080:
 	_get_unique_random_name (0000)
 0011BFA0 0090:
@@ -103,25 +103,25 @@ symbols in this file:
 0011D040 0090:
 	_network_game_server_change_game_variant (0000)
 0011D0D0 0170:
-	_code_0011d0d0 (0000)
+	_network_game_server_add_new_client (0000)
 0011D240 00a0:
-	_code_0011d240 (0000)
+	_network_game_server_handle_public_endpoint (0000)
 0011D2E0 00a0:
-	_code_0011d2e0 (0000)
+	_network_game_server_send_rejection_message (0000)
 0011D380 0030:
-	_code_0011d380 (0000)
+	_network_game_server_reject_connection_game_is_full (0000)
 0011D3B0 0050:
-	_code_0011d3b0 (0000)
+	_network_game_server_idle_postgame_tasks (0000)
 0011D400 0070:
-	_code_0011d400 (0000)
+	_network_game_server_have_all_machines_have_precached (0000)
 0011D470 00d0:
-	_code_0011d470 (0000)
+	_network_game_server_setup_game_from_playlist (0000)
 0011D540 0030:
-	_code_0011d540 (0000)
+	_network_game_server_number_of_machines_connected (0000)
 0011D570 0100:
-	_code_0011d570 (0000)
+	_dump_network_game_data (0000)
 0011D670 0130:
-	_code_0011d670 (0000)
+	_network_game_server_dump (0000)
 0011D7A0 0140:
 	_network_game_server_remove_client_machine_from_game (0000)
 0011D8E0 0140:
@@ -131,9 +131,9 @@ symbols in this file:
 0011DBF0 01e0:
 	_network_game_server_update_countdown (0000)
 0011DDD0 01d0:
-	_code_0011ddd0 (0000)
+	_network_game_server_handle_client_machines (0000)
 0011DFA0 02b0:
-	_code_0011dfa0 (0000)
+	_network_game_server_idle_pregame_tasks (0000)
 0011E250 0120:
 	_network_game_server_dispose (0000)
 0011E370 0180:

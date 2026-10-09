@@ -3,13 +3,13 @@ RASTERIZER_XBOX_ENVIRONMENT_FOG.C
 
 symbols in this file:
 00154FD0 01b0:
-	_code_00154fd0 (0000)
+	_D3DDevice_SetRenderState (0000)
 00155180 0050:
-	_code_00155180 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 001551D0 0020:
-	_code_001551d0 (0000)
+	_IDirect3DDevice8_Clear@28 (0000)
 001551F0 0220:
-	_code_001551f0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 00155410 0050:
 	_rasterizer_environment_fog_screen_initialize (0000)
 00155460 0010:
@@ -19,9 +19,9 @@ symbols in this file:
 00155480 0020:
 	_rasterizer_environment_fog_screen_dispose (0000)
 001554A0 0060:
-	_code_001554a0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00155500 0010:
-	_code_00155500 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00155510 0110:
 	__rasterizer_environment_fog_draw (0000)
 00155620 0010:
@@ -29,11 +29,11 @@ symbols in this file:
 00155630 0090:
 	__rasterizer_environment_fog_screen_wind_get_vector (0000)
 001556C0 0010:
-	_code_001556c0 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 001556D0 0010:
-	_code_001556d0 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 001556E0 0010:
-	_code_001556e0 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 001556F0 0120:
 	_rasterizer_environment_fog_screen_model_submit (0000)
 00155810 0010:
@@ -43,9 +43,9 @@ symbols in this file:
 00155840 0020:
 	_local_random_boolean (0000)
 00155860 0200:
-	_code_00155860 (0000)
+	_rasterizer_environment_fog_screen_is_active (0000)
 00155A60 01f0:
-	_code_00155a60 (0000)
+	_rasterizer_environment_fog_screen_wind_update (0000)
 00155C50 0490:
 	__rasterizer_environment_fog_begin (0000)
 001560E0 0f40:

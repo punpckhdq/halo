@@ -3,9 +3,9 @@ RASTERIZER_XBOX_VERTEX_SHADERS_INITIALIZE.C
 
 symbols in this file:
 00168070 0020:
-	_code_00168070 (0000)
+	_IDirect3DDevice8_CreateVertexShader@20 (0000)
 00168090 0010:
-	_code_00168090 (0000)
+	_IDirect3DDevice8_DeleteVertexShader@8 (0000)
 001680A0 0260:
 	_rasterizer_vertex_shaders_initialize (0000)
 00168300 0050:

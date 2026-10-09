@@ -3,21 +3,21 @@ S3TC.C
 
 symbols in this file:
 0005EB30 0060:
-	_code_0005eb30 (0000)
+	_ColorToFcolor (0000)
 0005EB90 0050:
-	_code_0005eb90 (0000)
+	_FcolorToColor (0000)
 0005EBE0 0040:
-	_code_0005ebe0 (0000)
+	_ColorToRGB (0000)
 0005EC20 0060:
-	_code_0005ec20 (0000)
+	_RGBToColor (0000)
 0005EC80 00a0:
-	_code_0005ec80 (0000)
+	_Square3x3 (0000)
 0005ED20 0210:
-	_code_0005ed20 (0000)
+	_Quantize (0000)
 0005EF30 0140:
-	_code_0005ef30 (0000)
+	_ClipExtrema (0000)
 0005F070 0170:
-	_code_0005f070 (0000)
+	_AllSame (0000)
 0005F1E0 0890:
 	_EncodeBlockRGBColorKey (0000)
 0005FA70 01c0:

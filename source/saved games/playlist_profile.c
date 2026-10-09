@@ -17,17 +17,17 @@ symbols in this file:
 001B1C00 0010:
 	_playlist_profile_number_of_default_profiles_on_disk (0000)
 001B1C10 01c0:
-	_code_001b1c10 (0000)
+	_playlist_profile_create_default_profiles_on_disk (0000)
 001B1DD0 0270:
-	_code_001b1dd0 (0000)
+	_playlist_profile_read (0000)
 001B2040 0160:
-	_code_001b2040 (0000)
+	_playlist_profile_write_thread_proc@4 (0000)
 001B21A0 0040:
 	_playlist_profiles_enumerate_available_to_local_player_index (0000)
 001B21E0 0060:
 	_playlist_profile_get (0000)
 001B2240 00a0:
-	_code_001b2240 (0000)
+	_playlist_profile_write (0000)
 001B22E0 0050:
 	_playlist_profile_save (0000)
 002A89E8 003e:

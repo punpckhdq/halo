@@ -35,37 +35,37 @@ symbols in this file:
 000481C0 00a0:
 	_actor_iterator_next (0000)
 00048260 0050:
-	_code_00048260 (0000)
+	_encounter_clear_pursuit (0000)
 000482B0 00f0:
-	_code_000482b0 (0000)
+	_encounter_find_pursuit (0000)
 000483A0 00a0:
 	_encounter_modify_pursuit_desires (0000)
 00048440 0280:
 	_encounter_determine_pursuit_availability (0000)
 000486C0 00d0:
-	_code_000486c0 (0000)
+	_squad_reset_starting_locations (0000)
 00048790 0290:
-	_code_00048790 (0000)
+	_encounter_new (0000)
 00048A20 0080:
-	_code_00048a20 (0000)
+	_squad_get_actor_type (0000)
 00048AA0 0060:
 	_encounterless_activate (0000)
 00048B00 0050:
-	_code_00048b00 (0000)
+	_encounterless_deactivate (0000)
 00048B50 00c0:
-	_code_00048b50 (0000)
+	_encounter_activate (0000)
 00048C10 00a0:
 	_encounter_link_activation (0000)
 00048CB0 00a0:
-	_code_00048cb0 (0000)
+	_encounter_deactivate (0000)
 00048D50 03d0:
-	_code_00048d50 (0000)
+	_encounters_test_activation (0000)
 00049120 01b0:
 	_encounter_stand_down (0000)
 000492D0 0090:
-	_code_000492d0 (0000)
+	_encounter_post_combat_add_possibility (0000)
 00049360 0070:
-	_code_00049360 (0000)
+	_encounter_update_timers (0000)
 000493D0 0030:
 	_encounter_set_blind (0000)
 00049400 0030:
@@ -73,9 +73,9 @@ symbols in this file:
 00049430 00b0:
 	_encounter_squad_timer_expire (0000)
 000494E0 0100:
-	_code_000494e0 (0000)
+	_encounter_update_squads (0000)
 000495E0 0290:
-	_code_000495e0 (0000)
+	_encounter_test_rule (0000)
 00049870 00a0:
 	_encounters_initialize_for_new_map (0000)
 00049910 00d0:
@@ -95,21 +95,21 @@ symbols in this file:
 0004A110 0030:
 	_encounter_force_deactivate (0000)
 0004A140 0110:
-	_code_0004a140 (0000)
+	_encounter_post_combat_select_random_behavior (0000)
 0004A250 07c0:
-	_code_0004a250 (0000)
+	_encounter_post_combat (0000)
 0004AA10 0170:
-	_code_0004aa10 (0000)
+	_encounter_place_actor (0000)
 0004AB80 0120:
 	_encounter_spawn_actor (0000)
 0004ACA0 0050:
 	_encounter_set_respawn (0000)
 0004ACF0 02c0:
-	_code_0004acf0 (0000)
+	_encounter_update_respawn (0000)
 0004AFB0 0140:
-	_code_0004afb0 (0000)
+	_encounter_update_platoons (0000)
 0004B0F0 0780:
-	_code_0004b0f0 (0000)
+	_encounter_update_follow (0000)
 0004B870 0220:
 	_encounter_attach_actor (0000)
 0004BA90 0470:
@@ -119,7 +119,7 @@ symbols in this file:
 0004BF80 02f0:
 	_encounter_create (0000)
 0004C270 01c0:
-	_code_0004c270 (0000)
+	_encounter_control_actors (0000)
 0004C430 00c0:
 	_encounters_create_for_new_map (0000)
 0004C4F0 0100:

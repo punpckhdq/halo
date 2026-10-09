@@ -5,15 +5,15 @@ symbols in this file:
 0010B9D0 0020:
 	_lra_full (0000)
 0010B9F0 0010:
-	_code_0010b9f0 (0000)
+	_lra_default_new_block_proc (0000)
 0010BA00 0010:
-	_code_0010ba00 (0000)
+	_lra_default_purge_block_proc (0000)
 0010BA10 0020:
-	_code_0010ba10 (0000)
+	_lra_purge_block (0000)
 0010BA30 0080:
-	_code_0010ba30 (0000)
+	_verify_lra_cache_block (0000)
 0010BAB0 0080:
-	_code_0010bab0 (0000)
+	_verify_lra_cache (0000)
 0010BB30 0120:
 	_lra_new (0000)
 0010BC50 0050:
@@ -27,7 +27,7 @@ symbols in this file:
 0010BDA0 0050:
 	_lra_unlock (0000)
 0010BDF0 0020:
-	_code_0010bdf0 (0000)
+	_get_cache_block_offset (0000)
 0010BE10 0190:
 	_lra_allocate (0000)
 0027DC64 0031:

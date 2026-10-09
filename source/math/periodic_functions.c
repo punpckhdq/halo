@@ -9,11 +9,11 @@ symbols in this file:
 000F9F30 0120:
 	_transition_function_evaluate (0000)
 000FA050 0100:
-	_code_000fa050 (0000)
+	_periodic_function_build_variable_period_x_table (0000)
 000FA150 0130:
-	_code_000fa150 (0000)
+	_transition_function_build_table (0000)
 000FA280 02b0:
-	_code_000fa280 (0000)
+	_periodic_function_build_table (0000)
 000FA530 00c0:
 	_periodic_functions_initialize (0000)
 0027AC7C 000a:

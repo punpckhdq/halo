@@ -3,81 +3,81 @@ GAME_ENGINE_ODDBALL.C
 
 symbols in this file:
 000A1630 0010:
-	_code_000a1630 (0000)
+	_oddball_engine_dispose (0000)
 000A1640 0010:
-	_code_000a1640 (0000)
+	_oddball_engine_dispose_from_old_map (0000)
 000A1650 0020:
-	_code_000a1650 (0000)
+	_oddball_engine_player_added (0000)
 000A1670 0010:
-	_code_000a1670 (0000)
+	_oddball_engine_game_ending (0000)
 000A1680 0010:
-	_code_000a1680 (0000)
+	_oddball_engine_game_starting (0000)
 000A1690 0010:
-	_code_000a1690 (0000)
+	_oddball_engine_statistics_append (0000)
 000A16A0 0010:
-	_code_000a16a0 (0000)
+	_oddball_engine_handle_client_message (0000)
 000A16B0 0010:
-	_code_000a16b0 (0000)
+	_oddball_engine_handle_server_message (0000)
 000A16C0 0010:
-	_code_000a16c0 (0000)
+	_oddball_engine_pregame_post_rasterize (0000)
 000A16D0 0010:
-	_code_000a16d0 (0000)
+	_oddball_engine_post_rasterize (0000)
 000A16E0 00d0:
-	_code_000a16e0 (0000)
+	_oddball_add_score (0000)
 000A17B0 0040:
-	_code_000a17b0 (0000)
+	_oddball_add_time_with_ball (0000)
 000A17F0 0030:
-	_code_000a17f0 (0000)
+	_player_ball_count (0000)
 000A1820 0010:
-	_code_000a1820 (0000)
+	_oddball_engine_player_damaged_player (0000)
 000A1830 0030:
 	_player_has_ball (0000)
 000A1860 0040:
 	_ball_available (0000)
 000A18A0 02e0:
-	_code_000a18a0 (0000)
+	_oddball_engine_display_score (0000)
 000A1B80 0010:
-	_code_000a1b80 (0000)
+	_oddball_engine_prespawn_player_update (0000)
 000A1B90 0040:
-	_code_000a1b90 (0000)
+	_oddball_weapon_drop (0000)
 000A1BD0 0040:
-	_code_000a1bd0 (0000)
+	_oddball_get_score (0000)
 000A1C10 0020:
-	_code_000a1c10 (0000)
+	_oddball_ball_transfer_by_killing (0000)
 000A1C30 0020:
-	_code_000a1c30 (0000)
+	_accumulate_score_by_time (0000)
 000A1C50 0020:
-	_code_000a1c50 (0000)
+	_terminator_scoring_rules (0000)
 000A1C70 0020:
-	_code_000a1c70 (0000)
+	_oddball_test_flag (0000)
 000A1C90 0050:
-	_code_000a1c90 (0000)
+	_oddball_test_trait (0000)
 000A1CE0 0050:
-	_code_000a1ce0 (0000)
+	_oddball_get_score_string (0000)
 000A1D30 0070:
-	_code_000a1d30 (0000)
+	_oddball_get_score_header_string (0000)
 000A1DA0 0050:
-	_code_000a1da0 (0000)
+	_oddball_get_team_score_string (0000)
 000A1DF0 0140:
-	_code_000a1df0 (0000)
+	_find_position_for_ball (0000)
 000A1F30 0090:
-	_code_000a1f30 (0000)
+	_create_the_ball (0000)
 000A1FC0 0120:
-	_code_000a1fc0 (0000)
+	_oddball_engine_initialize_for_new_map (0000)
 000A20E0 0070:
-	_code_000a20e0 (0000)
+	_reset_ball (0000)
 000A2150 0090:
-	_code_000a2150 (0000)
+	_update_ball_ownership (0000)
 000A21E0 01c0:
-	_code_000a21e0 (0000)
+	_oddball_engine_player_update (0000)
 000A23A0 00c0:
-	_code_000a23a0 (0000)
+	_oddball_engine_weapon_update (0000)
 000A2460 00d0:
-	_code_000a2460 (0000)
+	_oddball_engine_update (0000)
 000A2530 01c0:
-	_code_000a2530 (0000)
+	_oddball_engine_player_killed_player (0000)
 000A26F0 00b0:
-	_code_000a26f0 (0000)
+	_oddball_weapon_pickup (0000)
 0025BE74 002a:
 	??_C@_0CK@LKLFFONL@c?3?2halo?2SOURCE?2game?2game_engine_@ (0000)
 0025BEA0 0034:

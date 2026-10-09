@@ -5,7 +5,7 @@ symbols in this file:
 00024E70 0030:
 	_actor_stimulus_clear (0000)
 00024EA0 00d0:
-	_code_00024ea0 (0000)
+	_actor_stimulus_combat (0000)
 00024F70 0060:
 	_actor_stimulus_surprise (0000)
 00024FD0 0060:

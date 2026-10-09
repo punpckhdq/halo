@@ -3,77 +3,77 @@ GAME_ENGINE_RACE.C
 
 symbols in this file:
 000A27A0 0010:
-	_code_000a27a0 (0000)
+	_race_engine_dispose (0000)
 000A27B0 0080:
-	_code_000a27b0 (0000)
+	_delete_all_vehicles (0000)
 000A2830 00f0:
-	_code_000a2830 (0000)
+	_race_get_vehicle_to_spawn (0000)
 000A2920 0090:
 	_race_flags_make_unique (0000)
 000A29B0 0010:
-	_code_000a29b0 (0000)
+	_race_engine_dispose_from_old_map (0000)
 000A29C0 0030:
-	_code_000a29c0 (0000)
+	_race_engine_player_added (0000)
 000A29F0 0010:
-	_code_000a29f0 (0000)
+	_race_engine_game_ending (0000)
 000A2A00 0010:
-	_code_000a2a00 (0000)
+	_race_engine_game_starting (0000)
 000A2A10 0010:
-	_code_000a2a10 (0000)
+	_race_engine_statistics_append (0000)
 000A2A20 0010:
-	_code_000a2a20 (0000)
+	_race_engine_handle_client_message (0000)
 000A2A30 0010:
-	_code_000a2a30 (0000)
+	_race_engine_handle_server_message (0000)
 000A2A40 0010:
-	_code_000a2a40 (0000)
+	_race_engine_pregame_post_rasterize (0000)
 000A2A50 0010:
-	_code_000a2a50 (0000)
+	_race_engine_post_rasterize (0000)
 000A2A60 0190:
-	_code_000a2a60 (0000)
+	_race_complete_lap (0000)
 000A2BF0 0120:
-	_code_000a2bf0 (0000)
+	_can_touch_team (0000)
 000A2D10 0010:
-	_code_000a2d10 (0000)
+	_race_engine_weapon_update (0000)
 000A2D20 0090:
-	_code_000a2d20 (0000)
+	_race_team_can_win_game (0000)
 000A2DB0 00e0:
-	_code_000a2db0 (0000)
+	_build_player_speeds (0000)
 000A2E90 0010:
-	_code_000a2e90 (0000)
+	_race_engine_player_damaged_player (0000)
 000A2EA0 0010:
-	_code_000a2ea0 (0000)
+	_race_engine_player_killed_player (0000)
 000A2EB0 0480:
-	_code_000a2eb0 (0000)
+	_race_engine_display_score (0000)
 000A3330 0010:
-	_code_000a3330 (0000)
+	_race_engine_prespawn_player_update (0000)
 000A3340 0060:
-	_code_000a3340 (0000)
+	_race_goal_matches_player (0000)
 000A33A0 0020:
-	_code_000a33a0 (0000)
+	_count_bits_32 (0000)
 000A33C0 00e0:
-	_code_000a33c0 (0000)
+	_race_engine_get_score (0000)
 000A34A0 0040:
-	_code_000a34a0 (0000)
+	_race_get_score_string (0000)
 000A34E0 0070:
-	_code_000a34e0 (0000)
+	_race_get_score_header_string (0000)
 000A3550 0030:
-	_code_000a3550 (0000)
+	_race_get_team_score_string (0000)
 000A3580 00b0:
-	_code_000a3580 (0000)
+	_race_engine_did_player_win (0000)
 000A3630 00e0:
-	_code_000a3630 (0000)
+	_find_closest_vehicle (0000)
 000A3710 0130:
-	_code_000a3710 (0000)
+	_create_race_vehicles (0000)
 000A3840 00f0:
-	_code_000a3840 (0000)
+	_new_rally_flag (0000)
 000A3930 0150:
-	_code_000a3930 (0000)
+	_race_touch_flag (0000)
 000A3A80 00a0:
-	_code_000a3a80 (0000)
+	_race_engine_player_update (0000)
 000A3B20 00c0:
-	_code_000a3b20 (0000)
+	_race_engine_update (0000)
 000A3BE0 0110:
-	_code_000a3be0 (0000)
+	_race_engine_initialize_for_new_map (0000)
 0025BFD4 0027:
 	??_C@_0CH@MLHAJCND@c?3?2halo?2SOURCE?2game?2game_engine_@ (0000)
 0025BFFC 0019:

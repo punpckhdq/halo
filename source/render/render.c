@@ -13,7 +13,7 @@ symbols in this file:
 00174400 0010:
 	_render_dispose (0000)
 00174410 0110:
-	_code_00174410 (0000)
+	_render_nonplayer_frame (0000)
 00174520 00f0:
 	_render_frame_pregame (0000)
 00174610 0020:
@@ -23,9 +23,9 @@ symbols in this file:
 001746A0 0050:
 	_rendered_cluster_get (0000)
 001746F0 03f0:
-	_code_001746f0 (0000)
+	_render_window (0000)
 00174AE0 03f0:
-	_code_00174ae0 (0000)
+	_render_player_frame (0000)
 00174ED0 00f0:
 	_render_frame (0000)
 0029F44C 001f:
@@ -135,7 +135,7 @@ void render_dispose(
 	render_objects_dispose();
 }
 
-static void code_00174410(
+static void render_nonplayer_frame(
 	void)
 {
 	rasterizer_window_end();

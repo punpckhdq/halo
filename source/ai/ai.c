@@ -25,7 +25,7 @@ symbols in this file:
 0002E050 00c0:
 	_ai_release_inactive_swarms (0000)
 0002E110 0040:
-	_code_0002e110 (0000)
+	_compare_releasable_inactive_encounters (0000)
 0002E150 0150:
 	_ai_find_inactive_encounters (0000)
 0002E2A0 0130:
@@ -49,7 +49,7 @@ symbols in this file:
 0002EA70 0110:
 	_ai_handle_damage (0000)
 0002EB80 0120:
-	_code_0002eb80 (0000)
+	_ai_place_pending_mounted_weapons (0000)
 0002ECA0 0070:
 	_ai_create_mounted_weapons_for_unit (0000)
 0002ED10 0160:
@@ -61,7 +61,7 @@ symbols in this file:
 0002EFF0 0060:
 	_ai_handle_exit_vehicle (0000)
 0002F050 0040:
-	_code_0002f050 (0000)
+	_ai_flush_spatial_effects (0000)
 0002F090 0500:
 	_ai_disconnect_from_structure_bsp (0000)
 0002F590 00c0:
@@ -75,9 +75,9 @@ symbols in this file:
 0002F860 0170:
 	_ai_consider_major_upgrade (0000)
 0002F9D0 0060:
-	_code_0002f9d0 (0000)
+	_ai_generate_line_of_fire_pill (0000)
 0002FA30 0170:
-	_code_0002fa30 (0000)
+	_ai_find_line_of_fire_friend_pills (0000)
 0002FBA0 0150:
 	_ai_test_line_of_fire (0000)
 0002FCF0 03f0:
@@ -87,7 +87,7 @@ symbols in this file:
 00030490 0510:
 	_ai_handle_editing (0000)
 000309A0 0210:
-	_code_000309a0 (0000)
+	_ai_enemies_endanger_player (0000)
 00030BB0 0010:
 	_ai_enemies_can_see_player (0000)
 00030BC0 0010:

@@ -5,43 +5,43 @@ symbols in this file:
 0010E1E0 0090:
 	_stack_memory_pool_reset (0000)
 0010E270 0040:
-	_code_0010e270 (0000)
+	_memory_block_set_size_and_index (0000)
 0010E2B0 0030:
-	_code_0010e2b0 (0000)
+	_memory_block_get_real_size (0000)
 0010E2E0 0050:
-	_code_0010e2e0 (0000)
+	_memory_block_get_user_size (0000)
 0010E330 0030:
-	_code_0010e330 (0000)
+	_memory_block_get_pool_index (0000)
 0010E360 0080:
-	_code_0010e360 (0000)
+	_stack_memory_pool_free_space_at_end_of_pool (0000)
 0010E3E0 0050:
-	_code_0010e3e0 (0000)
+	_stack_memory_pool_find_first_unused_memory_block (0000)
 0010E430 0060:
-	_code_0010e430 (0000)
+	_stack_memory_pool_set_next_block_index (0000)
 0010E490 0080:
-	_code_0010e490 (0000)
+	_stack_memory_pool_find_space_between_blocks (0000)
 0010E510 00a0:
-	_code_0010e510 (0000)
+	_memory_block_valid (0000)
 0010E5B0 0040:
-	_code_0010e5b0 (0000)
+	_memory_block_lock (0000)
 0010E5F0 0040:
-	_code_0010e5f0 (0000)
+	_memory_block_unlock (0000)
 0010E630 0040:
-	_code_0010e630 (0000)
+	_memory_block_is_locked (0000)
 0010E670 0030:
-	_code_0010e670 (0000)
+	_memory_block_get_user_address (0000)
 0010E6A0 00d0:
-	_code_0010e6a0 (0000)
+	_stack_memory_pool_compact (0000)
 0010E770 0080:
-	_code_0010e770 (0000)
+	_stack_memory_pool_valid_block (0000)
 0010E7F0 00a0:
-	_code_0010e7f0 (0000)
+	_stack_memory_pool_dispose_block (0000)
 0010E890 00d0:
-	_code_0010e890 (0000)
+	_stack_memory_pool_lock_block (0000)
 0010E960 00a0:
-	_code_0010e960 (0000)
+	_stack_memory_pool_unlock_block (0000)
 0010EA00 0280:
-	_code_0010ea00 (0000)
+	_stack_memory_pool_allocate (0000)
 0010EC80 0080:
 	_dispose_handle (0000)
 0010ED00 0070:
@@ -51,11 +51,11 @@ symbols in this file:
 0010EE40 00b0:
 	_dispose_pointer (0000)
 0010EEF0 0020:
-	_code_0010eef0 (0000)
+	_stack_memory_pool_new_block (0000)
 0010EF10 0060:
-	_code_0010ef10 (0000)
+	_stack_memory_pool_new_block_clear (0000)
 0010EF70 00c0:
-	_code_0010ef70 (0000)
+	_stack_memory_pool_resize_block (0000)
 0010F030 0070:
 	_pool_new_handle (0000)
 0010F0A0 00b0:

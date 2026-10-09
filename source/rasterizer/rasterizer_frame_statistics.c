@@ -11,7 +11,7 @@ symbols in this file:
 0016E580 0040:
 	_rasterizer_fps_accumulate (0000)
 0016E5C0 0020:
-	_code_0016e5c0 (0000)
+	_eat_my_shorts (0000)
 0016E5E0 0040:
 	_rasterizer_frame_statistics_count_static_vertices (0000)
 0016E620 0130:

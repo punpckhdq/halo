@@ -15,7 +15,7 @@ symbols in this file:
 00029190 00a0:
 	_actor_activation_debug_color (0000)
 00029230 0080:
-	_code_00029230 (0000)
+	_actor_verify_unit_activation (0000)
 000292B0 00e0:
 	_actor_verify_activation (0000)
 00029390 00e0:
@@ -25,7 +25,7 @@ symbols in this file:
 00029640 0080:
 	_actor_swarm_cache_delete (0000)
 000296C0 0050:
-	_code_000296c0 (0000)
+	_actor_swarm_component_refresh (0000)
 00029710 0020:
 	_actor_is_noncombat (0000)
 00029730 0030:
@@ -55,25 +55,25 @@ symbols in this file:
 00029D10 00e0:
 	_actor_handle_damage (0000)
 00029DF0 0080:
-	_code_00029df0 (0000)
+	_actor_freeze_unit (0000)
 00029E70 00a0:
-	_code_00029e70 (0000)
+	_actor_freeze (0000)
 00029F10 0040:
 	_actors_freeze (0000)
 00029F50 00c0:
-	_code_00029f50 (0000)
+	_actor_randomly_control_unit (0000)
 0002A010 00a0:
 	_actors_move_randomly (0000)
 0002A0B0 0070:
 	_actor_change_encounter (0000)
 0002A120 0030:
-	_code_0002a120 (0000)
+	_actor_debug_preupdate (0000)
 0002A150 0010:
-	_code_0002a150 (0000)
+	_actor_debug_postupdate (0000)
 0002A160 00a0:
-	_code_0002a160 (0000)
+	_actor_get_timeslice (0000)
 0002A200 00a0:
-	_code_0002a200 (0000)
+	_actor_clear_output (0000)
 0002A2A0 00c0:
 	_actor_find_pathfinding_location (0000)
 0002A360 0090:
@@ -81,9 +81,9 @@ symbols in this file:
 0002A3F0 0070:
 	_actor_input_sample_position (0000)
 0002A460 0040:
-	_code_0002a460 (0000)
+	_actor_clear_orders (0000)
 0002A4A0 0230:
-	_code_0002a4a0 (0000)
+	_actor_decision_loop (0000)
 0002A6D0 0100:
 	_actors_handle_spatial_effect (0000)
 0002A7D0 00a0:
@@ -109,7 +109,7 @@ symbols in this file:
 0002B050 0110:
 	_actor_set_dormant (0000)
 0002B160 0070:
-	_code_0002b160 (0000)
+	_actor_swarm_component_setup (0000)
 0002B1D0 0050:
 	_actor_delete_props (0000)
 0002B220 0120:
@@ -135,17 +135,17 @@ symbols in this file:
 0002BF60 00a0:
 	_actor_erase (0000)
 0002C000 0230:
-	_code_0002c000 (0000)
+	_actor_general_update (0000)
 0002C230 0950:
-	_code_0002c230 (0000)
+	_actor_input_update (0000)
 0002CB80 0230:
 	_actors_handle_unit_effect (0000)
 0002CDB0 0310:
-	_code_0002cdb0 (0000)
+	_actor_unit_control (0000)
 0002D0C0 01d0:
 	_actor_attach_unit (0000)
 0002D290 0140:
-	_code_0002d290 (0000)
+	_actor_update (0000)
 0002D3D0 0270:
 	_actor_create_for_unit (0000)
 0002D640 0320:

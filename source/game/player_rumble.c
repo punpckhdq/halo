@@ -23,7 +23,7 @@ symbols in this file:
 000A9140 0060:
 	_rumble_dispose_from_old_map (0000)
 000A91A0 01a0:
-	_code_000a91a0 (0000)
+	_rumble_calculate (0000)
 000A9340 0130:
 	_rumble_update (0000)
 0025CE94 0007:

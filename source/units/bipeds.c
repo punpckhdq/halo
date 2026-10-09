@@ -31,17 +31,17 @@ symbols in this file:
 00190260 0050:
 	_biped_stop_limp_body_physics (0000)
 001902B0 00f0:
-	_code_001902b0 (0000)
+	_biped_bumped_object (0000)
 001903A0 00b0:
-	_code_001903a0 (0000)
+	_biped_check_discard (0000)
 00190450 01d0:
-	_code_00190450 (0000)
+	_biped_falling_damage (0000)
 00190620 0050:
 	_biped_flying_through_air (0000)
 00190670 0110:
-	_code_00190670 (0000)
+	_biped_start_landing (0000)
 00190780 0110:
-	_code_00190780 (0000)
+	_biped_make_footstep (0000)
 00190890 0060:
 	_biped_adjust_placement (0000)
 001908F0 00c0:
@@ -55,7 +55,7 @@ symbols in this file:
 00191170 0110:
 	_biped_render_debug (0000)
 00191280 0180:
-	_code_00191280 (0000)
+	_biped_find_ground_surface (0000)
 00191400 0030:
 	_biped_approximate_surface_index (0000)
 00191430 01c0:
@@ -63,33 +63,33 @@ symbols in this file:
 001915F0 00f0:
 	_biped_exit_seat_end (0000)
 001916E0 0140:
-	_code_001916e0 (0000)
+	_biped_falling_danger (0000)
 00191820 01b0:
-	_code_00191820 (0000)
+	_biped_vehicle_speech (0000)
 001919D0 0130:
-	_code_001919d0 (0000)
+	_biped_apply_rotation (0000)
 00191B00 01b0:
-	_code_00191b00 (0000)
+	_biped_jump (0000)
 00191CB0 01a0:
-	_code_00191cb0 (0000)
+	_biped_try_to_make_footsteps (0000)
 00191E50 0220:
-	_code_00191e50 (0000)
+	_biped_find_nearby_support_surface (0000)
 00192070 0100:
-	_code_00192070 (0000)
+	_biped_verify_object_vectors (0000)
 00192170 0160:
-	_code_00192170 (0000)
+	_biped_update_airborne (0000)
 001922D0 00b0:
-	_code_001922d0 (0000)
+	_biped_update_landing (0000)
 00192380 0080:
-	_code_00192380 (0000)
+	_biped_update_slipping (0000)
 00192400 0200:
-	_code_00192400 (0000)
+	_biped_update_jumping (0000)
 00192600 01b0:
 	_biped_build_flying_axes (0000)
 001927B0 1500:
-	_code_001927b0 (0000)
+	_biped_update_physics (0000)
 00193CB0 0550:
-	_code_00193cb0 (0000)
+	_biped_snap_facing (0000)
 00194200 00c0:
 	_biped_new (0000)
 001942C0 0020:
@@ -97,11 +97,11 @@ symbols in this file:
 001942E0 01e0:
 	_biped_accelerate (0000)
 001944C0 06b0:
-	_code_001944c0 (0000)
+	_biped_update_turning (0000)
 00194B70 0ff0:
-	_code_00194b70 (0000)
+	_biped_update_moving (0000)
 00195B60 00d0:
-	_code_00195b60 (0000)
+	_biped_update_dead (0000)
 00195C30 0460:
 	_biped_update (0000)
 002A30B0 0144:

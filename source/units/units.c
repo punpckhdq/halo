@@ -31,33 +31,33 @@ symbols in this file:
 00197DA0 0090:
 	_unit_get_animation_frames_remaining (0000)
 00197E30 0140:
-	_code_00197e30 (0000)
+	_unit_euler_axis_doplan (0000)
 00197F70 0020:
 	_unit_get_zoom_level (0000)
 00197F90 0080:
-	_code_00197f90 (0000)
+	_unit_animation_state_interruptable (0000)
 00198010 0040:
 	_code_00198010 (0000)
 00198050 0020:
-	_code_00198050 (0000)
+	_unit_animation_overlay_action_loops (0000)
 00198070 0060:
-	_code_00198070 (0000)
+	_unit_animation_state_loops (0000)
 001980D0 0060:
-	_code_001980d0 (0000)
+	_unit_animation_weapon_ik (0000)
 00198130 0040:
-	_code_00198130 (0000)
+	_unit_animation_vehicle_ik (0000)
 00198170 0020:
-	_code_00198170 (0000)
+	_unit_animation_aiming_screen (0000)
 00198190 0060:
-	_code_00198190 (0000)
+	_unit_animation_state_get_aiming_screen_index (0000)
 001981F0 0040:
-	_code_001981f0 (0000)
+	_unit_animation_state_can_be_entered_without_animation (0000)
 00198230 0040:
-	_code_00198230 (0000)
+	_unit_animation_compute_interpolation_frame_count (0000)
 00198270 0190:
 	_unit_animation_start_action (0000)
 00198400 01c0:
-	_code_00198400 (0000)
+	_unit_animation_start_overlay_action (0000)
 001985C0 00c0:
 	_unit_can_enter_seat (0000)
 00198680 0070:
@@ -79,9 +79,9 @@ symbols in this file:
 00198E00 0040:
 	_unit_get_center_of_mass (0000)
 00198E40 0190:
-	_code_00198e40 (0000)
+	_unit_animation_impulse_get_index (0000)
 00198FD0 00d0:
-	_code_00198fd0 (0000)
+	_unit_can_play_animation_impulse (0000)
 001990A0 00c0:
 	_unit_test_animation_impulse (0000)
 00199160 0080:
@@ -153,7 +153,7 @@ symbols in this file:
 0019A110 0060:
 	_unit_seat_allow_noncombatants (0000)
 0019A170 00e0:
-	_code_0019a170 (0000)
+	_unit_update_driver_and_gunner (0000)
 0019A250 0020:
 	_unit_get_current_equipment (0000)
 0019A270 0100:
@@ -169,7 +169,7 @@ symbols in this file:
 0019A5E0 0060:
 	_unit_has_weapon_definition_index (0000)
 0019A640 0030:
-	_code_0019a640 (0000)
+	_unit_first_free_weapon_index (0000)
 0019A670 0070:
 	_unit_get_weapon_count (0000)
 0019A6E0 0070:
@@ -185,15 +185,15 @@ symbols in this file:
 0019AD00 02d0:
 	_code_0019ad00 (0000)
 0019AFD0 0050:
-	_code_0019afd0 (0000)
+	_base_seat_label_get (0000)
 0019B020 0040:
 	_code_0019b020 (0000)
 0019B060 0050:
 	_code_0019b060 (0000)
 0019B0B0 00b0:
-	_code_0019b0b0 (0000)
+	_unit_set_animation (0000)
 0019B160 0050:
-	_code_0019b160 (0000)
+	_unit_animation_update (0000)
 0019B1B0 0080:
 	_code_0019b1b0 (0000)
 0019B230 0050:
@@ -201,13 +201,13 @@ symbols in this file:
 0019B280 0190:
 	_code_0019b280 (0000)
 0019B410 00b0:
-	_code_0019b410 (0000)
+	_unit_drop_grenades (0000)
 0019B4C0 0100:
-	_code_0019b4c0 (0000)
+	_unit_drop_inventory_weapons (0000)
 0019B5C0 0040:
 	_unit_handle_region_destroyed (0000)
 0019B600 0080:
-	_code_0019b600 (0000)
+	_unit_melee_sound (0000)
 0019B680 02a0:
 	_code_0019b680 (0000)
 0019B920 0040:
@@ -239,9 +239,9 @@ symbols in this file:
 0019BF40 0030:
 	_unit_flying_through_air (0000)
 0019BF70 04f0:
-	_code_0019bf70 (0000)
+	_unit_euler_axis_buildplan (0000)
 0019C460 0200:
-	_code_0019c460 (0000)
+	_unit_euler_axis_couple (0000)
 0019C660 0220:
 	_code_0019c660 (0000)
 0019C880 00d0:
@@ -285,7 +285,7 @@ symbols in this file:
 0019DEF0 0100:
 	_unit_drop_current_weapon (0000)
 0019DFF0 0030:
-	_code_0019dff0 (0000)
+	_unit_get_current_weapon_label (0000)
 0019E020 0020:
 	_scripting_set_magic_base_seat (0000)
 0019E040 0030:
@@ -301,7 +301,7 @@ symbols in this file:
 0019E9F0 0080:
 	_unit_custom_animation_at_frame (0000)
 0019EA70 0120:
-	_code_0019ea70 (0000)
+	_unit_align_facing (0000)
 0019EB90 00a0:
 	_unit_start_flaming_to_death (0000)
 0019EC30 02e0:
@@ -329,7 +329,7 @@ symbols in this file:
 001A0C90 0060:
 	_code_001a0c90 (0000)
 001A0CF0 0620:
-	_code_001a0cf0 (0000)
+	_unit_ping_animation (0000)
 001A1310 0120:
 	_unit_start_animation_impulse (0000)
 001A1430 0020:
@@ -355,9 +355,9 @@ symbols in this file:
 001A1F00 0050:
 	_unit_solo_player_integrated_night_vision_is_active (0000)
 001A1F50 00e0:
-	_code_001a1f50 (0000)
+	_unit_add_initial_weapons (0000)
 001A2030 0040:
-	_code_001a2030 (0000)
+	_unit_adjust_for_seat_change (0000)
 001A2070 0400:
 	_unit_new (0000)
 001A2470 0250:
@@ -726,7 +726,7 @@ static boolean unit_animation_set_state(
 	long unit_index,
 	short new_state);
 
-static boolean unit_verify_inventory(long unit_index);
+static boolean unit_vectors_are_valid(long unit_index);
 static void unit_throw_grenade_release(long unit_index, boolean premature);
 
 static void unit_seat_update(long object_index);
@@ -2418,7 +2418,7 @@ static boolean unit_animation_set_state(
 	return result;
 }
 
-static boolean unit_verify_inventory(
+static boolean unit_vectors_are_valid(
 	long unit_index)
 {
 	struct unit_datum *unit = unit_get(unit_index);
@@ -2795,7 +2795,7 @@ static void unit_verify_vectors(
 {
 	char buffer[512];
 
-	if (!unit_verify_inventory(unit_index))
+	if (!unit_vectors_are_valid(unit_index))
 	{
 		struct unit_datum *unit = unit_get(unit_index);
 
@@ -2906,7 +2906,7 @@ static void unit_verify_vectors(
 		match_vassert(
 			"c:\\halo\\SOURCE\\units\\units.c",
 			594,
-			unit_verify_inventory(unit_index),
+			unit_vectors_are_valid(unit_index),
 			"unit_verify_vectors FAILURE, see above for details"
 		);
 	}

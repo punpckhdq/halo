@@ -44,7 +44,7 @@ struct _input_abstraction_globals
 /* ---------- prototypes */
 
 static boolean local_player_is_piloting_aircraft(short controller_index);
-static void input_abstraction_get_default_preferences(struct game_input_preferences *preferences);
+static void input_abstraction_initialize_player_controller_settings_to_default(struct game_input_preferences *preferences);
 
 /* ---------- globals */
 
@@ -166,7 +166,7 @@ static boolean local_player_is_piloting_aircraft(
 	return result;
 }
 
-static void input_abstraction_get_default_preferences(
+static void input_abstraction_initialize_player_controller_settings_to_default(
 	struct game_input_preferences *preferences)
 {
 	preferences->pitch_rate = DEFAULT_PITCH_RATE;
@@ -199,7 +199,7 @@ void input_abstraction_initialize(
 
 	for (controller_index = 0; controller_index < MAXIMUM_GAMEPADS; controller_index++)
 	{
-		input_abstraction_get_default_preferences(&input_abstraction_globals.player_control_settings[controller_index]);
+		input_abstraction_initialize_player_controller_settings_to_default(&input_abstraction_globals.player_control_settings[controller_index]);
 		input_abstraction_globals.controller_available[controller_index] = input_has_gamepad((short)controller_index);
 	}
 

@@ -3,19 +3,19 @@ NETWORK_SERVER_MESSAGE_HANDLER.C
 
 symbols in this file:
 0011E890 0090:
-	_code_0011e890 (0000)
+	_network_game_server_handle_message_client_game_start_request (0000)
 0011E920 00a0:
-	_code_0011e920 (0000)
+	_network_game_server_handle_message_client_map_is_precached_pregame (0000)
 0011E9C0 0090:
-	_code_0011e9c0 (0000)
+	_network_game_server_handle_message_client_loaded (0000)
 0011EA50 0090:
-	_code_0011ea50 (0000)
+	_network_game_server_handle_message_client_add_player_request_ingame (0000)
 0011EAE0 00a0:
-	_code_0011eae0 (0000)
+	_network_game_server_handle_message_client_remove_player_request_postgame (0000)
 0011EB80 00a0:
-	_code_0011eb80 (0000)
+	_network_game_server_handle_message_client_switch_to_pregame (0000)
 0011EC20 0020:
-	_code_0011ec20 (0000)
+	_network_game_server_write (0000)
 0011EC40 0040:
 	_network_game_server_send_message_to_machine (0000)
 0011EC80 0110:
@@ -25,23 +25,23 @@ symbols in this file:
 0011EE20 00c0:
 	_network_game_server_send_game_data_pregame (0000)
 0011EEE0 0240:
-	_code_0011eee0 (0000)
+	_handle_message_client_broadcast_game_search (0000)
 0011F120 00c0:
-	_code_0011f120 (0000)
+	_handle_message_client_ping (0000)
 0011F1E0 03f0:
-	_code_0011f1e0 (0000)
+	_network_game_server_handle_message_client_join_game_request (0000)
 0011F5D0 00c0:
-	_code_0011f5d0 (0000)
+	_network_game_server_handle_message_client_add_player_request_pregame (0000)
 0011F690 00c0:
-	_code_0011f690 (0000)
+	_network_game_server_handle_message_client_remove_player_request_pregame (0000)
 0011F750 00e0:
-	_code_0011f750 (0000)
+	_network_game_server_handle_message_client_settings_request (0000)
 0011F830 00d0:
-	_code_0011f830 (0000)
+	_network_game_server_handle_message_client_player_settings_request (0000)
 0011F900 00d0:
-	_code_0011f900 (0000)
+	_network_game_server_handle_message_client_graceful_game_exit_pregame (0000)
 0011F9D0 00f0:
-	_code_0011f9d0 (0000)
+	_network_game_server_handle_message_client_remove_player_request_ingame (0000)
 0011FAC0 0310:
 	_network_game_server_handle_datagram (0000)
 0011FDD0 0400:

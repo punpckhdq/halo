@@ -11,11 +11,11 @@ symbols in this file:
 000527D0 0010:
 	_props_dispose_from_old_map (0000)
 000527E0 0260:
-	_code_000527e0 (0000)
+	_prop_add (0000)
 00052A40 0030:
-	_code_00052a40 (0000)
+	_prop_new_blank (0000)
 00052A70 0140:
-	_code_00052a70 (0000)
+	_prop_remove (0000)
 00052BB0 0030:
 	_prop_iterator_new (0000)
 00052BE0 0030:
@@ -23,7 +23,7 @@ symbols in this file:
 00052C10 0220:
 	_prop_new_unacknowledged (0000)
 00052E30 00e0:
-	_code_00052e30 (0000)
+	_prop_setup_orphan (0000)
 00052F10 00d0:
 	_prop_orphan_transition (0000)
 00052FE0 00f0:

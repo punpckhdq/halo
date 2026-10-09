@@ -15,8 +15,8 @@ BORED_CAMERA.C
 
 /* ---------- prototypes */
 
-static long bored_camera_get_threshold(long camera_count); /* fake name */
-static long bored_camera_get_next_timer(long camera_count); /* fake name */
+static long bored_camera_command_threshold(long camera_count);
+static long bored_camera_command_time(long camera_count);
 
 /* ---------- public code */
 
@@ -53,7 +53,7 @@ void bored_camera_update(
 	camera->timer += camera->last_update_time - current_time;
 	camera->last_update_time = current_time;
 
-	if (camera->timer<bored_camera_get_threshold(camera->camera_count))
+	if (camera->timer<bored_camera_command_threshold(camera->camera_count))
 	{
 		struct unit_camera_info camera_info;
 		real_euler_angles2d facing;
@@ -80,7 +80,7 @@ void bored_camera_update(
 			result->focus_distance = real_local_random_range(1.f, 6.f);
 			result->focus_velocity = *global_zero_vector3d;
 
-			next_timer = bored_camera_get_next_timer(camera->camera_count);
+			next_timer = bored_camera_command_time(camera->camera_count);
 			camera->timer = next_timer;
 			result->flags = FLAG(_observer_command_valid_bit);
 			result->timer = (real)next_timer;
@@ -95,13 +95,13 @@ void bored_camera_update(
 
 /* ---------- private code */
 
-static long bored_camera_get_threshold(
+static long bored_camera_command_threshold(
 	long camera_count)
 {
 	return MIN(camera_count, 3)*MILLISECONDS_PER_SECOND;
 }
 
-static long bored_camera_get_next_timer(
+static long bored_camera_command_time(
 	long camera_count)
 {
 	return MIN(camera_count+1, 3)*10*MILLISECONDS_PER_SECOND;

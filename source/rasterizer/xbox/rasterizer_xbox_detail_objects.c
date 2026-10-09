@@ -3,37 +3,37 @@ RASTERIZER_XBOX_DETAIL_OBJECTS.C
 
 symbols in this file:
 0014B7E0 01b0:
-	_code_0014b7e0 (0000)
+	_D3DDevice_SetRenderState (0000)
 0014B990 0050:
-	_code_0014b990 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 0014B9E0 0020:
-	_code_0014b9e0 (0000)
+	_IDirect3DDevice8_CreateVertexBuffer@24 (0000)
 0014BA00 0120:
-	_code_0014ba00 (0000)
+	_detail_object_build_vertices (0000)
 0014BB20 0070:
 	_rasterizer_detail_objects_initialize (0000)
 0014BB90 0220:
-	_code_0014bb90 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 0014BDB0 0060:
-	_code_0014bdb0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 0014BE10 0010:
-	_code_0014be10 (0000)
+	_IDirect3DDevice8_DrawVertices@16 (0000)
 0014BE20 0010:
-	_code_0014be20 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 0014BE30 0010:
-	_code_0014be30 (0000)
+	_IDirect3DDevice8_SetStreamSource@16 (0000)
 0014BE40 0010:
 	__rasterizer_detail_objects_end (0000)
 0014BE50 0030:
-	_code_0014be50 (0000)
+	_IDirect3DDevice8_SetVertexData4f@24 (0000)
 0014BE80 0010:
-	_code_0014be80 (0000)
+	_D3DVertexBuffer_Unlock@4 (0000)
 0014BE90 0010:
-	_code_0014be90 (0000)
+	_IDirect3DVertexBuffer8_Release@4 (0000)
 0014BEA0 0020:
-	_code_0014bea0 (0000)
+	_IDirect3DVertexBuffer8_Lock@20 (0000)
 0014BEC0 0010:
-	_code_0014bec0 (0000)
+	_IDirect3DVertexBuffer8_Unlock@4 (0000)
 0014BED0 0070:
 	_rasterizer_detail_objects_dispose (0000)
 0014BF40 0290:

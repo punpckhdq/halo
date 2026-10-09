@@ -15,7 +15,7 @@ symbols in this file:
 000CB840 0010:
 	_event_manager_time_of_last_event (0000)
 000CB850 0300:
-	_code_000cb850 (0000)
+	_queue_event (0000)
 000CBB50 0110:
 	_event_manager_update (0000)
 002706D8 0066:

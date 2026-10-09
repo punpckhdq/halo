@@ -11,9 +11,9 @@ symbols in this file:
 00096830 0020:
 	_game_engine_dispose (0000)
 00096850 0040:
-	_code_00096850 (0000)
+	_initialize_player_multiplayer_data (0000)
 00096890 0120:
-	_code_00096890 (0000)
+	_game_engine_build_lighting (0000)
 000969B0 0020:
 	_game_engine_dispose_from_old_map (0000)
 000969D0 0020:
@@ -33,31 +33,31 @@ symbols in this file:
 00096AE0 0050:
 	_sort_statistic_buffer_ranking (0000)
 00096B30 0010:
-	_code_00096b30 (0000)
+	_is_place_tied (0000)
 00096B40 0010:
-	_code_00096b40 (0000)
+	_place_get_position (0000)
 00096B50 0050:
-	_code_00096b50 (0000)
+	_get_place_string (0000)
 00096BA0 0070:
-	_code_00096ba0 (0000)
+	_drawline (0000)
 00096C10 0020:
-	_code_00096c10 (0000)
+	_get_selected_color (0000)
 00096C30 0050:
 	_get_postgame_hilite_colors (0000)
 00096C80 0060:
-	_code_00096c80 (0000)
+	_find_closest_player_callback (0000)
 00096CE0 0020:
 	_game_engine_post_rasterize_objects (0000)
 00096D00 0030:
-	_code_00096d00 (0000)
+	_can_delete_item (0000)
 00096D30 0100:
-	_code_00096d30 (0000)
+	_game_engine_update_purge (0000)
 00096E30 00a0:
-	_code_00096e30 (0000)
+	_update_weapon_inventory (0000)
 00096ED0 0150:
-	_code_00096ed0 (0000)
+	_game_engine_update_weapons (0000)
 00097020 00b0:
-	_code_00097020 (0000)
+	_item_collection_get_total (0000)
 000970D0 0050:
 	_game_engine_load_stage (0000)
 00097120 0030:
@@ -71,7 +71,7 @@ symbols in this file:
 00097200 0050:
 	_game_engine_player_damaged_player (0000)
 00097250 00a0:
-	_code_00097250 (0000)
+	_game_engine_player_is_odd_man_out (0000)
 000972F0 0040:
 	_game_engine_player_is_out_of_lives (0000)
 00097330 0100:
@@ -89,15 +89,15 @@ symbols in this file:
 00097530 0030:
 	_get_blink_alpha (0000)
 00097560 0010:
-	_code_00097560 (0000)
+	_game_engine_press_start_to_begin (0000)
 00097570 00f0:
-	_code_00097570 (0000)
+	_nearby_vehicle (0000)
 00097660 0100:
 	_game_engine_rasterize_message (0000)
 00097760 00e0:
 	_game_engine_picking_up (0000)
 00097840 0080:
-	_code_00097840 (0000)
+	_goal_matches_player (0000)
 000978C0 00a0:
 	_game_engine_player_get_custom_motion_sensor_positions (0000)
 00097960 0030:
@@ -119,7 +119,7 @@ symbols in this file:
 00097B30 00d0:
 	_game_engine_render_nav_points (0000)
 00097C00 0020:
-	_code_00097c00 (0000)
+	_game_engine_infinite_grenades_internal (0000)
 00097C20 0030:
 	_game_engine_infinite_grenades (0000)
 00097C50 0020:
@@ -157,9 +157,9 @@ symbols in this file:
 00098450 0020:
 	_game_engine_test_trait (0000)
 00098470 00a0:
-	_code_00098470 (0000)
+	_netgame_flag_verify_no_team_duplicates (0000)
 00098510 0070:
-	_code_00098510 (0000)
+	_netgame_flag_verify_team_range (0000)
 00098580 0070:
 	_game_engine_playlist_next (0000)
 000985F0 0090:
@@ -219,7 +219,7 @@ symbols in this file:
 000994D0 0020:
 	_game_engine_override_game_variant (0000)
 000994F0 01a0:
-	_code_000994f0 (0000)
+	_rasterize_in_game_score_draw_line (0000)
 00099690 0060:
 	_game_engine_hud_draw_messages (0000)
 000996F0 0080:
@@ -227,7 +227,7 @@ symbols in this file:
 00099770 0110:
 	_game_engine_weapon_fired (0000)
 00099880 0030:
-	_code_00099880 (0000)
+	_test_any_gamepad_button (0000)
 000998B0 00c0:
 	_ticks_to_unicode_time_string (0000)
 00099970 0060:
@@ -237,7 +237,7 @@ symbols in this file:
 00099B80 0010:
 	_game_engine_allow_pause (0000)
 00099B90 0270:
-	_code_00099b90 (0000)
+	_game_engine_predict_resources (0000)
 00099E00 0020:
 	_game_engine_draw_object_in_motion_sensor (0000)
 00099E20 0020:
@@ -255,41 +255,41 @@ symbols in this file:
 0009A0E0 0020:
 	_game_engine_should_end_game (0000)
 0009A100 0080:
-	_code_0009a100 (0000)
+	_adjust_score_for_ranking (0000)
 0009A180 0230:
 	_populate_statistic_buffer (0000)
 0009A3B0 0080:
-	_code_0009a3b0 (0000)
+	_game_engine_get_player_place (0000)
 0009A430 0060:
 	_postgame_statistic_get_rating (0000)
 0009A490 01f0:
-	_code_0009a490 (0000)
+	_select_players_to_display (0000)
 0009A680 01c0:
-	_code_0009a680 (0000)
+	_find_closest_player_index (0000)
 0009A840 0100:
-	_code_0009a840 (0000)
+	_internal_rasterize_target_name (0000)
 0009A940 0920:
-	_code_0009a940 (0000)
+	_internal_rasterize_score (0000)
 0009B260 0080:
-	_code_0009b260 (0000)
+	_random_item (0000)
 0009B2E0 0020:
-	_code_0009b2e0 (0000)
+	_game_engine_get_type (0000)
 0009B300 00a0:
 	_match_game_type (0000)
 0009B3A0 0150:
-	_code_0009b3a0 (0000)
+	_game_engine_update_item_spawn (0000)
 0009B4F0 0070:
-	_code_0009b4f0 (0000)
+	_game_engine_update_player_no_shield (0000)
 0009B560 0060:
 	_game_engine_update_player_always_invis (0000)
 0009B5C0 00e0:
 	_game_engine_update_non_deterministic (0000)
 0009B6A0 0040:
-	_code_0009b6a0 (0000)
+	_multiplayer_message_internal (0000)
 0009B6E0 0090:
-	_code_0009b6e0 (0000)
+	_multiplayer_message (0000)
 0009B770 0010:
-	_code_0009b770 (0000)
+	_game_show_score_one_player (0000)
 0009B780 0060:
 	_game_show_score_team (0000)
 0009B7E0 00d0:
@@ -303,19 +303,19 @@ symbols in this file:
 0009BA60 0040:
 	_find_netgame_flag (0000)
 0009BAA0 0130:
-	_code_0009baa0 (0000)
+	_handle_custom_starting_equipment (0000)
 0009BBD0 0150:
 	_game_engine_postspawn_player_update (0000)
 0009BD20 00d0:
 	_game_engine_get_damage_multiplier (0000)
 0009BDF0 03e0:
-	_code_0009bdf0 (0000)
+	_game_engine_update_teleporter (0000)
 0009C1D0 0170:
 	_game_engine_get_distance_rating_for_spawn (0000)
 0009C340 0120:
-	_code_0009c340 (0000)
+	_game_engine_get_friendly_bonus (0000)
 0009C460 00b0:
-	_code_0009c460 (0000)
+	_default_starting_location_rate_function (0000)
 0009C510 0060:
 	_game_engine_get_starting_location_rating (0000)
 0009C570 0220:
@@ -331,15 +331,15 @@ symbols in this file:
 0009CB30 0030:
 	_game_engine_did_player_win (0000)
 0009CB60 0080:
-	_code_0009cb60 (0000)
+	_game_engine_did_team_win (0000)
 0009CBE0 0040:
-	_code_0009cbe0 (0000)
+	_netgame_flag_verify_team_exists (0000)
 0009CC20 0060:
-	_code_0009cc20 (0000)
+	_netgame_verify_spawn_points (0000)
 0009CC80 0070:
-	_code_0009cc80 (0000)
+	_netgame_verify_equipment (0000)
 0009CCF0 0280:
-	_code_0009ccf0 (0000)
+	_game_engine_verify_current_map (0000)
 0009CF70 0010:
 	_game_engine_playlist_initialize (0000)
 0009CF80 0080:
@@ -347,7 +347,7 @@ symbols in this file:
 0009D000 0140:
 	_game_engine_player_added (0000)
 0009D140 0480:
-	_code_0009d140 (0000)
+	_game_engine_generate_title_string (0000)
 0009D5C0 09e0:
 	_game_engine_post_rasterize_post_game (0000)
 0009DFA0 02f0:
@@ -357,9 +357,9 @@ symbols in this file:
 0009E5D0 00a0:
 	_game_engine_nonplayer_post_rasterize (0000)
 0009E670 0350:
-	_code_0009e670 (0000)
+	_game_engine_rasterize_in_game_score (0000)
 0009E9C0 0140:
-	_code_0009e9c0 (0000)
+	_game_engine_post_rasterize_in_game (0000)
 0009EB00 0060:
 	_game_engine_post_rasterize (0000)
 0025B190 0008:

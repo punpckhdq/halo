@@ -9,7 +9,7 @@ symbols in this file:
 0008DD50 0030:
 	_particle_system_orphan (0000)
 0008DD80 00b0:
-	_code_0008dd80 (0000)
+	_particle_system_delete (0000)
 0008DE30 0010:
 	_particle_systems_dispose (0000)
 0008DE40 0010:
@@ -17,33 +17,33 @@ symbols in this file:
 0008DE50 0140:
 	_particle_systems_reconnect_to_structure_bsp (0000)
 0008DF90 00b0:
-	_code_0008df90 (0000)
+	_particle_system_next_type_state_index (0000)
 0008E040 0090:
-	_code_0008e040 (0000)
+	_particle_system_next_particle_state_index (0000)
 0008E0D0 0070:
-	_code_0008e0d0 (0000)
+	_particle_system_update_default (0000)
 0008E140 0040:
-	_code_0008e140 (0000)
+	_particle_system_new_particle_default (0000)
 0008E180 0190:
-	_code_0008e180 (0000)
+	_particle_system_update_particle_default (0000)
 0008E310 0030:
-	_code_0008e310 (0000)
+	_particle_system_update_explosion (0000)
 0008E340 0060:
 	_particle_systems_dispose_from_old_map (0000)
 0008E3A0 0350:
-	_code_0008e3a0 (0000)
+	_particle_system_new_particles (0000)
 0008E6F0 0100:
-	_code_0008e6f0 (0000)
+	_randomize_particle_variables (0000)
 0008E7F0 0680:
-	_code_0008e7f0 (0000)
+	_particle_system_update (0000)
 0008EE70 0550:
-	_code_0008ee70 (0000)
+	_particle_system_render (0000)
 0008F3C0 0110:
-	_code_0008f3c0 (0000)
+	_particle_system_new_particle_explosion (0000)
 0008F4D0 0170:
-	_code_0008f4d0 (0000)
+	_particle_system_new_particle_jet (0000)
 0008F640 0120:
-	_code_0008f640 (0000)
+	_particle_system_initialize (0000)
 0008F760 0080:
 	_particle_systems_update (0000)
 0008F7E0 00a0:

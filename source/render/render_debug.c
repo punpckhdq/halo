@@ -9,15 +9,15 @@ symbols in this file:
 001782E0 0090:
 	_render_debug_polygon (0000)
 00178370 00d0:
-	_code_00178370 (0000)
+	_render_debug_add_cache_string (0000)
 00178440 0070:
-	_code_00178440 (0000)
+	_build_circle_points (0000)
 001784B0 00a0:
-	_code_001784b0 (0000)
+	_build_height_matrix (0000)
 00178550 01c0:
-	_code_00178550 (0000)
+	_build_pill_points (0000)
 00178710 0290:
-	_code_00178710 (0000)
+	_render_debug_add_cache_entry (0000)
 001789A0 0120:
 	_render_debug_point (0000)
 00178AC0 00b0:
@@ -45,17 +45,17 @@ symbols in this file:
 00179500 0130:
 	_render_debug_string_at_point (0000)
 00179630 0220:
-	_code_00179630 (0000)
+	_render_debug_camera (0000)
 00179850 0110:
-	_code_00179850 (0000)
+	_render_debug_player (0000)
 00179960 0080:
-	_code_00179960 (0000)
+	_render_debug_structure (0000)
 001799E0 01e0:
-	_code_001799e0 (0000)
+	_render_debug_bsp (0000)
 00179BC0 0070:
-	_code_00179bc0 (0000)
+	_render_debug_input (0000)
 00179C30 01a0:
-	_code_00179c30 (0000)
+	_render_debug_structure_decals (0000)
 00179DD0 00d0:
 	_render_debug_point2d (0000)
 00179EA0 0120:

@@ -3,27 +3,27 @@ RASTERIZER_XBOX_SCREEN_EFFECT.C
 
 symbols in this file:
 0015F720 01b0:
-	_code_0015f720 (0000)
+	_D3DDevice_SetRenderState (0000)
 0015F8D0 0050:
-	_code_0015f8d0 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 0015F920 0090:
-	_code_0015f920 (0000)
+	___reciprocal_vector2d (0000)
 0015F9B0 0220:
-	_code_0015f9b0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 0015FBD0 0060:
-	_code_0015fbd0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 0015FC30 0010:
-	_code_0015fc30 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 0015FC40 0020:
-	_code_0015fc40 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 0015FC60 0010:
-	_code_0015fc60 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 0015FC70 0010:
-	_code_0015fc70 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 0015FC80 0010:
-	_code_0015fc80 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 0015FC90 0850:
-	_code_0015fc90 (0000)
+	_rasterizer_screen_effect_set_texture_transforms (0000)
 001604E0 0f30:
 	__rasterizer_screen_effect (0000)
 00161410 0540:

@@ -3,11 +3,11 @@ DECALS.C
 
 symbols in this file:
 00086FE0 0130:
-	_code_00086fe0 (0000)
+	_decal_check (0000)
 00087110 0080:
-	_code_00087110 (0000)
+	_decal_set_first_decal_index (0000)
 00087190 0180:
-	_code_00087190 (0000)
+	_decal_sprite_get_bounds (0000)
 00087310 00a0:
 	_decals_initialize (0000)
 000873B0 00b0:
@@ -45,11 +45,11 @@ symbols in this file:
 00087CB0 0070:
 	_bsp3d_get_plane_from_designator (0000)
 00087D20 0190:
-	_code_00087d20 (0000)
+	_decal_update (0000)
 00087EB0 0070:
-	_code_00087eb0 (0000)
+	_decal_reinsert (0000)
 00087F20 02c0:
-	_code_00087f20 (0000)
+	_decal_insert (0000)
 000881E0 01f0:
 	_decals_reconnect_to_structure_bsp (0000)
 000883D0 0220:
@@ -61,9 +61,9 @@ symbols in this file:
 000887D0 01a0:
 	_decal_delete (0000)
 00088970 02a0:
-	_code_00088970 (0000)
+	_decal_projection_create (0000)
 00088C10 06f0:
-	_code_00088c10 (0000)
+	_decal_clip_to_surface (0000)
 00089300 1820:
 	_decal_new_from_collision (0000)
 0008AB20 01a0:

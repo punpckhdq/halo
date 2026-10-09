@@ -3,63 +3,63 @@ GAME_ENGINE_KING.C
 
 symbols in this file:
 000A0030 0010:
-	_code_000a0030 (0000)
+	_king_engine_dispose (0000)
 000A0040 0020:
-	_code_000a0040 (0000)
+	_point3d_to_point2d (0000)
 000A0060 0350:
-	_code_000a0060 (0000)
+	_find_hill (0000)
 000A03B0 0010:
-	_code_000a03b0 (0000)
+	_king_engine_dispose_from_old_map (0000)
 000A03C0 0020:
-	_code_000a03c0 (0000)
+	_king_engine_player_added (0000)
 000A03E0 0010:
-	_code_000a03e0 (0000)
+	_king_engine_game_ending (0000)
 000A03F0 0020:
-	_code_000a03f0 (0000)
+	_king_engine_game_starting (0000)
 000A0410 0010:
-	_code_000a0410 (0000)
+	_king_engine_statistics_append (0000)
 000A0420 0010:
-	_code_000a0420 (0000)
+	_king_engine_handle_client_message (0000)
 000A0430 0010:
-	_code_000a0430 (0000)
+	_king_engine_handle_server_message (0000)
 000A0440 0010:
-	_code_000a0440 (0000)
+	_king_engine_pregame_post_rasterize (0000)
 000A0450 0090:
-	_code_000a0450 (0000)
+	_player_inside_hill (0000)
 000A04E0 0160:
-	_code_000a04e0 (0000)
+	_king_engine_player_update (0000)
 000A0640 01c0:
-	_code_000a0640 (0000)
+	_king_calculate_hill_state (0000)
 000A0800 0010:
-	_code_000a0800 (0000)
+	_king_engine_player_damaged_player (0000)
 000A0810 0010:
-	_code_000a0810 (0000)
+	_king_engine_player_killed_player (0000)
 000A0820 0190:
-	_code_000a0820 (0000)
+	_king_engine_display_score (0000)
 000A09B0 0010:
-	_code_000a09b0 (0000)
+	_king_engine_prespawn_player_update (0000)
 000A09C0 0040:
-	_code_000a09c0 (0000)
+	_king_get_score (0000)
 000A0A00 0090:
 	_render_dynamic_quad_initialize (0000)
 000A0A90 02b0:
 	_render_dynamic_quad (0000)
 000A0D40 0040:
-	_code_000a0d40 (0000)
+	_king_get_score_string (0000)
 000A0D80 0060:
-	_code_000a0d80 (0000)
+	_king_get_score_header_string (0000)
 000A0DE0 0030:
-	_code_000a0de0 (0000)
+	_king_get_team_score_string (0000)
 000A0E10 0020:
-	_code_000a0e10 (0000)
+	_king_engine_goal_matches_player (0000)
 000A0E30 0070:
-	_code_000a0e30 (0000)
+	_find_next_hill (0000)
 000A0EA0 0110:
-	_code_000a0ea0 (0000)
+	_king_engine_initialize_for_new_map (0000)
 000A0FB0 03a0:
-	_code_000a0fb0 (0000)
+	_king_engine_post_rasterize (0000)
 000A1350 0110:
-	_code_000a1350 (0000)
+	_king_engine_update (0000)
 0025BDC0 000d:
 	??_C@_0N@DGPCNCJC@NULL?5?$CB?$DN?5flag?$AA@ (0000)
 0025BDD0 0027:

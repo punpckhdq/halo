@@ -7,9 +7,9 @@ symbols in this file:
 00093C50 0030:
 	_compute_composite_attenuation (0000)
 00093C80 00f0:
-	_code_00093c80 (0000)
+	_unit_get_aim_assist_parameters (0000)
 00093D70 00a0:
-	_code_00093d70 (0000)
+	_compare_targets (0000)
 00093E10 0010:
 	_reciprocal_square_root (0000)
 00093E20 0060:
@@ -19,15 +19,15 @@ symbols in this file:
 00093EA0 00f0:
 	_aim_assist_clear_line_of_sight (0000)
 00093F90 01a0:
-	_code_00093f90 (0000)
+	_object_compute_autoaim_target (0000)
 00094130 01a0:
 	_aim_assist_compute_target (0000)
 000942D0 0110:
 	_autoaim_compute_target (0000)
 000943E0 0190:
-	_code_000943e0 (0000)
+	_find_aim_assist_targets_recursive (0000)
 00094570 0130:
-	_code_00094570 (0000)
+	_find_aim_assist_targets (0000)
 000946A0 0100:
 	_aim_assist (0000)
 000947A0 0340:

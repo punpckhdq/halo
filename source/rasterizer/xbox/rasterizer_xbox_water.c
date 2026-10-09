@@ -3,9 +3,9 @@ RASTERIZER_XBOX_WATER.C
 
 symbols in this file:
 001688F0 01b0:
-	_code_001688f0 (0000)
+	_D3DDevice_SetRenderState (0000)
 00168AA0 0050:
-	_code_00168aa0 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 00168AF0 0020:
 	_rasterizer_water_set_visibility_for_frame (0000)
 00168B10 0010:
@@ -13,19 +13,19 @@ symbols in this file:
 00168B20 0010:
 	_rasterizer_water_get_visibility_for_window (0000)
 00168B30 0220:
-	_code_00168b30 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 00168D50 0060:
-	_code_00168d50 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00168DB0 0010:
-	_code_00168db0 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00168DC0 0020:
-	_code_00168dc0 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 00168DE0 0010:
-	_code_00168de0 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 00168DF0 0010:
-	_code_00168df0 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 00168E00 0010:
-	_code_00168e00 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 00168E10 0820:
 	_rasterizer_water_build_bumpmap (0000)
 00169630 08c0:

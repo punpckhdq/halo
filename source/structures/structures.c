@@ -25,7 +25,7 @@ symbols in this file:
 00188050 01b0:
 	_sphere_intersects_cluster_portal (0000)
 00188200 0120:
-	_code_00188200 (0000)
+	_structure_clusters_in_sphere_recursive (0000)
 00188320 01e0:
 	_structure_clusters_in_cone (0000)
 00188500 0260:

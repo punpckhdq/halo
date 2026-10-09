@@ -3,7 +3,7 @@ STRUCTURE_LENS_FLARES.C
 
 symbols in this file:
 00183BB0 0020:
-	_code_00183bb0 (0000)
+	_compare_temp_markers (0000)
 00183BD0 0060:
 	_cluster_index_from_point (0000)
 00183C30 10f0:

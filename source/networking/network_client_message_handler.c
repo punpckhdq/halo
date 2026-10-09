@@ -3,37 +3,37 @@ NETWORK_CLIENT_MESSAGE_HANDLER.C
 
 symbols in this file:
 00116AB0 00b0:
-	_code_00116ab0 (0000)
+	_network_game_client_handle_message_server_game_advertise (0000)
 00116B60 0090:
-	_code_00116b60 (0000)
+	_network_game_client_handle_message_server_pong (0000)
 00116BF0 00a0:
-	_code_00116bf0 (0000)
+	_network_game_client_handle_message_server_machine_accepted (0000)
 00116C90 00a0:
-	_code_00116c90 (0000)
+	_network_game_client_handle_message_server_machine_rejected (0000)
 00116D30 0130:
-	_code_00116d30 (0000)
+	_network_game_client_handle_message_server_game_settings_update (0000)
 00116E60 0100:
-	_code_00116e60 (0000)
+	_network_game_client_handle_message_server_pregame_countdown (0000)
 00116F60 00e0:
-	_code_00116f60 (0000)
+	_network_game_client_handle_message_server_pregame_keep_alive (0000)
 00117040 00e0:
-	_code_00117040 (0000)
+	_network_game_client_handle_message_server_postgame_keep_alive (0000)
 00117120 00d0:
-	_code_00117120 (0000)
+	_network_game_client_handle_message_server_begin_game (0000)
 001171F0 00b0:
-	_code_001171f0 (0000)
+	_network_game_client_handle_message_server_graceful_game_exit_pregame (0000)
 001172A0 00c0:
-	_code_001172a0 (0000)
+	_network_game_client_handle_message_server_game_update (0000)
 00117360 00c0:
-	_code_00117360 (0000)
+	_network_game_client_handle_message_server_add_player_ingame (0000)
 00117420 00c0:
-	_code_00117420 (0000)
+	_network_game_client_handle_message_server_remove_player_ingame (0000)
 001174E0 00a0:
-	_code_001174e0 (0000)
+	_network_game_client_handle_message_server_game_over (0000)
 00117580 00c0:
-	_code_00117580 (0000)
+	_network_game_client_handle_message_server_switch_to_pregame (0000)
 00117640 00b0:
-	_code_00117640 (0000)
+	_network_game_client_handle_message_server_graceful_game_exit_postgame (0000)
 001176F0 0440:
 	_network_game_client_handle_message (0000)
 00281928 0045:

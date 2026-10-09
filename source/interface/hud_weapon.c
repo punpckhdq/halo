@@ -13,23 +13,23 @@ symbols in this file:
 000C7F10 0030:
 	_scripted_hud_show_crosshair (0000)
 000C7F40 0070:
-	_code_000c7f40 (0000)
+	_get_hud_state (0000)
 000C7FB0 0070:
-	_code_000c7fb0 (0000)
+	_get_crosshair_state (0000)
 000C8020 0050:
-	_code_000c8020 (0000)
+	_play_weapon_hud_sounds (0000)
 000C8070 02e0:
-	_code_000c8070 (0000)
+	_render_grenade_hud (0000)
 000C8350 0020:
 	_strip_path_name (0000)
 000C8370 08d0:
-	_code_000c8370 (0000)
+	_crosshairs_draw (0000)
 000C8C40 00a0:
 	_hud_fix_weapon_data (0000)
 000C8CE0 05c0:
-	_code_000c8ce0 (0000)
+	_hud_update_weapon_local_player (0000)
 000C92A0 0a60:
-	_code_000c92a0 (0000)
+	_render_weapon_hud (0000)
 000C9D00 0270:
 	_hud_update_weapon (0000)
 000C9F70 01f0:

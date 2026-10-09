@@ -35,13 +35,13 @@ symbols in this file:
 0000B0A0 00a0:
 	_actor_action_deny_transition (0000)
 0000B140 0040:
-	_code_0000b140 (0000)
+	_actor_action_allowed_to_enter_vehicle (0000)
 0000B180 0150:
 	_actor_action_handle_vehicle_exit (0000)
 0000B2D0 00e0:
 	_actor_action_allow_cover_seeking (0000)
 0000B3B0 0170:
-	_code_0000b3b0 (0000)
+	_actor_action_determine_pursuit_options (0000)
 0000B520 0090:
 	_actor_action_can_stop_guarding (0000)
 0000B5B0 0090:
@@ -59,7 +59,7 @@ symbols in this file:
 0000BB00 0040:
 	_actor_get_pursuit_location (0000)
 0000BB40 0090:
-	_code_0000bb40 (0000)
+	_actor_pursuit_consider_nearby_actor (0000)
 0000BBD0 0030:
 	_actor_action_name (0000)
 0000BC00 0030:
@@ -91,7 +91,7 @@ symbols in this file:
 0000C5B0 03c0:
 	_actor_action_handle_vehicle_entry (0000)
 0000C970 03a0:
-	_code_0000c970 (0000)
+	_actor_action_find_escape_from_danger (0000)
 0000CD10 01a0:
 	_actor_action_handle_active_cover_seeking (0000)
 0000CEB0 06f0:

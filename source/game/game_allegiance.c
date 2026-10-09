@@ -23,7 +23,7 @@ symbols in this file:
 000962A0 0060:
 	_game_allegiance_notify_change (0000)
 00096300 01a0:
-	_code_00096300 (0000)
+	_game_allegiance_broken (0000)
 000964A0 0080:
 	_game_allegiance_update (0000)
 00096520 00e0:

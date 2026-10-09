@@ -3,17 +3,17 @@ MOTION_SENSOR.C
 
 symbols in this file:
 000CA160 00b0:
-	_code_000ca160 (0000)
+	_tiny_point2d_set (0000)
 000CA210 0050:
-	_code_000ca210 (0000)
+	_tiny_point2d_get (0000)
 000CA260 0160:
-	_code_000ca260 (0000)
+	_blip_type_get (0000)
 000CA3C0 0060:
-	_code_000ca3c0 (0000)
+	_motion_sensor_blip_set_type_and_size (0000)
 000CA420 0010:
-	_code_000ca420 (0000)
+	_blip_size_get (0000)
 000CA430 0040:
-	_code_000ca430 (0000)
+	_get_motion_sensor_data (0000)
 000CA470 0050:
 	_motion_sensor_initialize (0000)
 000CA4C0 0010:
@@ -23,19 +23,19 @@ symbols in this file:
 000CA530 0010:
 	_motion_sensor_dispose_from_old_map (0000)
 000CA540 0020:
-	_code_000ca540 (0000)
+	_should_track_object (0000)
 000CA560 0070:
-	_code_000ca560 (0000)
+	_blip_begin (0000)
 000CA5D0 00e0:
-	_code_000ca5d0 (0000)
+	_should_draw_object (0000)
 000CA6B0 0190:
-	_code_000ca6b0 (0000)
+	_render_blip (0000)
 000CA840 0490:
-	_code_000ca840 (0000)
+	_motion_sensor_update (0000)
 000CACD0 0360:
-	_code_000cacd0 (0000)
+	_update_motion_sensor (0000)
 000CB030 0300:
-	_code_000cb030 (0000)
+	_render_motion_sensor (0000)
 000CB330 0050:
 	_motion_sensor_draw_screen (0000)
 000CB380 0070:

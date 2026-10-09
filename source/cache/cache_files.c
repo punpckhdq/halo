@@ -41,7 +41,7 @@ symbols in this file:
 001A9560 0070:
 	_tag_iterator_next (0000)
 001A95D0 00f0:
-	_code_001a95d0 (0000)
+	_cache_file_tag_instance_get (0000)
 001A96C0 0100:
 	_cache_file_header_verify (0000)
 001A97C0 0090:

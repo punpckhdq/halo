@@ -123,7 +123,7 @@ void collision_log_enable(
 	return;
 }
 
-static void collision_log_store_period(
+static void collision_log_set_period(
 	short time_period,
 	boolean unused)
 {
@@ -139,7 +139,7 @@ static void collision_log_store_period(
 void collision_log_begin_period(
 	short time_period)
 {
-	collision_log_store_period(time_period, TRUE);
+	collision_log_set_period(time_period, TRUE);
 
 	return;
 }
@@ -147,7 +147,7 @@ void collision_log_begin_period(
 void collision_log_continue_period(
 	short time_period)
 {
-	collision_log_store_period(time_period, FALSE);
+	collision_log_set_period(time_period, FALSE);
 
 	return;
 }
@@ -184,7 +184,7 @@ static void collision_log_format_usage(
 	return;
 }
 
-static int __cdecl collision_log_compare_usage(
+static int __cdecl collision_log_compare_users(
 	const void *a,
 	const void *b)
 {
@@ -245,7 +245,7 @@ void collision_log_render(
 							}
 						}
 					}
-					qsort(overall_usage, NUMBER_OF_COLLISION_USER_TYPES, sizeof(overall_usage[0]), collision_log_compare_usage);
+					qsort(overall_usage, NUMBER_OF_COLLISION_USER_TYPES, sizeof(overall_usage[0]), collision_log_compare_users);
 					sprintf(linebuf, "%s:", global_collision_function_names[function_index]);
 					if (collision_log_totals_only)
 					{

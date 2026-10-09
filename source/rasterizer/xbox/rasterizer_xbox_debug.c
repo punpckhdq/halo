@@ -3,27 +3,27 @@ RASTERIZER_XBOX_DEBUG.C
 
 symbols in this file:
 00149930 01b0:
-	_code_00149930 (0000)
+	_D3DDevice_SetRenderState (0000)
 00149AE0 0010:
 	_rasterizer_debug_drawing_end (0000)
 00149AF0 0220:
-	_code_00149af0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 00149D10 0010:
 	__rasterizer_debug_immediate_end (0000)
 00149D20 0010:
-	_code_00149d20 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00149D30 0010:
 	__rasterizer_debug_immediate_end_screenspace (0000)
 00149D40 0030:
-	_code_00149d40 (0000)
+	_IDirect3DDevice8_SetVertexData4f@24 (0000)
 00149D70 0010:
-	_code_00149d70 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 00149D80 0010:
-	_code_00149d80 (0000)
+	_IDirect3DDevice8_SetVertexDataColor@12 (0000)
 00149D90 0010:
-	_code_00149d90 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 00149DA0 0010:
-	_code_00149da0 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 00149DB0 01a0:
 	_rasterizer_debug_drawing_begin (0000)
 00149F50 00f0:

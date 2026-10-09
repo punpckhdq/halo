@@ -13,21 +13,21 @@ symbols in this file:
 001228F0 0050:
 	_glow_delete (0000)
 00122940 0080:
-	_code_00122940 (0000)
+	_glow_trailing_particle_update_color (0000)
 001229C0 0060:
-	_code_001229c0 (0000)
+	_glow_trailing_particle_update_size (0000)
 00122A20 0090:
-	_code_00122a20 (0000)
+	_glow_trailing_particle_update_velocity (0000)
 00122AB0 0040:
-	_code_00122ab0 (0000)
+	_glow_trailing_particle_update_position (0000)
 00122AF0 0060:
-	_code_00122af0 (0000)
+	_glow_trailing_particle_age (0000)
 00122B50 01a0:
-	_code_00122b50 (0000)
+	_glow_normal_particle_update_color (0000)
 00122CF0 0010:
-	_code_00122cf0 (0000)
+	_glow_normal_particle_update_size (0000)
 00122D00 0040:
-	_code_00122d00 (0000)
+	_glow_particle_new (0000)
 00122D40 0030:
 	_point_from_parametric_line (0000)
 00122D70 00c0:
@@ -39,17 +39,17 @@ symbols in this file:
 00122FA0 0070:
 	_glow_initialize (0000)
 00123010 01e0:
-	_code_00123010 (0000)
+	_glow_normal_particle_new (0000)
 001231F0 06d0:
-	_code_001231f0 (0000)
+	_get_particle_world_position (0000)
 001238C0 0230:
-	_code_001238c0 (0000)
+	_glow_normal_particle_update_position (0000)
 00123AF0 00b0:
-	_code_00123af0 (0000)
+	_glow_particles_initialize (0000)
 00123BA0 0260:
-	_code_00123ba0 (0000)
+	_glow_trailing_particle_new (0000)
 00123E00 0530:
-	_code_00123e00 (0000)
+	_glow_update (0000)
 00124330 0070:
 	_glow_submit (0000)
 00289014 0012:

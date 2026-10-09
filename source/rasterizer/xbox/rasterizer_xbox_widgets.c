@@ -3,35 +3,35 @@ RASTERIZER_XBOX_WIDGETS.C
 
 symbols in this file:
 00169EF0 01b0:
-	_code_00169ef0 (0000)
+	_D3DDevice_SetRenderState (0000)
 0016A0A0 0050:
-	_code_0016a0a0 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 0016A0F0 01c0:
-	_code_0016a0f0 (0000)
+	_rasterizer_widget_project_billboard (0000)
 0016A2B0 0220:
-	_code_0016a2b0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 0016A4D0 0060:
-	_code_0016a4d0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 0016A530 0010:
-	_code_0016a530 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 0016A540 0010:
-	_code_0016a540 (0000)
+	_IDirect3DDevice8_BeginVisibilityTest@4 (0000)
 0016A550 0010:
-	_code_0016a550 (0000)
+	_IDirect3DDevice8_EndVisibilityTest@8 (0000)
 0016A560 0010:
-	_code_0016a560 (0000)
+	_IDirect3DDevice8_GetVisibilityTestResult@16 (0000)
 0016A570 0020:
-	_code_0016a570 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 0016A590 0030:
-	_code_0016a590 (0000)
+	_IDirect3DDevice8_SetVertexData4f@24 (0000)
 0016A5C0 0010:
-	_code_0016a5c0 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 0016A5D0 0010:
-	_code_0016a5d0 (0000)
+	_IDirect3DDevice8_SetVertexDataColor@12 (0000)
 0016A5E0 0010:
-	_code_0016a5e0 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 0016A5F0 0010:
-	_code_0016a5f0 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 0016A600 0010:
 	__rasterizer_widget_end (0000)
 0016A610 00d0:

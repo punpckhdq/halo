@@ -3,15 +3,15 @@ LRU_CACHE.C
 
 symbols in this file:
 0010C7F0 0010:
-	_code_0010c7f0 (0000)
+	_lru_default_new_block_proc (0000)
 0010C800 0010:
-	_code_0010c800 (0000)
+	_lru_default_purge_block_proc (0000)
 0010C810 0020:
-	_code_0010c810 (0000)
+	_get_lru_cache_block_offset (0000)
 0010C830 0080:
-	_code_0010c830 (0000)
+	_verify_lru_cache_block (0000)
 0010C8B0 0080:
-	_code_0010c8b0 (0000)
+	_verify_lru_cache (0000)
 0010C930 0140:
 	_lru_new (0000)
 0010CA70 0050:

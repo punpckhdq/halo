@@ -3,7 +3,7 @@ ACTOR_COMBAT.C
 
 symbols in this file:
 0000F590 0090:
-	_code_0000f590 (0000)
+	_actor_combat_enable_special_fire_situation (0000)
 0000F620 0030:
 	_actor_combat_fire_wildly (0000)
 0000F650 0040:
@@ -15,13 +15,13 @@ symbols in this file:
 0000F700 0040:
 	_actor_get_weapon_definition (0000)
 0000F740 00c0:
-	_code_0000f740 (0000)
+	_actor_get_weapon_vector (0000)
 0000F800 0080:
 	_actor_combat_get_firing_variant_definition (0000)
 0000F880 00a0:
-	_code_0000f880 (0000)
+	_actor_combat_get_firing_parameters (0000)
 0000F920 0040:
-	_code_0000f920 (0000)
+	_actor_get_grenade_definition (0000)
 0000F960 0020:
 	_fast_ftol (0000)
 0000F980 0010:
@@ -39,15 +39,15 @@ symbols in this file:
 0000FA20 0020:
 	_valid_real (0000)
 0000FA40 0160:
-	_code_0000fa40 (0000)
+	_actor_combat_find_nearby_target (0000)
 0000FBA0 00b0:
-	_code_0000fba0 (0000)
+	_actor_start_pause (0000)
 0000FC50 00d0:
-	_code_0000fc50 (0000)
+	_actor_start_first_burst_delay (0000)
 0000FD20 01c0:
-	_code_0000fd20 (0000)
+	_actor_combat_reaim_grenade (0000)
 0000FEE0 0110:
-	_code_0000fee0 (0000)
+	_actor_combat_build_grenade_trajectory (0000)
 0000FFF0 0100:
 	_actor_combat_find_grenade_target (0000)
 000100F0 0370:
@@ -59,13 +59,13 @@ symbols in this file:
 000105C0 0060:
 	_valid_real_normal3d (0000)
 00010620 00b0:
-	_code_00010620 (0000)
+	_actor_combat_allow_special_fire_situation (0000)
 000106D0 02d0:
 	_actor_aim_projectile (0000)
 000109A0 07b0:
-	_code_000109a0 (0000)
+	_actor_start_burst (0000)
 00011150 0060:
-	_code_00011150 (0000)
+	_actor_combat_retarget_grenade (0000)
 000111B0 0220:
 	_actor_aim_grenade (0000)
 000113D0 1240:

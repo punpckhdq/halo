@@ -3,9 +3,9 @@ RASTERIZER_XBOX_DYNAVOBGEOM.C
 
 symbols in this file:
 0014E840 01b0:
-	_code_0014e840 (0000)
+	_D3DDevice_SetRenderState (0000)
 0014E9F0 0050:
-	_code_0014e9f0 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 0014EA40 0010:
 	__rasterizer_hud_begin (0000)
 0014EA50 0010:
@@ -15,25 +15,25 @@ symbols in this file:
 0014EA70 0100:
 	__rasterizer_dynamic_screen_geometry_add_multitexture_params_to_base (0000)
 0014EB70 0220:
-	_code_0014eb70 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 0014ED90 0030:
 	__rasterizer_dynamic_screen_geometry_draw (0000)
 0014EDC0 0060:
-	_code_0014edc0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 0014EE20 0010:
-	_code_0014ee20 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 0014EE30 0020:
-	_code_0014ee30 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 0014EE50 0010:
-	_code_0014ee50 (0000)
+	_IDirect3DDevice8_SetVertexDataColor@12 (0000)
 0014EE60 0010:
-	_code_0014ee60 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 0014EE70 0010:
-	_code_0014ee70 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 0014EE80 0270:
 	__rasterizer_dynamic_unlit_geometry_draw (0000)
 0014F0F0 0040:
-	_code_0014f0f0 (0000)
+	_submit_screen_vertex (0000)
 0014F130 0b90:
 	__rasterizer_psuedo_dynamic_screen_quad_draw (0000)
 0028FBDC 0010:

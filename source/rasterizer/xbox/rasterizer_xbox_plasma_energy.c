@@ -3,15 +3,15 @@ RASTERIZER_XBOX_PLASMA_ENERGY.C
 
 symbols in this file:
 0015E2B0 01b0:
-	_code_0015e2b0 (0000)
+	_D3DDevice_SetRenderState (0000)
 0015E460 0050:
-	_code_0015e460 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 0015E4B0 0220:
-	_code_0015e4b0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 0015E6D0 0060:
-	_code_0015e6d0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 0015E730 0010:
-	_code_0015e730 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 0015E740 0590:
 	_rasterizer_plasma_energy_draw (0000)
 00291F10 0004:

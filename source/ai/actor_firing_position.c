@@ -3,31 +3,31 @@ ACTOR_FIRING_POSITION.C
 
 symbols in this file:
 00012610 0050:
-	_code_00012610 (0000)
+	_firing_position_store_evaluation_debug (0000)
 00012660 0010:
-	_code_00012660 (0000)
+	_firing_position_reject_debug (0000)
 00012670 00d0:
-	_code_00012670 (0000)
+	_pre_evaluator_guard (0000)
 00012740 0240:
-	_code_00012740 (0000)
+	_pre_evaluator_combatmove (0000)
 00012980 00e0:
-	_code_00012980 (0000)
+	_post_evaluator_global (0000)
 00012A60 0180:
-	_code_00012a60 (0000)
+	_post_evaluator_pursuit (0000)
 00012BE0 00e0:
-	_code_00012be0 (0000)
+	_post_evaluator_hide (0000)
 00012CC0 00c0:
-	_code_00012cc0 (0000)
+	_post_evaluator_uncover (0000)
 00012D80 00e0:
-	_code_00012d80 (0000)
+	_post_evaluator_attack (0000)
 00012E60 0040:
-	_code_00012e60 (0000)
+	_firing_position_pre_evaluate (0000)
 00012EA0 0070:
-	_code_00012ea0 (0000)
+	_firing_position_post_evaluate (0000)
 00012F10 0050:
-	_code_00012f10 (0000)
+	_firing_positions_get_post_evaluation_bound (0000)
 00012F60 0110:
-	_code_00012f60 (0000)
+	_firing_position_compare (0000)
 00013070 0120:
 	_actor_get_firing_position_group (0000)
 00013190 0060:
@@ -37,15 +37,15 @@ symbols in this file:
 000132B0 0050:
 	_actor_firing_position_discarded (0000)
 00013300 0650:
-	_code_00013300 (0000)
+	_pre_evaluator_global (0000)
 00013950 01d0:
-	_code_00013950 (0000)
+	_pre_evaluator_pursuit (0000)
 00013B20 0290:
-	_code_00013b20 (0000)
+	_pre_evaluator_panic (0000)
 00013DB0 01d0:
-	_code_00013db0 (0000)
+	_firing_position_compute_line_of_sight (0000)
 00013F80 0090:
-	_code_00013f80 (0000)
+	_firing_position_forced_evaluation (0000)
 00014010 0210:
 	_actor_nearby_firing_positions (0000)
 00014220 1480:
@@ -55,7 +55,7 @@ symbols in this file:
 000158E0 0140:
 	_actor_change_firing_position (0000)
 00015A20 0460:
-	_code_00015a20 (0000)
+	_pre_evaluator_attack (0000)
 00244794 0068:
 	_global_pre_evaluator_table (0000)
 	_global_post_evaluator_table (0038)

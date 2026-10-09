@@ -7,41 +7,41 @@ symbols in this file:
 00185E40 00c0:
 	_structure_visibility_find_camera (0000)
 00185F00 01a0:
-	_code_00185f00 (0000)
+	_structure_visibility_traverse_subclusters (0000)
 001860A0 0210:
-	_code_001860a0 (0000)
+	_structure_visibility_traverse_surface_lists (0000)
 001862B0 00b0:
-	_code_001862b0 (0000)
+	_bounding_rectangles_intersect (0000)
 00186360 0180:
-	_code_00186360 (0000)
+	_planes_intersect_rectangle (0000)
 001864E0 00d0:
 	_structure_visibility_find_objects (0000)
 001865B0 00b0:
-	_code_001865b0 (0000)
+	_grow_clipping_rectangle_by_portal_hull (0000)
 00186660 00a0:
-	_code_00186660 (0000)
+	_render_debug_hull (0000)
 00186700 0120:
 	_dequantize_byte_to_real_rectangle3d (0000)
 00186820 0160:
-	_code_00186820 (0000)
+	_structure_visibility_build_surfaces_traverse_clusters (0000)
 00186980 01e0:
-	_code_00186980 (0000)
+	_structure_visibility_build_surfaces_traverse_leaf (0000)
 00186B60 01e0:
-	_code_00186b60 (0000)
+	_portal_hull_from_points (0000)
 00186D40 0080:
-	_code_00186d40 (0000)
+	_portal_hull_from_portal (0000)
 00186DC0 0070:
-	_code_00186dc0 (0000)
+	_points_within_distance (0000)
 00186E30 02c0:
 	_structure_visibility_find_mirror (0000)
 001870F0 0260:
-	_code_001870f0 (0000)
+	_structure_visibility_build_surfaces_traverse_node (0000)
 00187350 0390:
-	_code_00187350 (0000)
+	_structure_visibility_traverse_cluster (0000)
 001876E0 01e0:
 	_structure_visibility_build_surfaces (0000)
 001878C0 0110:
-	_code_001878c0 (0000)
+	_structure_visibility_find_clusters (0000)
 001879D0 0240:
 	_structure_visibility_compute (0000)
 002A1AF4 0010:

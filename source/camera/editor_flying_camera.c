@@ -24,9 +24,9 @@ EDITOR_FLYING_CAMERA.C
 
 /* ---------- prototypes */
 
-static void translate_flying_to_orbiting(
-	struct flying_camera *camera);
 static void translate_orbiting_to_flying(
+	struct flying_camera *camera);
+static void translate_flying_to_orbiting(
 	struct flying_camera *camera);
 static void editor_camera_flying_update(
 	struct flying_camera *camera,
@@ -50,7 +50,7 @@ static void (*update_funcs[NUMBER_OF_EDITOR_CAMERA_MODES])(struct flying_camera 
 static void (*translate_funcs[NUMBER_OF_EDITOR_CAMERA_MODES][NUMBER_OF_CAMERA_TRANSLATIONS])(struct flying_camera *) =
 {
 	{ NULL, NULL },
-	{ translate_orbiting_to_flying, translate_flying_to_orbiting },
+	{ translate_flying_to_orbiting, translate_orbiting_to_flying },
 };
 
 static boolean is_scripted = FALSE;
@@ -237,7 +237,7 @@ static real const orbiting_camera_minimum_distance = 1.f;
 static real const orbiting_camera_latency = 0.5f;
 static real const orbiting_camera_z_offset = 0.52f;
 
-static void translate_flying_to_orbiting(
+static void translate_orbiting_to_flying(
 	struct flying_camera *camera)
 {
 	static real const default_distance = 1.f;
@@ -435,7 +435,7 @@ void editor_camera_set_scripted(
 	return;
 }
 
-static void translate_orbiting_to_flying(
+static void translate_flying_to_orbiting(
 	struct flying_camera *camera)
 {
 	persisted_cameras[_editor_camera_orbiting].camera_data = *camera;

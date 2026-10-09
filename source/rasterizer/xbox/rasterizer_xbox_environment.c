@@ -3,17 +3,17 @@ RASTERIZER_XBOX_ENVIRONMENT.C
 
 symbols in this file:
 0014FCC0 01b0:
-	_code_0014fcc0 (0000)
+	_D3DDevice_SetRenderState (0000)
 0014FE70 0050:
-	_code_0014fe70 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 0014FEC0 0220:
-	_code_0014fec0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 001500E0 0010:
-	_code_001500e0 (0000)
+	_IDirect3DDevice8_SetTexture@12 (0000)
 001500F0 0060:
-	_code_001500f0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00150150 0010:
-	_code_00150150 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00150160 0010:
 	__rasterizer_environment_lightmap_end (0000)
 00150170 0010:
@@ -69,7 +69,7 @@ symbols in this file:
 001527E0 0240:
 	__rasterizer_environment_specular_lights_begin (0000)
 00152A20 03c0:
-	_code_00152a20 (0000)
+	_rasterizer_environment_specular_spot_light_begin (0000)
 00152DE0 0380:
 	__rasterizer_environment_specular_light_begin (0000)
 00153160 0330:

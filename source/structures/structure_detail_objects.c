@@ -3,9 +3,9 @@ STRUCTURE_DETAIL_OBJECTS.C
 
 symbols in this file:
 00183160 0020:
-	_code_00183160 (0000)
+	_calculate_world_from_cell_index_and_offset (0000)
 00183180 0040:
-	_code_00183180 (0000)
+	_get_local_player_datum (0000)
 001831C0 0050:
 	_structure_detail_objects_initialize (0000)
 00183210 0010:
@@ -17,13 +17,13 @@ symbols in this file:
 00183240 0030:
 	_detail_object_offset (0000)
 00183270 0030:
-	_code_00183270 (0000)
+	_key_compare_cells_lower_bound (0000)
 001832A0 0030:
-	_code_001832a0 (0000)
+	_key_compare_cells_upper_bound (0000)
 001832D0 0080:
-	_code_001832d0 (0000)
+	_get_lower_bound_cell (0000)
 00183350 0080:
-	_code_00183350 (0000)
+	_get_upper_bound_cell (0000)
 001833D0 0030:
 	_dot_product4d (0000)
 00183400 0050:

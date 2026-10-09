@@ -5,9 +5,9 @@ symbols in this file:
 000E4A40 0050:
 	_ui_widget_search_and_replace_invoke (0000)
 000E4A90 0010:
-	_code_000e4a90 (0000)
+	_widget_replace_function_null (0000)
 000E4AA0 00b0:
-	_code_000e4aa0 (0000)
+	_widget_controller (0000)
 00278C60 0014:
 	??_C@_1BE@PJJJEMAC@?$AA?$DM?$AAi?$AAn?$AAv?$AAa?$AAl?$AAi?$AAd?$AA?$DO?$AA?$AA@ (0000)
 00278C78 0047:

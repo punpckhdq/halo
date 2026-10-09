@@ -3,7 +3,7 @@ HUD.C
 
 symbols in this file:
 000BF660 0030:
-	_code_000bf660 (0000)
+	_weapon_state_is_depleted (0000)
 000BF690 0050:
 	_hud_initialize (0000)
 000BF6E0 0020:
@@ -19,9 +19,9 @@ symbols in this file:
 000BF7E0 0060:
 	_hud_update (0000)
 000BF840 0030:
-	_code_000bf840 (0000)
+	_get_object_icon_text_index (0000)
 000BF870 06d0:
-	_code_000bf870 (0000)
+	_hud_show_action_response (0000)
 000BFF40 0050:
 	_hud_get_item_string (0000)
 000BFF90 0020:
@@ -33,17 +33,17 @@ symbols in this file:
 000C0000 0020:
 	_hud_picked_up_powerup (0000)
 000C0020 00d0:
-	_code_000c0020 (0000)
+	_temporary_hud_draw_reticle (0000)
 000C00F0 0060:
 	_hud_load (0000)
 000C0150 00e0:
 	_hud_autosave (0000)
 000C0230 0160:
-	_code_000c0230 (0000)
+	_hud_draw_friendly_indicator (0000)
 000C0390 00a0:
-	_code_000c0390 (0000)
+	_hud_draw_players (0000)
 000C0430 0370:
-	_code_000c0430 (0000)
+	_temporary_hud_draw (0000)
 000C07A0 0140:
 	_hud_draw_screen (0000)
 0026FC1C 0015:

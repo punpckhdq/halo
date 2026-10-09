@@ -19,7 +19,7 @@ symbols in this file:
 0008FC00 00d0:
 	_particles_reconnect_to_structure_bsp (0000)
 0008FCD0 0010:
-	_code_0008fcd0 (0000)
+	_new_particle_is_visible (0000)
 0008FCE0 0040:
 	_particle_get_radius (0000)
 0008FD20 0060:
@@ -27,17 +27,17 @@ symbols in this file:
 0008FD80 0060:
 	_valid_real_argb_color (0000)
 0008FDE0 0150:
-	_code_0008fde0 (0000)
+	_particle_effect_new (0000)
 0008FF30 0050:
-	_code_0008ff30 (0000)
+	_particle_die (0000)
 0008FF80 0180:
-	_code_0008ff80 (0000)
+	_particle_next_sequence (0000)
 00090100 00d0:
-	_code_00090100 (0000)
+	_particle_next_frame (0000)
 000901D0 00d0:
-	_code_000901d0 (0000)
+	_particle_update_frame_time (0000)
 000902A0 03a0:
-	_code_000902a0 (0000)
+	_particle_update_physics (0000)
 00090640 05a0:
 	_particle_new (0000)
 00090BE0 0120:

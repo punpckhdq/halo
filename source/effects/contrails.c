@@ -17,9 +17,9 @@ symbols in this file:
 00085FF0 00d0:
 	_contrails_reconnect_to_structure_bsp (0000)
 000860C0 0090:
-	_code_000860c0 (0000)
+	_contrail_compute_new_point_count (0000)
 00086150 01a0:
-	_code_00086150 (0000)
+	_contrail_verify (0000)
 000862F0 0020:
 	_local_random_range (0000)
 00086310 0030:
@@ -29,11 +29,11 @@ symbols in this file:
 000863B0 0070:
 	_contrails_initialize (0000)
 00086420 0090:
-	_code_00086420 (0000)
+	_contrail_next_frame (0000)
 000864B0 03c0:
-	_code_000864b0 (0000)
+	_contrail_add_points (0000)
 00086870 0380:
-	_code_00086870 (0000)
+	_contrail_update_points (0000)
 00086BF0 0150:
 	_contrail_new (0000)
 00086D40 0080:

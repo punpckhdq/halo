@@ -3,7 +3,7 @@ CACHE_FILES_DECOMPRESS_WINDOWS.C
 
 symbols in this file:
 001A9C10 0020:
-	_code_001a9c10 (0000)
+	_copy_should_stop (0000)
 001A9C30 0040:
 	_cache_copy_buffer_size (0000)
 001A9C70 0040:
@@ -15,49 +15,49 @@ symbols in this file:
 001A9FB0 0030:
 	_cache_copy_queue_end (0000)
 001A9FE0 0030:
-	_code_001a9fe0 (0000)
+	_cache_copy_initialize_zlib (0000)
 001AA010 0030:
-	_code_001aa010 (0000)
+	_cache_copy_dispose_zlib (0000)
 001AA040 0060:
-	_code_001aa040 (0000)
+	_cache_copy_compressed_alloc (0000)
 001AA0A0 0050:
-	_code_001aa0a0 (0000)
+	_cache_copy_compressed_free (0000)
 001AA0F0 00b0:
-	_code_001aa0f0 (0000)
+	_cache_copy_initialize_and_fill_with_garbage (0000)
 001AA1A0 00f0:
-	_code_001aa1a0 (0000)
+	_cache_copy_initialize_read_data (0000)
 001AA290 0080:
-	_code_001aa290 (0000)
+	_wait_for_raw_read (0000)
 001AA310 00a0:
-	_code_001aa310 (0000)
+	_wait_for_raw_write (0000)
 001AA3B0 0070:
 	_acquire_read_request (0000)
 001AA420 0010:
-	_code_001aa420 (0000)
+	_get_read_request_size (0000)
 001AA430 0050:
-	_code_001aa430 (0000)
+	_get_read_request_buffer (0000)
 001AA480 0050:
-	_code_001aa480 (0000)
+	_get_write_buffer (0000)
 001AA4D0 0040:
-	_code_001aa4d0 (0000)
+	_get_write_buffer_size (0000)
 001AA510 0030:
-	_code_001aa510 (0000)
+	_any_bit_vector_flag_set (0000)
 001AA540 00a0:
-	_code_001aa540 (0000)
+	_wait_for_io_to_complete (0000)
 001AA5E0 0030:
-	_code_001aa5e0 (0000)
+	_set_copy_error (0000)
 001AA610 0010:
-	_code_001aa610 (0000)
+	_get_copy_error_flags (0000)
 001AA620 0020:
-	_code_001aa620 (0000)
+	_initialize_timing (0000)
 001AA640 0010:
-	_code_001aa640 (0000)
+	_begin_timing (0000)
 001AA650 0030:
-	_code_001aa650 (0000)
+	_end_timing (0000)
 001AA680 0100:
-	_code_001aa680 (0000)
+	_print_timing (0000)
 001AA780 0020:
-	_code_001aa780 (0000)
+	_give_up_time_if_necessary (0000)
 001AA7A0 0190:
 	_cache_copy_get_status (0000)
 001AA930 0050:
@@ -65,33 +65,33 @@ symbols in this file:
 001AA980 01f0:
 	_cache_copy_FileIOCompletionRoutine@12 (0000)
 001AAB70 0140:
-	_code_001aab70 (0000)
+	_cache_copy_issue_read_internal (0000)
 001AACB0 0140:
-	_code_001aacb0 (0000)
+	_cache_copy_issue_write_internal (0000)
 001AADF0 0010:
-	_code_001aadf0 (0000)
+	_cache_copy_issue_read_raw (0000)
 001AAE00 0010:
-	_code_001aae00 (0000)
+	_cache_copy_issue_write_raw (0000)
 001AAE10 0100:
-	_code_001aae10 (0000)
+	_cache_copy_issue_read_request_internal (0000)
 001AAF10 0020:
-	_code_001aaf10 (0000)
+	_cache_copy_issue_read_request (0000)
 001AAF30 0050:
-	_code_001aaf30 (0000)
+	_cache_copy_issue_read (0000)
 001AAF80 00a0:
-	_code_001aaf80 (0000)
+	_release_read_request (0000)
 001AB020 0190:
-	_code_001ab020 (0000)
+	_cache_copy_issue_write (0000)
 001AB1B0 00d0:
-	_code_001ab1b0 (0000)
+	_cache_copy_initialize_file_data (0000)
 001AB280 00d0:
-	_code_001ab280 (0000)
+	_cache_copy_initialize_read_buffers (0000)
 001AB350 01f0:
-	_code_001ab350 (0000)
+	_cache_copy_update_write_buffers (0000)
 001AB540 0340:
-	_code_001ab540 (0000)
+	_cache_copy_run_decompression (0000)
 001AB880 03e0:
-	_code_001ab880 (0000)
+	_simple_cache_copy_thread@0 (0000)
 001ABC60 00e0:
 	_cache_copy_initialize (0000)
 002A678C 0027:

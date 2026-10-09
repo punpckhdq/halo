@@ -5,13 +5,13 @@ symbols in this file:
 0018ED80 0010:
 	_biped_limp_noodle_get_max_relaxation_iterations (0000)
 0018ED90 04e0:
-	_code_0018ed90 (0000)
+	_biped_limp_noodle_valid_joint_rotation (0000)
 0018F270 07b0:
-	_code_0018f270 (0000)
+	_biped_limp_noodle_move_relax_and_constrain_positions (0000)
 0018FA20 01f0:
 	_validate_real_vector3d_axes3 (0000)
 0018FC10 02c0:
-	_code_0018fc10 (0000)
+	_biped_limp_noodle_adjust_orientations (0000)
 0018FED0 0100:
 	_biped_limp_noodle_relax_nodes_onto_environment (0000)
 002A3030 0045:

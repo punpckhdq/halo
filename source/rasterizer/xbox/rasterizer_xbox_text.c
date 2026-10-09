@@ -3,25 +3,25 @@ RASTERIZER_XBOX_TEXT.C
 
 symbols in this file:
 00162EA0 01b0:
-	_code_00162ea0 (0000)
+	_D3DDevice_SetRenderState (0000)
 00163050 0050:
-	_code_00163050 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 001630A0 0220:
-	_code_001630a0 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 001632C0 0060:
-	_code_001632c0 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00163320 0010:
-	_code_00163320 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00163330 0010:
 	_rasterizer_text_end (0000)
 00163340 0020:
-	_code_00163340 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 00163360 0010:
-	_code_00163360 (0000)
+	_IDirect3DDevice8_SetVertexDataColor@12 (0000)
 00163370 0010:
-	_code_00163370 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 00163380 0010:
-	_code_00163380 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 00163390 0690:
 	_rasterizer_text_begin (0000)
 00163A20 0120:

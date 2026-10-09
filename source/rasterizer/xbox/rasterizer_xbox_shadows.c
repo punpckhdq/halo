@@ -3,35 +3,35 @@ RASTERIZER_XBOX_SHADOWS.C
 
 symbols in this file:
 00161950 01b0:
-	_code_00161950 (0000)
+	_D3DDevice_SetRenderState (0000)
 00161B00 0050:
-	_code_00161b00 (0000)
+	_D3DDevice_SetTextureStageState (0000)
 00161B50 0220:
-	_code_00161b50 (0000)
+	_IDirect3DDevice8_SetRenderState@12 (0000)
 00161D70 0010:
 	__rasterizer_environment_shadows_begin (0000)
 00161D80 0060:
-	_code_00161d80 (0000)
+	_IDirect3DDevice8_SetTextureStageState@16 (0000)
 00161DE0 0010:
-	_code_00161de0 (0000)
+	_IDirect3DDevice8_SetVertexShaderConstant@16 (0000)
 00161DF0 00a0:
 	__rasterizer_environment_shadow_model_begin (0000)
 00161E90 0010:
 	__rasterizer_environment_shadow_model_end (0000)
 00161EA0 0020:
-	_code_00161ea0 (0000)
+	_IDirect3DDevice8_SetVertexData2f@16 (0000)
 00161EC0 0010:
-	_code_00161ec0 (0000)
+	_IDirect3DDevice8_SetVertexData2s@16 (0000)
 00161ED0 0010:
-	_code_00161ed0 (0000)
+	_IDirect3DDevice8_Begin@8 (0000)
 00161EE0 0010:
-	_code_00161ee0 (0000)
+	_IDirect3DDevice8_End@4 (0000)
 00161EF0 0080:
 	__rasterizer_environment_shadow_end (0000)
 00161F70 0010:
 	__rasterizer_environment_shadows_end (0000)
 00161F80 0300:
-	_code_00161f80 (0000)
+	_rasterizer_shadow_convolve (0000)
 00162280 03b0:
 	__rasterizer_environment_shadow_begin (0000)
 00162630 02b0:

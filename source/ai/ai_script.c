@@ -41,7 +41,7 @@ symbols in this file:
 00043220 0090:
 	_ai_scripting_place (0000)
 000432B0 0060:
-	_code_000432b0 (0000)
+	_ai_scripting_kill_internal (0000)
 00043310 0060:
 	_ai_scripting_kill (0000)
 00043370 0060:
@@ -71,7 +71,7 @@ symbols in this file:
 00043920 00a0:
 	_ai_scripting_timer_expire (0000)
 000439C0 02d0:
-	_code_000439c0 (0000)
+	_ai_scripting_count_internal (0000)
 00043C90 0020:
 	_ai_scripting_swarm_count (0000)
 00043CB0 0020:
@@ -93,13 +93,13 @@ symbols in this file:
 00043F70 00a0:
 	_ai_scripting_maneuver_enable (0000)
 00044010 0430:
-	_code_00044010 (0000)
+	_ai_scripting_migrate_find_target_squad (0000)
 00044440 0550:
-	_code_00044440 (0000)
+	_ai_scripting_migrate_internal (0000)
 00044990 00a0:
 	_ai_scripting_migrate (0000)
 00044A30 00f0:
-	_code_00044a30 (0000)
+	_ai_scripting_migrate_by_unit_internal (0000)
 00044B20 0110:
 	_ai_scripting_migrate_by_unit (0000)
 00044C30 00e0:
@@ -111,7 +111,7 @@ symbols in this file:
 00044E50 0050:
 	_ai_scripting_allegiance_broken (0000)
 00044EA0 0050:
-	_code_00044ea0 (0000)
+	_ai_scripting_vehicle_candidate_qsort (0000)
 00044EF0 0060:
 	_ai_scripting_going_to_vehicle (0000)
 00044F50 00a0:
@@ -125,7 +125,7 @@ symbols in this file:
 00045230 00a0:
 	_ai_scripting_prefer_target (0000)
 000452D0 0120:
-	_code_000452d0 (0000)
+	_ai_scripting_teleport_starting_location_private (0000)
 000453F0 0060:
 	_ai_scripting_teleport_starting_location_if_unsupported (0000)
 00045450 0060:
@@ -147,7 +147,7 @@ symbols in this file:
 00045930 0070:
 	_ai_scripting_command_list_advance_by_unit (0000)
 000459A0 0050:
-	_code_000459a0 (0000)
+	_ai_scripting_command_list_status_internal (0000)
 000459F0 0250:
 	_ai_scripting_command_list_status (0000)
 00045C40 00d0:
@@ -165,7 +165,7 @@ symbols in this file:
 00046110 00a0:
 	_ai_scripting_set_current_state (0000)
 000461B0 0080:
-	_code_000461b0 (0000)
+	_ai_scripting_assess_status (0000)
 00046230 00a0:
 	_ai_scripting_status (0000)
 000462D0 0010:
@@ -227,7 +227,7 @@ symbols in this file:
 00047150 0010:
 	_ai_scripting_retreat (0000)
 00047160 0150:
-	_code_00047160 (0000)
+	_ai_scripting_go_to_vehicle_internal (0000)
 000472B0 0080:
 	_ai_scripting_go_to_vehicle (0000)
 00047330 0080:

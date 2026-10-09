@@ -5,7 +5,7 @@ symbols in this file:
 0010F530 0040:
 	_texture_page_fraction_used (0000)
 0010F570 0060:
-	_code_0010f570 (0000)
+	_texture_page_verify (0000)
 0010F5D0 00d0:
 	_texture_page_new (0000)
 0010F6A0 0030:
@@ -15,9 +15,9 @@ symbols in this file:
 0010F710 0020:
 	_texture_page_texture_get (0000)
 0010F730 0060:
-	_code_0010f730 (0000)
+	_qsort_texture_indexes (0000)
 0010F790 02e0:
-	_code_0010f790 (0000)
+	_texture_page_resort (0000)
 0010FA70 00f0:
 	_texture_page_texture_new (0000)
 0010FB60 00c0:

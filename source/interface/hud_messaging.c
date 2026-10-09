@@ -3,9 +3,9 @@ HUD_MESSAGING.C
 
 symbols in this file:
 000C3810 0080:
-	_code_000c3810 (0000)
+	_render_state_text (0000)
 000C3890 0190:
-	_code_000c3890 (0000)
+	_render_state_bitmap (0000)
 000C3A20 0020:
 	_hud_messaging_initialize (0000)
 000C3A40 0030:
@@ -55,9 +55,9 @@ symbols in this file:
 000C4330 00c0:
 	_hud_messaging_get_objective (0000)
 000C43F0 0080:
-	_code_000c43f0 (0000)
+	_find_free_hud_message (0000)
 000C4470 0030:
-	_code_000c4470 (0000)
+	_compare_messages (0000)
 000C44A0 0040:
 	_scripted_hud_messages_clear (0000)
 000C44E0 0020:

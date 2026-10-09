@@ -3,11 +3,11 @@ DATA_PACKETS.C
 
 symbols in this file:
 0010A5F0 01d0:
-	_code_0010a5f0 (0000)
+	__data_packet_verify (0000)
 0010A7C0 0300:
-	_code_0010a7c0 (0000)
+	__data_packet_encode (0000)
 0010AAC0 02a0:
-	_code_0010aac0 (0000)
+	__data_packet_decode (0000)
 0010AD60 0110:
 	_data_packet_verify (0000)
 0010AE70 0100:

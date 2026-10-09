@@ -3,43 +3,43 @@ BITMAP_EXTRACT.C
 
 symbols in this file:
 00061EA0 0130:
-	_code_00061ea0 (0000)
+	_preprocess_plate (0000)
 00061FD0 0120:
-	_code_00061fd0 (0000)
+	_extract_find_row_bottom (0000)
 000620F0 0080:
-	_code_000620f0 (0000)
+	_extract_verify_unbroken_horizontal_border (0000)
 00062170 0340:
-	_code_00062170 (0000)
+	_extract_plateless_cube_map (0000)
 000624B0 0190:
-	_code_000624b0 (0000)
+	_extract_adjust_bounds (0000)
 00062640 0240:
-	_code_00062640 (0000)
+	_extract_get_bitmap_format (0000)
 00062880 03b0:
-	_code_00062880 (0000)
+	_extract_pixels_to_mipmap (0000)
 00062C30 0210:
-	_code_00062c30 (0000)
+	_extract_pixels_from_mipmap (0000)
 00062E40 0260:
-	_code_00062e40 (0000)
+	_build_texture_pages_by_sequence (0000)
 000630A0 0580:
 	_extract_build_debug_plate (0000)
 00063620 03d0:
-	_code_00063620 (0000)
+	_extract_mipmaps_to_bitmap (0000)
 000639F0 02b0:
-	_code_000639f0 (0000)
+	_extract_bitmap_to_group (0000)
 00063CA0 01d0:
-	_code_00063ca0 (0000)
+	_process_3d_bitmaps (0000)
 00063E70 0220:
-	_code_00063e70 (0000)
+	_process_cube_maps (0000)
 00064090 0450:
-	_code_00064090 (0000)
+	_process_sprites (0000)
 000644E0 0490:
-	_code_000644e0 (0000)
+	_extract_bitmap (0000)
 00064970 0110:
-	_code_00064970 (0000)
+	_extract_no_plate (0000)
 00064A80 02d0:
-	_code_00064a80 (0000)
+	_extract_bitmaps_in_row (0000)
 00064D50 00b0:
-	_code_00064d50 (0000)
+	_extract_plate (0000)
 00064E00 02e0:
 	_bitmaps_extract (0000)
 000650E0 0130:

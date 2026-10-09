@@ -59,19 +59,19 @@ symbols in this file:
 000D0500 0030:
 	_player_ui_activate_all_solo_levels (0000)
 000D0530 0050:
-	_code_000d0530 (0000)
+	_hud_message_to_all (0000)
 000D0580 0010:
 	_player0_look_pitch_is_inverted (0000)
 000D0590 0020:
 	_player0_joystick_set_is_normal (0000)
 000D05B0 0040:
-	_code_000d05b0 (0000)
+	_generate_default_player_profile (0000)
 000D05F0 0210:
-	_code_000d05f0 (0000)
+	_set_local_player_controls_from_player_profile (0000)
 000D0800 0010:
-	_code_000d0800 (0000)
+	_clear_profile_edit_data (0000)
 000D0810 0070:
-	_code_000d0810 (0000)
+	_reset_local_player_profile (0000)
 000D0880 00a0:
 	_player_ui_initialize (0000)
 000D0920 00a0:

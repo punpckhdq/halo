@@ -3,13 +3,13 @@ RASTERIZER_XBOX_VERTEX_SHADERS_RUNTIME.C
 
 symbols in this file:
 00168350 0010:
-	_code_00168350 (0000)
+	_IDirect3DDevice8_SetVertexShader@8 (0000)
 00168360 0010:
-	_code_00168360 (0000)
+	_IDirect3DDevice8_LoadVertexShader@12 (0000)
 00168370 0010:
-	_code_00168370 (0000)
+	_IDirect3DDevice8_SelectVertexShader@12 (0000)
 00168380 0010:
-	_code_00168380 (0000)
+	_IDirect3DDevice8_GetVertexShaderSize@12 (0000)
 00168390 0560:
 	_rasterizer_set_vertex_shader_permutation (0000)
 0029C2F8 0528:

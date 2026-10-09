@@ -3,21 +3,21 @@ ACTION_OBEY.C
 
 symbols in this file:
 00004F70 0040:
-	_code_00004f70 (0000)
+	_vehicle_possibility_qsort (0000)
 00004FB0 0230:
-	_code_00004fb0 (0000)
+	_action_obey_command_end (0000)
 000051E0 0070:
-	_code_000051e0 (0000)
+	_action_obey_individual_setup (0000)
 00005250 0040:
-	_code_00005250 (0000)
+	_action_obey_individual_flush_command_indices (0000)
 00005290 0050:
-	_code_00005290 (0000)
+	_action_obey_individual_begin (0000)
 000052E0 0020:
-	_code_000052e0 (0000)
+	_action_obey_individual_advance (0000)
 00005300 0050:
-	_code_00005300 (0000)
+	_action_obey_individual_end (0000)
 00005350 0130:
-	_code_00005350 (0000)
+	_action_obey_individuals_iterate (0000)
 00005480 0180:
 	_action_obey_command_list_setup (0000)
 00005600 0070:
@@ -41,15 +41,15 @@ symbols in this file:
 00005F50 0020:
 	_random_range (0000)
 00005F70 0150:
-	_code_00005f70 (0000)
+	_action_obey_directmovement_update_facing (0000)
 000060C0 10e0:
-	_code_000060c0 (0000)
+	_action_obey_command_begin (0000)
 000071A0 0580:
-	_code_000071a0 (0000)
+	_action_obey_command_perform (0000)
 00007720 0120:
-	_code_00007720 (0000)
+	_action_obey_individual_perform (0000)
 00007840 0050:
-	_code_00007840 (0000)
+	_action_obey_individual_update (0000)
 00007890 0030:
 	_action_obey_update (0000)
 000078C0 00c0:

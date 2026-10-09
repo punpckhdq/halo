@@ -3,83 +3,83 @@ GAME_ENGINE_CTF.C
 
 symbols in this file:
 0009EB60 0060:
-	_code_0009eb60 (0000)
+	_create_the_flag_at_position (0000)
 0009EBC0 0010:
-	_code_0009ebc0 (0000)
+	_ctf_engine_dispose (0000)
 0009EBD0 0060:
-	_code_0009ebd0 (0000)
+	_create_the_flag (0000)
 0009EC30 0040:
-	_code_0009ec30 (0000)
+	_ctf_single_flag_what_is_up_message (0000)
 0009EC70 0010:
-	_code_0009ec70 (0000)
+	_ctf_engine_dispose_from_old_map (0000)
 0009EC80 0020:
-	_code_0009ec80 (0000)
+	_ctf_engine_player_added (0000)
 0009ECA0 0010:
-	_code_0009eca0 (0000)
+	_ctf_engine_game_ending (0000)
 0009ECB0 0010:
-	_code_0009ecb0 (0000)
+	_ctf_engine_game_starting (0000)
 0009ECC0 0010:
-	_code_0009ecc0 (0000)
+	_ctf_engine_statistics_append (0000)
 0009ECD0 0010:
-	_code_0009ecd0 (0000)
+	_ctf_engine_handle_client_message (0000)
 0009ECE0 0010:
-	_code_0009ece0 (0000)
+	_ctf_engine_handle_server_message (0000)
 0009ECF0 0010:
-	_code_0009ecf0 (0000)
+	_ctf_engine_pregame_post_rasterize (0000)
 0009ED00 0010:
-	_code_0009ed00 (0000)
+	_ctf_engine_post_rasterize (0000)
 0009ED10 00c0:
-	_code_0009ed10 (0000)
+	_player_score (0000)
 0009EDD0 0040:
-	_code_0009edd0 (0000)
+	_ctf_flag_failure_sound (0000)
 0009EE10 0070:
-	_code_0009ee10 (0000)
+	_get_player_with_this_flag (0000)
 0009EE80 0080:
-	_code_0009ee80 (0000)
+	_ctf_engine_allow_pick_up (0000)
 0009EF00 0010:
-	_code_0009ef00 (0000)
+	_ctf_engine_player_damaged_player (0000)
 0009EF10 0010:
-	_code_0009ef10 (0000)
+	_ctf_engine_player_killed_player (0000)
 0009EF20 03a0:
-	_code_0009ef20 (0000)
+	_ctf_engine_display_score (0000)
 0009F2C0 0010:
-	_code_0009f2c0 (0000)
+	_ctf_engine_prespawn_player_update (0000)
 0009F2D0 0010:
-	_code_0009f2d0 (0000)
+	_ctf_state_message_update_warning (0000)
 0009F2E0 0040:
-	_code_0009f2e0 (0000)
+	_ctf_sound_update_warning (0000)
 0009F320 0020:
-	_code_0009f320 (0000)
+	_ctf_set_flag_warning (0000)
 0009F340 0040:
-	_code_0009f340 (0000)
+	_ctf_weapon_drop (0000)
 0009F380 0040:
-	_code_0009f380 (0000)
+	_ctf_get_score (0000)
 0009F3C0 0010:
-	_code_0009f3c0 (0000)
+	_ctf_test_flag (0000)
 0009F3D0 0040:
-	_code_0009f3d0 (0000)
+	_ctf_get_score_string (0000)
 0009F410 0060:
-	_code_0009f410 (0000)
+	_ctf_get_score_header_string (0000)
 0009F470 0030:
-	_code_0009f470 (0000)
+	_ctf_get_team_score_string (0000)
 0009F4A0 03d0:
-	_code_0009f4a0 (0000)
+	_ctf_engine_initialize_for_new_map (0000)
 0009F870 0050:
-	_code_0009f870 (0000)
+	_weapon_reset_flag (0000)
 0009F8C0 0090:
-	_code_0009f8c0 (0000)
+	_player_reset_flag (0000)
 0009F950 0050:
-	_code_0009f950 (0000)
+	_in_scoring_range (0000)
 0009F9A0 0150:
-	_code_0009f9a0 (0000)
+	_ctf_engine_player_update (0000)
 0009FAF0 0240:
-	_code_0009faf0 (0000)
+	_ctf_engine_weapon_update (0000)
 0009FD30 0080:
-	_code_0009fd30 (0000)
+	_ctf_engine_update (0000)
 0009FDB0 0160:
-	_code_0009fdb0 (0000)
+	_ctf_weapon_pickup (0000)
 0009FF10 0120:
-	_code_0009ff10 (0000)
+	_ctf_engine_starting_location_rating (0000)
 0025BBC4 000f:
 	??_C@_0P@HPMPGFLN@created?5a?5flag?$AA@ (0000)
 0025BBD4 001a:

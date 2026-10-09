@@ -3,7 +3,7 @@ ACTOR_TYPES.C
 
 symbols in this file:
 00028C10 0140:
-	_code_00028c10 (0000)
+	_actor_type_definition_get (0000)
 00028D50 0020:
 	_actor_types_initialize (0000)
 00028D70 0010:
