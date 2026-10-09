@@ -47,15 +47,15 @@ struct player_action
 	short pad;
 };
 
-struct network_player
+struct player_action_collection
 {
-	wchar_t name[12];
-	short primary_color_index;
-	short icon_index;
-	char machine_index;
-	char controller_index;
-	char team_index;
-	char player_list_index;
+	struct player_action actions[MAXIMUM_NUMBER_OF_LOCAL_PLAYERS];
+};
+
+struct game_update
+{
+	word number_of_actions;
+	struct player_action actions[NETWORK_GAME_MAXIMUM_PLAYER_COUNT];
 };
 
 struct multiplayer_player_info
@@ -144,6 +144,14 @@ void players_reconnect_to_structure_bsp(void);
 void player_input_enable(boolean enable);
 
 /* ---------- prototypes/PLAYER_QUEUES_NEW.C */
+
+void update_server_add_player(long player_index);
+void update_client_add_player(long player_index);
+void update_client_handle_server_update(struct game_update *new_update, long update_number);
+void update_server_next_update(void);
+void update_server_build_server_update(long machine_index, struct game_update *update, long *update_number);
+void update_server_handle_client_update(long machine_index, struct player_action *actions);
+void update_client_build_client_update(struct player_action_collection *action_collection);
 
 void update_server_delete(void);
 boolean update_server_new(void);

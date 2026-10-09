@@ -536,6 +536,7 @@ void unlock_global_random_seed(void);
 
 unsigned long *get_global_random_seed_address(void);
 unsigned long *get_global_local_random_seed_address(void);
+unsigned long get_random_seed(void);
 
 unsigned short seed_random(unsigned long *seed);
 short seed_random_range(unsigned long *seed, short lower_bound, short upper_bound);

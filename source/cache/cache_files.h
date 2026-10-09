@@ -28,6 +28,7 @@ enum
 /* ---------- prototypes/CACHE_FILES.C */
 
 unsigned long cache_files_get_checksum(void);
+boolean cache_files_give_time_to_precache(char const *map_name);
 void scenario_tags_unload(void);
 long scenario_tags_load(char const *name);
 boolean scenario_structure_bsp_load(struct scenario_structure_bsp_reference *reference);
@@ -38,6 +39,8 @@ void scenario_structure_bsp_unload(struct scenario_structure_bsp_reference *refe
 boolean cache_files_precache_in_progress(void);
 
 short cache_files_precache_map_status(real *progress);
+
+boolean cache_files_precache_map_loaded(char *map_name);
 
 void cache_files_precache_map_end(void);
 

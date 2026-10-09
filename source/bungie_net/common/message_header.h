@@ -22,13 +22,20 @@ enum
 
 enum
 {
-	_message_type_packet = 3,
+	_message_type_error = 1,
+	_message_type_data,
+	_message_type_packet,
 };
 
 enum
 {
-	_message_encrypted_bit = 0, /* fake name */
-	_message_key_agreement_bit, /* fake name */
+	MAXIMUM_ERROR_STRING_LENGTH = 128,
+};
+
+enum
+{
+	_message_flag_encrypted_bit = 0,
+	_message_flag_new_encryption_key_bit,
 	NUMBER_OF_MESSAGE_FLAGS,
 };
 
@@ -50,6 +57,12 @@ enum
 /* ---------- structures */
 
 typedef word message_header;
+
+struct message_error /* fake name */
+{
+	char error_string[MAXIMUM_ERROR_STRING_LENGTH]; /* fake name */
+	byte error_code; /* fake name */
+};
 
 /* ---------- prototypes/MESSAGE_HEADER.C */
 
