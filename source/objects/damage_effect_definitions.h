@@ -32,6 +32,24 @@ enum
 	_vibrate_frequency_right,
 };
 
+enum
+{
+	_damage_category_none = 0,
+	_damage_category_falling,
+	_damage_category_bullet,
+	_damage_category_grenade,
+	_damage_category_highexplosive,
+	_damage_category_sniper,
+	_damage_category_melee,
+	_damage_category_flame,
+	_damage_category_mountedweapon,
+	_damage_category_vehicle,
+	_damage_category_plasma,
+	_damage_category_needle,
+	_damage_category_shotgun,
+	NUMBER_OF_DAMAGE_CATEGORIES,
+};
+
 /* ---------- macros */
 
 #define damage_effect_definition_get(index) ((struct damage_effect_definition *)tag_get(DAMAGE_EFFECT_DEFINITION_TAG, index))

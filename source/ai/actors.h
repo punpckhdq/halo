@@ -40,6 +40,15 @@ enum
 
 enum
 {
+	_actor_danger_zone_none = 0,
+	_actor_danger_zone_suicide,
+	_actor_danger_zone_projectile,
+	_actor_danger_zone_vehicle,
+	NUMBER_OF_ACTOR_DANGER_ZONE_TYPES,
+};
+
+enum
+{
 	_primary_priority_none = 0,
 	_primary_priority_facing,
 	_primary_priority_exact_facing,
@@ -93,6 +102,28 @@ enum
 	_actor_threat_extremely_close_to_me,
 	_actor_threat_damaging_me,
 	NUMBER_OF_ACTOR_THREAT_TYPES,
+};
+
+enum
+{
+	_actor_mode_braindead = 0,
+	_actor_mode_asleep,
+	_actor_mode_alert,
+	_actor_mode_combat,
+	NUMBER_OF_ACTOR_MODES,
+};
+
+enum
+{
+	_actor_combat_status_none = 0,
+	_actor_combat_status_wary,
+	_actor_combat_status_investigate,
+	_actor_combat_status_definite,
+	_actor_combat_status_certain,
+	_actor_combat_status_clear_los,
+	_actor_combat_status_dangerous,
+	_actor_combat_status_visible,
+	NUMBER_OF_ACTOR_COMBAT_STATUS_LEVELS,
 };
 
 enum
@@ -989,8 +1020,14 @@ struct firing_position_evaluation_context
 
 real_argb_color const *actor_activation_debug_color(long actor_index);
 
-boolean actor_get_running_blind_vector(long actor_index, real_vector3d *run_vector);
+boolean actor_in_combat(long actor_index);
+boolean actor_is_fighting(long actor_index);
+
 boolean actor_has_unlimited_grenades(long actor_index);
+
+void actor_handle_communication(long actor_index, long prop_index, struct ai_information_packet *ai_information);
+
+boolean actor_get_running_blind_vector(long actor_index, real_vector3d *run_vector);
 
 /* ---------- prototypes/ACTOR_COMBAT.C */
 
@@ -998,6 +1035,7 @@ long actor_aim_grenade(long actor_index, real_point3d const *origin, real_vector
 
 /* ---------- prototypes/ACTOR_LOOKING.C */
 
+boolean actor_look_secondary(long actor_index, short type, short priority, struct direction_specification *direction);
 void actor_looking_test_validity(long actor_index, real_vector3d *test_vector, boolean *valid_aiming, boolean *valid_looking);
 
 /* ---------- prototypes/ACTOR_MOVING.C */
@@ -1012,9 +1050,14 @@ boolean actor_path_at_destination(long actor_index);
 
 /* ---------- prototypes/ACTOR_PERCEPTION.C */
 
+short actor_get_perception_knowledge(long actor_index, long prop_index);
 void actor_get_vision_distances(long actor_index, real maximum_vision_distance, real perception_factor, real horizontal_angle, real *full_distance_reference, real *partial_distance_reference);
 
 short actor_perception_aiming_vector_test_blockage(real_point3d const *source_position, real_vector3d const *source_vector, real_point3d const *friend_position, real_vector3d *friend_direction_to_aiming_vector);
+
+short actor_visibility_at_point(long actor_index, struct actor_position_data *sense_position, real_point3d const *position, char lighting, short line_of_sight, boolean use_frustum, boolean store_debugging_information, short combat_knowledge_type);
+short actor_audibility_at_point(long actor_index, struct actor_position_data *sense_position, real_point3d const *position, struct location const *location, short sound_volume, real perception_factor, short line_of_sight);
+void actor_perception_find_sense_position(long actor_index, real_point3d const *position, long prop_index, struct actor_position_data *sense_position);
 
 /* ---------- globals */
 

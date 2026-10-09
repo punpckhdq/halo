@@ -813,7 +813,7 @@
 				{ "name": "source/ai/ai_scenario_definitions.c", "index": 433, "status": "NonMatching" },
 				{ "name": "source/ai/ai_profile.c", "index": 434, "status": "NonMatching" },
 				{ "name": "source/ai/ai_debug.c", "index": 435, "status": "Matching", "options": { "cflags": [ "/nologo", "/c", "/O2", "/Oy-", "/MT", "/QIfist" ] } },
-				{ "name": "source/ai/ai_communication.c", "index": 436, "status": "NonMatching" },
+				{ "name": "source/ai/ai_communication.c", "index": 436, "status": "Matching" },
 				{ "name": "source/ai/ai.c", "index": 437, "status": "NonMatching" },
 				{ "name": "source/ai/actors.c", "index": 438, "status": "NonMatching" },
 				{ "name": "source/ai/actor_types.c", "index": 439, "status": "NonMatching" },

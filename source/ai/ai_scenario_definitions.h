@@ -83,8 +83,66 @@ enum
 	NUMBER_OF_AI_ATOM_TYPES,
 };
 
+enum
+{
+	_ai_conversation_stop_if_anyone_dies_bit = 0,
+	_ai_conversation_stop_if_damaged_bit,
+	_ai_conversation_stop_if_visible_enemy_bit,
+	_ai_conversation_stop_if_alerted_to_enemy_bit,
+	_ai_conversation_player_must_be_visible_bit,
+	_ai_conversation_stop_other_actions_bit,
+	_ai_conversation_keep_trying_to_play_bit,
+	_ai_conversation_player_must_be_looking_at_bit,
+	NUMBER_OF_CONVERSATION_DEFINITION_FLAGS,
+};
+
+enum
+{
+	_ai_conversation_participant_optional_bit = 0,
+	_ai_conversation_participant_has_alternate_bit,
+	_ai_conversation_participant_is_alternate_bit,
+	NUMBER_OF_CONVERSATION_PARTICIPANT_DEFINITION_FLAGS,
+};
+
+enum
+{
+	_ai_conversation_selection_friendly_actor = 0,
+	_ai_conversation_selection_disembodied,
+	_ai_conversation_selection_in_player_vehicle,
+	_ai_conversation_selection_not_in_vehicle,
+	_ai_conversation_selection_sargeant,
+	_ai_conversation_selection_any_actor,
+	_ai_conversation_selection_radio,
+	_ai_conversation_selection_radio_sargeant,
+	NUMBER_OF_CONVERSATION_SELECTION_TYPES,
+};
+
+enum
+{
+	_ai_conversation_line_addressee_look_back_bit = 0,
+	_ai_conversation_line_everyone_look_at_speaker_bit,
+	_ai_conversation_line_everyone_look_at_addressee_bit,
+	_ai_conversation_line_wait_after_until_told_to_advance_bit,
+	_ai_conversation_line_wait_until_speaker_nearby_bit,
+	_ai_conversation_line_wait_until_everyone_nearby_bit,
+	NUMBER_OF_CONVERSATION_LINE_FLAGS,
+};
+
+enum
+{
+	_ai_conversation_address_none = 0,
+	_ai_conversation_address_player,
+	_ai_conversation_address_participant,
+	NUMBER_OF_CONVERSATION_ADDRESS_TYPES,
+};
+
+#define MAXIMUM_CONVERSATIONS_PER_MAP 128
+#define MAXIMUM_PARTICIPANTS_PER_CONVERSATION 8
+#define MAXIMUM_DIALOGUE_VARIANTS_PER_CONVERSATION_PARTICIPANT 6
 
 /* ---------- macros */
+
+#define ai_conversation_definition_get(index) TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->ai_conversations, (index), struct ai_conversation) /* fake name */
 
 /* ---------- structures */
 
@@ -215,6 +273,46 @@ struct ai_command_list_definition
 	struct tag_block commands;			// ai_command_definition
 	struct tag_block points;			// ai_command_point_definition
 	struct tag_block unused_blocks[2];
+};
+
+struct ai_conversation_participant
+{
+	word pad;
+	word flags;
+	short selection_type;
+	short actor_type;
+	short preexisting_object_name_index;
+	short new_attach_object_name_index;
+	unsigned long unused[3];
+	short dialogue_variants[MAXIMUM_DIALOGUE_VARIANTS_PER_CONVERSATION_PARTICIPANT];
+	char ai_index_name[TAG_STRING_LENGTH+1];
+	long runtime_ai_index;
+	unsigned long unused2[3];
+};
+
+struct ai_conversation_line
+{
+	word flags;
+	short participant_index;
+	short address_type;
+	short address_participant_index;
+	unsigned long unused;
+	real delay_time;
+	unsigned long unused2[3];
+	struct tag_reference dialogue[MAXIMUM_DIALOGUE_VARIANTS_PER_CONVERSATION_PARTICIPANT];
+};
+
+struct ai_conversation
+{
+	char name[TAG_STRING_LENGTH+1];
+	word flags;
+	word pad;
+	real trigger_dist;
+	real run_to_player_dist;
+	unsigned long unused[9];
+	struct tag_block participants;		// ai_conversation_participant
+	struct tag_block lines;				// ai_conversation_line
+	struct tag_block unused_block;
 };
 
 /* ---------- prototypes/AI_SCENARIO_DEFINITIONS.C */

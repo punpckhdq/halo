@@ -177,6 +177,25 @@ enum
 
 enum
 {
+	_unit_animation_impulse_berserk = 0,
+	_unit_animation_impulse_signal_move,
+	_unit_animation_impulse_signal_attack,
+	_unit_animation_impulse_signal_warn,
+	_unit_animation_impulse_surprise_front,
+	_unit_animation_impulse_surprise_back,
+	_unit_animation_impulse_evade_left,
+	_unit_animation_impulse_evade_right,
+	_unit_animation_impulse_dive_front,
+	_unit_animation_impulse_dive_back,
+	_unit_animation_impulse_dive_left,
+	_unit_animation_impulse_dive_right,
+	_unit_animation_impulse_vehicle_celebrate,
+	_unit_animation_impulse_vehicle_panic,
+	NUMBER_OF_UNIT_ANIMATION_IMPULSES,
+};
+
+enum
+{
 	_unit_seat_animation_airborne_dead = 0,
 	_unit_seat_animation_landing_dead,
 	_unit_seat_animation_acceleration_front_back,
@@ -574,6 +593,7 @@ long unit_get_aiming_unit_index(long unit_index);
 void unit_get_aiming_vector(long unit_index, real_vector3d *aiming_vector);
 void unit_get_looking_vector(long unit_index, real_vector3d *looking_vector);
 void unit_get_facing_vector(long unit_index, real_vector3d *facing_vector);
+boolean unit_can_see_point(long unit_index, real_point3d const *point, real theta);
 boolean unit_clip_to_aiming_bounds(long unit_index, real_vector3d *vector, boolean use_aiming_screen);
 long unit_inventory_get_weapon(long unit_index, short index);
 short unit_inventory_next_grenade(long unit_index, short current_index, short delta);

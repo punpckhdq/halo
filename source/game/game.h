@@ -49,6 +49,12 @@ enum
 	MAXIMUM_MULTIPLAYER_GAME_TEAMS,
 };
 
+enum
+{
+	_allegiance_incident_accident = 0,
+	_allegiance_incident_betrayal,
+	_allegiance_incident_forgive,
+};
 
 /* ---------- macros */
 
@@ -157,6 +163,9 @@ void game_set_game_variant_from_name(const char *name);
 /* ---------- prototypes/GAME_ALLEGIANCE.C */
 
 boolean game_team_is_enemy(short our_team, short other_team);
+boolean game_team_is_ally(short our_team, short other_team);
+short game_allegiance_get_incidents(short our_team_index, short other_team_index, short *incident_threshold);
+boolean game_allegiance_incident(short aggressor_team_index, short victim_team_index, short type, boolean *notify_immediately);
 
 /* ---------- prototypes/GAME_TIME.C */
 
@@ -184,6 +193,8 @@ void game_time_update(real time_delta_sec);
 short game_connection(void);
 
 /* ---------- globals */
+
+extern char const *global_game_team_names[NUMBER_OF_SOLO_CAMPAIGN_TEAMS];
 
 /* ---------- public code */
 

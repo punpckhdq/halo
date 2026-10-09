@@ -285,7 +285,7 @@ struct scenario
 	struct tag_block ai_animation_references;
 	struct tag_block ai_script_references;
 	struct tag_block ai_recording_references;
-	struct tag_block ai_conversations;
+	struct tag_block ai_conversations;					// ai_conversation
 	struct tag_data hs_syntax_data;
 	struct tag_data hs_string_constants;
 	struct tag_block hs_scripts;

@@ -15,6 +15,16 @@ header included in hcex build.
 
 enum
 {
+	_action_class_noncombat = 0,
+	_action_class_passive,
+	_action_class_transitory,
+	_action_class_pursuit,
+	_action_class_active,
+	NUMBER_OF_ACTION_CLASSES,
+};
+
+enum
+{
 	_obey_metadata_targeting_bit = 0,
 	_obey_metadata_commands_finished_bit,
 	_obey_metadata_action_changed_bit,
@@ -365,9 +375,16 @@ struct action_state_data
 
 /* ---------- prototypes/ACTIONS.C */
 
+void actor_action_change(long actor_index, long new_action_type, struct action_state_data *new_action_data);
+
 struct pursuit_location *actor_get_pursuit_location(long actor_index);
 
 real_argb_color *actor_action_debug_color(long actor_index);
+short actor_action_class(long actor_index);
+
+/* ---------- prototypes/ACTION_CONVERSE.C */
+
+boolean action_converse_setup(long actor_index, long conversation_index, struct converse_state_data *state_data);
 
 /* ---------- prototypes/ACTION_OBEY.C */
 
