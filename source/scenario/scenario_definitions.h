@@ -44,6 +44,14 @@ enum
 
 enum
 {
+	_weapon_created_at_rest_bit = 0,
+	_weapon_obsolete_bit,
+	_weapon_does_accelerate_bit,
+	NUMBER_OF_SCENARIO_WEAPON_FLAGS,
+};
+
+enum
+{
 	_trigger_volume_type_world_aligned_bounding_box = 0,
 	_trigger_volume_type_bounding_box,
 	NUMBER_OF_TRIGGER_VOLUME_TYPES
@@ -140,6 +148,18 @@ struct scenario_light_fixture_datum
 	real cutoff_angle;
 	unsigned long unused[4];
 };
+
+struct scenario_weapon_datum
+{
+  struct scenario_object_datum object;
+  struct scenario_object_permutation permutation;
+  short rounds_total;
+  short rounds_loaded;
+  word flags;
+  word pad;
+  unsigned long unused[3];
+};
+
 
 struct scenario_object_name
 {

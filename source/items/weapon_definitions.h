@@ -43,6 +43,15 @@ enum
 	NUMBER_OF_WEAPON_DEFINITION_FLAGS,
 };
 
+enum
+{
+	_weapon_movement_penalty_always = 0,
+	_weapon_movement_penalty_when_zoomed,
+	_weapon_movement_penalty_when_zoomed_or_reloading,
+	NUMBER_OF_WEAPON_MOVEMENT_PENALTY_MODES,
+};
+
+
 /* ---------- macros */
 
 #define weapon_definition_get(index) ((struct weapon_definition *)tag_get(WEAPON_DEFINITION_TAG, index))

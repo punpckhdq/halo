@@ -232,11 +232,17 @@ struct animation_graph_device_animations
 	struct tag_block animations;		// animation_graph_animation_index
 };
 
+struct animation_graph_weapon_animations
+{
+  long unused1[4];
+  struct tag_block animations;		    // animation_graph_animation_index
+};
+
 struct animation_graph
 {
 	struct tag_block object_overlays;		// animation_graph_object_overlay
 	struct tag_block unit_seats;			// animation_graph_unit_seat
-	struct tag_block weapon_animations;
+	struct tag_block weapon_animations;     // animation_graph_weapon_animations
 	struct tag_block vehicle_animations;
 	struct tag_block device_animations;
 	struct tag_block unit_damage_animations;
