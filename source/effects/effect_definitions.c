@@ -9,4 +9,4 @@ EFFECT_DEFINITIONS.C
 
 /* ---------- globals */
 
-struct tag_reference_definition global_effect_reference = { 0, EFFECT_DEFINITION_TAG, NULL };
+TAG_REFERENCE_DEFINITION(global_effect_reference, EFFECT_DEFINITION_TAG);

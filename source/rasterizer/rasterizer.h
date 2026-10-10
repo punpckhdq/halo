@@ -576,12 +576,6 @@ void rasterizer_transparent_geometry_dispose(void);
 void rasterizer_transparent_geometry_draw(boolean water);
 void rasterizer_transparent_geometry_stop(void);
 
-/* ---------- prototypes/RASTERIZER_XBOX_HARDWARE_BITMAPS.C */
-
-boolean rasterizer_bitmap_new(struct bitmap_data *bitmap);
-void rasterizer_bitmap_delete(struct bitmap_data *bitmap);
-void rasterizer_bitmap_changed(struct bitmap_data *bitmap);
-
 /* ---------- prototypes/RASTERIZER_TEXT.C */
 
 boolean rasterizer_text_cache_initialize(void);

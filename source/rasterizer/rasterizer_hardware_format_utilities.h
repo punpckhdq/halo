@@ -14,7 +14,11 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/RASTERIZER_XBOX_HARDWARE_BITMAPS.C */
+
+boolean rasterizer_bitmap_new(struct bitmap_data *bitmap);
+void rasterizer_bitmap_delete(struct bitmap_data *bitmap);
+void rasterizer_bitmap_changed(struct bitmap_data *bitmap);
 
 /* ---------- globals */
 

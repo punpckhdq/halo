@@ -41,7 +41,7 @@ union byte_rectangle3d
 typedef union byte_rectangle3d byte_rectangle3d;
 
 
-typedef unsigned long pixel32;
+typedef unsigned long pixel32; // (ARGB format)
 
 /* ---------- prototypes/INTEGER_MATH.C */
 

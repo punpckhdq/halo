@@ -16,8 +16,6 @@ static void byte_swap_recording(void *recording, void *data, long size);
 
 /* ---------- globals */
 
-static struct tag_field recorded_animation_block_fields[10];
-
 struct tag_data_definition recorded_animation_event_stream_data =
 {
 	"recorded_animation_event_stream_data",
@@ -26,28 +24,18 @@ struct tag_data_definition recorded_animation_event_stream_data =
 	byte_swap_recording
 };
 
-struct tag_block_definition recorded_animation_block =
+TAG_BLOCK(recorded_animation_block, "recorded_animation_block", MAXIMUM_RECORDED_ANIMATIONS_PER_MAP, sizeof(struct recorded_animation_definition), NULL, NULL, NULL, NULL)
 {
-	"recorded_animation_block",
-	0,
-	MAXIMUM_RECORDED_ANIMATIONS_PER_MAP,
-	sizeof(struct recorded_animation_definition),
-	NULL,
-	recorded_animation_block_fields
-};
-
-static struct tag_field recorded_animation_block_fields[10] =
-{
-	{ _field_string, "name^" },
-	{ _field_char_integer, "version*" },
-	{ _field_char_integer, "raw animation data*" },
-	{ _field_char_integer, "unit control data version*" },
-	{ _field_pad, NULL, (void *)1 },
-	{ _field_short_integer, "length of animation*:ticks" },
-	{ _field_pad, NULL, (void *)2 },
-	{ _field_pad, NULL, (void *)4 },
-	{ _field_data, "recorded animation event stream*", &recorded_animation_event_stream_data },
-	{ _field_terminator }
+	{_field_string, "name^"},
+	{_field_char_integer, "version*"},
+	{_field_char_integer, "raw animation data*"},
+	{_field_char_integer, "unit control data version*"},
+	FIELD_PAD(1),
+	{_field_short_integer, "length of animation*:ticks"},
+	FIELD_PAD(2),
+	FIELD_PAD(4),
+	{_field_data, "recorded animation event stream*", &recorded_animation_event_stream_data},
+	{_field_terminator}
 };
 
 /* ---------- private code */

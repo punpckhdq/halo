@@ -28,7 +28,7 @@ static void render_debug_point_physics(
 
 /* ---------- globals */
 
-struct tag_reference_definition global_point_physics_reference = { 0, POINT_PHYSICS_DEFINITION_TAG, NULL };
+TAG_REFERENCE_DEFINITION(global_point_physics_reference, POINT_PHYSICS_DEFINITION_TAG);
 
 boolean debug_point_physics = FALSE;
 
