@@ -46,7 +46,7 @@ static struct font_header *styled_font_get(long base_font_index, short style);
 static void parse_string_new(struct parse_string_state *state, char *string, long base_font_index, short style, short justification, real_argb_color const *color);
 static short parse_unicode_string(struct parse_string_state *state);
 static void draw_string_partial(draw_character_proc draw_character, point2d *cursor, rectangle2d const *bounds, rectangle2d const *clip, pixel32 color, char *string, short string_index, short string_length);
-static void draw_unicode_string_partial(draw_character_proc draw_character, point2d *cursor, rectangle2d const *bounds, rectangle2d const *clip, pixel32 color, wchar_t *string, short string_index, short string_length);
+static void draw_unicode_string_partial(draw_character_proc draw_character, point2d *cursor, rectangle2d const *bounds, rectangle2d const *clip, pixel32 color, wchar_t const *string, short string_index, short string_length);
 
 /* ---------- globals */
 
@@ -161,7 +161,7 @@ void draw_string_compute_bounds(
 
 void draw_unicode_string_compute_bounds(
 	rectangle2d const *bounds,
-	wchar_t *string,
+	wchar_t const *string,
 	rectangle2d *text_bounds,
 	rectangle2d *cursor_bounds)
 {
@@ -528,7 +528,7 @@ void draw_unicode_string(
 	point2d *cursor_reference,
 	rectangle2d const *clip,
 	short height_adjust,
-	wchar_t *string)
+	wchar_t const *string)
 {
 	struct parse_string_state parse_state;
 	point2d cursor;
@@ -1177,7 +1177,7 @@ static void draw_unicode_string_partial(
 	rectangle2d const *bounds,
 	rectangle2d const *clip,
 	pixel32 color,
-	wchar_t *string,
+	wchar_t const *string,
 	short string_index,
 	short string_length)
 {

@@ -572,7 +572,7 @@ void unlock_global_random_seed(void);
 unsigned long *get_global_random_seed_address(void);
 unsigned long *get_global_local_random_seed_address(void);
 
-unsigned short seed_random(unsigned long *seed);
+word seed_random(unsigned long *seed);
 short seed_random_range(unsigned long *seed, short lower_bound, short upper_bound);
 
 real real_seed_random(unsigned long *seed);
@@ -1567,6 +1567,12 @@ __inline boolean valid_real_rgb_color(
 		color->red >= 0.f && color->red <= 1.f &&
 		color->green >= 0.f && color->green <= 1.f &&
 		color->blue >= 0.f && color->blue <= 1.f;
+}
+
+__inline boolean valid_real_argb_color(
+	real_argb_color const *color)
+{
+	return valid_real(color->alpha) && color->alpha >= 0.f && color->alpha <= 1.f && valid_real_rgb_color(&color->rgb);
 }
 
 // TODO: depends on byte_rectangle3d, need to include integer_math?

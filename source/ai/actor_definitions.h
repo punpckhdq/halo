@@ -382,7 +382,7 @@ struct actor_unit_properties
 	real maximum_shield_vitality;
 	real shield_sapping_radius;
 	short forced_shader_permutation_index;
-	unsigned short pad;
+	word pad;
 	unsigned long unused[4];
 };
 

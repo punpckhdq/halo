@@ -348,25 +348,38 @@ __inline long fast_ftol(
 	return result;
 }
 
+// truncates toward zero like a C cast, fast_ftol rounds to nearest
+// This is likely ASM because it's not inlined and exactly the same in sapien
 __inline long fast_ftol_C(
 	float x)
 {
-	long result = fast_ftol(x);
+	long result;
 
-	// This is to simulate a C-cast where the result is truncated 
-	// Default float rounding is to nearest whole number (even numbers preferred when .5)
-	if (x >= 0.f)
+	__asm
 	{
-		if ((float)result > x)
-		{
-			result--;
-		}
-	}
-	else if ((float)result < x)
-	{
-		result++;
+		mov ecx, x				// keep the sign of x
+		fld x
+		fist result				// result = x rounded to nearest
+		fisub result
+		fstp x					// x = x - result, the rounding error
+		test ecx, ecx
+		js negative
+		add x, 0x7FFFFFFF		// carry if the error is below zero (rounded up)...
+		sbb result, 0			// ...then step back down
+		jmp done
 	}
 
+negative:
+	__asm
+	{
+		mov edx, x
+		xor ecx, ecx
+		test edx, edx
+		setg cl					// error above zero (rounded down)...
+		add result, ecx			// ...then step back up
+	}
+
+done:
 	return result;
 }
 

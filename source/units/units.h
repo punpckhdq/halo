@@ -593,6 +593,10 @@ void unit_euler_aiming_update(
 void unit_adjust_projectile_ray(long unit_index, real_point3d *origin, real_vector3d *forward, real *inherited_velocity, boolean offset_origin, boolean offset_aim);
 void unit_unzoom(long unit_index);
 void unit_handle_weapon_state_change(long unit_index, short new_weapon_state);
+long unit_get_current_equipment(long unit_index);
+short unit_get_weapon_count(long unit_index);
+short unit_get_grenade_count(long unit_index, short grenade_type);
+short unit_get_current_grenade_type(long unit_index);
 
 void unit_destroy(long unit_index);
 void unit_died(long unit_index, boolean feigned);
@@ -615,6 +619,7 @@ void unit_get_facing_vector(long unit_index, real_vector3d *facing_vector);
 boolean unit_can_see_point(long unit_index, real_point3d const *point, real theta);
 boolean unit_clip_to_aiming_bounds(long unit_index, real_vector3d *vector, boolean use_aiming_screen);
 long unit_inventory_get_weapon(long unit_index, short index);
+short unit_inventory_next_weapon(long unit_index, short current_index, short delta);
 short unit_inventory_next_grenade(long unit_index, short current_index, short delta);
 
 void unit_ready_desired_weapon(long unit_index, boolean immediate);

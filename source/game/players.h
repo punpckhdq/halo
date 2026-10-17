@@ -27,6 +27,33 @@ enum
 	NUMBER_OF_PLAYER_POWERUPS,
 };
 
+enum
+{
+	_player_action_result_reload = 0,
+	_player_action_result_pickup_powerup,
+	_player_action_result_pickup_weapon,
+	_player_action_result_exit_vehicle,
+	_player_action_result_swap_for_grenades,
+	_player_action_result_swap_for_powerup,
+	_player_action_result_swap_for_weapon,
+	_player_action_result_add_weapon_to_inventory,
+	_player_action_result_enter_vehicle,
+	_player_action_result_evict_from_vehicle,
+	_player_action_result_touch_device,
+	_player_action_result_flip_vehicle,
+	NUMBER_OF_PLAYER_ACTION_RESULTS,
+};
+
+enum
+{
+	_player_respawn_failure_none = 0,
+	_player_respawn_failure_combat,
+	_player_respawn_failure_enemies,
+	_player_respawn_failure_moving,
+	_player_respawn_failure_vehicle,
+	NUMBER_OF_PLAYER_RESPAWN_FAILURES,
+};
+
 
 /* ---------- macros */
 
@@ -117,7 +144,10 @@ real_vector3d *player_control_get_facing_direction(short local_player_index, rea
 real player_control_get_field_of_view(short local_player_index);
 real_euler_angles2d const *player_control_get_facing_angles(short local_player_index);
 long player_control_get_aiming_unit_index(short local_player_index);
+long player_control_get_target_object_index(short local_player_index);
 void player_control_get_unit_camera_info(short local_player_index, struct unit_camera_info *camera_info);
+real player_control_get_autoaim_level(short local_player_index);
+short player_control_get_zoom_level(short local_player_index);
 
 /* ---------- prototypes/PLAYERS.C */
 
@@ -125,6 +155,7 @@ long player_new(long machine_index, long player_index, short local_player_index,
 void local_player_set_player_index(short local_player_index, long player_index);
 boolean players_respawn_coop(void);
 void players_handle_deleted_object(long deleted_object_index);
+short players_get_respawn_failure(void);
 
 boolean local_player_exists(long local_player_index);
 short local_player_count(void);

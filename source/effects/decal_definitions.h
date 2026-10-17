@@ -27,10 +27,10 @@ enum
 
 struct decal_definition
 {
-	unsigned short flags;
+	word flags;
 	short type;
 	short layer;
-	unsigned short pad1;
+	word pad1;
 	struct tag_reference next_decal_in_chain;
 	real radius_lower_bounds;
 	real radius_upper_bounds;
@@ -50,8 +50,8 @@ struct decal_definition
 	long unused5[3];
 	struct shader_decal shader;
 	real runtime_maximum_sprite_extent;
-	unsigned short runtime_incremental_counter;
-	unsigned short pad2;
+	word runtime_incremental_counter;
+	word pad2;
 	long unused6[2];
 };
 

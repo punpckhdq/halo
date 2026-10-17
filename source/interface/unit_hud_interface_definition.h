@@ -48,6 +48,10 @@ enum
 	NUMBER_OF_UNIT_AUXILARY_OVERLAY_FLAGS,
 };
 
+/* ---------- macros */
+
+#define unit_hud_interface_definition_get(index) ((struct unit_hud_interface_definition *)tag_get(UNIT_HUD_INTERFACE_TAG, index))	/* fake name */
+
 /* ---------- structures */
 
 struct metered_panel_definition
@@ -83,7 +87,7 @@ struct metered_panel_definition
 struct auxilary_panel_definition
 {
 	struct hud_absolute_placement_definition absolute_placement;
-	struct tag_block auxilary_overlays;
+	struct tag_block auxilary_overlays;		// auxilary_overlay_definition
 	long unused[4];
 };
 
@@ -98,7 +102,7 @@ struct auxilary_overlay_definition
 {
 	struct static_hud_element_definition static_element;
 	short type;
-	unsigned short flags;
+	word flags;
 	long unused0[6];
 };
 
@@ -111,8 +115,8 @@ struct unit_hud_interface_definition
 	struct motion_sensor_panel_definition motion_sensor;
 	struct hud_placement_definition blip_placement;
 	struct auxilary_panel_definition auxilary_panel;
-	struct tag_block warning_sounds;
-	struct tag_block auxilary_meters;
+	struct tag_block warning_sounds;	// sound_hud_element_definition
+	struct tag_block auxilary_meters;	// auxilary_meter_definition
 	long unused1[89];
 	long unused2[12];
 };

@@ -177,6 +177,18 @@ struct dynamic_screen_vertex
 	pixel32 color;
 };
 
+struct rasterizer_meter_parameters
+{
+	unsigned long gradient_min_color;
+	unsigned long gradient_max_color;
+	unsigned long background_color;
+	unsigned long flash_color;
+	boolean flash_color_is_negative;
+	boolean tint_mode_2;
+	unsigned long tint_color;
+	real gradient;
+};
+
 struct rasterizer_dynamic_screen_geometry_parameters
 {
 	struct rasterizer_meter_parameters *meter_parameters;

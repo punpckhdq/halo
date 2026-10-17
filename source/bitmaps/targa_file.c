@@ -15,16 +15,16 @@ TARGA_FILE.C
 
 struct targa_header /* fake name */
 {
-	unsigned char id_length;
-	unsigned char colormap_type;
-	unsigned char image_type;
-	unsigned char colormap_specification[5];
-	unsigned short x_origin;
-	unsigned short y_origin;
-	unsigned short image_width;
-	unsigned short image_height;
-	unsigned char pixel_depth;
-	unsigned char image_descriptor;
+	byte id_length;
+	byte colormap_type;
+	byte image_type;
+	byte colormap_specification[5];
+	word x_origin;
+	word y_origin;
+	word image_width;
+	word image_height;
+	byte pixel_depth;
+	byte image_descriptor;
 };
 
 /* ---------- prototypes */

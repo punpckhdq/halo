@@ -41,7 +41,7 @@ void draw_string_dispose_from_old_map(void);
 void draw_string_dispose(void);
 
 void draw_string_compute_bounds(rectangle2d const *bounds, char *string, rectangle2d *text_bounds, rectangle2d *cursor_bounds);
-void draw_unicode_string_compute_bounds(rectangle2d const *bounds, wchar_t *string, rectangle2d *text_bounds, rectangle2d *cursor_bounds);
+void draw_unicode_string_compute_bounds(rectangle2d const *bounds, wchar_t const *string, rectangle2d *text_bounds, rectangle2d *cursor_bounds);
 short draw_string_pick(rectangle2d const *bounds, char *string, point2d const *point);
 
 char *draw_string_get_string(short index);
@@ -57,7 +57,7 @@ void draw_string_set_highlight(short start_index, short stop_index);
 
 void bitmap_draw_string(struct bitmap_data *bitmap, rectangle2d const *bounds, rectangle2d const *clip, char *string);
 void draw_string(draw_character_proc draw_character, rectangle2d const *bounds, point2d *cursor_reference, rectangle2d const *clip, short height_adjust, char *string);
-void draw_unicode_string(draw_character_proc draw_character, rectangle2d const *bounds, point2d *cursor_reference, rectangle2d const *clip, short height_adjust, wchar_t *string);
+void draw_unicode_string(draw_character_proc draw_character, rectangle2d const *bounds, point2d *cursor_reference, rectangle2d const *clip, short height_adjust, wchar_t const *string);
 
 short parse_string(struct parse_string_state *state);
 

@@ -13,6 +13,12 @@ HUD_DEFINITIONS.H
 
 enum
 {
+	HUD_GLOBALS_DEFINITION_TAG = 'hudg', /* fake name */
+	HUD_NUMBER_DEFINITION_TAG = 'hud#', /* fake name */
+};
+
+enum
+{
 	_hud_draw_flashing_bit = 0,
 	_hud_draw_disabled_bit,
 	_hud_draw_in_multiplayer_bit,
@@ -57,6 +63,92 @@ enum
 	_hud_number_show_trailing_m,
 	NUMBER_OF_HUD_NUMBER_FLAGS,
 };
+
+enum
+{
+	_hud_flash_reverse_colors_bit = 0,
+	NUMBER_OF_HUD_FLASH_FLAGS,
+};
+
+enum
+{
+	_hud_icon_use_text_bit = 0,
+	_hud_icon_use_color_bit,
+	_hud_icon_absolute_width_bit,
+	NUMBER_OF_ICON_FLAGS,
+};
+
+enum
+{
+	_hud_dont_scale_offset_bit = 0,
+	_hud_dont_scale_size_bit,
+	NUMBER_OF_HUD_SCALING_FLAGS = 3,
+};
+
+enum
+{
+	_hud_number_decimal_index = 10,
+	_hud_number_colon_index,
+	_hud_number_negative_sign_index,
+	_hud_number_meters_index,
+	_hud_number_kilometers_index,
+};
+
+enum
+{
+	_hud_meter_switch_color_on_state_change = 0,
+	_hud_meter_interpolates_between_min_max_bit,
+	_hud_meter_interpolate_in_hsv_space_bit,
+	_hud_meter_interpolate_along_farthest_hue_path_bit,
+	_hud_meter_invert_interpolation_value_bit,
+	NUMBER_OF_HUD_METER_FLAGS,
+};
+
+enum
+{
+	_hud_multitexture_overlay_effector_type_tint = 0,
+	_hud_multitexture_overlay_effector_type_horizontal_offset,
+	_hud_multitexture_overlay_effector_type_vertical_offset,
+	_hud_multitexture_overlay_effector_type_alpha,
+	NUMBER_OF_HUD_MULTITEXTURE_OVERLAY_EFFECTOR_TYPES,
+};
+
+enum
+{
+	_hud_multitexture_overlay_effector_destination_geometry_offset = 0,
+	_hud_multitexture_overlay_effector_destination_primary_map,
+	_hud_multitexture_overlay_effector_destination_secondary_map,
+	_hud_multitexture_overlay_effector_destination_tertiary_map,
+	NUMBER_OF_HUD_MULTITEXTURE_OVERLAY_EFFECTOR_DESTINATIONS,
+};
+
+enum
+{
+	_hud_multitexture_overlay_effector_source_player_pitch = 0,
+	_hud_multitexture_overlay_effector_source_player_pitch_tangent,
+	_hud_multitexture_overlay_effector_source_player_yaw,
+	_hud_multitexture_overlay_effector_source_weapon_ammo_loaded,
+	_hud_multitexture_overlay_effector_source_weapon_ammo_total,
+	_hud_multitexture_overlay_effector_source_weapon_heat,
+	_hud_multitexture_overlay_effector_source_explicit,
+	_hud_multitexture_overlay_effector_source_zoom_level,
+	NUMBER_OF_HUD_MULTITEXTURE_OVERLAY_EFFECTOR_SOURCES,
+};
+
+enum
+{
+	_hud_multitexture_overlay_hud_element_blend_function_add = 0,
+	_hud_multitexture_overlay_hud_element_blend_function_subtract,
+	_hud_multitexture_overlay_hud_element_blend_function_multiply,
+	_hud_multitexture_overlay_hud_element_blend_function_multiply2x,
+	_hud_multitexture_overlay_hud_element_blend_function_dot,
+	NUMBER_OF_HUD_MULTITEXTURE_OVERLAY_BLEND_MODES,
+};
+
+/* ---------- macros */
+
+#define hud_globals_definition_get(index) ((struct hud_globals_definition *)tag_get(HUD_GLOBALS_DEFINITION_TAG, (index))) /* fake name */
+#define hud_number_definition_get(index) ((struct hud_number_definition *)tag_get(HUD_NUMBER_DEFINITION_TAG, (index))) /* fake name */
 
 /* ---------- structures */
 
@@ -108,7 +200,7 @@ struct hud_color_definition
 	real flash_period;
 	real flash_delay;
 	short number_of_flashes;
-	unsigned short flash_flags;
+	word flash_flags;
 	real flash_length;
 	unsigned long disabled_color;
 	union
@@ -125,7 +217,7 @@ struct static_hud_element_definition
 	struct hud_color_definition colors;
 	short sequence_index;
 	short pad;
-	struct tag_block multitexture_overlays;
+	struct tag_block multitexture_overlays;		// multitexture_overlay_hud_element_definition
 	long unused0[1];
 };
 
@@ -146,7 +238,7 @@ struct meter_hud_element_definition
 	real opacity;
 	real fade;
 	unsigned long disabled_color;
-	struct tag_block multitexture_overlays;
+	struct tag_block multitexture_overlays;		// multitexture_overlay_hud_element_definition
 	long unused0[1];
 };
 
@@ -159,6 +251,69 @@ struct number_hud_element_definition
 	char fractional_digits;
 	byte pad;
 	long unused1[3];
+};
+
+struct icon_hud_element_definition
+{
+	short sequence_index;
+	short width_offset;
+	point2d offset;
+	unsigned long color;
+	char frame_rate;
+	byte flags;
+	short text_index;
+};
+
+struct hud_number_definition
+{
+	struct tag_reference number_bitmap;	// bitmap_group
+	char character_width;
+	char screen_width;
+	char x_offset;
+	char y_offset;
+	char decimal_point_width;
+	char colon_width;
+	word pad;
+	long unused[19];
+};
+
+struct multitexture_overlay_hud_element_effector_definition
+{
+	long unused1[16];
+	short destination_type;
+	short destination;
+	short source;
+	word pad1;
+	real in_bounds[2];
+	real out_bounds[2];
+	long unused2[16];
+	real_rgb_color tint_color_lower_bounds;
+	real_rgb_color tint_color_upper_bounds;
+	short periodic_function;
+	word pad2;
+	real periodic_function_period;
+	real periodic_function_phase;
+	long unused3[8];
+};
+
+struct multitexture_overlay_hud_element_definition
+{
+	word flags;
+	short type;
+	short framebuffer_blend_function;
+	word pad1;
+	long unused1[8];
+	word map_flags[3];
+	short map_blending_function[2];
+	word pad2;
+	real_vector2d map_scale[3];
+	real_vector2d map_offset[3];
+	struct tag_reference map[3];	// bitmap_group
+	short map_clamp[3];
+	word pad3;
+	long unused2[46];
+	struct tag_block functions;		// multitexture_overlay_hud_element_effector_definition
+	long unused3[32];
 };
 
 struct hud_damage_indicators_definition
@@ -189,7 +344,7 @@ struct hud_waypoint_definition
 	real right_offset;
 	long unused0[8];
 	struct tag_reference arrow_bitmap;
-	struct tag_block arrows;
+	struct tag_block arrows;		// hud_waypoint_arrow
 	long unused1[20];
 };
 
@@ -224,7 +379,7 @@ struct hud_messaging_parameters_definition
 	struct tag_reference hud_item_messages;
 	struct tag_reference messaging_icons;
 	struct tag_reference alternate_icon_text;
-	struct tag_block button_icons;
+	struct tag_block button_icons;		// icon_hud_element_definition
 	struct hud_color_definition color;
 	struct tag_reference hud_messages;
 	struct hud_color_definition objective_color;
@@ -246,5 +401,9 @@ struct hud_globals_definition
 	struct tag_reference checkpoint_sound;
 	long unused2[24];
 };
+
+/* ---------- globals */
+
+extern char const *global_hud_anchor_names[NUMBER_OF_HUD_ANCHORS];
 
 #endif // __HUD_DEFINITIONS_H

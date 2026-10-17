@@ -143,13 +143,18 @@ boolean ai_test_line_of_fire(long actor_index, long ignore_unit_index, real_poin
 boolean ai_try_vehicle_eviction(long actor_index, long requesting_unit_index, boolean actually_evict);
 long ai_get_responsible_unit(long object_index, boolean responsible_for_weapon_fire);
 
+void ai_handle_allegiance_status_changed(short team1_index, short team2_index, boolean broken, boolean permanently_broken);
 void ai_handle_allegiance_broken_notification(short team1_index, short team2_index, boolean broken);
+void ai_update_team_status(void);
 
 boolean ai_adjust_damage(long actor_index, struct damage_data *damage_data, real *damage);
 void ai_handle_death(long unit_index, long owner_object_index, short damage_category);
 boolean ai_handle_killing_spree(long unit_index, short killing_spree_count);
 void ai_handle_damage(long unit_index, long shooter_object_index, short damage_category, float fraction, union real_vector3d *damage_velocity, boolean delayed);
+void ai_create_mounted_weapons_for_unit(long unit_index);
 void ai_handle_deleted_object(long deleted_object_index);
+boolean ai_enemies_can_see_player(void);
+boolean ai_enemies_attacking_player(void);
 void ai_handle_unit_effect(long owner_unit_index, short effect_type, short volume);
 void ai_handle_enter_vehicle(long unit_index, long vehicle_index);
 void ai_handle_exit_vehicle(long unit_index, long vehicle_index);

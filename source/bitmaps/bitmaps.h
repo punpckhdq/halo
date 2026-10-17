@@ -97,7 +97,7 @@ struct bitmap_data
 	short depth;
 	short type;
 	short format;
-	unsigned short flags;
+	word flags;
 	point2d registration_point;
 	short mipmap_count;
 	short mipmap_pad;

@@ -99,12 +99,12 @@ struct structure_cluster
 	short weather_palette_index;
 	short transitions_to_structure_bsp_index;
 	short first_runtime_decal_index;
-	unsigned short runtime_decal_count;
+	word runtime_decal_count;
 	long unused1[6];
 	struct tag_block predicted_resources;	// predicted_resource
 	struct tag_block subclusters;			// structure_subcluster
-	unsigned short first_lens_flare_marker_index;
-	unsigned short lens_flare_marker_count;
+	word first_lens_flare_marker_index;
+	word lens_flare_marker_count;
 	struct tag_block surface_indices;		// long
 	struct tag_block mirrors;				// structure_mirror
 	struct tag_block portal_indices;		// short

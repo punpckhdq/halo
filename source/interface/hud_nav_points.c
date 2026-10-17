@@ -420,8 +420,7 @@ void custom_render_nav_point(
 
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
-		match_vassert("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 675, return_eip == get_return_eip(), "corrupt return address!");
-		match_vassert("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 675, corrupt_index == NONE, csprintf(temporary, "corrupt stack at %d!", corrupt_index));
+		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 675);
 	}
 
 	return;
@@ -754,8 +753,7 @@ static void hud_update_nav_point_local_player(
 
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
-		match_vassert("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 496, return_eip == get_return_eip(), "corrupt return address!");
-		match_vassert("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 496, corrupt_index == NONE, csprintf(temporary, "corrupt stack at %d!", corrupt_index));
+		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 496);
 	}
 
 	return;

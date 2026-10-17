@@ -153,12 +153,12 @@ struct game_engine
 	void (*update)(void);
 	long (*get_score)(long, enum get_score_type);
 	long (*get_team_score)(long);
-	unsigned short *(*get_score_string)(long, unsigned short *);
-	unsigned short *(*get_team_score_string)(long, unsigned short *);
+	word *(*get_score_string)(long, word *);
+	word *(*get_team_score_string)(long, word *);
 	boolean (*allow_pick_up)(long, long);
 	void (*player_damaged_player)(long, long, boolean);
 	void (*player_killed_player)(long, long, long, boolean);
-	boolean (*rasterize_score)(long, long, long, unsigned short *, long);
+	boolean (*rasterize_score)(long, long, long, word *, long);
 	real (*starting_location_rating)(long, struct scenario_player *);
 	void (*prespawn_player_update)(long);
 	boolean (*postspawn_player_update)(long);
@@ -176,9 +176,12 @@ boolean game_engine_force_single_screen(void);
 void game_engine_update_non_deterministic(real seconds_elapsed);
 
 boolean game_engine_running(void);
+boolean game_engine_display_team_indicators(void);
+boolean game_engine_get_state_message(long player_index, wchar_t *buffer, long buffer_length);
 boolean game_engine_has_shield(long player_index);
 boolean game_engine_has_teams(void);
 boolean game_engine_hud_draw_motion_sensor(long player_index);
+boolean game_engine_hud_draw_messages(long player_index);
 
 real_point3d game_engine_get_goal_position(short goal_index);
 void game_engine_render_nav_points(short local_player_index);

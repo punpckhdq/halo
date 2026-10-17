@@ -232,11 +232,11 @@ char *tiff_import(
 		if (tiff)
 		{
 			rectangle2d import_bounds;
-			unsigned short bits_per_sample;
-			unsigned short samples_per_pixel;
-			unsigned short planar_configuration;
-			unsigned short photometric;
-			unsigned short orientation;
+			word bits_per_sample;
+			word samples_per_pixel;
+			word planar_configuration;
+			word photometric;
+			word orientation;
 			unsigned long width;
 			unsigned long height;
 			short import_format;

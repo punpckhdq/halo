@@ -39,6 +39,7 @@ enum
 
 long interface_get_tag_index(short interface_tag_index);
 void interface_set_bitmap_text_draw_mode(short interface_font_index, short style, short justification, unsigned long flags, short color_table_index, short color_index);
+void interface_draw_bitmap(struct bitmap_data const *bitmap, point2d const *point, real_rectangle2d const *clip, real scale, real theta, real fade);
 
 /* ---------- globals */
 

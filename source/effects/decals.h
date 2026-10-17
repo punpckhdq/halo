@@ -52,7 +52,7 @@ struct decal_vertex
 struct decal_datum
 {
 	short identifier;
-	unsigned short flags;
+	word flags;
 	short cluster_index;
 	short layer;
 	real_point3d position;

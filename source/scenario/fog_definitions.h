@@ -38,7 +38,7 @@ enum
 
 struct fog_screen
 {
-	unsigned short flags;
+	word flags;
 	short layer_count;
 	real near_distance;
 	real far_distance;

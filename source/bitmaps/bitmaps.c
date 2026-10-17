@@ -578,7 +578,7 @@ pixel32 bitmap_format_to_a8r8g8b8(
 	{
 		byte intensity = ((byte const *)mipmap_address)[pixel_index];
 
-		color = PIXEL32_FROM_ARGB(0xff, intensity, intensity, intensity);
+		color = PIXEL32_FROM_ARGB(UNSIGNED_CHAR_MAX, intensity, intensity, intensity);
 		break;
 	}
 	case _bitmap_format_ay8:

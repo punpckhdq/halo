@@ -38,7 +38,7 @@ struct collision_period
 struct collision_overall_usage
 {
 	short user_type;
-	unsigned short pad;
+	word pad;
 	struct collision_log total_all_periods;
 	struct collision_log usage_by_period[NUMBER_OF_COLLISION_TIME_PERIODS];
 };
