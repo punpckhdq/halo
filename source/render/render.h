@@ -15,9 +15,76 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_render_screen_flash_type_none = 0,
+	_render_screen_flash_type_lighten,
+	_render_screen_flash_type_darken,
+	_render_screen_flash_type_max,
+	_render_screen_flash_type_min,
+	_render_screen_flash_type_invert,
+	_render_screen_flash_type_tint,
+	NUMBER_OF_RENDER_SCREEN_FLASH_TYPES
+};
+
+enum
+{
+	MAXIMUM_BUILD_SPRITE_GROUPS = 8,	/* fake name */
+};
+
+enum
+{
+	_build_sprite_normal = 0,
+	_build_sprite_parallel,
+	_build_sprite_perpendicular,
+	NUMBER_OF_BUILD_SPRITE_ORIENTATIONS
+};
+
+enum
+{
+	_build_sprite_viewer_space_bit = 0,
+	_build_sprite_u_mirror_bit,
+	_build_sprite_v_mirror_bit,
+	NUMBER_OF_BUILD_SPRITE_FLAGS
+};
+
+enum
+{
+	_build_sprite_rotational_viewer_space_bit = 0,
+	_build_sprite_rotational_sideways_rotation_animates_bit,
+};
+
+enum
+{
+	_build_sprites_screen_space_bit = 0,
+	_build_sprites_first_person_bit,
+	_build_sprites_valid_bit,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct build_sprite_group
+{
+	long vertex_buffer_index;
+	void *vertices;
+	short sprite_count;
+	struct bitmap_data *bitmap;
+};
+
+struct build_sprite_data
+{
+	long bitmap_group_index;
+	short maximum_sprite_count;
+	short screen_space;
+	struct shader_effect *shader;
+	short sprite_count;
+	unsigned long flags;
+	real_point3d centroid;
+	short group_count;
+	struct build_sprite_group groups[MAXIMUM_BUILD_SPRITE_GROUPS];
+};
 
 struct render_animation
 {
@@ -112,6 +179,13 @@ void render_frame_present(point2d const *screenshot_index, struct bitmap_data *b
 boolean render_location_visible(struct location *location);
 struct rendered_cluster *rendered_cluster_get(short rendered_cluster_index);
 
+/* ---------- prototypes/RENDER_SPRITE.C */
+
+void build_sprites_begin(struct build_sprite_data *data, short maximum_sprite_count, long bitmap_group_index, struct shader_effect const *shader, unsigned long flags);
+void build_sprites_end(struct build_sprite_data *data);
+void build_sprite(struct build_sprite_data *data, short mode, short sequence_index, short sprite_index, real_point3d const *untransformed_origin, real_vector3d const *untransformed_direction, real rotation, real scale, real_argb_color const *color, real fade, unsigned long flags);
+void build_sprite_rotational(struct build_sprite_data *data, unsigned long flags, short first_sequence_index, short sprite_index, real_point3d const *untransformed_origin, real_vector3d const *untransformed_axis_of_rotation, real rotation, real scale, real_argb_color const *color, real fade);
+
 /* ---------- prototypes/RENDER_OBJECTS.C */
 
 void render_objects_initialize(void);
@@ -123,6 +197,10 @@ void render_objects_dispose(void);
 
 extern struct render_globals render;
 extern boolean debug_render_freeze;
+extern boolean render_contrails_enabled;
+extern boolean render_particles_enabled;
+extern boolean render_particle_systems_enabled;
+extern boolean render_weather_particle_systems_enabled;
 
 /* ---------- public code */
 

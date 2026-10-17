@@ -1,9 +1,5 @@
 /*
 CONTRAIL_DEFINITIONS.C
-
-symbols in this file:
-002DD184 000c:
-	_global_contrail_reference (0000)
 */
 
 /* ---------- headers */
@@ -11,16 +7,6 @@ symbols in this file:
 #include "cseries.h"
 #include "contrail_definitions.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
 /* ---------- globals */
 
-/* ---------- public code */
-
-/* ---------- private code */
+TAG_REFERENCE_DEFINITION(global_contrail_reference, CONTRAIL_DEFINITION_TAG);

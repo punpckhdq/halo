@@ -148,6 +148,7 @@ long player_control_get_target_object_index(short local_player_index);
 void player_control_get_unit_camera_info(short local_player_index, struct unit_camera_info *camera_info);
 real player_control_get_autoaim_level(short local_player_index);
 short player_control_get_zoom_level(short local_player_index);
+void player_control_permanent_impulse(short local_player_index, real_euler_angles2d const *impulse);
 
 /* ---------- prototypes/PLAYERS.C */
 

@@ -20,10 +20,6 @@ file has inline function assertions.
 
 /* ---------- prototypes/BITMAPS_INLINES.H */
 
-pixel32 real_rgb_color_to_pixel32(union real_rgb_color const *color);
-pixel32 real_argb_color_to_pixel32(real_argb_color const *color);
-pixel32 real_a_rgb_color_to_pixel32(real alpha, union real_rgb_color const *color);
-
 /* ---------- globals */
 
 /* ---------- public code */
@@ -141,6 +137,48 @@ __inline pixel32 real_rgb_color_to_pixel32(
 		and result, UNSIGNED_CHAR_MAX
 		shl result, 16
 		or edx, result				// 0x00RRGGBB, no alpha
+		mov result, edx
+	}
+
+	return result;
+}
+
+__inline pixel32 real_a_rgb_color_to_pixel32(
+	real alpha,
+	real_rgb_color const *color)
+{
+	real scale = 255.f;
+	pixel32 result;
+
+	match_assert("..\\bitmaps\\bitmaps_inlines.h", 243, alpha>=0.0f && alpha<=1.0f);
+	match_assert_valid_real_rgb_color("..\\bitmaps\\bitmaps_inlines.h", 244, color);
+
+	__asm
+	{
+		mov edx, color
+		fld alpha					// alpha
+		fld dword ptr [edx]			// red
+		fld dword ptr [edx + 4]		// green
+		fld dword ptr [edx + 8]		// blue
+		fld scale
+		fmul st(4), st				// scale all four by 255
+		fmul st(3), st
+		fmul st(2), st
+		fmulp st(1), st
+		fistp result				// blue
+		and result, UNSIGNED_CHAR_MAX
+		mov edx, result
+		fistp result				// green
+		and result, UNSIGNED_CHAR_MAX
+		shl result, 8
+		or edx, result
+		fistp result				// red
+		and result, UNSIGNED_CHAR_MAX
+		shl result, 16
+		or edx, result
+		fistp result				// alpha
+		shl result, 24
+		or edx, result				// 0xAARRGGBB
 		mov result, edx
 	}
 
