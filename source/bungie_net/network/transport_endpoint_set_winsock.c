@@ -381,7 +381,7 @@ short delete_endpoint_set(
 	return _transport_error_none;
 }
 
-long poll_endpoint_set(
+short poll_endpoint_set(
 	struct transport_endpoint_set *set,
 	word timeout)
 {
@@ -462,7 +462,7 @@ long poll_endpoint_set(
 	return result;
 }
 
-long add_endpoint_to_set(
+short add_endpoint_to_set(
 	struct transport_endpoint *ep,
 	struct transport_endpoint_set *set)
 {
@@ -499,7 +499,7 @@ long add_endpoint_to_set(
 	return result;
 }
 
-long remove_endpoint_from_set(
+short remove_endpoint_from_set(
 	struct transport_endpoint *ep,
 	struct transport_endpoint_set *set)
 {

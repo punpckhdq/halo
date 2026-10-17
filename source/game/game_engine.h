@@ -30,6 +30,14 @@ enum
 	LAST_USABLE_GAME_ENGINE_INDEX = _game_engine_race
 };
 
+enum
+{
+	_oddball_normal = 0,
+	_oddball_magic,
+	_oddball_terminator,
+	NUMBER_OF_ODDBALL_BALL_TYPES /* fake name */
+};
+
 enum get_score_type
 {
 	_get_score_individual = 0,
@@ -113,6 +121,11 @@ struct race_variant
 	long team_scoring;
 };
 
+struct terminator_variant
+{
+	long ignored;
+};
+
 union game_engine_variant
 {
 	struct ctf_variant ctf;
@@ -120,6 +133,7 @@ union game_engine_variant
 	struct king_variant king;
 	struct oddball_variant oddball;
 	struct race_variant race;
+	struct terminator_variant terminator;
 };
 
 struct game_variant
@@ -227,6 +241,10 @@ struct game_variant build_game_variant_team_oddball(void);
 struct game_variant build_game_variant_team_king(void);
 struct game_variant build_game_variant_team_slayer(void);
 void game_engine_variant_cleanup(struct game_variant *variant);
+
+void game_engine_switch_to_postgame(void);
+void game_engine_update(void);
+boolean game_engine_get_current_stage(struct game_variant *variant, char *map_name);
 
 /* ---------- prototypes/GAME_ENGINE_MULTIPLAYER_SOUNDS.C */
 

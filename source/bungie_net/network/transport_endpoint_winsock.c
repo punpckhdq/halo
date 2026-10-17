@@ -804,7 +804,7 @@ boolean endpoint_writeable(
 	return result;
 }
 
-long endpoint_connected(
+boolean endpoint_connected(
 	struct transport_endpoint const *ep)
 {
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_winsock.c", 1062, ep);
