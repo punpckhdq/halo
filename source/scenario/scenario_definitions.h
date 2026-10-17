@@ -260,6 +260,11 @@ struct scenario_cutscene_camera_point
 	long unused[9];
 };
 
+struct scenario_decal_palette_entry
+{
+	struct tag_reference reference;	// decal_definition
+};
+
 struct scenario_cutscene_title
 {
 	long flags;

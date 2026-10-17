@@ -186,6 +186,15 @@ struct structure_leaf
 	long first_surface_reference_index;
 };
 
+struct structure_runtime_decal
+{
+	real_point3d position;
+	byte palette_index;
+	byte unused;
+	char yaw;
+	char pitch;
+};
+
 struct structure_surface
 {
 	word vertex_indices[3];

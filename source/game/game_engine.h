@@ -230,6 +230,8 @@ struct game_variant build_game_variant_team_oddball(void);
 struct game_variant build_game_variant_team_king(void);
 struct game_variant build_game_variant_team_slayer(void);
 void game_engine_variant_cleanup(struct game_variant *variant);
+void game_engine_post_rasterize_objects(void);
+void game_engine_nonplayer_post_rasterize(void);
 
 /* ---------- prototypes/GAME_ENGINE_MULTIPLAYER_SOUNDS.C */
 

@@ -20,6 +20,7 @@ header included in hcex build.
 /* ---------- prototypes/PROGRESS_BAR.C */
 
 void progress_bar_display(real progress);
+void progress_bar_eachframe(void);
 
 /* ---------- globals */
 

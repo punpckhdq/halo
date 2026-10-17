@@ -135,6 +135,35 @@ enum
 	NUMBER_OF_HUD_WEAPON_CROSSHAIR_RUNTIME_FLAGS,
 };
 
+enum
+{
+	_hud_screen_effect_mask_only_when_zoomed_bit = 0,
+	NUMBER_OF_HUD_SCREEN_EFFECT_MASK_FLAGS,
+};
+
+enum
+{
+	_hud_screen_effect_convolution_only_when_zoomed_bit = 0,
+	NUMBER_OF_HUD_SCREEN_EFFECT_CONVOLUTION_FLAGS,
+};
+
+enum
+{
+	_hud_screen_effect_light_enhancement_only_when_zoomed_bit = 0,
+	_hud_screen_effect_light_enhancement_connect_to_flashlight_bit,
+	_hud_screen_effect_light_enhancement_uses_convolution_mask_bit,
+	NUMBER_OF_HUD_SCREEN_EFFECT_LIGHT_ENHANCEMENT_FLAGS,
+};
+
+enum
+{
+	_hud_screen_effect_desaturation_only_when_zoomed_bit = 0,
+	_hud_screen_effect_desaturation_connect_to_flashlight_bit,
+	_hud_screen_effect_desaturation_is_additive_bit,
+	_hud_screen_effect_desaturation_uses_convolution_mask_bit,
+	NUMBER_OF_HUD_SCREEN_EFFECT_DESATURATION_FLAGS,
+};
+
 /* ---------- macros */
 
 #define weapon_hud_interface_definition_get(index) ((struct weapon_hud_interface_definition *)tag_get(WEAPON_HUD_INTERFACE_TAG, index))

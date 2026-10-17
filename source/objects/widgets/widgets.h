@@ -37,6 +37,9 @@ void widgets_dispose_from_old_map(void);
 void widgets_dispose(void);
 void widgets_new(long object_index);
 void widgets_delete(long object_index);
+boolean widgets_need_lighting(long widget_index);
+void widgets_render(long object_index, struct render_lighting const *lighting, struct render_animation const *animation);
+void widgets_update(real dt);
 
 /* ---------- globals */
 

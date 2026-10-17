@@ -78,7 +78,10 @@ struct ai_profile_state
 
 /* ---------- prototypes/AI_PROFILE.C */
 
+void ai_profile_initialize(void);
+void ai_profile_dispose(void);
 void ai_profile_change_render_spray(void);
+void ai_profile_render(void);
 
 /* ---------- globals */
 

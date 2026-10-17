@@ -234,6 +234,7 @@ void render_debug_obstacles(struct obstacles const *obstacles, real radius);
 /* ---------- prototypes/PATH_OBSTACLE_AVOIDANCE.C */
 
 void render_debug_path(struct obstacle_path const *path);
+void render_debug_obstacle_path(void);
 
 /* ---------- globals */
 

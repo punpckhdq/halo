@@ -605,6 +605,9 @@ extern const real_vector3d *const global_right3d;
 extern const real_vector3d *const global_down3d;
 
 extern const real_quaternion *const global_identity_quaternion;
+extern const real_matrix4x3 *const global_identity4x3;
+
+extern const real_rectangle3d *const global_null_rectangle3d;
 
 /* ---------- public code */
 
@@ -740,8 +743,11 @@ __inline real_vector2d *rotate_vector2d(
 	real cosine,
 	real_vector2d *result)
 {
-	result->i = cosine*v->i - sine*v->j;
-	result->j = sine*v->i + cosine*v->j;
+	real i = cosine*v->i - sine*v->j;
+	real j = sine*v->i + cosine*v->j;
+
+	result->i = i;
+	result->j = j;
 	return result;
 }
 
@@ -1226,7 +1232,7 @@ __inline real plane3d_distance_to_point(
 	real_plane3d const *plane,
 	real_point3d const *point)
 {
-	return dot_product3d(&plane->n, (real_vector3d const *)point) - plane->d;
+	return dot_product3d((real_vector3d const *)point, &plane->n) - plane->d;
 }
 
 __inline real vector_intersect_plane3d(

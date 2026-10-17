@@ -13,7 +13,10 @@ header included in hcex build.
 enum
 {
 	SKY_TAG = 'sky ',
-	SKY_VERSION = 1
+	SKY_VERSION = 1,
+	MAXIMUM_SHADER_FUNCTIONS_PER_SKY = 8,
+	MAXIMUM_ANIMATIONS_PER_SKY = 8,
+	MAXIMUM_LIGHTS_PER_SKY = 8
 };
 
 /* ---------- macros */
@@ -29,6 +32,40 @@ struct sky_atmospheric_fog
 	real maximum_density;
 	real z_near;
 	real z_far;
+};
+
+struct sky_shader_function
+{
+	word pad;
+	short runtime_global_function_index;
+	char global_function_name[TAG_STRING_LENGTH+1];
+};
+
+struct sky_animation
+{
+	short animation_index;
+	word pad;
+	real period;
+	long unused[7];
+};
+
+struct sky_radiosity_light
+{
+	unsigned long flags;
+	real_rgb_color color;
+	real power;
+	real test_distance;
+	long unused;
+	real_euler_angles2d direction;
+	real diameter;
+};
+
+struct sky_light
+{
+	struct tag_reference lens_flare;	// lens_flare
+	char lens_flare_marker_name[TAG_STRING_LENGTH+1];
+	long unused[7];
+	struct sky_radiosity_light radiosity;
 };
 
 struct sky

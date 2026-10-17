@@ -175,6 +175,8 @@ void players_reconnect_to_structure_bsp(void);
 
 void player_input_enable(boolean enable);
 
+void players_debug_render(void);
+
 /* ---------- prototypes/PLAYER_QUEUES_NEW.C */
 
 void update_server_delete(void);
