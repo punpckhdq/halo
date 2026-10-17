@@ -72,6 +72,9 @@ boolean structure_visibility_find_mirror(struct render_camera const *camera, str
 void structure_visibility_compute(void);
 short structure_visibility_build_surfaces(long *surface_indices, short maximum_count, real_point3d const *bounding_sphere_center, real bounding_sphere_radius, real_rectangle3d const *bounding_box, short bounding_surface_count, real_plane3d const *bounding_surfaces, short cluster_count, short const *cluster_indices);
 short structure_visibility_find_objects(long *result_indices, short maximum_count, long (*cluster_get_first)(long *, short), long (*cluster_get_next)(long *), void (*get_bounding_sphere)(long, real_point3d *, real *), boolean (*unmarked)(long), boolean (*mark)(long));
+void structure_visibility_find_camera(struct render_camera const *camera);
+boolean structure_visibility_find_mirror(struct render_camera const *camera, struct render_frustum const *frustum, struct render_mirror *result);
+void structure_visibility_compute(void);
 
 /* ---------- globals */
 

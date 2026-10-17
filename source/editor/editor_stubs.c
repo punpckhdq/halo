@@ -22,7 +22,8 @@ boolean game_in_editor(
 }
 
 boolean editor_preprocess_rendered_object(
-	void)
+	long object_index,
+	struct render_lighting const *lighting)
 {
 	return TRUE;
 }

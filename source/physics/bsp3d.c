@@ -168,7 +168,9 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 
 	for (vertex_index = 0; vertex_index < vertex_count; ++vertex_index)
 	{
-		if (!(fabs(plane3d_distance_to_point(plane, &vertices[vertex_index])-0.0f) < epsilon))
+		real distance = plane3d_distance_to_point(plane, &vertices[vertex_index]);
+
+		if (!(fabs(distance-0.0f) < epsilon))
 		{
 			break;
 		}
@@ -176,17 +178,16 @@ static long bsp3d_clip_polygon_to_leaves_recursive(
 
 	if (vertex_index == vertex_count)
 	{
-		real_vector3d p0p2;
 		real_vector3d p0p1;
+		real_vector3d p0p2;
 		real_vector3d n;
 		boolean facing;
 
-		// TODO: this is a fake match
-		real_vector3d *edge2 = &p0p2;
-
-		vector_from_points3d(&vertices[0], &vertices[1], &p0p1);
-		vector_from_points3d(&vertices[0], &vertices[2], edge2);
-		cross_product3d(edge2, &p0p1, &n);
+		p0p1.i = vertices[1].x - vertices[0].x;
+		p0p1.j = vertices[1].y - vertices[0].y;
+		p0p1.k = vertices[1].z - vertices[0].z;
+		vector_from_points3d(&vertices[0], &vertices[2], &p0p2);
+		cross_product3d(&p0p2, &p0p1, &n);
 
 		facing = dot_product3d(&n, &plane->n) > 0.0f;
 

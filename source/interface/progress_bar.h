@@ -24,6 +24,7 @@ void progress_bar_dispose(void);
 void progress_bar_begin(boolean ui_is_up);
 void progress_bar_end(void);
 void progress_bar_display(real progress);
+void progress_bar_eachframe(void);
 
 /* ---------- globals */
 
