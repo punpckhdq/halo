@@ -87,6 +87,16 @@ vassert(													\
 	)														\
 )
 
+#define assert_valid_real_argb_color(color)									\
+vassert(																	\
+	valid_real_argb_color(color),											\
+	csprintf(																\
+		temporary,															\
+		"%s: assert_valid_real_argb_color(%f, %f, %f, %f)",					\
+		#color, (*color).alpha, (*color).red, (*color).green, (*color).blue	\
+	)																		\
+)
+
 #define assert_valid_real_vector3d_axes2(forward, up)						\
 vassert(																	\
 	valid_real_vector3d_axes2(forward, up),									\
@@ -214,6 +224,18 @@ match_vassert(													\
 		"%s: assert_valid_real_rgb_color(%f, %f, %f)",			\
 		#color, (*color).red, (*color).green, (*color).blue		\
 	)															\
+)
+
+#define match_assert_valid_real_argb_color(file, line, color)				\
+match_vassert(																\
+	file,																	\
+	line,																	\
+	valid_real_argb_color(color),											\
+	csprintf(																\
+		temporary,															\
+		"%s: assert_valid_real_argb_color(%f, %f, %f, %f)",					\
+		#color, (*color).alpha, (*color).red, (*color).green, (*color).blue	\
+	)																		\
 )
 
 #define match_assert_valid_real_vector3d_axes2(file, line, forward, up)		\
@@ -605,6 +627,11 @@ extern const real_vector3d *const global_right3d;
 extern const real_vector3d *const global_down3d;
 
 extern const real_quaternion *const global_identity_quaternion;
+extern const real_matrix4x3 *const global_identity4x3;
+extern const real_matrix4x3 *const global_negative_identity4x3;
+
+extern const real_rectangle2d *const global_null_rectangle2d;
+extern const real_rectangle3d *const global_null_rectangle3d;
 
 /* ---------- public code */
 
@@ -875,23 +902,17 @@ __inline real_point3d *project_point2d(
 	boolean sign,
 	real_point3d *p3d)
 {
-	long x = global_projection3d_mappings[projection][sign][0];
-	long y = global_projection3d_mappings[projection][sign][1];
+	short x = global_projection3d_mappings[projection][sign][0];
+	short y = global_projection3d_mappings[projection][sign][1];
 
 	match_assert("..\\math\\real_math.h", 879, projection>=_x && projection<=_z);
 	match_assert("..\\math\\real_math.h", 880, ~(sign&~1));
 
 	p3d->n[x] = p2d->x;
 	p3d->n[y] = p2d->y;
-
-	if (fabs(plane->n.n[projection])>=_real_epsilon)
-	{
-		p3d->n[projection] = ((plane->d - (p2d->x * plane->n.n[x])) - (p2d->y * plane->n.n[y])) / plane->n.n[projection];
-	}
-	else
-	{
-		p3d->n[projection] = 0.f;
-	}
+	p3d->n[projection] = fabs(plane->n.n[projection]) < _real_epsilon ?
+		0.f :
+		((plane->d - (p2d->x * plane->n.n[x])) - (p2d->y * plane->n.n[y])) / plane->n.n[projection];
 
 	return p3d;
 }
@@ -1142,18 +1163,19 @@ __inline real_plane2d *plane2d_from_points(
 	real_point2d const *point0,
 	real_point2d const *point1)
 {
-	vector_from_points2d(point0, point1, &plane->n);
+	plane->n.i = point1->y - point0->y;
+	plane->n.j = point0->x - point1->x;
 
 	if (normalize2d(&plane->n) == 0.0f)
 	{
 		plane->d = 0.0f;
+		return NULL;
 	}
 	else
 	{
 		plane->d = dot_product2d(&plane->n, (real_vector2d const *)point0);
+		return plane;
 	}
-
-	return plane;
 }
 
 __inline real plane2d_distance_to_point(
@@ -1339,20 +1361,26 @@ __inline short local_random_range(
 	short lower_bound,
 	short upper_bound)
 {
-	return seed_random_range(get_global_local_random_seed_address(), lower_bound, upper_bound);
+	short result = seed_random_range(get_global_local_random_seed_address(), lower_bound, upper_bound);
+
+	return result;
 }
 
 __inline real real_local_random(
 	void)
 {
-	return real_seed_random(get_global_local_random_seed_address());
+	real result = real_seed_random(get_global_local_random_seed_address());
+
+	return result;
 }
 
 __inline real real_local_random_range(
 	real lower_bound,
 	real upper_bound)
 {
-	return real_seed_random_range(get_global_local_random_seed_address(), lower_bound, upper_bound);
+	real result = real_seed_random_range(get_global_local_random_seed_address(), lower_bound, upper_bound);
+
+	return result;
 }
 
 __inline real_vector3d *local_random_direction3d(
@@ -1567,6 +1595,14 @@ __inline boolean valid_real_rgb_color(
 		color->red >= 0.f && color->red <= 1.f &&
 		color->green >= 0.f && color->green <= 1.f &&
 		color->blue >= 0.f && color->blue <= 1.f;
+}
+
+__inline boolean valid_real_argb_color(
+	real_argb_color const *color)
+{
+	return valid_real(color->alpha) &&
+		color->alpha >= 0.f && color->alpha <= 1.f &&
+		valid_real_rgb_color(&color->rgb);
 }
 
 // TODO: depends on byte_rectangle3d, need to include integer_math?

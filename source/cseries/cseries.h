@@ -139,7 +139,7 @@ enum
 
 #define FLOOR(n,floor) ((n)<(floor)?(floor):(n))
 #define CEILING(n,ceiling) ((n)>(ceiling)?(ceiling):(n))
-#define PIN(n,floor,ceiling) ((n)<(floor) ? (floor) : CEILING((n),(ceiling)))
+#define PIN(n,floor,ceiling) ((n)<(floor) ? (floor) : CEILING(n,ceiling))
 
 #define FLAG(b) (1<<(b))
 #define MASK(b) (FLAG((b)) - 1)

@@ -26,6 +26,8 @@ short convex_polygon3d_clip_to_plane(
 	real epsilon,
 	boolean keep_coplanar);
 
+short convex_polygon2d_clip_to_plane(short point_count, real_point2d const *points, real_plane2d const *plane, short maximum_point_count, real_point2d *result, unsigned long *clip_flags, boolean *clipped, real epsilon);
+
 boolean convex_hull2d_test_point(short count, union real_point2d const *points, union real_point2d const *point, real epsilon);
 
 /* ---------- globals */

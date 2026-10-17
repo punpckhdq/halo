@@ -118,6 +118,7 @@ real player_control_get_field_of_view(short local_player_index);
 real_euler_angles2d const *player_control_get_facing_angles(short local_player_index);
 long player_control_get_aiming_unit_index(short local_player_index);
 void player_control_get_unit_camera_info(short local_player_index, struct unit_camera_info *camera_info);
+void player_control_permanent_impulse(short local_player_index, real_euler_angles2d const *impulse);
 
 /* ---------- prototypes/PLAYERS.C */
 

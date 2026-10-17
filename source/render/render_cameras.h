@@ -112,6 +112,7 @@ real render_camera_get_adjusted_field_of_view_tangent(real field_of_view);
 boolean render_camera_view_to_screen(struct render_camera const *camera, struct render_frustum const *frustum, real_point3d const *view_point, real_point2d *screen_point);
 void render_camera_build_frustum(const struct render_camera *camera, const real_rectangle2d *frustum_bounds, struct render_frustum *frustum, boolean build_projection);
 void render_frustum_get_projection_bounds(struct render_frustum const *frustum, real_rectangle2d *projection_bounds);
+short render_frustum_cube_visible(struct render_frustum const *frustum, real_rectangle3d const *bounds, boolean test_frustum_against_cube);
 
 /* ---------- globals */
 

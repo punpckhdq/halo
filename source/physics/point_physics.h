@@ -48,6 +48,10 @@ enum
 	NUMBER_OF_POINT_PHYSICS_FLAGS,
 };
 
+/* ---------- macros */
+
+#define point_physics_definition_get(index) ((struct point_physics_definition *)tag_get(POINT_PHYSICS_DEFINITION_TAG, (index))) /* fake name */
+
 /* ---------- structures */
 
 struct point_physics_definition
