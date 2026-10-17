@@ -24,6 +24,8 @@ long player_ui_get_active_player_profile_index(short local_player_index);
 boolean player_ui_get_path_to_local_player_profile_directory(short local_player_index, char *full_path);
 void player_ui_set_active_player_profile(short local_player_index, long profile_index, struct player_profile *profile);
 
+void player_ui_get_active_player_profile(short local_player_index, struct player_profile *profile);
+
 /* ---------- globals */
 
 /* ---------- public code */

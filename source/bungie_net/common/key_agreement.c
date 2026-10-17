@@ -126,7 +126,7 @@ long is_message_encryption_key_message(
 	encoded_packet_type = ((char const *)msgptr)[message_size - 1];
 	*packet_type = encoded_packet_type;
 
-	if (TEST_FLAG(flags, _message_key_agreement_bit))
+	if (TEST_FLAG(flags, _message_flag_new_encryption_key_bit))
 	{
 		byte message_type = GET_MESSAGE_TYPE(*msgptr);
 
@@ -318,7 +318,7 @@ static message_header *create_key_agreement_message(
 
 		if (message)
 		{
-			SET_MESSAGE_FLAGS(*message, FLAG(_message_key_agreement_bit));
+			SET_MESSAGE_FLAGS(*message, FLAG(_message_flag_new_encryption_key_bit));
 		}
 	}
 
