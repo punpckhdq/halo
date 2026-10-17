@@ -382,6 +382,7 @@ real_vector3d *perpendicular3d(real_vector3d const *a, real_vector3d *result);
 real_vector4d *perpendicular4d(real_vector4d const *a, real_vector4d *result);
 
 real_vector3d *rotate_vector_about_axis(real_vector3d *v, real_vector3d const *n, real sine, real cosine);
+boolean pin_normal_to_cone3d(real_vector3d const *normal, real_vector3d const *direction, real sine, real cosine, real_vector3d *result);
 
 void vectors_interpolate(real_vector3d const *a, real_vector3d const *b, real t, real_vector3d *result);
 void points_interpolate(real_point3d const *a, real_point3d const *b, real t, real_point3d *result);
@@ -396,6 +397,8 @@ void quaternions_interpolate(real_quaternion const *q0, real_quaternion const *q
 void quaternion_transform_point(real_quaternion const *q, real_point3d const *p, real_point3d *result);
 
 void vectors3d_from_euler_angles3d(real_vector3d *forward, real_vector3d *up, real_euler_angles3d const *angles);
+real vector_to_line_distance_squared3d(real_point3d const *point, real_vector3d const *vector, real_point3d const *base, real_vector3d const *height);
+boolean pill_test_vector3d(real_point3d const *base, real height, real width, real_point3d const *point, real_vector3d const *vector, real *t_reference, real_vector3d *normal);
 boolean fast_vector_intersects_sphere(real_point3d const *point, real_vector3d const *vector, real_point3d const *center, real radius);
 boolean vector_intersects_pill3d(real_point3d const *point, real_vector3d const *vector, real_point3d const *base, real_vector3d const *height, real width);
 real fast_vector_intersection_with_sphere(real_point3d const *point, real_vector3d const *vector, real_point3d const *center, real radius);
@@ -470,14 +473,18 @@ real_vector3d *matrix3x3_transform_vector(real_matrix3x3 const *matrix, real_vec
 real_matrix3x3 *matrix3x3_from_forward_and_up(real_matrix3x3 *matrix, real_vector3d const *forward, real_vector3d const *up);
 void matrix4x3_transpose(real_matrix4x3 *matrix);
 void matrix4x3_inverse(real_matrix4x3 const *matrix, real_matrix4x3 *result);
+void matrix4x3_scale(real_matrix4x3 *matrix, real scale);
 void matrix4x3_translation(real_matrix4x3 *matrix, real_point3d const *point);
 void matrix4x3_rotation_from_axis_and_angle(real_matrix4x3 *matrix, real_vector3d const *axis, real sine, real cosine);
 void matrix4x3_rotation_from_vectors(real_matrix4x3 *matrix, real_vector3d const *forward, real_vector3d const *up);
 void matrix4x3_rotation_from_angles(real_matrix4x3 *matrix, real yaw, real pitch, real roll);
+void matrix4x3_rotation_to_angles(real_matrix4x3 *matrix, real_euler_angles3d *angles);
 void matrix4x3_rotation_from_quaternion(real_matrix4x3 *matrix, real_quaternion const *quaternion);
+void matrix4x3_rotation_to_quaternion(real_matrix4x3 const *matrix, real_quaternion *quaternion);
 void matrix4x3_from_point_and_vectors(real_matrix4x3 *matrix, real_point3d const *point, real_vector3d const *forward, real_vector3d const *up);
 void matrix4x3_from_point_and_quaternion(real_matrix4x3 *matrix, real_point3d const *point, real_quaternion const *quaternion);
 void matrix4x3_from_orientation(real_matrix4x3 *matrix, real_orientation const *orientation);
+void matrix4x3_from_plane(real_matrix4x3 *matrix, real_plane3d const *plane);
 void matrix4x3_to_point_and_vectors(real_matrix4x3 const *matrix, real_point3d *point, real_vector3d *forward, real_vector3d *up);
 real_vector3d *vector_from_matrices4x3(real_matrix4x3 const *a, real_matrix4x3 const *b, real_vector3d *rotation);
 real_point3d *matrix4x3_transform_point(real_matrix4x3 const *matrix, real_point3d const *point, real_point3d *result);
