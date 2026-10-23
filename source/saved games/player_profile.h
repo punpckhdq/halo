@@ -25,6 +25,10 @@ enum
 enum
 {
 	_button_preset_standard = 0,
+	_button_preset_southpaw,
+	_button_preset_jumpy,
+	_button_preset_bumperjumper,
+	_button_preset_boxer,
 };
 
 enum
@@ -63,7 +67,7 @@ struct player_profile
 	char single_player_map_flags[NUMBER_OF_SINGLE_PLAYER_LEVELS];
 	short last_single_player_map_played;
 
-	struct
+	struct _controller_settings
 	{
 		byte button_preset;
 		byte joystick_preset;
