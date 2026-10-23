@@ -29,7 +29,6 @@ enum
 /* ---------- types */
 
 typedef long byte_swap_code;
-typedef unsigned __int64 _uint64;
 
 struct byte_swap_definition
 {

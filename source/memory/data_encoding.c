@@ -46,7 +46,7 @@ boolean data_encode_memory(
 		size = count*sizeof(long);
 		break;
 	case _8byte:
-		size = count*sizeof(_uint64);
+		size = count*sizeof(unsigned __int64);
 		break;
 	default:
 		match_halt("c:\\halo\\SOURCE\\memory\\data_encoding.c", 51);
@@ -183,7 +183,7 @@ boolean data_encode_array(
 		break;
 	case _8byte:
 		{
-			_uint64 temp = element_count;
+			unsigned __int64 temp = element_count;
 
 			data_encode_memory(state, &temp, 1, _8byte);
 		}
@@ -294,7 +294,7 @@ void *data_decode_memory(
 		size = count*sizeof(long);
 		break;
 	case _8byte:
-		size = count*sizeof(_uint64);
+		size = count*sizeof(unsigned __int64);
 		break;
 	default:
 		match_halt("c:\\halo\\SOURCE\\memory\\data_encoding.c", 265);
@@ -343,10 +343,10 @@ long data_decode_long(
 	return value ? *value : 0;
 }
 
-_uint64 data_decode_int64(
+unsigned __int64 data_decode_int64(
 	struct data_encoding_state *state)
 {
-	_uint64 *value = (_uint64 *)data_decode_memory(state, 1, _8byte);
+	unsigned __int64 *value = (unsigned __int64 *)data_decode_memory(state, 1, _8byte);
 
 	return value ? *value : 0;
 }

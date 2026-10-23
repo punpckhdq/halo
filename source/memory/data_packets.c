@@ -150,7 +150,7 @@ static void _data_packet_verify(
 				size = field->count*sizeof(long);
 				break;
 			case __pack_int64:
-				size = field->count*sizeof(_uint64);
+				size = field->count*sizeof(unsigned __int64);
 				break;
 			case __pack_string:
 				size = field->count + 1;
@@ -383,7 +383,7 @@ static void _data_packet_decode(
 
 					if (data)
 					{
-						memcpy(buffer, data, field->count*sizeof(_uint64));
+						memcpy(buffer, data, field->count*sizeof(unsigned __int64));
 					}
 				}
 				break;

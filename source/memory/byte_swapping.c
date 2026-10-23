@@ -19,8 +19,8 @@ static byte_swap_code word_bs_codes[] = {_begin_bs_array, 1, sizeof(word), _end_
 struct byte_swap_definition word_bs_definition = {"word", sizeof(word), word_bs_codes, BYTE_SWAP_DEFINITION_SIGNATURE};
 static byte_swap_code long_bs_codes[] = {_begin_bs_array, 1, sizeof(long), _end_bs_array};
 struct byte_swap_definition long_bs_definition = {"long", sizeof(long), long_bs_codes, BYTE_SWAP_DEFINITION_SIGNATURE};
-static byte_swap_code int64_bs_codes[] = {_begin_bs_array, 1, sizeof(_uint64), _end_bs_array};
-struct byte_swap_definition int64_bs_definition = {"int64", sizeof(_uint64), int64_bs_codes, BYTE_SWAP_DEFINITION_SIGNATURE};
+static byte_swap_code int64_bs_codes[] = {_begin_bs_array, 1, sizeof(unsigned __int64), _end_bs_array};
+struct byte_swap_definition int64_bs_definition = {"int64", sizeof(unsigned __int64), int64_bs_codes, BYTE_SWAP_DEFINITION_SIGNATURE};
 
 /* ---------- public code */
 
@@ -129,7 +129,7 @@ void byte_swap_memory(
 		break;
 	case _8byte:
 		{
-			_uint64 *data = (_uint64 *)memory;
+			unsigned __int64 *data = (unsigned __int64 *)memory;
 
 			while (count-->0)
 			{
@@ -203,7 +203,7 @@ static void _byte_swap_data(
 			case _8byte:
 				if (data)
 				{
-					_uint64 *value = (_uint64 *)((byte *)data + size_in_bytes);
+					unsigned __int64 *value = (unsigned __int64 *)((byte *)data + size_in_bytes);
 
 					*value = SWAP8(*value);
 				}
