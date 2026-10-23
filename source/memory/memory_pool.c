@@ -1,71 +1,5 @@
 /*
 MEMORY_POOL.C
-
-symbols in this file:
-0010DB50 0010:
-	_memory_pool_allocation_size (0000)
-0010DB60 0050:
-	_memory_pool_initialize (0000)
-0010DBB0 0010:
-	_memory_pool_get_free_size (0000)
-0010DBC0 0020:
-	_memory_pool_get_used_size (0000)
-0010DBE0 0030:
-	_memory_pool_get_contiguous_free_size (0000)
-0010DC10 0010:
-	_memory_pool_block_compute_actual_size (0000)
-0010DC20 0030:
-	_memory_pool_block_new (0000)
-0010DC50 0170:
-	_code_0010dc50 (0000)
-0010DDC0 00b0:
-	_code_0010ddc0 (0000)
-0010DE70 0040:
-	_memory_pool_new (0000)
-0010DEB0 0030:
-	_memory_pool_delete (0000)
-0010DEE0 00e0:
-	_memory_pool_block_allocate (0000)
-0010DFC0 00a0:
-	_memory_pool_block_free (0000)
-0010E060 0060:
-	_memory_pool_compact (0000)
-0010E0C0 0120:
-	_memory_pool_block_reallocate (0000)
-0027E458 0041:
-	??_C@_0EB@NADHALE@?$CIbyte?5?$CK?$CJblock?$CLblock?9?$DOsize?$DM?$DN?$CIbyte@ (0000)
-0027E49C 002a:
-	??_C@_0CK@LLMKELFI@?$CIbyte?5?$CK?$CJblock?$DO?$DN?$CIbyte?5?$CK?$CJpool?9?$DObas@ (0000)
-0027E4C8 0032:
-	??_C@_0DC@HIOFDAGC@block?9?$DOtrailer_signature?$DN?$DNBLOCK_@ (0000)
-0027E4FC 0030:
-	??_C@_0DA@IHOELNEF@block?9?$DOheader_signature?$DN?$DNBLOCK_H@ (0000)
-0027E52C 002d:
-	??_C@_0CN@BLDKBJCH@block?9?$DOnext_block?5?$HM?$HM?5pool?9?$DOlast_@ (0000)
-0027E55C 0026:
-	??_C@_0CG@CJPANJAP@block?9?$DOprevious_block?$DN?$DNprevious_@ (0000)
-0027E584 000d:
-	??_C@_0N@EHOFABCJ@pool?9?$DOsize?$DO0?$AA@ (0000)
-0027E594 0020:
-	??_C@_0CA@HGIACAOK@pool?9?$DOsignature?$DN?$DNPOOL_SIGNATURE?$AA@ (0000)
-0027E5B4 0024:
-	??_C@_0CE@POLAKNJH@c?3?2halo?2SOURCE?2memory?2memory_poo@ (0000)
-0027E5D8 000c:
-	??_C@_0M@MJBIHABJ@other_block?$AA@ (0000)
-0027E5E4 0025:
-	??_C@_0CF@IJNEMAOG@expected?5reference?5?$CF08x?5but?5got?5@ (0000)
-0027E60C 001a:
-	??_C@_0BK@MFLHGBFC@reference?5?$CG?$CG?5?$CI?$CKreference?$CJ?$AA@ (0000)
-0027E628 0013:
-	??_C@_0BD@IKFFHLNA@pool?9?$DOfree_size?$DO?$DN0?$AA@ (0000)
-0027E63C 001c:
-	??_C@_0BM@JADHFLPK@pool?9?$DOfree_size?$DM?$DNpool?9?$DOsize?$AA@ (0000)
-0027E658 001c:
-	??_C@_0BM@HDOIAFHN@actual_new_size?$DOblock?9?$DOsize?$AA@ (0000)
-0027E674 0032:
-	??_C@_0DC@FAPCJHLD@pool?9?$DOfree_size?$DO?$DN0?5?$CG?$CG?5pool?9?$DOfree@ (0000)
-0027E6A8 000c:
-	??_C@_0M@PJCPCKMH@new_size?$DO?$DN0?$AA@ (0000)
 */
 
 /* ---------- headers */
@@ -81,21 +15,6 @@ enum
 	BLOCK_TRAILER_SIGNATURE = 'tail',
 	POOL_SIGNATURE = 'pool',
 };
-
-enum
-{
-	_pointer_locked_bit = -2147483648,
-	_pointer_size_mask = 2147483647,
-	MAXIMUM_BLOCK_SIZE = 2147483647,
-	ALIGNMENT_BYTE_BOUNDARY = 4,
-};
-
-enum
-{
-	INTERNAL_POINTER_OVERHEAD = 16,
-};
-
-/* ---------- macros */
 
 /* ---------- structures */
 
@@ -120,22 +39,38 @@ struct memory_pool
 	struct memory_pool_block *last_block;
 };
 
-struct memory_block
-{
-	unsigned long bits;
-	unsigned long index;
-	struct memory_block *previous_block;
-	struct memory_block *next_block;
-};
-
 /* ---------- prototypes */
 
+static long memory_pool_block_compute_actual_size(long size);
+static struct memory_pool_block *memory_pool_block_new(struct memory_pool *pool, long size);
 static void memory_pool_verify(struct memory_pool *pool);
-static struct memory_pool_block* memory_pool_block_get(struct memory_pool *pool, void **reference);
-
-/* ---------- globals */
+static struct memory_pool_block *memory_pool_block_get(struct memory_pool *pool, void **reference);
 
 /* ---------- public code */
+
+struct memory_pool *memory_pool_new(
+	char const *name,
+	long size)
+{
+	struct memory_pool *pool = (struct memory_pool *)match_malloc("c:\\halo\\SOURCE\\memory\\memory_pool.c", 70, memory_pool_allocation_size(size));
+
+	if (pool)
+	{
+		memory_pool_initialize(pool, name, size);
+	}
+
+	return pool;
+}
+
+void memory_pool_delete(
+	struct memory_pool *pool)
+{
+	memory_pool_verify(pool);
+	memset(pool, 0, sizeof(*pool));
+	match_free("c:\\halo\\SOURCE\\memory\\memory_pool.c", 85, pool);
+
+	return;
+}
 
 long memory_pool_allocation_size(
 	long size)
@@ -156,6 +91,165 @@ void memory_pool_initialize(
 	pool->free_size = size;
 	pool->first_block = NULL;
 	pool->last_block = NULL;
+
+	return;
+}
+
+boolean memory_pool_block_allocate(
+	struct memory_pool *pool,
+	void **reference,
+	long size)
+{
+	struct memory_pool_block *block;
+	long actual_size = memory_pool_block_compute_actual_size(size);
+
+	memory_pool_verify(pool);
+	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 124, size>=0);
+
+	block = memory_pool_block_new(pool, actual_size);
+	if (block)
+	{
+		block->header_signature = BLOCK_HEADER_SIGNATURE;
+		block->size = actual_size;
+		block->reference = reference;
+		block->next_block = NULL;
+		block->previous_block = pool->last_block;
+		block->trailer_signature = BLOCK_TRAILER_SIGNATURE;
+
+		if (!pool->first_block)
+		{
+			pool->first_block = block;
+		}
+
+		if (pool->last_block)
+		{
+			pool->last_block->next_block = block;
+		}
+
+		pool->last_block = block;
+		pool->free_size -= block->size;
+		match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 156, pool->free_size>=0);
+
+		*reference = &block[1];
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+boolean memory_pool_block_reallocate(
+	struct memory_pool *pool,
+	void **reference,
+	long new_size)
+{
+	struct memory_pool_block *block = memory_pool_block_get(pool, reference);
+	long actual_new_size = memory_pool_block_compute_actual_size(new_size);
+	byte *maximum_address;
+
+	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 174, new_size>=0);
+
+	maximum_address = block->next_block ? (byte *)block->next_block : (byte *)pool->base_address + pool->size;
+	if ((byte *)block + actual_new_size <= maximum_address)
+	{
+		pool->free_size += block->size - actual_new_size;
+		match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 184, pool->free_size>=0 && pool->free_size<=pool->size);
+		block->size = actual_new_size;
+
+		return TRUE;
+	}
+	else
+	{
+		void *new_buffer;
+
+		if (memory_pool_block_allocate(pool, &new_buffer, new_size))
+		{
+			struct memory_pool_block *new_block;
+
+			match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 200, actual_new_size>block->size);
+			memcpy(new_buffer, *reference, block->size - sizeof(struct memory_pool_block));
+			memory_pool_block_free(pool, reference);
+			new_block = memory_pool_block_get(pool, &new_buffer);
+			new_block->reference = reference;
+			*reference = new_buffer;
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+void memory_pool_block_free(
+	struct memory_pool *pool,
+	void **reference)
+{
+	struct memory_pool_block *block = memory_pool_block_get(pool, reference);
+
+	pool->free_size += block->size;
+	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 230, pool->free_size<=pool->size);
+
+	if (block->previous_block)
+	{
+		block->previous_block->next_block = block->next_block;
+	}
+	else
+	{
+		pool->first_block = block->next_block;
+	}
+
+	if (block->next_block)
+	{
+		block->next_block->previous_block = block->previous_block;
+	}
+	else
+	{
+		pool->last_block = block->previous_block;
+	}
+
+	memset(block, 0, block->size);
+
+	return;
+}
+
+void memory_pool_compact(
+	struct memory_pool *pool)
+{
+	if (pool->first_block)
+	{
+		struct memory_pool_block *block;
+		struct memory_pool_block *previous_block;
+		byte *next_address;
+
+		next_address = (byte *)pool->base_address;
+		previous_block = NULL;
+		for (block = pool->first_block; block; next_address = (byte *)block + block->size, previous_block = block, block = block->next_block)
+		{
+			if ((byte *)block > next_address)
+			{
+				memmove(next_address, block, block->size);
+				block = (struct memory_pool_block *)next_address;
+				*block->reference = &block[1];
+			}
+
+			block->previous_block = previous_block;
+			if (previous_block)
+			{
+				previous_block->next_block = block;
+			}
+			else
+			{
+				pool->first_block = block;
+			}
+		}
+
+		previous_block->next_block = NULL;
+		pool->last_block = previous_block;
+	}
+
+	memory_pool_verify(pool);
+
+	return;
 }
 
 long memory_pool_get_free_size(
@@ -176,124 +270,47 @@ long memory_pool_get_contiguous_free_size(
 	return pool->size - memory_pool_get_used_size(pool);
 }
 
-struct memory_pool *memory_pool_new(
-	char const *name,
+/* ---------- private code */
+
+static long memory_pool_block_compute_actual_size(
 	long size)
 {
-	struct memory_pool* pool = (struct memory_pool *)match_malloc("c:\\halo\\SOURCE\\memory\\memory_pool.c", 70, memory_pool_allocation_size(size));
-
-	if (pool)
+	size += sizeof(struct memory_pool_block);
+	if (size & 3)
 	{
-		memory_pool_initialize(pool, name, size);
+		size = (size | 3) + 1;
 	}
 
-	return pool;
+	return size;
 }
 
-void memory_pool_delete(
-	struct memory_pool *pool)
-{
-	memory_pool_verify(pool);
-	memset(pool, 0, sizeof(*pool));
-	match_free("c:\\halo\\SOURCE\\memory\\memory_pool.c", 85, pool);
-}
-
-boolean memory_pool_block_allocate(
+static struct memory_pool_block *memory_pool_block_new(
 	struct memory_pool *pool,
-	void **reference,
 	long size)
 {
-	boolean result = FALSE;
-	struct memory_pool_block *base_address;
-	long new_size;
+	struct memory_pool_block *block = pool->last_block ? (struct memory_pool_block *)((byte *)pool->last_block + pool->last_block->size) : (struct memory_pool_block *)pool->base_address;
 
-	new_size = size + sizeof(struct memory_pool_block);
-	// round up macro?
-	if ( ((size + sizeof(struct memory_pool_block)) & 3) != 0 )
+	if ((byte *)block + size <= (byte *)pool->base_address + pool->size)
 	{
-		new_size = (new_size | 3) + 1;
-	}
-
-	memory_pool_verify(pool);
-	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 124, size>=0);
-
-	if (pool->last_block)
-	{
-		base_address = (struct memory_pool_block *)((byte *)pool->last_block + pool->last_block->size);
+		return block;
 	}
 	else
 	{
-		base_address = (struct memory_pool_block *)pool->base_address;
+		return NULL;
 	}
-
-	if ((byte *)base_address + new_size <= (byte *)pool->base_address + pool->size && base_address)
-	{
-		base_address->size = new_size;
-		base_address->header_signature = BLOCK_HEADER_SIGNATURE;
-		base_address->reference = reference;
-		base_address->next_block = NULL;
-		base_address->previous_block = pool->last_block;
-		base_address->trailer_signature = BLOCK_TRAILER_SIGNATURE;
-
-		if ( !pool->first_block )
-		{
-			pool->first_block = base_address;
-		}
-		
-		if ( pool->last_block )
-		{
-			pool->last_block->next_block = base_address;
-		}
-
-		pool->last_block = base_address;
-		pool->free_size -= base_address->size;
-
-		match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 156, pool->free_size>=0);
-
-		*reference = &base_address[1];
-		result = TRUE;
-	}
-
-	return result;
 }
-
-void memory_pool_block_free(
-	struct memory_pool *pool,
-	void **reference)
-{
-	struct memory_pool_block* block = memory_pool_block_get(pool, reference);
-
-	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 230, pool->free_size<=pool->size);
-}
-
-void memory_pool_compact(
-	struct memory_pool *pool)
-{
-	memory_pool_verify(pool);
-}
-
-boolean memory_pool_block_reallocate(
-	struct memory_pool *pool,
-	void **reference,
-	long new_size)
-{
-	memory_pool_block_get(pool, reference);
-}
-
-/* ---------- private code */
 
 static void memory_pool_verify(
 	struct memory_pool *pool)
 {
-	struct memory_pool_block* block;
-	struct memory_pool_block* previous_block;
+	struct memory_pool_block *block;
+	struct memory_pool_block *previous_block;
 
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 340, pool->signature==POOL_SIGNATURE);
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 341, pool->size>0);
 
 	block = pool->first_block;
 	previous_block = NULL;
-
 	while (block)
 	{
 		match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 352, block->previous_block==previous_block);
@@ -308,30 +325,25 @@ static void memory_pool_verify(
 		previous_block = block;
 		block = block->next_block;
 	}
+
+	return;
 }
 
-static struct memory_pool_block* memory_pool_block_get(
+static struct memory_pool_block *memory_pool_block_get(
 	struct memory_pool *pool,
 	void **reference)
 {
-	void* other_reference;
-	struct memory_pool_block* block;
-	struct memory_pool_block* other_block;
+	struct memory_pool_block *block;
+	struct memory_pool_block *other_block;
 
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 372, reference && (*reference));
 	memory_pool_verify(pool);
 
-	other_reference = *(void **)((byte *)*reference - INTERNAL_POINTER_OVERHEAD);
-	match_vassert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 379, other_reference==reference, csprintf(temporary, "expected reference %08x but got %08x", other_reference, reference));
+	block = (struct memory_pool_block *)*reference - 1;
+	match_vassert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 379, block->reference==reference, csprintf(temporary, "expected reference %08x but got %08x", block->reference, reference));
 
-	block = (*(struct memory_pool_block**)reference) - 1;
-	other_block = block;
-
-	do
-	{
-		other_block = block->next_block;
-		match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 388, other_block);
-	} while (block != other_block);
+	for (other_block = pool->first_block; other_block && block!=other_block; other_block = other_block->next_block);
+	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 388, other_block);
 
 	return block;
 }

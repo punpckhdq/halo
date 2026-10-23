@@ -8,12 +8,6 @@ header included in hcex build.
 #define __MEMORY_POOL_H
 #pragma once
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
 /* ---------- prototypes/MEMORY_POOL.C */
 
 struct memory_pool *memory_pool_new(char const *name, long size);
@@ -27,9 +21,5 @@ void memory_pool_compact(struct memory_pool *pool);
 long memory_pool_get_free_size(struct memory_pool *pool);
 long memory_pool_get_used_size(struct memory_pool *pool);
 long memory_pool_get_contiguous_free_size(struct memory_pool *pool);
-
-/* ---------- globals */
-
-/* ---------- public code */
 
 #endif // __MEMORY_POOL_H

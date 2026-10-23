@@ -25,8 +25,6 @@ enum
 	NUMBER_OF_PACKET_FIELD_TYPES,
 };
 
-/* ---------- macros */
-
 /* ---------- structures */
 
 struct data_packet_field
@@ -48,10 +46,10 @@ struct data_packet_definition
 	boolean initialized_flag;
 };
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/DATA_PACKETS.C */
 
-/* ---------- globals */
-
-/* ---------- public code */
+void data_packet_verify(struct data_packet_definition *packet_definition);
+boolean data_packet_encode(struct data_packet_definition *packet_definition, short version, void *packet, void *buffer, short *buffer_size, short maximum_buffer_size);
+boolean data_packet_decode(struct data_packet_definition *packet_definition, void *encoded_packet, short encoded_packet_size, void *decoded_packet, short *version_reference, short *actual_encoded_packet_size_reference);
 
 #endif // __DATA_PACKETS_H

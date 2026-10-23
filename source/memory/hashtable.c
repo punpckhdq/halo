@@ -1,47 +1,5 @@
 /*
 HASHTABLE.C
-
-symbols in this file:
-0010B070 0100:
-	_hashtable_new (0000)
-0010B170 0010:
-	_hashtable_set_user_data (0000)
-0010B180 00a0:
-	_hashtable_delete (0000)
-0010B220 0050:
-	_default_hash_function (0000)
-0010B270 0120:
-	_hashtable_search (0000)
-0010B390 00b0:
-	_hashtable_get (0000)
-0010B440 01f0:
-	_hashtable_remove (0000)
-0010B630 00a0:
-	_hashtable_capacious_put (0000)
-0010B6D0 0240:
-	_hashtable_grow (0000)
-0010B910 00c0:
-	_hashtable_put (0000)
-0027DB74 0020:
-	??_C@_0CA@EAIKHNMM@load_factor?$DO0?5?$CG?$CG?5load_factor?$DM?$DN1?$AA@ (0000)
-0027DB94 000b:
-	??_C@_0L@LMBHJBKN@key_size?$DO0?$AA@ (0000)
-0027DBA0 0006:
-	??_C@_05LCLENNFI@table?$AA@ (0000)
-0027DBA8 0022:
-	??_C@_0CC@GCDECDDH@c?3?2halo?2SOURCE?2memory?2hashtable?4@ (0000)
-0027DBCC 0017:
-	??_C@_0BH@CIIOJKNJ@hashtable_valid?$CItable?$CJ?$AA@ (0000)
-0027DBE4 001e:
-	??_C@_0BO@PNMEFFDL@removing?5key?5not?5in?5hashtable?$AA@ (0000)
-0027DC04 0021:
-	??_C@_0CB@FCCGJANJ@putting?5key?5already?5in?5hashtable@ (0000)
-0027DC28 002c:
-	??_C@_0CM@FCICEOBE@table?9?$DOcapacity_bits?$CLgrowth_bits@ (0000)
-0027DC54 000e:
-	??_C@_0O@LDIFINGJ@growth_bits?$DO0?$AA@ (0000)
-00309E5C 001e:
-	_default_hash_polynomial (0000)
 */
 
 /* ---------- headers */
@@ -49,16 +7,268 @@ symbols in this file:
 #include "cseries.h"
 #include "hashtable.h"
 
-/* ---------- constants */
-
 /* ---------- macros */
 
-/* ---------- structures */
+#define hashtable_valid(table) ((table) && (table)->key_size>0 && (table)->element_size>0 && (table)->load_factor>0 && (table)->load_factor<=1 && ((table)->capacity_bits==NONE || FLAG((table)->capacity_bits)==(table)->elements.count))
 
 /* ---------- prototypes */
 
+static boolean hashtable_search(struct hashtable *table, void const *key, short *index);
+static void *hashtable_capacious_put(struct hashtable *table, void const *key);
+
 /* ---------- globals */
+
+short default_hash_polynomial[] = {3, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59};
 
 /* ---------- public code */
 
+void hashtable_new(
+	struct hashtable *table,
+	short key_size,
+	short element_size,
+	real load_factor,
+	hashtable_hash_function hash_function,
+	hashtable_compare_function compare_function)
+{
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 41, table);
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 42, key_size>0);
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 43, element_size>0);
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 44, load_factor>0 && load_factor<=1);
+
+	table->key_size = key_size;
+	table->element_size = element_size;
+	table->count = 0;
+	table->capacity_bits = NONE;
+	table->load_factor = load_factor;
+	table->hash_function = hash_function;
+	table->compare_function = compare_function;
+	dynamic_array_new(&table->elements, key_size + element_size);
+	table->used = NULL;
+
+	return;
+}
+
+void hashtable_set_user_data(
+	struct hashtable *table,
+	void *user_data)
+{
+	table->user_data = user_data;
+
+	return;
+}
+
+void *hashtable_get(
+	struct hashtable *table,
+	void const *key)
+{
+	void *result = NULL;
+	short index;
+
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 77, hashtable_valid(table));
+
+	if (table->count && hashtable_search(table, key, &index))
+	{
+		result = (byte *)dynamic_array_get_element(&table->elements, index, table->element_size) + table->key_size;
+	}
+
+	return result;
+}
+
+void *hashtable_put(
+	struct hashtable *table,
+	void const *key)
+{
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 93, hashtable_valid(table));
+
+	if (table->capacity_bits==NONE || table->count>=table->elements.count*table->load_factor)
+	{
+		if (!hashtable_grow(table, table->capacity_bits==NONE ? 2 : 1))
+		{
+			return NULL;
+		}
+	}
+
+	return hashtable_capacious_put(table, key);
+}
+
+void hashtable_delete(
+	struct hashtable *table)
+{
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 110, hashtable_valid(table));
+
+	dynamic_array_delete(&table->elements);
+	if (table->used)
+	{
+		match_free("c:\\halo\\SOURCE\\memory\\hashtable.c", 116, table->used);
+	}
+
+	return;
+}
+
+boolean hashtable_grow(
+	struct hashtable *table,
+	short growth_bits)
+{
+	short old_capacity_bits = table->capacity_bits;
+	short old_count = table->count;
+	unsigned long *old_used = table->used;
+	struct dynamic_array old_elements = table->elements;
+	short capacity;
+
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 134, hashtable_valid(table));
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 135, growth_bits>0);
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 136, table->capacity_bits+growth_bits<SHORT_BITS);
+
+	table->capacity_bits += growth_bits;
+	capacity = FLAG(table->capacity_bits);
+	table->count = 0;
+	table->used = (unsigned long *)match_malloc("c:\\halo\\SOURCE\\memory\\hashtable.c", 143, BIT_VECTOR_SIZE_IN_BYTES(capacity));
+	if (table->used)
+	{
+		dynamic_array_new(&table->elements, table->elements.element_size);
+		if (dynamic_array_resize(&table->elements, capacity))
+		{
+			short index;
+
+			memset(table->used, 0, BIT_VECTOR_SIZE_IN_BYTES(capacity));
+			for (index = 0; index<old_elements.count; index++)
+			{
+				if (BIT_VECTOR_TEST_FLAG(old_used, index))
+				{
+					void *element = dynamic_array_get_element(&old_elements, index, old_elements.element_size);
+
+					memcpy(hashtable_capacious_put(table, element), (byte *)element + table->key_size, table->element_size);
+				}
+			}
+
+			if (old_used)
+			{
+				match_free("c:\\halo\\SOURCE\\memory\\hashtable.c", 168, old_used);
+			}
+			dynamic_array_delete(&old_elements);
+
+			return TRUE;
+		}
+
+		match_free("c:\\halo\\SOURCE\\memory\\hashtable.c", 176, table->used);
+	}
+
+	table->capacity_bits = old_capacity_bits;
+	table->count = old_count;
+	table->used = old_used;
+	table->elements = old_elements;
+
+	return FALSE;
+}
+
+void hashtable_remove(
+	struct hashtable *table,
+	void const *key)
+{
+	short index;
+
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 195, hashtable_valid(table));
+	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 196, key);
+
+	if (hashtable_search(table, key, &index))
+	{
+		short next_index = (index + 1) & (table->elements.count - 1);
+
+		while (BIT_VECTOR_TEST_FLAG(table->used, next_index))
+		{
+			void *element = dynamic_array_get_element(&table->elements, next_index, table->element_size);
+			short hash_index = (table->hash_function ? table->hash_function(table->user_data, element) : default_hash_function(element, table->key_size)) & (table->elements.count - 1);
+
+			if ((hash_index<next_index && index>=hash_index && index<next_index) || (hash_index>next_index && (index>=hash_index || index<next_index)))
+			{
+				memcpy(dynamic_array_get_element(&table->elements, index, table->element_size), dynamic_array_get_element(&table->elements, next_index, table->element_size), table->elements.element_size);
+				index = next_index;
+			}
+
+			next_index = (next_index + 1) & (table->elements.count - 1);
+		}
+
+		BIT_VECTOR_SET_FLAG(table->used, index, FALSE);
+	}
+	else
+	{
+		match_vhalt("c:\\halo\\SOURCE\\memory\\hashtable.c", 225, "removing key not in hashtable");
+	}
+
+	return;
+}
+
+short default_hash_function(
+	byte const *key,
+	unsigned long key_size)
+{
+	short hash = 0;
+	short index;
+
+	for (index = 0; index<key_size; index++, key++)
+	{
+		if (index==NUMBEROF(default_hash_polynomial))
+		{
+			index = 0;
+			key_size -= NUMBEROF(default_hash_polynomial);
+		}
+
+		hash += default_hash_polynomial[index] * *key;
+	}
+
+	return hash;
+}
+
 /* ---------- private code */
+
+static void *hashtable_capacious_put(
+	struct hashtable *table,
+	void const *key)
+{
+	void *result = NULL;
+	short index;
+
+	if (hashtable_search(table, key, &index))
+	{
+		match_vhalt("c:\\halo\\SOURCE\\memory\\hashtable.c", 241, "putting key already in hashtable");
+	}
+	else
+	{
+		void *element = dynamic_array_get_element(&table->elements, index, table->element_size);
+
+		memcpy(element, key, table->key_size);
+		BIT_VECTOR_SET_FLAG(table->used, index, TRUE);
+		result = (byte *)element + table->key_size;
+		table->count++;
+	}
+
+	return result;
+}
+
+static boolean hashtable_search(
+	struct hashtable *table,
+	void const *key,
+	short *index)
+{
+	boolean found = FALSE;
+	short probe_count = 0;
+	short element_index = (table->hash_function ? table->hash_function(table->user_data, key) : default_hash_function(key, table->key_size)) & (table->elements.count - 1);
+
+	while (BIT_VECTOR_TEST_FLAG(table->used, element_index))
+	{
+		if (probe_count>=table->count) break;
+		if (table->compare_function ?
+			table->compare_function(table->user_data, dynamic_array_get_element(&table->elements, element_index, table->element_size), key) :
+			!memcmp(dynamic_array_get_element(&table->elements, element_index, table->element_size), key, table->key_size))
+		{
+			found = TRUE;
+			break;
+		}
+
+		element_index = (element_index + 1) & (table->elements.count - 1);
+		probe_count++;
+	}
+
+	*index = element_index;
+	return found;
+}

@@ -24,10 +24,12 @@ enum
 
 #define SWAP2(q) (((q)>>8) | (((q)<<8)&0xff00))
 #define SWAP4(q) (((q)>>24) | (((q)>>8)&0xff00) | (((q)<<8)&0x00ff0000) | (((q)<<24)&0xff000000))
+#define SWAP8(q) (((q)>>56) | (((q)>>40)&0xff00) | (((q)>>24)&0xff0000) | (((q)>>8)&0xff000000) | (((q)<<8)&0xff00000000) | (((q)<<24)&0xff0000000000) | (((q)<<40)&0xff000000000000) | ((q)<<56)) /* fake name */
 
 /* ---------- types */
 
 typedef long byte_swap_code;
+typedef unsigned __int64 _uint64;
 
 struct byte_swap_definition
 {

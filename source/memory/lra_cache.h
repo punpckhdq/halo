@@ -8,16 +8,20 @@ header included in hcex build.
 #define __LRA_CACHE_H
 #pragma once
 
-/* ---------- constants */
-
-/* ---------- macros */
-
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+typedef void (*lra_new_block_proc)(void **reference, void *data); /* fake name */
+typedef void (*lra_purge_block_proc)(void **reference); /* fake name */
 
-/* ---------- globals */
+/* ---------- prototypes/LRA_CACHE.C */
 
-/* ---------- public code */
+struct lra_cache *lra_new(char const *name, long size, lra_new_block_proc new_block_proc, lra_purge_block_proc purge_block_proc, void *base_address);
+void lra_dispose(struct lra_cache *cache);
+void lra_flush(struct lra_cache *cache);
+boolean lra_full(struct lra_cache *cache);
+void *lra_allocate(struct lra_cache *cache, long size, void **reference);
+void lra_free(struct lra_cache *cache, void *pointer);
+void lra_lock(struct lra_cache *cache, void *pointer);
+void lra_unlock(struct lra_cache *cache, void *pointer);
 
 #endif // __LRA_CACHE_H

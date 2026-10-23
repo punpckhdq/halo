@@ -8,10 +8,6 @@ header included in hcex build.
 #define __TEXTURE_PAGE_H
 #pragma once
 
-/* ---------- constants */
-
-/* ---------- macros */
-
 /* ---------- structures */
 
 struct texture_page_texture
@@ -47,10 +43,7 @@ struct texture_page_texture *texture_page_texture_get(struct texture_page *textu
 long texture_page_texture_new(struct texture_page *texture_page, short width, short height, boolean immediate);
 void texture_page_textures_cancel(struct texture_page *texture_page);
 boolean texture_page_textures_end(struct texture_page *texture_page);
+void texture_page_texture_delete(struct texture_page *texture_page, long texture_index);
 boolean texture_page_resize(struct texture_page *texture_page, short width, short height);
-
-/* ---------- globals */
-
-/* ---------- public code */
 
 #endif // __TEXTURE_PAGE_H
