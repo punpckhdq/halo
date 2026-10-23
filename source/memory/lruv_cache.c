@@ -166,6 +166,7 @@ void lruv_flush(
 	lruv_cache_verify(cache, TRUE);
 
 	data_iterator_new(&iterator, cache->blocks);
+
 	while (data_iterator_next(&iterator))
 	{
 		lruv_block_delete(cache, iterator.index);
@@ -198,6 +199,7 @@ long lruv_block_new(
 	next_block_index = cache->first_block_index;
 	previous_block_index = NONE;
 	page_index = 0;
+
 	while (page_index<cache->page_count)
 	{
 		unsigned long last_used_frame_index;
@@ -231,6 +233,7 @@ long lruv_block_new(
 				last_used_frame_index = block->last_used_frame_index;
 				page_count = block->page_count;
 				locked = cache->locked_block_proc && cache->locked_block_proc(next_block_index) ? TRUE : FALSE;
+
 				if (block->last_used_frame_index==cache->frame_index)
 				{
 					locked = TRUE;
@@ -274,6 +277,7 @@ long lruv_block_new(
 				}
 
 				hole->page_count += page_count;
+
 				if (hole->page_count>=desired_page_count)
 				{
 					if (!found_hole ||
@@ -297,6 +301,7 @@ long lruv_block_new(
 		struct lruv_cache_block *block;
 
 		data_iterator_new(&iterator, cache->blocks);
+
 		while (block = (struct lruv_cache_block *)data_iterator_next(&iterator))
 		{
 			if (block->first_page_index<best_hole.first_page_index + desired_page_count && block->first_page_index + block->page_count>best_hole.first_page_index)
@@ -319,6 +324,7 @@ long lruv_block_new(
 		}
 
 		block_index = datum_new(cache->blocks);
+
 		if (block_index!=NONE)
 		{
 			block = lruv_cache_block_get(cache, block_index);
@@ -459,6 +465,7 @@ void lruv_cache_get_page_usage(
 	memset(page_usage, 0, cache->page_count);
 
 	data_iterator_new(&iterator, cache->blocks);
+
 	while (block = (struct lruv_cache_block *)data_iterator_next(&iterator))
 	{
 		byte flags = FLAG(_lruv_cache_page_usage_allocated_bit);
@@ -495,6 +502,7 @@ void lruv_resize(
 	lruv_cache_verify(cache, TRUE);
 
 	data_iterator_new(&iterator, cache->blocks);
+
 	while (block = (struct lruv_cache_block *)data_iterator_next(&iterator))
 	{
 		if (block->first_page_index + block->page_count>new_page_count)
@@ -529,6 +537,7 @@ void lruv_debug_to_file(
 	lruv_cache_verify(cache, TRUE);
 
 	file = fopen(path, "w+");
+
 	if (file)
 	{
 		long block_index;
@@ -547,6 +556,7 @@ void lruv_debug_to_file(
 
 		block_index = cache->first_block_index;
 		page_index = 0;
+
 		while (page_index<cache->page_count)
 		{
 			unsigned long age = 0;
@@ -568,6 +578,7 @@ void lruv_debug_to_file(
 					age = cache->frame_index - block->last_used_frame_index;
 					page_count = block->page_count;
 					locked = cache->locked_block_proc && cache->locked_block_proc(block_index) ? TRUE : FALSE;
+
 					if (block->last_used_frame_index + 1>=cache->frame_index)
 					{
 						locked = TRUE;

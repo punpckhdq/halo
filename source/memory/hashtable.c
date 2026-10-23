@@ -97,6 +97,7 @@ void hashtable_delete(
 	match_assert("c:\\halo\\SOURCE\\memory\\hashtable.c", 110, hashtable_valid(table));
 
 	dynamic_array_delete(&table->elements);
+
 	if (table->used)
 	{
 		match_free("c:\\halo\\SOURCE\\memory\\hashtable.c", 116, table->used);
@@ -123,14 +124,17 @@ boolean hashtable_grow(
 	capacity = FLAG(table->capacity_bits);
 	table->count = 0;
 	table->used = (unsigned long *)match_malloc("c:\\halo\\SOURCE\\memory\\hashtable.c", 143, BIT_VECTOR_SIZE_IN_BYTES(capacity));
+
 	if (table->used)
 	{
 		dynamic_array_new(&table->elements, table->elements.element_size);
+
 		if (dynamic_array_resize(&table->elements, capacity))
 		{
 			short index;
 
 			memset(table->used, 0, BIT_VECTOR_SIZE_IN_BYTES(capacity));
+
 			for (index = 0; index<old_elements.count; index++)
 			{
 				if (BIT_VECTOR_TEST_FLAG(old_used, index))
@@ -145,6 +149,7 @@ boolean hashtable_grow(
 			{
 				match_free("c:\\halo\\SOURCE\\memory\\hashtable.c", 168, old_used);
 			}
+
 			dynamic_array_delete(&old_elements);
 
 			return TRUE;
@@ -256,7 +261,11 @@ static boolean hashtable_search(
 
 	while (BIT_VECTOR_TEST_FLAG(table->used, element_index))
 	{
-		if (probe_count>=table->count) break;
+		if (probe_count>=table->count)
+		{
+			break;
+		}
+
 		if (table->compare_function ?
 			table->compare_function(table->user_data, dynamic_array_get_element(&table->elements, element_index, table->element_size), key) :
 			!memcmp(dynamic_array_get_element(&table->elements, element_index, table->element_size), key, table->key_size))

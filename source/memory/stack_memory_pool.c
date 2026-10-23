@@ -80,19 +80,22 @@ handle pool_new_handle(
 	if (block)
 	{
 		h = (handle)block;
-		pool->statistics.total_size += memory_block_get_real_size(block);
-		pool->statistics.block_count++;
-		if (pool->statistics.total_size>pool->statistics.maximum_total_size)
+		pool->statistics.bytes_allocated += memory_block_get_real_size(block);
+		pool->statistics.blocks_used++;
+
+		if (pool->statistics.bytes_allocated>pool->statistics.peak_bytes_allocated)
 		{
-			pool->statistics.maximum_total_size = pool->statistics.total_size;
+			pool->statistics.peak_bytes_allocated = pool->statistics.bytes_allocated;
 		}
-		if (pool->statistics.block_count>pool->statistics.maximum_block_count)
+
+		if (pool->statistics.blocks_used>pool->statistics.peak_blocks_used)
 		{
-			pool->statistics.maximum_block_count = pool->statistics.block_count;
+			pool->statistics.peak_blocks_used = pool->statistics.blocks_used;
 		}
-		if (memory_block_get_real_size(block)>pool->statistics.largest_block_size)
+
+		if (memory_block_get_real_size(block)>pool->statistics.largest_block_allocated)
 		{
-			pool->statistics.largest_block_size = memory_block_get_real_size(block);
+			pool->statistics.largest_block_allocated = memory_block_get_real_size(block);
 		}
 	}
 	else
@@ -115,19 +118,22 @@ handle pool_new_handle_clear(
 	if (block)
 	{
 		h = (handle)block;
-		pool->statistics.total_size += memory_block_get_real_size(block);
-		pool->statistics.block_count++;
-		if (pool->statistics.total_size>pool->statistics.maximum_total_size)
+		pool->statistics.bytes_allocated += memory_block_get_real_size(block);
+		pool->statistics.blocks_used++;
+
+		if (pool->statistics.bytes_allocated>pool->statistics.peak_bytes_allocated)
 		{
-			pool->statistics.maximum_total_size = pool->statistics.total_size;
+			pool->statistics.peak_bytes_allocated = pool->statistics.bytes_allocated;
 		}
-		if (pool->statistics.block_count>pool->statistics.maximum_block_count)
+
+		if (pool->statistics.blocks_used>pool->statistics.peak_blocks_used)
 		{
-			pool->statistics.maximum_block_count = pool->statistics.block_count;
+			pool->statistics.peak_blocks_used = pool->statistics.blocks_used;
 		}
-		if (memory_block_get_real_size(block)>pool->statistics.largest_block_size)
+
+		if (memory_block_get_real_size(block)>pool->statistics.largest_block_allocated)
 		{
-			pool->statistics.largest_block_size = memory_block_get_real_size(block);
+			pool->statistics.largest_block_allocated = memory_block_get_real_size(block);
 		}
 	}
 	else
@@ -159,17 +165,20 @@ boolean pool_resize_handle(
 	{
 		old_size = memory_block_get_real_size(block);
 		block = stack_memory_pool_resize_block(pool, block, new_size, file, line);
+
 		if (block)
 		{
 			*h = (handle)block;
-			pool->statistics.total_size += memory_block_get_real_size(block) - old_size;
-			if (pool->statistics.total_size>pool->statistics.maximum_total_size)
+			pool->statistics.bytes_allocated += memory_block_get_real_size(block) - old_size;
+
+			if (pool->statistics.bytes_allocated>pool->statistics.peak_bytes_allocated)
 			{
-				pool->statistics.maximum_total_size = pool->statistics.total_size;
+				pool->statistics.peak_bytes_allocated = pool->statistics.bytes_allocated;
 			}
-			if (memory_block_get_real_size(block)>pool->statistics.largest_block_size)
+
+			if (memory_block_get_real_size(block)>pool->statistics.largest_block_allocated)
 			{
-				pool->statistics.largest_block_size = memory_block_get_real_size(block);
+				pool->statistics.largest_block_allocated = memory_block_get_real_size(block);
 			}
 		}
 		else
@@ -192,8 +201,8 @@ void dispose_handle(
 
 	size = memory_block_get_real_size(block);
 	stack_memory_pool_dispose_block(pool, block);
-	pool->statistics.total_size -= size;
-	pool->statistics.block_count--;
+	pool->statistics.bytes_allocated -= size;
+	pool->statistics.blocks_used--;
 
 	return;
 }
@@ -250,19 +259,22 @@ void *pool_new_pointer(
 	{
 		stack_memory_pool_lock_block(pool, block);
 		p = memory_block_get_user_address(block);
-		pool->statistics.total_size += memory_block_get_real_size(block);
-		pool->statistics.block_count++;
-		if (pool->statistics.total_size>pool->statistics.maximum_total_size)
+		pool->statistics.bytes_allocated += memory_block_get_real_size(block);
+		pool->statistics.blocks_used++;
+
+		if (pool->statistics.bytes_allocated>pool->statistics.peak_bytes_allocated)
 		{
-			pool->statistics.maximum_total_size = pool->statistics.total_size;
+			pool->statistics.peak_bytes_allocated = pool->statistics.bytes_allocated;
 		}
-		if (pool->statistics.block_count>pool->statistics.maximum_block_count)
+
+		if (pool->statistics.blocks_used>pool->statistics.peak_blocks_used)
 		{
-			pool->statistics.maximum_block_count = pool->statistics.block_count;
+			pool->statistics.peak_blocks_used = pool->statistics.blocks_used;
 		}
-		if (memory_block_get_real_size(block)>pool->statistics.largest_block_size)
+
+		if (memory_block_get_real_size(block)>pool->statistics.largest_block_allocated)
 		{
-			pool->statistics.largest_block_size = memory_block_get_real_size(block);
+			pool->statistics.largest_block_allocated = memory_block_get_real_size(block);
 		}
 	}
 
@@ -282,19 +294,22 @@ void *pool_new_pointer_clear(
 	{
 		stack_memory_pool_lock_block(pool, block);
 		p = memory_block_get_user_address(block);
-		pool->statistics.total_size += memory_block_get_real_size(block);
-		pool->statistics.block_count++;
-		if (pool->statistics.total_size>pool->statistics.maximum_total_size)
+		pool->statistics.bytes_allocated += memory_block_get_real_size(block);
+		pool->statistics.blocks_used++;
+
+		if (pool->statistics.bytes_allocated>pool->statistics.peak_bytes_allocated)
 		{
-			pool->statistics.maximum_total_size = pool->statistics.total_size;
+			pool->statistics.peak_bytes_allocated = pool->statistics.bytes_allocated;
 		}
-		if (pool->statistics.block_count>pool->statistics.maximum_block_count)
+
+		if (pool->statistics.blocks_used>pool->statistics.peak_blocks_used)
 		{
-			pool->statistics.maximum_block_count = pool->statistics.block_count;
+			pool->statistics.peak_blocks_used = pool->statistics.blocks_used;
 		}
-		if (memory_block_get_real_size(block)>pool->statistics.largest_block_size)
+
+		if (memory_block_get_real_size(block)>pool->statistics.largest_block_allocated)
 		{
-			pool->statistics.largest_block_size = memory_block_get_real_size(block);
+			pool->statistics.largest_block_allocated = memory_block_get_real_size(block);
 		}
 	}
 
@@ -318,6 +333,7 @@ void *pool_resize_pointer(
 	}
 
 	block = stack_memory_pool_resize_block(pool, block, new_size, file, line);
+
 	if (block)
 	{
 		if (!memory_block_is_locked(block))
@@ -326,19 +342,22 @@ void *pool_resize_pointer(
 		}
 
 		p = memory_block_get_user_address(block);
-		pool->statistics.total_size += memory_block_get_real_size(block) - old_size;
-		pool->statistics.block_count += old_size>0 ? 0 : 1;
-		if (pool->statistics.total_size>pool->statistics.maximum_total_size)
+		pool->statistics.bytes_allocated += memory_block_get_real_size(block) - old_size;
+		pool->statistics.blocks_used += old_size>0 ? 0 : 1;
+
+		if (pool->statistics.bytes_allocated>pool->statistics.peak_bytes_allocated)
 		{
-			pool->statistics.maximum_total_size = pool->statistics.total_size;
+			pool->statistics.peak_bytes_allocated = pool->statistics.bytes_allocated;
 		}
-		if (pool->statistics.block_count>pool->statistics.maximum_block_count)
+
+		if (pool->statistics.blocks_used>pool->statistics.peak_blocks_used)
 		{
-			pool->statistics.maximum_block_count = pool->statistics.block_count;
+			pool->statistics.peak_blocks_used = pool->statistics.blocks_used;
 		}
-		if (memory_block_get_real_size(block)>pool->statistics.largest_block_size)
+
+		if (memory_block_get_real_size(block)>pool->statistics.largest_block_allocated)
 		{
-			pool->statistics.largest_block_size = memory_block_get_real_size(block);
+			pool->statistics.largest_block_allocated = memory_block_get_real_size(block);
 		}
 	}
 	else
@@ -364,8 +383,8 @@ void dispose_pointer(
 
 	size = memory_block_get_real_size(block);
 	stack_memory_pool_dispose_block(pool, block);
-	pool->statistics.total_size -= size;
-	pool->statistics.block_count--;
+	pool->statistics.bytes_allocated -= size;
+	pool->statistics.blocks_used--;
 
 	return;
 }
@@ -373,7 +392,7 @@ void dispose_pointer(
 void stack_memory_pool_reset(
 	struct stack_memory_pool *pool)
 {
-	char const *name;
+	char *name;
 	byte *base_address;
 	struct memory_block **blocks_array;
 	long number_of_blocks;
@@ -412,6 +431,7 @@ __inline static boolean memory_block_valid(
 	else
 	{
 		real_size = memory_block_get_real_size(block);
+
 		if (real_size - INTERNAL_POINTER_OVERHEAD<=0)
 		{
 			match_assert("c:\\halo\\SOURCE\\memory\\stack_memory_pool.c", 484, !"pointer has invalid size");
@@ -560,6 +580,7 @@ static struct memory_block *stack_memory_pool_resize_block(
 			else
 			{
 				new_block = stack_memory_pool_allocate(pool, new_size, file, line);
+
 				if (new_block)
 				{
 					memcpy(memory_block_get_user_address(new_block), memory_block_get_user_address(reference), memory_block_get_user_size(reference));
@@ -581,22 +602,27 @@ static void stack_memory_pool_dispose_block(
 	match_assert("c:\\halo\\SOURCE\\memory\\stack_memory_pool.c", 723, stack_memory_pool_valid_block(pool, reference));
 
 	index = memory_block_get_pool_index(reference);
+
 	if (reference->previous_block)
 	{
 		reference->previous_block->next_block = reference->next_block;
 	}
+
 	if (reference->next_block)
 	{
 		reference->next_block->previous_block = reference->previous_block;
 	}
+
 	if (reference==pool->first_block)
 	{
 		pool->first_block = reference->next_block;
 	}
+
 	if (reference==pool->last_block)
 	{
 		pool->last_block = reference->previous_block;
 	}
+
 	pool->blocks[index] = NULL;
 	pool->next_block_index = !pool->first_block ? 0 : index;
 
@@ -673,6 +699,7 @@ static void stack_memory_pool_set_next_block_index(
 	{
 		index = pool->next_block_index + 1;
 		pool->next_block_index = NONE;
+
 		for (; index<pool->number_of_blocks; index++)
 		{
 			if (!pool->blocks[index])
@@ -703,12 +730,14 @@ static struct memory_block *stack_memory_pool_allocate(
 		void *new_block_address = NULL;
 
 		size += INTERNAL_POINTER_OVERHEAD;
+
 		while (size % ALIGNMENT_BYTE_BOUNDARY)
 		{
 			size++;
 		}
 
 		free_space = stack_memory_pool_free_space_at_end_of_pool(pool);
+
 		if (free_space<size)
 		{
 			stack_memory_pool_compact(pool);
@@ -777,6 +806,7 @@ static struct memory_block *stack_memory_pool_allocate(
 					block->previous_block = free_space_in_pool_previous;
 					block->next_block = free_space_in_pool_previous->next_block;
 					free_space_in_pool_previous->next_block = block;
+
 					if (block->next_block)
 					{
 						block->next_block->previous_block = block;
@@ -820,6 +850,7 @@ static void stack_memory_pool_compact(
 				{
 					memmove(previous_block + previous_size, block, memory_block_get_real_size(block));
 					block = (struct memory_block *)(previous_block + previous_size);
+
 					if (block->previous_block)
 					{
 						block->previous_block->next_block = block;

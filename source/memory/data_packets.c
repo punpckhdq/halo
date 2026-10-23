@@ -91,9 +91,11 @@ boolean data_packet_decode(
 	data_decode_new(&decode_state, encoded_packet, encoded_packet_size);
 
 	version = !packet_definition->version ? 0 : data_decode_byte(&decode_state);
+
 	if (version<=packet_definition->version)
 	{
 		_data_packet_decode(packet_definition, &decode_state, version, decoded_packet, NULL, packet_definition->fields, NULL);
+
 		if (!decode_state.overflow_flag)
 		{
 			success = TRUE;
@@ -237,6 +239,7 @@ static void _data_packet_encode(
 
 					data += sizeof(short);
 					match_assert("c:\\halo\\SOURCE\\memory\\data_packets.c", 253, data_size>=0 && data_size<=field->count);
+
 					if (data_size<0 || data_size>field->count)
 					{
 						data_size = 0;
@@ -259,12 +262,14 @@ static void _data_packet_encode(
 
 					_data_packet_verify(packet_definition, NULL, field + 1, &field_count);
 					match_assert("c:\\halo\\SOURCE\\memory\\data_packets.c", 281, element_count>=0 && element_count<=field->count);
+
 					if (element_count<0 || element_count>field->count)
 					{
 						element_count = 0;
 					}
 
 					data_encode_integer(encode_state, element_count, field->count);
+
 					for (element_index = 0; element_index<element_count; element_index++)
 					{
 						_data_packet_encode(packet_definition, encode_state, version, element, &byte_count, field + 1, NULL);
@@ -399,6 +404,7 @@ static void _data_packet_decode(
 
 					*(short *)buffer = data_size;
 					data = data_decode_memory(decode_state, data_size, _1byte);
+
 					if (data)
 					{
 						memcpy(buffer + sizeof(short), data, data_size);
@@ -424,6 +430,7 @@ static void _data_packet_decode(
 					short element_index;
 
 					_data_packet_verify(packet_definition, NULL, field + 1, &field_count);
+
 					if (element_count<0 || element_count>field->count)
 					{
 						element_count = 0;
@@ -431,6 +438,7 @@ static void _data_packet_decode(
 
 					*(short *)buffer = element_count;
 					element = buffer + sizeof(short);
+
 					for (element_index = 0; element_index<element_count; element_index++)
 					{
 						_data_packet_decode(packet_definition, decode_state, version, element, &byte_count, field + 1, NULL);

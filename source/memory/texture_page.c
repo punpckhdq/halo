@@ -56,6 +56,7 @@ struct texture_page *texture_page_new(
 		texture_page->used_pixel_count = 0;
 		texture_page->contains_unsorted_textures = FALSE;
 		texture_page->textures = data_new("texture page textures", SHORT_MAX, sizeof(struct texture_page_texture));
+
 		if (texture_page->textures)
 		{
 			data_make_valid(texture_page->textures);
@@ -105,6 +106,7 @@ long texture_page_texture_new(
 	if (width<=texture_page->width && height<=texture_page->height && width*height + texture_page->texture_pixel_count<texture_page->width*texture_page->height)
 	{
 		texture_index = datum_new(texture_page->textures);
+
 		if (texture_index!=NONE)
 		{
 			struct texture_page_texture *texture = texture_page_texture_get(texture_page, texture_index);
@@ -113,6 +115,7 @@ long texture_page_texture_new(
 			texture->height = height;
 			texture->sorted = !texture_page->contains_unsorted_textures;
 			texture_page->texture_pixel_count += width*height;
+
 			if (immediate && !texture_page_resort(texture_page))
 			{
 				texture_page->texture_pixel_count -= width*height;
@@ -173,6 +176,7 @@ boolean texture_page_textures_end(
 	match_assert("c:\\halo\\SOURCE\\memory\\texture_page.c", 170, texture_page->contains_unsorted_textures);
 
 	success = texture_page_resort(texture_page);
+
 	if (success)
 	{
 		for (texture_index = 0, texture = (struct texture_page_texture *)texture_page->textures->data; texture_index<texture_page->textures->count; texture_index++, texture++)
@@ -213,6 +217,7 @@ boolean texture_page_resize(
 	old_height = texture_page->height;
 	texture_page->width = width;
 	texture_page->height = height;
+
 	if (texture_page_resort(texture_page))
 	{
 		success = TRUE;
@@ -264,6 +269,7 @@ static boolean texture_page_resort(
 	texture_page_verify(texture_page);
 
 	sorted_texture_count = 0;
+
 	for (texture_index = 0, texture = (struct texture_page_texture *)texture_page->textures->data; texture_index<texture_page->textures->count; texture_index++, texture++)
 	{
 		if (texture->identifier)
@@ -318,6 +324,7 @@ static boolean texture_page_resort(
 
 			texture->x = channel->x + spacing;
 			texture->y = channel->y + spacing;
+
 			if (remaining_height)
 			{
 				struct texture_channel *new_channel = &channels[channel_count++];

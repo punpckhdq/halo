@@ -14,18 +14,18 @@ typedef void **handle;
 
 struct stack_memory_pool
 {
-	char const *name;
+	char *name;
 	byte *base_address;
 	unsigned long pool_size;
 	long number_of_blocks;
 	long next_block_index;
 	struct
 	{
-		long total_size; /* fake name */
-		long maximum_total_size; /* fake name */
-		unsigned long block_count; /* fake name */
-		unsigned long maximum_block_count; /* fake name */
-		unsigned long largest_block_size; /* fake name */
+		long bytes_allocated;
+		long peak_bytes_allocated;
+		unsigned long blocks_used;
+		unsigned long peak_blocks_used;
+		long largest_block_allocated;
 	} statistics;
 	boolean locked;
 	struct memory_block *first_block;

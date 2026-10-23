@@ -107,6 +107,7 @@ boolean memory_pool_block_allocate(
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 124, size>=0);
 
 	block = memory_pool_block_new(pool, actual_size);
+
 	if (block)
 	{
 		block->header_signature = BLOCK_HEADER_SIGNATURE;
@@ -150,6 +151,7 @@ boolean memory_pool_block_reallocate(
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 174, new_size>=0);
 
 	maximum_address = block->next_block ? (byte *)block->next_block : (byte *)pool->base_address + pool->size;
+
 	if ((byte *)block + actual_new_size <= maximum_address)
 	{
 		pool->free_size += block->size - actual_new_size;
@@ -223,6 +225,7 @@ void memory_pool_compact(
 
 		next_address = (byte *)pool->base_address;
 		previous_block = NULL;
+
 		for (block = pool->first_block; block; next_address = (byte *)block + block->size, previous_block = block, block = block->next_block)
 		{
 			if ((byte *)block > next_address)
@@ -233,6 +236,7 @@ void memory_pool_compact(
 			}
 
 			block->previous_block = previous_block;
+
 			if (previous_block)
 			{
 				previous_block->next_block = block;
@@ -276,6 +280,7 @@ static long memory_pool_block_compute_actual_size(
 	long size)
 {
 	size += sizeof(struct memory_pool_block);
+
 	if (size & 3)
 	{
 		size = (size | 3) + 1;
@@ -311,6 +316,7 @@ static void memory_pool_verify(
 
 	block = pool->first_block;
 	previous_block = NULL;
+
 	while (block)
 	{
 		match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 352, block->previous_block==previous_block);

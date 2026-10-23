@@ -165,11 +165,13 @@ static void _byte_swap_data(
 	match_vassert("c:\\halo\\SOURCE\\memory\\byte_swapping.c", 189, array_count>=0, csprintf(temporary, "%s bs data @%p.#1 has invalid array size #%d", definition->name, codes, array_count));
 
 	size_in_bytes = 0;
+
 	for (array_index = 0; array_index<array_count; array_index++)
 	{
 		boolean done = FALSE;
 
 		size_in_codes = 2;
+
 		while (!done)
 		{
 			byte_swap_code code = codes[size_in_codes];
@@ -183,6 +185,7 @@ static void _byte_swap_data(
 
 					*value = SWAP2(*value);
 				}
+
 				size_in_codes++;
 				size_in_bytes += 2;
 				break;
@@ -193,6 +196,7 @@ static void _byte_swap_data(
 
 					*value = SWAP4(*value);
 				}
+
 				size_in_codes++;
 				size_in_bytes += 4;
 				break;
@@ -203,6 +207,7 @@ static void _byte_swap_data(
 
 					*value = SWAP8(*value);
 				}
+
 				size_in_codes++;
 				size_in_bytes += 8;
 				break;

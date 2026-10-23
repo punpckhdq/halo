@@ -57,7 +57,7 @@ char *data_packet_groups_get_error(
 boolean data_packet_group_decode_packet(
 	struct data_packet_group_definition *group_definition,
 	void *decoded_packet,
-	void const *encoded_packet,
+	void *encoded_packet,
 	short *encoded_packet_size,
 	short *packet_type,
 	short *packet_version,
@@ -75,6 +75,7 @@ boolean data_packet_group_decode_packet(
 		struct packet_header *header = (struct packet_header *)((byte *)encoded_packet + *encoded_packet_size - sizeof(struct packet_header));
 
 		byte_swap_data(&packet_header_bs_definition, header, 1);
+
 		if (header->type>=0 && header->type<group_definition->packet_type_count)
 		{
 			struct data_packet_group_packet *packet = &group_definition->packets[header->type];
@@ -82,13 +83,14 @@ boolean data_packet_group_decode_packet(
 			if (packet->packet_class==expected_packet_class)
 			{
 				*encoded_packet_size -= sizeof(struct packet_header);
-				if (packet->definition && !data_packet_decode(packet->definition, (void *)encoded_packet, *encoded_packet_size, decoded_packet, packet_version, NULL))
+
+				if (!packet->definition || data_packet_decode(packet->definition, encoded_packet, *encoded_packet_size, decoded_packet, packet_version, NULL))
 				{
-					error_string = "got packet which wouldn't decode";
+					*packet_type = header->type;
 				}
 				else
 				{
-					*packet_type = header->type;
+					error_string = "got packet which wouldn't decode";
 				}
 			}
 			else
@@ -113,7 +115,7 @@ boolean data_packet_group_decode_packet(
 
 boolean data_packet_group_encode_packet(
 	struct data_packet_group_definition *group_definition,
-	void const *decoded_packet,
+	void *decoded_packet,
 	void *encoded_packet,
 	short *encoded_packet_size,
 	short packet_type,

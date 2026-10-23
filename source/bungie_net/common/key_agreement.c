@@ -48,10 +48,10 @@ struct message_finalize_key_agreement /* fake name */
 
 /* ---------- prototypes */
 
-static char get_key_agreement_packet_type(message_header const *msgptr);
-static boolean decode_key_agreement_packet(void *decoded_packet, void const *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);
-static boolean encode_key_agreement_packet(void const *decoded_packet, void *encoded_packet, short *encoded_packet_size, short packet_type, short packet_version);
-static message_header *create_key_agreement_message(short packet_type, void const *packet, void *buffer, word buffer_size);
+static char get_key_agreement_packet_type(message_header *msgptr);
+static boolean decode_key_agreement_packet(void *decoded_packet, void *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);
+static boolean encode_key_agreement_packet(void *decoded_packet, void *encoded_packet, short *encoded_packet_size, short packet_type, short packet_version);
+static message_header *create_key_agreement_message(short packet_type, void *packet, void *buffer, word buffer_size);
 static message_header *create_message_initiate_key_agreement(struct public_key const *prime, struct public_key const *g, struct public_key const *key, void *buffer, word buffer_size);
 static message_header *create_message_finalize_key_agreement(struct public_key const *key, void *buffer, word buffer_size);
 
@@ -112,7 +112,7 @@ static byte key_agreement_buffer[KEY_AGREEMENT_BUFFER_SIZE]; /* fake name */
 /* ---------- public code */
 
 long is_message_encryption_key_message(
-	message_header const *msgptr,
+	message_header *msgptr,
 	word message_size,
 	byte *packet_type)
 {
@@ -123,7 +123,7 @@ long is_message_encryption_key_message(
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\key_agreement.c", 196, msgptr && packet_type);
 
 	flags = GET_MESSAGE_FLAGS(*msgptr);
-	encoded_packet_type = ((char const *)msgptr)[message_size - 1];
+	encoded_packet_type = ((char *)msgptr)[message_size - 1];
 	*packet_type = encoded_packet_type;
 
 	if (TEST_FLAG(flags, _message_key_agreement_bit))
@@ -183,7 +183,7 @@ boolean initiate_key_exchange(
 
 boolean complete_key_exchange(
 	struct transport_endpoint *endpoint,
-	message_header const *msgptr,
+	message_header *msgptr,
 	struct public_key const *prime,
 	struct public_key *secret,
 	struct public_key *private_key)
@@ -258,19 +258,19 @@ void initialize_key_agreement_packets(
 /* ---------- private code */
 
 static char get_key_agreement_packet_type(
-	message_header const *msgptr)
+	message_header *msgptr)
 {
 	byte message_type;
 	word length = GET_MESSAGE_SIZE(*msgptr);
 
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\common\\key_agreement.c", 77, (message_type= GET_MESSAGE_TYPE(*msgptr)) == _message_type_packet);
 
-	return ((char const *)msgptr)[length - 1];
+	return ((char *)msgptr)[length - 1];
 }
 
 static boolean decode_key_agreement_packet(
 	void *decoded_packet,
-	void const *encoded_packet,
+	void *encoded_packet,
 	short *encoded_packet_size,
 	short *packet_type,
 	short *packet_version,
@@ -287,7 +287,7 @@ static boolean decode_key_agreement_packet(
 }
 
 static boolean encode_key_agreement_packet(
-	void const *decoded_packet,
+	void *decoded_packet,
 	void *encoded_packet,
 	short *encoded_packet_size,
 	short packet_type,
@@ -304,7 +304,7 @@ static boolean encode_key_agreement_packet(
 
 static message_header *create_key_agreement_message(
 	short packet_type,
-	void const *packet,
+	void *packet,
 	void *buffer,
 	word buffer_size)
 {

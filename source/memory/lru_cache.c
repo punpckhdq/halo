@@ -76,6 +76,7 @@ struct lru_cache *lru_new(
 	}
 
 	block_size += sizeof(struct lru_block);
+
 	if (block_size & 3)
 	{
 		block_size = (block_size | 3) + 1;
@@ -83,6 +84,7 @@ struct lru_cache *lru_new(
 
 	block_count = total_size / block_size;
 	cache = (struct lru_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lru_cache.c", 110, sizeof(struct lru_cache));
+
 	if (cache)
 	{
 		boolean allocated_blocks = FALSE;
@@ -97,13 +99,13 @@ struct lru_cache *lru_new(
 		{
 			memset(cache, 0, sizeof(struct lru_cache));
 			cache->block_count = block_count;
+			cache->block_size = block_size;
+			cache->total_size = block_size*block_count;
+			cache->signature = LRU_CACHE_SIGNATURE;
 			cache->blocks = (byte *)buffer;
 			cache->new_block_proc = new_block_proc;
 			cache->age = 0;
 			cache->used_block_count = 0;
-			cache->block_size = block_size;
-			cache->total_size = block_count*block_size;
-			cache->signature = LRU_CACHE_SIGNATURE;
 			cache->purge_block_proc = purge_block_proc;
 			cache->allocated_blocks = allocated_blocks;
 			strncpy(cache->name, name, sizeof(cache->name) - 1);
@@ -129,6 +131,7 @@ void lru_dispose(
 	{
 		match_free("c:\\halo\\SOURCE\\memory\\lru_cache.c", 156, cache->blocks);
 	}
+
 	match_free("c:\\halo\\SOURCE\\memory\\lru_cache.c", 157, cache);
 
 	return;
@@ -166,6 +169,7 @@ void *lru_allocate(
 	void **reference)
 {
 	struct lru_block *block = NULL;
+	void *result = NULL;
 
 	verify_lru_cache(cache);
 
@@ -173,17 +177,16 @@ void *lru_allocate(
 	{
 		unsigned long oldest_age;
 		long block_index;
-		byte *current_block;
+		struct lru_block *current_block;
 
-		for (block_index = 0, current_block = cache->blocks; block_index<cache->used_block_count; block_index++, current_block += cache->block_size)
+		for (block_index = 0, current_block = (struct lru_block *)cache->blocks; block_index<cache->used_block_count; block_index++, current_block = (struct lru_block *)((byte *)current_block + cache->block_size))
 		{
-			struct lru_block *candidate = (struct lru_block *)current_block;
+			verify_lru_cache_block(cache, current_block);
 
-			verify_lru_cache_block(cache, candidate);
-			if (!TEST_FLAG(candidate->signature, _lru_block_locked_bit) && (!block || oldest_age>candidate->age))
+			if (!TEST_FLAG(current_block->signature, _lru_block_locked_bit) && (!block || oldest_age>current_block->age))
 			{
-				block = candidate;
-				oldest_age = candidate->age;
+				block = current_block;
+				oldest_age = current_block->age;
 			}
 		}
 
@@ -200,16 +203,15 @@ void *lru_allocate(
 
 	if (block)
 	{
-		block->reference = reference;
 		block->signature = LRU_BLOCK_SIGNATURE;
+		block->reference = reference;
 		block->age = cache->age++;
 		block->unused = 0;
-		cache->new_block_proc(block->reference, block + 1);
-
-		return block + 1;
+		result = block + 1;
+		cache->new_block_proc(block->reference, result);
 	}
 
-	return NULL;
+	return result;
 }
 
 void lru_lock(

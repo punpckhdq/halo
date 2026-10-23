@@ -32,8 +32,8 @@ struct data_packet_group_definition
 
 void data_packet_group_initialize(struct data_packet_group_definition *group_definition);
 char *data_packet_groups_get_error(void);
-boolean data_packet_group_decode_packet(struct data_packet_group_definition *group_definition, void *decoded_packet, void const *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);
-boolean data_packet_group_encode_packet(struct data_packet_group_definition *group_definition, void const *decoded_packet, void *encoded_packet, short *encoded_packet_size, short packet_type, short packet_version);
+boolean data_packet_group_decode_packet(struct data_packet_group_definition *group_definition, void *decoded_packet, void *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);
+boolean data_packet_group_encode_packet(struct data_packet_group_definition *group_definition, void *decoded_packet, void *encoded_packet, short *encoded_packet_size, short packet_type, short packet_version);
 boolean data_packet_group_append_packet_header(struct data_packet_group_definition *group_definition, void *encoded_packet, short *encoded_packet_size, short packet_type);
 
 #endif // __DATA_PACKET_GROUPS_H

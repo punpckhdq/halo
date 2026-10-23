@@ -92,24 +92,24 @@ struct lrar_cache *lrar_new(
 			memset(blocks, 0, block_count*sizeof(struct lrar_block));
 			strncpy(cache->name, name, sizeof(cache->name) - 1);
 			cache->name[sizeof(cache->name) - 1] = 0;
-			cache->alignment_bit = alignment_bit;
-			cache->boundary_bit = boundary_bit;
 			cache->minimum_address = minimum_address;
 			cache->maximum_address = maximum_address;
-			cache->size = maximum_address - minimum_address;
+			cache->size = cache->maximum_address - cache->minimum_address;
+			cache->alignment_bit = alignment_bit;
+			cache->boundary_bit = boundary_bit;
 			cache->blocks = blocks;
 			cache->first_block_index = NONE;
 			cache->last_block_index = NONE;
 			cache->block_count = block_count;
-			cache->new_block_proc = new_block_proc;
 			cache->purge_block_proc = purge_block_proc;
+			cache->new_block_proc = new_block_proc;
 			cache->signature = LRAR_CACHE_SIGNATURE;
 			verify_lrar_cache(cache);
 		}
 		else
 		{
 			match_free("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 138, cache);
-			return NULL;
+			cache = NULL;
 		}
 	}
 
@@ -134,9 +134,11 @@ void lrar_flush(
 	verify_lrar_cache(cache);
 
 	block_index = cache->first_block_index;
+
 	while (block_index!=NONE)
 	{
 		lrar_purge_block(cache, get_lrar_cache_block(cache, block_index));
+
 		if (block_index==cache->last_block_index)
 		{
 			block_index = NONE;
@@ -158,7 +160,7 @@ short lrar_allocate(
 	long size,
 	short *reference)
 {
-	short block_index = NONE;
+	short new_block_index = NONE;
 
 	verify_lrar_cache(cache);
 
@@ -170,14 +172,16 @@ short lrar_allocate(
 	if (size>=0 && size<=cache->size)
 	{
 		short first_block_index = cache->first_block_index;
-		short new_block_index = cache->last_block_index==NONE ? 0 : cache->last_block_index + 1;
+		boolean allocated = FALSE;
+
+		new_block_index = cache->last_block_index==NONE ? 0 : cache->last_block_index + 1;
 
 		if (new_block_index>=cache->block_count)
 		{
 			new_block_index = 0;
 		}
 
-		for (;;)
+		while (!allocated)
 		{
 			unsigned long new_block_address;
 			unsigned long adjusted_new_block_address;
@@ -198,23 +202,22 @@ short lrar_allocate(
 			if (cache->boundary_bit!=NONE)
 			{
 				unsigned long boundary_mask = ~MASK(cache->boundary_bit);
-				unsigned long start_boundary = new_block_address & boundary_mask;
 
-				if (start_boundary!=((new_block_address + size) & boundary_mask))
+				if ((new_block_address & boundary_mask)!=((new_block_address + size) & boundary_mask))
 				{
-					adjusted_new_block_address = start_boundary + FLAG(cache->boundary_bit);
+					adjusted_new_block_address = (new_block_address & boundary_mask) + FLAG(cache->boundary_bit);
 				}
 			}
 
 			if (first_block_index!=NONE)
 			{
-				struct lrar_block *block;
+				struct lrar_block *block = get_lrar_cache_block(cache, first_block_index);
 
-				block = get_lrar_cache_block(cache, first_block_index);
 				while (first_block_index==new_block_index || (new_block_address<=block->address && adjusted_new_block_address + size>block->address))
 				{
 					lrar_purge_block(cache, block);
 					block->signature = NONE;
+
 					if (++first_block_index>=cache->block_count)
 					{
 						first_block_index = 0;
@@ -234,6 +237,7 @@ short lrar_allocate(
 				short test_block_index;
 
 				match_assert("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 273, adjusted_new_block_address>=cache->minimum_address && adjusted_new_block_address+size<=cache->maximum_address);
+
 				for (test_block_index = 0; test_block_index<cache->block_count; test_block_index++)
 				{
 					struct lrar_block *test_block = &cache->blocks[test_block_index];
@@ -244,24 +248,26 @@ short lrar_allocate(
 					}
 				}
 
-				block->size = size;
 				block->signature = LRAR_BLOCK_SIGNATURE;
+				block->size = size;
 				block->address = adjusted_new_block_address;
 				block->reference = reference;
 				cache->new_block_proc(reference, new_block_index);
-				cache->last_block_index = new_block_index;
-				if (first_block_index==NONE)
-				{
-					first_block_index = new_block_index;
-				}
-				cache->first_block_index = first_block_index;
-				block_index = new_block_index;
-				break;
+				allocated = TRUE;
 			}
 		}
+
+		cache->last_block_index = new_block_index;
+
+		if (first_block_index==NONE)
+		{
+			first_block_index = new_block_index;
+		}
+
+		cache->first_block_index = first_block_index;
 	}
 
-	return block_index;
+	return new_block_index;
 }
 
 unsigned long lrar_block_address(
@@ -332,11 +338,18 @@ static void verify_lrar_cache_block(
 	struct lrar_cache *cache,
 	struct lrar_block *block)
 {
-	match_vassert("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 390,
-		block->signature==LRAR_BLOCK_SIGNATURE &&
-		block->size>=0 && block->size<cache->size &&
-		block->address>=cache->minimum_address && block->address + block->size<=cache->maximum_address,
-		csprintf(temporary, "lrar cache %s @%p block @%p appears to be corrupt", cache->name, cache, block));
+	boolean valid = FALSE;
+
+	if (block->signature==LRAR_BLOCK_SIGNATURE &&
+		block->size>=0 &&
+		block->size<cache->size &&
+		block->address>=cache->minimum_address &&
+		block->address + block->size<=cache->maximum_address)
+	{
+		valid = TRUE;
+	}
+
+	match_vassert("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 390, valid, csprintf(temporary, "lrar cache %s @%p block @%p appears to be corrupt", cache->name, cache, block));
 
 	return;
 }
@@ -344,12 +357,17 @@ static void verify_lrar_cache_block(
 static void verify_lrar_cache(
 	struct lrar_cache *cache)
 {
-	match_vassert("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 409,
-		cache->signature==LRAR_CACHE_SIGNATURE &&
+	boolean valid = FALSE;
+
+	if (cache->signature==LRAR_CACHE_SIGNATURE &&
 		cache->minimum_address<cache->maximum_address &&
 		cache->size>0 &&
-		cache->block_count>0,
-		csprintf(temporary, "lrar cache %s @%p appears to be corrupt", cache->name, cache));
+		cache->block_count>0)
+	{
+		valid = TRUE;
+	}
+
+	match_vassert("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 409, valid, csprintf(temporary, "lrar cache %s @%p appears to be corrupt", cache->name, cache));
 
 	return;
 }

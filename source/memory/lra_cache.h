@@ -15,7 +15,7 @@ typedef void (*lra_purge_block_proc)(void **reference); /* fake name */
 
 /* ---------- prototypes/LRA_CACHE.C */
 
-struct lra_cache *lra_new(char const *name, long size, lra_new_block_proc new_block_proc, lra_purge_block_proc purge_block_proc, void *base_address);
+struct lra_cache *lra_new(char *name, long size, lra_new_block_proc new_block_proc, lra_purge_block_proc purge_block_proc, void *base_address);
 void lra_dispose(struct lra_cache *cache);
 void lra_flush(struct lra_cache *cache);
 boolean lra_full(struct lra_cache *cache);

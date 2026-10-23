@@ -24,8 +24,6 @@ enum
 long lruv_allocation_size(long maximum_block_count);
 void lruv_initialize(struct lruv_cache *cache, char const *name, long page_count, long page_size_bits, long maximum_block_count, void (*delete_block_proc)(long), boolean (*locked_block_proc)(long));
 struct lruv_cache *lruv_new(char const *name, long page_count, long page_size_bits, long maximum_block_count, void (*delete_block_proc)(long), boolean (*locked_block_proc)(long));
-long lruv_allocation_size(long maximum_block_count);
-void lruv_initialize(struct lruv_cache *cache, char const *name, long page_count, long page_size_bits, long maximum_block_count, void (*delete_block_proc)(long), boolean (*locked_block_proc)(long));
 boolean lruv_has_locked_proc(struct lruv_cache const *cache);
 void lruv_update_function_pointers(struct lruv_cache *cache, void (*delete_block_proc)(long), boolean (*locked_block_proc)(long));
 void lruv_flush(struct lruv_cache *cache);

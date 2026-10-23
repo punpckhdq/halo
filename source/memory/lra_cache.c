@@ -56,7 +56,7 @@ static void verify_lra_cache(struct lra_cache *cache);
 /* ---------- public code */
 
 struct lra_cache *lra_new(
-	char const *name,
+	char *name,
 	long size,
 	lra_new_block_proc new_block_proc,
 	lra_purge_block_proc purge_block_proc,
@@ -101,7 +101,7 @@ struct lra_cache *lra_new(
 		else
 		{
 			match_free("c:\\halo\\SOURCE\\memory\\lra_cache.c", 126, cache);
-			return NULL;
+			cache = NULL;
 		}
 	}
 
@@ -117,6 +117,7 @@ void lra_dispose(
 	{
 		match_free("c:\\halo\\SOURCE\\memory\\lra_cache.c", 140, cache->base_address);
 	}
+
 	match_free("c:\\halo\\SOURCE\\memory\\lra_cache.c", 141, cache);
 
 	return;
@@ -158,6 +159,7 @@ void *lra_allocate(
 	verify_lra_cache(cache);
 
 	size += sizeof(struct lra_block);
+
 	if (size & 3)
 	{
 		size = (size | 3) + 1;
@@ -170,39 +172,34 @@ void *lra_allocate(
 		struct lra_block *first_purge_block = NULL;
 		short wrap_count = 0;
 
-		while (!result)
+		do
 		{
 			long free_offset = previous_block ? get_cache_block_offset(cache, previous_block) + previous_block->size : 0;
 
 			if (next_block)
 			{
 				verify_lra_cache_block(cache, next_block);
-				if (free_offset + size>get_cache_block_offset(cache, next_block))
-				{
-					if (TEST_FLAG(next_block->signature, _lra_block_locked_bit))
-					{
-						previous_block = next_block;
-						next_block = next_block->next_block;
-						first_purge_block = NULL;
-					}
-					else
-					{
-						if (!first_purge_block)
-						{
-							first_purge_block = next_block;
-						}
-						next_block = next_block->next_block;
-					}
-
-					continue;
-				}
 			}
 
-			if (free_offset + size>cache->size)
+			if (next_block && free_offset + size>get_cache_block_offset(cache, next_block))
+			{
+				if (TEST_FLAG(next_block->signature, _lra_block_locked_bit))
+				{
+					first_purge_block = NULL;
+					previous_block = next_block;
+				}
+				else if (!first_purge_block)
+				{
+					first_purge_block = next_block;
+				}
+
+				next_block = next_block->next_block;
+			}
+			else if (free_offset + size>cache->size)
 			{
 				next_block = (struct lra_block *)cache->base_address;
-				previous_block = NULL;
-				first_purge_block = NULL;
+				first_purge_block = previous_block = NULL;
+
 				if (wrap_count++)
 				{
 					break;
@@ -210,27 +207,31 @@ void *lra_allocate(
 			}
 			else
 			{
+				struct lra_block *purge_block;
 				struct lra_block *block;
 
-				for (block = first_purge_block; block && block!=next_block; block = block->next_block)
+				for (purge_block = first_purge_block; purge_block && purge_block!=next_block; purge_block = purge_block->next_block)
 				{
-					lra_purge_block(cache, block);
+					lra_purge_block(cache, purge_block);
 				}
 
 				block = (struct lra_block *)(cache->base_address + free_offset);
-				block->size = size;
 				block->signature = LRA_BLOCK_SIGNATURE;
+				block->size = size;
 				block->reference = reference;
 				block->next_block = next_block;
 				result = block + 1;
 				cache->new_block_proc(reference, result);
+
 				if (previous_block)
 				{
 					previous_block->next_block = block;
 				}
+
 				cache->last_block = block;
 			}
 		}
+		while (!result);
 	}
 
 	return result;
@@ -352,8 +353,16 @@ static void verify_lra_cache_block(
 static void verify_lra_cache(
 	struct lra_cache *cache)
 {
+	boolean valid = FALSE;
+
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 408, cache);
-	match_vassert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 418, cache->signature==LRA_CACHE_SIGNATURE && cache->base_address && cache->size>=0, csprintf(temporary, "lra cache %s @%p appears to be corrupt", cache->name, cache));
+
+	if (cache->signature==LRA_CACHE_SIGNATURE && cache->base_address && cache->size>=0)
+	{
+		valid = TRUE;
+	}
+
+	match_vassert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 418, valid, csprintf(temporary, "lra cache %s @%p appears to be corrupt", cache->name, cache));
 
 	if (cache->last_block)
 	{

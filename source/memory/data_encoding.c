@@ -123,6 +123,7 @@ boolean data_encode_structures(
 	match_assert("c:\\halo\\SOURCE\\memory\\data_encoding.c", 112, bs_definition);
 
 	size = structure_count*bs_definition->size;
+
 	if (size>0)
 	{
 		if (state->offset + size<=state->buffer_size && !state->overflow_flag)
@@ -249,9 +250,11 @@ void *data_decode_structures(
 	match_assert("c:\\halo\\SOURCE\\memory\\data_encoding.c", 224, bs_definition);
 
 	size = structure_count*bs_definition->size;
+
 	if (state->offset + size<=state->buffer_size && !state->overflow_flag)
 	{
 		data = (byte *)state->buffer + state->offset;
+
 		if (size)
 		{
 			byte_swap_data(bs_definition, data, structure_count);
@@ -300,6 +303,7 @@ void *data_decode_memory(
 	if (state->offset + size<=state->buffer_size && !state->overflow_flag)
 	{
 		result = (byte *)state->buffer + state->offset;
+
 		if (code!=_1byte)
 		{
 			byte_swap_memory(result, count, code);
