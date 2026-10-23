@@ -13,6 +13,21 @@ enum
 	PROFILE_SECTION_HISTORY_FRAMES = 120, /* fake name */
 };
 
+enum
+{
+	_profile_sort_name = 0,		/* fake name */
+	_profile_sort_average_time,	/* fake name */
+	_profile_sort_total_time,	/* fake name */
+	NUMBER_OF_PROFILE_SORT_MODES
+};
+
+enum
+{
+	_profile_dump_format_text = 0,	/* fake name */
+	_profile_dump_format_table,		/* fake name */
+	NUMBER_OF_PROFILE_DUMP_FORMAT_MODES
+};
+
 /* ---------- macros */
 
 #define profile_enter(section)							\
@@ -84,10 +99,10 @@ void profile_sections_activate(char const *name);
 void profile_sections_deactivate(char const *name);
 short profile_find_frame_value(char const *name, short *section_index_reference);
 short profile_find_game_value(char const *name, short *section_index_reference);
-real profile_frame_get_value(struct profile_frame_iterator const *iterator, short value);
+real profile_frame_get_value(struct profile_frame_iterator const *iterator, short value, short section_index);
 void profile_frame_iterator_new(struct profile_frame_iterator *iterator);
 boolean profile_frame_iterator_next(struct profile_frame_iterator *iterator, __int64 *vbl_count);
-void profile_frame_get_messages(struct profile_frame_iterator const *iterator);
+void profile_frame_get_messages(struct profile_frame_iterator const *iterator, short *message_count, short maximum_message_count, char **message_strings, point2d *message_locations, real_argb_color const **message_colors);
 long profile_frame_get_stalls(struct profile_frame_iterator const *iterator, short *stall_count, real *stall_msec);
 void profile_rasterizer_stalls(long stalls, short stall_count, __int64 stall_clocks, __int64 stall_time);
 
@@ -97,5 +112,7 @@ extern boolean profile_timebase_ticks;
 extern boolean profile_global_enable;
 extern boolean profile_dump_frames;
 extern boolean profile_dump_lost_frames;
+extern boolean profile_display;
+extern boolean profile_graph;
 
 #endif // __PROFILE_H

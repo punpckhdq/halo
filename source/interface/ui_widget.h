@@ -55,6 +55,16 @@ enum
 	_error_maximum_game_files_created,
 };
 
+enum
+{
+	_audio_feedback_none = 0,
+	_audio_feedback_cursor,
+	_audio_feedback_forward,
+	_audio_feedback_backward,
+	_audio_feedback_failure,
+	NUMBER_OF_AUDIO_FEEDBACK_SOUNDS
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

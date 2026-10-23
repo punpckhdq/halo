@@ -29,6 +29,9 @@ void network_game_abort(void);
 
 boolean network_game_is_active(void);
 struct network_game_client *global_network_game_client_get(void);
+void network_game_accept_remote_connections(boolean accept);
+boolean create_global_network_game_client(void);
+boolean create_global_network_game_server(void);
 
 /* ---------- globals */
 

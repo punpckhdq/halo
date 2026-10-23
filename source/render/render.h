@@ -28,6 +28,12 @@ enum
 	NUMBER_OF_BUILD_SPRITE_ORIENTATIONS,
 };
 
+enum
+{
+	_render_model_effect_type_none = 0,
+	_render_model_effect_type_active_camouflage
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -158,6 +164,7 @@ void render_objects_initialize(void);
 void render_objects_initialize_for_new_map(void);
 void render_objects_dispose_from_old_map(void);
 void render_objects_dispose(void);
+struct render_lighting const *object_get_cached_render_lighting(long object_index, real level_of_detail_pixels);
 
 /* ---------- globals */
 

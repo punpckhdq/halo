@@ -19,7 +19,14 @@ header included in hcex build.
 
 /* ---------- prototypes/PROGRESS_BAR.C */
 
+void progress_bar_initialize(void);
+void progress_bar_dispose(void);
+void progress_bar_begin(boolean ui_is_up);
+void progress_bar_end(void);
+boolean progress_bar_is_active(void);
+void progress_bar_eachframe(void);
 void progress_bar_display(real progress);
+void progress_bar_enable(boolean enable);
 
 /* ---------- globals */
 

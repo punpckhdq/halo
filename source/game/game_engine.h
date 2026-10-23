@@ -185,6 +185,9 @@ boolean game_engine_hud_draw_messages(long player_index);
 
 real_point3d game_engine_get_goal_position(short goal_index);
 void game_engine_render_nav_points(short local_player_index);
+boolean game_engine_get_goal_in_use(short goal_index);
+boolean game_engine_draw_object_in_motion_sensor(long unit_index);
+byte game_engine_player_get_custom_motion_sensor_positions(long player_index, real_point2d *points, char *goal_indices, short maximum_points);
 
 boolean game_engine_infinite_grenades(long player_index);
 
@@ -203,6 +206,8 @@ void game_engine_player_killed(long killing_player_index, long killing_object_in
 real game_engine_get_damage_multiplier(long attacker_index, long defender_index);
 
 void game_engine_playlist_next(long unused1, long unused2, long unused3);
+void game_engine_playlist_begin(void);
+void game_engine_playlist_initialize(void);
 struct game_variant build_game_variant_slayer(void);
 struct game_variant build_game_variant_slayer_pro(void);
 struct game_variant build_game_variant_elimination(void);

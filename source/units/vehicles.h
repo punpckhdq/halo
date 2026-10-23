@@ -31,6 +31,7 @@ enum
 /* ---------- macros */
 
 #define vehicle_get(index) ((struct vehicle_datum *)object_get_and_verify_type((index), _object_mask_vehicle))
+#define vehicle_try_and_get(index) ((struct vehicle_datum *)object_try_and_get_and_verify_type((index), _object_mask_vehicle))
 
 /* ---------- structures */
 

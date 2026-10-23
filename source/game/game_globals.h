@@ -331,7 +331,7 @@ struct game_globals
 	struct tag_block difficulty_information;
 	struct tag_block grenades;					// game_globals_grenade
 	struct tag_block rasterizer_data;			// game_globals_rasterizer_data
-	struct tag_block interface_tag_references;
+	struct tag_block interface_tag_references;	// game_globals_interface_tag_references
 	struct tag_block weapon_list;
 	struct tag_block cheat_powerups;
 	struct tag_block multiplayer_information;

@@ -18,12 +18,22 @@ header included in hcex build.
 
 /* ---------- structures */
 
+struct effects_information
+{
+	short effect_count;
+	short location_count;
+	short active_effect_count;
+};
+
 /* ---------- prototypes/EFFECTS.C */
 
+void effects_stop_on_first_person_weapon(short local_player_index);
+void effects_information_get(struct effects_information *information);
 void effect_stop(long effect_index, boolean and_delete);
 void effect_delete(long effect_index);
 void effects_disconnect_from_structure_bsp(void);
 void effects_reconnect_to_structure_bsp(void);
+void effects_start_on_first_person_weapon(short local_player_index, long object_index);
 
 long effect_new_looping(
 	long definition_index,
