@@ -465,6 +465,7 @@ boolean pill_test_vector3d(real_point3d const *base, real height, real width, re
 boolean fast_vector_intersects_sphere(real_point3d const *point, real_vector3d const *vector, real_point3d const *center, real radius);
 real fast_vector_intersection_with_sphere(real_point3d const *point, real_vector3d const *vector, real_point3d const *center, real radius);
 boolean point_in_triangle2d(real_point2d const *point, real_point2d const *p0, real_point2d const *p1, real_point2d const *p2, real *s, real *t);
+boolean point_in_triangle3d(real_point3d const *point, real_point3d const *p0, real_point3d const *p1, real_point3d const *p2, real *s, real *t);
 
 boolean point_in_rectangle2d(real_point2d const *point, real_rectangle2d const *bounds);
 boolean point_in_rectangle3d(real_point3d const *point, real_rectangle3d const *bounds);
@@ -514,6 +515,7 @@ boolean point_from_planes3d(real_plane3d const *plane0, real_plane3d const *plan
 boolean sphere_test_vector3d(real_point3d const *center, real radius, real_point3d const *point, real_vector3d const *vector, real *t, real_vector3d *normal);
 
 boolean valid_real_sine_cosine(real sine, real cosine);
+boolean sphere_intersects_cone3d(real_point3d const *center, real radius, real_point3d const *base, real_vector3d const *direction, real distance, real sine, real cosine);
 
 boolean accelerate_to_position(
 	real *position_reference,
@@ -606,6 +608,9 @@ extern const real_vector3d *const global_down3d;
 
 extern const real_quaternion *const global_identity_quaternion;
 extern const real_matrix4x3 *const global_identity4x3;
+
+extern const real_rectangle2d *const global_null_rectangle2d;
+extern const real_rectangle3d *const global_null_rectangle3d;
 
 /* ---------- public code */
 
@@ -1545,8 +1550,25 @@ __inline boolean valid_real_argb_color(
 	return valid_real(color->alpha) && color->alpha >= 0.f && color->alpha <= 1.f && valid_real_rgb_color(&color->rgb);
 }
 
-// TODO: depends on byte_rectangle3d, need to include integer_math?
-/*
+__inline real dequantize_byte_to_real(
+	real min,
+	real max,
+	byte value)
+{
+	real result;
+
+	if (value == UNSIGNED_CHAR_MAX)
+	{
+		result = max;
+	}
+	else
+	{
+		result = (max - min) * ((real)value / 255.f) + min;
+	}
+
+	return result;
+}
+
 __inline real_rectangle3d *dequantize_byte_to_real_rectangle3d(
 	real_rectangle3d const *parent,
 	byte_rectangle3d const *compressed_rectangle,
@@ -1558,8 +1580,9 @@ __inline real_rectangle3d *dequantize_byte_to_real_rectangle3d(
 	result->y1 = dequantize_byte_to_real(parent->y0, parent->y1, compressed_rectangle->y1);
 	result->z0 = dequantize_byte_to_real(parent->z0, parent->z1, compressed_rectangle->z0);
 	result->z1 = dequantize_byte_to_real(parent->z0, parent->z1, compressed_rectangle->z1);
+
+	return result;
 }
-*/
 
 __inline void interpolate_scalar(
 	real *current, 

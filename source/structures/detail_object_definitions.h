@@ -10,9 +10,103 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	DETAIL_OBJECT_CELL_SIZE = 8,
+	DETAIL_OBJECT_CELL_GRANULARITY = 255,
+	MAXIMUM_DETAIL_OBJECT_CELLS_PER_AXIS = 3,
+	MAXIMUM_DETAIL_OBJECT_CELLS_PER_FRAME = 27,
+	MAXIMUM_DETAIL_OBJECT_LAYERS_PER_STRUCTURE = 32,
+	MAXIMUM_DETAIL_OBJECT_LOCAL_PLAYERS = 2,	/* fake name */
+};
+
+enum
+{
+	_structure_detail_object_data_valid_bit = 0,	/* fake name */
+	_structure_detail_object_data_dirty_bit,		/* fake name */
+	NUMBER_OF_STRUCTURE_DETAIL_OBJECT_DATA_FLAGS	/* fake name */
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct detail_object_cell_definition
+{
+	short cell_x;
+	short cell_y;
+	short cell_z;
+	short offset_z;
+	unsigned long valid_layers;
+	long start_index;
+	long count_index;
+	long unused[3];
+};
+
+struct detail_object
+{
+	byte position[3];
+	byte data;
+	word color;
+};
+
+struct structure_detail_object_data
+{
+	struct tag_block cells;									// detail_object_cell_definition
+	struct tag_block detail_objects;						// detail_object
+	struct tag_block detail_objects_counts;					// short
+	struct tag_block detail_object_z_reference_vectors;		// real_vector4d
+	byte valid;
+	byte pad[3];
+	long unused[3];
+};
+
+struct detail_object_cell_data
+{
+	long first_detail_object_index;
+	long detail_object_count;
+	short cell_x;
+	short cell_y;
+	real cell_z;
+	long internal__first_vertex_index;
+	real_vector4d const *z_reference_vector;
+};
+
+struct detail_object_layer_data
+{
+	struct detail_object_cell_data *cells;
+	short cell_count;
+	short collection_definition_index;
+};
+
+struct detail_object_view_data
+{
+	struct detail_object_layer_data *layers;
+	short layer_count;
+	short pad;
+};
+
+struct detail_object_cell_coord
+{
+	short x;
+	short y;
+	short z;
+	boolean initialized;
+};
+
+struct detail_object_runtime_data
+{
+	struct detail_object_cell_data cells[MAXIMUM_DETAIL_OBJECT_LAYERS_PER_STRUCTURE][MAXIMUM_DETAIL_OBJECT_CELLS_PER_FRAME];
+	struct detail_object_layer_data layers[MAXIMUM_DETAIL_OBJECT_LAYERS_PER_STRUCTURE];
+	struct detail_object_view_data view_data;
+	struct detail_object_cell_coord last_cell_coord;
+};
+
+struct detail_object_global_runtime_data
+{
+	struct detail_object_runtime_data local_player_data[MAXIMUM_DETAIL_OBJECT_LOCAL_PLAYERS];
+	real_vector4d default_z_reference_vector;
+};
 
 /* ---------- prototypes/EXAMPLE.C */
 

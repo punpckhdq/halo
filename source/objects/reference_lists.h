@@ -84,6 +84,31 @@ __inline void reference_list_add(
 	return;
 }
 
+__inline void reference_list_remove(
+	struct data_array *array,
+	long *first_reference_index,
+	long datum_index)
+{
+	struct data_reference *reference;
+
+	while (*first_reference_index!=NONE)
+	{
+		reference = (struct data_reference *)datum_get(array, *first_reference_index);
+		if (reference->datum_index==datum_index)
+		{
+			datum_delete(array, *first_reference_index);
+			*first_reference_index = reference->next_reference_index;
+			return;
+		}
+
+		first_reference_index = &reference->next_reference_index;
+	}
+
+	match_vhalt("..\\objects\\reference_lists.h", 109, csprintf(temporary, "attempt to remove invalid element %ld from reference list", datum_index));
+
+	return;
+}
+
 __inline void reference_list_delete(
 	struct data_array *array,
 	long first_reference_index)
@@ -95,6 +120,34 @@ __inline void reference_list_delete(
 	{
 		reference = (struct data_reference*)datum_get(array, i);
 		datum_delete(array, i);
+	}
+
+	return;
+}
+
+__inline void reference_list_copy(
+	struct data_array *result,
+	struct data_array const *source)
+{
+	short absolute_index;
+	struct data_reference const *source_reference;
+	struct data_reference *result_reference;
+
+	match_assert("..\\objects\\reference_lists.h", 136, result->size==source->size);
+	match_assert("..\\objects\\reference_lists.h", 137, result->maximum_count==source->maximum_count);
+
+	for (absolute_index = 0, source_reference = source->data, result_reference = result->data;
+		absolute_index < result->maximum_count;
+		absolute_index++, source_reference++, result_reference++)
+	{
+		if (source_reference->identifier)
+		{
+			*result_reference = *source_reference;
+		}
+		else if (result_reference->identifier)
+		{
+			datum_delete(result, absolute_index);
+		}
 	}
 
 	return;

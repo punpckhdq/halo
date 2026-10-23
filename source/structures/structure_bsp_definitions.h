@@ -110,6 +110,17 @@ struct structure_cluster
 	struct tag_block portal_indices;		// short
 };
 
+struct cluster_portal
+{
+	short cluster_indices[2];
+	long plane_index;
+	real_point3d centroid;
+	real bounding_radius;
+	long flags;
+	long unused[6];
+	struct tag_block vertices;	// real_point3d
+};
+
 struct structure_fog_plane
 {
 	short region_index;
@@ -177,6 +188,11 @@ struct structure_sound_environment_palette_entry
 	long unused[8];
 };
 
+struct structure_node
+{
+	byte_rectangle3d bounds;
+};
+
 struct structure_leaf
 {
 	byte_rectangle3d bounds;
@@ -186,9 +202,24 @@ struct structure_leaf
 	long first_surface_reference_index;
 };
 
+struct structure_runtime_decal
+{
+	real_point3d position;
+	byte palette_index;
+	byte unused;
+	char yaw;
+	char pitch;
+};
+
 struct structure_surface
 {
 	word vertex_indices[3];
+};
+
+struct structure_surface_reference
+{
+	long surface_index;
+	long bsp3d_node_index;
 };
 
 struct structure_material

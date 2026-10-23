@@ -25,6 +25,12 @@ enum
 	MAXIMUM_QUEUED_LENS_FLARES = 8,
 };
 
+enum
+{
+	_render_fog_runtime_screen_use_sky_interpolator_bit = 0,
+	NUMBER_OF_RENDER_FOG_RUNTIME_FLAGS
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -105,10 +111,22 @@ struct render_fog
 	real screen_external_intensity;
 };
 
+struct render_mirror
+{
+	real_plane3d plane;
+	real index_of_refraction;
+	real depth;
+	short cluster_index;
+};
+
 /* ---------- prototypes/RENDER_CAMERAS.C */
 
 real render_camera_get_adjusted_field_of_view_tangent(real field_of_view);
 
+boolean render_camera_build_clipped_frustum_bounds(struct render_camera const *camera, real_rectangle2d const *clip, real_rectangle2d *frustum_bounds);
+boolean render_frustum_triangle_visible(struct render_frustum const *frustum, real_point3d const *p0, real_point3d const *p1, real_point3d const *p2);
+short render_frustum_cube_visible(struct render_frustum const *frustum, real_rectangle3d const *bounds, boolean test_frustum_against_cube);
+short render_frustum_sphere_visible(struct render_frustum const *frustum, real_point3d const *point, real radius);
 boolean render_camera_view_to_screen(struct render_camera const *camera, struct render_frustum const *frustum, real_point3d const *view_point, real_point2d *screen_point);
 void render_camera_build_frustum(const struct render_camera *camera, const real_rectangle2d *frustum_bounds, struct render_frustum *frustum, boolean build_projection);
 void render_frustum_get_projection_bounds(struct render_frustum const *frustum, real_rectangle2d *projection_bounds);

@@ -283,6 +283,7 @@ long tag_loaded(long group_tag, const char *name);
 
 void *tag_get(long group_tag, long tag_index);
 void tag_block_delete_element(struct tag_block *block, long index);
+void tag_reference_set(struct tag_reference *reference, unsigned long group_tag, char const *name);
 
 void tag_iterator_new(struct tag_iterator *iterator, unsigned long key_group_tag);
 long tag_iterator_next(struct tag_iterator *iterator);

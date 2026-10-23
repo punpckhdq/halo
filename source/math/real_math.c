@@ -651,19 +651,6 @@ real cross_product_magnitude3d(
 	return magnitude3d(&c);
 }
 
-real dequantize_byte_to_real(
-	real min,
-	real max,
-	byte value)
-{
-	if (value == UNSIGNED_CHAR_MAX)
-	{
-		return max;
-	}
-	
-	return (max-min) * ((real)value / 255.f) + min;
-}
-
 real signed_angle_between_vectors2d(
 	real_vector2d const *a,
 	real_vector2d const *b)
