@@ -20,6 +20,18 @@ enum
 	EQUIPMENT_DEFINITION_VERSION = 2,
 };
 
+enum
+{
+	_equipment_powerup_none = 0,
+	_equipment_powerup_double_speed,
+	_equipment_powerup_over_shield,
+	_equipment_powerup_active_camouflage,
+	_equipment_powerup_full_spectrum_vision,
+	_equipment_powerup_health,
+	_equipment_powerup_grenade,
+	NUMBER_OF_EQUIPMENT_POWERUPS	/* fake name */
+};
+
 /* ---------- macros */
 
 #define equipment_definition_get(index) ((struct equipment_definition *)tag_get(EQUIPMENT_DEFINITION_TAG, index))

@@ -26,6 +26,7 @@ struct aim_assist_parameters
 
 /* ---------- prototypes/AIM_ASSIST.C */
 
+boolean autoaim_compute_target(long object_index, real_point3d const *position, real_vector3d const *direction, long ignore_object_index, real_point3d *target_position, real_vector3d *target_direction, real *target_distance, real *target_angle);
 long player_aim_projectile(long player_index, real_point3d const *position, real_vector3d *direction);
 
 /* ---------- globals */

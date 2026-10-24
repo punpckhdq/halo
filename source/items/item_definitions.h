@@ -33,6 +33,7 @@ enum
 /* ---------- macros */
 
 #define item_definition_get(index) ((struct item_definition *)tag_get(ITEM_DEFINITION_TAG, index))
+#define item_collection_definition_get(index) ((struct item_collection_definition *)tag_get(ITEM_COLLECTION_DEFINITION_TAG, index))
 
 /* ---------- structures */
 
@@ -60,6 +61,22 @@ struct item_definition
 {
 	struct _object_definition object;
 	struct _item_definition item;
+};
+
+struct item_permutation_definition
+{
+	long unused1[8];
+	real weight;
+	struct tag_reference item;
+	long unused2[8];
+};
+
+struct item_collection_definition
+{
+	struct tag_block permutations;
+	short spawn_time;
+	short pad;
+	long unused[19];
 };
 
 /* ---------- prototypes/EXAMPLE.C */

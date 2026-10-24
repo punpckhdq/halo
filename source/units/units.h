@@ -371,6 +371,13 @@ enum
 	NUMBER_OF_UNIT_ESTIMATE_POSITION_MODES,
 };
 
+enum
+{
+	_unit_add_weapon_normal = 0,	/* fake name */
+	_unit_add_weapon_ready,	/* fake name */
+	_unit_add_weapon_replace_all	/* fake name */
+};
+
 /* ---------- macros */
 
 #define unit_get(index)			((struct unit_datum*)object_get_and_verify_type(index, _object_mask_unit))
@@ -558,6 +565,9 @@ struct unit_datum
 
 /* ---------- prototypes/UNITS.C */
 
+boolean unit_has_weapon_definition_index(long unit_index, long definition_index);
+boolean unit_add_weapon_to_inventory(long unit_index, long weapon_index, short mode);
+boolean unit_has_weapon_with_flag(long unit_index, long flag);
 void units_initialize(void);
 void units_dispose(void);
 void units_initialize_for_new_map(void);

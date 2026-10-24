@@ -17,6 +17,7 @@ header included in hcex build.
 /* ---------- prototypes/PLAYER_EFFECTS.C */
 
 void player_effect_continuous_refresh(long effect_index, real_point3d const *origin);
+void player_effect_screen_flash(long player_index, struct screen_flash_definition const *screen_flash, real scale);
 
 void player_effect_get_camera_effect_matrix(short local_player_index, real_matrix4x3 *matrix);
 

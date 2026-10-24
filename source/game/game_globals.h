@@ -146,6 +146,14 @@ enum
 	NUMBER_OF_MULTIPLAYER_SOUNDS,
 };
 
+enum
+{
+	_multiplayer_vehicle_warthog = 0,
+	_multiplayer_vehicle_ghost,
+	_multiplayer_vehicle_scorpion,
+	NUMBER_OF_MULTIPLAYER_VEHICLES	/* fake name */
+};
+
 /* ---------- macros */
 
 #define game_globals_definition_get(index) ((struct game_globals *)tag_get(GAME_GLOBALS_DEFINITION_TAG, index)) /* fake name */
@@ -351,5 +359,14 @@ real game_difficulty_get_value(short value_type);
 /* ---------- globals */
 
 /* ---------- public code */
+
+__inline long game_globals_get_weapon(
+	struct game_globals *game_globals,
+	long index)
+{
+	struct tag_reference *weapon = TAG_BLOCK_GET_ELEMENT(&game_globals->weapon_list, index, struct tag_reference);
+
+	return weapon->index;
+}
 
 #endif // __GAME_GLOBALS_H

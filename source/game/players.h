@@ -148,6 +148,8 @@ long player_control_get_target_object_index(short local_player_index);
 void player_control_get_unit_camera_info(short local_player_index, struct unit_camera_info *camera_info);
 real player_control_get_autoaim_level(short local_player_index);
 short player_control_get_zoom_level(short local_player_index);
+short unit_get_local_player_index(long unit_index);
+void player_control_set_facing(short local_player_index, real_vector3d const *facing);
 
 /* ---------- prototypes/PLAYERS.C */
 
@@ -156,6 +158,8 @@ void local_player_set_player_index(short local_player_index, long player_index);
 boolean players_respawn_coop(void);
 void players_handle_deleted_object(long deleted_object_index);
 short players_get_respawn_failure(void);
+short player_get_starting_location_count(void);
+struct scenario_player *player_get_starting_location(short starting_location_index);
 
 boolean local_player_exists(long local_player_index);
 short local_player_count(void);
@@ -174,6 +178,11 @@ void player_control_fix_for_loaded_game_state(void);
 void players_reconnect_to_structure_bsp(void);
 
 void player_input_enable(boolean enable);
+
+/* ---------- prototypes/PLAYER_RUMBLE.C */
+
+void rumble_player_clear(short local_player_index);
+void rumble_clear_all_now(void);
 
 /* ---------- prototypes/PLAYER_QUEUES_NEW.C */
 

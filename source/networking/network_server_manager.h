@@ -14,7 +14,10 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/NETWORK_SERVER_MANAGER.C */
+
+void network_game_server_switch_to_postgame(struct network_game_server *server);
+void network_game_server_reset_to_pregame(struct network_game_server *server);
 
 /* ---------- globals */
 

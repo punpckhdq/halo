@@ -83,6 +83,26 @@ enum
 	NUMBER_OF_DAMAGE_DEFINITION_FLAGS,
 };
 
+enum
+{
+	_screen_flash_type_none = 0,	/* fake name */
+	_screen_flash_type_lighten,
+	_screen_flash_type_darken,	/* fake name */
+	_screen_flash_type_max,	/* fake name */
+	_screen_flash_type_min,	/* fake name */
+	_screen_flash_type_invert,	/* fake name */
+	_screen_flash_type_tint,	/* fake name */
+	NUMBER_OF_SCREEN_FLASH_TYPES	/* fake name */
+};
+
+enum
+{
+	_screen_flash_low_priority = 0,	/* fake name */
+	_screen_flash_medium_priority,	/* fake name */
+	_screen_flash_high_priority,
+	NUMBER_OF_SCREEN_FLASH_PRIORITIES	/* fake name */
+};
+
 /* ---------- macros */
 
 #define damage_effect_definition_get(index) ((struct damage_effect_definition *)tag_get(DAMAGE_EFFECT_DEFINITION_TAG, index))
