@@ -273,7 +273,7 @@ static void _data_packet_encode(
 					for (element_index = 0; element_index<element_count; element_index++)
 					{
 						_data_packet_encode(packet_definition, encode_state, version, element, &byte_count, field + 1, NULL);
-						element += byte_count;
+						element = (byte *)offset_pointer(element, byte_count);
 					}
 
 					field += field_count;
@@ -312,7 +312,7 @@ static void _data_packet_encode(
 			}
 		}
 
-		buffer += field->size;
+		buffer = (byte *)offset_pointer(buffer, field->size);
 		field++;
 	}
 
@@ -442,7 +442,7 @@ static void _data_packet_decode(
 					for (element_index = 0; element_index<element_count; element_index++)
 					{
 						_data_packet_decode(packet_definition, decode_state, version, element, &byte_count, field + 1, NULL);
-						element += byte_count;
+						element = (byte *)offset_pointer(element, byte_count);
 					}
 
 					field += field_count;
@@ -455,7 +455,7 @@ static void _data_packet_decode(
 			memset(buffer, 0, field->size);
 		}
 
-		buffer += field->size;
+		buffer = (byte *)offset_pointer(buffer, field->size);
 		field++;
 	}
 

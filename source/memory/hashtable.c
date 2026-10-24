@@ -177,9 +177,9 @@ void hashtable_remove(
 
 	if (hashtable_search(table, key, &index))
 	{
-		short next_index = (index + 1) & (table->elements.count - 1);
+		short next_index;
 
-		while (BIT_VECTOR_TEST_FLAG(table->used, next_index))
+		for (next_index = (index + 1) & (table->elements.count - 1); BIT_VECTOR_TEST_FLAG(table->used, next_index); next_index = (next_index + 1) & (table->elements.count - 1))
 		{
 			void *element = dynamic_array_get_element(&table->elements, next_index, table->element_size);
 			short hash_index = (table->hash_function ? table->hash_function(table->user_data, element) : default_hash_function(element, table->key_size)) & (table->elements.count - 1);
@@ -189,8 +189,6 @@ void hashtable_remove(
 				memcpy(dynamic_array_get_element(&table->elements, index, table->element_size), dynamic_array_get_element(&table->elements, next_index, table->element_size), table->elements.element_size);
 				index = next_index;
 			}
-
-			next_index = (next_index + 1) & (table->elements.count - 1);
 		}
 
 		BIT_VECTOR_SET_FLAG(table->used, index, FALSE);
@@ -255,17 +253,12 @@ static boolean hashtable_search(
 	void const *key,
 	short *index)
 {
+	short element_index;
 	boolean found = FALSE;
 	short probe_count = 0;
-	short element_index = (table->hash_function ? table->hash_function(table->user_data, key) : default_hash_function(key, table->key_size)) & (table->elements.count - 1);
 
-	while (BIT_VECTOR_TEST_FLAG(table->used, element_index))
+	for (element_index = (table->hash_function ? table->hash_function(table->user_data, key) : default_hash_function(key, table->key_size)) & (table->elements.count - 1); BIT_VECTOR_TEST_FLAG(table->used, element_index) && probe_count<table->count; element_index = (element_index + 1) & (table->elements.count - 1), probe_count++)
 	{
-		if (probe_count>=table->count)
-		{
-			break;
-		}
-
 		if (table->compare_function ?
 			table->compare_function(table->user_data, dynamic_array_get_element(&table->elements, element_index, table->element_size), key) :
 			!memcmp(dynamic_array_get_element(&table->elements, element_index, table->element_size), key, table->key_size))
@@ -273,9 +266,6 @@ static boolean hashtable_search(
 			found = TRUE;
 			break;
 		}
-
-		element_index = (element_index + 1) & (table->elements.count - 1);
-		probe_count++;
 	}
 
 	*index = element_index;

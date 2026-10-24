@@ -169,7 +169,7 @@ boolean memory_pool_block_reallocate(
 			struct memory_pool_block *new_block;
 
 			match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 200, actual_new_size>block->size);
-			memcpy(new_buffer, *reference, block->size - sizeof(struct memory_pool_block));
+			memcpy(new_buffer, *reference, block->size - sizeof(*block));
 			memory_pool_block_free(pool, reference);
 			new_block = memory_pool_block_get(pool, &new_buffer);
 			new_block->reference = reference;

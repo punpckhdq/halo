@@ -17,7 +17,7 @@ void data_encode_new(
 	match_assert("c:\\halo\\SOURCE\\memory\\data_encoding.c", 25, buffer);
 	match_assert("c:\\halo\\SOURCE\\memory\\data_encoding.c", 26, buffer_size>=0);
 
-	memset(state, 0, sizeof(struct data_encoding_state));
+	memset(state, 0, sizeof(*state));
 	state->buffer = buffer;
 	state->buffer_size = buffer_size;
 
@@ -229,7 +229,7 @@ void data_decode_new(
 	match_assert("c:\\halo\\SOURCE\\memory\\data_encoding.c", 204, buffer);
 	match_assert("c:\\halo\\SOURCE\\memory\\data_encoding.c", 205, buffer_size>=0);
 
-	memset(state, 0, sizeof(struct data_encoding_state));
+	memset(state, 0, sizeof(*state));
 	state->buffer = buffer;
 	state->buffer_size = buffer_size;
 

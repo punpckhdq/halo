@@ -18,7 +18,12 @@ enum
 enum
 {
 	_lru_block_locked_bit = 0, /* fake name */
+	NUMBER_OF_LRU_BLOCK_FLAGS /* fake name */
 };
+
+/* ---------- macros */
+
+#define lru_block_get(data) ((struct lru_block *)(data) - 1) /* fake name */
 
 /* ---------- structures */
 
@@ -83,7 +88,7 @@ struct lru_cache *lru_new(
 	}
 
 	block_count = total_size / block_size;
-	cache = (struct lru_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lru_cache.c", 110, sizeof(struct lru_cache));
+	cache = (struct lru_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lru_cache.c", 110, sizeof(*cache));
 
 	if (cache)
 	{
@@ -97,7 +102,7 @@ struct lru_cache *lru_new(
 
 		if (buffer)
 		{
-			memset(cache, 0, sizeof(struct lru_cache));
+			memset(cache, 0, sizeof(*cache));
 			cache->block_count = block_count;
 			cache->block_size = block_size;
 			cache->total_size = block_size*block_count;
@@ -141,14 +146,14 @@ void lru_flush(
 	struct lru_cache *cache)
 {
 	long block_index;
-	byte *block;
+	struct lru_block *block;
 
 	verify_lru_cache(cache);
 
-	for (block_index = 0, block = cache->blocks; block_index<cache->used_block_count; block_index++, block += cache->block_size)
+	for (block_index = 0, block = (struct lru_block *)cache->blocks; block_index<cache->used_block_count; block_index++, block = (struct lru_block *)offset_pointer(block, cache->block_size))
 	{
-		verify_lru_cache_block(cache, (struct lru_block *)block);
-		cache->purge_block_proc(((struct lru_block *)block)->reference);
+		verify_lru_cache_block(cache, block);
+		cache->purge_block_proc(block->reference);
 	}
 
 	cache->used_block_count = 0;
@@ -179,7 +184,7 @@ void *lru_allocate(
 		long block_index;
 		struct lru_block *current_block;
 
-		for (block_index = 0, current_block = (struct lru_block *)cache->blocks; block_index<cache->used_block_count; block_index++, current_block = (struct lru_block *)((byte *)current_block + cache->block_size))
+		for (block_index = 0, current_block = (struct lru_block *)cache->blocks; block_index<cache->used_block_count; block_index++, current_block = (struct lru_block *)offset_pointer(current_block, cache->block_size))
 		{
 			verify_lru_cache_block(cache, current_block);
 
@@ -218,7 +223,7 @@ void lru_lock(
 	struct lru_cache *cache,
 	void *data)
 {
-	struct lru_block *block = (struct lru_block *)data - 1;
+	struct lru_block *block = lru_block_get(data);
 
 	verify_lru_cache(cache);
 	verify_lru_cache_block(cache, block);
@@ -231,7 +236,7 @@ void lru_unlock(
 	struct lru_cache *cache,
 	void *data)
 {
-	struct lru_block *block = (struct lru_block *)data - 1;
+	struct lru_block *block = lru_block_get(data);
 
 	verify_lru_cache(cache);
 	verify_lru_cache_block(cache, block);
@@ -244,7 +249,7 @@ void lru_touch(
 	struct lru_cache *cache,
 	void *data)
 {
-	struct lru_block *block = (struct lru_block *)data - 1;
+	struct lru_block *block = lru_block_get(data);
 
 	verify_lru_cache(cache);
 	verify_lru_cache_block(cache, block);
@@ -287,11 +292,14 @@ static void verify_lru_cache_block(
 {
 	boolean valid = FALSE;
 
-	if ((block->signature & ~FLAG(_lru_block_locked_bit))==LRU_BLOCK_SIGNATURE && !block->unused)
+	if ((block->signature & ~MASK(NUMBER_OF_LRU_BLOCK_FLAGS))==LRU_BLOCK_SIGNATURE &&
+		!block->unused)
 	{
 		long offset = get_lru_cache_block_offset(cache, block);
 
-		if (offset>=0 && offset + cache->block_size<=cache->total_size && block->age<cache->age)
+		if (offset>=0 &&
+			offset + cache->block_size<=cache->total_size &&
+			block->age<cache->age)
 		{
 			valid = TRUE;
 		}

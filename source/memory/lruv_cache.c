@@ -28,8 +28,8 @@ enum
 struct lruv_cache
 {
 	char name[32];
-	void (*delete_block_proc)(long);
-	boolean (*locked_block_proc)(long);
+	lruv_delete_block_proc delete_block_proc;
+	lruv_locked_block_proc locked_block_proc;
 	long page_count;
 	long page_size_bits;
 	unsigned long frame_index;
@@ -71,8 +71,8 @@ struct lruv_cache *lruv_new(
 	long page_count,
 	long page_size_bits,
 	long maximum_block_count,
-	void (*delete_block_proc)(long),
-	boolean (*locked_block_proc)(long))
+	lruv_delete_block_proc delete_block_proc,
+	lruv_locked_block_proc locked_block_proc)
 {
 	struct lruv_cache *cache = (struct lruv_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lruv_cache.c", 82, lruv_allocation_size(maximum_block_count));
 
@@ -96,8 +96,8 @@ void lruv_initialize(
 	long page_count,
 	long page_size_bits,
 	long maximum_block_count,
-	void (*delete_block_proc)(long),
-	boolean (*locked_block_proc)(long))
+	lruv_delete_block_proc delete_block_proc,
+	lruv_locked_block_proc locked_block_proc)
 {
 	struct data_array *blocks = (struct data_array *)(cache + 1);
 
@@ -109,7 +109,7 @@ void lruv_initialize(
 	data_initialize(blocks, name, maximum_block_count, sizeof(struct lruv_cache_block));
 	data_make_valid(blocks);
 
-	memset(cache, 0, sizeof(struct lruv_cache));
+	memset(cache, 0, sizeof(*cache));
 	strncpy(cache->name, name, sizeof(cache->name) - 1);
 	cache->delete_block_proc = delete_block_proc;
 	cache->locked_block_proc = locked_block_proc;
@@ -127,8 +127,8 @@ void lruv_initialize(
 
 void lruv_update_function_pointers(
 	struct lruv_cache *cache,
-	void (*delete_block_proc)(long),
-	boolean (*locked_block_proc)(long))
+	lruv_delete_block_proc delete_block_proc,
+	lruv_locked_block_proc locked_block_proc)
 {
 	match_assert("c:\\halo\\SOURCE\\memory\\lruv_cache.c", 148, cache);
 
@@ -143,7 +143,7 @@ void lruv_delete(
 {
 	lruv_cache_verify(cache, TRUE);
 	data_dispose(cache->blocks);
-	memset(cache, 0, sizeof(struct lruv_cache));
+	memset(cache, 0, sizeof(*cache));
 	match_free("c:\\halo\\SOURCE\\memory\\lruv_cache.c", 163, cache);
 
 	return;
@@ -529,8 +529,8 @@ void lruv_debug_to_file(
 	char const *failed_allocation_name,
 	long failed_allocation_size,
 	struct lruv_cache *cache,
-	void (*header_proc)(FILE *),
-	char const *(*name_block_proc)(long))
+	lruv_header_proc header_proc,
+	lruv_name_block_proc name_block_proc)
 {
 	FILE *file;
 

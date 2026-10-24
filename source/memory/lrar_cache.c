@@ -63,7 +63,7 @@ struct lrar_cache *lrar_new(
 	lrar_new_block_proc new_block_proc,
 	lrar_purge_block_proc purge_block_proc)
 {
-	struct lrar_cache *cache = (struct lrar_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 86, sizeof(struct lrar_cache));
+	struct lrar_cache *cache = (struct lrar_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 86, sizeof(*cache));
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 88, minimum_address<maximum_address);
 
@@ -84,12 +84,12 @@ struct lrar_cache *lrar_new(
 
 	if (cache)
 	{
-		struct lrar_block *blocks = (struct lrar_block *)match_malloc("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 108, block_count*sizeof(struct lrar_block));
+		struct lrar_block *blocks = (struct lrar_block *)match_malloc("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 108, block_count*sizeof(*blocks));
 
 		if (blocks)
 		{
-			memset(cache, 0, sizeof(struct lrar_cache));
-			memset(blocks, 0, block_count*sizeof(struct lrar_block));
+			memset(cache, 0, sizeof(*cache));
+			memset(blocks, 0, block_count*sizeof(*blocks));
 			strncpy(cache->name, name, sizeof(cache->name) - 1);
 			cache->name[sizeof(cache->name) - 1] = 0;
 			cache->minimum_address = minimum_address;

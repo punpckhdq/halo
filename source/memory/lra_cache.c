@@ -22,6 +22,10 @@ enum
 	NUMBER_OF_LRA_BLOCK_FLAGS /* fake name */
 };
 
+/* ---------- macros */
+
+#define lra_block_get(pointer) ((struct lra_block *)(pointer) - 1) /* fake name */
+
 /* ---------- structures */
 
 struct lra_block /* fake name */
@@ -62,7 +66,7 @@ struct lra_cache *lra_new(
 	lra_purge_block_proc purge_block_proc,
 	void *base_address)
 {
-	struct lra_cache *cache = (struct lra_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lra_cache.c", 86, sizeof(struct lra_cache));
+	struct lra_cache *cache = (struct lra_cache *)match_malloc("c:\\halo\\SOURCE\\memory\\lra_cache.c", 86, sizeof(*cache));
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 88, size>=0);
 
@@ -86,7 +90,7 @@ struct lra_cache *lra_new(
 		{
 			match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 107, !((long)base_address&3));
 
-			memset(cache, 0, sizeof(struct lra_cache));
+			memset(cache, 0, sizeof(*cache));
 			strncpy(cache->name, name, sizeof(cache->name) - 1);
 			cache->name[sizeof(cache->name) - 1] = 0;
 			cache->size = size;
@@ -241,7 +245,7 @@ void lra_free(
 	struct lra_cache *cache,
 	void *pointer)
 {
-	struct lra_block *block = (struct lra_block *)pointer - 1;
+	struct lra_block *block = lra_block_get(pointer);
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 282, pointer);
 
@@ -256,7 +260,7 @@ void lra_lock(
 	struct lra_cache *cache,
 	void *pointer)
 {
-	struct lra_block *block = (struct lra_block *)pointer - 1;
+	struct lra_block *block = lra_block_get(pointer);
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 298, pointer);
 
@@ -271,7 +275,7 @@ void lra_unlock(
 	struct lra_cache *cache,
 	void *pointer)
 {
-	struct lra_block *block = (struct lra_block *)pointer - 1;
+	struct lra_block *block = lra_block_get(pointer);
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 314, pointer);
 
@@ -330,7 +334,9 @@ static void verify_lra_cache_block(
 {
 	boolean valid = FALSE;
 
-	if ((block->signature & ~MASK(NUMBER_OF_LRA_BLOCK_FLAGS))==LRA_BLOCK_SIGNATURE && block->size>=0 && block->size<cache->size)
+	if ((block->signature & ~MASK(NUMBER_OF_LRA_BLOCK_FLAGS))==LRA_BLOCK_SIGNATURE &&
+		block->size>=0 &&
+		block->size<cache->size)
 	{
 		long offset = (byte *)block - cache->base_address;
 
@@ -338,7 +344,7 @@ static void verify_lra_cache_block(
 		{
 			long next_offset = block->next_block ? (byte *)block->next_block - cache->base_address : 0;
 
-			if (next_offset>=0 && next_offset + sizeof(struct lra_block)<=cache->size)
+			if (next_offset>=0 && next_offset + sizeof(*block)<=cache->size)
 			{
 				valid = TRUE;
 			}

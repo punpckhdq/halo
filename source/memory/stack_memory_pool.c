@@ -11,9 +11,9 @@ STACK_MEMORY_POOL.C
 
 enum
 {
-	_pointer_locked_bit = -2147483648,
-	_pointer_size_mask = 2147483647,
-	MAXIMUM_BLOCK_SIZE = 2147483647,
+	_pointer_locked_bit = 0x80000000,
+	_pointer_size_mask = 0x7FFFFFFF,
+	MAXIMUM_BLOCK_SIZE = 0x7FFFFFFF,
 	ALIGNMENT_BYTE_BOUNDARY = 4,
 };
 
@@ -405,8 +405,8 @@ void stack_memory_pool_reset(
 	number_of_blocks = pool->number_of_blocks;
 	blocks_array = pool->blocks;
 	pool_size = pool->pool_size;
-	memset(pool->blocks, 0, pool->number_of_blocks*sizeof(struct memory_block *));
-	memset(pool, 0, sizeof(struct stack_memory_pool));
+	memset(pool->blocks, 0, pool->number_of_blocks*sizeof(*pool->blocks));
+	memset(pool, 0, sizeof(*pool));
 	pool->name = name;
 	pool->base_address = base_address;
 	pool->number_of_blocks = number_of_blocks;

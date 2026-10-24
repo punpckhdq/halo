@@ -72,7 +72,7 @@ boolean data_packet_group_decode_packet(
 
 	if (*encoded_packet_size>=sizeof(struct packet_header))
 	{
-		struct packet_header *header = (struct packet_header *)((byte *)encoded_packet + *encoded_packet_size - sizeof(struct packet_header));
+		struct packet_header *header = (struct packet_header *)((byte *)encoded_packet + *encoded_packet_size - sizeof(*header));
 
 		byte_swap_data(&packet_header_bs_definition, header, 1);
 
@@ -82,7 +82,7 @@ boolean data_packet_group_decode_packet(
 
 			if (packet->packet_class==expected_packet_class)
 			{
-				*encoded_packet_size -= sizeof(struct packet_header);
+				*encoded_packet_size -= sizeof(*header);
 
 				if (!packet->definition || data_packet_decode(packet->definition, encoded_packet, *encoded_packet_size, decoded_packet, packet_version, NULL))
 				{
@@ -161,11 +161,11 @@ boolean data_packet_group_append_packet_header(
 	match_assert("c:\\halo\\SOURCE\\memory\\data_packet_groups.c", 173, *encoded_packet_size>=0);
 	match_assert("c:\\halo\\SOURCE\\memory\\data_packet_groups.c", 174, packet_type>=0 && packet_type<group_definition->packet_type_count);
 
-	if (*encoded_packet_size + sizeof(struct packet_header)<group_definition->maximum_encoded_packet_size)
+	if (*encoded_packet_size + sizeof(*header)<group_definition->maximum_encoded_packet_size)
 	{
 		header->type = (char)packet_type;
 		byte_swap_data(&packet_header_bs_definition, header, 1);
-		*encoded_packet_size += sizeof(struct packet_header);
+		*encoded_packet_size += sizeof(*header);
 	}
 	else
 	{

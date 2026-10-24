@@ -41,13 +41,13 @@ struct texture_page *texture_page_new(
 	short page_height,
 	short spacing)
 {
-	struct texture_page *texture_page = (struct texture_page *)match_malloc("c:\\halo\\SOURCE\\memory\\texture_page.c", 29, sizeof(struct texture_page));
+	struct texture_page *texture_page = (struct texture_page *)match_malloc("c:\\halo\\SOURCE\\memory\\texture_page.c", 29, sizeof(*texture_page));
 
 	match_assert("c:\\halo\\SOURCE\\memory\\texture_page.c", 31, page_width>0 && page_height>0);
 
 	if (texture_page)
 	{
-		memset(texture_page, 0, sizeof(struct texture_page));
+		memset(texture_page, 0, sizeof(*texture_page));
 		texture_page->width = page_width;
 		texture_page->height = page_height;
 		texture_page->spacing = spacing;
