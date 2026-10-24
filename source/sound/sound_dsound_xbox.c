@@ -43,9 +43,6 @@ enum
 	(TEST_FLAG(type_flags, _sound_channel_44k_bit) ? 2.f : 1.f)* \
 	(TEST_FLAG(type_flags, _sound_channel_stereo_bit) ? 2.f : 1.f))
 
-#define REAL_CMP_EPSILON(new_value, old_value, epsilon) /* fake name */ \
-	(!(fabs((new_value)-(old_value))<(epsilon)))
-
 /* ---------- structures */
 
 struct dsound_virtual_channel /* fake name */

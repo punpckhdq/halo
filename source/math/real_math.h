@@ -23,6 +23,9 @@ file has inline function assertions.
 
 /* ---------- macros */
 
+#define REAL_CMP_EPSILON(new_value, old_value, epsilon) /* fake name */ \
+	(!(fabs((new_value)-(old_value))<(epsilon)))
+
 #define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * M_PI / 180.f))
 #define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / M_PI))
 
@@ -96,6 +99,17 @@ vassert(																	\
 		#forward, #up,														\
 		(*forward).i, (*forward).j, (*forward).k, (*up).i, (*up).j, (*up).k	\
 	)																		\
+)
+
+#define assert_valid_real_sine_cosine(sine, cosine)			\
+vassert(													\
+	valid_real_sine_cosine(sine, cosine),					\
+	csprintf(												\
+		temporary,											\
+		"%s, %s: assert_valid_real_sine_cosine(%f, %f)",	\
+		#sine, #cosine,										\
+		sine, cosine										\
+	)														\
 )
 
 #define assert_valid_real_matrix4x3_internal(matrix, string)				\
@@ -227,6 +241,19 @@ match_vassert(																\
 		#forward, #up,														\
 		(*forward).i, (*forward).j, (*forward).k, (*up).i, (*up).j, (*up).k	\
 	)																		\
+)
+
+#define match_assert_valid_real_sine_cosine(file, line, sine, cosine)	\
+match_vassert(														\
+	file,															\
+	line,															\
+	valid_real_sine_cosine(sine, cosine),							\
+	csprintf(														\
+		temporary,													\
+		"%s, %s: assert_valid_real_sine_cosine(%f, %f)",			\
+		#sine, #cosine,												\
+		sine, cosine												\
+	)																\
 )
 
 #define match_assert_valid_real_matrix4x3_internal(file, line, matrix, string)	\
@@ -585,27 +612,43 @@ real_vector3d *seed_random_vector_in_cone3d(unsigned long *seed, real_vector3d c
 
 extern short const global_projection3d_mappings[3][2][2];
 
-extern const real_point3d *const global_origin3d;
+extern real_point2d const *global_origin2d;
+extern real_point2d const *global_x_axis2d;
+extern real_point2d const *global_y_axis2d;
+extern real_point2d const *global_negative_x_axis2d;
+extern real_point2d const *global_negative_y_axis2d;
 
-extern const real_point3d *const global_x_axis3d;
-extern const real_point3d *const global_y_axis3d;
-extern const real_point3d *const global_z_axis3d;
-extern const real_point3d *const global_negative_x_axis3d;
-extern const real_point3d *const global_negative_y_axis3d;
-extern const real_point3d *const global_negative_z_axis3d;
+extern real_vector2d const *global_zero_vector2d;
+extern real_vector2d const *global_forward2d;
+extern real_vector2d const *global_left2d;
+extern real_vector2d const *global_backward2d;
+extern real_vector2d const *global_right2d;
 
-extern const real_vector3d *const global_zero_vector3d;
+extern real_point3d const *global_origin3d;
+extern real_point3d const *global_x_axis3d;
+extern real_point3d const *global_y_axis3d;
+extern real_point3d const *global_z_axis3d;
+extern real_point3d const *global_negative_x_axis3d;
+extern real_point3d const *global_negative_y_axis3d;
+extern real_point3d const *global_negative_z_axis3d;
 
-extern const real_vector3d *const global_forward3d;
-extern const real_vector3d *const global_left3d;
-extern const real_vector3d *const global_up3d;
+extern real_vector3d const *global_zero_vector3d;
+extern real_vector3d const *global_forward3d;
+extern real_vector3d const *global_left3d;
+extern real_vector3d const *global_up3d;
+extern real_vector3d const *global_backward3d;
+extern real_vector3d const *global_right3d;
+extern real_vector3d const *global_down3d;
 
-extern const real_vector3d *const global_backward3d;
-extern const real_vector3d *const global_right3d;
-extern const real_vector3d *const global_down3d;
+extern real_euler_angles2d const *global_zero_angles2d;
+extern real_euler_angles3d const *global_zero_angles3d;
 
-extern const real_quaternion *const global_identity_quaternion;
-extern const real_matrix4x3 *const global_identity4x3;
+extern real_quaternion const *global_identity_quaternion;
+extern real_matrix4x3 const *global_identity4x3;
+extern real_matrix4x3 const *global_negative_identity4x3;
+
+extern real_rectangle2d const *global_null_rectangle2d;
+extern real_rectangle3d const *global_null_rectangle3d;
 
 /* ---------- public code */
 
@@ -763,7 +806,7 @@ __inline real normalize2d(
 {
 	real magnitude = magnitude2d(v);
 
-	if (!(_real_epsilon>fabs(magnitude-0.f)))
+	if (REAL_CMP_EPSILON(magnitude, 0.f, _real_epsilon))
 	{
 		scale_vector2d(v, 1.f / magnitude, v);
 	}
@@ -980,7 +1023,7 @@ __inline real normalize3d(
 {
 	real magnitude = magnitude3d(v);
 
-	if (!(_real_epsilon>fabs(magnitude-0.f)))
+	if (REAL_CMP_EPSILON(magnitude, 0.f, _real_epsilon))
 	{
 		scale_vector3d(v, 1.f / magnitude, v);
 	}
