@@ -215,25 +215,25 @@ void matrix4x3_rotation_from_angles(
 	real pitch,
 	real roll)
 {
-	real cosine_roll = cosine(roll);
-	real sine_roll = sine(roll);
-	real cosine_pitch = cosine(pitch);
-	real sine_pitch = sine(pitch);
-	real cosine_yaw = cosine(yaw);
-	real sine_yaw = sine(yaw);
-	real sine_pitch_cosine_roll = sine_pitch*cosine_roll;
-	real sine_pitch_sine_roll = sine_pitch*sine_roll;
+	real a = cosine(roll);
+	real b = sine(roll);
+	real c = cosine(pitch);
+	real d = sine(pitch);
+	real e = cosine(yaw);
+	real f = sine(yaw);
+	real ad = d*a;
+	real bd = d*b;
 
 	matrix->scale = 1.f;
-	matrix->forward.i = cosine_yaw*cosine_pitch;
-	matrix->forward.j = sine_yaw*cosine_roll - sine_pitch_sine_roll*cosine_yaw;
-	matrix->forward.k = sine_pitch_cosine_roll*cosine_yaw + sine_yaw*sine_roll;
-	matrix->left.i = -(sine_yaw*cosine_pitch);
-	matrix->left.j = sine_pitch_sine_roll*sine_yaw + cosine_yaw*cosine_roll;
-	matrix->left.k = cosine_yaw*sine_roll - sine_pitch_cosine_roll*sine_yaw;
-	matrix->up.i = -sine_pitch;
-	matrix->up.j = -(cosine_pitch*sine_roll);
-	matrix->up.k = cosine_pitch*cosine_roll;
+	matrix->forward.i = e*c;
+	matrix->forward.j = f*a - bd*e;
+	matrix->forward.k = ad*e + f*b;
+	matrix->left.i = -(f*c);
+	matrix->left.j = bd*f + e*a;
+	matrix->left.k = e*b - ad*f;
+	matrix->up.i = -d;
+	matrix->up.j = -(c*b);
+	matrix->up.k = c*a;
 	matrix->position.x = 0.f;
 	matrix->position.y = 0.f;
 	matrix->position.z = 0.f;
@@ -245,19 +245,29 @@ void matrix4x3_rotation_to_angles(
 	real_matrix4x3 *matrix,
 	real_euler_angles3d *angles)
 {
-	real cosine_pitch;
+	real tr_x;
+	real tr_y;
+	real C;
 
 	angles->pitch = -arcsine(matrix->up.i);
-	cosine_pitch = cosine(angles->pitch);
-	if (cosine_pitch>0.0001)
+	C = cosine(angles->pitch);
+	if (C>0.0001)
 	{
-		angles->roll = arctangent(-matrix->up.j/cosine_pitch, matrix->up.k/cosine_pitch);
-		angles->yaw = arctangent(-matrix->left.i/cosine_pitch, matrix->forward.i/cosine_pitch);
+		tr_x = matrix->up.k/C;
+		tr_y = -matrix->up.j/C;
+		angles->roll = arctangent(tr_y, tr_x);
+
+		tr_x = matrix->forward.i/C;
+		tr_y = -matrix->left.i/C;
+		angles->yaw = arctangent(tr_y, tr_x);
 	}
 	else
 	{
 		angles->roll = 0.f;
-		angles->yaw = arctangent(matrix->forward.j, matrix->left.j);
+
+		tr_x = matrix->left.j;
+		tr_y = matrix->forward.j;
+		angles->yaw = arctangent(tr_y, tr_x);
 	}
 
 	return;
@@ -522,11 +532,11 @@ real_point3d *matrix4x3_inverse_transform_point(
 
 		if (matrix->scale!=1.f)
 		{
-			real inverse_scale = 1.f/matrix->scale;
+			real one_over_scale = 1.f/matrix->scale;
 
-			x*= inverse_scale;
-			y*= inverse_scale;
-			z*= inverse_scale;
+			x*= one_over_scale;
+			y*= one_over_scale;
+			z*= one_over_scale;
 		}
 
 		result->x = matrix->forward.k*z + matrix->forward.j*y + matrix->forward.i*x;
@@ -554,11 +564,11 @@ real_vector3d *matrix4x3_inverse_transform_vector(
 
 	if (matrix->scale!=1.f)
 	{
-		real inverse_scale = 1.f/matrix->scale;
+		real one_over_scale = 1.f/matrix->scale;
 
-		i*= inverse_scale;
-		j*= inverse_scale;
-		k*= inverse_scale;
+		i*= one_over_scale;
+		j*= one_over_scale;
+		k*= one_over_scale;
 	}
 
 	result->i = matrix->forward.k*k + matrix->forward.j*j + matrix->forward.i*i;
@@ -713,19 +723,19 @@ real_matrix3x3 *matrix3x3_transpose(
 {
 	if (matrix==result)
 	{
-		real temp;
+		real swap;
 
-		temp = matrix->n[0][1];
+		swap = matrix->n[0][1];
 		result->n[0][1] = matrix->n[1][0];
-		result->n[1][0] = temp;
+		result->n[1][0] = swap;
 
-		temp = matrix->n[0][2];
+		swap = matrix->n[0][2];
 		result->n[0][2] = matrix->n[2][0];
-		result->n[2][0] = temp;
+		result->n[2][0] = swap;
 
-		temp = matrix->n[1][2];
+		swap = matrix->n[1][2];
 		result->n[1][2] = matrix->n[2][1];
-		result->n[2][1] = temp;
+		result->n[2][1] = swap;
 	}
 	else
 	{

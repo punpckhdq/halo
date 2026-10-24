@@ -754,6 +754,7 @@ boolean convex_hull2d_test_vector(
 {
 	real t_in = -REAL_MAX;
 	real t_out = REAL_MAX;
+	boolean hit = TRUE;
 	short point_index;
 
 	for (point_index = 0; point_index<count; point_index++)
@@ -790,26 +791,31 @@ boolean convex_hull2d_test_vector(
 
 			if (t_in>t_out)
 			{
-				return FALSE;
+				hit = FALSE;
+				break;
 			}
 		}
 		else if (edge_cross_test<_real_epsilon)
 		{
-			return FALSE;
+			hit = FALSE;
+			break;
 		}
 	}
 
-	if (t_in_reference)
+	if (hit)
 	{
-		*t_in_reference = t_in;
+		if (t_in_reference)
+		{
+			*t_in_reference = t_in;
+		}
+
+		if (t_out_reference)
+		{
+			*t_out_reference = t_out;
+		}
 	}
 
-	if (t_out_reference)
-	{
-		*t_out_reference = t_out;
-	}
-
-	return TRUE;
+	return hit;
 }
 
 short convex_polygon2d_clip_to_plane(
@@ -1700,6 +1706,7 @@ boolean convex_hull3d_test_vector(
 {
 	real t_in = -REAL_MAX;
 	real t_out = REAL_MAX;
+	boolean hit = TRUE;
 	short surface_index;
 
 	for (surface_index = 0; surface_index<surface_count; surface_index++)
@@ -1709,7 +1716,7 @@ boolean convex_hull3d_test_vector(
 		if (surface->extant)
 		{
 			real distance = plane3d_distance_to_point(&surface->plane, point);
-			real vector_dot_normal = dot_product3d(&surface->plane.n, vector);
+			real vector_dot_normal = dot_product3d(vector, &surface->plane.n);
 
 			if (!realcmp(vector_dot_normal, 0.f))
 			{
@@ -1732,27 +1739,32 @@ boolean convex_hull3d_test_vector(
 
 				if (t_in>t_out)
 				{
-					return FALSE;
+					hit = FALSE;
+					break;
 				}
 			}
 			else if (distance>global_convex_hull3d_epsilon)
 			{
-				return FALSE;
+				hit = FALSE;
+				break;
 			}
 		}
 	}
 
-	if (t_in_reference)
+	if (hit)
 	{
-		*t_in_reference = t_in;
+		if (t_in_reference)
+		{
+			*t_in_reference = t_in;
+		}
+
+		if (t_out_reference)
+		{
+			*t_out_reference = t_out;
+		}
 	}
 
-	if (t_out_reference)
-	{
-		*t_out_reference = t_out;
-	}
-
-	return TRUE;
+	return hit;
 }
 
 /* ---------- private code */

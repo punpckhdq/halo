@@ -21,10 +21,10 @@ struct vector_tree /* fake name */
 {
 	long root_node_index; /* fake name */
 	struct dynamic_array nodes; /* fake name */
-	short component_count;
+	short component_count; /* fake name */
 	void *data; /* fake name */
-	vector_tree_get_vector_proc get_vector;
-	vector_tree_compare_component_proc compare_component;
+	vector_tree_get_vector_proc get_vector; /* fake name */
+	vector_tree_compare_component_proc compare_component; /* fake name */
 };
 
 /* ---------- prototypes/VECTOR_TREE.C */

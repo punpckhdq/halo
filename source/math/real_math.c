@@ -1032,32 +1032,32 @@ boolean fast_vector_intersects_sphere(
 	else
 	{
 		real_vector3d v = *vector;
-		real b = p.x*v.i + p.y*v.j + p.z*v.k;
+		real b_over_2 = p.x*v.i + p.y*v.j + p.z*v.k;
 		
-		if (b >= 0.f)
+		if (b_over_2 >= 0.f)
 		{
 			return FALSE;
 		}
 		else
 		{
 			real a = v.i*v.i + v.j*v.j + v.k*v.k;
-			real disc = b * b - a * c;
+			real disc_over_4 = b_over_2 * b_over_2 - a * c;
 			
-			if (disc <= 0.f)
+			if (disc_over_4 <= 0.f)
 			{
 				return FALSE;
 			}
 			else
 			{
-				real neg_a_minus_b = -a - b;
+				real neg_a_minus_b_over_2 = -a - b_over_2;
 
-				if (neg_a_minus_b < 0.f)
+				if (neg_a_minus_b_over_2 < 0.f)
 				{
 					return TRUE;
 				}
 				else
 				{
-					return neg_a_minus_b * neg_a_minus_b < disc;
+					return neg_a_minus_b_over_2 * neg_a_minus_b_over_2 < disc_over_4;
 				}
 			}
 		}
@@ -2558,7 +2558,7 @@ void angular_accelerate_to_position(
 		real angle;
 		real angular_velocity_magnitude_desired;
 		real_vector3d angular_velocity_desired;
-		real_vector3d instantaneous_acceleration_desired;
+		real_vector3d angular_acceleration_desired;
 		real instantaneous_acceleration_magnitude_desired_squared;
 
 		if (dot_product<-1.f)
@@ -2578,8 +2578,8 @@ void angular_accelerate_to_position(
 		cross_product3d(position, position_desired, &angular_velocity_desired);
 		normalize3d(&angular_velocity_desired);
 		scale_vector3d(&angular_velocity_desired, angular_velocity_magnitude_desired, &angular_velocity_desired);
-		subtract_vectors3d(&angular_velocity_desired, angular_velocity, &instantaneous_acceleration_desired);
-		instantaneous_acceleration_magnitude_desired_squared = magnitude_squared3d(&instantaneous_acceleration_desired);
+		subtract_vectors3d(&angular_velocity_desired, angular_velocity, &angular_acceleration_desired);
+		instantaneous_acceleration_magnitude_desired_squared = magnitude_squared3d(&angular_acceleration_desired);
 
 		if (instantaneous_acceleration_magnitude_desired_squared<angular_acceleration_magnitude_maximum*angular_acceleration_magnitude_maximum)
 		{
@@ -2598,7 +2598,7 @@ void angular_accelerate_to_position(
 		{
 			real instantaneous_acceleration_magnitude_desired = square_root(instantaneous_acceleration_magnitude_desired_squared);
 
-			point_from_line3d((real_point3d *)angular_velocity, &instantaneous_acceleration_desired, angular_acceleration_magnitude_maximum/instantaneous_acceleration_magnitude_desired, (real_point3d *)angular_velocity);
+			point_from_line3d((real_point3d *)angular_velocity, &angular_acceleration_desired, angular_acceleration_magnitude_maximum/instantaneous_acceleration_magnitude_desired, (real_point3d *)angular_velocity);
 		}
 
 		if (!exact)
