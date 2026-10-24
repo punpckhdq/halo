@@ -65,19 +65,17 @@ void matrix4x3_inverse(
 {
 	if (matrix->scale!=0.f)
 	{
-		real swap;
-
 		real x = -matrix->position.x;
 		real y = -matrix->position.y;
 		real z = -matrix->position.z;
+		real swap;
 
 		if (matrix->scale!=1.f)
 		{
-			real scale = 1.f / matrix->scale;
-			result->scale = scale;
-			x *= scale;
-			y *= scale;
-			z *= scale;
+			result->scale = 1.f / matrix->scale;
+			x *= result->scale;
+			y *= result->scale;
+			z *= result->scale;
 		}
 		else
 		{
@@ -313,12 +311,13 @@ void matrix4x3_rotation_to_quaternion(
 	real_matrix4x3 const *matrix,
 	real_quaternion *quaternion)
 {
-	real trace = matrix->n[0][0] + matrix->n[1][1] + matrix->n[2][2];
+	real trace;
+	real s;
 
+	trace = matrix->n[0][0] + matrix->n[1][1] + matrix->n[2][2];
 	if (trace>0.f)
 	{
-		real s = square_root(trace + 1.f);
-
+		s = square_root(trace + 1.f);
 		quaternion->w = 0.5f*s;
 		s = 0.5f/s;
 		quaternion->v.i = (matrix->n[2][1]-matrix->n[1][2])*s;
@@ -328,10 +327,9 @@ void matrix4x3_rotation_to_quaternion(
 	else
 	{
 		static short next_field[3] = { 1, 2, 0 };
-		real q[3];
 		short i = 0;
 		short j, k;
-		real s;
+		real q[3];
 
 		if (matrix->n[1][1]>matrix->n[0][0])
 		{
@@ -892,12 +890,13 @@ real_quaternion *matrix3x3_rotation_to_quaternion(
 	real_matrix3x3 const *matrix,
 	real_quaternion *quaternion)
 {
-	real trace = matrix->n[0][0] + matrix->n[1][1] + matrix->n[2][2];
+	real trace;
+	real s;
 
+	trace = matrix->n[0][0] + matrix->n[1][1] + matrix->n[2][2];
 	if (trace>0.f)
 	{
-		real s = square_root(trace + 1.f);
-
+		s = square_root(trace + 1.f);
 		quaternion->w = 0.5f*s;
 		s = 0.5f/s;
 		quaternion->v.i = (matrix->n[2][1]-matrix->n[1][2])*s;
@@ -907,10 +906,9 @@ real_quaternion *matrix3x3_rotation_to_quaternion(
 	else
 	{
 		static short next_field[3] = { 1, 2, 0 };
-		real q[3];
 		short i = 0;
 		short j, k;
-		real s;
+		real q[3];
 
 		if (matrix->n[1][1]>matrix->n[0][0])
 		{

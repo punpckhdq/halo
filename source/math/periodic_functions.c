@@ -77,19 +77,20 @@ static boolean function_tables_initialized;
 void periodic_functions_initialize(
 	void)
 {
-	short function_type;
+	short periodic_function_type;
+	short transition_function_type;
 
 	match_assert("c:\\halo\\SOURCE\\math\\periodic_functions.c", 67, !function_tables_initialized);
 	function_tables_initialized = TRUE;
 
 	*get_global_random_seed_address() = 0x20f3f660;
 
-	for (function_type = 0; function_type<NUMBER_OF_PERIODIC_FUNCTIONS; function_type++)
+	for (periodic_function_type = 0; periodic_function_type<NUMBER_OF_PERIODIC_FUNCTIONS; periodic_function_type++)
 	{
-		periodic_function_tables[function_type] = match_malloc("c:\\halo\\SOURCE\\math\\periodic_functions.c", 78, FUNCTION_TABLE_SIZE);
-		if (periodic_function_tables[function_type])
+		periodic_function_tables[periodic_function_type] = match_malloc("c:\\halo\\SOURCE\\math\\periodic_functions.c", 78, FUNCTION_TABLE_SIZE);
+		if (periodic_function_tables[periodic_function_type])
 		{
-			periodic_function_build_table(function_type, periodic_function_tables[function_type]);
+			periodic_function_build_table(periodic_function_type, periodic_function_tables[periodic_function_type]);
 		}
 		else
 		{
@@ -97,12 +98,12 @@ void periodic_functions_initialize(
 		}
 	}
 
-	for (function_type = 0; function_type<NUMBER_OF_TRANSITION_FUNCTIONS; function_type++)
+	for (transition_function_type = 0; transition_function_type<NUMBER_OF_TRANSITION_FUNCTIONS; transition_function_type++)
 	{
-		transition_function_tables[function_type] = match_malloc("c:\\halo\\SOURCE\\math\\periodic_functions.c", 96, FUNCTION_TABLE_SIZE);
-		if (transition_function_tables[function_type])
+		transition_function_tables[transition_function_type] = match_malloc("c:\\halo\\SOURCE\\math\\periodic_functions.c", 96, FUNCTION_TABLE_SIZE);
+		if (transition_function_tables[transition_function_type])
 		{
-			transition_function_build_table(function_type, transition_function_tables[function_type]);
+			transition_function_build_table(transition_function_type, transition_function_tables[transition_function_type]);
 		}
 		else
 		{
@@ -118,16 +119,17 @@ void periodic_functions_dispose(
 {
 	if (function_tables_initialized)
 	{
-		short function_type;
+		short periodic_function_type;
+		short transition_function_type;
 
-		for (function_type = 0; function_type<NUMBER_OF_PERIODIC_FUNCTIONS; function_type++)
+		for (periodic_function_type = 0; periodic_function_type<NUMBER_OF_PERIODIC_FUNCTIONS; periodic_function_type++)
 		{
-			match_free("c:\\halo\\SOURCE\\math\\periodic_functions.c", 122, periodic_function_tables[function_type]);
+			match_free("c:\\halo\\SOURCE\\math\\periodic_functions.c", 122, periodic_function_tables[periodic_function_type]);
 		}
 
-		for (function_type = 0; function_type<NUMBER_OF_TRANSITION_FUNCTIONS; function_type++)
+		for (transition_function_type = 0; transition_function_type<NUMBER_OF_TRANSITION_FUNCTIONS; transition_function_type++)
 		{
-			match_free("c:\\halo\\SOURCE\\math\\periodic_functions.c", 132, transition_function_tables[function_type]);
+			match_free("c:\\halo\\SOURCE\\math\\periodic_functions.c", 132, transition_function_tables[transition_function_type]);
 		}
 
 		function_tables_initialized = FALSE;
@@ -152,8 +154,8 @@ real periodic_function_evaluate(
 
 		if (function_tables_initialized)
 		{
-			real fractional_time;
 			long integer_time;
+			real fractional_time;
 
 			{
 				real const function_period = 25.6f;
@@ -165,10 +167,10 @@ real periodic_function_evaluate(
 			integer_time = fast_ftol(time-fractional_time)&(FUNCTION_TABLE_SIZE-1);
 
 			{
-				real result0;
-				real result1;
 				real const one_over_255 = 1.f/255.f;
 				byte const *table = periodic_function_tables[function_type];
+				real result0;
+				real result1;
 
 				result0 = table[integer_time]*one_over_255;
 				result1 = table[(integer_time+1)&(FUNCTION_TABLE_SIZE-1)]*one_over_255;
@@ -329,7 +331,6 @@ static void periodic_function_build_table(
 	real real_table[FUNCTION_TABLE_SIZE];
 	real value0 = REAL_MAX;
 	real value1 = -REAL_MAX;
-	real range;
 	short index;
 
 	periodic_function_build_variable_period_x_table(x_table);
@@ -396,13 +397,16 @@ static void periodic_function_build_table(
 		real_table[index] = value;
 	}
 
-	range = TEST_FLAG(WRAPPING_FUNCTION_FLAGS, function_type) ? 0.f : value1-value0;
-	for (index = 0; index<FUNCTION_TABLE_SIZE; index++)
 	{
-		real value = range!=0.f ? (real_table[index]-value0)/range : real_table[index];
-		long integer_value = (long)(value*255.f);
+		real range = TEST_FLAG(WRAPPING_FUNCTION_FLAGS, function_type) ? 0.f : value1-value0;
 
-		integer_table[index] = (byte)PIN(integer_value, 0, 255);
+		for (index = 0; index<FUNCTION_TABLE_SIZE; index++)
+		{
+			real value = range!=0.f ? (real_table[index]-value0)/range : real_table[index];
+			long integer_value = (long)(value*255.f);
+
+			integer_table[index] = (byte)PIN(integer_value, 0, 255);
+		}
 	}
 
 	return;
