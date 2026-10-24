@@ -29,134 +29,6 @@ file has inline function assertions.
 #define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * M_PI / 180.f))
 #define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / M_PI))
 
-#define assert_valid_real(v)				\
-vassert(									\
-	valid_real(v),							\
-	csprintf(								\
-		temporary,							\
-		"%s: assert_valid_real(0x%08X %f)",	\
-		#v,									\
-		*((long*)&v), v						\
-	)										\
-)
-
-#define assert_valid_real_point3d(point)\
-vassert(												\
-	valid_real_point3d(point),							\
-	csprintf(											\
-		temporary,										\
-		"%s: assert_valid_real_point3d(%f, %f, %f)",	\
-		#point, (*point).x, (*point).y, (*point).z		\
-	)													\
-)
-
-#define assert_valid_real_vector3d(vector)				\
-vassert(												\
-	valid_real_vector3d(vector),						\
-	csprintf(											\
-		temporary,										\
-		"%s: assert_valid_real_vector2d(%f, %f, %f)",	\
-		#vector, (*vector).i, (*vector).j, (*vector).k	\
-	)													\
-)
-
-#define assert_valid_real_plane3d(plane)								\
-vassert(																\
-	valid_real_plane3d(plane),											\
-	csprintf(															\
-		temporary,														\
-		"%s: assert_valid_real_plane3d(%f, %f, %f / %f)",				\
-		#plane, (*plane).n.i, (*plane).n.j, (*plane).n.k, (*plane).d	\
-	)																	\
-)
-
-#define assert_valid_real_normal3d(vector)				\
-vassert(												\
-	valid_real_normal3d(vector),						\
-	csprintf(											\
-		temporary,										\
-		"%s: assert_valid_real_normal3d(%f, %f, %f)",	\
-		#vector, (*vector).i, (*vector).j, (*vector).k	\
-	)													\
-)
-
-#define assert_valid_real_rgb_color(color)					\
-vassert(													\
-	valid_real_rgb_color(color),							\
-	csprintf(												\
-		temporary,											\
-		"%s: assert_valid_real_rgb_color(%f, %f, %f)",		\
-		#color, (*color).red, (*color).green, (*color).blue	\
-	)														\
-)
-
-#define assert_valid_real_vector3d_axes2(forward, up)						\
-vassert(																	\
-	valid_real_vector3d_axes2(forward, up),									\
-	csprintf(																\
-		temporary,															\
-		"%s, %s: assert_valid_real_vector3d_axes2(%f, %f, %f / %f, %f, %f)",\
-		#forward, #up,														\
-		(*forward).i, (*forward).j, (*forward).k, (*up).i, (*up).j, (*up).k	\
-	)																		\
-)
-
-#define assert_valid_real_sine_cosine(sine, cosine)			\
-vassert(													\
-	valid_real_sine_cosine(sine, cosine),					\
-	csprintf(												\
-		temporary,											\
-		"%s, %s: assert_valid_real_sine_cosine(%f, %f)",	\
-		#sine, #cosine,										\
-		sine, cosine										\
-	)														\
-)
-
-#define assert_valid_real_matrix4x3_internal(matrix, string)				\
-vassert(valid_real((*matrix).scale), csprintf(temporary, "%s had a bad scale %f", string, (*matrix).scale));	\
-vassert(valid_real_normal3d(&(*matrix).forward), csprintf(temporary, "%s had a bad forward (%f,%f,%f)", string, (*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k));		\
-vassert(valid_real_normal3d(&(*matrix).left), csprintf(temporary, "%s had a bad left (%f,%f,%f)", string, (*matrix).left.i, (*matrix).left.j, (*matrix).left.k));						\
-vassert(valid_real_normal3d(&(*matrix).up), csprintf(temporary, "%s had a bad up (%f,%f,%f)", string, (*matrix).up.i, (*matrix).up.j, (*matrix).up.k));								\
-vassert(valid_real_point3d(&(*matrix).position), csprintf(temporary, "%s had a bad position (%f,%f,%f)", string, (*matrix).position.x, (*matrix).position.y, (*matrix).position.z));	\
-match_vassert(																\
-	valid_realcmp(dot_product3d(&(*matrix).forward, &(*matrix).left), 0.f),	\
-	csprintf(																\
-		temporary,															\
-		"%s had a forward (%f,%f,%f) not perpendicular to left (%f,%f,%f)",	\
-		string,																\
-		(*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k,		\
-		(*matrix).left.i, (*matrix).left.j, (*matrix).left.k));				\
-vassert(																	\
-	valid_realcmp(dot_product3d(&(*matrix).up, &(*matrix).left), 0.f),		\
-	csprintf(																\
-		temporary,															\
-		"%s had a up (%f,%f,%f) not perpendicular to left (%f,%f,%f)",		\
-		string,																\
-		(*matrix).up.i, (*matrix).up.j, (*matrix).up.k,						\
-		(*matrix).left.i, (*matrix).left.j, (*matrix).left.k));				\
-vassert(																	\
-	valid_realcmp(dot_product3d(&(*matrix).forward, &(*matrix).up), 0.f),	\
-	csprintf(																\
-		temporary,															\
-		"%s had a forward (%f,%f,%f) not perpendicular to up (%f,%f,%f)",	\
-		string,																\
-		(*matrix).forward.i, (*matrix).forward.j, (*matrix).forward.k,		\
-		(*matrix).up.i, (*matrix).up.j, (*matrix).up.k));					\
-vassert(valid_real_matrix4x3(matrix), csprintf(temporary, "%s: assert_valid_real_matrix4x3", string));	\
-
-#define assert_valid_real_matrix4x3(file, line, matrix)								\
-if (!valid_real_matrix4x3(matrix))													\
-{																					\
-	assert_valid_real_matrix4x3_internal(file, line, matrix, STRINGIFY(matrix));	\
-}																					\
-
-#define assert_valid_real_matrix4x3_custom_string(matrix, custom_string)	\
-if (!valid_real_matrix4x3(matrix))											\
-{																			\
-	char* string = custom_string;											\
-	assert_valid_real_matrix4x3_internal(file, line, matrix, string);		\
-}																			\
-
 #define match_assert_valid_real(file, line, v)	\
 match_vassert(									\
 	file,										\
@@ -301,6 +173,17 @@ if (!valid_real_matrix4x3(matrix))															\
 	char const* string = (custom_string);													\
 	match_assert_valid_real_matrix4x3_internal(file, line, matrix, string);					\
 }
+
+#define assert_valid_real(v) match_assert_valid_real(__FILE__, __LINE__, v)
+#define assert_valid_real_point3d(point) match_assert_valid_real_point3d(__FILE__, __LINE__, point)
+#define assert_valid_real_vector3d(vector) match_assert_valid_real_vector3d(__FILE__, __LINE__, vector)
+#define assert_valid_real_plane3d(plane) match_assert_valid_real_plane3d(__FILE__, __LINE__, plane)
+#define assert_valid_real_normal3d(vector) match_assert_valid_real_normal3d(__FILE__, __LINE__, vector)
+#define assert_valid_real_rgb_color(color) match_assert_valid_real_rgb_color(__FILE__, __LINE__, color)
+#define assert_valid_real_vector3d_axes2(forward, up) match_assert_valid_real_vector3d_axes2(__FILE__, __LINE__, forward, up)
+#define assert_valid_real_sine_cosine(sine, cosine) match_assert_valid_real_sine_cosine(__FILE__, __LINE__, sine, cosine)
+#define assert_valid_real_matrix4x3(matrix) match_assert_valid_real_matrix4x3(__FILE__, __LINE__, matrix)
+#define assert_valid_real_matrix4x3_custom_string(matrix, custom_string) match_assert_valid_real_matrix4x3_custom_string(__FILE__, __LINE__, matrix, custom_string)
 
 /* ---------- structures */
 
