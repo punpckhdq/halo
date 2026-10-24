@@ -61,7 +61,7 @@ static void verify_lru_cache(struct lru_cache *cache);
 /* ---------- public code */
 
 struct lru_cache *lru_new(
-	char const *name,
+	char *name,
 	long total_size,
 	long block_size,
 	lru_new_block_proc new_block_proc,
@@ -180,8 +180,8 @@ void *lru_allocate(
 
 	if (cache->used_block_count==cache->block_count)
 	{
-		unsigned long oldest_age;
 		long block_index;
+		unsigned long oldest_age;
 		struct lru_block *current_block;
 
 		for (block_index = 0, current_block = (struct lru_block *)cache->blocks; block_index<cache->used_block_count; block_index++, current_block = (struct lru_block *)offset_pointer(current_block, cache->block_size))

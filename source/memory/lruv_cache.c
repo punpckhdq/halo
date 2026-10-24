@@ -402,7 +402,9 @@ void lruv_block_delete(
 
 	if (block->previous_block_index!=NONE)
 	{
-		lruv_cache_block_get(cache, block->previous_block_index)->next_block_index = block->next_block_index;
+		struct lruv_cache_block *previous_block = lruv_cache_block_get(cache, block->previous_block_index);
+
+		previous_block->next_block_index = block->next_block_index;
 	}
 	else
 	{
@@ -412,7 +414,9 @@ void lruv_block_delete(
 
 	if (block->next_block_index!=NONE)
 	{
-		lruv_cache_block_get(cache, block->next_block_index)->previous_block_index = block->previous_block_index;
+		struct lruv_cache_block *next_block = lruv_cache_block_get(cache, block->next_block_index);
+
+		next_block->previous_block_index = block->previous_block_index;
 	}
 	else
 	{
@@ -430,8 +434,11 @@ void lruv_block_touch(
 	struct lruv_cache *cache,
 	long block_index)
 {
+	struct lruv_cache_block *block;
+
 	lruv_cache_verify(cache, FALSE);
-	lruv_cache_block_get(cache, block_index)->last_used_frame_index = cache->frame_index;
+	block = lruv_cache_block_get(cache, block_index);
+	block->last_used_frame_index = cache->frame_index;
 
 	return;
 }
@@ -440,18 +447,24 @@ unsigned long lruv_block_get_address(
 	struct lruv_cache *cache,
 	long block_index)
 {
-	lruv_cache_verify(cache, FALSE);
+	struct lruv_cache_block *block;
 
-	return lruv_cache_block_get(cache, block_index)->first_page_index<<cache->page_size_bits;
+	lruv_cache_verify(cache, FALSE);
+	block = lruv_cache_block_get(cache, block_index);
+
+	return block->first_page_index<<cache->page_size_bits;
 }
 
 boolean lruv_block_touched(
 	struct lruv_cache *cache,
 	long block_index)
 {
-	lruv_cache_verify(cache, FALSE);
+	struct lruv_cache_block *block;
 
-	return lruv_cache_block_get(cache, block_index)->last_used_frame_index==cache->frame_index;
+	lruv_cache_verify(cache, FALSE);
+	block = lruv_cache_block_get(cache, block_index);
+
+	return block->last_used_frame_index==cache->frame_index;
 }
 
 void lruv_cache_get_page_usage(

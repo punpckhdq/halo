@@ -54,7 +54,7 @@ static void verify_lrar_cache(struct lrar_cache *cache);
 /* ---------- public code */
 
 struct lrar_cache *lrar_new(
-	char const *name,
+	char *name,
 	unsigned long minimum_address,
 	unsigned long maximum_address,
 	short block_count,
@@ -137,7 +137,9 @@ void lrar_flush(
 
 	while (block_index!=NONE)
 	{
-		lrar_purge_block(cache, get_lrar_cache_block(cache, block_index));
+		struct lrar_block *block = get_lrar_cache_block(cache, block_index);
+
+		lrar_purge_block(cache, block);
 
 		if (block_index==cache->last_block_index)
 		{

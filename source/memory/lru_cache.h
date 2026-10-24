@@ -15,7 +15,7 @@ typedef void (*lru_purge_block_proc)(void **reference); /* fake name */
 
 /* ---------- prototypes/LRU_CACHE.C */
 
-struct lru_cache *lru_new(char const *name, long total_size, long block_size, lru_new_block_proc new_block_proc, lru_purge_block_proc purge_block_proc, void *buffer);
+struct lru_cache *lru_new(char *name, long total_size, long block_size, lru_new_block_proc new_block_proc, lru_purge_block_proc purge_block_proc, void *buffer);
 void lru_dispose(struct lru_cache *cache);
 void lru_flush(struct lru_cache *cache);
 long lru_free_blocks(struct lru_cache *cache);
