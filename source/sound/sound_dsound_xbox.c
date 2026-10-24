@@ -376,9 +376,9 @@ static void dsound_set_listener_properties(
 {
 	HRESULT result;
 
-	if (REAL_CMP_EPSILON(properties->position.x, dsound_globals.listener.position.x, 0.05f) ||
-		REAL_CMP_EPSILON(properties->position.y, dsound_globals.listener.position.y, 0.05f) ||
-		REAL_CMP_EPSILON(properties->position.z, dsound_globals.listener.position.z, 0.05f) ||
+	if (!realcmp_epsilon(properties->position.x, dsound_globals.listener.position.x, 0.05f) ||
+		!realcmp_epsilon(properties->position.y, dsound_globals.listener.position.y, 0.05f) ||
+		!realcmp_epsilon(properties->position.z, dsound_globals.listener.position.z, 0.05f) ||
 		!dsound_globals.initialized)
 	{
 		result = IDirectSound_SetPosition(dsound_globals.dsound_object, properties->position.x, (properties->position.z), (properties->position.y), DS3D_DEFERRED);
@@ -389,12 +389,12 @@ static void dsound_set_listener_properties(
 		dsound_globals.listener.position = properties->position;
 	}
 
-	if (REAL_CMP_EPSILON(properties->forward.i, dsound_globals.listener.forward.i, 0.05f) ||
-		REAL_CMP_EPSILON(properties->forward.j, dsound_globals.listener.forward.j, 0.05f) ||
-		REAL_CMP_EPSILON(properties->forward.k, dsound_globals.listener.forward.k, 0.05f) ||
-		REAL_CMP_EPSILON(properties->up.i, dsound_globals.listener.up.i, 0.05f) ||
-		REAL_CMP_EPSILON(properties->up.j, dsound_globals.listener.up.j, 0.05f) ||
-		REAL_CMP_EPSILON(properties->up.k, dsound_globals.listener.up.k, 0.05f) ||
+	if (!realcmp_epsilon(properties->forward.i, dsound_globals.listener.forward.i, 0.05f) ||
+		!realcmp_epsilon(properties->forward.j, dsound_globals.listener.forward.j, 0.05f) ||
+		!realcmp_epsilon(properties->forward.k, dsound_globals.listener.forward.k, 0.05f) ||
+		!realcmp_epsilon(properties->up.i, dsound_globals.listener.up.i, 0.05f) ||
+		!realcmp_epsilon(properties->up.j, dsound_globals.listener.up.j, 0.05f) ||
+		!realcmp_epsilon(properties->up.k, dsound_globals.listener.up.k, 0.05f) ||
 		!dsound_globals.initialized)
 	{
 		result = IDirectSound_SetOrientation(dsound_globals.dsound_object, properties->forward.i, (properties->forward.k), (properties->forward.j), properties->up.i, (properties->up.k), (properties->up.j), DS3D_DEFERRED);
@@ -406,9 +406,9 @@ static void dsound_set_listener_properties(
 		dsound_globals.listener.up = properties->up;
 	}
 
-	if (REAL_CMP_EPSILON(properties->translational_velocity.i, dsound_globals.listener.translational_velocity.i, 0.01f) ||
-		REAL_CMP_EPSILON(properties->translational_velocity.j, dsound_globals.listener.translational_velocity.j, 0.01f) ||
-		REAL_CMP_EPSILON(properties->translational_velocity.k, dsound_globals.listener.translational_velocity.k, 0.01f) ||
+	if (!realcmp_epsilon(properties->translational_velocity.i, dsound_globals.listener.translational_velocity.i, 0.01f) ||
+		!realcmp_epsilon(properties->translational_velocity.j, dsound_globals.listener.translational_velocity.j, 0.01f) ||
+		!realcmp_epsilon(properties->translational_velocity.k, dsound_globals.listener.translational_velocity.k, 0.01f) ||
 		!dsound_globals.initialized)
 	{
 		result = IDirectSound_SetVelocity(dsound_globals.dsound_object, properties->translational_velocity.i, (properties->translational_velocity.k), (properties->translational_velocity.j), DS3D_DEFERRED);
@@ -707,9 +707,9 @@ static void dsound_channel_set_location(
 		}
 	}
 
-	if (REAL_CMP_EPSILON(location->position.x, channel->location.position.x, 0.05f) ||
-		REAL_CMP_EPSILON(location->position.y, channel->location.position.y, 0.05f) ||
-		REAL_CMP_EPSILON(location->position.z, channel->location.position.z, 0.05f) ||
+	if (!realcmp_epsilon(location->position.x, channel->location.position.x, 0.05f) ||
+		!realcmp_epsilon(location->position.y, channel->location.position.y, 0.05f) ||
+		!realcmp_epsilon(location->position.z, channel->location.position.z, 0.05f) ||
 		!dsound_globals.initialized)
 	{
 		result = IDirectSoundStream_SetPosition(channel->stream, location->position.x, (location->position.z), (location->position.y), DS3D_DEFERRED);
@@ -720,9 +720,9 @@ static void dsound_channel_set_location(
 		channel->location.position = location->position;
 	}
 
-	if (REAL_CMP_EPSILON(location->forward.i, channel->location.forward.i, 0.05f) ||
-		REAL_CMP_EPSILON(location->forward.j, channel->location.forward.j, 0.05f) ||
-		REAL_CMP_EPSILON(location->forward.k, channel->location.forward.k, 0.05f) ||
+	if (!realcmp_epsilon(location->forward.i, channel->location.forward.i, 0.05f) ||
+		!realcmp_epsilon(location->forward.j, channel->location.forward.j, 0.05f) ||
+		!realcmp_epsilon(location->forward.k, channel->location.forward.k, 0.05f) ||
 		!dsound_globals.initialized)
 	{
 		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 933, valid_real_normal3d(&location->forward));
@@ -735,9 +735,9 @@ static void dsound_channel_set_location(
 		channel->location.forward = location->forward;
 	}
 
-	if (REAL_CMP_EPSILON(location->translational_velocity.i, channel->location.translational_velocity.i, 0.01f) ||
-		REAL_CMP_EPSILON(location->translational_velocity.j, channel->location.translational_velocity.j, 0.01f) ||
-		REAL_CMP_EPSILON(location->translational_velocity.k, channel->location.translational_velocity.k, 0.01f) ||
+	if (!realcmp_epsilon(location->translational_velocity.i, channel->location.translational_velocity.i, 0.01f) ||
+		!realcmp_epsilon(location->translational_velocity.j, channel->location.translational_velocity.j, 0.01f) ||
+		!realcmp_epsilon(location->translational_velocity.k, channel->location.translational_velocity.k, 0.01f) ||
 		!dsound_globals.initialized)
 	{
 		result = IDirectSoundStream_SetVelocity(channel->stream, location->translational_velocity.i, (location->translational_velocity.k), (location->translational_velocity.j), DS3D_DEFERRED);
@@ -748,8 +748,8 @@ static void dsound_channel_set_location(
 		channel->location.translational_velocity = location->translational_velocity;
 	}
 
-	if (REAL_CMP_EPSILON(obstruction, channel->obstruction, 0.001f) ||
-		REAL_CMP_EPSILON(occlusion, channel->occlusion, 0.001f) ||
+	if (!realcmp_epsilon(obstruction, channel->obstruction, 0.001f) ||
+		!realcmp_epsilon(occlusion, channel->occlusion, 0.001f) ||
 		channel->underwater!=underwater ||
 		mode_changed ||
 		!dsound_globals.initialized)
@@ -791,7 +791,7 @@ static void dsound_channel_set_properties(
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 981, dsound_globals.pause_gain>=0 && dsound_globals.pause_gain<=1.f);
 	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 982, channel->stream);
 
-	if (REAL_CMP_EPSILON(gain, channel->gain, 0.001f) || !dsound_globals.initialized)
+	if (!realcmp_epsilon(gain, channel->gain, 0.001f) || !dsound_globals.initialized)
 	{
 		result = IDirectSoundStream_SetVolume(channel->stream, dsound_volume_from_gain(gain, 0));
 		if (FAILED(result))
@@ -803,7 +803,7 @@ static void dsound_channel_set_properties(
 
 	if (!gain_only)
 	{
-		if (REAL_CMP_EPSILON(properties->pitch, channel->pitch, 0.001f) || !dsound_globals.initialized)
+		if (!realcmp_epsilon(properties->pitch, channel->pitch, 0.001f) || !dsound_globals.initialized)
 		{
 			long samples_per_second = sound_samples_per_second(TEST_FLAG(channel->type_flags, _sound_channel_44k_bit));
 
@@ -817,7 +817,7 @@ static void dsound_channel_set_properties(
 
 		if (TEST_FLAG(channel->type_flags, _sound_channel_3d_bit))
 		{
-			if (REAL_CMP_EPSILON(properties->maximum_distance, channel->maximum_distance, 0.05f) || !dsound_globals.initialized)
+			if (!realcmp_epsilon(properties->maximum_distance, channel->maximum_distance, 0.05f) || !dsound_globals.initialized)
 			{
 				result = IDirectSoundStream_SetMaxDistance(channel->stream, properties->maximum_distance, DS3D_DEFERRED);
 				if (FAILED(result))
@@ -827,7 +827,7 @@ static void dsound_channel_set_properties(
 				channel->maximum_distance = properties->maximum_distance;
 			}
 
-			if (REAL_CMP_EPSILON(properties->minimum_distance, channel->minimum_distance, 0.05f) || !dsound_globals.initialized)
+			if (!realcmp_epsilon(properties->minimum_distance, channel->minimum_distance, 0.05f) || !dsound_globals.initialized)
 			{
 				result = IDirectSoundStream_SetMinDistance(channel->stream, properties->minimum_distance, DS3D_DEFERRED);
 				if (FAILED(result))
@@ -837,8 +837,8 @@ static void dsound_channel_set_properties(
 				channel->minimum_distance = properties->minimum_distance;
 			}
 
-			if (REAL_CMP_EPSILON(properties->inner_cone_angle, channel->inner_cone_angle, 0.034906585f) ||
-				REAL_CMP_EPSILON(properties->outer_cone_angle, channel->outer_cone_angle, 0.034906585f) ||
+			if (!realcmp_epsilon(properties->inner_cone_angle, channel->inner_cone_angle, 0.034906585f) ||
+				!realcmp_epsilon(properties->outer_cone_angle, channel->outer_cone_angle, 0.034906585f) ||
 				!dsound_globals.initialized)
 			{
 				result = IDirectSoundStream_SetConeAngles(channel->stream, dsound_angle_from_angle(properties->inner_cone_angle), dsound_angle_from_angle(properties->outer_cone_angle), DS3D_IMMEDIATE);
@@ -850,7 +850,7 @@ static void dsound_channel_set_properties(
 				channel->outer_cone_angle = properties->outer_cone_angle;
 			}
 
-			if (REAL_CMP_EPSILON(properties->outer_cone_gain, channel->outer_cone_gain, 0.001f) || !dsound_globals.initialized)
+			if (!realcmp_epsilon(properties->outer_cone_gain, channel->outer_cone_gain, 0.001f) || !dsound_globals.initialized)
 			{
 				result = IDirectSoundStream_SetConeOutsideVolume(channel->stream, dsound_volume_from_gain(properties->outer_cone_gain, 0), DS3D_DEFERRED);
 				if (FAILED(result))
@@ -860,7 +860,7 @@ static void dsound_channel_set_properties(
 				channel->outer_cone_gain = properties->outer_cone_gain;
 			}
 
-			if (REAL_CMP_EPSILON(properties->reverb_damping_factor, channel->reverb_damping_factor, 0.001f) || !dsound_globals.initialized)
+			if (!realcmp_epsilon(properties->reverb_damping_factor, channel->reverb_damping_factor, 0.001f) || !dsound_globals.initialized)
 			{
 				channel->reverb_damping_factor = properties->reverb_damping_factor;
 				dsound_channel_set_I3DL2_properties(channel_index);

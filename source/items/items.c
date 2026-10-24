@@ -126,7 +126,7 @@ boolean item_update(
 		item->object.parent_object_index == NONE)
 	{
 		if (TEST_FLAG(definition->item.flags, _item_always_maintains_z_up_bit) &&
-			REAL_CMP_EPSILON(item->object.up.k, 1.f, _real_epsilon))
+			!realcmp(item->object.up.k, 1.f))
 		{
 			real_vector3d left;
 

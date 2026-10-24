@@ -1,98 +1,22 @@
 /*
 PERIODIC_FUNCTIONS.C
-
-symbols in this file:
-000F9D90 0070:
-	_periodic_functions_dispose (0000)
-000F9E00 0130:
-	_periodic_function_evaluate (0000)
-000F9F30 0120:
-	_transition_function_evaluate (0000)
-000FA050 0100:
-	_periodic_function_build_variable_period_x_table (0000)
-000FA150 0130:
-	_transition_function_build_table (0000)
-000FA280 02b0:
-	_periodic_function_build_table (0000)
-000FA530 00c0:
-	_periodic_functions_initialize (0000)
-0027AC7C 000a:
-	??_C@_09PFNFPFNK@very?5late?$AA@ (0000)
-0027AC88 0005:
-	??_C@_04KNPHFNKG@late?$AA@ (0000)
-0027AC90 000b:
-	??_C@_0L@JFLLBJBL@very?5early?$AA@ (0000)
-0027AC9C 0006:
-	??_C@_05MMFAAGKE@early?$AA@ (0000)
-0027ACA4 0006:
-	??_C@_05GILPFPMI@spark?$AA@ (0000)
-0027ACAC 0007:
-	??_C@_06EJKHKJBM@wander?$AA@ (0000)
-0027ACB4 0007:
-	??_C@_06NJLEAOMD@jitter?$AA@ (0000)
-0027ACBC 0018:
-	??_C@_0BI@LODCFJBP@slide?5?$CIvariable?5period?$CJ?$AA@ (0000)
-0027ACD4 0006:
-	??_C@_05IODDPPOI@slide?$AA@ (0000)
-0027ACDC 0020:
-	??_C@_0CA@POBCGHPD@diagonal?5wave?5?$CIvariable?5period?$CJ?$AA@ (0000)
-0027ACFC 000e:
-	??_C@_0O@JLGDFEJA@diagonal?5wave?$AA@ (0000)
-0027AD0C 0019:
-	??_C@_0BJ@LIPGHGNF@cosine?5?$CIvariable?5period?$CJ?$AA@ (0000)
-0027AD28 0007:
-	??_C@_06IDPAJACI@cosine?$AA@ (0000)
-0027AD30 0005:
-	??_C@_04DDFHDMOL@zero?$AA@ (0000)
-0027AD38 0004:
-	??_C@_03OHDNLOHO@one?$AA@ (0000)
-0027AD3C 0029:
-	??_C@_0CJ@OKNGCK@c?3?2halo?2SOURCE?2math?2periodic_fun@ (0000)
-0027AD68 0004:
-	__real@41cccccd (0000)
-0027AD6C 003f:
-	??_C@_0DP@JEKDFHEF@function_type?$DO?$DN0?5?$CG?$CG?5function_typ@ (0000)
-0027ADAC 0004:
-	__real@447fc000 (0000)
-0027ADB0 0041:
-	??_C@_0EB@CENGDIOD@function_type?$DO?$DN0?5?$CG?$CG?5function_typ@ (0000)
-0027ADF4 0004:
-	__real@3cce16a7 (0000)
-0027ADF8 0004:
-	__real@3d002d4f (0000)
-0027ADFC 0004:
-	__real@3d377812 (0000)
-0027AE00 0008:
-	__real@4000000000000000 (0000)
-0027AE08 0008:
-	__real@3fd0000000000000 (0000)
-0027AE10 0004:
-	__real@3a802008 (0000)
-0027AE14 0004:
-	__real@422fede0 (0000)
-0027AE18 0004:
-	__real@41c90fdb (0000)
-0027AE1C 0004:
-	__real@3f65c8fa (0000)
-0027AE20 0004:
-	__real@41e00000 (0000)
-0027AE24 0004:
-	__real@3cdfffff (0000)
-0027AE28 001d:
-	??_C@_0BN@IGAJMLPO@?$CBfunction_tables_initialized?$AA@ (0000)
-0030791C 0060:
-	_data_0030791c (0000)
-	_global_periodic_functions_enum (0030)
-	_global_transition_functions_enum (0054)
-004561BC 004c:
-	_bss_004561bc (0000)
 */
 
 /* ---------- headers */
 
 #include "cseries.h"
+#include "real_math.h"
+#include "tag_groups.h"
+#include "periodic_functions.h"
 
 /* ---------- constants */
+
+enum
+{
+	FUNCTION_TABLE_SIZE = 1024,
+	PERIODIC_FUNCTION_PERIODS_PER_TABLE = 28,
+	WRAPPING_FUNCTION_FLAGS = FLAG(_periodic_function_slide)|FLAG(_periodic_function_slide_with_random_period),
+};
 
 /* ---------- macros */
 
@@ -100,8 +24,386 @@ symbols in this file:
 
 /* ---------- prototypes */
 
+static void periodic_function_build_variable_period_x_table(real *x_table);
+static void transition_function_build_table(short function_type, byte *integer_table);
+static void periodic_function_build_table(short function_type, byte *integer_table);
+
 /* ---------- globals */
+
+static char *global_periodic_functions_enum_strings[NUMBER_OF_PERIODIC_FUNCTIONS] =
+{
+	"one",
+	"zero",
+	"cosine",
+	"cosine (variable period)",
+	"diagonal wave",
+	"diagonal wave (variable period)",
+	"slide",
+	"slide (variable period)",
+	"noise",
+	"jitter",
+	"wander",
+	"spark"
+};
+
+struct enum_definition global_periodic_functions_enum =
+{
+	NUMBER_OF_PERIODIC_FUNCTIONS,
+	global_periodic_functions_enum_strings
+};
+
+static char *global_transition_functions_enum_strings[NUMBER_OF_TRANSITION_FUNCTIONS] =
+{
+	"linear",
+	"early",
+	"very early",
+	"late",
+	"very late",
+	"cosine"
+};
+
+struct enum_definition global_transition_functions_enum =
+{
+	NUMBER_OF_TRANSITION_FUNCTIONS,
+	global_transition_functions_enum_strings
+};
+
+static byte *periodic_function_tables[NUMBER_OF_PERIODIC_FUNCTIONS];
+static byte *transition_function_tables[NUMBER_OF_TRANSITION_FUNCTIONS];
+static boolean function_tables_initialized;
 
 /* ---------- public code */
 
+void periodic_functions_initialize(
+	void)
+{
+	short function_type;
+
+	match_assert("c:\\halo\\SOURCE\\math\\periodic_functions.c", 67, !function_tables_initialized);
+	function_tables_initialized = TRUE;
+
+	*get_global_random_seed_address() = 0x20f3f660;
+
+	for (function_type = 0; function_type<NUMBER_OF_PERIODIC_FUNCTIONS; function_type++)
+	{
+		periodic_function_tables[function_type] = match_malloc("c:\\halo\\SOURCE\\math\\periodic_functions.c", 78, FUNCTION_TABLE_SIZE);
+		if (periodic_function_tables[function_type])
+		{
+			periodic_function_build_table(function_type, periodic_function_tables[function_type]);
+		}
+		else
+		{
+			function_tables_initialized = FALSE;
+		}
+	}
+
+	for (function_type = 0; function_type<NUMBER_OF_TRANSITION_FUNCTIONS; function_type++)
+	{
+		transition_function_tables[function_type] = match_malloc("c:\\halo\\SOURCE\\math\\periodic_functions.c", 96, FUNCTION_TABLE_SIZE);
+		if (transition_function_tables[function_type])
+		{
+			transition_function_build_table(function_type, transition_function_tables[function_type]);
+		}
+		else
+		{
+			function_tables_initialized = FALSE;
+		}
+	}
+
+	return;
+}
+
+void periodic_functions_dispose(
+	void)
+{
+	if (function_tables_initialized)
+	{
+		short function_type;
+
+		for (function_type = 0; function_type<NUMBER_OF_PERIODIC_FUNCTIONS; function_type++)
+		{
+			match_free("c:\\halo\\SOURCE\\math\\periodic_functions.c", 122, periodic_function_tables[function_type]);
+		}
+
+		for (function_type = 0; function_type<NUMBER_OF_TRANSITION_FUNCTIONS; function_type++)
+		{
+			match_free("c:\\halo\\SOURCE\\math\\periodic_functions.c", 132, transition_function_tables[function_type]);
+		}
+
+		function_tables_initialized = FALSE;
+	}
+
+	return;
+}
+
+real periodic_function_evaluate(
+	short function_type,
+	real time)
+{
+	real result;
+
+	if (function_type==_periodic_function_one)
+	{
+		result = 1.f;
+	}
+	else
+	{
+		match_assert("c:\\halo\\SOURCE\\math\\periodic_functions.c", 157, function_type>=0 && function_type<NUMBER_OF_PERIODIC_FUNCTIONS);
+
+		if (function_tables_initialized)
+		{
+			real fractional_time;
+			long integer_time;
+
+			{
+				real const function_period = 25.6f;
+
+				time*= function_period;
+			}
+
+			fractional_time = (real)fmod(time, 1.0);
+			integer_time = real_to_long_round(time-fractional_time)&(FUNCTION_TABLE_SIZE-1);
+
+			{
+				real result0;
+				real result1;
+				real const one_over_255 = 1.f/255.f;
+				byte const *table = periodic_function_tables[function_type];
+
+				result0 = table[integer_time]*one_over_255;
+				result1 = table[(integer_time+1)&(FUNCTION_TABLE_SIZE-1)]*one_over_255;
+
+				if (TEST_FLAG(WRAPPING_FUNCTION_FLAGS, function_type))
+				{
+					if (result0>0.75f && result1<0.25f)
+					{
+						result1+= 1.f;
+					}
+
+					result = (1.f-fractional_time)*result0 + result1*fractional_time;
+					if (result>1.f)
+					{
+						result-= 1.f;
+					}
+				}
+				else
+				{
+					result = (1.f-fractional_time)*result0 + result1*fractional_time;
+				}
+			}
+		}
+		else
+		{
+			result = 0.f;
+		}
+	}
+
+	return result;
+}
+
+real transition_function_evaluate(
+	short function_type,
+	real value)
+{
+	real result;
+
+	if (value<0.f)
+	{
+		value = 0.f;
+	}
+	else if (value>1.f)
+	{
+		value = 1.f;
+	}
+
+	if (function_type==_transition_function_linear)
+	{
+		result = value;
+	}
+	else
+	{
+		match_assert("c:\\halo\\SOURCE\\math\\periodic_functions.c", 216, function_type>=0 && function_type<NUMBER_OF_TRANSITION_FUNCTIONS);
+
+		if (function_tables_initialized)
+		{
+			real const one_over_255 = 1.f/255.f;
+			byte const *table = transition_function_tables[function_type];
+			real index = value*(FUNCTION_TABLE_SIZE-1);
+			real fractional_index = (real)fmod(index, 1.0);
+			short integer_index = (short)real_to_long_round(index-0.5f);
+
+			if (integer_index==FUNCTION_TABLE_SIZE-1)
+			{
+				result = table[integer_index]*one_over_255;
+			}
+			else
+			{
+				real result0 = table[integer_index]*one_over_255;
+				real result1 = table[integer_index+1]*one_over_255;
+
+				result = result0*(1.f-fractional_index) + result1*fractional_index;
+			}
+		}
+		else
+		{
+			result = 0.f;
+		}
+	}
+
+	return result;
+}
+
 /* ---------- private code */
+
+static void periodic_function_build_variable_period_x_table(
+	real *x_table)
+{
+	real x = 0.f;
+	short index;
+
+	for (index = 0; index<FUNCTION_TABLE_SIZE; index++)
+	{
+		x_table[index] = x;
+		x+= real_random()*0.25f+0.25f
+			+ (cosine(2.f*_pi*4.1f*index/FUNCTION_TABLE_SIZE)+1.f)*real_random()
+			+ (cosine(2.f*_pi*5.1f*index/FUNCTION_TABLE_SIZE)+1.f)*real_random()
+			+ (cosine(2.f*_pi*7.3f*index/FUNCTION_TABLE_SIZE)+1.f)*real_random();
+	}
+
+	for (index = 0; index<FUNCTION_TABLE_SIZE; index++)
+	{
+		x_table[index]/= x;
+	}
+
+	return;
+}
+
+static void transition_function_build_table(
+	short function_type,
+	byte *integer_table)
+{
+	short index;
+
+	for (index = 0; index<FUNCTION_TABLE_SIZE; index++)
+	{
+		real x = (real)index/(FUNCTION_TABLE_SIZE-1);
+		real v;
+		long integer_value;
+
+		switch (function_type)
+		{
+		case _transition_function_linear:
+			v = x;
+			break;
+		case _transition_function_early:
+			v = power(x, 0.5f);
+			break;
+		case _transition_function_very_early:
+			v = power(x, 0.25f);
+			break;
+		case _transition_function_late:
+			v = power(x, 2.f);
+			break;
+		case _transition_function_very_late:
+			v = power(x, 4.f);
+			break;
+		case _transition_function_cosine:
+			v = (sine(x*_pi - _pi/2.f)+1.f)*0.5f;
+			break;
+		default:
+			match_halt("c:\\halo\\SOURCE\\math\\periodic_functions.c", 411);
+		}
+
+		integer_value = (long)(v*255.f);
+		integer_table[index] = (byte)PIN(integer_value, 0, 255);
+	}
+
+	return;
+}
+
+static void periodic_function_build_table(
+	short function_type,
+	byte *integer_table)
+{
+	real x_table[FUNCTION_TABLE_SIZE];
+	real real_table[FUNCTION_TABLE_SIZE];
+	real value0 = REAL_MAX;
+	real value1 = -REAL_MAX;
+	real range;
+	short index;
+
+	periodic_function_build_variable_period_x_table(x_table);
+
+	for (index = 0; index<FUNCTION_TABLE_SIZE; index++)
+	{
+		real x = (real)index/((real)FUNCTION_TABLE_SIZE/PERIODIC_FUNCTION_PERIODS_PER_TABLE);
+		real variable_x = x_table[index]*PERIODIC_FUNCTION_PERIODS_PER_TABLE;
+		real value;
+
+		switch (function_type)
+		{
+		case _periodic_function_one:
+			value = 1.f;
+			break;
+		case _periodic_function_zero:
+			value = 0.f;
+			break;
+		case _periodic_function_cosine:
+			value = cosine(x*2.f*_pi);
+			break;
+		case _periodic_function_cosine_with_random_period:
+			value = cosine(variable_x*2.f*_pi);
+			break;
+		case _periodic_function_slide:
+			value = (real)fmod(x, 1.0);
+			break;
+		case _periodic_function_slide_with_random_period:
+			value = (real)fmod(variable_x, 1.0);
+			break;
+		case _periodic_function_diagonal_wave:
+			value = (real)fmod(x, 1.0);
+			value = value<0.5f ? 2.f*value : 1.f - 2.f*(value-0.5f);
+			break;
+		case _periodic_function_diagonal_wave_with_random_period:
+			value = (real)fmod(variable_x, 1.0);
+			value = value<0.5f ? 2.f*value : 1.f - 2.f*(value-0.5f);
+			break;
+		case _periodic_function_noise:
+			value = real_random();
+			break;
+		case _periodic_function_jitter:
+		case _periodic_function_wander:
+			value = (sine(x*(_pi/2.f))*cosine(x*(2.f*_pi*7.f)) + cosine(x*(2.f*_pi*4.f))*cosine(x*(2.f*_pi/7.f)))*0.5f + cosine(x*2.f*_pi)*sine(x*_pi);
+			break;
+		case _periodic_function_spark:
+			value = (real)fmod(variable_x, 1.0);
+			value*= value;
+			break;
+		default:
+			match_halt("c:\\halo\\SOURCE\\math\\periodic_functions.c", 499);
+		}
+
+		if (value>value1)
+		{
+			value1 = value;
+		}
+
+		if (value<value0)
+		{
+			value0 = value;
+		}
+
+		real_table[index] = value;
+	}
+
+	range = TEST_FLAG(WRAPPING_FUNCTION_FLAGS, function_type) ? 0.f : value1-value0;
+	for (index = 0; index<FUNCTION_TABLE_SIZE; index++)
+	{
+		real value = range!=0.f ? (real_table[index]-value0)/range : real_table[index];
+		long integer_value = (long)(value*255.f);
+
+		integer_table[index] = (byte)PIN(integer_value, 0, 255);
+	}
+
+	return;
+}

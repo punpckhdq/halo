@@ -23,8 +23,9 @@ file has inline function assertions.
 
 /* ---------- macros */
 
-#define REAL_CMP_EPSILON(new_value, old_value, epsilon) /* fake name */ \
-	(!(fabs((new_value)-(old_value))<(epsilon)))
+#define realcmp_epsilon(a, b, epsilon) (fabs((a)-(b))<(epsilon)) /* fake name */
+
+#define realcmp(a, b) (fabs((a)-(b))<_real_epsilon)
 
 #define DEGREES_TO_RADIANS(angle) ((real)(((real)angle) * M_PI / 180.f))
 #define RADIANS_TO_DEGREES(angle) ((real)(((real)angle) * 180.f / M_PI))
@@ -601,6 +602,20 @@ __inline real power(
 	return pow(a, b);
 }
 
+__inline long real_to_long_round(
+	real value)
+{
+	long result;
+
+	__asm
+	{
+		fld value
+		fistp result
+	}
+
+	return result;
+}
+
 __inline real_point2d *set_real_point2d(
 	real_point2d *p, 
 	real x,
@@ -680,7 +695,7 @@ __inline real normalize2d(
 {
 	real magnitude = magnitude2d(v);
 
-	if (REAL_CMP_EPSILON(magnitude, 0.f, _real_epsilon))
+	if (!realcmp(magnitude, 0.f))
 	{
 		scale_vector2d(v, 1.f / magnitude, v);
 	}
@@ -729,8 +744,7 @@ __inline real distance2d(
 	real_point2d const *a,
 	real_point2d const *b)
 {
-	real_vector2d v;
-	return magnitude2d(vector_from_points2d(a, b, &v));
+	return square_root(distance_squared2d(a, b));
 }
 
 __inline real dot_product2d(
@@ -910,7 +924,7 @@ __inline real normalize3d(
 {
 	real magnitude = magnitude3d(v);
 
-	if (REAL_CMP_EPSILON(magnitude, 0.f, _real_epsilon))
+	if (!realcmp(magnitude, 0.f))
 	{
 		scale_vector3d(v, 1.f / magnitude, v);
 	}
@@ -1114,6 +1128,14 @@ __inline real plane2d_distance_to_point(
 	real_point2d const *point)
 {
 	return (plane->n.i*point->x + plane->n.j*point->y) - plane->d;
+}
+
+__inline real vector_intersect_plane2d(
+	real_point2d const *point,
+	real_vector2d const *vector,
+	real_plane2d const *plane)
+{
+	return -(plane2d_distance_to_point(plane, point) / dot_product2d(vector, &plane->n));
 }
 	
 __inline real point_to_line_distance3d(

@@ -807,7 +807,7 @@ real vector_to_line_distance_squared3d(
 	cross_product3d(vector, height, &n);
 	nn = magnitude_squared3d(&n);
 
-	if (REAL_CMP_EPSILON(nn, 0.f, _real_epsilon))
+	if (!realcmp(nn, 0.f))
 	{
 		boolean pin_t0 = FALSE;
 		boolean pin_t1 = FALSE;
@@ -1359,7 +1359,7 @@ boolean vector_intersects_pill2d(
 	vector_from_points2d(point, base, &v);
 	n = cross_product2d(vector, height);
 
-	if (REAL_CMP_EPSILON(n, 0.f, _real_epsilon))
+	if (!realcmp(n, 0.f))
 	{
 		real oon = 1.f/n;
 		boolean pin_t0;
@@ -1451,7 +1451,7 @@ boolean vector_intersects_pill3d(
 	cross_product3d(vector, height, &n);
 	nn = magnitude_squared3d(&n);
 
-	if (REAL_CMP_EPSILON(nn, 0.f, _real_epsilon))
+	if (!realcmp(nn, 0.f))
 	{
 		boolean pin_t0 = FALSE;
 		boolean pin_t1 = FALSE;
@@ -1530,7 +1530,7 @@ boolean vector_intersects_rectangle2d(
 	real t_in = -FLT_MAX;
 	real t_out = FLT_MAX;
 
-	if (REAL_CMP_EPSILON(vector->i, 0.f, _real_epsilon))
+	if (!realcmp(vector->i, 0.f))
 	{
 		real ooi = 1.f / vector->i;
 		real t0 = (bounds->x0-point->x) * ooi;
@@ -1560,7 +1560,7 @@ boolean vector_intersects_rectangle2d(
 		}
 	}
 
-	if (REAL_CMP_EPSILON(vector->j, 0.f, _real_epsilon))
+	if (!realcmp(vector->j, 0.f))
 	{
 		real ooj = 1.f  / vector->j;
 		real t0 = (bounds->y0-point->y) * ooj;
@@ -1601,7 +1601,7 @@ boolean vector_intersects_rectangle3d(
 	real t_in = -FLT_MAX;
 	real t_out = FLT_MAX;
 
-	if (REAL_CMP_EPSILON(vector->i, 0.f, _real_epsilon))
+	if (!realcmp(vector->i, 0.f))
 	{
 		real ooi = 1.f / vector->i;
 		real t0 = (bounds->x0-point->x) * ooi;
@@ -1629,7 +1629,7 @@ boolean vector_intersects_rectangle3d(
 			return FALSE;
 	}
 
-	if (REAL_CMP_EPSILON(vector->j, 0.f, _real_epsilon))
+	if (!realcmp(vector->j, 0.f))
 	{
 		real ooj = 1.f / vector->j;
 		real t0 = (bounds->y0-point->y) * ooj;
@@ -1659,7 +1659,7 @@ boolean vector_intersects_rectangle3d(
 		}
 	}
 
-	if (REAL_CMP_EPSILON(vector->k, 0.f, _real_epsilon))
+	if (!realcmp(vector->k, 0.f))
 	{
 		real ook = 1 / vector->k;
 		real t0 = (bounds->z0-point->z) * ook;
@@ -1711,7 +1711,7 @@ boolean vector_intersects_triangle2d(
 	c = cross_product2d(&v, &e);
 	x = cross_product2d(&e, vector);
 
-	if (REAL_CMP_EPSILON(x, 0.f, _real_epsilon))
+	if (!realcmp(x, 0.f))
 	{
 		real t = c/x;
 
@@ -1745,7 +1745,7 @@ boolean vector_intersects_triangle2d(
 	c = cross_product2d(&v, &e);
 	x = cross_product2d(&e, vector);
 
-	if (REAL_CMP_EPSILON(x, 0.f, _real_epsilon))
+	if (!realcmp(x, 0.f))
 	{
 		real t = c/x;
 
@@ -1779,7 +1779,7 @@ boolean vector_intersects_triangle2d(
 	c = cross_product2d(&v, &e);
 	x = cross_product2d(&e, vector);
 
-	if (REAL_CMP_EPSILON(x, 0.f, _real_epsilon))
+	if (!realcmp(x, 0.f))
 	{
 		real t = c/x;
 
@@ -1830,7 +1830,7 @@ boolean vector_intersects_triangle3d(
 	cross_product3d(&e0, &e1, &n);
 	d = dot_product3d(vector, &n);
 
-	if (REAL_CMP_EPSILON(d, 0.f, _real_epsilon))
+	if (!realcmp(d, 0.f))
 	{
 		real ood = 1.f/d;
 		real_vector3d x;
@@ -2359,7 +2359,7 @@ boolean point_from_planes3d(
 {
 	real t = triple_product3d(&plane0->n, &plane1->n, &plane2->n);
 
-	if (REAL_CMP_EPSILON(t, 0.f, _real_epsilon))
+	if (!realcmp(t, 0.f))
 	{
 		real_vector3d cross;
 
@@ -2388,7 +2388,7 @@ boolean line_from_planes3d(
 	cross_product3d(&plane0->n, &plane1->n, vector);
 	vv = magnitude_squared3d(vector);
 
-	if (REAL_CMP_EPSILON(vv, 0.f, _real_epsilon))
+	if (!realcmp(vv, 0.f))
 	{
 		real_vector3d cross;
 
