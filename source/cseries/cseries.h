@@ -333,56 +333,6 @@ extern const union real_rgb_color *global_real_rgb_violet;
 
 /* ---------- public code */
 
-// HCEX indicates these live here despite the lack of real type
-__inline long fast_ftol(
-	float d)
-{
-	long result;
-
-	__asm
-	{
-		fld d
-		fistp result
-	}
-
-	return result;
-}
-
-// truncates toward zero like a C cast, fast_ftol rounds to nearest
-// This is likely ASM because it's not inlined and exactly the same in sapien
-__inline long fast_ftol_C(
-	float x)
-{
-	long result;
-
-	__asm
-	{
-		mov ecx, x				// keep the sign of x
-		fld x
-		fist result				// result = x rounded to nearest
-		fisub result
-		fstp x					// x = x - result, the rounding error
-		test ecx, ecx
-		js negative
-		add x, 0x7FFFFFFF		// carry if the error is below zero (rounded up)...
-		sbb result, 0			// ...then step back down
-		jmp done
-	}
-
-negative:
-	__asm
-	{
-		mov edx, x
-		xor ecx, ecx
-		test edx, edx
-		setg cl					// error above zero (rounded down)...
-		add result, ecx			// ...then step back up
-	}
-
-done:
-	return result;
-}
-
 __inline unsigned int address_from_pointer(
 	void const *pointer)
 {

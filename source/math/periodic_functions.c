@@ -162,7 +162,7 @@ real periodic_function_evaluate(
 			}
 
 			fractional_time = (real)fmod(time, 1.0);
-			integer_time = real_to_long_round(time-fractional_time)&(FUNCTION_TABLE_SIZE-1);
+			integer_time = fast_ftol(time-fractional_time)&(FUNCTION_TABLE_SIZE-1);
 
 			{
 				real result0;
@@ -230,7 +230,7 @@ real transition_function_evaluate(
 			byte const *table = transition_function_tables[function_type];
 			real index = value*(FUNCTION_TABLE_SIZE-1);
 			real fractional_index = (real)fmod(index, 1.0);
-			short integer_index = (short)real_to_long_round(index-0.5f);
+			short integer_index = (short)fast_ftol(index-0.5f);
 
 			if (integer_index==FUNCTION_TABLE_SIZE-1)
 			{

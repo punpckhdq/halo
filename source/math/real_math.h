@@ -527,6 +527,55 @@ extern real_rectangle3d const *global_null_rectangle3d;
 
 /* ---------- public code */
 
+__inline long fast_ftol(
+	real d)
+{
+	long result;
+
+	__asm
+	{
+		fld d
+		fistp result
+	}
+
+	return result;
+}
+
+// truncates toward zero like a C cast, fast_ftol rounds to nearest
+// This is likely ASM because it's not inlined and exactly the same in sapien
+__inline long fast_ftol_C(
+	real x)
+{
+	long result;
+
+	__asm
+	{
+		mov ecx, x				// keep the sign of x
+		fld x
+		fist result				// result = x rounded to nearest
+		fisub result
+		fstp x					// x = x - result, the rounding error
+		test ecx, ecx
+		js negative
+		add x, 0x7FFFFFFF		// carry if the error is below zero (rounded up)...
+		sbb result, 0			// ...then step back down
+		jmp done
+	}
+
+negative:
+	__asm
+	{
+		mov edx, x
+		xor ecx, ecx
+		test edx, edx
+		setg cl					// error above zero (rounded down)...
+		add result, ecx			// ...then step back up
+	}
+
+done:
+	return result;
+}
+
 __inline real sine(
 	real angle)
 {
@@ -600,20 +649,6 @@ __inline real power(
 	real b)
 {
 	return pow(a, b);
-}
-
-__inline long real_to_long_round(
-	real value)
-{
-	long result;
-
-	__asm
-	{
-		fld value
-		fistp result
-	}
-
-	return result;
 }
 
 __inline real_point2d *set_real_point2d(
