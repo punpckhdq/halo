@@ -10,6 +10,10 @@ HASHTABLE.C
 /* ---------- macros */
 
 #define hashtable_valid(table) ((table) && (table)->key_size>0 && (table)->element_size>0 && (table)->load_factor>0 && (table)->load_factor<=1 && ((table)->capacity_bits==NONE || FLAG((table)->capacity_bits)==(table)->elements.count))
+#define hashtable_wrap_index(table, index) ((index) & ((table)->elements.count - 1)) /* fake name */
+#define hashtable_hash(table, key) ((table)->hash_function ? (table)->hash_function((table)->user_data, (key)) : default_hash_function((key), (table)->key_size)) /* fake name */
+#define hashtable_element_get(table, index) dynamic_array_get_element(&(table)->elements, (index), (table)->element_size) /* fake name */
+#define hashtable_element_value(table, element) ((byte *)(element) + (table)->key_size) /* fake name */
 
 /* ---------- prototypes */
 
@@ -68,7 +72,7 @@ void *hashtable_get(
 
 	if (table->count && hashtable_search(table, key, &index))
 	{
-		result = (byte *)dynamic_array_get_element(&table->elements, index, table->element_size) + table->key_size;
+		result = hashtable_element_value(table, hashtable_element_get(table, index));
 	}
 
 	return result;
@@ -141,7 +145,7 @@ boolean hashtable_grow(
 				{
 					void *element = dynamic_array_get_element(&old_elements, index, old_elements.element_size);
 
-					memcpy(hashtable_capacious_put(table, element), (byte *)element + table->key_size, table->element_size);
+					memcpy(hashtable_capacious_put(table, element), hashtable_element_value(table, element), table->element_size);
 				}
 			}
 
@@ -184,19 +188,19 @@ void hashtable_remove(
 			void *element;
 			short hash_index;
 
-			next_index = (next_index + 1) & (table->elements.count - 1);
+			next_index = hashtable_wrap_index(table, next_index + 1);
 
 			if (!BIT_VECTOR_TEST_FLAG(table->used, next_index))
 			{
 				break;
 			}
 
-			element = dynamic_array_get_element(&table->elements, next_index, table->element_size);
-			hash_index = (table->hash_function ? table->hash_function(table->user_data, element) : default_hash_function(element, table->key_size)) & (table->elements.count - 1);
+			element = hashtable_element_get(table, next_index);
+			hash_index = hashtable_wrap_index(table, hashtable_hash(table, element));
 
 			if ((hash_index<next_index && index>=hash_index && index<next_index) || (hash_index>next_index && (index>=hash_index || index<next_index)))
 			{
-				memcpy(dynamic_array_get_element(&table->elements, index, table->element_size), dynamic_array_get_element(&table->elements, next_index, table->element_size), table->elements.element_size);
+				memcpy(hashtable_element_get(table, index), hashtable_element_get(table, next_index), table->elements.element_size);
 				index = next_index;
 			}
 		}
@@ -247,11 +251,11 @@ static void *hashtable_capacious_put(
 	}
 	else
 	{
-		void *element = dynamic_array_get_element(&table->elements, index, table->element_size);
+		void *element = hashtable_element_get(table, index);
 
 		memcpy(element, key, table->key_size);
 		BIT_VECTOR_SET_FLAG(table->used, index, TRUE);
-		result = (byte *)element + table->key_size;
+		result = hashtable_element_value(table, element);
 		table->count++;
 	}
 
@@ -265,19 +269,19 @@ static boolean hashtable_search(
 {
 	boolean found = FALSE;
 	short probe_count = 0;
-	short element_index = (table->hash_function ? table->hash_function(table->user_data, key) : default_hash_function(key, table->key_size)) & (table->elements.count - 1);
+	short element_index = hashtable_wrap_index(table, hashtable_hash(table, key));
 
 	while (BIT_VECTOR_TEST_FLAG(table->used, element_index) && probe_count<table->count)
 	{
 		if (table->compare_function ?
-			table->compare_function(table->user_data, dynamic_array_get_element(&table->elements, element_index, table->element_size), key) :
-			!memcmp(dynamic_array_get_element(&table->elements, element_index, table->element_size), key, table->key_size))
+			table->compare_function(table->user_data, hashtable_element_get(table, element_index), key) :
+			!memcmp(hashtable_element_get(table, element_index), key, table->key_size))
 		{
 			found = TRUE;
 			break;
 		}
 
-		element_index = (element_index + 1) & (table->elements.count - 1);
+		element_index = hashtable_wrap_index(table, element_index + 1);
 		probe_count++;
 	}
 
