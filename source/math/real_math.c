@@ -295,7 +295,7 @@ real_vector3d *rotate_vector_about_axis(
 	real sine,
 	real cosine)
 {
-	real one_minus_cosine_times_v_dot_n = dot_product3d(n, v) * (1-cosine);
+	real one_minus_cosine_times_v_dot_n = (n->i*v->i + n->j*v->j + n->k*v->k) * (1-cosine);
 
 	real v_cross_n_i = n->k*v->j - v->k*n->j;
 	real v_cross_n_j = n->i*v->k - v->i*n->k;
@@ -491,18 +491,22 @@ void component_vectors_from_normal3d(
 	real_vector3d *perpendicular)
 {
 	real_vector3d storage;
-	real vn = dot_product3d(vector, normal);
+	real vn = vector->i*normal->i + vector->j*normal->j + vector->k*normal->k;
 
 	if (parallel== NULL)
 	{
 		parallel = &storage;
 	}
 
-	scale_vector3d(normal, vn, parallel);
+	parallel->i = vn*normal->i;
+	parallel->j = vn*normal->j;
+	parallel->k = vn*normal->k;
 
 	if (perpendicular!= NULL)
 	{
-		subtract_vectors3d(vector, parallel, perpendicular);
+		perpendicular->i = vector->i-parallel->i;
+		perpendicular->j = vector->j-parallel->j;
+		perpendicular->k = vector->k-parallel->k;
 	}
 	return;
 }
@@ -513,16 +517,22 @@ void component_vectors_from_direction3d(
 	real_vector3d *parallel,
 	real_vector3d *perpendicular)
 {
-	real dd = dot_product3d(direction, direction);
+	real dd = direction->i*direction->i + direction->j*direction->j + direction->k*direction->k;
 	if (dd != 0.f)
 	{
-		real vd_dd = dot_product3d(vector, direction) / dd;
-		scale_vector3d(direction, vd_dd, parallel);
-		subtract_vectors3d(vector, parallel, perpendicular);
+		real vd_dd = (vector->i*direction->i + vector->j*direction->j + vector->k*direction->k) / dd;
+		parallel->i = vd_dd*direction->i;
+		parallel->j = vd_dd*direction->j;
+		parallel->k = vd_dd*direction->k;
+		perpendicular->i = vector->i-parallel->i;
+		perpendicular->j = vector->j-parallel->j;
+		perpendicular->k = vector->k-parallel->k;
 	}
 	else
 	{
-		set_real_vector3d(parallel, 0.f, 0.f, 0.f);
+		parallel->i = 0.f;
+		parallel->j = 0.f;
+		parallel->k = 0.f;
 		*perpendicular = *vector;
 	}
 	return;
@@ -2720,61 +2730,6 @@ byte_rectangle3d *quantize_real_to_byte_rectangle3d(
 	}
 
 	return result;
-}
-
-boolean valid_real_sine_cosine(
-	real sine, 
-	real cosine)
-{
-	return valid_realcmp(sine * sine + cosine * cosine, 1.0f);
-}
-
-real_vector2d *fast_normalize2d(
-	real_vector2d *v)
-{
-	real magnitude_squared = magnitude_squared2d(v);
-	
-	if (magnitude_squared != 0.f)
-	{
-		scale_vector2d(v, 1.f / square_root(magnitude_squared), v);
-	}
-
-	return v;
-}
-
-real_vector3d *fast_normalize3d(
-	real_vector3d *v)
-{
-	real magnitude_squared = magnitude_squared3d(v);
-	
-	if (magnitude_squared != 0.f)
-	{
-		scale_vector3d(v, 1.f / square_root(magnitude_squared), v);
-	}
-
-	return v;
-}
-
-real cross_product_magnitude3d(
-	real_vector3d const *a,
-	real_vector3d const *b)
-{
-	real_vector3d c;
-	cross_product3d(a, b, &c);
-	return magnitude3d(&c);
-}
-
-real dequantize_byte_to_real(
-	real min,
-	real max,
-	byte value)
-{
-	if (value == UNSIGNED_CHAR_MAX)
-	{
-		return max;
-	}
-	
-	return (max-min) * ((real)value / 255.f) + min;
 }
 
 /* ---------- private code */

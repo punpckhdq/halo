@@ -383,13 +383,6 @@ boolean vector_intersects_rectangle2d(real_point2d const *point, real_vector2d c
 boolean vector_intersects_rectangle3d(real_point3d const *point, real_vector3d const *vector, real_rectangle3d const *bounds);
 boolean pill_intersects_rectangle3d(real_point3d const *base, real_vector3d const *height, real width, real_rectangle3d const *bounds);
 
-real_vector2d *fast_normalize2d(real_vector2d *v);
-real_vector3d *fast_normalize3d(real_vector3d *v);
-
-real cross_product_magnitude3d(real_vector3d const *a, real_vector3d const *b);
-
-real dequantize_byte_to_real(real min, real max, unsigned char value);
-
 real signed_angle_between_vectors2d(real_vector2d const *a, real_vector2d const *b);
 real angle_between_vectors2d(real_vector2d const *a, real_vector2d const *b);
 real angle_between_vectors3d(real_vector3d const *a, real_vector3d const *b);
@@ -422,8 +415,6 @@ boolean line_from_planes3d(real_plane3d const *plane0, real_plane3d const *plane
 boolean point_from_planes3d(real_plane3d const *plane0, real_plane3d const *plane1, real_plane3d const *plane2, real_point3d *point);
 
 boolean sphere_test_vector3d(real_point3d const *center, real radius, real_point3d const *point, real_vector3d const *vector, real *t, real_vector3d *normal);
-
-boolean valid_real_sine_cosine(real sine, real cosine);
 
 boolean accelerate_to_position(
 	real *position_reference,
@@ -701,6 +692,19 @@ __inline real normalize2d(
 	return magnitude;
 }
 
+__inline real_vector2d *fast_normalize2d(
+	real_vector2d *v)
+{
+	real magnitude_squared = magnitude_squared2d(v);
+
+	if (magnitude_squared != 0.f)
+	{
+		scale_vector2d(v, 1.f / square_root(magnitude_squared), v);
+	}
+
+	return v;
+}
+
 __inline boolean limit2d(
 	real_vector2d *vector, 
 	real length)
@@ -918,6 +922,19 @@ __inline real normalize3d(
 	return magnitude;
 }
 
+__inline real_vector3d *fast_normalize3d(
+	real_vector3d *v)
+{
+	real magnitude_squared = magnitude_squared3d(v);
+
+	if (magnitude_squared != 0.f)
+	{
+		scale_vector3d(v, 1.f / square_root(magnitude_squared), v);
+	}
+
+	return v;
+}
+
 __inline boolean limit3d(
 	real_vector3d *vector,
 	real length)
@@ -1012,6 +1029,15 @@ __inline real_vector3d *cross_product3d(
 	result->k = k;
 
 	return result;
+}
+
+__inline real cross_product_magnitude3d(
+	real_vector3d const *a,
+	real_vector3d const *b)
+{
+	real_vector3d c;
+	cross_product3d(a, b, &c);
+	return magnitude3d(&c);
 }
 
 __inline real triple_product3d(
@@ -1382,11 +1408,7 @@ __inline void nonuniform_cubic_spline_vector3d(
 	return;
 }
 
-__inline boolean valid_real(
-	real n)
-{
-	return (*(long *)&n & 0x7F800000) != 0x7F800000;
-}
+boolean valid_real(real n);
 
 __inline boolean valid_realcmp(
 	real a,
@@ -1394,6 +1416,12 @@ __inline boolean valid_realcmp(
 {
 	real y = a - b;
 	return valid_real(y) && fabs(y) < 0.001f;
+}
+
+__inline boolean valid_real(
+	real n)
+{
+	return (*(long *)&n & 0x7F800000) != 0x7F800000;
 }
 
 __inline boolean valid_real_point2d(
@@ -1412,6 +1440,13 @@ __inline boolean valid_real_vector3d(
 	real_vector3d const *v)
 {
 	return valid_real(v->i) && valid_real(v->j) && valid_real(v->k);
+}
+
+__inline boolean valid_real_sine_cosine(
+	real sine,
+	real cosine)
+{
+	return valid_realcmp(sine * sine + cosine * cosine, 1.0f);
 }
 
 __inline boolean valid_real_normal3d(
@@ -1469,6 +1504,19 @@ __inline boolean valid_real_argb_color(
 	real_argb_color const *color)
 {
 	return valid_real(color->alpha) && color->alpha >= 0.f && color->alpha <= 1.f && valid_real_rgb_color(&color->rgb);
+}
+
+__inline real dequantize_byte_to_real(
+	real min,
+	real max,
+	byte value)
+{
+	if (value == UNSIGNED_CHAR_MAX)
+	{
+		return max;
+	}
+
+	return (max-min) * ((real)value / 255.f) + min;
 }
 
 // TODO: depends on byte_rectangle3d, need to include integer_math?
