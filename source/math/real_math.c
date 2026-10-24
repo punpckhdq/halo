@@ -1538,13 +1538,27 @@ boolean vector_intersects_rectangle2d(
 
 		if (vector->i > 0.f)
 		{
-			if (t_in < t0) t_in = t0;
-			if (t_out > t1) t_out = t1;
+			if (t_in < t0)
+			{
+				t_in = t0;
+			}
+
+			if (t_out > t1)
+			{
+				t_out = t1;
+			}
 		}
 		else
 		{
-			if (t_in < t1) t_in = t1;
-			if (t_out > t0) t_out = t0;
+			if (t_in < t1)
+			{
+				t_in = t1;
+			}
+
+			if (t_out > t0)
+			{
+				t_out = t0;
+			}
 		}
 
 		if (t_in > t_out)
@@ -1568,13 +1582,27 @@ boolean vector_intersects_rectangle2d(
 
 		if (vector->j > 0.f)
 		{
-			if (t_in < t0) t_in = t0;
-			if (t_out > t1) t_out = t1;
+			if (t_in < t0)
+			{
+				t_in = t0;
+			}
+
+			if (t_out > t1)
+			{
+				t_out = t1;
+			}
 		}
 		else
 		{
-			if (t_in < t1) t_in = t1;
-			if (t_out > t0) t_out = t0;
+			if (t_in < t1)
+			{
+				t_in = t1;
+			}
+
+			if (t_out > t0)
+			{
+				t_out = t0;
+			}
 		}
 
 		if (t_in > t_out)
@@ -1609,13 +1637,27 @@ boolean vector_intersects_rectangle3d(
 
 		if (vector->i > 0.f)
 		{
-			if (t_in < t0) t_in = t0;
-			if (t_out > t1) t_out = t1;
+			if (t_in < t0)
+			{
+				t_in = t0;
+			}
+
+			if (t_out > t1)
+			{
+				t_out = t1;
+			}
 		}
 		else
 		{
-			if (t_in < t1) t_in = t1;
-			if (t_out > t0) t_out = t0;
+			if (t_in < t1)
+			{
+				t_in = t1;
+			}
+
+			if (t_out > t0)
+			{
+				t_out = t0;
+			}
 		}
 
 		if (t_in > t_out)
@@ -1626,7 +1668,9 @@ boolean vector_intersects_rectangle3d(
 	else
 	{
 		if (point->x < bounds->x0 || point->x > bounds->x1)
+		{
 			return FALSE;
+		}
 	}
 
 	if (!realcmp(vector->j, 0.f))
@@ -1637,13 +1681,27 @@ boolean vector_intersects_rectangle3d(
 
 		if (vector->j > 0.f)
 		{
-			if (t_in < t0) t_in = t0;
-			if (t_out > t1) t_out = t1;
+			if (t_in < t0)
+			{
+				t_in = t0;
+			}
+
+			if (t_out > t1)
+			{
+				t_out = t1;
+			}
 		}
 		else
 		{
-			if (t_in < t1) t_in = t1;
-			if (t_out > t0) t_out = t0;
+			if (t_in < t1)
+			{
+				t_in = t1;
+			}
+
+			if (t_out > t0)
+			{
+				t_out = t0;
+			}
 		}
 
 		if (t_in > t_out)
@@ -1667,13 +1725,27 @@ boolean vector_intersects_rectangle3d(
 
 		if (vector->k > 0.f)
 		{
-			if (t_in < t0) t_in = t0;
-			if (t_out > t1) t_out = t1;
+			if (t_in < t0)
+			{
+				t_in = t0;
+			}
+
+			if (t_out > t1)
+			{
+				t_out = t1;
+			}
 		}
 		else
 		{
-			if (t_in < t1) t_in = t1;
-			if (t_out > t0) t_out = t0;
+			if (t_in < t1)
+			{
+				t_in = t1;
+			}
+
+			if (t_out > t0)
+			{
+				t_out = t0;
+			}
 		}
 
 		if (t_in > t_out)

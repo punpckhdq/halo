@@ -166,7 +166,8 @@ static void subdivide_triangle(
 	face_vertices = match_malloc("c:\\halo\\SOURCE\\math\\geometry.c", 154, face_area*sizeof(short));
 	if (face_vertices)
 	{
-		short i, j;
+		short i;
+		short j;
 
 		for (i = 0; i<face_area; i++)
 		{

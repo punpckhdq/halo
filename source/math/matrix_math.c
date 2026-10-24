@@ -328,7 +328,8 @@ void matrix4x3_rotation_to_quaternion(
 	{
 		static short next_field[3] = { 1, 2, 0 };
 		short i = 0;
-		short j, k;
+		short j;
+		short k;
 		real q[3];
 
 		if (matrix->n[1][1]>matrix->n[0][0])
@@ -758,7 +759,8 @@ real_matrix3x3 *matrix3x3_inverse(
 {
 	real_matrix3x3 copy;
 	real oodeterminant;
-	short i, j;
+	short i;
+	short j;
 
 	if (matrix==result)
 	{
@@ -907,7 +909,8 @@ real_quaternion *matrix3x3_rotation_to_quaternion(
 	{
 		static short next_field[3] = { 1, 2, 0 };
 		short i = 0;
-		short j, k;
+		short j;
+		short k;
 		real q[3];
 
 		if (matrix->n[1][1]>matrix->n[0][0])
