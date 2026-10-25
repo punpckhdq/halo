@@ -135,9 +135,9 @@ char *tiff_export(
 								word pixel = ((word *)pixels)[x];
 
 								buffer[4*x+3] = 0xff;
-								buffer[4*x+2] = ((pixel&0x1f)>>2) | ((pixel&0x1f)<<3);
-								buffer[4*x+1] = (((pixel>>5)&0x3f)>>4) | (((pixel>>5)&0x3f)<<2);
-								buffer[4*x+0] = (pixel>>13) | ((pixel>>11)<<3);
+								buffer[4*x+2] = PIXEL16_565_BLUE(pixel);
+								buffer[4*x+1] = PIXEL16_565_GREEN(pixel);
+								buffer[4*x+0] = PIXEL16_565_RED(pixel);
 							}
 						}
 						break;
