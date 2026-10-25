@@ -49,9 +49,9 @@ static void detail_object_build_vertices(
 		vertex.position[2] = detail_object->position[2];
 
 		color = detail_object->color;
-		vertex.color[0] = PIXEL16_565_RED(color);
-		vertex.color[1] = PIXEL16_565_GREEN(color);
-		vertex.color[2] = PIXEL16_565_BLUE(color);
+		vertex.color[0] = PIXEL16_565_TO_PIXEL32_RED(color);
+		vertex.color[1] = PIXEL16_565_TO_PIXEL32_GREEN(color);
+		vertex.color[2] = PIXEL16_565_TO_PIXEL32_BLUE(color);
 
 		type_index = (detail_object->data >> 4) % collection_definition->type_definitions.count;
 		type_definition = TAG_BLOCK_GET_ELEMENT(&collection_definition->type_definitions, type_index, struct detail_object_type_definition);
