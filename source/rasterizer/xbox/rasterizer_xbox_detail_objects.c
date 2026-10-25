@@ -67,6 +67,8 @@ static void detail_object_build_vertices(
 		vertex.data++;
 		*detail_object_vertices++ = vertex;
 	}
+
+	return;
 }
 
 /* ---------- public code */
@@ -104,6 +106,8 @@ void rasterizer_detail_objects_dispose(
 		IDirect3DVertexBuffer8_Release(local_d3d_vertex_buffer);
 		local_d3d_vertex_buffer = NULL;
 	}
+
+	return;
 }
 
 void _rasterizer_detail_objects_begin(
@@ -186,6 +190,8 @@ void _rasterizer_detail_objects_begin(
 	{
 		error(_error_silent, "### ERROR rasterizer_detail_objects_begin failed");
 	}
+
+	return;
 }
 
 void _rasterizer_detail_objects_rebuild_vertices(
@@ -272,6 +278,8 @@ void _rasterizer_detail_objects_rebuild_vertices(
 	{
 		error(_error_silent, "### ERROR rasterizer_detail_objects_rebuild_vertices failed");
 	}
+
+	return;
 }
 
 void _rasterizer_detail_objects_draw(
@@ -395,10 +403,14 @@ void _rasterizer_detail_objects_draw(
 			error(_error_silent, "### ERROR rasterizer_detail_objects_draw failed");
 		}
 	}
+
+	return;
 }
 
 void _rasterizer_detail_objects_end(
 	void)
 {
 	rasterizer_profile_end(_rasterizer_profile_detail_objects);
+
+	return;
 }

@@ -42,6 +42,8 @@ void rasterizer_active_camouflage_set_visibility(
 		local_active_camouflage_debug_cache_count = 0;
 		local_active_camouflage_debug_cached_flag = FALSE;
 	}
+
+	return;
 }
 
 void rasterizer_active_camouflage_cache_primary_render_target(
@@ -124,6 +126,8 @@ void rasterizer_active_camouflage_cache_primary_render_target(
 
 		local_active_camouflage_debug_cached_flag = TRUE;
 	}
+
+	return;
 }
 
 void rasterizer_active_camouflage_draw(
@@ -337,6 +341,8 @@ void rasterizer_active_camouflage_draw(
 			rasterizer_set_frustum_z(0.f, 0.f);
 		}
 	}
+
+	return;
 }
 
 /* ---------- private code */

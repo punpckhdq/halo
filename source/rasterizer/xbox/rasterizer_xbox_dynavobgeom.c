@@ -32,12 +32,16 @@ void _rasterizer_hud_begin(
 	void)
 {
 	rasterizer_profile_begin(_rasterizer_profile_hud);
+
+	return;
 }
 
 void _rasterizer_hud_end(
 	void)
 {
 	rasterizer_profile_end(_rasterizer_profile_hud);
+
+	return;
 }
 
 void _rasterizer_dynamic_unlit_geometry_draw(
@@ -131,6 +135,8 @@ void _rasterizer_dynamic_unlit_geometry_draw(
 			warned = TRUE;
 		}
 	}
+
+	return;
 }
 
 void _rasterizer_dynamic_lit_geometry_draw(
@@ -144,6 +150,7 @@ void _rasterizer_dynamic_lit_geometry_draw(
 	real_point3d const *centroid,
 	unsigned long geometry_flags)
 {
+	return;
 }
 
 void _rasterizer_dynamic_screen_geometry_add_multitexture_params_to_base(
@@ -172,6 +179,8 @@ void _rasterizer_dynamic_screen_geometry_add_multitexture_params_to_base(
 	base->map_fade[2] = multitex_params->map_fade[2];
 	base->map0_to_1_blend_function = multitex_params->map0_to_1_blend_function;
 	base->map1_to_2_blend_function = multitex_params->map1_to_2_blend_function;
+
+	return;
 }
 
 void _rasterizer_dynamic_screen_geometry_draw(
@@ -181,6 +190,8 @@ void _rasterizer_dynamic_screen_geometry_draw(
 	long triangle_count)
 {
 	match_vassert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 255, FALSE, "_rasterizer_dynamic_screen_geometry_draw not supported no mo'");
+
+	return;
 }
 
 static void submit_screen_vertex(
@@ -189,6 +200,8 @@ static void submit_screen_vertex(
 	IDirect3DDevice8_SetVertexDataColor(global_d3d_device, D3DVSDE_TEXCOORD0, vertex->color);
 	IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, vertex->texcoord.x, vertex->texcoord.y);
 	IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, vertex->position.x, vertex->position.y);
+
+	return;
 }
 
 void _rasterizer_psuedo_dynamic_screen_quad_draw(
@@ -479,6 +492,8 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 		IDirect3DDevice8_End(global_d3d_device);
 		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ALPHAKILL, D3DTALPHAKILL_DISABLE);
 	}
+
+	return;
 }
 
 /* ---------- private code */
