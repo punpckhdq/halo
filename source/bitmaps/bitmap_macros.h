@@ -109,9 +109,9 @@ enum
 	(((((pixel)>>5)&0x1f)<<3 | (((pixel)>>5)&0x1f)>>2)<<8) | \
 	((((pixel)&0x1f)<<3) | (((pixel)&0x1f)>>2))) /* fake name */
 
-#define PIXEL16_565_RED(pixel) (((pixel)>>13) | (((pixel)>>11)<<3)) /* fake name */
-#define PIXEL16_565_GREEN(pixel) (((((pixel)>>5)&0x3f)>>4) | ((((pixel)>>5)&0x3f)<<2)) /* fake name */
-#define PIXEL16_565_BLUE(pixel) ((((pixel)&0x1f)>>2) | (((pixel)&0x1f)<<3)) /* fake name */
+#define PIXEL16_565_RED(pixel) ((((pixel)>>8)&0xf8) | (((pixel)>>13)&0x7)) /* fake name */
+#define PIXEL16_565_GREEN(pixel) ((((pixel)>>3)&0xfc) | (((pixel)>>9)&0x3)) /* fake name */
+#define PIXEL16_565_BLUE(pixel) ((((pixel)<<3)&0xf8) | (((pixel)>>2)&0x7)) /* fake name */
 #define PIXEL16_565_TO_PIXEL32(pixel) \
 	(0xff000000 | \
 	(((((pixel)>>11)&0x1f)<<3 | (((pixel)>>11)&0x1f)>>2)<<16) | \

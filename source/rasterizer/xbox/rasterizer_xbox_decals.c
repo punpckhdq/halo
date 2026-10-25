@@ -398,13 +398,12 @@ void _rasterizer_decals_draw(
 					break;
 				default:
 					match_vassert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 470, FALSE, "### ERROR unsupported framebuffer blend function");
-
 				}
 
 				rasterizer_set_framebuffer_blend_function(local_framebuffer_blend_function);
 				rasterizer_set_pixel_shader(&pixel_shader);
 
-				if (rasterizer_debug_options.statistics_mode == 2)
+				if (rasterizer_debug_options.statistics_mode == _rasterizer_statistics_mode_full)
 				{
 					rasterizer_frame_statistics.decal_shader_count++;
 				}
@@ -417,7 +416,7 @@ void _rasterizer_decals_draw(
 
 				rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_multiplicative, local_bitmap_group_index, local_bitmap_index);
 
-				if (rasterizer_debug_options.statistics_mode == 2)
+				if (rasterizer_debug_options.statistics_mode == _rasterizer_statistics_mode_full)
 				{
 					rasterizer_frame_statistics.decal_texture_count++;
 				}
@@ -426,15 +425,15 @@ void _rasterizer_decals_draw(
 			vertex_data_offset = lruv_block_get_address(local_vertex_cache, decal_index);
 
 			color = decal->color;
-			intensity = ((color>>24)*decal->intensity+127)>>8;
+			intensity = (PIXEL32_ALPHA(color)*decal->intensity + 127)>>8;
 
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 510, intensity<=PIXEL32_COMPONENT_MASK);
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 511, vertex_data_offset%sizeof(struct decal_vertex)==0);
 
-			IDirect3DDevice8_SetVertexData4ub(global_d3d_device, D3DVSDE_TEXCOORD0, (byte)(color>>16), (byte)(color>>8), (byte)color, (byte)(PIXEL32_COMPONENT_MASK-intensity));
+			IDirect3DDevice8_SetVertexData4ub(global_d3d_device, D3DVSDE_TEXCOORD0, (byte)PIXEL32_RED(color), (byte)PIXEL32_GREEN(color), (byte)PIXEL32_BLUE(color), (byte)(PIXEL32_COMPONENT_MASK - intensity));
 			IDirect3DDevice8_DrawPrimitive(global_d3d_device, D3DPT_QUADLIST, vertex_data_offset/sizeof(struct decal_vertex), decal->quad_count);
 
-			if (rasterizer_debug_options.statistics_mode == 2)
+			if (rasterizer_debug_options.statistics_mode == _rasterizer_statistics_mode_full)
 			{
 				rasterizer_frame_statistics.decal_primitive_count++;
 				rasterizer_frame_statistics.decal_triangle_count += decal->quad_count*2;
