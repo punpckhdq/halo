@@ -12,12 +12,23 @@ header included in hcex build.
 
 enum
 {
+	DETAIL_OBJECT_COLLECTION_DEFINITION_TAG = 'dobc' /* fake name */
+};
+
+enum
+{
 	DETAIL_OBJECT_CELL_SIZE = 8,
 	DETAIL_OBJECT_CELL_GRANULARITY = 255,
 	MAXIMUM_DETAIL_OBJECT_CELLS_PER_AXIS = 3,
 	MAXIMUM_DETAIL_OBJECT_CELLS_PER_FRAME = 27,
 	MAXIMUM_DETAIL_OBJECT_LAYERS_PER_STRUCTURE = 32,
 	MAXIMUM_DETAIL_OBJECT_LOCAL_PLAYERS = 2,	/* fake name */
+};
+
+enum
+{
+	MAXIMUM_DETAIL_OBJECT_TYPES_PER_COLLECTION = 16,
+	MAXIMUM_DETAIL_OBJECT_SPRITES_PER_COLLECTION = 128
 };
 
 enum
@@ -29,7 +40,39 @@ enum
 
 /* ---------- macros */
 
+#define detail_object_collection_definition_get(index) ((struct detail_object_collection_definition *)tag_get(DETAIL_OBJECT_COLLECTION_DEFINITION_TAG, (index))) /* fake name */
+
 /* ---------- structures */
+
+struct detail_object_type_definition
+{
+	char name[TAG_STRING_LENGTH+1];
+	byte sequence_index;
+	byte flags;
+	byte first_frame_index;
+	byte frame_count;
+	real color_override_factor;
+	long unused1[2];
+	real near_fade_distance;
+	real far_fade_distance;
+	real size_min;
+	real size_max;
+	real_rgb_color color_min;
+	real_rgb_color color_max;
+	pixel32 color_ambient;
+	long unused2[1];
+};
+
+struct detail_object_collection_definition
+{
+	short collection_type;
+	word pad;
+	real global_z_offset;
+	long unused1[11];
+	struct tag_reference map;				// bitmap_group
+	struct tag_block type_definitions;		// detail_object_type_definition
+	long unused2[12];
+};
 
 struct detail_object_cell_definition
 {
