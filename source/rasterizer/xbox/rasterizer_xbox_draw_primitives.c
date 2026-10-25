@@ -232,11 +232,14 @@ void rasterizer_dynamic_geometry_begin(
 		dynamic_vertices.buffer_count = 0;
 		dynamic_triangles.buffer_count = 0;
 	}
+
+	return;
 }
 
 void rasterizer_dynamic_geometry_end(
 	void)
 {
+	return;
 }
 
 void rasterizer_dynamic_geometry_dispose(
@@ -268,6 +271,8 @@ void rasterizer_dynamic_geometry_dispose(
 		IDirect3DIndexBuffer8_Release(dynamic_triangles.d3d_index_buffer);
 		dynamic_triangles.d3d_index_buffer = NULL;
 	}
+
+	return;
 }
 
 long _rasterizer_dynamic_triangles_new(
@@ -379,11 +384,14 @@ void _rasterizer_dynamic_triangles_unlock(
 	{
 		error(_error_silent, "### ERROR failed to unlock dynamic triangles");
 	}
+
+	return;
 }
 
 void _rasterizer_dynamic_triangles_delete(
 	long dynamic_triangle_buffer_index)
 {
+	return;
 }
 
 long _rasterizer_dynamic_vertices_new(
@@ -558,11 +566,14 @@ void _rasterizer_dynamic_vertices_unlock(
 	{
 		error(_error_silent, "### WARNING tried to unlock dynamic vertices with index=NONE");
 	}
+
+	return;
 }
 
 void _rasterizer_dynamic_vertices_delete(
 	long dynamic_vertex_buffer_index)
 {
+	return;
 }
 
 void rasterizer_draw_dynamic_vertices(
@@ -634,6 +645,8 @@ void rasterizer_draw_dynamic_vertices(
 	{
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_vertices failed");
 	}
+
+	return;
 }
 
 void rasterizer_draw_dynamic_triangles_dynamic_vertices(
@@ -700,6 +713,8 @@ void rasterizer_draw_dynamic_triangles_dynamic_vertices(
 	{
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_triangles_dynamic_vertices failed");
 	}
+
+	return;
 }
 
 void rasterizer_draw_dynamic_triangles_static_vertices(
@@ -754,6 +769,8 @@ void rasterizer_draw_dynamic_triangles_static_vertices(
 	{
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_triangles_static_vertices failed");
 	}
+
+	return;
 }
 
 void rasterizer_draw_dynamic_triangles_static_vertices2(
@@ -815,6 +832,8 @@ void rasterizer_draw_dynamic_triangles_static_vertices2(
 	{
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_triangles_static_vertices2 failed");
 	}
+
+	return;
 }
 
 void rasterizer_draw_static_triangles_dynamic_vertices(
@@ -887,6 +906,8 @@ void rasterizer_draw_static_triangles_dynamic_vertices(
 	{
 		error(_error_silent, "### ERROR rasterizer_draw_static_triangles_dynamic_vertices failed");
 	}
+
+	return;
 }
 
 void rasterizer_draw_static_triangles_static_vertices(
@@ -949,6 +970,8 @@ void rasterizer_draw_static_triangles_static_vertices(
 	{
 		error(_error_silent, "### ERROR rasterizer_draw_static_triangles_static_vertices failed");
 	}
+
+	return;
 }
 
 void rasterizer_draw(
@@ -1003,4 +1026,6 @@ void rasterizer_draw(
 				dynamic_vertex_buffer_index);
 		}
 	}
+
+	return;
 }

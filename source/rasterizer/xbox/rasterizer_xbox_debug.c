@@ -67,11 +67,14 @@ void rasterizer_debug_drawing_begin(
 
 		rasterizer_set_pixel_shader(&pixel_shader);
 	}
+
+	return;
 }
 
 void rasterizer_debug_drawing_end(
 	void)
 {
+	return;
 }
 
 void _rasterizer_debug_immediate_begin(
@@ -94,6 +97,8 @@ void _rasterizer_debug_immediate_begin(
 	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
 	pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0);
 	rasterizer_set_pixel_shader(&pixel_shader);
+
+	return;
 }
 
 void _rasterizer_debug_immediate_line(
@@ -116,6 +121,8 @@ void _rasterizer_debug_immediate_line(
 
 	IDirect3DDevice8_SetVertexData4f(global_d3d_device, VSDE_VERTEX, p1->x, p1->y, p1->z, 1.f);
 	IDirect3DDevice8_End(global_d3d_device);
+
+	return;
 }
 
 void _rasterizer_debug_immediate_triangle(
@@ -147,11 +154,14 @@ void _rasterizer_debug_immediate_triangle(
 
 	IDirect3DDevice8_SetVertexData4f(global_d3d_device, VSDE_VERTEX, p2->x, p2->y, p2->z, 1.f);
 	IDirect3DDevice8_End(global_d3d_device);
+
+	return;
 }
 
 void _rasterizer_debug_immediate_end(
 	void)
 {
+	return;
 }
 
 void _rasterizer_debug_immediate_begin_screenspace(
@@ -190,6 +200,8 @@ void _rasterizer_debug_immediate_begin_screenspace(
 	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
 	pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0);
 	rasterizer_set_pixel_shader(&pixel_shader);
+
+	return;
 }
 
 void _rasterizer_debug_immediate_line_screenspace(
@@ -222,6 +234,8 @@ void _rasterizer_debug_immediate_line_screenspace(
 
 	IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, p1->x, p1->y);
 	IDirect3DDevice8_End(global_d3d_device);
+
+	return;
 }
 
 void _rasterizer_debug_immediate_linestrip_screenspace(
@@ -247,11 +261,14 @@ void _rasterizer_debug_immediate_linestrip_screenspace(
 	}
 
 	D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
+
+	return;
 }
 
 void _rasterizer_debug_immediate_end_screenspace(
 	void)
 {
+	return;
 }
 
 /* ---------- private code */

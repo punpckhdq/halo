@@ -119,6 +119,8 @@ __inline void SetRenderStateSmart(
 	unsigned long value)
 {
 	IDirect3DDevice8_SetRenderState(global_d3d_device, state, value);
+
+	return;
 }
 
 __inline void SetTextureStageStateSmart(
@@ -127,6 +129,8 @@ __inline void SetTextureStageStateSmart(
 	unsigned long value)
 {
 	IDirect3DDevice8_SetTextureStageState(global_d3d_device, stage, type, value);
+
+	return;
 }
 
 boolean rasterizer_preinitialize__fill_you_up_with_the_devils_cock(
@@ -311,6 +315,8 @@ static void rasterizer_filthy_bitmap_defaults_initialize(
 	rasterizer_globals.default_2d_hardware_format = default_2d_hardware_format;
 	rasterizer_globals.default_3d_hardware_format = default_3d_hardware_format;
 	rasterizer_globals.default_cm_hardware_format = default_cm_hardware_format;
+
+	return;
 }
 
 /* ---------- public code */
@@ -648,16 +654,19 @@ boolean _rasterizer_initialize(
 void _rasterizer_reset_state(
 	void)
 {
+	return;
 }
 
 void rasterizer_spin_begin(
 	void)
 {
+	return;
 }
 
 void rasterizer_spin_end(
 	void)
 {
+	return;
 }
 
 void _rasterizer_frame_begin(
@@ -682,6 +691,8 @@ void _rasterizer_frame_begin(
 		decals_update();
 		rasterizer_decal_vertices_end_update();
 	}
+
+	return;
 }
 
 boolean _rasterizer_windows_begin(
@@ -747,6 +758,8 @@ void _rasterizer_window_begin(
 
 	rasterizer_set_frustum_z(-1.f, -1.f);
 	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_FILLMODE, rasterizer_debug_options.wireframe_enabled ? D3DFILL_WIREFRAME : D3DFILL_SOLID);
+
+	return;
 }
 
 void _rasterizer_window_get_fog(
@@ -755,6 +768,8 @@ void _rasterizer_window_get_fog(
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 1440, fog);
 
 	*fog = global_window_parameters.fog;
+
+	return;
 }
 
 void _rasterizer_window_set_fog(
@@ -836,6 +851,8 @@ void _rasterizer_window_set_fog(
 
 	IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, VSH_CONSTANTS__FOG_OFFSET, vsh_constants__fog, VSH_CONSTANTS__FOG_COUNT);
 	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_FOGCOLOR, real_rgb_color_to_pixel32(&global_window_parameters.fog.atmospheric_color));
+
+	return;
 }
 
 void _rasterizer_window_end(
@@ -877,6 +894,8 @@ void _rasterizer_window_end(
 	}
 
 	rasterizer_profile_window_end();
+
+	return;
 }
 
 void _rasterizer_windows_end(
@@ -885,6 +904,8 @@ void _rasterizer_windows_end(
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 1629, global_d3d_device);
 
 	IDirect3DDevice8_EndScene(global_d3d_device);
+
+	return;
 }
 
 void _rasterizer_frame_end(
@@ -914,6 +935,8 @@ void _rasterizer_frame_end(
 	{
 		error(_error_silent, "### ERROR rasterizer_frame_end failed");
 	}
+
+	return;
 }
 
 void _rasterizer_present(
@@ -1000,6 +1023,8 @@ void _rasterizer_present(
 	{
 		error(_error_silent, "### ERROR rasterizer_present failed");
 	}
+
+	return;
 }
 
 void _rasterizer_dispose(
@@ -1029,12 +1054,16 @@ void _rasterizer_dispose(
 		IDirect3D8_Release(d3d);
 		d3d = NULL;
 	}
+
+	return;
 }
 
 void _rasterizer_set_vblank_callback(
 	void (*callback)(unsigned long))
 {
 	IDirect3DDevice8_SetVerticalBlankCallback(global_d3d_device, callback);
+
+	return;
 }
 
 void rasterizer_set_framebuffer_blend_function(
@@ -1082,6 +1111,8 @@ void rasterizer_set_framebuffer_blend_function(
 	SetRenderStateSmart(D3DRS_SRCBLEND, srcblend_table[framebuffer_blend_function]);
 	SetRenderStateSmart(D3DRS_DESTBLEND, destblend_table[framebuffer_blend_function]);
 	SetRenderStateSmart(D3DRS_BLENDOP, blendop_table[framebuffer_blend_function]);
+
+	return;
 }
 
 boolean rasterizer_set_texture_bitmap_data(
@@ -1458,6 +1489,8 @@ void rasterizer_set_target(
 
 		IDirect3DDevice8_Clear(global_d3d_device, 0, NULL, clear_flags, clear_color, 1.f, 0);
 	}
+
+	return;
 }
 
 void rasterizer_set_target_as_texture(
@@ -1546,6 +1579,8 @@ void rasterizer_set_target_as_texture(
 	{
 		error(_error_silent, "### ERROR rasterizer_set_target_as_texture failed");
 	}
+
+	return;
 }
 
 void rasterizer_secondary_render_target_debug(
@@ -1605,6 +1640,8 @@ void rasterizer_secondary_render_target_debug(
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, bounds->x0, bounds->y1);
 		IDirect3DDevice8_End(global_d3d_device);
 	}
+
+	return;
 }
 
 void rasterizer_set_vertex_shader(
@@ -1640,6 +1677,8 @@ void rasterizer_set_vertex_shader(
 			error(_error_silent, "### ERROR rasterizer_set_vertex_shader failed");
 		}
 	}
+
+	return;
 }
 
 void rasterizer_set_pixel_shader(
@@ -1698,6 +1737,8 @@ void rasterizer_set_pixel_shader(
 			rasterizer_frame_statistics.pixel_shader_bytes += 228;
 		}
 	}
+
+	return;
 }
 
 void rasterizer_set_model_skinning(
@@ -1736,6 +1777,8 @@ void rasterizer_set_model_skinning(
 	{
 		rasterizer_frame_statistics.skinning_bytes += sizeof(vsh_constants__nodematrices[0])*skinning->node_matrix_count;
 	}
+
+	return;
 }
 
 void rasterizer_set_model_lighting_point_light(
@@ -1778,6 +1821,8 @@ void rasterizer_set_model_lighting_point_light(
 		lighting_constants->point_lights[light_num].spot_falloff_coefficient_A = 0.f;
 		lighting_constants->point_lights[light_num].spot_falloff_coefficient_B = 1.f;
 	}
+
+	return;
 }
 
 void rasterizer_set_model_lighting_distant_light(
@@ -1796,6 +1841,8 @@ void rasterizer_set_model_lighting_distant_light(
 	{
 		memset(&lighting_constants->distant_lights[light_num], 0, sizeof(lighting_constants->distant_lights[light_num]));
 	}
+
+	return;
 }
 
 void rasterizer_set_model_lighting(
@@ -1840,6 +1887,8 @@ void rasterizer_set_model_lighting(
 	{
 		rasterizer_frame_statistics.lighting_bytes += sizeof(vsh_constants__vertexlight);
 	}
+
+	return;
 }
 
 void rasterizer_set_frustum_z(
@@ -1888,6 +1937,8 @@ void rasterizer_set_frustum_z(
 	vsh_constants__viewproj[7][3] = 255.9375f;
 
 	IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, VSH_CONSTANTS__VIEWPROJ_OFFSET, vsh_constants__viewproj, VSH_CONSTANTS__VIEWPROJ_COUNT + VSH_CONSTANTS__EYEXFORM_COUNT);
+
+	return;
 }
 
 void rasterizer_set_stencil_mode(
@@ -1963,6 +2014,8 @@ void rasterizer_set_stencil_mode(
 
 		previous_stencil_mode = stencil_mode;
 	}
+
+	return;
 }
 
 short rasterizer_get_stencil_mode(
@@ -1994,4 +2047,6 @@ void SetupSmartStates(
 	{
 		texture_table[stage] = NULL;
 	}
+
+	return;
 }
