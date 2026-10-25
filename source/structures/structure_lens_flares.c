@@ -25,7 +25,7 @@ enum
 
 /* ---------- structures */
 
-struct temporary_lens_flare_marker /* fake name */
+struct temp_marker
 {
 	struct structure_lens_flare_marker marker;
 	short cluster_index;
@@ -44,10 +44,7 @@ static int compare_temp_markers(
 	void const *a,
 	void const *b)
 {
-	struct temporary_lens_flare_marker const *marker_a = a;
-	struct temporary_lens_flare_marker const *marker_b = b;
-
-	return marker_a->cluster_index > marker_b->cluster_index ? 1 : -1;
+	return ((struct temp_marker const *)a)->cluster_index > ((struct temp_marker const *)b)->cluster_index ? 1 : -1;
 }
 
 long cluster_index_from_point(
@@ -86,7 +83,7 @@ boolean build_structure_lens_flares(
 
 		if (structure_bsp && projected_points && points && hull_indices)
 		{
-			struct temporary_lens_flare_marker *temp_markers;
+			struct temp_marker *temp_markers;
 			short cluster_index;
 			short lightmap_index;
 

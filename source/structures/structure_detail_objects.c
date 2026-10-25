@@ -161,12 +161,12 @@ void structure_render_detail_objects(
 							upper_bound_cell->cell_x == key.x &&
 							upper_bound_cell->cell_y == key.y)
 						{
-							struct detail_object_cell_definition *cell;
+							struct detail_object_cell_definition *cell = lower_bound_cell;
 
 							match_assert("c:\\halo\\SOURCE\\structures\\structure_detail_objects.c", 198, lower_bound_cell<=upper_bound_cell);
 							upper_bound_cell++;
 
-							for (cell = lower_bound_cell; cell < upper_bound_cell; cell++)
+							while (cell < upper_bound_cell)
 							{
 								if (abs(key.z - cell->cell_z) <= 1)
 								{
@@ -195,6 +195,8 @@ void structure_render_detail_objects(
 										}
 									}
 								}
+
+								cell++;
 							}
 						}
 					}

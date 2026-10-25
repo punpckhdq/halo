@@ -58,13 +58,13 @@ boolean structure_cluster_mark(short cluster_index);
 void structure_cluster_marker_end(void);
 boolean structure_render_surface_from_point_and_leaf(real_point3d const *point, long leaf_index, long plane_index, short *lightmap_index, short *material_index, long *surface_index, real *s, real *t);
 boolean structure_test_vector(real_point3d const *p, real_vector3d const *v, real_point3d *collision_point, short *lightmap_index, short *material_index, long *surface_index, real *s, real *t);
-long structure_get_planar_fog_definition_index(struct structure_bsp *structure_bsp, short cluster_index, boolean sky);
+long structure_get_planar_fog_definition_index(struct structure_bsp *structure, short cluster_index, boolean get_fog_from_sky);
 void structure_get_planar_fog(short cluster_index, struct render_fog *fog);
 void render_debug_fog_planes(void);
 
 /* ---------- prototypes/STRUCTURE_VISIBILITY.C */
 
-void debug_pvs(boolean enable);
+void debug_pvs(boolean on);
 void structure_visibility_find_camera(struct render_camera const *camera);
 boolean structure_visibility_find_mirror(struct render_camera const *camera, struct render_frustum const *frustum, struct render_mirror *result);
 void structure_visibility_compute(void);

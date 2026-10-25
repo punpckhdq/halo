@@ -22,13 +22,15 @@ STRUCTURE_RENDER.C
 
 enum
 {
-	MAXIMUM_LOCAL_STRUCTURE_SURFACES = 4096, /* fake name */
+	MAXIMUM_RENDERED_SURFACES_PER_POINT_LIGHT = 4096,
+	MAXIMUM_RENDERED_SURFACES_PER_SHADOW = 4096,
 };
 
 enum
 {
-	_structure_material_coplanar_bit = 0, /* fake name */
-	_structure_material_fog_plane_bit, /* fake name */
+	_structure_material_coplanar_bit = 0,
+	_structure_material_fog_plane_bit,
+	NUMBER_OF_STRUCTURE_MATERIAL_FLAGS
 };
 
 enum
@@ -51,31 +53,29 @@ struct structure_render_globals
 
 /* ---------- prototypes */
 
-static boolean compare_surface_indices(long surface_index0, long surface_index1);
-static void structure_render_dynamic_triangles_from_bitvector(short surface_count, long *surface_indices, unsigned long *surface_flags, struct rasterizer_triangle *triangles);
+static boolean compare_surface_indices(long index1, long index2);
+static void structure_render_dynamic_triangles_from_bitvector(short surface_count, long *result_surface_indices, unsigned long *surface_flags, struct rasterizer_triangle *triangles);
 static void structure_render_dynamic_triangles_from_indices(short surface_count, long *surface_indices, struct rasterizer_triangle *triangles);
 static long structure_render_build_dynamic_triangles(long *surface_indices, short surface_count, unsigned long *surface_flags);
-static void structure_render_pass(long *surface_indices, short surface_count, long dynamic_triangle_buffer_index, void (*begin_lightmap)(struct bitmap_data const *lightmap), void (*draw)(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer), void (*end_lightmap)(void), void (*draw_transparent)(struct shader const *shader, short shader_permutation_index, struct bitmap_data const *lightmap, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffers, real_point3d const *centroid, real_plane3d const *plane, real_vector3d const *vector, struct render_lighting const *lighting, unsigned long geometry_flags));
+static void structure_render_pass(long *surface_indices, short surface_count, long dynamic_triangles_index, void (*begin_lightmap)(struct bitmap_data const *lightmap), void (*draw_triangles)(struct shader const *shader, short shader_permutation_index, long dynamic_triangles_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer), void (*end_lightmap)(void), void (*draw_transparent_triangles)(struct shader const *shader, short shader_permutation_index, struct bitmap_data const *lightmap, long dynamic_triangles_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffers, real_point3d const *centroid, real_plane3d const *plane, real_vector3d const *vector, struct render_lighting const *lighting, unsigned long geometry_flags));
 
 /* ---------- globals */
 
 long debug_leaf_index = NONE;
 long debug_leaf_portal_index = NONE;
 
-static struct profile_section render_structure_build_triangle_arrays_section = {"render_structure_build_triangle_arrays", NONE, TRUE};
-static struct profile_section render_structure_lightmaps_section = {"render_structure_lightmaps", NONE, TRUE};
-static struct profile_section render_structure_diffuse_textures_section = {"render_structure_diffuse_textures", NONE, TRUE};
-static struct profile_section render_structure_reflections_section = {"render_structure_reflections", NONE, TRUE};
-static struct profile_section render_structure_transparent_geometry_section = {"render_structure_transparent_geometry", NONE, TRUE};
-static struct profile_section render_structure_fog_section = {"render_structure_fog", NONE, TRUE};
-static struct profile_section render_structure_specular_lights_section = {"render_structure_specular_lights", NONE, TRUE};
-static struct profile_section render_structure_specular_lights_draw_section = {"render_structure_specular_lights_draw", NONE, TRUE};
-static struct profile_section render_structure_diffuse_lights_section = {"render_structure_diffuse_lights", NONE, TRUE};
-static struct profile_section render_structure_diffuse_lights_draw_section = {"render_structure_diffuse_lights_draw", NONE, TRUE};
-static struct profile_section render_structure_shadows_section = {"render_structure_shadows", NONE, TRUE};
-static struct profile_section render_structure_shadows_draw_section = {"render_structure_shadows_draw", NONE, TRUE};
-
-static short report_dynamic_structure_triangle_failure = TRUE; /* fake name */
+static struct profile_section render_structure_build_triangle_arrays_section = {"render_structure_build_triangle_arrays", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_lightmaps_section = {"render_structure_lightmaps", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_diffuse_textures_section = {"render_structure_diffuse_textures", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_reflections_section = {"render_structure_reflections", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_transparent_geometry_section = {"render_structure_transparent_geometry", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_fog_section = {"render_structure_fog", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_specular_lights_section = {"render_structure_specular_lights", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_specular_lights_draw_section = {"render_structure_specular_lights_draw", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_diffuse_lights_section = {"render_structure_diffuse_lights", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_diffuse_lights_draw_section = {"render_structure_diffuse_lights_draw", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_shadows_section = {"render_structure_shadows", NONE, TRUE}; /* fake name */
+static struct profile_section render_structure_shadows_draw_section = {"render_structure_shadows_draw", NONE, TRUE}; /* fake name */
 
 static struct structure_render_globals structure_render_globals;
 
@@ -93,38 +93,34 @@ void structure_render_set_fog_offset(
 }
 
 static boolean compare_surface_indices(
-	long surface_index0,
-	long surface_index1)
+	long index1,
+	long index2)
 {
-	boolean result;
-
-	if (surface_index0 < surface_index1)
+	if (index1 < index2)
 	{
-		result = FALSE;
+		return FALSE;
 	}
-	else if (surface_index1 < surface_index0)
+	else if (index2 < index1)
 	{
-		result = TRUE;
+		return TRUE;
 	}
 	else
 	{
-		result = FALSE;
+		return FALSE;
 	}
-
-	return result;
 }
 
 static void structure_render_dynamic_triangles_from_bitvector(
 	short surface_count,
-	long *surface_indices,
+	long *result_surface_indices,
 	unsigned long *surface_flags,
 	struct rasterizer_triangle *triangles)
 {
 	struct structure_bsp *structure_bsp = global_structure_bsp_get();
 	short surface_index_index = 0;
-	long surface_index = 0;
+	long surface_index;
 
-	while (surface_index < structure_bsp->surfaces.count)
+	for (surface_index = 0; surface_index < structure_bsp->surfaces.count; surface_flags++)
 	{
 		if (*surface_flags)
 		{
@@ -138,7 +134,7 @@ static void structure_render_dynamic_triangles_from_bitvector(
 
 					match_assert("c:\\halo\\SOURCE\\structures\\structure_render.c", 421, surface_index_index>=0 && surface_index_index<surface_count);
 
-					*surface_indices++ = surface_index;
+					*result_surface_indices++ = surface_index;
 					triangles[surface_index_index].vertex_indices[0] = surface->vertex_indices[0];
 					triangles[surface_index_index].vertex_indices[1] = surface->vertex_indices[1];
 					triangles[surface_index_index].vertex_indices[2] = surface->vertex_indices[2];
@@ -150,8 +146,6 @@ static void structure_render_dynamic_triangles_from_bitvector(
 		{
 			surface_index += LONG_BITS;
 		}
-
-		surface_flags++;
 	}
 
 	return;
@@ -186,6 +180,7 @@ static long structure_render_build_dynamic_triangles(
 	short surface_count,
 	unsigned long *surface_flags)
 {
+	static short once = TRUE;
 	struct structure_bsp *structure_bsp = global_structure_bsp_get();
 	long dynamic_triangle_buffer_index = NONE;
 
@@ -214,10 +209,10 @@ static long structure_render_build_dynamic_triangles(
 
 			rasterizer_dynamic_triangles_unlock(dynamic_triangle_buffer_index);
 		}
-		else if (report_dynamic_structure_triangle_failure)
+		else if (once)
 		{
 			error(_error_silent, "unable to allocate dynamic structure triangles.");
-			report_dynamic_structure_triangle_failure = FALSE;
+			once = FALSE;
 		}
 	}
 
@@ -227,11 +222,11 @@ static long structure_render_build_dynamic_triangles(
 static void structure_render_pass(
 	long *surface_indices,
 	short surface_count,
-	long dynamic_triangle_buffer_index,
+	long dynamic_triangles_index,
 	void (*begin_lightmap)(struct bitmap_data const *lightmap),
-	void (*draw)(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer),
+	void (*draw_triangles)(struct shader const *shader, short shader_permutation_index, long dynamic_triangles_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer),
 	void (*end_lightmap)(void),
-	void (*draw_transparent)(struct shader const *shader, short shader_permutation_index, struct bitmap_data const *lightmap, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffers, real_point3d const *centroid, real_plane3d const *plane, real_vector3d const *vector, struct render_lighting const *lighting, unsigned long geometry_flags))
+	void (*draw_transparent_triangles)(struct shader const *shader, short shader_permutation_index, struct bitmap_data const *lightmap, long dynamic_triangles_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffers, real_point3d const *centroid, real_plane3d const *plane, real_vector3d const *vector, struct render_lighting const *lighting, unsigned long geometry_flags))
 {
 	short lightmap_index;
 	struct structure_bsp *structure_bsp = global_structure_bsp_get();
@@ -284,24 +279,24 @@ static void structure_render_pass(
 					{
 						if (!shader_type_is_transparent(shader->base.type))
 						{
-							if (draw)
+							if (draw_triangles)
 							{
-								draw(
+								draw_triangles(
 									shader,
 									material->permutation_index,
-									dynamic_triangle_buffer_index,
+									dynamic_triangles_index,
 									first_triangle_index,
 									triangle_count,
 									&material->vertices);
 							}
 						}
-						else if (draw_transparent)
+						else if (draw_transparent_triangles)
 						{
-							draw_transparent(
+							draw_transparent_triangles(
 								shader,
 								material->permutation_index,
 								lightmap_bitmap,
-								dynamic_triangle_buffer_index,
+								dynamic_triangles_index,
 								first_triangle_index,
 								triangle_count,
 								&material->vertices,
@@ -362,7 +357,8 @@ void structure_render_preprocess(
 
 		for (portal_index = 0; portal_index < structure_bsp->leaf_map.portals.count; portal_index++)
 		{
-			TAG_BLOCK_GET_ELEMENT(&structure_bsp->leaf_map.portals, portal_index, struct leaf_portal);
+			struct leaf_portal *portal = TAG_BLOCK_GET_ELEMENT(&structure_bsp->leaf_map.portals, portal_index, struct leaf_portal);
+
 			render_debug_leaf_portal(&structure_bsp->leaf_map, portal_index);
 		}
 	}
@@ -606,18 +602,18 @@ void structure_render_specular_light(
 	short cluster_count,
 	short const *cluster_indices)
 {
-	long local_surface_indices[MAXIMUM_LOCAL_STRUCTURE_SURFACES];
+	long surface_indices_storage[MAXIMUM_RENDERED_SURFACES_PER_POINT_LIGHT];
 	long surface_count;
 	long dynamic_triangle_buffer_index;
-	long *surface_indices = local_surface_indices;
+	long *surface_indices = surface_indices_storage;
 
 	profile_enter(render_structure_specular_lights_section);
 
 	if (cluster_indices)
 	{
 		surface_count = structure_visibility_build_surfaces(
-			local_surface_indices,
-			MAXIMUM_LOCAL_STRUCTURE_SURFACES,
+			surface_indices_storage,
+			MAXIMUM_RENDERED_SURFACES_PER_POINT_LIGHT,
 			bounding_sphere_center,
 			bounding_sphere_radius,
 			NULL,
@@ -625,7 +621,7 @@ void structure_render_specular_light(
 			NULL,
 			cluster_count,
 			cluster_indices);
-		dynamic_triangle_buffer_index = structure_render_build_dynamic_triangles(local_surface_indices, surface_count, NULL);
+		dynamic_triangle_buffer_index = structure_render_build_dynamic_triangles(surface_indices_storage, surface_count, NULL);
 	}
 	else
 	{
@@ -668,18 +664,18 @@ void structure_render_diffuse_light(
 	short cluster_count,
 	short const *cluster_indices)
 {
-	long local_surface_indices[MAXIMUM_LOCAL_STRUCTURE_SURFACES];
+	long surface_indices_storage[MAXIMUM_RENDERED_SURFACES_PER_POINT_LIGHT];
 	long surface_count;
 	long dynamic_triangle_buffer_index;
-	long *surface_indices = local_surface_indices;
+	long *surface_indices = surface_indices_storage;
 
 	profile_enter(render_structure_diffuse_lights_section);
 
 	if (cluster_indices)
 	{
 		surface_count = structure_visibility_build_surfaces(
-			local_surface_indices,
-			MAXIMUM_LOCAL_STRUCTURE_SURFACES,
+			surface_indices_storage,
+			MAXIMUM_RENDERED_SURFACES_PER_POINT_LIGHT,
 			bounding_sphere_center,
 			bounding_sphere_radius,
 			NULL,
@@ -687,7 +683,7 @@ void structure_render_diffuse_light(
 			NULL,
 			cluster_count,
 			cluster_indices);
-		dynamic_triangle_buffer_index = structure_render_build_dynamic_triangles(local_surface_indices, surface_count, NULL);
+		dynamic_triangle_buffer_index = structure_render_build_dynamic_triangles(surface_indices_storage, surface_count, NULL);
 	}
 	else
 	{
@@ -725,24 +721,24 @@ void structure_render_diffuse_light(
 
 void structure_render_shadow(
 	real_point3d const *bounding_sphere_center,
-	real bounding_sphere_radius,
+	real bounding_radius,
 	real_rectangle3d const *bounding_box,
-	short bounding_surface_count,
-	real_plane3d const *bounding_surfaces)
+	short bounding_polyhedra_count,
+	real_plane3d const *bounding_polyhedra)
 {
-	long surface_indices[MAXIMUM_LOCAL_STRUCTURE_SURFACES];
+	long surface_indices[MAXIMUM_RENDERED_SURFACES_PER_SHADOW];
 	long surface_count;
 	long dynamic_triangle_buffer_index;
 
 	profile_enter(render_structure_shadows_section);
 	surface_count = structure_visibility_build_surfaces(
 		surface_indices,
-		MAXIMUM_LOCAL_STRUCTURE_SURFACES,
+		MAXIMUM_RENDERED_SURFACES_PER_SHADOW,
 		bounding_sphere_center,
-		bounding_sphere_radius,
+		bounding_radius,
 		bounding_box,
-		bounding_surface_count,
-		bounding_surfaces,
+		bounding_polyhedra_count,
+		bounding_polyhedra,
 		0,
 		NULL);
 	dynamic_triangle_buffer_index = structure_render_build_dynamic_triangles(surface_indices, surface_count, NULL);

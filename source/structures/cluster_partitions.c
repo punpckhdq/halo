@@ -17,8 +17,9 @@ CLUSTER_PARTITIONS.C
 
 enum
 {
-	MAXIMUM_CLUSTER_PARTITION_REFERENCES = 2048, /* fake name */
-	MAXIMUM_CLUSTERS_SPANNED_PER_DATUM = 64, /* fake name */
+	MAXIMUM_CLUSTERS_PER_DATUM = 64,
+	MAXIMUM_DATUM_REFERENCES_PER_MAP = 2048,
+	MAXIMUM_CLUSTER_REFERENCES_PER_MAP = 2048,
 };
 
 /* ---------- macros */
@@ -44,11 +45,14 @@ void cluster_partition_new(
 		"cluster references",
 		MAXIMUM_CLUSTERS_PER_STRUCTURE * sizeof(*partition->cluster_first_data_references));
 	sprintf(buffer, "cluster %s", name);
-	partition->data_reference_data = reference_list_new(buffer, MAXIMUM_CLUSTER_PARTITION_REFERENCES);
+	partition->data_reference_data = reference_list_new(buffer, MAXIMUM_DATUM_REFERENCES_PER_MAP);
 	sprintf(buffer, "%s cluster", name);
-	partition->cluster_reference_data = reference_list_new(buffer, MAXIMUM_CLUSTER_PARTITION_REFERENCES);
+	partition->cluster_reference_data = reference_list_new(buffer, MAXIMUM_CLUSTER_REFERENCES_PER_MAP);
 
-	if (!partition->cluster_first_data_references || !partition->cluster_reference_data || !partition->data_reference_data)
+	if (partition->cluster_first_data_references && partition->cluster_reference_data && partition->data_reference_data)
+	{
+	}
+	else
 	{
 		error(_error_immediate, "couldn't allocate %s cluster partition globals", name);
 	}
@@ -114,7 +118,7 @@ void cluster_partition_reconnect(
 	real radius,
 	struct location const *location)
 {
-	short spanning_cluster_indices[MAXIMUM_CLUSTERS_SPANNED_PER_DATUM];
+	short spanning_cluster_indices[MAXIMUM_CLUSTERS_PER_DATUM];
 	short spanning_cluster_count;
 	short spanning_cluster_index;
 
@@ -128,13 +132,13 @@ void cluster_partition_reconnect(
 		location->cluster_index,
 		position,
 		radius,
-		MAXIMUM_CLUSTERS_SPANNED_PER_DATUM,
+		MAXIMUM_CLUSTERS_PER_DATUM,
 		spanning_cluster_indices);
 
-	if (spanning_cluster_count > MAXIMUM_CLUSTERS_SPANNED_PER_DATUM)
+	if (spanning_cluster_count > MAXIMUM_CLUSTERS_PER_DATUM)
 	{
 		error(_error_silent, "an object or light spanned %d clusters.", spanning_cluster_count);
-		spanning_cluster_count = MAXIMUM_CLUSTERS_SPANNED_PER_DATUM;
+		spanning_cluster_count = MAXIMUM_CLUSTERS_PER_DATUM;
 	}
 
 	for (spanning_cluster_index = 0; spanning_cluster_index < spanning_cluster_count; spanning_cluster_index++)
@@ -160,7 +164,8 @@ void cluster_partition_disconnect(
 	struct data_reference *reference;
 	short cluster_index;
 
-	for (reference_index = *first_cluster_reference; reference_index != NONE; reference_index = reference->next_reference_index)
+	reference_index = *first_cluster_reference;
+	while (reference_index != NONE)
 	{
 		reference = (struct data_reference *)datum_get(partition->cluster_reference_data, reference_index);
 		cluster_index = (short)reference->datum_index;
@@ -169,6 +174,7 @@ void cluster_partition_disconnect(
 			partition->data_reference_data,
 			cluster_partition_get_first_reference(partition, cluster_index),
 			datum_index);
+		reference_index = reference->next_reference_index;
 	}
 
 	*first_cluster_reference = NONE;

@@ -78,8 +78,9 @@ void structure_decals_disconnect_from_structure_bsp(
 		for (cluster_index = 0; cluster_index < cluster_count; cluster_index++)
 		{
 			struct structure_cluster *cluster = TAG_BLOCK_GET_ELEMENT(&structure_bsp->clusters, cluster_index, struct structure_cluster);
+			boolean cluster_has_decals = cluster->first_runtime_decal_index != NONE && cluster->runtime_decal_count;
 
-			if (cluster->first_runtime_decal_index != NONE && cluster->runtime_decal_count)
+			if (cluster_has_decals)
 			{
 				decals_delete_permanent_from_cluster(cluster_index);
 			}
@@ -144,12 +145,11 @@ void structure_decals_update(
 						&global_scenario_get()->decal_palette,
 						decal->palette_index,
 						struct scenario_decal_palette_entry)->reference.index;
-
-					decal_definition_get(definition_index);
+					struct decal_definition *definition = decal_definition_get(definition_index);
 
 					{
-						real_euler_angles2d angles;
 						real_vector3d direction;
+						real_euler_angles2d angles;
 
 						angles.yaw = decal->yaw * DECAL_YAW_SCALE;
 						angles.pitch = decal->pitch * DECAL_PITCH_SCALE;

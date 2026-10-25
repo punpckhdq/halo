@@ -15,11 +15,11 @@ enum
 {
 	MAXIMUM_NODE_STACK_COUNT = 256,
 	MAXIMUM_VERTICES_PER_LEAF_FACE = 64, /* fake name */
-	MAXIMUM_FACES_PER_MAP_LEAF = 256, /* fake name */
-	MAXIMUM_PORTALS_PER_MAP_LEAF = 256, /* fake name */
+	MAXIMUM_FACES_PER_MAP_LEAF = 256,
+	MAXIMUM_PORTALS_PER_MAP_LEAF = 256,
 	MAXIMUM_MAP_LEAVES = 0x10000, /* fake name */
-	MAXIMUM_VERTICES_PER_LEAF_PORTAL = 64, /* fake name */
-	MAXIMUM_LEAF_PORTALS = 0x80000, /* fake name */
+	MAXIMUM_VERTICES_PER_LEAF_PORTAL = 64,
+	MAXIMUM_PORTALS_PER_LEAF_MAP = 0x80000,
 };
 
 enum
@@ -60,15 +60,15 @@ struct temporary_face
 
 /* ---------- prototypes */
 
-static void node_stack_push(long node_index);
+static void node_stack_push(long node);
 static long node_stack_pop(void);
 static long node_stack_read(short levels_up);
 static void leaf_map_build_leaf_faces(struct leaf_map *leaf_map, long node_index);
 static void leaf_map_build_leaf_faces_for_leaf(struct leaf_map *leaf_map, long leaf_index);
-static void leaf_map_build_leaf_face_for_leaf_on_node(struct leaf_map *leaf_map, long leaf_index, long node_designator);
+static void leaf_map_build_leaf_face_for_leaf_on_node(struct leaf_map *leaf_map, long leaf_index, long node);
 static short intersect_planes3d(real_plane3d const *plane, real_plane3d const *reference_plane, real_plane2d *result);
 static void leaf_map_build_portals(struct leaf_map *leaf_map, long node_index);
-static void leaf_map_build_portals_from_leaf(struct leaf_map *leaf_map, long ancestor_node_index, long leaf_index, long node_index, short levels_up);
+static void leaf_map_build_portals_from_leaf(struct leaf_map *leaf_map, long ancestor_node_index, long leaf_index, long node_index, short stack_depth);
 static boolean find_like_crossing(struct leaf_map const *leaf_map, long plane_index, boolean *side);
 static short map_leaf_find_face_on_node(struct leaf_map const *leaf_map, struct map_leaf const *leaf, long node_index);
 static void leaf_map_build_portal_from_leaves(struct leaf_map *leaf_map, long node_index, long leaf_index0, long leaf_index1);
@@ -78,7 +78,7 @@ static real normalize_three_dee(real_vector3d *vector);
 
 /* ---------- globals */
 
-static struct profile_section leaf_map_initialize_section = {"leaf_map_initialize", NONE, TRUE};
+static struct profile_section leaf_map_initialize_section = {"leaf_map_initialize", NONE, TRUE}; /* fake name */
 
 static struct temporary_face default_face =
 {
@@ -123,7 +123,7 @@ TAG_BLOCK(leaf_portal_vertex_block, MAXIMUM_VERTICES_PER_LEAF_PORTAL, sizeof(rea
 	{_field_terminator}
 };
 
-TAG_BLOCK(global_leaf_portal_block, MAXIMUM_LEAF_PORTALS, sizeof(struct leaf_portal), NULL, NULL, NULL, NULL)
+TAG_BLOCK(global_leaf_portal_block, MAXIMUM_PORTALS_PER_LEAF_MAP, sizeof(struct leaf_portal), NULL, NULL, NULL, NULL)
 {
 	{_field_long_integer, "plane index*"},
 	{_field_long_integer, "back leaf index*"},
@@ -144,11 +144,11 @@ static short portal_count = 0;
 /* ---------- public code */
 
 static void node_stack_push(
-	long node_index)
+	long node)
 {
 	match_assert("c:\\halo\\SOURCE\\structures\\leaf_map.c", 42, leaf_map_globals.node_stack_count<MAXIMUM_NODE_STACK_COUNT);
 
-	leaf_map_globals.node_stack[leaf_map_globals.node_stack_count++] = node_index;
+	leaf_map_globals.node_stack[leaf_map_globals.node_stack_count++] = node;
 
 	return;
 }
@@ -260,11 +260,11 @@ static void leaf_map_build_leaf_faces_for_leaf(
 static void leaf_map_build_leaf_face_for_leaf_on_node(
 	struct leaf_map *leaf_map,
 	long leaf_index,
-	long node_designator)
+	long node)
 {
 	struct temporary_face result;
 	short levels_up;
-	real_plane3d *reference_plane = TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->planes, TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->nodes, index_from_node(node_designator), struct bsp3d_node)->plane, real_plane3d);
+	real_plane3d *reference_plane = TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->planes, TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->nodes, index_from_node(node), struct bsp3d_node)->plane, real_plane3d);
 
 	result = default_face;
 
@@ -272,25 +272,25 @@ static void leaf_map_build_leaf_face_for_leaf_on_node(
 	{
 		long traversal_node = node_stack_read(levels_up);
 
-		if (traversal_node != node_designator)
+		if (traversal_node != node)
 		{
-			real_plane2d projected_plane;
+			real_plane2d halfspace;
 			short intersection;
-			real_plane3d plane = *TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->planes, TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->nodes, index_from_node(traversal_node), struct bsp3d_node)->plane, real_plane3d);
+			real_plane3d other_plane = *TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->planes, TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->nodes, index_from_node(traversal_node), struct bsp3d_node)->plane, real_plane3d);
 
 			if (traversal_node & LONG_MIN)
 			{
-				plane3d_negate(&plane, &plane);
+				plane3d_negate(&other_plane, &other_plane);
 			}
 
-			intersection = intersect_planes3d(&plane, reference_plane, &projected_plane);
+			intersection = intersect_planes3d(&other_plane, reference_plane, &halfspace);
 
 			if (intersection == _plane_intersection_line)
 			{
 				result.vertex_count = convex_polygon2d_clip_to_plane(
 					result.vertex_count,
 					result.vertices,
-					&projected_plane,
+					&halfspace,
 					MAXIMUM_VERTICES_PER_LEAF_FACE,
 					result.vertices,
 					NULL,
@@ -314,7 +314,7 @@ static void leaf_map_build_leaf_face_for_leaf_on_node(
 		{
 			struct map_leaf_face *face = TAG_BLOCK_GET_ELEMENT(&leaf->faces, face_index, struct map_leaf_face);
 
-			face->node_index = index_from_node(node_designator);
+			face->node_index = index_from_node(node);
 
 			if (tag_block_resize(&face->vertices, result.vertex_count))
 			{
@@ -339,7 +339,7 @@ static short intersect_planes3d(
 	real_plane3d const *reference_plane,
 	real_plane2d *result)
 {
-	real_plane3d projected_plane;
+	real_plane3d perpendicular_intersection;
 	real length;
 	short projection = projection_from_vector3d(&reference_plane->n);
 
@@ -348,34 +348,34 @@ static short intersect_planes3d(
 
 	if (plane->n.n[projection] == 0.f)
 	{
-		projected_plane = *plane;
+		perpendicular_intersection = *plane;
 	}
 	else
 	{
 		real scale = plane->n.n[projection] / reference_plane->n.n[projection];
 
-		projected_plane.n.i = plane->n.i - scale * reference_plane->n.i;
-		projected_plane.n.j = plane->n.j - scale * reference_plane->n.j;
-		projected_plane.n.k = plane->n.k - scale * reference_plane->n.k;
-		projected_plane.d = plane->d - scale * reference_plane->d;
+		perpendicular_intersection.n.i = plane->n.i - scale * reference_plane->n.i;
+		perpendicular_intersection.n.j = plane->n.j - scale * reference_plane->n.j;
+		perpendicular_intersection.n.k = plane->n.k - scale * reference_plane->n.k;
+		perpendicular_intersection.d = plane->d - scale * reference_plane->d;
 	}
 
-	length = normalize_three_dee(&projected_plane.n);
+	length = normalize_three_dee(&perpendicular_intersection.n);
 
 	if (length != 0.f)
 	{
 		project_point3d(
-			(real_point3d const *)&projected_plane.n,
+			(real_point3d const *)&perpendicular_intersection.n,
 			projection,
 			projection_sign_from_vector3d(&reference_plane->n, projection),
 			(real_point2d *)&result->n);
-		result->d = projected_plane.d / length;
+		result->d = perpendicular_intersection.d / length;
 
 		return _plane_intersection_line;
 	}
 	else
 	{
-		if (projected_plane.d > 0.f)
+		if (perpendicular_intersection.d > 0.f)
 		{
 			return _plane_intersection_none;
 		}
@@ -663,10 +663,10 @@ boolean leaf_map_leaf_is_closed(
 void leaf_map_get_leaf_bounds(
 	struct leaf_map const *leaf_map,
 	long leaf_index,
-	real_point3d *center,
-	real *radius)
+	real_point3d *bounding_sphere_center,
+	real *bounding_sphere_radius)
 {
-	real_point3d corner;
+	real_point3d maximum;
 	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&leaf_map->leaves, index_from_node(leaf_index), struct map_leaf);
 	real_rectangle3d bounds = *global_null_rectangle3d;
 
@@ -770,13 +770,13 @@ void leaf_map_get_leaf_bounds(
 		}
 	}
 
-	center->x = (bounds.x0 + bounds.x1) * 0.5f;
-	center->y = (bounds.y0 + bounds.y1) * 0.5f;
-	center->z = (bounds.z0 + bounds.z1) * 0.5f;
-	corner.x = bounds.x1;
-	corner.y = bounds.y1;
-	corner.z = bounds.z1;
-	*radius = distance3d(center, &corner);
+	bounding_sphere_center->x = (bounds.x0 + bounds.x1) * 0.5f;
+	bounding_sphere_center->y = (bounds.y0 + bounds.y1) * 0.5f;
+	bounding_sphere_center->z = (bounds.z0 + bounds.z1) * 0.5f;
+	maximum.x = bounds.x1;
+	maximum.y = bounds.y1;
+	maximum.z = bounds.z1;
+	*bounding_sphere_radius = distance3d(bounding_sphere_center, &maximum);
 
 	return;
 }
@@ -828,13 +828,13 @@ static void leaf_map_family_mark(
 }
 
 void render_debug_leaf_portal(
-	struct leaf_map const *leaf_map,
+	struct leaf_map const *map,
 	long portal_designator)
 {
 	short vertex_index;
-	struct leaf_portal *portal = TAG_BLOCK_GET_ELEMENT(&leaf_map->portals, index_from_node(portal_designator), struct leaf_portal);
+	struct leaf_portal *portal = TAG_BLOCK_GET_ELEMENT(&map->portals, index_from_node(portal_designator), struct leaf_portal);
 	boolean closed = (portal_designator & LONG_MIN) != 0;
-	real_argb_color colors[2] = {{0.1f, 0.f, 1.f, 0.f}, {0.1f, 1.f, 0.f, 0.f}};
+	real_argb_color portal_colors[2] = {{0.1f, 0.f, 1.f, 0.f}, {0.1f, 1.f, 0.f, 0.f}};
 
 	for (vertex_index = 2; vertex_index < portal->vertices.count; vertex_index++)
 	{
@@ -843,7 +843,7 @@ void render_debug_leaf_portal(
 			TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
 			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index - 1, real_point3d),
 			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index, real_point3d),
-			&colors[closed]);
+			&portal_colors[closed]);
 		render_debug_line(
 			TRUE,
 			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index - 1, real_point3d),
@@ -866,17 +866,17 @@ void render_debug_leaf_portal(
 }
 
 void render_debug_leaf_portals(
-	struct leaf_map const *leaf_map,
+	struct leaf_map const *map,
 	long leaf_index)
 {
 	short portal_designator_index;
-	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&leaf_map->leaves, index_from_node(leaf_index), struct map_leaf);
+	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&map->leaves, index_from_node(leaf_index), struct map_leaf);
 
 	for (portal_designator_index = 0; portal_designator_index < leaf->portal_designators.count; portal_designator_index++)
 	{
 		long portal_designator = *TAG_BLOCK_GET_ELEMENT(&leaf->portal_designators, portal_designator_index, long);
 
-		render_debug_leaf_portal(leaf_map, portal_designator);
+		render_debug_leaf_portal(map, portal_designator);
 	}
 
 	return;
@@ -887,9 +887,9 @@ boolean leaf_map_leaf_spans_polygon(
 	long leaf_index,
 	real_plane3d const *plane,
 	short projection,
-	boolean sign,
+	boolean projection_sign,
 	short vertex_count,
-	real_point2d const *vertices)
+	real_point2d const *vertices2d)
 {
 	short face_index;
 	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&leaf_map->leaves, index_from_node(leaf_index), struct map_leaf);
@@ -904,8 +904,8 @@ boolean leaf_map_leaf_spans_polygon(
 
 		for (vertex_index = 0; vertex_index < face->vertices.count; vertex_index++)
 		{
-			real_point3d point0;
-			real_point3d point1;
+			real_point3d vertex0;
+			real_point3d vertex1;
 			real distance0;
 			real distance1;
 
@@ -914,29 +914,29 @@ boolean leaf_map_leaf_spans_polygon(
 				face_plane,
 				face_projection,
 				face_sign,
-				&point0);
+				&vertex0);
 			project_point2d(
 				TAG_BLOCK_GET_ELEMENT(&face->vertices, vertex_index + 1 == face->vertices.count ? 0 : vertex_index + 1, real_point2d),
 				face_plane,
 				face_projection,
 				face_sign,
-				&point1);
-			distance0 = plane3d_distance_to_point(plane, &point0);
-			distance1 = plane3d_distance_to_point(plane, &point1);
+				&vertex1);
+			distance0 = plane3d_distance_to_point(plane, &vertex0);
+			distance1 = plane3d_distance_to_point(plane, &vertex1);
 
 			if ((distance0 < -0.03f && distance1 > 0.03f) || (distance0 > 0.03f && distance1 < -0.03f))
 			{
-				real_vector3d vector;
+				real_vector3d edge;
 				real t;
-				real_point3d intersection;
-				real_point2d point;
+				real_point3d intersection_point;
+				real_point2d intersection_point2d;
 
-				vector_from_points3d(&point0, &point1, &vector);
-				t = vector_intersect_plane3d(&point0, &vector, plane);
-				point_from_line3d(&point0, &vector, t, &intersection);
-				project_point3d(&intersection, projection, sign, &point);
+				vector_from_points3d(&vertex0, &vertex1, &edge);
+				t = vector_intersect_plane3d(&vertex0, &edge, plane);
+				point_from_line3d(&vertex0, &edge, t, &intersection_point);
+				project_point3d(&intersection_point, projection, projection_sign, &intersection_point2d);
 
-				if (convex_hull2d_test_point(vertex_count, vertices, &point, 0.05f))
+				if (convex_hull2d_test_point(vertex_count, vertices2d, &intersection_point2d, 0.05f))
 				{
 					return TRUE;
 				}
@@ -972,12 +972,12 @@ void render_debug_leaf_faces(
 	long leaf_index)
 {
 	short face_index;
-	real_point3d first_vertex;
-	real_point3d second_vertex;
-	real_point3d previous_vertex;
-	real_point3d next_vertex;
+	real_point3d p0;
+	real_point3d p1;
+	real_point3d last_p;
+	real_point3d p;
 	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&map->leaves, index_from_node(leaf_index), struct map_leaf);
-	real_argb_color color = {0.2f, 1.f, 0.f, 0.f};
+	real_argb_color face_color = {0.2f, 1.f, 0.f, 0.f};
 
 	match_assert("c:\\halo\\SOURCE\\structures\\leaf_map.c", 940, map->bsp);
 
@@ -986,17 +986,17 @@ void render_debug_leaf_faces(
 		short vertex_index;
 		struct map_leaf_face *face = TAG_BLOCK_GET_ELEMENT(&leaf->faces, face_index, struct map_leaf_face);
 
-		leaf_face_get_vertex3d(map, face, 0, &first_vertex);
-		leaf_face_get_vertex3d(map, face, 1, &second_vertex);
-		previous_vertex = second_vertex;
-		render_debug_line(TRUE, &first_vertex, &second_vertex, global_real_argb_white);
+		leaf_face_get_vertex3d(map, face, 0, &p0);
+		leaf_face_get_vertex3d(map, face, 1, &p1);
+		last_p = p1;
+		render_debug_line(TRUE, &p0, &p1, global_real_argb_white);
 
 		for (vertex_index = 2; vertex_index < face->vertices.count; vertex_index++)
 		{
-			leaf_face_get_vertex3d(map, face, vertex_index, &next_vertex);
-			render_debug_triangle(TRUE, &first_vertex, &previous_vertex, &next_vertex, &color);
-			render_debug_line(TRUE, &previous_vertex, &next_vertex, global_real_argb_white);
-			previous_vertex = next_vertex;
+			leaf_face_get_vertex3d(map, face, vertex_index, &p);
+			render_debug_triangle(TRUE, &p0, &last_p, &p, &face_color);
+			render_debug_line(TRUE, &last_p, &p, global_real_argb_white);
+			last_p = p;
 		}
 	}
 

@@ -29,7 +29,7 @@ void structure_render_fog(void);
 void structure_render_fog_screen(void);
 void structure_render_specular_light(long rasterizer_light_index, union real_point3d const *bounding_sphere_center, real bounding_sphere_radius, short cluster_count, short const *cluster_indices);
 void structure_render_diffuse_light(long rasterizer_light_index, union real_point3d const *bounding_sphere_center, real bounding_sphere_radius, short cluster_count, short const *cluster_indices);
-void structure_render_shadow(real_point3d const *bounding_sphere_center, real bounding_sphere_radius, real_rectangle3d const *bounding_box, short bounding_surface_count, real_plane3d const *bounding_surfaces);
+void structure_render_shadow(real_point3d const *bounding_sphere_center, real bounding_radius, real_rectangle3d const *bounding_box, short bounding_polyhedra_count, real_plane3d const *bounding_polyhedra);
 
 /* ---------- globals */
 

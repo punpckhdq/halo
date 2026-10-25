@@ -92,7 +92,6 @@ boolean sphere_intersects_cluster_portal(
 	real_point3d const *point,
 	real radius)
 {
-	boolean result = FALSE;
 	struct cluster_portal *portal = TAG_BLOCK_GET_ELEMENT(&structure->cluster_portals, portal_index, struct cluster_portal);
 	real distance = plane3d_distance_to_point(
 		TAG_BLOCK_GET_ELEMENT(
@@ -131,12 +130,12 @@ boolean sphere_intersects_cluster_portal(
 				&projected_centroid2d,
 				square_root(radius * radius - distance * distance)))
 			{
-				result = TRUE;
+				return TRUE;
 			}
 		}
 	}
 
-	return result;
+	return FALSE;
 }
 
 short structure_clusters_in_sphere(
@@ -183,8 +182,8 @@ static short structure_clusters_in_sphere_recursive(
 	short maximum_count,
 	short *intersected_indices)
 {
-	short intersected_count;
 	short portal_reference_index;
+	short intersected_count = 0;
 	struct structure_bsp *structure_bsp = global_structure_bsp_get();
 	struct structure_cluster *cluster = TAG_BLOCK_GET_ELEMENT(&structure_bsp->clusters, cluster_index, struct structure_cluster);
 
@@ -194,7 +193,7 @@ static short structure_clusters_in_sphere_recursive(
 	}
 
 	structure_cluster_mark(cluster_index);
-	intersected_count = 1;
+	intersected_count++;
 
 	for (portal_reference_index = 0; portal_reference_index < cluster->portal_indices.count; portal_reference_index++)
 	{
@@ -238,9 +237,10 @@ short structure_clusters_in_cone(
 
 	structure_cluster_marker_begin();
 	structure_bsp = global_structure_bsp_get();
+	stack_depth = 0;
 	structure_cluster_mark(position_cluster_index);
-	cluster_stack[0] = position_cluster_index;
-	stack_depth = 1;
+	match_assert("c:\\halo\\SOURCE\\structures\\structures.c", 223, stack_depth<MAXIMUM_CLUSTERS_PER_STRUCTURE);
+	cluster_stack[stack_depth++] = position_cluster_index;
 
 	while (stack_depth > 0 && cluster_count < maximum_cluster_count)
 	{
@@ -284,42 +284,34 @@ void structure_cluster_marker_begin(
 boolean structure_cluster_unmarked(
 	short cluster_index)
 {
-	boolean result;
-
 	match_assert("c:\\halo\\SOURCE\\structures\\structures.c", 270, structure_globals.cluster_marker_initialized);
 	match_assert("c:\\halo\\SOURCE\\structures\\structures.c", 271, cluster_index>=0 && cluster_index<MAXIMUM_CLUSTERS_PER_STRUCTURE);
 
 	if (structure_globals.cluster_magic_numbers[cluster_index] != structure_globals.cluster_marker)
 	{
-		result = TRUE;
+		return TRUE;
 	}
 	else
 	{
-		result = FALSE;
+		return FALSE;
 	}
-
-	return result;
 }
 
 boolean structure_cluster_mark(
 	short cluster_index)
 {
-	boolean result;
-
 	match_assert("c:\\halo\\SOURCE\\structures\\structures.c", 286, structure_globals.cluster_marker_initialized);
 	match_assert("c:\\halo\\SOURCE\\structures\\structures.c", 287, cluster_index>=0 && cluster_index<MAXIMUM_CLUSTERS_PER_STRUCTURE);
 
 	if (structure_globals.cluster_magic_numbers[cluster_index] != structure_globals.cluster_marker)
 	{
 		structure_globals.cluster_magic_numbers[cluster_index] = structure_globals.cluster_marker;
-		result = TRUE;
+		return TRUE;
 	}
 	else
 	{
-		result = FALSE;
+		return FALSE;
 	}
-
-	return result;
 }
 
 void structure_cluster_marker_end(
@@ -473,17 +465,17 @@ boolean structure_test_vector(
 }
 
 long structure_get_planar_fog_definition_index(
-	struct structure_bsp *structure_bsp,
+	struct structure_bsp *structure,
 	short cluster_index,
-	boolean sky)
+	boolean get_fog_from_sky)
 {
 	long definition_index = NONE;
 
 	if (cluster_index != NONE)
 	{
-		struct structure_cluster *cluster = TAG_BLOCK_GET_ELEMENT(&structure_bsp->clusters, cluster_index, struct structure_cluster);
+		struct structure_cluster *cluster = TAG_BLOCK_GET_ELEMENT(&structure->clusters, cluster_index, struct structure_cluster);
 
-		if (sky)
+		if (get_fog_from_sky)
 		{
 			struct sky *sky_definition = scenario_get_sky(0);
 
@@ -499,7 +491,7 @@ long structure_get_planar_fog_definition_index(
 			if (cluster->fog_designator & FLAG(_cluster_fog_designator_plane_bit))
 			{
 				region_index = TAG_BLOCK_GET_ELEMENT(
-					&structure_bsp->fog_planes,
+					&structure->fog_planes,
 					cluster->fog_designator & MASK(_cluster_fog_designator_plane_bit),
 					struct structure_fog_plane)->region_index;
 			}
@@ -510,12 +502,12 @@ long structure_get_planar_fog_definition_index(
 
 			if (region_index != NONE)
 			{
-				struct structure_fog_region *region = TAG_BLOCK_GET_ELEMENT(&structure_bsp->fog_regions, region_index, struct structure_fog_region);
+				struct structure_fog_region *region = TAG_BLOCK_GET_ELEMENT(&structure->fog_regions, region_index, struct structure_fog_region);
 
 				if (region->fog_palette_index != NONE)
 				{
 					struct structure_fog_palette_entry *palette_entry = TAG_BLOCK_GET_ELEMENT(
-						&structure_bsp->fog_palette,
+						&structure->fog_palette,
 						region->fog_palette_index,
 						struct structure_fog_palette_entry);
 

@@ -37,11 +37,11 @@ boolean leaf_map_initialize_from_bsp(struct leaf_map *leaf_map, struct bsp3d con
 void leaf_map_delete(struct leaf_map *leaf_map);
 void leaf_map_close_portal(struct leaf_map *leaf_map, long portal_index);
 boolean leaf_map_leaf_is_closed(struct leaf_map const *leaf_map, long leaf_index);
-void leaf_map_get_leaf_bounds(struct leaf_map const *leaf_map, long leaf_index, real_point3d *center, real *radius);
+void leaf_map_get_leaf_bounds(struct leaf_map const *leaf_map, long leaf_index, real_point3d *bounding_sphere_center, real *bounding_sphere_radius);
 boolean leaf_map_closure(struct leaf_map const *leaf_map, long *marked_leaves, long *result);
-void render_debug_leaf_portal(struct leaf_map const *leaf_map, long portal_designator);
-void render_debug_leaf_portals(struct leaf_map const *leaf_map, long leaf_index);
-boolean leaf_map_leaf_spans_polygon(struct leaf_map const *leaf_map, long leaf_index, real_plane3d const *plane, short projection, boolean sign, short vertex_count, real_point2d const *vertices);
+void render_debug_leaf_portal(struct leaf_map const *map, long portal_designator);
+void render_debug_leaf_portals(struct leaf_map const *map, long leaf_index);
+boolean leaf_map_leaf_spans_polygon(struct leaf_map const *leaf_map, long leaf_index, real_plane3d const *plane, short projection, boolean projection_sign, short vertex_count, real_point2d const *vertices2d);
 void render_debug_leaf_faces(struct leaf_map const *map, long leaf_index);
 
 /* ---------- globals */
