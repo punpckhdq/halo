@@ -512,7 +512,7 @@ static void motion_sensor_update(
 			memcpy(
 				&motion_sensor_globals->motion_sensors[local_player_index].sensor_data[sensor_active_index],
 				&motion_sensor_globals->motion_sensors[local_player_index].sensor_data[previous_index],
-				sizeof(struct motion_sensor_datum));
+				sizeof(motion_sensor_globals->motion_sensors[local_player_index].sensor_data[sensor_active_index]));
 			local_player_index = local_player_get_next(local_player_index);
 		}
 	}

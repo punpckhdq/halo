@@ -577,7 +577,7 @@ void player_ui_begin_editing_profile(
 			memcpy(
 				&player_ui_globals.edit_profile_data.edit_profile.player_profile,
 				&player_ui_globals.edit_profile_data.original_profile.player_profile,
-				sizeof(struct player_profile));
+				sizeof(player_ui_globals.edit_profile_data.edit_profile.player_profile));
 			player_ui_globals.edit_profile_data.profile_index = profile_index;
 		}
 		else
@@ -591,7 +591,7 @@ void player_ui_begin_editing_profile(
 			memcpy(
 				&player_ui_globals.edit_profile_data.edit_profile.playlist_profile,
 				&player_ui_globals.edit_profile_data.original_profile.playlist_profile,
-				sizeof(struct game_variant));
+				sizeof(player_ui_globals.edit_profile_data.edit_profile.playlist_profile));
 			player_ui_globals.edit_profile_data.profile_index = profile_index;
 		}
 		else
@@ -722,7 +722,7 @@ boolean player_ui_edit_profile_is_dirty(
 			if (memcmp(
 				&player_ui_globals.edit_profile_data.original_profile.player_profile,
 				&player_ui_globals.edit_profile_data.edit_profile.player_profile,
-				sizeof(struct player_profile)))
+				sizeof(player_ui_globals.edit_profile_data.edit_profile.player_profile)))
 			{
 				dirty = TRUE;
 			}
@@ -739,7 +739,7 @@ boolean player_ui_edit_profile_is_dirty(
 			if (memcmp(
 				&player_ui_globals.edit_profile_data.original_profile.playlist_profile,
 				&player_ui_globals.edit_profile_data.edit_profile.playlist_profile,
-				sizeof(struct game_variant)))
+				sizeof(player_ui_globals.edit_profile_data.edit_profile.playlist_profile)))
 			{
 				dirty = TRUE;
 			}
