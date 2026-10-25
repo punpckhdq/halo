@@ -65,6 +65,14 @@ long cluster_index_from_point(
 	return result;
 }
 
+void structure_lens_flares_place(
+	void)
+{
+	build_structure_lens_flares(global_structure_bsp_get());
+
+	return;
+}
+
 boolean build_structure_lens_flares(
 	struct structure_bsp *structure_bsp)
 {
@@ -462,10 +470,3 @@ boolean build_structure_lens_flares(
 	return success;
 }
 
-void structure_lens_flares_place(
-	void)
-{
-	build_structure_lens_flares(global_structure_bsp_get());
-
-	return;
-}

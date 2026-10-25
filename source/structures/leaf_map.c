@@ -66,15 +66,15 @@ static long node_stack_read(short levels_up);
 static void leaf_map_build_leaf_faces(struct leaf_map *leaf_map, long node_index);
 static void leaf_map_build_leaf_faces_for_leaf(struct leaf_map *leaf_map, long leaf_index);
 static void leaf_map_build_leaf_face_for_leaf_on_node(struct leaf_map *leaf_map, long leaf_index, long node);
+static real normalize_three_dee(real_vector3d *vector);
 static short intersect_planes3d(real_plane3d const *plane, real_plane3d const *reference_plane, real_plane2d *result);
 static void leaf_map_build_portals(struct leaf_map *leaf_map, long node_index);
-static void leaf_map_build_portals_from_leaf(struct leaf_map *leaf_map, long ancestor_node_index, long leaf_index, long node_index, short stack_depth);
 static boolean find_like_crossing(struct leaf_map const *leaf_map, long plane_index, boolean *side);
-static short map_leaf_find_face_on_node(struct leaf_map const *leaf_map, struct map_leaf const *leaf, long node_index);
+static void leaf_map_build_portals_from_leaf(struct leaf_map *leaf_map, long ancestor_node_index, long leaf_index, long node_index, short stack_depth);
 static void leaf_map_build_portal_from_leaves(struct leaf_map *leaf_map, long node_index, long leaf_index0, long leaf_index1);
+static short map_leaf_find_face_on_node(struct leaf_map const *leaf_map, struct map_leaf const *leaf, long node_index);
 static void leaf_map_family_mark(struct leaf_map const *leaf_map, long *marked_leaves, long leaf_index);
 static void leaf_face_get_vertex3d(struct leaf_map const *map, struct map_leaf_face const *face, short vertex_index, real_point3d *result);
-static real normalize_three_dee(real_vector3d *vector);
 
 /* ---------- globals */
 
@@ -334,6 +334,25 @@ static void leaf_map_build_leaf_face_for_leaf_on_node(
 	return;
 }
 
+static real normalize_three_dee(
+	real_vector3d *vector)
+{
+	real length = magnitude3d(vector);
+	real inverse_length = 1.f / length;
+
+	if (valid_real(inverse_length))
+	{
+		scale_vector3d(vector, inverse_length, vector);
+
+		if (valid_real_normal3d(vector))
+		{
+			return length;
+		}
+	}
+
+	return 0.f;
+}
+
 static short intersect_planes3d(
 	real_plane3d const *plane,
 	real_plane3d const *reference_plane,
@@ -420,6 +439,30 @@ static void leaf_map_build_portals(
 	return;
 }
 
+static boolean find_like_crossing(
+	struct leaf_map const *leaf_map,
+	long plane_index,
+	boolean *side)
+{
+	short levels_up;
+	boolean found = FALSE;
+
+	for (levels_up = 0; levels_up < leaf_map_globals.node_stack_count; levels_up++)
+	{
+		long traversal_node = node_stack_read(levels_up);
+		struct bsp3d_node *node = TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->nodes, index_from_node(traversal_node), struct bsp3d_node);
+
+		if (node->plane == plane_index)
+		{
+			*side = (traversal_node & LONG_MIN) != 0;
+			found = TRUE;
+			break;
+		}
+	}
+
+	return found;
+}
+
 static void leaf_map_build_portals_from_leaf(
 	struct leaf_map *leaf_map,
 	long ancestor_node_index,
@@ -471,48 +514,6 @@ static void leaf_map_build_portals_from_leaf(
 	}
 
 	return;
-}
-
-static boolean find_like_crossing(
-	struct leaf_map const *leaf_map,
-	long plane_index,
-	boolean *side)
-{
-	short levels_up;
-	boolean found = FALSE;
-
-	for (levels_up = 0; levels_up < leaf_map_globals.node_stack_count; levels_up++)
-	{
-		long traversal_node = node_stack_read(levels_up);
-		struct bsp3d_node *node = TAG_BLOCK_GET_ELEMENT(&leaf_map->bsp->nodes, index_from_node(traversal_node), struct bsp3d_node);
-
-		if (node->plane == plane_index)
-		{
-			*side = (traversal_node & LONG_MIN) != 0;
-			found = TRUE;
-			break;
-		}
-	}
-
-	return found;
-}
-
-static short map_leaf_find_face_on_node(
-	struct leaf_map const *leaf_map,
-	struct map_leaf const *leaf,
-	long node_index)
-{
-	short face_index;
-
-	for (face_index = 0; face_index < leaf->faces.count; face_index++)
-	{
-		if (TAG_BLOCK_GET_ELEMENT(&leaf->faces, face_index, struct map_leaf_face)->node_index == node_index)
-		{
-			return face_index;
-		}
-	}
-
-	return NONE;
 }
 
 static void leaf_map_build_portal_from_leaves(
@@ -611,53 +612,22 @@ static void leaf_map_build_portal_from_leaves(
 	return;
 }
 
-void leaf_map_close_portal(
-	struct leaf_map *leaf_map,
-	long portal_index)
-{
-	short side;
-	struct leaf_portal *portal = TAG_BLOCK_GET_ELEMENT(&leaf_map->portals, portal_index, struct leaf_portal);
-
-	for (side = 0; side < 2; side++)
-	{
-		short portal_designator_index;
-		struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&leaf_map->leaves, index_from_node(portal->leaf_indices[side]), struct map_leaf);
-
-		for (portal_designator_index = 0; portal_designator_index < leaf->portal_designators.count; portal_designator_index++)
-		{
-			long *portal_designator = TAG_BLOCK_GET_ELEMENT(&leaf->portal_designators, portal_designator_index, long);
-
-			if (index_from_node(*portal_designator) == portal_index)
-			{
-				*portal_designator = index_from_node(*portal_designator) | LONG_MIN;
-				break;
-			}
-		}
-
-		match_assert("c:\\halo\\SOURCE\\structures\\leaf_map.c", 673, portal_designator_index!=leaf->portal_designators.count);
-	}
-
-	return;
-}
-
-boolean leaf_map_leaf_is_closed(
+static short map_leaf_find_face_on_node(
 	struct leaf_map const *leaf_map,
-	long leaf_index)
+	struct map_leaf const *leaf,
+	long node_index)
 {
-	short portal_designator_index;
-	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&leaf_map->leaves, index_from_node(leaf_index), struct map_leaf);
+	short face_index;
 
-	for (portal_designator_index = 0; portal_designator_index < leaf->portal_designators.count; portal_designator_index++)
+	for (face_index = 0; face_index < leaf->faces.count; face_index++)
 	{
-		long portal_designator = *TAG_BLOCK_GET_ELEMENT(&leaf->portal_designators, portal_designator_index, long);
-
-		if (!(portal_designator & LONG_MIN))
+		if (TAG_BLOCK_GET_ELEMENT(&leaf->faces, face_index, struct map_leaf_face)->node_index == node_index)
 		{
-			return FALSE;
+			return face_index;
 		}
 	}
 
-	return leaf->portal_designators.count;
+	return NONE;
 }
 
 void leaf_map_get_leaf_bounds(
@@ -781,6 +751,55 @@ void leaf_map_get_leaf_bounds(
 	return;
 }
 
+void leaf_map_close_portal(
+	struct leaf_map *leaf_map,
+	long portal_index)
+{
+	short side;
+	struct leaf_portal *portal = TAG_BLOCK_GET_ELEMENT(&leaf_map->portals, portal_index, struct leaf_portal);
+
+	for (side = 0; side < 2; side++)
+	{
+		short portal_designator_index;
+		struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&leaf_map->leaves, index_from_node(portal->leaf_indices[side]), struct map_leaf);
+
+		for (portal_designator_index = 0; portal_designator_index < leaf->portal_designators.count; portal_designator_index++)
+		{
+			long *portal_designator = TAG_BLOCK_GET_ELEMENT(&leaf->portal_designators, portal_designator_index, long);
+
+			if (index_from_node(*portal_designator) == portal_index)
+			{
+				*portal_designator = index_from_node(*portal_designator) | LONG_MIN;
+				break;
+			}
+		}
+
+		match_assert("c:\\halo\\SOURCE\\structures\\leaf_map.c", 673, portal_designator_index!=leaf->portal_designators.count);
+	}
+
+	return;
+}
+
+boolean leaf_map_leaf_is_closed(
+	struct leaf_map const *leaf_map,
+	long leaf_index)
+{
+	short portal_designator_index;
+	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&leaf_map->leaves, index_from_node(leaf_index), struct map_leaf);
+
+	for (portal_designator_index = 0; portal_designator_index < leaf->portal_designators.count; portal_designator_index++)
+	{
+		long portal_designator = *TAG_BLOCK_GET_ELEMENT(&leaf->portal_designators, portal_designator_index, long);
+
+		if (!(portal_designator & LONG_MIN))
+		{
+			return FALSE;
+		}
+	}
+
+	return leaf->portal_designators.count;
+}
+
 boolean leaf_map_closure(
 	struct leaf_map const *leaf_map,
 	long *marked_leaves,
@@ -822,61 +841,6 @@ static void leaf_map_family_mark(
 			BIT_VECTOR_SET_FLAG(marked_leaves, other_leaf_index, TRUE);
 			leaf_map_family_mark(leaf_map, marked_leaves, other_leaf_index);
 		}
-	}
-
-	return;
-}
-
-void render_debug_leaf_portal(
-	struct leaf_map const *map,
-	long portal_designator)
-{
-	short vertex_index;
-	struct leaf_portal *portal = TAG_BLOCK_GET_ELEMENT(&map->portals, index_from_node(portal_designator), struct leaf_portal);
-	boolean closed = (portal_designator & LONG_MIN) != 0;
-	real_argb_color portal_colors[2] = {{0.1f, 0.f, 1.f, 0.f}, {0.1f, 1.f, 0.f, 0.f}};
-
-	for (vertex_index = 2; vertex_index < portal->vertices.count; vertex_index++)
-	{
-		render_debug_triangle(
-			TRUE,
-			TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
-			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index - 1, real_point3d),
-			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index, real_point3d),
-			&portal_colors[closed]);
-		render_debug_line(
-			TRUE,
-			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index - 1, real_point3d),
-			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index, real_point3d),
-			global_real_argb_red);
-	}
-
-	render_debug_line(
-		TRUE,
-		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
-		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 1, real_point3d),
-		global_real_argb_red);
-	render_debug_line(
-		TRUE,
-		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
-		TAG_BLOCK_GET_ELEMENT(&portal->vertices, portal->vertices.count - 1, real_point3d),
-		global_real_argb_red);
-
-	return;
-}
-
-void render_debug_leaf_portals(
-	struct leaf_map const *map,
-	long leaf_index)
-{
-	short portal_designator_index;
-	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&map->leaves, index_from_node(leaf_index), struct map_leaf);
-
-	for (portal_designator_index = 0; portal_designator_index < leaf->portal_designators.count; portal_designator_index++)
-	{
-		long portal_designator = *TAG_BLOCK_GET_ELEMENT(&leaf->portal_designators, portal_designator_index, long);
-
-		render_debug_leaf_portal(map, portal_designator);
 	}
 
 	return;
@@ -947,6 +911,61 @@ boolean leaf_map_leaf_spans_polygon(
 	return FALSE;
 }
 
+void render_debug_leaf_portal(
+	struct leaf_map const *map,
+	long portal_designator)
+{
+	short vertex_index;
+	struct leaf_portal *portal = TAG_BLOCK_GET_ELEMENT(&map->portals, index_from_node(portal_designator), struct leaf_portal);
+	boolean closed = (portal_designator & LONG_MIN) != 0;
+	real_argb_color portal_colors[2] = {{0.1f, 0.f, 1.f, 0.f}, {0.1f, 1.f, 0.f, 0.f}};
+
+	for (vertex_index = 2; vertex_index < portal->vertices.count; vertex_index++)
+	{
+		render_debug_triangle(
+			TRUE,
+			TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
+			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index - 1, real_point3d),
+			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index, real_point3d),
+			&portal_colors[closed]);
+		render_debug_line(
+			TRUE,
+			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index - 1, real_point3d),
+			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index, real_point3d),
+			global_real_argb_red);
+	}
+
+	render_debug_line(
+		TRUE,
+		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
+		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 1, real_point3d),
+		global_real_argb_red);
+	render_debug_line(
+		TRUE,
+		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
+		TAG_BLOCK_GET_ELEMENT(&portal->vertices, portal->vertices.count - 1, real_point3d),
+		global_real_argb_red);
+
+	return;
+}
+
+void render_debug_leaf_portals(
+	struct leaf_map const *map,
+	long leaf_index)
+{
+	short portal_designator_index;
+	struct map_leaf *leaf = TAG_BLOCK_GET_ELEMENT(&map->leaves, index_from_node(leaf_index), struct map_leaf);
+
+	for (portal_designator_index = 0; portal_designator_index < leaf->portal_designators.count; portal_designator_index++)
+	{
+		long portal_designator = *TAG_BLOCK_GET_ELEMENT(&leaf->portal_designators, portal_designator_index, long);
+
+		render_debug_leaf_portal(map, portal_designator);
+	}
+
+	return;
+}
+
 static void leaf_face_get_vertex3d(
 	struct leaf_map const *map,
 	struct map_leaf_face const *face,
@@ -1003,21 +1022,3 @@ void render_debug_leaf_faces(
 	return;
 }
 
-static real normalize_three_dee(
-	real_vector3d *vector)
-{
-	real length = magnitude3d(vector);
-	real inverse_length = 1.f / length;
-
-	if (valid_real(inverse_length))
-	{
-		scale_vector3d(vector, inverse_length, vector);
-
-		if (valid_real_normal3d(vector))
-		{
-			return length;
-		}
-	}
-
-	return 0.f;
-}

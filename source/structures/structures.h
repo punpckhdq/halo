@@ -28,6 +28,8 @@ void render_debug_detail_objects(void);
 /* ---------- prototypes/STRUCTURE_LENS_FLARES.C */
 
 long cluster_index_from_point(struct structure_bsp const *structure_bsp, union real_point3d const *point);
+void structure_lens_flares_place(void);
+boolean build_structure_lens_flares(struct structure_bsp *structure_bsp);
 
 /* ---------- prototypes/STRUCTURE_RENDER.C */
 
