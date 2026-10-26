@@ -500,7 +500,7 @@
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_environment_fog.c", "index": 120, "status": "NonMatching" },
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_environment.c", "index": 121, "status": "NonMatching" },
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_dynavobgeom.c", "index": 122, "status": "Matching" },
-				{ "name": "source/rasterizer/xbox/rasterizer_xbox_draw_primitives.c", "index": 123, "status": "NonMatching" },
+				{ "name": "source/rasterizer/xbox/rasterizer_xbox_draw_primitives.c", "index": 123, "status": "Matching" },
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_detail_objects.c", "index": 124, "status": "Matching" },
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_decals.c", "index": 125, "status": "Matching" },
 				{ "name": "source/rasterizer/xbox/rasterizer_xbox_debug.c", "index": 126, "status": "Matching" },
