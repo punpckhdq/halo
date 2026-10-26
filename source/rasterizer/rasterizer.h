@@ -683,6 +683,7 @@ struct rasterizer_globals_struct
 	real z_far_first_person;
 	void *default_2d_hardware_format;
 	void *default_3d_hardware_format;
+	void *default_cm_hardware_format;
 	short lightmap_mode;
 	short maximum_nodes_per_model;
 	short max_simultaneous_textures;
