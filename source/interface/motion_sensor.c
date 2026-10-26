@@ -54,6 +54,7 @@ enum
 
 /* ---------- macros */
 
+#define SECONDS_PER_TICK (1.f/TICKS_PER_SECOND) /* fake name */
 #define DROPSHIP_SEAT_LABEL "c_dropship"										/* fake name */
 #define CUSTOM_BLIP_FLASH_ANGULAR_VELOCITY (3.141592f / TICKS_PER_SECOND)		/* fake name */
 

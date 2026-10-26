@@ -644,7 +644,7 @@
 				{ "name": "source/interface/attract_mode.c", "index": 264, "status": "Matching" },
 				{ "name": "source/interface/weapon_hud_interface_definition.c", "index": 265, "status": "Matching" },
 				{ "name": "source/interface/unit_hud_interface_definition.c", "index": 266, "status": "Matching" },
-				{ "name": "source/interface/motion_sensor.c", "index": 267, "status": "NonMatching" },
+				{ "name": "source/interface/motion_sensor.c", "index": 267, "status": "Matching" },
 				{ "name": "source/interface/hud_weapon.c", "index": 268, "status": "NonMatching" },
 				{ "name": "source/interface/hud_unit.c", "index": 269, "status": "Matching" },
 				{ "name": "source/interface/hud_sounds.c", "index": 270, "status": "Matching" },
