@@ -1104,11 +1104,19 @@ void actor_handle_communication(long actor_index, long prop_index, struct ai_inf
 
 boolean actor_get_running_blind_vector(long actor_index, real_vector3d *run_vector);
 
+void actor_set_active(long actor_index, boolean active);
+void actor_set_dormant(long actor_index, boolean dormant);
+void actor_verify_activation(long actor_index);
+
 /* ---------- prototypes/ACTOR_COMBAT.C */
 
 boolean actor_firing_blindly(long actor_index);
 long actor_aim_projectile(long actor_index, real_point3d const *origin, real_vector3d *vector, real *error_reference);
 long actor_aim_grenade(long actor_index, real_point3d const *origin, real_vector3d *vector);
+
+/* ---------- prototypes/ACTOR_FIRING_POSITION.C */
+
+unsigned long actor_get_firing_position_group(long actor_index, short evaluation_mode, short group_selection_mode);
 
 /* ---------- prototypes/ACTOR_LOOKING.C */
 
@@ -1138,6 +1146,11 @@ short actor_perception_aiming_vector_test_blockage(real_point3d const *source_po
 short actor_visibility_at_point(long actor_index, struct actor_position_data *sense_position, real_point3d const *position, char lighting, short line_of_sight, boolean use_frustum, boolean store_debugging_information, short combat_knowledge_type);
 short actor_audibility_at_point(long actor_index, struct actor_position_data *sense_position, real_point3d const *position, struct location const *location, short sound_volume, real perception_factor, short line_of_sight);
 void actor_perception_find_sense_position(long actor_index, real_point3d const *position, long prop_index, struct actor_position_data *sense_position);
+void actor_perception_acknowledge(long actor_index, long prop_index, boolean had_orphan, boolean expected);
+boolean actor_perception_desire_prop(long actor_index, short desired_target_state, long unit_index, long unit_actor_index, boolean in_use, boolean player, boolean enemy, boolean dead, short dead_ticks, real suicide_radius, real distance_squared, short required_ticks, boolean *optional_reference);
+void prop_position_refresh(long actor_index, long prop_index, struct actor_position_data *sense_position, boolean forced_position_update, boolean full_status_update);
+boolean actor_expected_acknowledgement(long actor_index, long prop_index);
+void prop_status_refresh(long actor_index, long prop_index, struct actor_position_data *sense_position);
 
 void actor_berserk(long actor_index, boolean berserk);
 boolean actor_compute_prop_unopposable(long actor_index, long prop_index);
