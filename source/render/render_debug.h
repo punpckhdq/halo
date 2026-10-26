@@ -23,7 +23,6 @@ void render_debug_circle(boolean immediate, real_plane3d const *plane, short pro
 
 void render_debug_point(boolean immediate, real_point3d const *point, real size, real_argb_color const *color);
 void render_debug_line(boolean immediate, real_point3d const *point0, real_point3d const *point1, real_argb_color const *color);
-void render_debug_triangle(boolean immediate, real_point3d const *point0, real_point3d const *point1, real_point3d const *point2, real_argb_color const *color);
 
 void render_debug_vector(boolean immediate, real_point3d const *point, real_vector3d const *vector, real size, real_argb_color const *color);
 void render_debug_vectors(boolean immediate, real_point3d const *point, real_vector3d const *forward, real_vector3d const *up, real size);
