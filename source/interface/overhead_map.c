@@ -1,50 +1,47 @@
 /*
 OVERHEAD_MAP.C
-
-symbols in this file:
-000CFB20 0010:
-	_overhead_map_initialize (0000)
-000CFB30 0010:
-	_overhead_map_initialize_for_new_map (0000)
-000CFB40 0010:
-	_overhead_map_dispose_from_old_map (0000)
-000CFB50 00e0:
-	_overhead_map_post_rasterize (0000)
-00270BD0 000c:
-	_rdata_00270bd0 (0000)
-00453CD0 0030:
-	_bss_00453cd0 (0000)
 */
 
 /* ---------- headers */
 
 #include "cseries.h"
+#include "game.h"
 
 /* ---------- constants */
+
+enum
+{
+	OVERHEAD_MAP_UPDATE_TICKS = 7,	/* fake name */
+};
 
 /* ---------- macros */
 
 /* ---------- structures */
 
+struct overhead_map_globals	/* fake name */
+{
+	boolean active;
+	rectangle2d bounds;
+	boolean throttle_updates;
+	boolean dirty;
+	rectangle2d screen_bounds;
+	real_point2d position;
+	point2d screen_position;
+	long last_update_time;
+	long unknown24;
+	struct bitmap_data *bitmap;
+	long unknown2C;
+};
+
 /* ---------- prototypes */
 
 /* ---------- globals */
 
-struct
-{
-	boolean bss_00453cd0;
-	short data_853cd2;
-	short data_853cd4;
-	short data_853cd6;
-	long data_853cd8;
-	long data_853cdc;
-	long data_853ce0;
-	double data_853ce4;
-	short data_853cec;
-	short data_853cee;
-	long data_853cf0;
-	void* data_853cf8;
-} overhead_map_globals;
+static real const overhead_map_scale = 0.5f;	/* fake name */
+static real const overhead_map_width = 84.f;	/* fake name */
+static real const overhead_map_height = 80.f;	/* fake name */
+
+static struct overhead_map_globals overhead_map_globals;	/* fake name */
 
 /* ---------- public code */
 
@@ -63,25 +60,37 @@ void overhead_map_initialize_for_new_map(
 void overhead_map_dispose_from_old_map(
 	void)
 {
-	overhead_map_globals.bss_00453cd0 = FALSE;
+	overhead_map_globals.active = FALSE;
 
 	return;
 }
 
 void overhead_map_post_rasterize(
-	void* a1,
-	void* a2,
-	double* a3)
+	void *unused0,
+	void *unused1,
+	real_point2d const *position)
 {
-	double* v1;
-	void* v2;
-
-	if (overhead_map_globals.bss_00453cd0)
+	if (overhead_map_globals.active)
 	{
-		overhead_map_globals.data_853ce4 = *a3;
+		rectangle2d screen_bounds;
 
-		v1 = a3;
-		v2 = overhead_map_globals.data_853cf8;
+		overhead_map_globals.position = *position;
+		screen_bounds.x0 = ((short)position->x >> 1) - overhead_map_globals.bitmap->registration_point.x;
+		screen_bounds.y0 = ((short)position->y >> 1) - overhead_map_globals.bitmap->registration_point.y;
+		screen_bounds.x1 = overhead_map_globals.bounds.x1 + screen_bounds.x0;
+		screen_bounds.y1 = overhead_map_globals.bounds.y1 + screen_bounds.y0;
+		overhead_map_globals.screen_position.x = screen_bounds.x0;
+		overhead_map_globals.screen_position.y = screen_bounds.y0;
+		screen_bounds.x0 += overhead_map_globals.bounds.x0;
+		screen_bounds.y0 += overhead_map_globals.bounds.y0;
+
+		if (!overhead_map_globals.throttle_updates ||
+			local_time_get() - overhead_map_globals.last_update_time > OVERHEAD_MAP_UPDATE_TICKS)
+		{
+			overhead_map_globals.screen_bounds = screen_bounds;
+			overhead_map_globals.last_update_time = local_time_get();
+			overhead_map_globals.dirty = FALSE;
+		}
 	}
 
 	return;

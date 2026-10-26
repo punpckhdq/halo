@@ -727,8 +727,11 @@ __inline real_vector2d *rotate_vector2d(
 	real cosine,
 	real_vector2d *result)
 {
+	real j = sine*v->i + cosine*v->j;
+
 	result->i = cosine*v->i - sine*v->j;
-	result->j = sine*v->i + cosine*v->j;
+	result->j = j;
+
 	return result;
 }
 

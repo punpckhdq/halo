@@ -48,6 +48,13 @@ struct animation_state
 	short frame_index;
 };
 
+struct animation_state_continuous
+{
+	short index;
+	word pad;
+	real frame_index;
+};
+
 /* ---------- prototypes/MODELS.C */
 
 void render_model(
@@ -108,6 +115,14 @@ __inline short animation_update(
 	long *triggered_sound_index)
 {
 	return animation_update_internal(animation_update_kind_affects_game_state, animation_graph_index, state, triggered_sound_index);
+}
+
+__inline short animation_update_render_only(
+	long animation_graph_index,
+	struct animation_state *state,
+	long *triggered_sound_index)
+{
+	return animation_update_internal(animation_update_kind_render_only, animation_graph_index, state, triggered_sound_index);
 }
 
 __inline short animation_choose_random_permutation(

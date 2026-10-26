@@ -667,6 +667,8 @@ extern struct rasterizer_frame_statistics_s rasterizer_frame_statistics;
 extern struct rasterizer_debug_options_struct rasterizer_debug_options;
 extern boolean rasterizer_model_cortana_hack;
 extern struct rasterizer_window_begin_parameters global_window_parameters;
+extern short blip_player_index;
+extern real_point2d center_point;
 
 /* ---------- public code */
 

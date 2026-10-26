@@ -102,7 +102,7 @@ long create_enumerated_saved_game_file(word saved_game_file_type, short local_pl
 boolean delete_enumerated_saved_game_file(long index);
 boolean saved_game_file_open(struct file_reference *saved_game_file, long index);
 boolean saved_game_file_close(struct file_reference *saved_game_file, long index);
-short saved_game_file_get_type(long index);
+word saved_game_file_get_type(long index);
 void saved_game_files_delete_all_custom_profiles(void);
 void saved_game_files_notify_memory_units_changed(void);
 void saved_game_file_get_useable_untitled_profile_name(wchar_t *display_name);
