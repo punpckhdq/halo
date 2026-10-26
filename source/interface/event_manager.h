@@ -19,6 +19,8 @@ header included in hcex build.
 unsigned long event_manager_time_of_last_event(void);
 
 void event_manager_update(void);
+void event_manager_flush(void);
+void event_manager_suppress(boolean suppress);
 
 /* ---------- globals */
 
