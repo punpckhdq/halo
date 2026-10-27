@@ -185,6 +185,26 @@ __inline pixel32 real_a_rgb_color_to_pixel32(
 	return result;
 }
 
+__inline pixel32 real_alpha_to_pixel32(
+	real alpha)
+{
+	pixel32 result;
+	real scale = 255.f;
+
+	match_assert("..\\bitmaps\\bitmaps_inlines.h", 291, alpha>=0.0f && alpha<=1.0f);
+
+	__asm
+	{
+		fld alpha
+		fld scale
+		fmulp st(1), st
+		fistp result
+		shl result, 24
+	}
+
+	return result;
+}
+
 __inline pixel32 real_alpha_intensity_to_pixel32(
 	real alpha,
 	real intensity)

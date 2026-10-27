@@ -350,6 +350,12 @@ struct scenario_cutscene_title
 	long unused[4];
 };
 
+struct scenario_detail_object_collection_palette_entry
+{
+	struct tag_reference reference;		// detail_object_collection_definition
+	long unused[8];
+};
+
 struct scenario
 {
 	struct tag_reference ugly_structure_bsp;	// structure_bsp

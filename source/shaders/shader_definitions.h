@@ -47,6 +47,14 @@ enum
 
 enum
 {
+	_shader_effect_sort_bias_bit = 0,
+	_shader_effect_uses_nonlinear_tint_bit,
+	_shader_effect_flags_dont_overdraw_first_person_weapon_bit,
+	NUMBER_OF_SHADER_EFFECT_FLAGS,
+};
+
+enum
+{
 	_shader_radiosity_simple_parameterization_bit = 0,
 	_shader_radiosity_ignore_normals_bit,
 	_shader_radiosity_FILTHY_transparent_lit_bit,

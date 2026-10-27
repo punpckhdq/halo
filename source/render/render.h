@@ -62,6 +62,14 @@ enum
 	NUMBER_OF_BUILD_SPRITES_FLAGS,
 };
 
+enum
+{
+	_render_model_effect_type_none = 0,
+	_render_model_effect_type_active_camouflage,
+	_render_model_effect_type_transparent_zbuffered,
+	NUMBER_OF_RENDER_MODEL_EFFECT_TYPES,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

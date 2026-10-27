@@ -19,6 +19,12 @@ enum
 	GAME_GLOBALS_DEFINITION_VERSION = 3
 };
 
+enum
+{
+	_rasterizer_active_camouflage_tint_edge_density_bit = 0,
+	NUMBER_OF_RASTERIZER_ACTIVE_CAMOUFLAGE_FLAGS,
+};
+
 /* referenced in game_globals.c? */
 enum
 {
