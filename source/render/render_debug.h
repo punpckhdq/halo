@@ -28,6 +28,7 @@ void render_debug_vectors(boolean immediate, real_point3d const *point, real_vec
 void render_debug_tick(boolean immediate, real_point3d const *point, real_vector3d const *tick_vector, float tick_size, real_argb_color const *color);
 
 void render_debug_line_offset(boolean immediate, real_point3d const *p0, real_point3d const *p1, real_argb_color const *color, real offset);
+void render_debug_circle(boolean immediate, real_plane3d const *plane, short projection_axis, boolean projection_sign, real_point2d const *center, real radius, real_argb_color const *color, real offset);
 
 void render_debug_matrix(boolean immediate, const struct real_matrix4x3 *matrix, real size);
 

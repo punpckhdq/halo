@@ -43,6 +43,18 @@ match_vassert(									\
 	)											\
 )
 
+#define match_assert_valid_real_point2d(file, line, point)	\
+match_vassert(												\
+	file,													\
+	line,													\
+	valid_real_point2d(point),								\
+	csprintf(												\
+		temporary,											\
+		"%s: assert_valid_real_point2d(%f, %f)",			\
+		#point, (*point).x, (*point).y						\
+	)														\
+)
+
 #define match_assert_valid_real_point3d(file, line, point)	\
 match_vassert(												\
 	file,													\
@@ -188,6 +200,7 @@ if (!valid_real_matrix4x3(matrix))															\
 }
 
 #define assert_valid_real(v) match_assert_valid_real(__FILE__, __LINE__, v)
+#define assert_valid_real_point2d(point) match_assert_valid_real_point2d(__FILE__, __LINE__, point)
 #define assert_valid_real_point3d(point) match_assert_valid_real_point3d(__FILE__, __LINE__, point)
 #define assert_valid_real_vector3d(vector) match_assert_valid_real_vector3d(__FILE__, __LINE__, vector)
 #define assert_valid_real_plane3d(plane) match_assert_valid_real_plane3d(__FILE__, __LINE__, plane)
@@ -727,8 +740,11 @@ __inline real_vector2d *rotate_vector2d(
 	real cosine,
 	real_vector2d *result)
 {
-	result->i = cosine*v->i - sine*v->j;
-	result->j = sine*v->i + cosine*v->j;
+	real i = cosine*v->i - sine*v->j;
+	real j = sine*v->i + cosine*v->j;
+
+	result->i = i;
+	result->j = j;
 	return result;
 }
 

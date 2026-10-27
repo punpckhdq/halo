@@ -171,7 +171,7 @@ boolean encounter_spawn_actor(long encounter_index, short squad_index);
 void encounter_set_respawn(long encounter_index, boolean respawn);
 void encounter_set_deaf(long encounter_index, boolean deaf);
 void encounter_set_blind(long encounter_index, boolean blind);
-void encounter_force_activate(long encounter_index);
+boolean encounter_force_activate(long encounter_index);
 void encounter_squad_timer_expire(long encounter_index, short squad_index);
 void encounters_update_dirty_status(void);
 void encounter_attach_actor(long actor_index, long encounter_index, short squad_index, boolean has_previous_team);
@@ -179,7 +179,15 @@ void encounter_detach_actor(long actor_index, boolean died);
 void encounterless_attach_actor(long actor_index);
 void encounterless_detach_actor(long actor_index);
 short encounter_get_actor_starting_location(long encounter_index, long squad_index, boolean spawn);
-boolean encounter_link_activation(long encounter_index, long link_encounter_index);
+boolean encounter_link_activation(long encounter_index, short link_encounter_index);
+void encounter_attach_unit(long encounter_index, long unit_index);
+void encounter_verify_firing_position_owner_actor_indices(long encounter_index);
+boolean encounter_mark_examined_pursuit_position(long encounter_index, long actor_index, short firing_position_index, long history_start_time);
+void encounter_modify_pursuit_desires(long encounter_index, short squad_index, boolean *pursue_tenacious, short *group_pursuit_restriction, boolean *group_pursuit_controller, short *desired_target_search, short *desired_pursuit, short *desired_pursuit_search);
+void encounter_determine_pursuit_availability(long encounter_index, long actor_index, short group_pursuit_restriction, boolean is_pursuit_controller, boolean *allow_target_uncover, boolean *allow_indefinite_target_uncover, boolean *allow_target_search, boolean *allow_pursuit, boolean *allow_pursuit_search, boolean *controlling_group_pursuit, boolean *controlled_by_group_pursuit, boolean *wait_after_pursuit);
+void encounterless_activate(long actor_index);
+void encounter_stand_down(long encounter_index);
+void encounter_update_status(long encounter_index);
 
 /* ---------- globals */
 

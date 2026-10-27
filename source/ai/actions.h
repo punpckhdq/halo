@@ -385,6 +385,8 @@ short actor_action_class(long actor_index);
 boolean actor_action_set_default_state(long actor_index, short override_state);
 boolean actor_action_try_to_enter_vehicle(long actor_index, long vehicle_index, char const *seat_substring_name, short seat_desire_type, short precomputed_seat_count, short *precomputed_seat_indices);
 
+long actor_pursuit_find_nearby_actors(long actor_index, boolean pursuit_coordinator);
+
 /* ---------- prototypes/ACTION_CONVERSE.C */
 
 boolean action_converse_setup(long actor_index, long conversation_index, struct converse_state_data *state_data);
