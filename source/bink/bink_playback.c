@@ -71,16 +71,16 @@ struct _bink_globals
 /* ---------- prototypes */
 
 static void bink_get_memory_available();
+static void bink_playback_update__internal(void);
+static void bink_free_texture_cache(void);
 static void *bink_alloc_permanent(unsigned long size_in_bytes, unsigned long alignment_in_bytes);
 static boolean is_all_bink_memory_free(void);
 static void *RADLINK bink_alloc(unsigned long size_in_bytes);
 static void RADLINK bink_free(void *pointer);
 static void bink_decompress_audio_frame(void);
+static void bink_decompress_video_frame(void);
 static void bink_draw_frame(void);
 static boolean bink_query_analog_controller_buttons(void);
-static void bink_free_texture_cache(void);
-static void bink_decompress_video_frame(void);
-static void bink_playback_update__internal(void);
 
 /* ---------- globals */
 
@@ -104,318 +104,6 @@ static void bink_get_memory_available()
 	status.dwLength = sizeof(status);
 	GlobalMemoryStatus(&status);
 	bink_memory_available = status.dwAvailPhys >> 10;
-
-	return;
-}
-
-boolean bink_playback_active(
-	void)
-{
-	return bink_globals.bink && bink_globals.initialized;
-}
-
-boolean bink_playback_ui_rendering_inhibited(
-	void)
-{
-	return bink_globals.initialized && TEST_FLAG(bink_globals.playback_flags, _bink_playback_dont_render_ui_bit);
-}
-
-boolean bink_playback_in_progress(
-	void)
-{
-	return bink_globals.bink != NULL;
-}
-
-static void *bink_alloc_permanent(
-	unsigned long size_in_bytes,
-	unsigned long alignment_in_bytes)
-{
-	char *pointer = (char *)bink_globals.memory_pool_base + bink_globals.memory_pool_size - size_in_bytes;
-
-	if (alignment_in_bytes && ((unsigned long)pointer & (alignment_in_bytes - 1)))
-	{
-		match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 691, alignment_in_bytes>0 && (alignment_in_bytes&(alignment_in_bytes-1))==0);
-		size_in_bytes += (alignment_in_bytes - (unsigned long)pointer) & (alignment_in_bytes - 1);
-		pointer -= (alignment_in_bytes - (unsigned long)pointer) & (alignment_in_bytes - 1);
-	}
-
-	match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 697, size_in_bytes>0);
-	match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 698, bink_globals.memory_pool_size>=size_in_bytes);
-	match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 699, bink_globals.memory_pool_base);
-	bink_globals.memory_pool_size -= size_in_bytes;
-
-	return pointer;
-}
-
-static boolean is_all_bink_memory_free(
-	void)
-{
-	boolean all_bink_memory_is_free = TRUE;
-	short pointer_index;
-
-	for (pointer_index = 0; pointer_index < bink_pointer_count; pointer_index++)
-	{
-		if (bink_pointer_list[pointer_index])
-		{
-			all_bink_memory_is_free = FALSE;
-		}
-	}
-
-	return all_bink_memory_is_free;
-}
-
-static void *RADLINK bink_alloc(
-	unsigned long size_in_bytes)
-{
-	void *pointer = NULL;
-	boolean fail_to_allocate;
-
-	bink_get_memory_available();
-
-	if (bink_pointer_count > 0 && !bink_pointer_list[0])
-	{
-		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 735, is_all_bink_memory_free(), "### FATAL_ERROR bink just confused the hell out of me (1)");
-		if (is_all_bink_memory_free())
-		{
-			bink_pointer_count = 0;
-			bink_globals.memory_pool_offset = 0;
-		}
-	}
-
-	fail_to_allocate = FALSE;
-	fail_to_allocate = fail_to_allocate || bink_globals.memory_pool_offset + size_in_bytes > (unsigned long)bink_globals.memory_pool_size;
-	fail_to_allocate = fail_to_allocate || bink_pointer_count >= MAXIMUM_BINK_POINTER_BLOCKS;
-	fail_to_allocate = fail_to_allocate || !bink_globals.memory_pool_base;
-	if (fail_to_allocate)
-	{
-		match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 759, !"bink memory allocation should not fail");
-		__asm int 3;
-	}
-	else
-	{
-		pointer = (char *)bink_globals.memory_pool_base + bink_globals.memory_pool_offset;
-		bink_globals.memory_pool_offset += size_in_bytes;
-		XPhysicalProtect(pointer, size_in_bytes, PAGE_READWRITE);
-		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 786, bink_globals.memory_pool_offset <= bink_globals.memory_pool_size,
-			csprintf(temporary, "### FATAL_ERROR bink needs more memory (requested %d bytes over the %d-byte limit)",
-				bink_globals.memory_pool_offset - bink_globals.memory_pool_size, bink_globals.memory_pool_size));
-		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 787, bink_pointer_count < MAXIMUM_BINK_POINTER_BLOCKS, "### FATAL_ERROR bink needs more pointer blocks");
-		bink_pointer_list[bink_pointer_count++] = pointer;
-
-		bink_get_memory_available();
-
-		{
-			long guard_bytes = 0x3000;
-
-			match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 799, bink_globals.memory_pool_offset < bink_globals.memory_pool_size);
-			bink_globals.memory_pool_offset += guard_bytes;
-			bink_globals.memory_pool_offset = MIN(bink_globals.memory_pool_offset, bink_globals.memory_pool_size);
-		}
-	}
-
-	return pointer;
-}
-
-static void RADLINK bink_free(
-	void *pointer)
-{
-	long pointer_index;
-
-	bink_get_memory_available();
-
-	for (pointer_index = 0; pointer_index < bink_pointer_count; pointer_index++)
-	{
-		if (bink_pointer_list[pointer_index] == pointer)
-		{
-			bink_pointer_list[pointer_index] = NULL;
-			break;
-		}
-	}
-	match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 825, pointer_index < bink_pointer_count, "### FATAL_ERROR bink just confused the hell out of me (2)");
-
-	bink_get_memory_available();
-
-	return;
-}
-
-static void bink_decompress_audio_frame(
-	void)
-{
-	return;
-}
-
-static void bink_draw_frame(
-	void)
-{
-	rectangle2d bounds;
-	struct dynamic_screen_vertex vertices[4];
-	short vertex_index;
-
-	if (TEST_FLAG(bink_globals.playback_flags, _bink_playback_full_screen_bit))
-	{
-		bounds = rasterizer_globals.screen_bounds;
-	}
-	else
-	{
-		short buffer_width = rasterizer_globals.screen_bounds.x1 - rasterizer_globals.screen_bounds.x0;
-		short buffer_height = rasterizer_globals.screen_bounds.y1 - rasterizer_globals.screen_bounds.y0;
-
-		bounds.x0 = (buffer_width - bink_globals.bink_frame_width) / 2;
-		bounds.x1 = (buffer_width + bink_globals.bink_frame_width) / 2;
-		bounds.y0 = (buffer_height - bink_globals.bink_frame_height) / 2;
-		bounds.y1 = (buffer_height + bink_globals.bink_frame_height) / 2;
-	}
-
-	for (vertex_index = 0; vertex_index < 4; vertex_index++)
-	{
-		real u = ((vertex_index + 1) & 2) ? (real)bink_globals.bink_frame_width : 0.0f;
-		real v = vertex_index > 1 ? (real)bink_globals.bink_frame_height : 0.0f;
-		real x = ((vertex_index + 1) & 2) ? (real)bounds.x1 : (real)bounds.x0;
-		real y = vertex_index > 1 ? (real)bounds.y1 : (real)bounds.y0;
-
-		vertices[vertex_index].position.x = x;
-		vertices[vertex_index].position.y = y;
-		vertices[vertex_index].texcoord.x = u;
-		vertices[vertex_index].texcoord.y = v;
-		vertices[vertex_index].color = PIXEL32_FROM_ARGB(255, 255, 255, 255);
-	}
-	rasterizer_psuedo_dynamic_screen_quad_draw(&bink_globals.screen_geometry_parameters, vertices);
-
-	if (debug_bink)
-	{
-		char bink_string[4096];
-		BINKSUMMARY summary;
-		BINKREALTIME lies;
-		rectangle2d bounds;
-		short tab_stops[6];
-		short tab_stop_count = 1;
-		point2d cursor;
-		real scale = 1.0f;
-
-		tab_stops[0] = 250;
-		tab_stops[1] = 0;
-		tab_stops[2] = 0;
-		tab_stops[3] = 0;
-		tab_stops[4] = 0;
-		tab_stops[5] = 0;
-		cursor.x = 0;
-		cursor.y = 0;
-		BinkGetRealtime(bink_globals.bink, &lies, 0);
-		scale = 1.0f / lies.Frames;
-		sprintf(bink_string, "FramesTime=|t%.02f|nFrameVideoDecompTime=|t%.02f|nFrameAudioDecompTime=|t%.02f|nFrameReadTime=|t%.02f|nFrameIdleReadTime=|t%.02f|nFrameThreadReadTime=|t%.02f|nFramesBlitTime=|t%.02f|n|nFrames=|t%d",
-			lies.FramesTime * scale,
-			lies.FramesVideoDecompTime * scale,
-			lies.FramesAudioDecompTime * scale,
-			lies.FramesReadTime * scale,
-			lies.FramesIdleReadTime * scale,
-			lies.FramesThreadReadTime * scale,
-			lies.FramesBlitTime * scale,
-			lies.Frames);
-		bounds = rasterizer_globals.frame_bounds;
-		offset_rectangle2d(&bounds, 0, 32);
-		interface_set_bitmap_text_draw_mode(1, NONE, 0, 0, 5, 0);
-		draw_string_set_color(global_real_argb_green);
-		draw_string_set_tab_stops(tab_stops, tab_stop_count);
-		rasterizer_draw_string(&bounds, NULL, &cursor, -4, bink_string);
-		bounds.y0 = cursor.y + 31;
-
-		if (bink_globals.debug_info.desired_frame_index - bink_globals.debug_info.previous_desired_frame_index >= 29)
-		{
-			BinkGetSummary(bink_globals.bink, &summary);
-			bink_globals.debug_info.display_skipped_frames = summary.SkippedFrames - bink_globals.debug_info.previous_skipped_frames;
-			bink_globals.debug_info.display_skipped_blits = summary.SkippedBlits - bink_globals.debug_info.previous_skipped_blits;
-			bink_globals.debug_info.display_frames = bink_globals.debug_info.desired_frame_index - bink_globals.debug_info.previous_desired_frame_index;
-			bink_globals.debug_info.previous_skipped_frames = summary.SkippedFrames;
-			bink_globals.debug_info.previous_skipped_blits = summary.SkippedBlits;
-			bink_globals.debug_info.previous_desired_frame_index = bink_globals.debug_info.desired_frame_index;
-		}
-		sprintf(bink_string, "SkippedFrames=|t%d (%d)|nSkippedBlits=|t%d|n",
-			bink_globals.debug_info.display_skipped_frames,
-			bink_globals.debug_info.display_frames,
-			bink_globals.debug_info.display_skipped_blits);
-		draw_string_set_color(global_real_argb_red);
-		rasterizer_draw_string(&bounds, NULL, &cursor, -4, bink_string);
-	}
-
-	return;
-}
-
-static boolean bink_query_analog_controller_buttons(
-	void)
-{
-	boolean button_down = FALSE;
-	short gamepad_index;
-
-	for (gamepad_index = 0; gamepad_index < MAXIMUM_GAMEPADS && !button_down; gamepad_index++)
-	{
-		struct gamepad_state const *state = input_get_gamepad_state(gamepad_index);
-
-		if (state)
-		{
-			if (state->buttons[_gamepad_binary_button_start] == 1)
-			{
-				button_down = TRUE;
-			}
-			else if (state->buttons[_gamepad_binary_button_back] == 1)
-			{
-				button_down = TRUE;
-			}
-			else
-			{
-				short button_index;
-
-				for (button_index = 0; button_index < NUMBER_OF_GAMEPAD_ANALOG_BUTTONS; button_index++)
-				{
-					if (state->buttons[button_index] == 1)
-					{
-						button_down = TRUE;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	return button_down;
-}
-
-void bink_playback_initialize(
-	void)
-{
-	memset(&bink_globals, 0, sizeof(bink_globals));
-	RADSetMemory(bink_alloc, bink_free);
-	bink_globals.initialized = TRUE;
-
-	return;
-}
-
-static void bink_free_texture_cache(
-	void)
-{
-	if (bink_globals.initialized && bink_globals.memory_pool_base)
-	{
-		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 665, is_all_bink_memory_free(), "we released the texture cache but we still had memory allocated");
-		texture_cache_return_memory();
-		bink_globals.memory_pool_base = NULL;
-		bink_globals.texture = NULL;
-		bink_globals.memory_pool_size = 0;
-	}
-
-	return;
-}
-
-static void bink_decompress_video_frame(
-	void)
-{
-	D3DLOCKED_RECT locked_rect;
-
-	BinkDoFrame(bink_globals.bink);
-	BinkNextFrame(bink_globals.bink);
-	rasterizer_globals.current_lock_operation = _rasterizer_lock_bink;
-	IDirect3DTexture8_LockRect(bink_globals.texture, 0, &locked_rect, NULL, 0);
-	BinkCopyToBuffer(bink_globals.bink, locked_rect.pBits, locked_rect.Pitch, bink_globals.bink->Height, 0, 0, bink_globals.surface_type | BINKCOPYALL);
-	IDirect3DTexture8_UnlockRect(bink_globals.texture, 0);
-	rasterizer_globals.current_lock_operation = _rasterizer_lock_none;
 
 	return;
 }
@@ -458,6 +146,29 @@ void bink_playback_dispose(
 	{
 		bink_playback_stop();
 		memset(&bink_globals, 0, sizeof(bink_globals));
+	}
+
+	return;
+}
+
+boolean bink_playback_active(
+	void)
+{
+	return bink_globals.bink && bink_globals.initialized;
+}
+
+boolean bink_playback_ui_rendering_inhibited(
+	void)
+{
+	return bink_globals.initialized && TEST_FLAG(bink_globals.playback_flags, _bink_playback_dont_render_ui_bit);
+}
+
+void bink_playback_update(
+	void)
+{
+	if (global_frame_rate_throttle)
+	{
+		bink_playback_update__internal();
 	}
 
 	return;
@@ -681,15 +392,304 @@ void bink_playback_start(
 	return;
 }
 
-void bink_playback_update(
+boolean bink_playback_in_progress(
 	void)
 {
-	if (global_frame_rate_throttle)
+	return bink_globals.bink != NULL;
+}
+
+void bink_playback_initialize(
+	void)
+{
+	memset(&bink_globals, 0, sizeof(bink_globals));
+	RADSetMemory(bink_alloc, bink_free);
+	bink_globals.initialized = TRUE;
+
+	return;
+}
+
+static void bink_free_texture_cache(
+	void)
+{
+	if (bink_globals.initialized && bink_globals.memory_pool_base)
 	{
-		bink_playback_update__internal();
+		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 665, is_all_bink_memory_free(), "we released the texture cache but we still had memory allocated");
+		texture_cache_return_memory();
+		bink_globals.memory_pool_base = NULL;
+		bink_globals.texture = NULL;
+		bink_globals.memory_pool_size = 0;
 	}
 
 	return;
+}
+
+static void *bink_alloc_permanent(
+	unsigned long size_in_bytes,
+	unsigned long alignment_in_bytes)
+{
+	char *pointer = (char *)bink_globals.memory_pool_base + bink_globals.memory_pool_size - size_in_bytes;
+
+	if (alignment_in_bytes && ((unsigned long)pointer & (alignment_in_bytes - 1)))
+	{
+		match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 691, alignment_in_bytes>0 && (alignment_in_bytes&(alignment_in_bytes-1))==0);
+		size_in_bytes += (alignment_in_bytes - (unsigned long)pointer) & (alignment_in_bytes - 1);
+		pointer -= (alignment_in_bytes - (unsigned long)pointer) & (alignment_in_bytes - 1);
+	}
+
+	match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 697, size_in_bytes>0);
+	match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 698, bink_globals.memory_pool_size>=size_in_bytes);
+	match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 699, bink_globals.memory_pool_base);
+	bink_globals.memory_pool_size -= size_in_bytes;
+
+	return pointer;
+}
+
+static boolean is_all_bink_memory_free(
+	void)
+{
+	boolean all_bink_memory_is_free = TRUE;
+	short pointer_index;
+
+	for (pointer_index = 0; pointer_index < bink_pointer_count; pointer_index++)
+	{
+		if (bink_pointer_list[pointer_index])
+		{
+			all_bink_memory_is_free = FALSE;
+		}
+	}
+
+	return all_bink_memory_is_free;
+}
+
+static void *RADLINK bink_alloc(
+	unsigned long size_in_bytes)
+{
+	void *pointer = NULL;
+	boolean fail_to_allocate;
+
+	bink_get_memory_available();
+
+	if (bink_pointer_count > 0 && !bink_pointer_list[0])
+	{
+		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 735, is_all_bink_memory_free(), "### FATAL_ERROR bink just confused the hell out of me (1)");
+		if (is_all_bink_memory_free())
+		{
+			bink_pointer_count = 0;
+			bink_globals.memory_pool_offset = 0;
+		}
+	}
+
+	fail_to_allocate = FALSE;
+	fail_to_allocate = fail_to_allocate || bink_globals.memory_pool_offset + size_in_bytes > (unsigned long)bink_globals.memory_pool_size;
+	fail_to_allocate = fail_to_allocate || bink_pointer_count >= MAXIMUM_BINK_POINTER_BLOCKS;
+	fail_to_allocate = fail_to_allocate || !bink_globals.memory_pool_base;
+	if (fail_to_allocate)
+	{
+		match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 759, !"bink memory allocation should not fail");
+		__asm int 3;
+	}
+	else
+	{
+		pointer = (char *)bink_globals.memory_pool_base + bink_globals.memory_pool_offset;
+		bink_globals.memory_pool_offset += size_in_bytes;
+		XPhysicalProtect(pointer, size_in_bytes, PAGE_READWRITE);
+		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 786, bink_globals.memory_pool_offset <= bink_globals.memory_pool_size,
+			csprintf(temporary, "### FATAL_ERROR bink needs more memory (requested %d bytes over the %d-byte limit)",
+				bink_globals.memory_pool_offset - bink_globals.memory_pool_size, bink_globals.memory_pool_size));
+		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 787, bink_pointer_count < MAXIMUM_BINK_POINTER_BLOCKS, "### FATAL_ERROR bink needs more pointer blocks");
+		bink_pointer_list[bink_pointer_count++] = pointer;
+
+		bink_get_memory_available();
+
+		{
+			long guard_bytes = 0x3000;
+
+			match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 799, bink_globals.memory_pool_offset < bink_globals.memory_pool_size);
+			bink_globals.memory_pool_offset += guard_bytes;
+			bink_globals.memory_pool_offset = MIN(bink_globals.memory_pool_offset, bink_globals.memory_pool_size);
+		}
+	}
+
+	return pointer;
+}
+
+static void RADLINK bink_free(
+	void *pointer)
+{
+	long pointer_index;
+
+	bink_get_memory_available();
+
+	for (pointer_index = 0; pointer_index < bink_pointer_count; pointer_index++)
+	{
+		if (bink_pointer_list[pointer_index] == pointer)
+		{
+			bink_pointer_list[pointer_index] = NULL;
+			break;
+		}
+	}
+	match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 825, pointer_index < bink_pointer_count, "### FATAL_ERROR bink just confused the hell out of me (2)");
+
+	bink_get_memory_available();
+
+	return;
+}
+
+static void bink_decompress_audio_frame(
+	void)
+{
+	return;
+}
+
+static void bink_decompress_video_frame(
+	void)
+{
+	D3DLOCKED_RECT locked_rect;
+
+	BinkDoFrame(bink_globals.bink);
+	BinkNextFrame(bink_globals.bink);
+	rasterizer_globals.current_lock_operation = _rasterizer_lock_bink;
+	IDirect3DTexture8_LockRect(bink_globals.texture, 0, &locked_rect, NULL, 0);
+	BinkCopyToBuffer(bink_globals.bink, locked_rect.pBits, locked_rect.Pitch, bink_globals.bink->Height, 0, 0, bink_globals.surface_type | BINKCOPYALL);
+	IDirect3DTexture8_UnlockRect(bink_globals.texture, 0);
+	rasterizer_globals.current_lock_operation = _rasterizer_lock_none;
+
+	return;
+}
+
+static void bink_draw_frame(
+	void)
+{
+	rectangle2d bounds;
+	struct dynamic_screen_vertex vertices[4];
+	short vertex_index;
+
+	if (TEST_FLAG(bink_globals.playback_flags, _bink_playback_full_screen_bit))
+	{
+		bounds = rasterizer_globals.screen_bounds;
+	}
+	else
+	{
+		short buffer_width = rasterizer_globals.screen_bounds.x1 - rasterizer_globals.screen_bounds.x0;
+		short buffer_height = rasterizer_globals.screen_bounds.y1 - rasterizer_globals.screen_bounds.y0;
+
+		bounds.x0 = (buffer_width - bink_globals.bink_frame_width) / 2;
+		bounds.x1 = (buffer_width + bink_globals.bink_frame_width) / 2;
+		bounds.y0 = (buffer_height - bink_globals.bink_frame_height) / 2;
+		bounds.y1 = (buffer_height + bink_globals.bink_frame_height) / 2;
+	}
+
+	for (vertex_index = 0; vertex_index < 4; vertex_index++)
+	{
+		real u = ((vertex_index + 1) & 2) ? (real)bink_globals.bink_frame_width : 0.0f;
+		real v = vertex_index > 1 ? (real)bink_globals.bink_frame_height : 0.0f;
+		real x = ((vertex_index + 1) & 2) ? (real)bounds.x1 : (real)bounds.x0;
+		real y = vertex_index > 1 ? (real)bounds.y1 : (real)bounds.y0;
+
+		vertices[vertex_index].position.x = x;
+		vertices[vertex_index].position.y = y;
+		vertices[vertex_index].texcoord.x = u;
+		vertices[vertex_index].texcoord.y = v;
+		vertices[vertex_index].color = PIXEL32_FROM_ARGB(255, 255, 255, 255);
+	}
+	rasterizer_psuedo_dynamic_screen_quad_draw(&bink_globals.screen_geometry_parameters, vertices);
+
+	if (debug_bink)
+	{
+		char bink_string[4096];
+		BINKSUMMARY summary;
+		BINKREALTIME lies;
+		rectangle2d bounds;
+		short tab_stops[6];
+		short tab_stop_count = 1;
+		point2d cursor;
+		real scale = 1.0f;
+
+		tab_stops[0] = 250;
+		tab_stops[1] = 0;
+		tab_stops[2] = 0;
+		tab_stops[3] = 0;
+		tab_stops[4] = 0;
+		tab_stops[5] = 0;
+		cursor.x = 0;
+		cursor.y = 0;
+		BinkGetRealtime(bink_globals.bink, &lies, 0);
+		scale = 1.0f / lies.Frames;
+		sprintf(bink_string, "FramesTime=|t%.02f|nFrameVideoDecompTime=|t%.02f|nFrameAudioDecompTime=|t%.02f|nFrameReadTime=|t%.02f|nFrameIdleReadTime=|t%.02f|nFrameThreadReadTime=|t%.02f|nFramesBlitTime=|t%.02f|n|nFrames=|t%d",
+			lies.FramesTime * scale,
+			lies.FramesVideoDecompTime * scale,
+			lies.FramesAudioDecompTime * scale,
+			lies.FramesReadTime * scale,
+			lies.FramesIdleReadTime * scale,
+			lies.FramesThreadReadTime * scale,
+			lies.FramesBlitTime * scale,
+			lies.Frames);
+		bounds = rasterizer_globals.frame_bounds;
+		offset_rectangle2d(&bounds, 0, 32);
+		interface_set_bitmap_text_draw_mode(1, NONE, 0, 0, 5, 0);
+		draw_string_set_color(global_real_argb_green);
+		draw_string_set_tab_stops(tab_stops, tab_stop_count);
+		rasterizer_draw_string(&bounds, NULL, &cursor, -4, bink_string);
+		bounds.y0 = cursor.y + 31;
+
+		if (bink_globals.debug_info.desired_frame_index - bink_globals.debug_info.previous_desired_frame_index >= 29)
+		{
+			BinkGetSummary(bink_globals.bink, &summary);
+			bink_globals.debug_info.display_skipped_frames = summary.SkippedFrames - bink_globals.debug_info.previous_skipped_frames;
+			bink_globals.debug_info.display_skipped_blits = summary.SkippedBlits - bink_globals.debug_info.previous_skipped_blits;
+			bink_globals.debug_info.display_frames = bink_globals.debug_info.desired_frame_index - bink_globals.debug_info.previous_desired_frame_index;
+			bink_globals.debug_info.previous_skipped_frames = summary.SkippedFrames;
+			bink_globals.debug_info.previous_skipped_blits = summary.SkippedBlits;
+			bink_globals.debug_info.previous_desired_frame_index = bink_globals.debug_info.desired_frame_index;
+		}
+		sprintf(bink_string, "SkippedFrames=|t%d (%d)|nSkippedBlits=|t%d|n",
+			bink_globals.debug_info.display_skipped_frames,
+			bink_globals.debug_info.display_frames,
+			bink_globals.debug_info.display_skipped_blits);
+		draw_string_set_color(global_real_argb_red);
+		rasterizer_draw_string(&bounds, NULL, &cursor, -4, bink_string);
+	}
+
+	return;
+}
+
+static boolean bink_query_analog_controller_buttons(
+	void)
+{
+	boolean button_down = FALSE;
+	short gamepad_index;
+
+	for (gamepad_index = 0; gamepad_index < MAXIMUM_GAMEPADS && !button_down; gamepad_index++)
+	{
+		struct gamepad_state const *state = input_get_gamepad_state(gamepad_index);
+
+		if (state)
+		{
+			if (state->buttons[_gamepad_binary_button_start] == 1)
+			{
+				button_down = TRUE;
+			}
+			else if (state->buttons[_gamepad_binary_button_back] == 1)
+			{
+				button_down = TRUE;
+			}
+			else
+			{
+				short button_index;
+
+				for (button_index = 0; button_index < NUMBER_OF_GAMEPAD_ANALOG_BUTTONS; button_index++)
+				{
+					if (state->buttons[button_index] == 1)
+					{
+						button_down = TRUE;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return button_down;
 }
 
 /* ---------- private code */
