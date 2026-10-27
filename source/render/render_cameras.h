@@ -121,18 +121,31 @@ struct render_mirror
 
 /* ---------- prototypes/RENDER_CAMERAS.C */
 
-real render_camera_get_adjusted_field_of_view_tangent(real field_of_view);
-
+void render_camera_new(struct render_camera *camera);
+void render_camera_mirror(struct render_camera const *camera, struct render_mirror const *mirror, struct render_camera *result);
+void render_camera_hack_frustum_z(struct render_frustum *frustum, real z_near, real z_far);
+void render_camera_build_frustum_bounds(struct render_camera const *camera, real_rectangle2d *frustum_bounds);
 boolean render_camera_build_clipped_frustum_bounds(struct render_camera const *camera, real_rectangle2d const *clip, real_rectangle2d *frustum_bounds);
+void render_camera_build_frustum(struct render_camera const *camera, real_rectangle2d const *frustum_bounds, struct render_frustum *frustum, boolean build_projection);
+boolean render_camera_triangle_frontfacing(struct render_camera const *camera, real_point3d const *p0, real_point3d const *p1, real_point3d const *p2);
+short render_frustum_build_point_flags(struct render_frustum const *frustum, real_point3d const *point);
 boolean render_frustum_triangle_visible(struct render_frustum const *frustum, real_point3d const *p0, real_point3d const *p1, real_point3d const *p2);
 short render_frustum_cube_visible(struct render_frustum const *frustum, real_rectangle3d const *bounds, boolean test_frustum_against_cube);
 short render_frustum_sphere_visible(struct render_frustum const *frustum, real_point3d const *point, real radius);
+real render_frustum_sphere_diameter_in_pixels(struct render_frustum const *frustum, real_point3d const *point, real radius);
+real render_frustum_cube_view_fraction(struct render_frustum const *frustum, real_rectangle3d const *bounds);
+void render_frustum_get_projection_bounds(struct render_frustum const *frustum, real_rectangle2d *bounds);
+boolean render_camera_world_to_screen(struct render_camera const *camera, struct render_frustum const *frustum, real_point3d const *world_point, real_point2d *screen_point);
 boolean render_camera_view_to_screen(struct render_camera const *camera, struct render_frustum const *frustum, real_point3d const *view_point, real_point2d *screen_point);
-void render_camera_build_frustum(const struct render_camera *camera, const real_rectangle2d *frustum_bounds, struct render_frustum *frustum, boolean build_projection);
-void render_frustum_get_projection_bounds(struct render_frustum const *frustum, real_rectangle2d *projection_bounds);
-short render_frustum_cube_visible(struct render_frustum const *frustum, real_rectangle3d const *bounds, boolean test_frustum_against_cube);
+void render_camera_screen_to_view(struct render_camera const *camera, struct render_frustum const *frustum, real_point2d const *screen_point, real_vector3d *view_vector);
+void render_camera_screen_to_world(struct render_camera const *camera, struct render_frustum const *frustum, real_point2d const *screen_point, real_point3d *world_point, real_vector3d *world_vector);
+real render_camera_get_adjusted_field_of_view_tangent(real field_of_view);
+void render_camera_debug_frustum(struct render_camera const *camera, struct render_frustum const *frustum);
 
 /* ---------- globals */
+
+extern boolean debug_no_frustum_clip;
+extern boolean render_camera_debug_this_fucking_frustum;
 
 /* ---------- public code */
 

@@ -23,6 +23,8 @@ short first_person_weapon_get_marker_by_name_render(long weapon_index, char cons
 real_matrix4x3 *first_person_weapon_get_node_matrix(short local_player_index, short node_index);
 short first_person_weapon_get_local_index(long object_index);
 short first_person_weapon_get_marker_by_name(long weapon_index, char const *name, struct object_marker *markers, short maximum_marker_count);
+void first_person_weapon_render_update(void);
+void first_person_weapon_draw(void);
 
 /* ---------- globals */
 

@@ -24,6 +24,9 @@ boolean hs_compile_and_evaluate(const char *expression);
 
 short hs_tokens_enumerate(char const *substring, long type_flags, char const **results, short maximum_count);
 
+void render_debug_scripting(void);
+void render_debug_trigger_volumes(void);
+
 /* ---------- globals */
 
 /* ---------- public code */

@@ -180,6 +180,8 @@ void players_reconnect_to_structure_bsp(void);
 
 void player_input_enable(boolean enable);
 
+void players_debug_render(void);
+
 /* ---------- prototypes/PLAYER_RUMBLE.C */
 
 void rumble_player_clear(short local_player_index);

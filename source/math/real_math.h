@@ -727,8 +727,11 @@ __inline real_vector2d *rotate_vector2d(
 	real cosine,
 	real_vector2d *result)
 {
-	result->i = cosine*v->i - sine*v->j;
-	result->j = sine*v->i + cosine*v->j;
+	real i = cosine*v->i - sine*v->j;
+	real j = sine*v->i + cosine*v->j;
+
+	result->i = i;
+	result->j = j;
 	return result;
 }
 
@@ -1250,7 +1253,7 @@ __inline real plane3d_distance_to_point(
 	real_plane3d const *plane,
 	real_point3d const *point)
 {
-	return dot_product3d(&plane->n, (real_vector3d const *)point) - plane->d;
+	return dot_product3d((real_vector3d const *)point, &plane->n) - plane->d;
 }
 
 __inline real vector_intersect_plane3d(
