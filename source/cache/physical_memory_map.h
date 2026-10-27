@@ -15,6 +15,7 @@ header included in hcex build.
 
 enum
 {
+	CPU_PAGE_SIZE = 0x1000,
 	TAG_CACHE_SIZE = 0x1600000, /* fake name */
 };
 

@@ -36,7 +36,7 @@ void bink_playback_initialize(void);
 void bink_playback_stop(void);
 void bink_playback_dispose(void);
 void bink_playback_render(void);
-void bink_playback_start(const char *full_pathname, unsigned long flags);
+void bink_playback_start(char const *full_pathname, unsigned long flags);
 void bink_playback_update(void);
 
 /* ---------- globals */

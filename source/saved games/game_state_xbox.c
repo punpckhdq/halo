@@ -22,7 +22,6 @@ GAME_STATE_XBOX.C
 
 enum
 {
-	CPU_PAGE_SIZE = 0x1000,
 	GAME_STATE_SIZE = 0x345000,			/* fake name */
 	GAME_STATE_FILE_SIZE = 0x380000,	/* fake name */
 };

@@ -22,6 +22,7 @@ BINK_PLAYBACK.C
 #include "ui_widget.h"
 #include "main.h"
 #include "sound_dsound.h"
+#include "physical_memory_map.h"
 
 /* ---------- constants */
 
@@ -31,41 +32,37 @@ enum
 	BINK_MEMORY_POOL_SIZE = 0x400000, /* fake name */
 	BINK_MEMORY_POOL_EXTRA_SIZE = 0xC00000, /* fake name */
 	BINK_IO_BUFFER_SIZE = 0xC00000, /* fake name */
-	BINK_MEMORY_GUARD_SIZE = 0x3000, /* fake name */
 	BINK_FRAME_BUFFER_ALIGNMENT = 128, /* fake name */
-	CPU_PAGE_SIZE = 4096,
 };
 
 /* ---------- macros */
 
 /* ---------- structures */
 
-struct bink_debug_info /* fake name, from halo 3 */
-{
-	long previous_skipped_frames;
-	long previous_skipped_blits;
-	long previous_desired_frame_index;
-	long desired_frame_index;
-	long display_skipped_frames;
-	long display_skipped_blits;
-	long display_frames;
-};
-
-struct bink_globals_definition /* fake name */
+struct _bink_globals
 {
 	boolean initialized;
 	boolean time_to_decompress_next_frame;
 	unsigned long playback_flags;
 	HBINK bink;
-	short width;
-	short height;
-	boolean unknown10;
-	long unknown14;
-	long surface_type;
-	long bytes_per_pixel;
-	IDirect3DTexture8 *texture;
-	struct bink_debug_info debug_info;
-	struct rasterizer_dynamic_screen_geometry_parameters screen_geometry_parameters;
+	short bink_frame_width;
+	short bink_frame_height;
+	boolean has_alpha; /* fake name */
+	long surface_type_index; /* fake name */
+	long surface_type; /* fake name */
+	long bytes_per_pixel; /* fake name */
+	IDirect3DTexture8 *texture; /* fake name */
+	struct _debug_info
+	{
+		long previous_skipped_frames;
+		long previous_skipped_blits;
+		long previous_desired_frame_index;
+		long desired_frame_index;
+		long display_skipped_frames;
+		long display_skipped_blits;
+		long display_frames;
+	} debug_info;
+	struct rasterizer_dynamic_screen_geometry_parameters screen_geometry_parameters; /* fake name */
 	void *memory_pool_base;
 	long memory_pool_offset;
 	long memory_pool_size;
@@ -73,7 +70,7 @@ struct bink_globals_definition /* fake name */
 
 /* ---------- prototypes */
 
-static void bink_get_memory_available(); /* K&R style: some callers pass a string, which blocks inlining */
+static void bink_get_memory_available();
 static void *bink_alloc_permanent(unsigned long size_in_bytes, unsigned long alignment_in_bytes);
 static boolean is_all_bink_memory_free(void);
 static void *RADLINK bink_alloc(unsigned long size_in_bytes);
@@ -90,12 +87,12 @@ static void bink_playback_update__internal(void);
 static long bink_memory_available = NONE; /* fake name */
 static boolean bink_saved_frame_rate_throttle = TRUE; /* fake name */
 
-static void *bink_pointer_list[MAXIMUM_BINK_POINTER_BLOCKS];
-static struct bitmap_data bink_bitmap; /* fake name */
-static IDirect3DBaseTexture8 bink_texture; /* fake name */
-boolean debug_bink;
-struct bink_globals_definition bink_globals;
-static long bink_pointer_count;
+static void *bink_pointer_list[MAXIMUM_BINK_POINTER_BLOCKS] = {0};
+static struct bitmap_data bink_bitmap = {0}; /* fake name */
+static IDirect3DBaseTexture8 bink_texture = {0}; /* fake name */
+boolean debug_bink = FALSE;
+struct _bink_globals bink_globals = {0};
+static long bink_pointer_count = 0;
 
 /* ---------- public code */
 
@@ -171,7 +168,7 @@ static void *RADLINK bink_alloc(
 	unsigned long size_in_bytes)
 {
 	void *pointer = NULL;
-	boolean allocation_failed;
+	boolean fail_to_allocate;
 
 	bink_get_memory_available();
 
@@ -185,10 +182,11 @@ static void *RADLINK bink_alloc(
 		}
 	}
 
-	allocation_failed = bink_globals.memory_pool_offset + size_in_bytes > (unsigned long)bink_globals.memory_pool_size ||
-		bink_pointer_count >= MAXIMUM_BINK_POINTER_BLOCKS ||
-		!bink_globals.memory_pool_base;
-	if (allocation_failed)
+	fail_to_allocate = FALSE;
+	fail_to_allocate = fail_to_allocate || bink_globals.memory_pool_offset + size_in_bytes > (unsigned long)bink_globals.memory_pool_size;
+	fail_to_allocate = fail_to_allocate || bink_pointer_count >= MAXIMUM_BINK_POINTER_BLOCKS;
+	fail_to_allocate = fail_to_allocate || !bink_globals.memory_pool_base;
+	if (fail_to_allocate)
 	{
 		match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 759, !"bink memory allocation should not fail");
 		__asm int 3;
@@ -206,11 +204,12 @@ static void *RADLINK bink_alloc(
 
 		bink_get_memory_available();
 
-		match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 799, bink_globals.memory_pool_offset < bink_globals.memory_pool_size);
-		bink_globals.memory_pool_offset += BINK_MEMORY_GUARD_SIZE;
-		if (bink_globals.memory_pool_offset > bink_globals.memory_pool_size)
 		{
-			bink_globals.memory_pool_offset = bink_globals.memory_pool_size;
+			long guard_bytes = 0x3000;
+
+			match_assert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 799, bink_globals.memory_pool_offset < bink_globals.memory_pool_size);
+			bink_globals.memory_pool_offset += guard_bytes;
+			bink_globals.memory_pool_offset = MIN(bink_globals.memory_pool_offset, bink_globals.memory_pool_size);
 		}
 	}
 
@@ -258,19 +257,19 @@ static void bink_draw_frame(
 	}
 	else
 	{
-		short screen_width = rasterizer_globals.screen_bounds.x1 - rasterizer_globals.screen_bounds.x0;
-		short screen_height = rasterizer_globals.screen_bounds.y1 - rasterizer_globals.screen_bounds.y0;
+		short buffer_width = rasterizer_globals.screen_bounds.x1 - rasterizer_globals.screen_bounds.x0;
+		short buffer_height = rasterizer_globals.screen_bounds.y1 - rasterizer_globals.screen_bounds.y0;
 
-		bounds.x0 = (screen_width - bink_globals.width) / 2;
-		bounds.x1 = (screen_width + bink_globals.width) / 2;
-		bounds.y0 = (screen_height - bink_globals.height) / 2;
-		bounds.y1 = (screen_height + bink_globals.height) / 2;
+		bounds.x0 = (buffer_width - bink_globals.bink_frame_width) / 2;
+		bounds.x1 = (buffer_width + bink_globals.bink_frame_width) / 2;
+		bounds.y0 = (buffer_height - bink_globals.bink_frame_height) / 2;
+		bounds.y1 = (buffer_height + bink_globals.bink_frame_height) / 2;
 	}
 
 	for (vertex_index = 0; vertex_index < 4; vertex_index++)
 	{
-		real u = ((vertex_index + 1) & 2) ? (real)bink_globals.width : 0.0f;
-		real v = vertex_index > 1 ? (real)bink_globals.height : 0.0f;
+		real u = ((vertex_index + 1) & 2) ? (real)bink_globals.bink_frame_width : 0.0f;
+		real v = vertex_index > 1 ? (real)bink_globals.bink_frame_height : 0.0f;
 		real x = ((vertex_index + 1) & 2) ? (real)bounds.x1 : (real)bounds.x0;
 		real y = vertex_index > 1 ? (real)bounds.y1 : (real)bounds.y0;
 
@@ -284,13 +283,14 @@ static void bink_draw_frame(
 
 	if (debug_bink)
 	{
-		char string[4096];
+		char bink_string[4096];
 		BINKSUMMARY summary;
-		BINKREALTIME realtime;
+		BINKREALTIME lies;
 		rectangle2d bounds;
 		short tab_stops[6];
+		short tab_stop_count = 1;
 		point2d cursor;
-		real one_over_frames;
+		real scale = 1.0f;
 
 		tab_stops[0] = 250;
 		tab_stops[1] = 0;
@@ -300,23 +300,23 @@ static void bink_draw_frame(
 		tab_stops[5] = 0;
 		cursor.x = 0;
 		cursor.y = 0;
-		BinkGetRealtime(bink_globals.bink, &realtime, 0);
-		one_over_frames = 1.0f / realtime.Frames;
-		sprintf(string, "FramesTime=|t%.02f|nFrameVideoDecompTime=|t%.02f|nFrameAudioDecompTime=|t%.02f|nFrameReadTime=|t%.02f|nFrameIdleReadTime=|t%.02f|nFrameThreadReadTime=|t%.02f|nFramesBlitTime=|t%.02f|n|nFrames=|t%d",
-			realtime.FramesTime * one_over_frames,
-			realtime.FramesVideoDecompTime * one_over_frames,
-			realtime.FramesAudioDecompTime * one_over_frames,
-			realtime.FramesReadTime * one_over_frames,
-			realtime.FramesIdleReadTime * one_over_frames,
-			realtime.FramesThreadReadTime * one_over_frames,
-			realtime.FramesBlitTime * one_over_frames,
-			realtime.Frames);
+		BinkGetRealtime(bink_globals.bink, &lies, 0);
+		scale = 1.0f / lies.Frames;
+		sprintf(bink_string, "FramesTime=|t%.02f|nFrameVideoDecompTime=|t%.02f|nFrameAudioDecompTime=|t%.02f|nFrameReadTime=|t%.02f|nFrameIdleReadTime=|t%.02f|nFrameThreadReadTime=|t%.02f|nFramesBlitTime=|t%.02f|n|nFrames=|t%d",
+			lies.FramesTime * scale,
+			lies.FramesVideoDecompTime * scale,
+			lies.FramesAudioDecompTime * scale,
+			lies.FramesReadTime * scale,
+			lies.FramesIdleReadTime * scale,
+			lies.FramesThreadReadTime * scale,
+			lies.FramesBlitTime * scale,
+			lies.Frames);
 		bounds = rasterizer_globals.frame_bounds;
 		offset_rectangle2d(&bounds, 0, 32);
 		interface_set_bitmap_text_draw_mode(1, NONE, 0, 0, 5, 0);
 		draw_string_set_color(global_real_argb_green);
-		draw_string_set_tab_stops(tab_stops, 1);
-		rasterizer_draw_string(&bounds, NULL, &cursor, -4, string);
+		draw_string_set_tab_stops(tab_stops, tab_stop_count);
+		rasterizer_draw_string(&bounds, NULL, &cursor, -4, bink_string);
 		bounds.y0 = cursor.y + 31;
 
 		if (bink_globals.debug_info.desired_frame_index - bink_globals.debug_info.previous_desired_frame_index >= 29)
@@ -329,12 +329,12 @@ static void bink_draw_frame(
 			bink_globals.debug_info.previous_skipped_blits = summary.SkippedBlits;
 			bink_globals.debug_info.previous_desired_frame_index = bink_globals.debug_info.desired_frame_index;
 		}
-		sprintf(string, "SkippedFrames=|t%d (%d)|nSkippedBlits=|t%d|n",
+		sprintf(bink_string, "SkippedFrames=|t%d (%d)|nSkippedBlits=|t%d|n",
 			bink_globals.debug_info.display_skipped_frames,
 			bink_globals.debug_info.display_frames,
 			bink_globals.debug_info.display_skipped_blits);
 		draw_string_set_color(global_real_argb_red);
-		rasterizer_draw_string(&bounds, NULL, &cursor, -4, string);
+		rasterizer_draw_string(&bounds, NULL, &cursor, -4, bink_string);
 	}
 
 	return;
@@ -352,11 +352,18 @@ static boolean bink_query_analog_controller_buttons(
 
 		if (state)
 		{
-			short button_index;
-
-			button_down = state->buttons[_gamepad_binary_button_start] == 1 || state->buttons[_gamepad_binary_button_back] == 1;
-			if (!button_down)
+			if (state->buttons[_gamepad_binary_button_start] == 1)
 			{
+				button_down = TRUE;
+			}
+			else if (state->buttons[_gamepad_binary_button_back] == 1)
+			{
+				button_down = TRUE;
+			}
+			else
+			{
+				short button_index;
+
 				for (button_index = 0; button_index < NUMBER_OF_GAMEPAD_ANALOG_BUTTONS; button_index++)
 				{
 					if (state->buttons[button_index] == 1)
@@ -459,10 +466,10 @@ void bink_playback_dispose(
 static void bink_playback_update__internal(
 	void)
 {
-	boolean stop_playback = FALSE;
-
 	if (bink_globals.initialized && bink_globals.bink)
 	{
+		boolean stop_playback;
+
 		if (global_frame_rate_throttle)
 		{
 			bink_globals.time_to_decompress_next_frame = !BinkWait(bink_globals.bink);
@@ -473,6 +480,7 @@ static void bink_playback_update__internal(
 			bink_globals.time_to_decompress_next_frame = TRUE;
 		}
 
+		stop_playback = FALSE;
 		if (TEST_FLAG(bink_globals.playback_flags, _bink_playback_button_click_stops_movie_bit))
 		{
 			boolean skipping_allowed = TEST_FLAG(bink_globals.playback_flags, _bink_playback_dont_allow_skipping_if_filesystem_check_thread_is_active_bit) ?
@@ -485,14 +493,9 @@ static void bink_playback_update__internal(
 			}
 		}
 
-		if (!stop_playback &&
-			(!bink_globals.bink || bink_globals.bink->FrameNum == bink_globals.bink->Frames - 1) &&
-			!TEST_FLAG(bink_globals.playback_flags, _bink_playback_loop_bit))
-		{
-			stop_playback = TRUE;
-		}
-
-		if (stop_playback)
+		if (stop_playback ||
+			((!bink_globals.bink || bink_globals.bink->FrameNum == bink_globals.bink->Frames - 1) &&
+			!TEST_FLAG(bink_globals.playback_flags, _bink_playback_loop_bit)))
 		{
 			bink_playback_stop();
 		}
@@ -531,9 +534,13 @@ void bink_playback_render(
 }
 
 void bink_playback_start(
-	const char *full_pathname,
+	char const *full_pathname,
 	unsigned long flags)
 {
+	long surface_types[] = {BINKSURFACE32, BINKSURFACE32A, BINKSURFACE555, BINKSURFACE565, BINKSURFACE5551, BINKSURFACE4444};
+	unsigned long surface_pixel_sizes[] = {4, 0x80000004, 2, 2, 0x80000002, 0x80000002};
+	long bitmap_formats[] = {_bitmap_format_x8r8g8b8, _bitmap_format_a8r8g8b8, NONE, _bitmap_format_r5g6b5, _bitmap_format_a1r5g5b5, _bitmap_format_a4r4g4b4};
+
 	bink_get_memory_available();
 
 	if (bink_globals.initialized && !cache_files_precache_in_progress())
@@ -581,39 +588,39 @@ void bink_playback_start(
 
 			if (bink_globals.bink)
 			{
-				long frame_buffer_size = (bink_globals.bink->Width * bink_globals.bink->Height * 4 + (CPU_PAGE_SIZE - 1)) & ~(CPU_PAGE_SIZE - 1);
-				char *frame_buffer = bink_alloc_permanent(frame_buffer_size, BINK_FRAME_BUFFER_ALIGNMENT);
+				long frame_memory_size = (bink_globals.bink->Width * bink_globals.bink->Height * 4 + (CPU_PAGE_SIZE - 1)) & ~(CPU_PAGE_SIZE - 1);
+				char *frame_memory = bink_alloc_permanent(frame_memory_size, BINK_FRAME_BUFFER_ALIGNMENT);
 				long byte_index;
 
 				bink_get_memory_available("begin XPhysicalProtect");
-				XPhysicalProtect(frame_buffer, frame_buffer_size, PAGE_READWRITE | PAGE_WRITECOMBINE);
+				XPhysicalProtect(frame_memory, frame_memory_size, PAGE_READWRITE | PAGE_WRITECOMBINE);
 				bink_get_memory_available("end XPhysicalProtect");
 
-				for (byte_index = 0; byte_index < frame_buffer_size; byte_index++)
+				for (byte_index = 0; byte_index < frame_memory_size; byte_index++)
 				{
-					frame_buffer[byte_index] = rand() >> 8;
+					frame_memory[byte_index] = rand() >> 8;
 				}
 
-				bink_globals.width = (short)bink_globals.bink->Width;
-				bink_globals.height = (short)bink_globals.bink->Height;
-				bink_globals.unknown14 = 0;
-				bink_globals.surface_type = BINKSURFACE32;
-				bink_globals.bytes_per_pixel = 4;
-				bink_globals.unknown10 = FALSE;
+				bink_globals.bink_frame_width = (short)bink_globals.bink->Width;
+				bink_globals.bink_frame_height = (short)bink_globals.bink->Height;
+				bink_globals.surface_type_index = 0;
+				bink_globals.surface_type = surface_types[0];
+				bink_globals.bytes_per_pixel = surface_pixel_sizes[0] & 0xFF;
+				bink_globals.has_alpha = (surface_pixel_sizes[0] & 0x80000000) != 0;
 				bink_globals.texture = (IDirect3DTexture8 *)&bink_texture;
 
 				bink_texture.Common = D3DCOMMON_TYPE_TEXTURE | 1;
 				bink_texture.Data = 0;
 				bink_texture.Lock = 0;
-				bink_texture.Size = ((((unsigned long)(bink_globals.width * bink_globals.bytes_per_pixel) / D3DTEXTURE_PITCH_ALIGNMENT - 1) << D3DSIZE_PITCH_SHIFT) |
-					((bink_globals.height - 1) << D3DSIZE_HEIGHT_SHIFT) |
-					(bink_globals.width - 1));
+				bink_texture.Size = ((((unsigned long)(bink_globals.bink_frame_width * bink_globals.bytes_per_pixel) / D3DTEXTURE_PITCH_ALIGNMENT - 1) << D3DSIZE_PITCH_SHIFT) |
+					((bink_globals.bink_frame_height - 1) << D3DSIZE_HEIGHT_SHIFT) |
+					(bink_globals.bink_frame_width - 1));
 				bink_texture.Format = (D3DFMT_LIN_X8R8G8B8 << D3DFORMAT_FORMAT_SHIFT) |
 					(1 << D3DFORMAT_MIPMAP_SHIFT) |
 					(2 << D3DFORMAT_DIMENSION_SHIFT) |
 					D3DFORMAT_BORDERSOURCE_COLOR |
 					D3DFORMAT_DMACHANNEL_A;
-				IDirect3DBaseTexture8_Register(&bink_texture, frame_buffer);
+				IDirect3DBaseTexture8_Register(&bink_texture, frame_memory);
 
 				memset(&bink_globals.screen_geometry_parameters, 0, sizeof(bink_globals.screen_geometry_parameters));
 				bink_globals.screen_geometry_parameters.map_texture_scale[0].i = 1.0f;
@@ -625,11 +632,11 @@ void bink_playback_start(
 				bink_globals.screen_geometry_parameters.framebuffer_blend_function = _shader_framebuffer_blend_function_alpha_multiply_add;
 
 				bink_bitmap.signature = BITMAP_SIGNATURE;
-				bink_bitmap.width = bink_globals.width;
-				bink_bitmap.height = bink_globals.height;
+				bink_bitmap.width = bink_globals.bink_frame_width;
+				bink_bitmap.height = bink_globals.bink_frame_height;
 				bink_bitmap.depth = 1;
 				bink_bitmap.type = _bitmap_type_2d;
-				bink_bitmap.format = _bitmap_format_x8r8g8b8;
+				bink_bitmap.format = bitmap_formats[0];
 				bink_bitmap.flags = FLAG(_bitmap_linear_bit);
 				bink_bitmap.pixels_size = bink_bitmap.width * bink_bitmap.height * bitmap_format_get_bits_per_pixel(bink_bitmap.format) / 8;
 				bink_bitmap.tag_index = NONE;

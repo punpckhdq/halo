@@ -398,7 +398,7 @@
 				{ "name": "source/sound/sound_import/sound_wave.c", "index": 18, "status": "Matching" },
 				{ "name": "source/sound/sound_import/sound_import.c", "index": 19, "status": "Matching" },
 				{ "name": "source/sound/sound_import/sound_aiff.c", "index": 20, "status": "Matching" },
-				{ "name": "source/bink/bink_playback.c", "index": 21, "status": "NonMatching" },
+				{ "name": "source/bink/bink_playback.c", "index": 21, "status": "Matching" },
 				{ "name": "source/saved films/saved_films.c", "index": 22, "status": "Matching" },
 				{ "name": "source/saved games/saved_game_files.c", "index": 23, "status": "Matching" },
 				{ "name": "source/saved games/playlist_profile.c", "index": 24, "status": "Matching" },
