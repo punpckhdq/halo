@@ -8,10 +8,12 @@ BINK_PLAYBACK.C
 #include "bink_playback.h"
 #include "bink.h"
 #include "bitmaps.h"
+#include "bitmap_macros.h"
 #include "cache_files.h"
 #include "texture_cache.h"
 #include "render.h"
 #include "rasterizer.h"
+#include "shader_definitions.h"
 #include "draw_string.h"
 #include "input.h"
 #include "interface.h"
@@ -101,7 +103,7 @@ static void bink_get_memory_available()
 {
 	MEMORYSTATUS status;
 
-	csmemset(&status, 0, sizeof(status));
+	memset(&status, 0, sizeof(status));
 	status.dwLength = sizeof(status);
 	GlobalMemoryStatus(&status);
 	bink_memory_available = status.dwAvailPhys >> 10;
@@ -276,7 +278,7 @@ static void bink_draw_frame(
 		vertices[vertex_index].position.y = y;
 		vertices[vertex_index].texcoord.x = u;
 		vertices[vertex_index].texcoord.y = v;
-		vertices[vertex_index].color = 0xFFFFFFFF;
+		vertices[vertex_index].color = PIXEL32_FROM_ARGB(255, 255, 255, 255);
 	}
 	rasterizer_psuedo_dynamic_screen_quad_draw(&bink_globals.screen_geometry_parameters, vertices);
 
@@ -373,7 +375,7 @@ static boolean bink_query_analog_controller_buttons(
 void bink_playback_initialize(
 	void)
 {
-	csmemset(&bink_globals, 0, sizeof(bink_globals));
+	memset(&bink_globals, 0, sizeof(bink_globals));
 	RADSetMemory(bink_alloc, bink_free);
 	bink_globals.initialized = TRUE;
 
@@ -448,7 +450,7 @@ void bink_playback_dispose(
 	if (bink_globals.initialized)
 	{
 		bink_playback_stop();
-		csmemset(&bink_globals, 0, sizeof(bink_globals));
+		memset(&bink_globals, 0, sizeof(bink_globals));
 	}
 
 	return;
@@ -603,7 +605,7 @@ void bink_playback_start(
 				bink_texture.Common = D3DCOMMON_TYPE_TEXTURE | 1;
 				bink_texture.Data = 0;
 				bink_texture.Lock = 0;
-				bink_texture.Size = ((((unsigned long)(bink_globals.width * 4) / D3DTEXTURE_PITCH_ALIGNMENT - 1) << D3DSIZE_PITCH_SHIFT) |
+				bink_texture.Size = ((((unsigned long)(bink_globals.width * bink_globals.bytes_per_pixel) / D3DTEXTURE_PITCH_ALIGNMENT - 1) << D3DSIZE_PITCH_SHIFT) |
 					((bink_globals.height - 1) << D3DSIZE_HEIGHT_SHIFT) |
 					(bink_globals.width - 1));
 				bink_texture.Format = (D3DFMT_LIN_X8R8G8B8 << D3DFORMAT_FORMAT_SHIFT) |
@@ -613,16 +615,16 @@ void bink_playback_start(
 					D3DFORMAT_DMACHANNEL_A;
 				IDirect3DBaseTexture8_Register(&bink_texture, frame_buffer);
 
-				csmemset(&bink_globals.screen_geometry_parameters, 0, sizeof(bink_globals.screen_geometry_parameters));
+				memset(&bink_globals.screen_geometry_parameters, 0, sizeof(bink_globals.screen_geometry_parameters));
 				bink_globals.screen_geometry_parameters.map_texture_scale[0].i = 1.0f;
 				bink_globals.screen_geometry_parameters.map_texture_scale[0].j = 1.0f;
 				bink_globals.screen_geometry_parameters.map_scale[0].i = 1.0f;
 				bink_globals.screen_geometry_parameters.map_scale[0].j = 1.0f;
 				bink_globals.screen_geometry_parameters.meter_parameters = NULL;
 				bink_globals.screen_geometry_parameters.point_sampled = FALSE;
-				bink_globals.screen_geometry_parameters.framebuffer_blend_function = 7;
+				bink_globals.screen_geometry_parameters.framebuffer_blend_function = _shader_framebuffer_blend_function_alpha_multiply_add;
 
-				bink_bitmap.signature = 'bitm';
+				bink_bitmap.signature = BITMAP_SIGNATURE;
 				bink_bitmap.width = bink_globals.width;
 				bink_bitmap.height = bink_globals.height;
 				bink_bitmap.depth = 1;

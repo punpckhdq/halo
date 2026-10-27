@@ -1,8 +1,5 @@
 /*
 BINK.H
-
-stand-in for the RAD Game Tools bink 1.x sdk header (xbox, 2001).
-only declares what bink_playback.c uses; structures are truncated after the last field we touch.
 */
 
 #ifndef __BINK_H
@@ -15,10 +12,8 @@ only declares what bink_playback.c uses; structures are truncated after the last
 #define RADEXPLINK __stdcall
 #define RADEXPFUNC
 
-// BinkOpen flags
 #define BINKIOSIZE 0x01000000L
 
-// BinkCopyToBuffer surface types and flags
 #define BINKSURFACE32 3
 #define BINKCOPYALL 0x80000000L
 
@@ -37,7 +32,6 @@ typedef struct BINK
 	U32 Height;
 	U32 Frames;
 	U32 FrameNum;
-	// ... (truncated)
 } BINK, *HBINK;
 
 typedef struct BINKREALTIME
@@ -93,7 +87,7 @@ typedef struct BINKSUMMARY
 	U32 Highest1SecFrame;
 } BINKSUMMARY;
 
-typedef void *BINKSNDOPEN; // really a function pointer, never called directly
+typedef void *BINKSNDOPEN;
 typedef BINKSNDOPEN (RADLINK *BINKSNDSYSOPEN)(U32 param);
 
 typedef void *(RADLINK *RADMEMALLOC)(U32 bytes);
