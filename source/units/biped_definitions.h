@@ -38,11 +38,31 @@ enum
 	NUMBER_OF_BIPED_DEFINITION_FLAGS,
 };
 
+enum
+{
+	_contact_point_left_foot = 0,
+	_contact_point_right_foot,
+	NUMBER_OF_CONTACT_POINTS,
+};
+
+enum
+{
+	_biped_function_none = 0,
+	_biped_function_flying_speed,
+	NUMBER_OF_BIPED_FUNCTION_MODES,
+};
+
 /* ---------- macros */
 
 #define biped_definition_get(index) ((struct biped_definition *)tag_get(BIPED_DEFINITION_TAG, (index)))
 
 /* ---------- structures */
+
+struct biped_contact_point
+{
+	long unused[8];
+	char marker_name[TAG_STRING_LENGTH+1];
+};
 
 struct _biped_definition
 {

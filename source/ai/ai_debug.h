@@ -113,6 +113,8 @@ enum
 #define MAXIMUM_BALLISTIC_PILLS 16
 #define MAXIMUM_BALLISTIC_POINTS 64
 
+#define AI_BEHAVIOR(behavior) (game_connection() == _game_connection_local && ai_debug.behavior)
+
 /* ---------- structures */
 
 struct ai_debug_firing_position
