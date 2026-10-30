@@ -241,16 +241,34 @@ enum
 	MAXIMUM_NUMBER_OF_VOCALIZATION_TYPES = 256,
 };
 
+enum
+{
+	DIALOGUE_DEFINITION_TAG = 'udlg',
+};
+
 /* ---------- macros */
+
+#define dialogue_definition_get(index) ((struct dialogue_definition *)tag_get(DIALOGUE_DEFINITION_TAG, index))
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+struct dialogue_definition
+{
+	short vocalization_enum_version;
+	word pad;
+	unsigned long unused[3];
+	struct tag_reference vocalizations[NUMBER_OF_VOCALIZATION_TYPES];
+	struct tag_reference unused2[MAXIMUM_NUMBER_OF_VOCALIZATION_TYPES-NUMBER_OF_VOCALIZATION_TYPES];
+};
+
+/* ---------- prototypes/DIALOGUE_DEFINITIONS.C */
 
 short dialogue_get_vocalization_type_by_name(char const *name);
-char const *dialogue_get_vocalization_name(short vocalization_type, boolean unknown);
+char const *dialogue_get_vocalization_name(short vocalization_type, boolean abbreviated);
 
 /* ---------- globals */
+
+extern short const dialogue_vocalization_lookup[NUMBER_OF_VOCALIZATION_TYPES];
 
 /* ---------- public code */
 
