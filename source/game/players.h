@@ -169,6 +169,7 @@ boolean players_are_all_dead(void);
 long local_player_get_player_index(short local_player_index);
 
 long player_index_from_unit_index(long unit_index);
+void players_set_local_player_unit(short local_player_index, long new_unit_index);
 long local_player_get_player_index(short local_player_index);
 short local_player_get_next(short local_player_index);
 

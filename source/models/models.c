@@ -239,7 +239,7 @@ void render_model(
 				{
 					real height = (real)(fabs(centroid->x*render.frustum.world_to_view.forward.k + centroid->y*render.frustum.world_to_view.left.k + centroid->z*render.frustum.world_to_view.up.k + render.frustum.world_to_view.position.z)/render.frustum.projection_world_to_screen.j)*level_of_detail_pixels*0.5f;
 
-					if (height>0.0001f)
+					if (height>_real_epsilon)
 					{
 						real_argb_color const *detail_level_colors[NUMBER_OF_DETAIL_LEVELS_PER_MODEL] =
 						{

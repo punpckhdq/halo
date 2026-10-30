@@ -152,7 +152,7 @@ void ai_update_team_status(void);
 boolean ai_adjust_damage(long actor_index, struct damage_data *damage_data, real *damage);
 void ai_handle_death(long unit_index, long owner_object_index, short damage_category);
 boolean ai_handle_killing_spree(long unit_index, short killing_spree_count);
-void ai_handle_bump(long biped_index, long object_index);
+void ai_handle_bump(long biped_index, long object_index, real_vector3d const *old_velocity);
 void ai_handle_damage(long unit_index, long shooter_object_index, short damage_category, float fraction, union real_vector3d *damage_velocity, boolean delayed);
 void ai_create_mounted_weapons_for_unit(long unit_index);
 void ai_handle_deleted_object(long deleted_object_index);

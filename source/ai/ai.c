@@ -1346,7 +1346,8 @@ void ai_update_team_status(
 
 void ai_handle_bump(
 	long biped_index,
-	long object_index)
+	long object_index,
+	real_vector3d const *old_velocity)
 {
 	long bumped_unit_index = ai_get_responsible_unit(object_index, FALSE);
 

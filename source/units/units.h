@@ -336,6 +336,13 @@ enum
 
 enum
 {
+	_unit_animation_result_none = 0,
+	_unit_animation_result_jump,
+	NUMBER_OF_UNIT_ANIMATION_RESULTS,
+};
+
+enum
+{
 	_unit_base_seat_asleep = 0,
 	_unit_base_seat_alert,
 	_unit_base_seat_stand,
@@ -425,6 +432,12 @@ struct unit_animation
 	real_rectangle2d looking_screen_bounds;
 	long external_animation_graph_index;
 	struct animation_state external_animation;
+};
+
+struct unit_animation_update_data
+{
+	char state_desired;
+	boolean crouching;
 };
 
 struct unit_speech_item
@@ -574,6 +587,7 @@ void units_initialize_for_new_map(void);
 void units_dispose_from_old_map(void);
 
 boolean unit_new(long unit_index);
+void unit_place(long unit_index, struct scenario_unit_datum *scenario_unit);
 void unit_delete(long unit_index);
 void unit_export_function_values(long unit_index);
 void unit_handle_deleted_object(long unit_index, long deleted_object_index);
@@ -587,6 +601,8 @@ void units_update(void);
 void unit_set_mouth_aperture(long unit_index, real aperture);
 
 boolean unit_update(long unit_index);
+short unit_update_animation(long unit_index, struct unit_animation_update_data *data);
+boolean unit_driven_by_ai(long unit_index);
 void unit_kill(long unit_index);
 boolean unit_unsuspecting(long unit_index, real_point3d const *attacker);
 void unit_damage_aftermath(long unit_index, struct damage_data *damage_data, unsigned long being_damaged_flags, real shield_damage, real body_damage, real body_damage_multiplier, short body_part);
@@ -649,9 +665,29 @@ boolean unit_drop_current_weapon(long unit_index, boolean immediate);
 boolean unit_throw_grenade_begin(long unit_index, real_vector2d const *alignment_vector);
 
 void unit_try_and_exit_seat(long object_index);
+void unit_exit_seat_end(long object_index);
 boolean unit_enter_seat(long unit_index, long parent_unit_index, short seat_index);
+void unit_animation_start_action(long unit_index, short action);
+void unit_abort_animation(long unit_index);
+void unit_impact_melee_damage(long unit_index, long impact_object_index, short impact_node_index, short impact_region_index, short impact_material_index, real_point3d const *impact_point, real_vector3d const *impact_normal, struct location const *impact_location);
+void unit_cause_player_melee_damage(long unit_index);
 void unit_add_grenade_type_to_inventory(long unit_index, short grenade_type, short grenade_count);
 short vehicle_scripting_find_available_seats(long unit_index, char const *seat_substring_name, short seat_desire_type, short *seat_indices, short seat_max_indices);
+boolean unit_start_user_animation(long unit_index, long animation_graph_index, char const *animation_name, boolean interpolate);
+
+/* ---------- prototypes/UNIT_SCRIPTING_COMMANDS.C */
+
+void unit_scripting_set_maximum_vitality(long unit_index, real body_vitality, real shield_vitality);
+void units_scripting_set_maximum_vitality(long object_list_index, real body_vitality, real shield_vitality);
+void unit_scripting_set_current_vitality(long unit_index, real body_vitality, real shield_vitality);
+void units_scripting_set_current_vitality(long object_list_index, real body_vitality, real shield_vitality);
+real unit_scripting_get_health(long unit_index);
+real unit_scripting_get_shield(long unit_index);
+short unit_scripting_get_grenade_count(long unit_index);
+void unit_scripting_impervious(long object_list_index, boolean impervious);
+boolean unit_scripting_start_user_animation_list(long object_list_index, long animation_graph_index, char const *animation_name, boolean interpolate);
+boolean unit_scripting_has_weapon(long unit_index, long weapon_definition_index);
+boolean unit_scripting_has_weapon_readied(long unit_index, long weapon_definition_index);
 
 /* ---------- prototypes/UNIT_DIALOGUE.C */
 
@@ -661,6 +697,8 @@ void unit_notify_impulse_sound(long unit_index, long sound_definition_index, lon
 boolean unit_is_speaking(long unit_index);
 boolean unit_make_damage_sound(long unit_index, struct damage_data *damage_data, boolean died, boolean died_instantly, real body_damage, real shield_damage);
 boolean unit_scream(long unit_index, short scream_type);
+void unit_dialogue_update(long unit_index);
+void unit_dialogue_determine_variant(long unit_index);
 
 char const *unit_get_speech_priority_name(short priority);
 short unit_get_speech_priority_by_name(char const *name);

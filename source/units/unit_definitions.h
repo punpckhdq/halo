@@ -73,6 +73,13 @@ enum
 
 enum
 {
+	_unit_hud_default = 0,
+	_unit_hud_multiplayer,
+	NUMBER_OF_UNIT_HUD_TYPES,
+};
+
+enum
+{
 	MAXIMUM_SEATS_PER_UNIT_DEFINITION = 16,
 	MAXIMUM_INITIAL_WEAPONS_PER_UNIT = 4,
 	MAXIMUM_IK_MARKERS_PER_SEAT = 4,
@@ -100,6 +107,12 @@ struct unit_camera_track
 {
 	struct tag_reference track;
 	long unused[3];
+};
+
+struct unit_hud_reference
+{
+	struct tag_reference unit_hud_interface;
+	long unused[8];
 };
 
 struct unit_seat

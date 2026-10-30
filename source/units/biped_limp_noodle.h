@@ -14,7 +14,11 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/BIPED_LIMP_NOODLE.C */
+
+boolean biped_limp_noodle_relax_nodes_onto_environment(long biped_index);
+long biped_limp_noodle_get_max_relaxation_iterations(long biped_index);
+void validate_real_vector3d_axes3(real_vector3d *forward, real_vector3d *left, real_vector3d *up);
 
 /* ---------- globals */
 

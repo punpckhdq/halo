@@ -28,6 +28,26 @@ enum
 	NUMBER_OF_VEHICLE_ANIMATIONS,
 };
 
+enum
+{
+	_vehicle_blurred_bit = 0,
+	_vehicle_hovering_bit,
+	_vehicle_control_crouch_bit,
+	_vehicle_control_jump_bit,
+	_vehicle_upending_bit,
+	NUMBER_OF_VEHICLE_FLAGS,
+};
+
+enum
+{
+	_vehicle_not_upending = 0,
+	_vehicle_upending_along_back,
+	_vehicle_upending_along_forward,
+	_vehicle_upending_along_left,
+	_vehicle_upending_along_right,
+	NUMBER_OF_VEHICLE_UPENDING_TYPES,
+};
+
 /* ---------- macros */
 
 #define vehicle_get(index) ((struct vehicle_datum *)object_get_and_verify_type((index), _object_mask_vehicle))
@@ -84,7 +104,17 @@ void vehicle_render_debug(long vehicle_index);
 void vehicle_hover(long vehicle_index, boolean hover);
 void vehicle_accelerate(long vehicle_index, real_vector3d const *acceleration);
 
+boolean vehicle_causes_collision_damage(long vehicle_index);
+boolean vehicle_build_update(void);
+boolean vehicle_parse_update(void);
+long vehicle_find_pathfinding_surface_index(long vehicle_index, real_point3d *pathfinding_point);
+boolean vehicle_is_flipped(long vehicle_index);
+boolean vehicle_moving_near_any_player(void);
+boolean vehicle_stuck(long vehicle_index, real_vector3d *approximate_direction);
+
 /* ---------- globals */
+
+extern boolean debug_objects_vehicle_powered_mass_points;
 
 /* ---------- public code */
 

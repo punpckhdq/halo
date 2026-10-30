@@ -31,6 +31,28 @@ enum
 	_vehicle_alien_fighter,
 	_vehicle_turret,
 	NUMBER_OF_VEHICLE_DEFINITION_TYPES,
+
+	_vehicle_mask_flying = FLAG(_vehicle_human_plane) | FLAG(_vehicle_alien_fighter),
+};
+
+enum
+{
+	_vehicle_speed_wakes_physics_bit = 0,
+	_vehicle_turn_wakes_physics_bit,
+	_vehicle_driver_power_wakes_physics_bit,
+	_vehicle_gunner_power_wakes_physics_bit,
+	_vehicle_control_opposite_speed_sets_jump_bit,
+	_vehicle_slide_wakes_physics_bit,
+	_vehicle_kills_riders_at_terminal_velocity_bit,
+	_vehicle_causes_collision_damage_bit,
+	_vehicle_ai_weapon_cannot_rotate_bit,
+	_vehicle_ai_does_not_require_driver_bit,
+	_vehicle_ai_unused_bit,
+	_vehicle_ai_driver_enable_bit,
+	_vehicle_ai_driver_flying_bit,
+	_vehicle_ai_driver_nondirectional_bit,
+	_vehicle_ai_driver_hovering_bit,
+	NUMBER_OF_VEHICLE_DEFINITION_FLAGS,
 };
 
 /* ---------- macros */

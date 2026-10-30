@@ -26,6 +26,21 @@ enum
 	NUMBER_OF_BIPED_FLAGS,
 };
 
+enum
+{
+	_biped_state_idle = 0,
+	_biped_state_moving,
+	_biped_state_unknown,
+	NUMBER_OF_BIPED_STATES,
+};
+
+enum
+{
+	_biped_landing_soft = 0,
+	_biped_landing_hard,
+	NUMBER_OF_BIPED_LANDING_TYPES,
+};
+
 /* ---------- macros */
 
 #define biped_get(index)			((struct biped_datum *)object_get_and_verify_type((index), _object_mask_biped))
@@ -98,15 +113,38 @@ void biped_get_sight_position(
 	real_vector3d const *desired_gun_offset,
 	real_point3d *sight_position);
 void biped_get_physics_pill(long biped_index, real_point3d *base, real *height, real *width);
+void biped_get_autoaim_pill(long biped_index, real_point3d *base, real_vector3d *height, real *width);
+boolean biped_fix_position(
+	long biped_index,
+	long line_of_site_object_index,
+	real_point3d const *new_position,
+	real_point3d *final_position,
+	real max_radius_fudge_factor,
+	boolean fix_below_new_position,
+	boolean dont_teleport,
+	boolean use_radius_as_multiplier);
 void biped_accelerate(long biped_index, real_vector3d *acceleration);
 
+void biped_stop_melee_attack(long biped_index);
+void biped_start_limp_body_physics(long biped_index);
 void biped_stop_limp_body_physics(long biped_index);
+void biped_exit_seat_end(long biped_index, long old_vehicle_index);
 long biped_find_pathfinding_surface_index(long biped_index, real_point3d *pathfinding_point);
 long biped_approximate_surface_index(long biped_index, real_point3d *surface_point);
 
+boolean biped_flying_through_air(long biped_index);
 void biped_build_flying_axes(real_vector3d const *forward_vector, real_vector3d *left_vector, real_vector3d *up_vector);
 
 /* ---------- globals */
+
+extern boolean rider_ejection;
+extern boolean debug_biped_physics;
+extern boolean debug_biped_skip_update;
+extern boolean debug_biped_skip_collision;
+extern boolean debug_biped_limp_body_disable;
+
+extern boolean debug_objects_biped_autoaim_pills;
+extern boolean debug_objects_biped_physics_pills;
 
 /* ---------- public code */
 
