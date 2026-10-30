@@ -63,6 +63,13 @@ enum
 
 enum
 {
+	_unit_nearby_seat_result_none = 0,
+	_unit_nearby_seat_result_occupied_by_friend,
+	_unit_nearby_seat_result_empty,
+};
+
+enum
+{
 	_unit_control_crouch_modifier_bit = 0,
 	_unit_control_jump_bit,
 	_unit_control_user_animation1_bit,
@@ -565,8 +572,10 @@ struct unit_datum
 
 /* ---------- prototypes/UNITS.C */
 
+boolean any_unit_is_dangerous(void);
 boolean unit_has_weapon_definition_index(long unit_index, long definition_index);
 boolean unit_add_weapon_to_inventory(long unit_index, long weapon_index, short mode);
+boolean unit_has_weapon(long unit_index, long weapon_index);
 boolean unit_has_weapon_with_flag(long unit_index, long flag);
 void units_initialize(void);
 void units_dispose(void);
@@ -588,6 +597,7 @@ void unit_set_mouth_aperture(long unit_index, real aperture);
 
 boolean unit_update(long unit_index);
 void unit_kill(long unit_index);
+void unit_kill_no_statistics(long unit_index);
 boolean unit_unsuspecting(long unit_index, real_point3d const *attacker);
 void unit_damage_aftermath(long unit_index, struct damage_data *damage_data, unsigned long being_damaged_flags, real shield_damage, real body_damage, real body_damage_multiplier, short body_part);
 
@@ -602,9 +612,24 @@ void unit_euler_aiming_update(
 
 void unit_adjust_projectile_ray(long unit_index, real_point3d *origin, real_vector3d *forward, real *inherited_velocity, boolean offset_origin, boolean offset_aim);
 void unit_unzoom(long unit_index);
+short unit_get_zoom_level(long unit_index);
+real unit_get_zoom_magnification(long unit_index, short zoom_level);
+long units_debug_get_next_unit(long unit_index);
+long units_debug_get_closest_unit(long unit_index);
+void unit_debug_ninja_rope(long unit_index);
+short unit_inventory_get_must_be_readied_weapon(long unit_index);
 void unit_handle_weapon_state_change(long unit_index, short new_weapon_state);
 long unit_get_current_equipment(long unit_index);
 short unit_get_weapon_count(long unit_index);
+boolean unit_approve_weapon_pickup(long unit_index, long weapon_index);
+boolean unit_approve_weapon_swap(long unit_index, long new_weapon_index);
+boolean unit_overcharged(long unit_index);
+short unit_find_nearby_seat(long unit_index, long parent_unit_index, short *parent_seat_index);
+boolean unit_can_enter_seat(long unit_index, long parent_unit_index, short seat_index, long *occupant_unit_index_reference);
+boolean unit_add_grenade_to_inventory(long unit_index, long equipment_index);
+boolean unit_add_equipment_to_inventory(long unit_index, long equipment_index, short mode);
+void unit_drop_current_equipment(long unit_index);
+void unit_delete_current_equipment(long unit_index);
 short unit_get_grenade_count(long unit_index, short grenade_type);
 short unit_get_current_grenade_type(long unit_index);
 
@@ -649,6 +674,8 @@ boolean unit_drop_current_weapon(long unit_index, boolean immediate);
 boolean unit_throw_grenade_begin(long unit_index, real_vector2d const *alignment_vector);
 
 void unit_try_and_exit_seat(long object_index);
+void unit_exit_seat_end(long unit_index);
+void unit_delete_all_weapons(long unit_index);
 boolean unit_enter_seat(long unit_index, long parent_unit_index, short seat_index);
 void unit_add_grenade_type_to_inventory(long unit_index, short grenade_type, short grenade_count);
 short vehicle_scripting_find_available_seats(long unit_index, char const *seat_substring_name, short seat_desire_type, short *seat_indices, short seat_max_indices);

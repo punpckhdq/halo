@@ -93,6 +93,9 @@ enum
 
 /* ---------- macros */
 
+#define MAXIMUM_STARTING_WEAPONS_PER_PROFILE 2 /* fake name */
+#define MAXIMUM_STARTING_GRENADE_COUNTS_PER_PROFILE 4 /* fake name */
+
 #define scenario_definition_get(index) ((struct scenario *)tag_get(SCENARIO_GROUP_TAG, index)) /* fake name */
 
 /* ---------- structures */
@@ -232,6 +235,23 @@ struct scenario_object_name
 	short runtime_scenario_datum_index;
 };
 
+struct starting_weapon_info
+{
+	struct tag_reference weapon;
+	short rounds_loaded;
+	short rounds_total;
+};
+
+struct scenario_starting_profile
+{
+	char name[TAG_STRING_LENGTH+1];
+	real starting_health;
+	real starting_shield;
+	struct starting_weapon_info starting_weapons[MAXIMUM_STARTING_WEAPONS_PER_PROFILE];
+	byte starting_grenade_counts[MAXIMUM_STARTING_GRENADE_COUNTS_PER_PROFILE];
+	long unused[5];
+};
+
 struct scenario_player
 {
 	real_point3d position;
@@ -304,6 +324,14 @@ struct scenario_trigger_volume
 			real_rectangle3d rectangle;
 		} world_aligned_bounding_box;
 	};
+};
+
+struct scenario_bsp_switch_trigger_volume
+{
+	short trigger_volume_index;
+	short source_bsp_index;
+	short destination_bsp_index;
+	short safe_flag_index;
 };
 
 struct scenario_cutscene_flag

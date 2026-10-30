@@ -42,7 +42,7 @@ struct input_globals_xbox
 	HANDLE gamepad_handles[MAXIMUM_GAMEPADS];
 	struct gamepad_state gamepads[MAXIMUM_GAMEPADS];
 	struct gamepad_state suppressed_gamepad; /* fake name */
-	struct vibrate_data vibrations[MAXIMUM_GAMEPADS]; /* fake name */
+	struct rumble_data vibrations[MAXIMUM_GAMEPADS]; /* fake name */
 	HANDLE rumble_thread; /* fake name */
 	HANDLE rumble_event; /* fake name */
 	boolean rumble_this_vertical_blank; /* fake name */

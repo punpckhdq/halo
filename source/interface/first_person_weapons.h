@@ -16,6 +16,7 @@ header included in hcex build.
 
 /* ---------- prototypes/FIRST_PERSON_WEAPONS.C */
 
+void first_person_weapons_update(void);
 void first_person_weapon_message_from_weapon(long weapon_index, short message_type);
 void first_person_weapon_center_flashlight(long unit_index, union real_point3d *position, union real_vector3d *forward, union real_vector3d *up);
 boolean first_person_weapon_adjust_light(long weapon_index, char const *marker_name, union real_point3d *position, union real_vector3d *forward, union real_vector3d *up);

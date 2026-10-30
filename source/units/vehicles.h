@@ -28,6 +28,26 @@ enum
 	NUMBER_OF_VEHICLE_ANIMATIONS,
 };
 
+enum
+{
+	_vehicle_blurred_bit = 0,
+	_vehicle_hovering_bit,
+	_vehicle_control_crouch_bit,
+	_vehicle_control_jump_bit,
+	_vehicle_upending_bit,
+	NUMBER_OF_VEHICLE_FLAGS,
+};
+
+enum
+{
+	_vehicle_not_upending = 0,
+	_vehicle_upending_along_back,
+	_vehicle_upending_along_forward,
+	_vehicle_upending_along_left,
+	_vehicle_upending_along_right,
+	NUMBER_OF_VEHICLE_UPENDING_TYPES,
+};
+
 /* ---------- macros */
 
 #define vehicle_get(index) ((struct vehicle_datum *)object_get_and_verify_type((index), _object_mask_vehicle))
@@ -67,6 +87,7 @@ struct vehicle_datum
 
 /* ---------- prototypes/VEHICLES.C */
 
+boolean vehicle_moving_near_any_player(void);
 void vehicles_initialize(void);
 void vehicles_dispose(void);
 void vehicles_initialize_for_new_map(void);

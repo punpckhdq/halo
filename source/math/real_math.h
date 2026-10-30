@@ -55,6 +55,18 @@ match_vassert(												\
 	)														\
 )
 
+#define match_assert_valid_real_vector2d(file, line, vector)	\
+match_vassert(													\
+	file,														\
+	line,														\
+	valid_real_vector2d(vector),								\
+	csprintf(													\
+		temporary,												\
+		"%s: assert_valid_real_vector2d(%f, %f)",				\
+		#vector, (*vector).i, (*vector).j						\
+	)															\
+)
+
 #define match_assert_valid_real_vector3d(file, line, vector)	\
 match_vassert(													\
 	file,														\
@@ -189,6 +201,7 @@ if (!valid_real_matrix4x3(matrix))															\
 
 #define assert_valid_real(v) match_assert_valid_real(__FILE__, __LINE__, v)
 #define assert_valid_real_point3d(point) match_assert_valid_real_point3d(__FILE__, __LINE__, point)
+#define assert_valid_real_vector2d(vector) match_assert_valid_real_vector2d(__FILE__, __LINE__, vector)
 #define assert_valid_real_vector3d(vector) match_assert_valid_real_vector3d(__FILE__, __LINE__, vector)
 #define assert_valid_real_plane3d(plane) match_assert_valid_real_plane3d(__FILE__, __LINE__, plane)
 #define assert_valid_real_normal3d(vector) match_assert_valid_real_normal3d(__FILE__, __LINE__, vector)
@@ -492,6 +505,7 @@ void unlock_global_random_seed(void);
 unsigned long *get_global_random_seed_address(void);
 unsigned long *get_global_local_random_seed_address(void);
 unsigned long get_random_seed(void);
+void random_seed_debug_log(boolean enable);
 
 word seed_random(unsigned long *seed);
 short seed_random_range(unsigned long *seed, short lower_bound, short upper_bound);
@@ -779,11 +793,14 @@ __inline boolean limit2d(
 	real length)
 {
 	real dot = vector->i*vector->i + vector->j*vector->j;
-	if (dot <= length*length)
-		return FALSE;
 
-	scale_vector2d(vector, length / square_root(dot), vector);
-	return TRUE;
+	if (dot > length*length)
+	{
+		scale_vector2d(vector, length * reciprocal_square_root(dot), vector);
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 __inline real distance_squared2d(
@@ -1002,11 +1019,14 @@ __inline boolean limit3d(
 	real length)
 {
 	real dot = vector->i*vector->i + vector->j*vector->j + vector->k*vector->k;
-	if (dot <= length*length)
-		return FALSE;
 
-	scale_vector3d(vector, length / square_root(dot), vector);
-	return TRUE;
+	if (dot > length*length)
+	{
+		scale_vector3d(vector, length * reciprocal_square_root(dot), vector);
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 __inline real distance_squared3d(
@@ -1507,6 +1527,12 @@ __inline boolean valid_real_point3d(
 	real_point3d const *p)
 {
 	return valid_real(p->x) && valid_real(p->y) && valid_real(p->z);
+}
+
+__inline boolean valid_real_vector2d(
+	real_vector2d const *v)
+{
+	return valid_real(v->i) && valid_real(v->j);
 }
 
 __inline boolean valid_real_vector3d(
