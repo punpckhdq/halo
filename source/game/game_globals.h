@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "game.h"
 
 /* ---------- constants */
 
@@ -337,7 +338,7 @@ struct game_globals_falling_damage
 
 struct game_globals_difficulty_information
 {
-	real game_difficulty_values[NUMBER_OF_GAME_DIFFICULTY_VALUES][4];
+	real game_difficulty_values[NUMBER_OF_GAME_DIFFICULTY_VALUES][NUMBER_OF_GAME_DIFFICULTY_LEVELS];
 	unsigned long unused[21];
 };
 

@@ -2331,7 +2331,7 @@ static boolean player_handle_action(
 	case _player_action_result_swap_for_powerup:
 		unit_drop_current_equipment(player->unit_index);
 
-		if (unit_add_equipment_to_inventory(player->unit_index, player->action_object_index, 0))
+		if (unit_add_equipment_to_inventory(player->unit_index, player->action_object_index, _unit_add_weapon_normally))
 		{
 			hud_picked_up_powerup(player->local_player_index, equipment_get(player->action_object_index)->definition_index);
 		}

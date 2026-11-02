@@ -295,8 +295,8 @@ static struct rumble_data rumble_calculate(
 		magnitudes[_rumble_frequency_right] += rumble_globals->scripted_rumble.right_frequency * rumble_globals->scripted_rumble.scale;
 	}
 
-	result.left_frequency = (word)fast_ftol(PIN(magnitudes[_rumble_frequency_left] * 65535.f, 0.f, 65535.f));
-	result.right_frequency = (word)fast_ftol(PIN(magnitudes[_rumble_frequency_right] * 65535.f, 0.f, 65535.f));
+	result.left_frequency = (word)fast_ftol(PIN(magnitudes[_rumble_frequency_left] * UNSIGNED_SHORT_MAX, 0.f, UNSIGNED_SHORT_MAX));
+	result.right_frequency = (word)fast_ftol(PIN(magnitudes[_rumble_frequency_right] * UNSIGNED_SHORT_MAX, 0.f, UNSIGNED_SHORT_MAX));
 
 	return result;
 }

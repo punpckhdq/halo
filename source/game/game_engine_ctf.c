@@ -402,7 +402,7 @@ static boolean ctf_engine_initialize_for_new_map(
 	{
 		struct scenario_player *starting_location = player_get_starting_location(starting_location_index);
 
-		if (starting_location->team_index != 0 && starting_location->team_index != 1)
+		if (starting_location->team_index != _team_red && starting_location->team_index != _team_blue)
 		{
 			error(_error_silent, "NETGAME_FLAG_WARNING starting location %d bad team index %d", starting_location_index, starting_location->team_index);
 			continue;
@@ -841,7 +841,7 @@ static boolean ctf_engine_display_score(
 	{
 	case ctf_message_score:
 		multiplayer_game_text_get_string(string, _string_red_team_score_blue_team_score);
-		usnprintf(buffer, buffer_size, string, ctf_globals.score[0], ctf_globals.score[1]);
+		usnprintf(buffer, buffer_size, string, ctf_globals.score[_team_red], ctf_globals.score[_team_blue]);
 		break;
 	case ctf_message_you_scored:
 		multiplayer_game_text_get_string(string, _string_you_scored_score_to_score);
