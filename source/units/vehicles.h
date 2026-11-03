@@ -87,7 +87,6 @@ struct vehicle_datum
 
 /* ---------- prototypes/VEHICLES.C */
 
-boolean vehicle_moving_near_any_player(void);
 void vehicles_initialize(void);
 void vehicles_dispose(void);
 void vehicles_initialize_for_new_map(void);
@@ -105,7 +104,17 @@ void vehicle_render_debug(long vehicle_index);
 void vehicle_hover(long vehicle_index, boolean hover);
 void vehicle_accelerate(long vehicle_index, real_vector3d const *acceleration);
 
+boolean vehicle_causes_collision_damage(long vehicle_index);
+boolean vehicle_build_update(void);
+boolean vehicle_parse_update(void);
+long vehicle_find_pathfinding_surface_index(long vehicle_index, real_point3d *pathfinding_point);
+boolean vehicle_is_flipped(long vehicle_index);
+boolean vehicle_moving_near_any_player(void);
+boolean vehicle_stuck(long vehicle_index, real_vector3d *approximate_direction);
+
 /* ---------- globals */
+
+extern boolean debug_objects_vehicle_powered_mass_points;
 
 /* ---------- public code */
 

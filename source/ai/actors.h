@@ -1127,6 +1127,8 @@ void actor_move_get_avoidance_direction(struct vector_avoidance_data *avoidance_
 
 boolean actor_path_has_path(long actor_index);
 boolean actor_path_at_destination(long actor_index);
+boolean actor_aim_jump(long actor_index, long unit_index, boolean leap, real jump_magnitude, real_vector3d *jump_velocity);
+boolean actor_is_leaping(long actor_index);
 
 /* ---------- prototypes/ACTOR_PERCEPTION.C */
 

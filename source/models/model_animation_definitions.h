@@ -31,6 +31,14 @@ enum
 
 enum
 {
+	_joint_type_ball_and_socket = 0,
+	_joint_type_hinge,
+	_joint_type_no_movement,
+	NUMBER_OF_NODE_BLOCK_FLAGS,
+};
+
+enum
+{
 	_animation_base = 0,
 	_animation_overlay,
 	_animation_replacement,
@@ -238,6 +246,23 @@ struct animation_graph_device_animations
 	struct tag_block animations;		// animation_graph_animation_index
 };
 
+struct animation_graph_vehicle_suspension_animation
+{
+	short mass_point_index;
+	short animation_index;
+	real full_extension_ground_depth;
+	real full_compression_ground_depth;
+	long unused[2];
+};
+
+struct animation_graph_vehicle_animations
+{
+	struct animation_aiming_screen_bounds steering_screen_bounds;
+	long unused[17];
+	struct tag_block animations;			// animation_graph_animation_index
+	struct tag_block suspension_animations;	// animation_graph_vehicle_suspension_animation
+};
+
 struct animation_graph_weapon_animations
 {
 	long unused1[4];
@@ -383,6 +408,18 @@ __inline short animation_sound_frame_index(
 	struct animation const *animation)
 {
 	return animation->private_sound_frame_index;
+}
+
+__inline byte animation_left_foot_frame_index(
+	struct animation const *animation)
+{
+	return animation->private_left_foot_frame_index;
+}
+
+__inline byte animation_right_foot_frame_index(
+	struct animation const *animation)
+{
+	return animation->private_right_foot_frame_index;
 }
 
 #endif // __MODEL_ANIMATION_DEFINITIONS_H
