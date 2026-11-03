@@ -169,6 +169,7 @@ void game_allegiance_dispose_from_old_map(void);
 void game_allegiance_update(void);
 boolean game_team_is_enemy(short our_team, short other_team);
 boolean game_team_is_ally(short our_team, short other_team);
+boolean game_team_ally_status_changed(short our_team_index, short other_team_index);
 short game_allegiance_get_incidents(short our_team_index, short other_team_index, short *incident_threshold);
 boolean game_allegiance_incident(short aggressor_team_index, short victim_team_index, short type, boolean *notify_immediately);
 void game_allegiance_create(short team1_index, boolean team1_suspicious, short team2_index, boolean team2_suspicious, short incident_threshold, short incident_decay_time, boolean allegiance_requires_communication);
