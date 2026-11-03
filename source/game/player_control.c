@@ -435,7 +435,7 @@ void player_control_new_unit(
 
 	if (unit_index != NONE)
 	{
-		struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(unit_index, _object_mask_unit);
+		struct unit_datum *unit = unit_get(unit_index);
 
 		euler_angles2d_from_vector3d(&player_control->desired_angles, &unit->unit.desired_facing_vector);
 		if (player_control->desired_angles.yaw < 0.f)
@@ -549,15 +549,15 @@ static void get_local_player_input_blob(
 
 			if (player->unit_index != NONE)
 			{
-				struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(player->unit_index, _object_mask_unit);
+				struct unit_datum *unit = unit_get(player->unit_index);
 
 				yaw_rate = (real)(player_look_yaw_rate[local_player_index] * (_pi / 180.f)) / TICKS_PER_SECOND;
 				pitch_rate = (real)(player_look_pitch_rate[local_player_index] * (_pi / 180.f)) / TICKS_PER_SECOND;
 
 				if (unit->object.parent_object_index != NONE && unit->unit.parent_seat_index != NONE)
 				{
-					struct unit_datum *parent = (struct unit_datum *)object_get_and_verify_type(unit->object.parent_object_index, _object_mask_unit);
-					struct unit_definition *definition = (struct unit_definition *)tag_get(UNIT_DEFINITION_TAG, parent->definition_index);
+					struct unit_datum *parent = unit_get(unit->object.parent_object_index, _object_mask_unit);
+					struct unit_definition *definition = unit_definition_get(parent->definition_index);
 					struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&definition->unit.seats, unit->unit.parent_seat_index, struct unit_seat);
 
 					if (seat->yaw_rate > 0.f)
@@ -625,7 +625,7 @@ static void get_local_player_input_blob(
 				if (player->unit_index != NONE)
 				{
 					struct game_globals_player_information *player_information = TAG_BLOCK_GET_ELEMENT(&scenario_get_game_globals()->player_information, 0, struct game_globals_player_information);
-					struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(player->unit_index, _object_mask_unit);
+					struct unit_datum *unit = unit_get(player->unit_index);
 					real stun_scale = 1.f - unit->unit.body_stun * player_information->stun_turning_penalty;
 
 					angular_velocity.yaw *= stun_scale;
@@ -831,8 +831,8 @@ static void handle_one_player_input(
 
 	if (player->unit_index != NONE)
 	{
-		struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(player->unit_index, _object_mask_unit);
-		struct unit_definition *definition = (struct unit_definition *)tag_get(UNIT_DEFINITION_TAG, unit->definition_index);
+		struct unit_datum *unit = unit_get(player->unit_index);
+		struct unit_definition *definition = unit_definition_get(unit->definition_index);
 		short must_be_readied_weapon_index;
 
 		weapon_index = unit_inventory_get_weapon(player->unit_index, unit->unit.current_weapon_index);
@@ -986,8 +986,8 @@ real player_control_get_field_of_view(
 
 	if (player_control->unit_index != NONE)
 	{
-		struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(player_control->unit_index, _object_mask_unit);
-		struct unit_definition *definition = (struct unit_definition *)tag_get(UNIT_DEFINITION_TAG, unit->definition_index);
+		struct unit_datum *unit = unit_get(player_control->unit_index);
+		struct unit_definition *definition = unit_definition_get(unit->definition_index);
 		long weapon_index = unit_inventory_get_weapon(player_control->unit_index, unit->unit.current_weapon_index);
 
 		if (weapon_index != NONE)
@@ -1017,7 +1017,7 @@ void player_control_get_unit_camera_info(
 
 	if (camera_info->unit_index != NONE)
 	{
-		struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(camera_info->unit_index, _object_mask_unit);
+		struct unit_datum *unit = unit_get(camera_info->unit_index);
 
 		unit_get_camera_position(camera_info->unit_index, &camera_info->unit_origin);
 		if (unit->object.parent_object_index != NONE)
@@ -1032,7 +1032,7 @@ void player_control_get_unit_camera_info(
 				camera_info->unit_index = unit->object.parent_object_index;
 				camera_info->unit_camera = &seat->camera;
 				camera_info->seat_index = unit->unit.parent_seat_index;
-				unit = (struct unit_datum *)object_get_and_verify_type(camera_info->unit_index, _object_mask_unit);
+				unit = unit_get(camera_info->unit_index);
 			}
 		}
 
@@ -1067,7 +1067,7 @@ long player_control_get_desired_weapon(
 		}
 	}
 
-	return unit_inventory_get_weapon(unit_index, ((struct unit_datum *)object_get_and_verify_type(unit_index, _object_mask_unit))->unit.current_weapon_index);
+	return unit_inventory_get_weapon(unit_index, unit_get(unit_index)->unit.current_weapon_index);
 }
 
 void player_control_set_desired_weapon(
@@ -1117,8 +1117,9 @@ static void player_control_modify_desired_angles(
 
 	if (camera_info.seat_index != NONE)
 	{
-		struct unit_definition *definition = (struct unit_definition *)tag_get(UNIT_DEFINITION_TAG, ((struct object_datum *)object_get_and_verify_type(camera_info.unit_index, _object_mask_unit))->definition_index);
-		struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&definition->unit.seats, camera_info.seat_index, struct unit_seat);
+		struct unit_datum const *unit = unit_get(camera_info.unit_index, _object_mask_unit);
+		struct unit_definition const *definition = unit_definition_get(unit->definition_index);
+		struct unit_seat const *seat = TAG_BLOCK_GET_ELEMENT(&definition->unit.seats, camera_info.seat_index, struct unit_seat);
 
 		if (seat->yaw_minimum != 0.f || seat->yaw_maximum != 0.f)
 		{
@@ -1169,7 +1170,7 @@ static void player_control_modify_desired_angles(
 
 	if (camera_info.unit_camera)
 	{
-		struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(camera_info.unit_index, _object_mask_unit);
+		struct unit_datum *unit = unit_get(camera_info.unit_index);
 		real autolevel_pitch = camera_info.unit_camera->pitch_autolevel;
 
 		if (camera_info.unit_camera->pitch_maximum != 0.f || camera_info.unit_camera->pitch_minimum != 0.f)
@@ -1229,7 +1230,7 @@ static void player_control_modify_desired_angles(
 short unit_get_local_player_index(
 	long unit_index)
 {
-	struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(unit_index, _object_mask_unit);
+	struct unit_datum *unit = unit_get(unit_index);
 
 	if (unit->unit.player_index != NONE)
 	{

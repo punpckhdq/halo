@@ -33,7 +33,7 @@ enum
 
 enum
 {
-	_game_team_default = 0x0,
+	_game_team_default = 0,
 	_game_team_player,
 	_game_team_human,
 	_game_team_covenant,

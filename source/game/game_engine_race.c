@@ -196,14 +196,14 @@ static void build_player_speeds(void);
 static void race_engine_update(void);
 static void race_engine_player_damaged_player(long killing_player_index, long dead_player_index, boolean friendly_fire);
 static void race_engine_player_killed_player(long killing_player_index, long killing_object_index, long dead_player_index, boolean friendly_fire);
-static boolean race_engine_display_score(long player_index, long message, long message_data, word *buffer, long buffer_size);
+static boolean race_engine_display_score(long player_index, long message, long message_data, wchar_t *buffer, long buffer_size);
 static void race_engine_prespawn_player_update(long player_index);
 static boolean race_goal_matches_player(long player_index, long goal_index);
 static long count_bits_32(unsigned long value);
 static long race_engine_get_score(long player_index, enum get_score_type get_score_type);
-static word *race_get_score_string(long player_index, word *buffer);
-static word *race_get_score_header_string(word *buffer);
-static word *race_get_team_score_string(long team_index, word *buffer);
+static wchar_t *race_get_score_string(long player_index, wchar_t *buffer);
+static wchar_t *race_get_score_header_string(wchar_t *buffer);
+static wchar_t *race_get_team_score_string(long team_index, wchar_t *buffer);
 static long race_engine_did_player_win(long player_index);
 
 /* ---------- globals */
@@ -388,7 +388,7 @@ static void create_race_vehicles(
 	data_iterator_new(&iterator, player_data);
 	while (player = (struct player_datum *)data_iterator_next(&iterator))
 	{
-		struct unit_datum *unit = player->unit_index != NONE ? (struct unit_datum *)object_get_and_verify_type(player->unit_index, _object_mask_unit) : NULL;
+		struct unit_datum *unit = player->unit_index != NONE ? unit_get(player->unit_index) : NULL;
 		long flag_index;
 
 		if (vehicle_count == NUMBEROF(spawned_vehicles))
@@ -823,12 +823,12 @@ static void race_engine_player_update(
 
 	if (player->unit_index != NONE && game_engine_can_score())
 	{
-		struct unit_datum *unit = (struct unit_datum *)object_get_and_verify_type(player->unit_index, _object_mask_unit);
+		struct unit_datum *unit = unit_get(player->unit_index);
 		long flag_index;
 
 		if (unit->object.parent_object_index != NONE)
 		{
-			struct unit_datum *vehicle = (struct unit_datum *)object_get_and_verify_type(unit->object.parent_object_index, _object_mask_unit);
+			struct unit_datum *vehicle = unit_get(unit->object.parent_object_index);
 			real distance = 2.5f;
 
 			flag_index = find_netgame_flag(&vehicle->object.bounding_sphere_center, distance, 0.f, _netgame_flag_race_track, NONE);
@@ -991,7 +991,7 @@ static boolean race_engine_display_score(
 	long player_index,
 	long message,
 	long message_data,
-	word *buffer,
+	wchar_t *buffer,
 	long buffer_size)
 {
 	struct player_datum *message_player = NULL;
@@ -1149,17 +1149,17 @@ static long race_engine_get_score(
 	return score;
 }
 
-static word *race_get_score_string(
+static wchar_t *race_get_score_string(
 	long player_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	usprintf(buffer, L"%d", player_get(player_index)->statistics.multiplayer_statistics.race_statistics.laps);
 
 	return buffer;
 }
 
-static word *race_get_score_header_string(
-	word *buffer)
+static wchar_t *race_get_score_header_string(
+	wchar_t *buffer)
 {
 	long string_index = game_engine_get_variant()->game_engine_variant.race.race_type == _race_type_flag_rally ? _string_flags : _string_laps;
 	wchar_t *string;
@@ -1170,9 +1170,9 @@ static word *race_get_score_header_string(
 	return buffer;
 }
 
-static word *race_get_team_score_string(
+static wchar_t *race_get_team_score_string(
 	long team_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	usprintf(buffer, L"%d", race_globals.team_laps[team_index]);
 

@@ -179,7 +179,7 @@ static void oddball_add_score(long player_index);
 static void oddball_add_time_with_ball(long player_index);
 static long player_ball_count(long player_index);
 static void oddball_engine_player_damaged_player(long killing_player_index, long dead_player_index, boolean friendly_fire);
-static boolean oddball_engine_display_score(long player_index, long message, long message_data, word *buffer, long buffer_size);
+static boolean oddball_engine_display_score(long player_index, long message, long message_data, wchar_t *buffer, long buffer_size);
 static void oddball_engine_prespawn_player_update(long player_index);
 static void oddball_weapon_drop(long weapon_index);
 static long oddball_get_score(long player_index, enum get_score_type get_score_type);
@@ -188,9 +188,9 @@ static boolean accumulate_score_by_time(void);
 static boolean terminator_scoring_rules(void);
 static boolean oddball_test_flag(long flag);
 static boolean oddball_test_trait(long player_index, long trait);
-static word *oddball_get_score_string(long player_index, word *buffer);
-static word *oddball_get_score_header_string(word *buffer);
-static word *oddball_get_team_score_string(long team_index, word *buffer);
+static wchar_t *oddball_get_score_string(long player_index, wchar_t *buffer);
+static wchar_t *oddball_get_score_header_string(wchar_t *buffer);
+static wchar_t *oddball_get_team_score_string(long team_index, wchar_t *buffer);
 static real_point3d find_position_for_ball(long ball_index);
 static void create_the_ball(long ball_index);
 static boolean oddball_engine_initialize_for_new_map(void);
@@ -879,7 +879,7 @@ static boolean oddball_engine_display_score(
 	long player_index,
 	long message,
 	long message_data,
-	word *buffer,
+	wchar_t *buffer,
 	long buffer_size)
 {
 	struct player_datum *player = player_get(player_index);
@@ -979,7 +979,7 @@ static boolean oddball_weapon_pickup(
 
 		if (player->unit_index != NONE)
 		{
-			result = !unit_has_weapon_with_flag(player->unit_index, 3);
+			result = !unit_has_weapon_with_flag(player->unit_index, _object_mask_unit);
 
 			if (result)
 			{
@@ -1109,9 +1109,9 @@ static boolean oddball_test_trait(
 	return result;
 }
 
-static word *oddball_get_score_string(
+static wchar_t *oddball_get_score_string(
 	long player_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	long score = oddball_globals.individual_score[DATUM_INDEX_TO_ABSOLUTE_INDEX(player_index)];
 
@@ -1127,8 +1127,8 @@ static word *oddball_get_score_string(
 	return buffer;
 }
 
-static word *oddball_get_score_header_string(
-	word *buffer)
+static wchar_t *oddball_get_score_header_string(
+	wchar_t *buffer)
 {
 	short string_index;
 	wchar_t *string;
@@ -1148,9 +1148,9 @@ static word *oddball_get_score_header_string(
 	return buffer;
 }
 
-static word *oddball_get_team_score_string(
+static wchar_t *oddball_get_team_score_string(
 	long team_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	long score = oddball_globals.team_score[team_index];
 

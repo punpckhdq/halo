@@ -134,14 +134,14 @@ static boolean slayer_engine_allow_pick_up(long unit_index, long item_index);
 static void slayer_engine_player_damaged_player(long killing_player_index, long dead_player_index, boolean friendly_fire);
 static void slayer_engine_adjust_score(long player_index, long adjustment);
 static void slayer_engine_player_killed_player(long killing_player_index, long killing_object_index, long dead_player_index, boolean friendly_fire);
-static boolean slayer_engine_display_score(long player_index, long message, long message_data, word *buffer, long buffer_size);
+static boolean slayer_engine_display_score(long player_index, long message, long message_data, wchar_t *buffer, long buffer_size);
 static void slayer_engine_prespawn_player_update(long player_index);
 static void slayer_player_update(long player_index);
 static long slayer_get_score(long player_index, enum get_score_type get_score_type);
 static boolean slayer_test_flag(long flag);
-static word *slayer_get_score_string(long player_index, word *buffer);
-static word *slayer_get_score_header_string(word *buffer);
-static word *slayer_get_team_score_string(long team_index, word *buffer);
+static wchar_t *slayer_get_score_string(long player_index, wchar_t *buffer);
+static wchar_t *slayer_get_score_header_string(wchar_t *buffer);
+static wchar_t *slayer_get_team_score_string(long team_index, wchar_t *buffer);
 
 /* ---------- globals */
 
@@ -460,7 +460,7 @@ static boolean slayer_engine_display_score(
 	long player_index,
 	long message,
 	long message_data,
-	word *buffer,
+	wchar_t *buffer,
 	long buffer_size)
 {
 	struct player_datum *player = player_get(player_index);
@@ -619,17 +619,17 @@ static boolean slayer_test_flag(
 	return result;
 }
 
-static word *slayer_get_score_string(
+static wchar_t *slayer_get_score_string(
 	long player_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	usprintf(buffer, L"%d", slayer_globals.individual_score[DATUM_INDEX_TO_ABSOLUTE_INDEX(player_index)]);
 
 	return buffer;
 }
 
-static word *slayer_get_score_header_string(
-	word *buffer)
+static wchar_t *slayer_get_score_header_string(
+	wchar_t *buffer)
 {
 	wchar_t *string;
 
@@ -639,9 +639,9 @@ static word *slayer_get_score_header_string(
 	return buffer;
 }
 
-static word *slayer_get_team_score_string(
+static wchar_t *slayer_get_team_score_string(
 	long team_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	usprintf(buffer, L"%d", slayer_globals.team_score[team_index]);
 

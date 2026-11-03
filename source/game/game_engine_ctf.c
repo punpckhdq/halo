@@ -213,7 +213,7 @@ static long get_player_with_this_flag(long weapon_index);
 static boolean ctf_engine_allow_pick_up(long unit_index, long item_index);
 static void ctf_engine_player_damaged_player(long killing_player_index, long dead_player_index, boolean friendly_fire);
 static void ctf_engine_player_killed_player(long killing_player_index, long killing_object_index, long dead_player_index, boolean friendly_fire);
-static boolean ctf_engine_display_score(long player_index, long message, long message_data, word *buffer, long buffer_size);
+static boolean ctf_engine_display_score(long player_index, long message, long message_data, wchar_t *buffer, long buffer_size);
 static void ctf_engine_prespawn_player_update(long player_index);
 void ctf_state_message_update_warning(long team_index);
 static void ctf_sound_update_warning(long team_index);
@@ -221,9 +221,9 @@ static void ctf_set_flag_warning(long team_index, boolean warning);
 static void ctf_weapon_drop(long weapon_index);
 static long ctf_get_score(long player_index, enum get_score_type get_score_type);
 static boolean ctf_test_flag(long flag);
-static word *ctf_get_score_string(long player_index, word *buffer);
-static word *ctf_get_score_header_string(word *buffer);
-static word *ctf_get_team_score_string(long team_index, word *buffer);
+static wchar_t *ctf_get_score_string(long player_index, wchar_t *buffer);
+static wchar_t *ctf_get_score_header_string(wchar_t *buffer);
+static wchar_t *ctf_get_team_score_string(long team_index, wchar_t *buffer);
 static boolean ctf_engine_initialize_for_new_map(void);
 static void weapon_reset_flag(long weapon_index);
 static void player_reset_flag(long player_index, long weapon_index);
@@ -429,7 +429,7 @@ static boolean ctf_engine_initialize_for_new_map(
 			if (too_close)
 			{
 				error(_error_silent, "NETGAME_FLAG_WARNING starting location %d team %d, too close to enemy flag", starting_location_index, starting_location->team_index);
-				starting_location->team_index = 3;
+				starting_location->team_index = MAXIMUM_MULTIPLAYER_GAME_TEAMS+1;
 			}
 		}
 	}
@@ -829,7 +829,7 @@ static boolean ctf_engine_display_score(
 	long player_index,
 	long message,
 	long message_data,
-	word *buffer,
+	wchar_t *buffer,
 	long buffer_size)
 {
 	long team_index = player_get(player_index)->team_index;
@@ -1052,9 +1052,9 @@ static boolean ctf_test_flag(
 	return result;
 }
 
-static word *ctf_get_score_string(
+static wchar_t *ctf_get_score_string(
 	long player_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	struct player_datum *player = player_get(player_index);
 
@@ -1063,8 +1063,8 @@ static word *ctf_get_score_string(
 	return buffer;
 }
 
-static word *ctf_get_score_header_string(
-	word *buffer)
+static wchar_t *ctf_get_score_header_string(
+	wchar_t *buffer)
 {
 	wchar_t *string;
 
@@ -1074,9 +1074,9 @@ static word *ctf_get_score_header_string(
 	return buffer;
 }
 
-static word *ctf_get_team_score_string(
+static wchar_t *ctf_get_team_score_string(
 	long team_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	usprintf(buffer, L"%d", ctf_globals.score[team_index]);
 

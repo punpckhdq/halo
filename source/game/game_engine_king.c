@@ -174,14 +174,14 @@ static void king_engine_player_update(long player_index);
 static void king_calculate_hill_state(void);
 static void king_engine_player_damaged_player(long killing_player_index, long dead_player_index, boolean friendly_fire);
 static void king_engine_player_killed_player(long killing_player_index, long killing_object_index, long dead_player_index, boolean friendly_fire);
-static boolean king_engine_display_score(long player_index, long message, long message_data, word *buffer, long buffer_size);
+static boolean king_engine_display_score(long player_index, long message, long message_data, wchar_t *buffer, long buffer_size);
 static void king_engine_prespawn_player_update(long player_index);
 static long king_get_score(long player_index, enum get_score_type get_score_type);
 void render_dynamic_quad_initialize(void);
 void render_dynamic_quad(struct model_vertex_uncompressed *verts, long shader_index, struct render_lighting const *lighting, struct render_animation const *animation, real u_scale, real v_scale);
-static word *king_get_score_string(long player_index, word *buffer);
-static word *king_get_score_header_string(word *buffer);
-static word *king_get_team_score_string(long team_index, word *buffer);
+static wchar_t *king_get_score_string(long player_index, wchar_t *buffer);
+static wchar_t *king_get_score_header_string(wchar_t *buffer);
+static wchar_t *king_get_team_score_string(long team_index, wchar_t *buffer);
 static boolean king_engine_goal_matches_player(long player_index, long goal_index);
 static long find_next_hill(long hill_id);
 static boolean king_engine_initialize_for_new_map(void);
@@ -841,7 +841,7 @@ static boolean king_engine_display_score(
 	long player_index,
 	long message,
 	long message_data,
-	word *buffer,
+	wchar_t *buffer,
 	long buffer_size)
 {
 	struct player_datum *player = player_get(player_index);
@@ -948,7 +948,7 @@ void render_dynamic_quad(
 
 	if (dynamic_triangle_buffer_index != NONE && dynamic_vertex_buffer_index != NONE)
 	{
-		struct model_vertex_compressed *vertices = rasterizer_dynamic_vertices_lock(dynamic_vertex_buffer_index);
+		struct model_vertex_compressed *vertices = (struct model_vertex_compressed *)rasterizer_dynamic_vertices_lock(dynamic_vertex_buffer_index);
 		struct rasterizer_triangle *triangles = rasterizer_dynamic_triangles_lock(dynamic_triangle_buffer_index);
 		struct shader *shader;
 		struct rasterizer_model_begin_parameters parameters;
@@ -963,11 +963,15 @@ void render_dynamic_quad(
 		triangles[1].vertex_indices[2] = 0;
 		rasterizer_dynamic_triangles_unlock(dynamic_triangle_buffer_index);
 		rasterizer_dynamic_vertices_unlock(dynamic_vertex_buffer_index);
-		shader = tag_get(SHADER_DEFINITION_TAG, shader_index);
+		
+		shader = shader_definition_get(shader_index);
+
 		centroid.x = (verts[0].position.x + verts[1].position.x + verts[2].position.x + verts[3].position.x) * 0.25f;
 		centroid.y = (verts[0].position.y + verts[1].position.y + verts[2].position.y + verts[3].position.y) * 0.25f;
 		centroid.z = (verts[0].position.z + verts[1].position.z + verts[2].position.z + verts[3].position.z) * 0.25f;
+		
 		memset(&parameters, 0, sizeof(parameters));
+		
 		parameters.unique_id = 1;
 		parameters.skinning.node_matrix_count = 1;
 		parameters.skinning.node_matrices = (real_matrix4x3 *)global_identity4x3;
@@ -1026,9 +1030,9 @@ void render_dynamic_quad(
 	return;
 }
 
-static word *king_get_score_string(
+static wchar_t *king_get_score_string(
 	long player_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	struct player_datum *player = player_get(player_index);
 
@@ -1037,8 +1041,8 @@ static word *king_get_score_string(
 	return buffer;
 }
 
-static word *king_get_score_header_string(
-	word *buffer)
+static wchar_t *king_get_score_header_string(
+	wchar_t *buffer)
 {
 	wchar_t *string;
 
@@ -1048,9 +1052,9 @@ static word *king_get_score_header_string(
 	return buffer;
 }
 
-static word *king_get_team_score_string(
+static wchar_t *king_get_team_score_string(
 	long team_index,
-	word *buffer)
+	wchar_t *buffer)
 {
 	ticks_to_unicode_time_string(king_globals.score[team_index], 256, buffer);
 

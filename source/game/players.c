@@ -2201,7 +2201,10 @@ static void player_examine_nearby_item(
 			weapon_count = unit_get_weapon_count(player->unit_index);
 			current_weapon_doesnt_count = FALSE;
 
-			if (weapon_count >= MAXIMUM_WEAPONS_PER_PLAYER && current_weapon_index != NONE && !TEST_FLAG(definition->weapon.flags, _weapon_doesnt_count_toward_maximum_bit) && TEST_FLAG(weapon_definition_get(weapon_get(current_weapon_index)->definition_index)->weapon.flags, _weapon_doesnt_count_toward_maximum_bit))
+			if (weapon_count >= MAXIMUM_WEAPONS_PER_PLAYER && 
+				current_weapon_index != NONE &&
+				!TEST_FLAG(definition->weapon.flags, _weapon_doesnt_count_toward_maximum_bit) &&
+				TEST_FLAG(weapon_definition_get(weapon_get(current_weapon_index)->definition_index)->weapon.flags, _weapon_doesnt_count_toward_maximum_bit))
 			{
 				current_weapon_doesnt_count = TRUE;
 			}
@@ -2468,10 +2471,12 @@ static void player_health_pack_screen_effect(
 		screen_flash.duration = 2.f;
 		screen_flash.max_intensity = 0.5f;
 		screen_flash.zero_scale_factor = 0.f;
+		
 		screen_flash.screen_flash_color.alpha = 1.f;
-		screen_flash.screen_flash_color.red = 0.917647f;
-		screen_flash.screen_flash_color.green = 0.917647f;
-		screen_flash.screen_flash_color.blue = 0.917647f;
+		screen_flash.screen_flash_color.red = 0.917647f;	// 234 / 255
+		screen_flash.screen_flash_color.green = 0.917647f;	// 234 / 255
+		screen_flash.screen_flash_color.blue = 0.917647f;	// 234 / 255
+
 		player_effect_screen_flash(player_index, &screen_flash, 1.f);
 	}
 
