@@ -131,6 +131,7 @@ boolean render_camera_view_to_screen(struct render_camera const *camera, struct 
 void render_camera_build_frustum(const struct render_camera *camera, const real_rectangle2d *frustum_bounds, struct render_frustum *frustum, boolean build_projection);
 void render_frustum_get_projection_bounds(struct render_frustum const *frustum, real_rectangle2d *projection_bounds);
 short render_frustum_cube_visible(struct render_frustum const *frustum, real_rectangle3d const *bounds, boolean test_frustum_against_cube);
+void render_camera_hack_frustum_z(struct render_frustum *frustum, real z_near, real z_far);
 
 /* ---------- globals */
 
