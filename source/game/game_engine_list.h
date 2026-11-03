@@ -19,6 +19,11 @@ header included in hcex build.
 /* ---------- globals */
 
 extern struct game_engine *game_engines[];
+extern struct game_engine ctf_engine;
+extern struct game_engine slayer_engine;
+extern struct game_engine oddball_engine;
+extern struct game_engine king_engine;
+extern struct game_engine race_engine;
 extern struct game_engine stub_engine;
 
 /* ---------- public code */

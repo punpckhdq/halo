@@ -45,7 +45,7 @@ enum
 
 struct continuous_player_effect_datum
 {
-	real vibrate_frequencies[NUMBER_OF_vibrate_FREQUENCIES];
+	real rumble_frequencies[NUMBER_OF_RUMBLE_FREQUENCIES];
 	real translational_shake;
 	real rotational_shake;
 };
@@ -202,8 +202,8 @@ void player_effect_add_continuous_effect(
 
 		continuous_effect->translational_shake += MAX(definition->camera_shake.random_translation_magnitude * shake_scale, 0.f);
 		continuous_effect->rotational_shake += MAX(definition->camera_shake.random_rotation_magnitude * shake_scale, 0.f);
-		continuous_effect->vibrate_frequencies[_vibrate_frequency_low] += scale * definition->vibrate.frequencies[_vibrate_frequency_low];
-		continuous_effect->vibrate_frequencies[_vibrate_frequency_high] += scale * definition->vibrate.frequencies[_vibrate_frequency_high];
+		continuous_effect->rumble_frequencies[_rumble_frequency_low] += scale * definition->rumble.frequencies[_rumble_frequency_low];
+		continuous_effect->rumble_frequencies[_rumble_frequency_high] += scale * definition->rumble.frequencies[_rumble_frequency_high];
 	}
 
 	return;
@@ -374,7 +374,7 @@ void player_effect_start(
 			scale,
 			1.f);
 		player_effect_update_camera_shake(local_player_index, datum, &definition->camera_shake, scale, 1.f);
-		rumble_player_impulse(local_player_index, &definition->vibrate, scale, 1.f);
+		rumble_player_impulse(local_player_index, &definition->rumble, scale, 1.f);
 
 		if (definition->sound.index != NONE)
 		{
@@ -761,8 +761,8 @@ void player_effect_get_camera_effect_matrix(
 					&shake_matrix);
 				rumble_player_continuous(
 					local_player_index,
-					continuous_effect->vibrate_frequencies[_vibrate_frequency_low],
-					continuous_effect->vibrate_frequencies[_vibrate_frequency_high]);
+					continuous_effect->rumble_frequencies[_rumble_frequency_low],
+					continuous_effect->rumble_frequencies[_rumble_frequency_high]);
 				datum->continuous_effect_timer += game_time_get_elapsed();
 
 				if (datum->continuous_effect_timer > 0)

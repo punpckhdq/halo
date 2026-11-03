@@ -16,6 +16,11 @@ header included in hcex build.
 
 /* ---------- prototypes/HS.C */
 
+void hs_initialize(void);
+void hs_initialize_for_new_map(void);
+void hs_dispose_from_old_map(void);
+void hs_dispose(void);
+void hs_update(void);
 void hs_runtime_dispose_from_old_map(void);
 void hs_runtime_initialize_for_new_map(void);
 char const *hs_runtime_get_executing_thread_name(void);

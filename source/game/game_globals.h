@@ -10,6 +10,7 @@ header included in hcex build.
 
 /* ---------- headers */
 
+#include "game.h"
 
 /* ---------- constants */
 
@@ -96,6 +97,7 @@ enum
 	_game_difficulty_unused2,
 	_game_difficulty_unused3,
 	_game_difficulty_unused4,
+	NUMBER_OF_GAME_DIFFICULTY_VALUES
 };
 
 enum
@@ -159,6 +161,11 @@ enum
 #define game_globals_definition_get(index) ((struct game_globals *)tag_get(GAME_GLOBALS_DEFINITION_TAG, index)) /* fake name */
 
 /* ---------- structures */
+
+struct game_globals_tag_reference
+{
+	struct tag_reference reference;
+};
 
 struct breakable_surface
 {
@@ -329,6 +336,12 @@ struct game_globals_falling_damage
 	real runtime_maximum_damage_velocity;
 };
 
+struct game_globals_difficulty_information
+{
+	real game_difficulty_values[NUMBER_OF_GAME_DIFFICULTY_VALUES][NUMBER_OF_GAME_DIFFICULTY_LEVELS];
+	unsigned long unused[21];
+};
+
 struct game_globals
 {
 	unsigned long flags;
@@ -364,9 +377,9 @@ __inline long game_globals_get_weapon(
 	struct game_globals *game_globals,
 	long index)
 {
-	struct tag_reference *weapon = TAG_BLOCK_GET_ELEMENT(&game_globals->weapon_list, index, struct tag_reference);
+	struct game_globals_tag_reference *weapon = TAG_BLOCK_GET_ELEMENT(&game_globals->weapon_list, index, struct game_globals_tag_reference);
 
-	return weapon->index;
+	return weapon->reference.index;
 }
 
 #endif // __GAME_GLOBALS_H

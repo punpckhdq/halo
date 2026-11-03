@@ -147,8 +147,8 @@ static boolean local_player_is_piloting_aircraft(
 
 			if (unit && unit->object.parent_object_index!=NONE && unit->unit.parent_seat_index!=NONE)
 			{
-				struct object_datum *vehicle = (struct object_datum *)object_get_and_verify_type(unit->object.parent_object_index, _object_mask_vehicle);
-				struct vehicle_definition *definition = vehicle_definition_get(vehicle->definition_index);
+				struct vehicle_datum const *vehicle = vehicle_get(unit->object.parent_object_index);
+				struct vehicle_definition const *definition = vehicle_definition_get(vehicle->definition_index);
 
 				if (definition->vehicle.type==_vehicle_human_plane || definition->vehicle.type==_vehicle_alien_fighter)
 				{

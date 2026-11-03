@@ -45,159 +45,9 @@ GAME_ENGINE.C
 
 /* ---------- constants */
 
-#define MULTIPLAYER_GAME_TEXT_TAG_NAME "ui\\multiplayer_game_text" /* fake name */
-
-enum
-{
-	_string_searching_for_network_games = 0,
-	_string_empty_string,
-	_string_single_player,
-	_string_capture_the_flag,
-	_string_slayer,
-	_string_oddball,
-	_string_king_of_the_hill,
-	_string_race,
-	_string_unknown_game_type,
-	_string_game_colon,
-	_string_map_colon,
-	_string_number_of_players_colon,
-	_string_team_game,
-	_string_free_for_all,
-	_string_score_limit_colon,
-	_string_time_limit_minutes_colon,
-	_string_automatic_start,
-	_string_red_team,
-	_string_blue_team,
-	_string_closed_game_prefix,
-	_string_game_accepting_players,
-	_string_game_in_progress,
-	_string_captures,
-	_string_minutes,
-	_string_frags,
-	_string_laps,
-	_string_choose_teams_using_dpad,
-	_string_need_two_teams,
-	_string_single_flag_assault,
-	_string_assault,
-	_string_single_flag_ctf,
-	_string_reverse_tag,
-	_string_juggernaut,
-	_string_rally,
-	_string_waiting_for_another_xbox,
-	_string_waiting_for_another_player,
-	_string_1st,
-	_string_2nd,
-	_string_3rd,
-	_string_4th,
-	_string_5th,
-	_string_6th,
-	_string_7th,
-	_string_8th,
-	_string_9th,
-	_string_10th,
-	_string_11th,
-	_string_12th,
-	_string_13th,
-	_string_14th,
-	_string_15th,
-	_string_16th,
-	_string_no_lives,
-	_string_1_life,
-	_string_n_lives,
-	_string_game_ends_in_a_draw,
-	_string_your_team_lost,
-	_string_you_lost,
-	_string_your_team_won,
-	_string_you_won,
-	_string_red_leads_blue_score_to_score_lives,
-	_string_blue_leads_red_score_to_score_lives,
-	_string_teams_tied_lives,
-	_string_tied_for_nth_place_with_score_lives,
-	_string_in_nth_place_with_score_lives,
-	_string_tab_red_team_tab_string,
-	_string_tab_blue_team_tab_string,
-	_string_place,
-	_string_name,
-	_string_kills,
-	_string_assists,
-	_string_deaths,
-	_string_server_post_game_stats_footer,
-	_string_client_post_game_stats_footer,
-	_string_welcome_player_name,
-	_string_player_name_died,
-	_string_player_name_was_killed_by_the_guardians,
-	_string_player_name_was_killed_by_a_vehicle,
-	_string_player_name_was_killed_by_player_name,
-	_string_player_name_was_betrayed_by_player_name,
-	_string_player_name_quit,
-	_string_player_name_committed_suicide,
-	_string_you_betrayed_player_name,
-	_string_killtacular,
-	_string_triple_kill,
-	_string_double_kill,
-	_string_running_riot,
-	_string_you_are_on_a_killing_spree,
-	_string_you_killed_player_name,
-	_string_killtacular_score,
-	_string_triple_kill_score,
-	_string_double_kill_score,
-	_string_running_riot_score,
-	_string_you_are_on_a_killing_spree_score,
-	_string_you_killed_player_name_score,
-	_string_you_are_the_odd_man_out,
-	_string_you_are_out_of_lives,
-	_string_rejoin_in_seconds,
-	_string_waiting_for_space_to_clear,
-	_string_you_quit_out_of_game,
-	_string_hold_back_for_score,
-	_string_teleporter_is_blocked,
-	_string_first_place,
-	_string_second_place,
-	_string_third_place,
-	_string_fourth_place,
-	_string_fifth_place,
-	_string_sixth_place,
-	_string_seventh_place,
-	_string_eighth_place,
-	_string_9th_place,
-	_string_10th_place,
-	_string_11th_place,
-	_string_12th_place,
-	_string_13th_place,
-	_string_14th_place,
-	_string_15th_place,
-	_string_16th_place,
-	_string_tied_for_first_place,
-	_string_tied_for_second_place,
-	_string_tied_for_third_place,
-	_string_tied_for_fourth_place,
-	_string_tied_for_fifth_place,
-	_string_tied_for_sixth_place,
-	_string_tied_for_seventh_place,
-	_string_tied_for_eight_place,
-	_string_tied_for_9th_place,
-	_string_tied_for_10th_place,
-	_string_tied_for_11th_place,
-	_string_tied_for_12th_place,
-	_string_tied_for_13th_place,
-	_string_tied_for_14th_place,
-	_string_tied_for_15th_place,
-	_string_tied_for_16th_place,
-	_string_even,
-	_string_winning,
-	_string_losing,
-	_string_tied,
-	_string_dead,
-	_string_quit
-};
 
 #define STATISTIC_BUFFER_PLACE_TIED_FLAG 0x80000000 /* fake name */
 #define MAXIMUM_TITLE_STRING_LENGTH 80 /* fake name */
-
-enum
-{
-	MULTIPLAYER_MAXIMUM_PLAYERS = 16
-};
 
 enum
 {
@@ -209,19 +59,6 @@ enum
 };
 
 /* ---------- macros */
-
-#define multiplayer_game_text_get_string(string, string_index) /* fake name */ \
-{ \
-	long string_list_index = tag_loaded(UNICODE_STRING_LISTS_GROUP_TAG, MULTIPLAYER_GAME_TEXT_TAG_NAME); \
-	if (string_list_index != NONE) \
-	{ \
-		(string) = unicode_string_list_get_string(string_list_index, (string_index)); \
-	} \
-	else \
-	{ \
-		(string) = L""; \
-	} \
-}
 
 /* ---------- structures */
 
@@ -3895,12 +3732,12 @@ long weapon_definition_index_to_list_index(
 {
 	long list_index;
 	struct game_globals *game_globals = scenario_get_game_globals();
-	struct tag_reference *weapons = game_globals->weapon_list.count ? TAG_BLOCK_GET_ELEMENT(&game_globals->weapon_list, 0, struct tag_reference) : NULL;
+	struct game_globals_tag_reference *weapons = game_globals->weapon_list.count ? TAG_BLOCK_GET_ELEMENT(&game_globals->weapon_list, 0, struct game_globals_tag_reference) : NULL;
 	long result = NONE;
 
 	for (list_index = 0; list_index < game_globals->weapon_list.count; list_index++)
 	{
-		if (definition_index == weapons[list_index].index)
+		if (definition_index == weapons[list_index].reference.index)
 		{
 			result = list_index;
 			break;

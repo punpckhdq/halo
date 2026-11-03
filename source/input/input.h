@@ -240,7 +240,7 @@ struct key_stroke
 	short key_code;
 };
 
-struct vibrate_data
+struct rumble_data
 {
 	word left_frequency;
 	word right_frequency;

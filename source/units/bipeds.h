@@ -97,10 +97,13 @@ void biped_get_sight_position(
 	real_vector3d *desired_facing,
 	real_vector3d const *desired_gun_offset,
 	real_point3d *sight_position);
+void biped_get_autoaim_pill(long biped_index, real_point3d *base, real_vector3d *height, real *width);
+boolean biped_fix_position(long biped_index, long line_of_site_object_index, real_point3d const *new_position, real_point3d *final_position, real max_radius_fudge_factor, boolean fix_below_new_position, boolean dont_teleport, boolean use_radius_as_multiplier);
 void biped_get_physics_pill(long biped_index, real_point3d *base, real *height, real *width);
 void biped_accelerate(long biped_index, real_vector3d *acceleration);
 
 void biped_stop_limp_body_physics(long biped_index);
+boolean biped_flying_through_air(long biped_index);
 long biped_find_pathfinding_surface_index(long biped_index, real_point3d *pathfinding_point);
 long biped_approximate_surface_index(long biped_index, real_point3d *surface_point);
 
