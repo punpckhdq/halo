@@ -2278,13 +2278,13 @@ static void biped_update_jumping(
 
 		if (player->local_player_index != NONE && thrusting)
 		{
-			struct vibrate_definition vibrate;
+			struct rumble_definition rumble;
 
-			memset(&vibrate, 0, sizeof(vibrate));
-			vibrate.vibrate_frequencies[0].frequency = 1.f;
-			vibrate.vibrate_frequencies[0].duration = 0.3f;
-			vibrate.vibrate_frequencies[0].fade_function = _transition_function_late;
-			rumble_player_impulse(player->local_player_index, &vibrate, 1.f, 1.f);
+			memset(&rumble, 0, sizeof(rumble));
+			rumble.rumble_frequencies[_rumble_frequency_low].frequency = 1.f;
+			rumble.rumble_frequencies[_rumble_frequency_low].duration = 0.3f;
+			rumble.rumble_frequencies[_rumble_frequency_low].fade_function = _transition_function_late;
+			rumble_player_impulse(player->local_player_index, &rumble, 1.f, 1.f);
 		}
 	}
 
