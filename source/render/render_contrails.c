@@ -162,9 +162,9 @@ static void render_contrail(
 				_contrail_texture_repeats_v_bit) + texture_v0;
 			previous_point = NULL;
 
-			for (point_index = contrail->first_contrail_point_indices[instance_index];
-				point_index != NONE;
-				point_index = previous_point->next_contrail_point_index)
+			point_index = contrail->first_contrail_point_indices[instance_index];
+
+			while (point_index != NONE)
 			{
 				real_argb_color rgbcolor;
 				real_vector3d normal;
@@ -336,9 +336,7 @@ static void render_contrail(
 						point_vector.k = next_point->position.z - point->position.z;
 					}
 
-					vector.i = point_vector.k * camera_vector.j - point_vector.j * camera_vector.k;
-					vector.j = point_vector.i * camera_vector.k - point_vector.k * camera_vector.i;
-					vector.k = point_vector.j * camera_vector.i - point_vector.i * camera_vector.j;
+					cross_product3d(&camera_vector, &point_vector, &vector);
 					normalize3d(&vector);
 					vertices[0].position.x = point->position.x - vector.i * width;
 					vertices[0].position.y = point->position.y - vector.j * width;
@@ -349,9 +347,7 @@ static void render_contrail(
 
 					if (orient)
 					{
-						normal.i = vector.k * point_vector.j - vector.j * point_vector.k;
-						normal.j = vector.i * point_vector.k - vector.k * point_vector.i;
-						normal.k = vector.j * point_vector.i - vector.i * point_vector.j;
+						cross_product3d(&point_vector, &vector, &normal);
 						normalize3d(&normal);
 					}
 					break;
@@ -371,6 +367,7 @@ static void render_contrail(
 				texture_u += texture_u_delta;
 				vertices += 2;
 				previous_point = point;
+				point_index = point->next_contrail_point_index;
 			}
 
 			vertices -= vertex_count;
