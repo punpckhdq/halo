@@ -36,7 +36,7 @@ RENDER.C
 
 /* ---------- constants */
 
-enum
+enum nonplayer_type
 {
 	_draw_fullscreen_elements = 0,
 	_draw_game_engine_elements
@@ -49,7 +49,7 @@ enum
 /* ---------- prototypes */
 
 static void render_player_frame(struct render_window *window, point2d const *screenshot_combined_index);
-static void render_nonplayer_frame(struct render_window const *window, long type);
+static void render_nonplayer_frame(struct render_window *window, enum nonplayer_type nonplayer_type);
 static void render_window(short local_player_index, struct render_camera const *render_camera, struct render_frustum const *render_frustum, struct render_camera const *rasterizer_camera, struct render_frustum const *rasterizer_frustum, short rasterizer_target, boolean has_mirror);
 
 /* ---------- globals */
@@ -110,7 +110,7 @@ static void render_player_frame(
 	struct render_window *window,
 	point2d const *screenshot_combined_index)
 {
-	static boolean fog_error_displayed;
+	static boolean warned;
 	real_rectangle2d frustum_bounds;
 	struct render_frustum render_frustum;
 	struct render_frustum rasterizer_frustum;
@@ -142,23 +142,17 @@ static void render_player_frame(
 
 	if (window->render_camera.z_far <= window->render_camera.z_near)
 	{
-		if (!fog_error_displayed)
+		if (!warned)
 		{
 			error(_error_silent, "### ERROR something is wrong with the fog in the sky tag or the fog tag");
-			fog_error_displayed = TRUE;
+			warned = TRUE;
 		}
 
 		window->render_camera.z_far = window->render_camera.z_near + 0.01f;
 	}
 
-	match_assert(
-		"c:\\halo\\SOURCE\\render\\render.c",
-		187,
-		!memcmp(&window->render_camera.viewport_bounds, &window->rasterizer_camera.viewport_bounds, sizeof(rectangle2d)));
-	match_assert(
-		"c:\\halo\\SOURCE\\render\\render.c",
-		188,
-		!memcmp(&window->render_camera.window_bounds, &window->rasterizer_camera.window_bounds, sizeof(rectangle2d)));
+	match_assert("c:\\halo\\SOURCE\\render\\render.c", 187, !memcmp(&window->render_camera.viewport_bounds, &window->rasterizer_camera.viewport_bounds, sizeof(rectangle2d)));
+	match_assert("c:\\halo\\SOURCE\\render\\render.c", 188, !memcmp(&window->render_camera.window_bounds, &window->rasterizer_camera.window_bounds, sizeof(rectangle2d)));
 
 	render_camera_build_frustum_bounds(camera, &frustum_bounds);
 
@@ -191,14 +185,8 @@ static void render_player_frame(
 
 		match_assert("c:\\halo\\SOURCE\\render\\render.c", 225, window->render_camera.viewport_bounds.x0==0);
 		match_assert("c:\\halo\\SOURCE\\render\\render.c", 226, window->render_camera.viewport_bounds.y0==0);
-		match_assert(
-			"c:\\halo\\SOURCE\\render\\render.c",
-			227,
-			window->render_camera.viewport_bounds.x1==RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH);
-		match_assert(
-			"c:\\halo\\SOURCE\\render\\render.c",
-			228,
-			window->render_camera.viewport_bounds.y1==RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT);
+		match_assert("c:\\halo\\SOURCE\\render\\render.c", 227, window->render_camera.viewport_bounds.x1==RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH);
+		match_assert("c:\\halo\\SOURCE\\render\\render.c", 228, window->render_camera.viewport_bounds.y1==RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT);
 
 		render_camera_mirror(camera, &mirror, &mirror_camera);
 		render_camera_build_frustum(&mirror_camera, &frustum_bounds, &mirror_frustum, TRUE);
@@ -230,8 +218,8 @@ static void render_player_frame(
 }
 
 static void render_nonplayer_frame(
-	struct render_window const *window,
-	long type)
+	struct render_window *window,
+	enum nonplayer_type nonplayer_type)
 {
 	struct rasterizer_window_begin_parameters rasterizer_parameters;
 
@@ -242,11 +230,11 @@ static void render_nonplayer_frame(
 	rasterizer_parameters.camera = window->rasterizer_camera;
 	render_camera_build_frustum(&rasterizer_parameters.camera, NULL, &rasterizer_parameters.frustum, TRUE);
 	rasterizer_parameters.rasterizer_target = _rasterizer_target_render_primary;
-	rasterizer_parameters.suppress_clear = type == _draw_fullscreen_elements;
+	rasterizer_parameters.suppress_clear = nonplayer_type == _draw_fullscreen_elements;
 	rasterizer_parameters.window_index = NONE;
 	rasterizer_window_begin(&rasterizer_parameters);
 
-	switch (type)
+	switch (nonplayer_type)
 	{
 	case _draw_fullscreen_elements:
 		interface_draw_fullscreen_overlays();
@@ -493,10 +481,7 @@ void render_frame_present(
 boolean render_location_visible(
 	struct location *location)
 {
-	match_assert(
-		"c:\\halo\\SOURCE\\render\\render.c",
-		584,
-		location->cluster_index>=0 && location->cluster_index<global_structure_bsp_get()->clusters.count);
+	match_assert("c:\\halo\\SOURCE\\render\\render.c", 584, location->cluster_index>=0 && location->cluster_index<global_structure_bsp_get()->clusters.count);
 
 	return BIT_VECTOR_TEST_FLAG(render.visible_cluster_flags, location->cluster_index);
 }
@@ -504,10 +489,7 @@ boolean render_location_visible(
 struct rendered_cluster *rendered_cluster_get(
 	short rendered_cluster_index)
 {
-	match_assert(
-		"c:\\halo\\SOURCE\\render\\render.c",
-		592,
-		rendered_cluster_index>=0 && rendered_cluster_index<render.rendered_cluster_count);
+	match_assert("c:\\halo\\SOURCE\\render\\render.c", 592, rendered_cluster_index>=0 && rendered_cluster_index<render.rendered_cluster_count);
 
 	return &render.rendered_clusters[rendered_cluster_index];
 }

@@ -42,27 +42,30 @@ RENDER_DEBUG.C
 
 enum
 {
-	CIRCLE_DIVISIONS = 16,										/* fake name */
+	QUARTER_CIRCLE_DIVISIONS = 4,
+	HALF_CIRCLE_DIVISIONS = 8,
+	THREE_QUARTER_CIRCLE_DIVISIONS = 12,
+	CIRCLE_DIVISIONS = 16,
 	NUMBER_OF_CIRCLE_POINTS = CIRCLE_DIVISIONS + 1,				/* fake name */
-	NUMBER_OF_HALF_CIRCLE_POINTS = CIRCLE_DIVISIONS / 2 + 1,	/* fake name */
+	NUMBER_OF_HALF_CIRCLE_POINTS = HALF_CIRCLE_DIVISIONS + 1,	/* fake name */
 
-	MAXIMUM_RENDER_DEBUG_CACHE_ENTRIES = 512,					/* fake name */
-	MAXIMUM_RENDER_DEBUG_CACHE_STRING_SIZE = 1024,				/* fake name */
+	MAXIMUM_CACHE_STRING_LENGTH = 1023,
+	MAXIMUM_DEBUG_CACHE_COUNT = 512,
 };
 
 enum
 {
-	_render_debug_cache_circle = 0,				/* fake name */
-	_render_debug_cache_point,					/* fake name */
-	_render_debug_cache_line,					/* fake name */
-	_render_debug_cache_sphere,					/* fake name */
-	_render_debug_cache_cylinder,				/* fake name */
-	_render_debug_cache_pill,					/* fake name */
-	_render_debug_cache_box,					/* fake name */
-	_render_debug_cache_box_outline,			/* fake name */
-	_render_debug_cache_string,					/* fake name */
-	_render_debug_cache_string_at_point,		/* fake name */
-	NUMBER_OF_RENDER_DEBUG_CACHE_TYPES			/* fake name */
+	_cache_entry_type_circle = 0,
+	_cache_entry_type_point,
+	_cache_entry_type_line,
+	_cache_entry_type_sphere,
+	_cache_entry_type_cylinder,
+	_cache_entry_type_pill,
+	_cache_entry_type_box,
+	_cache_entry_type_box_outline,
+	_cache_entry_type_string,
+	_cache_entry_type_string_at_point,
+	NUMBER_OF_CACHE_ENTRY_TYPES
 };
 
 #define CIRCLE_DIVISION_ANGLE ((2.f * _pi) / CIRCLE_DIVISIONS)				/* fake name */
@@ -71,13 +74,12 @@ enum
 #define DEBUG_DECAL_SPHERE_RADIUS 0.1f										/* fake name */
 #define DEBUG_CAMERA_GROUND_DISTANCE 1000.f									/* fake name */
 #define DEBUG_CAMERA_SURFACE_DISTANCE 50.f									/* fake name */
-#define DEBUG_BSP_FILE_NAME "d:\\debug_bsp.txt"								/* fake name */
 
 /* ---------- macros */
 
 /* ---------- structures */
 
-struct render_debug_cache_entry	/* fake name */
+struct cache_entry
 {
 	short type;
 
@@ -86,8 +88,8 @@ struct render_debug_cache_entry	/* fake name */
 		struct
 		{
 			real_plane3d plane;
-			short projection;
-			boolean sign;
+			short projection_axis;
+			boolean projection_sign;
 			real_point2d center;
 			real radius;
 			real_argb_color color;
@@ -179,16 +181,16 @@ static boolean render_debug_cache_overflow_warned;					/* fake name */
 static short render_debug_cache_string_length;						/* fake name */
 static short render_debug_cache_entry_count;						/* fake name */
 static short render_debug_cache_time;								/* fake name */
-static struct render_debug_cache_entry render_debug_cache_entries[MAXIMUM_RENDER_DEBUG_CACHE_ENTRIES];	/* fake name */
-static char render_debug_cache_strings[MAXIMUM_RENDER_DEBUG_CACHE_STRING_SIZE];							/* fake name */
+static struct cache_entry render_debug_cache_entries[MAXIMUM_DEBUG_CACHE_COUNT];	/* fake name */
+static char render_debug_cache_strings[MAXIMUM_CACHE_STRING_LENGTH + 1];							/* fake name */
 
 /* ---------- public code */
 
 void render_debug_point2d(
 	boolean immediate,
 	real_plane3d const *plane,
-	short projection,
-	boolean sign,
+	short projection_axis,
+	boolean projection_sign,
 	real_point2d const *point,
 	real size,
 	real_argb_color const *color,
@@ -200,8 +202,8 @@ void render_debug_point2d(
 	match_assert("c:\\halo\\SOURCE\\render\\render_debug.c", 220, point);
 	match_assert("c:\\halo\\SOURCE\\render\\render_debug.c", 221, color);
 
-	project_point2d(point, plane, projection, sign, &q);
-	q.n[projection] += sign ? offset : -offset;
+	project_point2d(point, plane, projection_axis, projection_sign, &q);
+	q.n[projection_axis] += projection_sign ? offset : -offset;
 	render_debug_point(immediate, &q, size, color);
 
 	return;
@@ -210,8 +212,8 @@ void render_debug_point2d(
 void render_debug_line2d(
 	boolean immediate,
 	real_plane3d const *plane,
-	short projection,
-	boolean sign,
+	short projection_axis,
+	boolean projection_sign,
 	real_point2d const *p0,
 	real_point2d const *p1,
 	real_argb_color const *color,
@@ -225,10 +227,10 @@ void render_debug_line2d(
 	match_assert("c:\\halo\\SOURCE\\render\\render_debug.c", 244, p1);
 	match_assert("c:\\halo\\SOURCE\\render\\render_debug.c", 245, color);
 
-	project_point2d(p0, plane, projection, sign, &q0);
-	project_point2d(p1, plane, projection, sign, &q1);
-	q0.n[projection] += sign ? offset : -offset;
-	q1.n[projection] += sign ? offset : -offset;
+	project_point2d(p0, plane, projection_axis, projection_sign, &q0);
+	project_point2d(p1, plane, projection_axis, projection_sign, &q1);
+	q0.n[projection_axis] += projection_sign ? offset : -offset;
+	q1.n[projection_axis] += projection_sign ? offset : -offset;
 	render_debug_line(immediate, &q0, &q1, color);
 
 	return;
@@ -237,11 +239,11 @@ void render_debug_line2d(
 void render_debug_vector2d(
 	boolean immediate,
 	real_plane3d const *plane,
-	short projection,
-	boolean sign,
+	short projection_axis,
+	boolean projection_sign,
 	real_point2d const *point,
 	real_vector2d const *vector,
-	real scale,
+	real size,
 	real_argb_color const *color,
 	real offset)
 {
@@ -252,8 +254,8 @@ void render_debug_vector2d(
 	match_assert("c:\\halo\\SOURCE\\render\\render_debug.c", 271, vector);
 	match_assert("c:\\halo\\SOURCE\\render\\render_debug.c", 272, color);
 
-	point_from_line2d(point, vector, scale, &point1);
-	render_debug_line2d(immediate, plane, projection, sign, point, &point1, color, offset);
+	point_from_line2d(point, vector, size, &point1);
+	render_debug_line2d(immediate, plane, projection_axis, projection_sign, point, &point1, color, offset);
 
 	return;
 }
@@ -261,8 +263,8 @@ void render_debug_vector2d(
 void render_debug_circle(
 	boolean immediate,
 	real_plane3d const *plane,
-	short projection,
-	boolean sign,
+	short projection_axis,
+	boolean projection_sign,
 	real_point2d const *center,
 	real radius,
 	real_argb_color const *color,
@@ -288,12 +290,12 @@ void render_debug_circle(
 
 			set_real_point2d(&q0, center->x + p0->x, center->y + p0->y);
 			set_real_point2d(&q1, center->x + p1->x, center->y + p1->y);
-			render_debug_line2d(TRUE, plane, projection, sign, &q0, &q1, color, offset);
+			render_debug_line2d(TRUE, plane, projection_axis, projection_sign, &q0, &q1, color, offset);
 		}
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_circle, plane, projection, sign, center, radius, color);
+		render_debug_add_cache_entry(_cache_entry_type_circle, plane, projection_axis, projection_sign, center, radius, color);
 	}
 
 	return;
@@ -328,7 +330,7 @@ void render_debug_point(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_point, point, size, color);
+		render_debug_add_cache_entry(_cache_entry_type_point, point, size, color);
 	}
 
 	return;
@@ -350,7 +352,7 @@ void render_debug_line(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_line, point0, point1, color);
+		render_debug_add_cache_entry(_cache_entry_type_line, point0, point1, color);
 	}
 
 	return;
@@ -377,14 +379,14 @@ void render_debug_vector(
 
 void render_debug_vectors(
 	boolean immediate,
-	real_point3d const *point,
+	real_point3d const *position,
 	real_vector3d const *forward,
 	real_vector3d const *up,
 	real size)
 {
 	real_matrix4x3 matrix;
 
-	matrix4x3_from_point_and_vectors(&matrix, point, forward, up);
+	matrix4x3_from_point_and_vectors(&matrix, position, forward, up);
 	render_debug_matrix(immediate, &matrix, size);
 
 	return;
@@ -392,13 +394,13 @@ void render_debug_vectors(
 
 void render_debug_quaternion(
 	boolean immediate,
-	real_point3d const *point,
-	real_quaternion const *quaternion,
+	real_point3d const *position,
+	real_quaternion const *rotation,
 	real size)
 {
 	real_matrix4x3 matrix;
 
-	matrix4x3_from_point_and_quaternion(&matrix, point, quaternion);
+	matrix4x3_from_point_and_quaternion(&matrix, position, rotation);
 	render_debug_matrix(immediate, &matrix, size);
 
 	return;
@@ -543,7 +545,7 @@ void render_debug_sphere(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_sphere, center, radius, color);
+		render_debug_add_cache_entry(_cache_entry_type_sphere, center, radius, color);
 	}
 
 	return;
@@ -583,20 +585,20 @@ void render_debug_cylinder(
 			rasterizer_debug_line(&bottom_points[i], &bottom_points[i + 1], color);
 		}
 
-		for (i = 0; i < CIRCLE_DIVISIONS; i += 4)
+		for (i = 0; i < CIRCLE_DIVISIONS; i += QUARTER_CIRCLE_DIVISIONS)
 		{
 			rasterizer_debug_line(&top_points[i], &bottom_points[i], color);
 		}
 
-		for (i = 0; i < CIRCLE_DIVISIONS / 2; i += 4)
+		for (i = 0; i < HALF_CIRCLE_DIVISIONS; i += QUARTER_CIRCLE_DIVISIONS)
 		{
-			rasterizer_debug_line(&top_points[i], &top_points[i + CIRCLE_DIVISIONS / 2], color);
-			rasterizer_debug_line(&bottom_points[i], &bottom_points[i + CIRCLE_DIVISIONS / 2], color);
+			rasterizer_debug_line(&top_points[i], &top_points[i + HALF_CIRCLE_DIVISIONS], color);
+			rasterizer_debug_line(&bottom_points[i], &bottom_points[i + HALF_CIRCLE_DIVISIONS], color);
 		}
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_cylinder, base, height, width, color);
+		render_debug_add_cache_entry(_cache_entry_type_cylinder, base, height, width, color);
 	}
 
 	return;
@@ -640,12 +642,12 @@ void render_debug_pill(
 			rasterizer_debug_line(&xy_bottom_points[i], &xy_bottom_points[i + 1], color);
 		}
 
-		for (i = 0; i < CIRCLE_DIVISIONS; i += 4)
+		for (i = 0; i < CIRCLE_DIVISIONS; i += QUARTER_CIRCLE_DIVISIONS)
 		{
 			rasterizer_debug_line(&xy_top_points[i], &xy_bottom_points[i], color);
 		}
 
-		for (i = 0; i < CIRCLE_DIVISIONS / 2; i++)
+		for (i = 0; i < HALF_CIRCLE_DIVISIONS; i++)
 		{
 			rasterizer_debug_line(&yz_top_points[i], &yz_top_points[i + 1], color);
 			rasterizer_debug_line(&yz_bottom_points[i], &yz_bottom_points[i + 1], color);
@@ -655,7 +657,7 @@ void render_debug_pill(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_pill, base, height, width, color);
+		render_debug_add_cache_entry(_cache_entry_type_pill, base, height, width, color);
 	}
 
 	return;
@@ -720,7 +722,7 @@ void render_debug_box(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_box, bounds, color);
+		render_debug_add_cache_entry(_cache_entry_type_box, bounds, color);
 	}
 
 	return;
@@ -757,7 +759,7 @@ void render_debug_box_outline(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_box_outline, bounds, color);
+		render_debug_add_cache_entry(_cache_entry_type_box_outline, bounds, color);
 	}
 
 	return;
@@ -823,7 +825,7 @@ void render_debug_string(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_string, string);
+		render_debug_add_cache_entry(_cache_entry_type_string, string);
 	}
 
 	return;
@@ -863,7 +865,7 @@ void render_debug_string_at_point(
 	}
 	else
 	{
-		render_debug_add_cache_entry(_render_debug_cache_string_at_point, string, point, color);
+		render_debug_add_cache_entry(_cache_entry_type_string_at_point, string, point, color);
 	}
 
 	return;
@@ -898,31 +900,31 @@ void render_debug(
 
 	for (entry_index = 0; entry_index < render_debug_cache_entry_count; entry_index++)
 	{
-		struct render_debug_cache_entry *entry = &render_debug_cache_entries[entry_index];
+		struct cache_entry *entry = &render_debug_cache_entries[entry_index];
 
 		switch (entry->type)
 		{
-		case _render_debug_cache_circle:
+		case _cache_entry_type_circle:
 			render_debug_circle(
 				TRUE,
 				&entry->circle.plane,
-				entry->circle.projection,
-				entry->circle.sign,
+				entry->circle.projection_axis,
+				entry->circle.projection_sign,
 				&entry->circle.center,
 				entry->circle.radius,
 				&entry->circle.color,
 				entry->circle.offset);
 			break;
-		case _render_debug_cache_point:
+		case _cache_entry_type_point:
 			render_debug_point(TRUE, &entry->point.point, entry->point.size, &entry->point.color);
 			break;
-		case _render_debug_cache_line:
+		case _cache_entry_type_line:
 			render_debug_line(TRUE, &entry->line.point0, &entry->line.point1, &entry->line.color);
 			break;
-		case _render_debug_cache_sphere:
+		case _cache_entry_type_sphere:
 			render_debug_sphere(TRUE, &entry->sphere.center, entry->sphere.radius, &entry->sphere.color);
 			break;
-		case _render_debug_cache_cylinder:
+		case _cache_entry_type_cylinder:
 			render_debug_cylinder(
 				TRUE,
 				&entry->cylinder.base,
@@ -930,7 +932,7 @@ void render_debug(
 				entry->cylinder.width,
 				&entry->cylinder.color);
 			break;
-		case _render_debug_cache_pill:
+		case _cache_entry_type_pill:
 			render_debug_pill(
 				TRUE,
 				&entry->pill.base,
@@ -938,16 +940,16 @@ void render_debug(
 				entry->pill.width,
 				&entry->pill.color);
 			break;
-		case _render_debug_cache_box:
+		case _cache_entry_type_box:
 			render_debug_box(TRUE, &entry->box.bounds, &entry->box.color);
 			break;
-		case _render_debug_cache_box_outline:
+		case _cache_entry_type_box_outline:
 			render_debug_box_outline(TRUE, &entry->box.bounds, &entry->box.color);
 			break;
-		case _render_debug_cache_string:
+		case _cache_entry_type_string:
 			render_debug_string(TRUE, entry->string.string);
 			break;
-		case _render_debug_cache_string_at_point:
+		case _cache_entry_type_string_at_point:
 			render_debug_string_at_point(
 				TRUE,
 				&entry->string_at_point.point,
@@ -989,13 +991,13 @@ static char *render_debug_add_cache_string(
 
 	if (!result)
 	{
-		if (render_debug_cache_string_length < MAXIMUM_RENDER_DEBUG_CACHE_STRING_SIZE - 1)
+		if (render_debug_cache_string_length < MAXIMUM_CACHE_STRING_LENGTH)
 		{
 			result = &render_debug_cache_strings[render_debug_cache_string_length];
-			strncpy(result, string, MAXIMUM_RENDER_DEBUG_CACHE_STRING_SIZE - 1 - render_debug_cache_string_length);
-			render_debug_cache_strings[MAXIMUM_RENDER_DEBUG_CACHE_STRING_SIZE - 1] = '\0';
+			strncpy(result, string, MAXIMUM_CACHE_STRING_LENGTH - render_debug_cache_string_length);
+			render_debug_cache_strings[MAXIMUM_CACHE_STRING_LENGTH] = '\0';
 			render_debug_cache_string_length += strlen(string) + 1;
-			render_debug_cache_string_length = MIN(render_debug_cache_string_length, MAXIMUM_RENDER_DEBUG_CACHE_STRING_SIZE - 1);
+			render_debug_cache_string_length = MIN(render_debug_cache_string_length, MAXIMUM_CACHE_STRING_LENGTH);
 		}
 		else if (!render_debug_cache_string_overflow_warned)
 		{
@@ -1012,8 +1014,9 @@ static void build_circle_points(
 	real_point2d *points)
 {
 	short i;
-	real s = sine(CIRCLE_DIVISION_ANGLE);
-	real c = cosine(CIRCLE_DIVISION_ANGLE);
+	real angle = CIRCLE_DIVISION_ANGLE;
+	real s = sine(angle);
+	real c = cosine(angle);
 
 	set_real_point2d(&points[0], radius, 0.f);
 
@@ -1081,7 +1084,7 @@ static void build_pill_points(
 		for (i = 0; i < NUMBER_OF_HALF_CIRCLE_POINTS; i++)
 		{
 			real_point2d const *p0 = &circle_points[i];
-			real_point2d const *p1 = &circle_points[i + CIRCLE_DIVISIONS / 2];
+			real_point2d const *p1 = &circle_points[i + HALF_CIRCLE_DIVISIONS];
 
 			set_real_point3d(&yz_top_points[i], 0.f, p0->x, p0->y + length);
 			set_real_point3d(&yz_bottom_points[i], 0.f, p1->x, p1->y);
@@ -1109,58 +1112,58 @@ static void render_debug_add_cache_entry(
 		render_debug_cache_strings[0] = '\0';
 	}
 
-	if (render_debug_cache_entry_count < MAXIMUM_RENDER_DEBUG_CACHE_ENTRIES)
+	if (render_debug_cache_entry_count < MAXIMUM_DEBUG_CACHE_COUNT)
 	{
 		va_list arguments;
-		struct render_debug_cache_entry *entry = &render_debug_cache_entries[render_debug_cache_entry_count++];
+		struct cache_entry *entry = &render_debug_cache_entries[render_debug_cache_entry_count++];
 
 		va_start(arguments, type);
 		entry->type = type;
 
 		switch (type)
 		{
-		case _render_debug_cache_circle:
+		case _cache_entry_type_circle:
 			entry->circle.plane = *va_arg(arguments, real_plane3d const *);
-			entry->circle.projection = va_arg(arguments, short);
-			entry->circle.sign = va_arg(arguments, boolean);
+			entry->circle.projection_axis = va_arg(arguments, short);
+			entry->circle.projection_sign = va_arg(arguments, boolean);
 			entry->circle.center = *va_arg(arguments, real_point2d const *);
 			entry->circle.radius = (real)va_arg(arguments, double);
 			entry->circle.color = *va_arg(arguments, real_argb_color const *);
 			entry->circle.offset = (real)va_arg(arguments, double);
 			break;
-		case _render_debug_cache_point:
+		case _cache_entry_type_point:
 			entry->point.point = *va_arg(arguments, real_point3d const *);
 			entry->point.size = (real)va_arg(arguments, double);
 			entry->point.color = *va_arg(arguments, real_argb_color const *);
 			break;
-		case _render_debug_cache_line:
+		case _cache_entry_type_line:
 			entry->line.point0 = *va_arg(arguments, real_point3d const *);
 			entry->line.point1 = *va_arg(arguments, real_point3d const *);
 			entry->line.color = *va_arg(arguments, real_argb_color const *);
 			break;
-		case _render_debug_cache_sphere:
+		case _cache_entry_type_sphere:
 			entry->sphere.center = *va_arg(arguments, real_point3d const *);
 			entry->sphere.radius = (real)va_arg(arguments, double);
 			entry->sphere.color = *va_arg(arguments, real_argb_color const *);
 			break;
-		case _render_debug_cache_cylinder:
+		case _cache_entry_type_cylinder:
 			entry->cylinder.base = *va_arg(arguments, real_point3d const *);
 			entry->cylinder.height = *va_arg(arguments, real_vector3d const *);
 			entry->cylinder.width = (real)va_arg(arguments, double);
 			entry->cylinder.color = *va_arg(arguments, real_argb_color const *);
 			break;
-		case _render_debug_cache_pill:
+		case _cache_entry_type_pill:
 			entry->pill.base = *va_arg(arguments, real_point3d const *);
 			entry->pill.height = *va_arg(arguments, real_vector3d const *);
 			entry->pill.width = (real)va_arg(arguments, double);
 			entry->pill.color = *va_arg(arguments, real_argb_color const *);
 			break;
-		case _render_debug_cache_box:
-		case _render_debug_cache_box_outline:
+		case _cache_entry_type_box:
+		case _cache_entry_type_box_outline:
 			entry->box.bounds = *va_arg(arguments, real_rectangle3d const *);
 			entry->box.color = *va_arg(arguments, real_argb_color const *);
 			break;
-		case _render_debug_cache_string:
+		case _cache_entry_type_string:
 		{
 			char *string = render_debug_add_cache_string(va_arg(arguments, char const *));
 
@@ -1174,7 +1177,7 @@ static void render_debug_add_cache_entry(
 			}
 			break;
 		}
-		case _render_debug_cache_string_at_point:
+		case _cache_entry_type_string_at_point:
 		{
 			char *string = render_debug_add_cache_string(va_arg(arguments, char const *));
 
@@ -1387,7 +1390,7 @@ static void render_debug_bsp(
 
 		if (input_key_is_down(_key_b))
 		{
-			FILE *file = fopen(DEBUG_BSP_FILE_NAME, "w");
+			FILE *file = fopen("d:\\debug_bsp.txt", "w");
 
 			if (file)
 			{

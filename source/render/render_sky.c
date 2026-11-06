@@ -47,10 +47,7 @@ void render_sky(
 	short shader_function_index;
 	short light_index;
 
-	match_assert(
-		"c:\\halo\\SOURCE\\render\\render_sky.c",
-		38,
-		!render.visible_sky_model || scenario_get_sky(render.visible_sky_index));
+	match_assert("c:\\halo\\SOURCE\\render\\render_sky.c", 38, !render.visible_sky_model || scenario_get_sky(render.visible_sky_index));
 
 	if (render.visible_sky_model)
 	{
@@ -203,3 +200,5 @@ void render_sky(
 
 	return;
 }
+
+/* ---------- private code */

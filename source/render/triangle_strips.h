@@ -19,13 +19,13 @@ enum
 
 /* ---------- structures */
 
-struct triangle_strip_iterator
+struct triangle_strip_iterator	/* fake name */
 {
 	short strip_count;	/* fake name */
 	short vertex_count;
 	short const *triangle_strip_vertex_indices;
 	boolean reverse_winding;	/* fake name */
-	char signature;
+	byte signature;
 };
 
 /* ---------- prototypes/TRIANGLE_STRIPS.C */

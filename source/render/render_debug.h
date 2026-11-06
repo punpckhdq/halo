@@ -16,17 +16,17 @@ header included in hcex build.
 
 /* ---------- prototypes/RENDER_DEBUG.C */
 
-void render_debug_point2d(boolean immediate, real_plane3d const *plane, short projection, boolean sign, real_point2d const *point, real size, real_argb_color const *color, real offset);
-void render_debug_line2d(boolean immediate, real_plane3d const *plane, short projection, boolean sign, real_point2d const *p0, real_point2d const *p1, real_argb_color const *color, real offset);
-void render_debug_vector2d(boolean immediate, real_plane3d const *plane, short projection, boolean sign, real_point2d const *point, real_vector2d const *vector, real scale, real_argb_color const *color, real offset);
-void render_debug_circle(boolean immediate, real_plane3d const *plane, short projection, boolean sign, real_point2d const *center, real radius, real_argb_color const *color, real offset);
+void render_debug_point2d(boolean immediate, real_plane3d const *plane, short projection_axis, boolean projection_sign, real_point2d const *point, real size, real_argb_color const *color, real offset);
+void render_debug_line2d(boolean immediate, real_plane3d const *plane, short projection_axis, boolean projection_sign, real_point2d const *p0, real_point2d const *p1, real_argb_color const *color, real offset);
+void render_debug_vector2d(boolean immediate, real_plane3d const *plane, short projection_axis, boolean projection_sign, real_point2d const *point, real_vector2d const *vector, real size, real_argb_color const *color, real offset);
+void render_debug_circle(boolean immediate, real_plane3d const *plane, short projection_axis, boolean projection_sign, real_point2d const *center, real radius, real_argb_color const *color, real offset);
 
 void render_debug_point(boolean immediate, real_point3d const *point, real size, real_argb_color const *color);
 void render_debug_line(boolean immediate, real_point3d const *point0, real_point3d const *point1, real_argb_color const *color);
 
 void render_debug_vector(boolean immediate, real_point3d const *point, real_vector3d const *vector, real size, real_argb_color const *color);
-void render_debug_vectors(boolean immediate, real_point3d const *point, real_vector3d const *forward, real_vector3d const *up, real size);
-void render_debug_quaternion(boolean immediate, real_point3d const *point, real_quaternion const *quaternion, real size);
+void render_debug_vectors(boolean immediate, real_point3d const *position, real_vector3d const *forward, real_vector3d const *up, real size);
+void render_debug_quaternion(boolean immediate, real_point3d const *position, real_quaternion const *rotation, real size);
 void render_debug_tick(boolean immediate, real_point3d const *point, real_vector3d const *tick_vector, real tick_size, real_argb_color const *color);
 
 void render_debug_line_offset(boolean immediate, real_point3d const *p0, real_point3d const *p1, real_argb_color const *color, real offset);

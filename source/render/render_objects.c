@@ -53,7 +53,7 @@ enum
 
 /* ---------- macros */
 
-#define object_render_state_get(index) ((struct object_render_state *)datum_get(cached_object_render_states, (index)))
+#define object_render_state_get(index) ((struct object_render_state *)datum_get(cached_object_render_states, (index)))	/* fake name */
 
 /* ---------- structures */
 
@@ -96,9 +96,9 @@ static void render_object(struct object_render_data *data);
 static void render_object_list(struct object_render_data *data, struct render_model_effect *parent_model_effect, long object_index);
 static long object_get_cached_render_state(long object_index, real level_of_detail_pixels);
 static void object_render_state_refresh(long cache_index, long object_index, real level_of_detail_pixels, boolean dirty);
-static void interpolate_real_rgb_color(real_rgb_color *current, real_rgb_color const *desired, real maximum_speed);
-static void interpolate_real_argb_color(real_argb_color *current, real_argb_color const *desired, real maximum_speed);
-static void interpolate_normal(real_vector3d *current, real_vector3d const *desired, real maximum_speed);
+static void interpolate_real_rgb_color(real_rgb_color *current, real_rgb_color *desired, real maximum_speed);
+static void interpolate_real_argb_color(real_argb_color *current, real_argb_color *desired, real maximum_speed);
+static void interpolate_normal(real_vector3d *current, real_vector3d *desired, real maximum_speed);
 static real object_get_level_of_detail_pixels(long object_index);
 static boolean render_object_shadow_begin(struct object_render_data *data, real lod);
 static void bounding_planes_from_point_and_normal(real_vector3d const *n, real_point3d const *p, real_plane3d *lb, real_plane3d *ub);
@@ -108,8 +108,18 @@ static void render_object_shadow_end(struct object_render_data *data);
 
 boolean render_shadows = TRUE;
 
-static struct profile_section render_objects_section = {"render_objects", NONE, TRUE};
-static struct profile_section render_object_shadows_section = {"render_object_shadows", NONE, TRUE};
+static struct profile_section render_objects_section =
+{
+	"render_objects",
+	NONE,
+	TRUE
+};
+static struct profile_section render_object_shadows_section =
+{
+	"render_object_shadows",
+	NONE,
+	TRUE
+};
 
 boolean debug_objects;
 struct data_array *cached_object_render_states;
@@ -239,8 +249,8 @@ static boolean object_is_first_person_camera(
 	long object_index)
 {
 	return
-		(local_player_get_player_index(render.local_player_index) == NONE ? NONE : player_get(local_player_get_player_index(render.local_player_index))->unit_index) == object_index &&
-		director_get_perspective(render.local_player_index) == _director_perspective_first_person ||
+		((local_player_get_player_index(render.local_player_index) == NONE ? NONE : player_get(local_player_get_player_index(render.local_player_index))->unit_index) == object_index &&
+		director_get_perspective(render.local_player_index) == _director_perspective_first_person) ||
 		scripted_camera_object_is_first_person_camera(object_index);
 }
 
@@ -535,12 +545,17 @@ static long object_get_cached_render_state(
 	long object_index,
 	real level_of_detail_pixels)
 {
-	struct object_datum *object = object_get(object_index);
 	long cache_index = NONE;
+	struct object_datum *object = object_get(object_index);
 
-	if (object->object.cached_render_state_index != NONE && object_render_state_get(object->object.cached_render_state_index)->object_index == object_index)
+	if (object->object.cached_render_state_index != NONE)
 	{
-		cache_index = object->object.cached_render_state_index;
+		struct object_render_state *state = object_render_state_get(object->object.cached_render_state_index);
+
+		if (state->object_index == object_index)
+		{
+			cache_index = object->object.cached_render_state_index;
+		}
 	}
 
 	if (cache_index == NONE)
@@ -707,10 +722,7 @@ static void object_render_state_refresh(
 
 	for (point_light_index = 0; point_light_index < state->lighting.point_light_count; point_light_index++)
 	{
-		match_assert(
-			"c:\\halo\\SOURCE\\render\\render_objects.c",
-			690,
-			state->lighting.point_light_indices[point_light_index]>=0 && state->lighting.point_light_indices[point_light_index]<debug_rasterizer_light_count);
+		match_assert("c:\\halo\\SOURCE\\render\\render_objects.c", 690, state->lighting.point_light_indices[point_light_index]>=0 && state->lighting.point_light_indices[point_light_index]<debug_rasterizer_light_count);
 	}
 
 	state->render_scene_index = render.scene_index;
@@ -721,7 +733,7 @@ static void object_render_state_refresh(
 
 static void interpolate_real_rgb_color(
 	real_rgb_color *current,
-	real_rgb_color const *desired,
+	real_rgb_color *desired,
 	real maximum_speed)
 {
 	real delta;
@@ -738,7 +750,7 @@ static void interpolate_real_rgb_color(
 
 static void interpolate_real_argb_color(
 	real_argb_color *current,
-	real_argb_color const *desired,
+	real_argb_color *desired,
 	real maximum_speed)
 {
 	real delta;
@@ -757,7 +769,7 @@ static void interpolate_real_argb_color(
 
 static void interpolate_normal(
 	real_vector3d *current,
-	real_vector3d const *desired,
+	real_vector3d *desired,
 	real maximum_speed)
 {
 	real delta;
@@ -920,3 +932,5 @@ static void render_object_shadow_end(
 
 	return;
 }
+
+/* ---------- private code */

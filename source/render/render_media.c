@@ -20,22 +20,22 @@ enum
 
 struct frame_level_of_detail	/* fake name */
 {
-	long level_count;
-	real minimum_fraction;
-	real fractions[MAXIMUM_FRAME_LEVELS_OF_DETAIL];
-	real unused[3];
-	real render_target_fractions[3];
-	real minimum_distance;
-	real distances[MAXIMUM_FRAME_LEVELS_OF_DETAIL];
-	real maximum_level;
-	real minimum_level;
+	long level_count;								/* fake name */
+	real minimum_fraction;							/* fake name */
+	real fractions[MAXIMUM_FRAME_LEVELS_OF_DETAIL];	/* fake name */
+	real unused[3];									/* fake name */
+	real render_target_fractions[3];				/* fake name */
+	real minimum_distance;							/* fake name */
+	real distances[MAXIMUM_FRAME_LEVELS_OF_DETAIL];	/* fake name */
+	real maximum_level;								/* fake name */
+	real minimum_level;								/* fake name */
 };
 
 struct render_media_globals	/* fake name */
 {
-	boolean initialized;
-	long render_target_index;
-	long unused[9];
+	boolean initialized;		/* fake name */
+	long render_target_index;	/* fake name */
+	long unused[9];				/* fake name */
 };
 
 /* ---------- prototypes */
@@ -102,3 +102,5 @@ void render_media(
 {
 	return;
 }
+
+/* ---------- private code */

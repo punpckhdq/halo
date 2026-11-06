@@ -23,7 +23,7 @@ enum
 
 enum
 {
-	NUMBER_OF_VERTICES_PER_SPRITE = 4,	/* fake name */
+	NUMBER_OF_VERTICES_PER_SPRITE = 4,
 	DYNAMIC_TRIANGLE_QUAD_LIST = -4,	/* fake name */
 	MAXIMUM_BIG_SPRITES = 10,			/* fake name */
 };
@@ -134,16 +134,16 @@ static void build_sprite_compute_basis(
 
 	if (TEST_FLAG(data->flags, _build_sprites_screen_space_bit))
 	{
-		match_vassert(
-			"c:\\halo\\SOURCE\\render\\render_sprite.c",
-			122,
-			mode == _build_sprite_normal,
-			"build_sprite only supports normal sprites in screen space.");
+		match_vassert("c:\\halo\\SOURCE\\render\\render_sprite.c", 122, mode == _build_sprite_normal, "build_sprite only supports normal sprites in screen space.");
 	}
 	else if (mode == _build_sprite_normal)
 	{
-		set_real_vector3d(&basis->forward, 1.f, 0.f, 0.f);
-		set_real_vector3d(&basis->left, 0.f, 1.f, 0.f);
+		basis->forward.i = 1.f;
+		basis->forward.j = 0.f;
+		basis->forward.k = 0.f;
+		basis->left.i = 0.f;
+		basis->left.j = 1.f;
+		basis->left.k = 0.f;
 	}
 	else if (mode == _build_sprite_parallel)
 	{
@@ -154,15 +154,15 @@ static void build_sprite_compute_basis(
 	}
 	else if (mode == _build_sprite_perpendicular)
 	{
-		real_vector3d const *up = &build_sprite_globals.viewer_space_world_up;
-		real dot = dot_product3d(direction, up);
+		real_vector3d const *second_direction = &build_sprite_globals.viewer_space_world_up;
+		real direction_dot_second = dot_product3d(direction, second_direction);
 
-		if (dot * dot > magnitude_squared3d(direction) * PERPENDICULAR_SPRITE_PARALLEL_DOT_SQUARED)
+		if (direction_dot_second * direction_dot_second > magnitude_squared3d(direction) * PERPENDICULAR_SPRITE_PARALLEL_DOT_SQUARED)
 		{
-			up = &build_sprite_globals.viewer_space_world_forward;
+			second_direction = &build_sprite_globals.viewer_space_world_forward;
 		}
 
-		cross_product3d(direction, up, &basis->forward);
+		cross_product3d(direction, second_direction, &basis->forward);
 		normalize3d(&basis->forward);
 		basis->left = basis->forward;
 		basis->up = *direction;
@@ -254,61 +254,63 @@ static short build_sprite_get_group(
 	static boolean warned;
 	short group_index;
 
-	for (group_index = 0; group_index < data->group_count && data->groups[group_index].bitmap != bitmap; group_index++);
-
-	match_vassert(
-		"c:\\halo\\SOURCE\\render\\render_sprite.c",
-		275,
-		group_index < data->group_count || data->group_count < MAXIMUM_NUMBER_OF_BUILD_SPRITE_BITMAPS,
-		csprintf(
-			temporary,
-			"a build_sprites_begin call can accomodate at most %d bitmaps",
-			MAXIMUM_NUMBER_OF_BUILD_SPRITE_BITMAPS));
-
-	if (group_index >= data->group_count && data->group_count >= MAXIMUM_NUMBER_OF_BUILD_SPRITE_BITMAPS)
+	for (group_index = 0; group_index < data->group_count; group_index++)
 	{
-		group_index = NONE;
-	}
-	else if (group_index >= data->group_count)
-	{
-		struct build_sprite_group *group = &data->groups[group_index];
-
-		data->group_count++;
-		group->bitmap = bitmap;
-
-		if (_texture_cache_bitmap_get_hardware_format(bitmap, FALSE, TRUE))
+		if (data->groups[group_index].bitmap == bitmap)
 		{
-			rasterizer_globals.current_lock_operation = _rasterizer_lock_sprite;
-			group->vertex_buffer_index = rasterizer_dynamic_vertices_new(
-				TEST_FLAG(data->flags, _build_sprites_screen_space_bit) ?
-					_rasterizer_vertex_type_dynamic_screen :
-					_rasterizer_vertex_type_dynamic_unlit,
-				NUMBER_OF_VERTICES_PER_SPRITE * data->maximum_sprite_count);
+			break;
+		}
+	}
 
-			if (group->vertex_buffer_index != NONE)
+	match_vassert("c:\\halo\\SOURCE\\render\\render_sprite.c", 275, group_index < data->group_count || data->group_count < MAXIMUM_NUMBER_OF_BUILD_SPRITE_BITMAPS, csprintf(temporary, "a build_sprites_begin call can accomodate at most %d bitmaps", MAXIMUM_NUMBER_OF_BUILD_SPRITE_BITMAPS));
+
+	if (group_index < data->group_count || data->group_count < MAXIMUM_NUMBER_OF_BUILD_SPRITE_BITMAPS)
+	{
+		if (group_index >= data->group_count)
+		{
+			struct build_sprite_group *group = &data->groups[group_index];
+
+			data->group_count++;
+			group->bitmap = bitmap;
+
+			if (_texture_cache_bitmap_get_hardware_format(bitmap, FALSE, TRUE))
 			{
-				group->vertices = rasterizer_dynamic_vertices_lock(group->vertex_buffer_index);
-				match_assert("c:\\halo\\SOURCE\\render\\render_sprite.c", 294, group->vertices);
+				rasterizer_globals.current_lock_operation = _rasterizer_lock_sprite;
+				group->vertex_buffer_index = rasterizer_dynamic_vertices_new(
+					TEST_FLAG(data->flags, _build_sprites_screen_space_bit) ?
+						_rasterizer_vertex_type_dynamic_screen :
+						_rasterizer_vertex_type_dynamic_unlit,
+					NUMBER_OF_VERTICES_PER_SPRITE * data->maximum_sprite_count);
+
+				if (group->vertex_buffer_index != NONE)
+				{
+					group->vertices = rasterizer_dynamic_vertices_lock(group->vertex_buffer_index);
+					match_assert("c:\\halo\\SOURCE\\render\\render_sprite.c", 294, group->vertices);
+				}
+				else
+				{
+					if (!warned)
+					{
+						error(_error_silent, "build_sprite failed to allocate dynamic vertices");
+						warned = TRUE;
+					}
+
+					group->vertices = NULL;
+				}
+
+				rasterizer_globals.current_lock_operation = _rasterizer_lock_none;
 			}
 			else
 			{
-				if (!warned)
-				{
-					error(_error_silent, "build_sprite failed to allocate dynamic vertices");
-					warned = TRUE;
-				}
-
 				group->vertices = NULL;
 			}
 
-			rasterizer_globals.current_lock_operation = _rasterizer_lock_none;
+			group->sprite_count = 0;
 		}
-		else
-		{
-			group->vertices = NULL;
-		}
-
-		group->sprite_count = 0;
+	}
+	else
+	{
+		group_index = NONE;
 	}
 
 	if (group_index != NONE && !data->groups[group_index].vertices)
@@ -364,11 +366,7 @@ void build_sprites_end(
 
 			if (TEST_FLAG(data->flags, _build_sprites_screen_space_bit))
 			{
-				match_vassert(
-					"c:\\halo\\SOURCE\\render\\render_sprite.c",
-					377,
-					FALSE,
-					"### ERROR sprites rendered with screen geometry -- tell Bernie!!");
+				match_vassert("c:\\halo\\SOURCE\\render\\render_sprite.c", 377, FALSE, "### ERROR sprites rendered with screen geometry -- tell Bernie!!");
 				rasterizer_dynamic_screen_geometry_draw(
 					NULL,
 					DYNAMIC_TRIANGLE_QUAD_LIST,
@@ -416,10 +414,7 @@ void build_sprite(
 	struct bitmap_group *bitmap_group = bitmap_group_get(data->bitmap_group_index);
 
 	match_assert("c:\\halo\\SOURCE\\render\\render_sprite.c", 418, untransformed_origin);
-	match_assert(
-		"c:\\halo\\SOURCE\\render\\render_sprite.c",
-		419,
-		mode==_build_sprite_normal || (untransformed_direction && magnitude_squared3d(untransformed_direction)));
+	match_assert("c:\\halo\\SOURCE\\render\\render_sprite.c", 419, mode==_build_sprite_normal || (untransformed_direction && magnitude_squared3d(untransformed_direction)));
 
 	if (!color)
 	{
@@ -444,16 +439,7 @@ void build_sprite(
 					sprite_index,
 					struct bitmap_group_sprite);
 
-				match_vassert(
-					"c:\\halo\\SOURCE\\render\\render_sprite.c",
-					435,
-					sprite->bitmap_index != NONE,
-					csprintf(
-						temporary,
-						"the bitmap group %s sequence %d sprite %d references bitmap -1 (tell matt).",
-						tag_get_name(data->bitmap_group_index),
-						sequence_index,
-						sprite_index));
+				match_vassert("c:\\halo\\SOURCE\\render\\render_sprite.c", 435, sprite->bitmap_index != NONE, csprintf(temporary, "the bitmap group %s sequence %d sprite %d references bitmap -1 (tell matt).", tag_get_name(data->bitmap_group_index), sequence_index, sprite_index));
 
 				bitmap = TAG_BLOCK_GET_ELEMENT(&bitmap_group->bitmaps, sprite->bitmap_index, struct bitmap_data);
 				group_index = build_sprite_get_group(data, bitmap);
@@ -472,15 +458,15 @@ void build_sprite(
 						byte alpha;
 						short vertex;
 						short vertex_index = NUMBER_OF_VERTICES_PER_SPRITE * group->sprite_count;
-						real sine_rotation = 0.f;
-						real cosine_rotation = 1.f;
+						real rotation_sine = 0.f;
+						real rotation_cosine = 1.f;
 
 						bounding_rectangle = *global_null_rectangle3d;
 
 						if (rotation != 0.f)
 						{
-							sine_rotation = sine(rotation);
-							cosine_rotation = cosine(rotation);
+							rotation_sine = sine(rotation);
+							rotation_cosine = cosine(rotation);
 						}
 
 						build_sprite_transform_origin_and_direction(
@@ -529,10 +515,10 @@ void build_sprite(
 							real v = TEST_FLAG(vertex, 1) ? sprite->bounds.y0 : sprite->bounds.y1;
 							real x = u - (sprite->bounds.x0 + sprite->registration_point.x);
 							real y = (sprite->bounds.y0 + sprite->registration_point.y) - v;
-							real x_sine = x * sine_rotation;
+							real x_sine = x * rotation_sine;
 
-							x = x * cosine_rotation - y * sine_rotation;
-							y = y * cosine_rotation + x_sine;
+							x = x * rotation_cosine - y * rotation_sine;
+							y = y * rotation_cosine + x_sine;
 
 							if (TEST_FLAG(flags, _build_sprite_u_mirror_bit))
 							{
@@ -763,3 +749,5 @@ void build_sprite_rotational(
 
 	return;
 }
+
+/* ---------- private code */

@@ -81,3 +81,5 @@ boolean triangle_strip_iterator_get_triangle(
 
 	return result;
 }
+
+/* ---------- private code */

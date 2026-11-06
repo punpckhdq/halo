@@ -45,7 +45,12 @@ static int compare_rendered_particles(void const *a, void const *b);
 
 /* ---------- globals */
 
-static struct profile_section render_particles_section = {"render_particles", NONE, TRUE};
+static struct profile_section render_particles_section =
+{
+	"render_particles",
+	NONE,
+	TRUE
+};
 
 /* ---------- public code */
 
@@ -155,16 +160,18 @@ void render_particles(
 			}
 			else
 			{
-				if (sprite_group_count >= MAXIMUM_PARTICLE_SPRITE_GROUPS)
+				if (sprite_group_count < MAXIMUM_PARTICLE_SPRITE_GROUPS)
+				{
+					current_sprite_group = &sprite_groups[sprite_group_count++];
+					*current_sprite_group = 1;
+					definition_index = rendered_particle->definition_index;
+					cluster_index = rendered_particle->cluster_index;
+					attached_to_first_person_weapon = rendered_particle->attached_to_first_person_weapon;
+				}
+				else
 				{
 					break;
 				}
-
-				current_sprite_group = &sprite_groups[sprite_group_count++];
-				*current_sprite_group = 1;
-				definition_index = rendered_particle->definition_index;
-				cluster_index = rendered_particle->cluster_index;
-				attached_to_first_person_weapon = rendered_particle->attached_to_first_person_weapon;
 			}
 
 			rendered_particle++;

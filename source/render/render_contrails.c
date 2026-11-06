@@ -23,7 +23,7 @@ RENDER_CONTRAILS.C
 /* ---------- prototypes */
 
 static void render_contrails(unsigned long render_type_flags);
-static void render_contrail(struct contrail_datum const *contrail, struct contrail_definition const *definition, short instance_index);
+static void render_contrail(struct contrail_datum *contrail, struct contrail_definition *contrail_definition, short instance_index);
 
 /* ---------- globals */
 
@@ -84,7 +84,7 @@ static void render_contrails(
 }
 
 __inline real contrail_fade(
-	struct contrail_definition const *definition,
+	struct contrail_definition *contrail_definition,
 	short fade_mode,
 	real_point3d const *world_point,
 	real_vector3d const *world_normal)
@@ -98,7 +98,7 @@ __inline real contrail_fade(
 		vector_from_points3d(world_point, &render.camera.position, &camera_vector);
 		fade = (real)fabs(dot_product3d(world_normal, &camera_vector) / magnitude3d(&camera_vector));
 
-		if (TEST_FLAG(definition->flags, _contrail_fades_slowly_bit))
+		if (TEST_FLAG(contrail_definition->flags, _contrail_fades_slowly_bit))
 		{
 			fade = transition_function_evaluate(_transition_function_very_early, fade);
 		}
@@ -113,12 +113,12 @@ __inline real contrail_fade(
 }
 
 static void render_contrail(
-	struct contrail_datum const *contrail,
-	struct contrail_definition const *definition,
+	struct contrail_datum *contrail,
+	struct contrail_definition *contrail_definition,
 	short instance_index)
 {
 	struct bitmap_data *bitmap = bitmap_group_get_bitmap_from_sequence(
-		definition->bitmap.index,
+		contrail_definition->bitmap.index,
 		contrail->sequence_index,
 		contrail->frame_index);
 
@@ -143,7 +143,7 @@ static void render_contrail(
 			struct rasterizer_triangle *triangles = rasterizer_dynamic_triangles_lock(triangle_buffer_index);
 			struct dynamic_unlit_vertex *vertices = rasterizer_dynamic_vertices_lock(vertex_buffer_index);
 			real_point3d centroid = *global_origin3d;
-			struct shader_effect const *shader = &definition->shader;
+			struct shader_effect const *shader = &contrail_definition->shader;
 			boolean orient = shader->effect.framebuffer_fade_mode != _shader_framebuffer_fade_mode_none;
 
 			match_assert("c:\\halo\\SOURCE\\render\\render_contrails.c", 136, triangles && vertices);
@@ -151,14 +151,14 @@ static void render_contrail(
 			texture_u = contrail->texture_offset_u;
 			texture_u_delta = -contrail_scale_value(
 				contrail->density,
-				definition->texture_repeats_u,
-				definition->scale_flags,
+				contrail_definition->texture_repeats_u,
+				contrail_definition->scale_flags,
 				_contrail_texture_repeats_u_bit);
 			texture_v0 = contrail->texture_offset_v;
 			texture_v1 = contrail_scale_value(
 				contrail->density,
-				definition->texture_repeats_v,
-				definition->scale_flags,
+				contrail_definition->texture_repeats_v,
+				contrail_definition->scale_flags,
 				_contrail_texture_repeats_v_bit) + texture_v0;
 			previous_point = NULL;
 
@@ -170,7 +170,7 @@ static void render_contrail(
 				real_vector3d normal;
 				struct contrail_point_datum *point = contrail_point_get(point_index);
 				struct contrail_point_state *state = TAG_BLOCK_GET_ELEMENT(
-					&definition->states,
+					&contrail_definition->states,
 					point->state_index,
 					struct contrail_point_state);
 				real color_scale = contrail_scale_value(
@@ -193,7 +193,7 @@ static void render_contrail(
 				{
 					real_argb_color next_color;
 					struct contrail_point_state *next_state = TAG_BLOCK_GET_ELEMENT(
-						&definition->states,
+						&contrail_definition->states,
 						point->state_index + 1,
 						struct contrail_point_state);
 					real transition = point->time;
@@ -248,7 +248,7 @@ static void render_contrail(
 				centroid.y += point->position.y;
 				centroid.z += point->position.z;
 
-				switch (definition->render_type)
+				switch (contrail_definition->render_type)
 				{
 				case _contrail_render_type_vertical:
 					vertices[0].position.x = point->position.x;
@@ -364,7 +364,7 @@ static void render_contrail(
 					return;
 				}
 
-				rgbcolor.alpha *= contrail_fade(definition, shader->effect.framebuffer_fade_mode, &point->position, &normal);
+				rgbcolor.alpha *= contrail_fade(contrail_definition, shader->effect.framebuffer_fade_mode, &point->position, &normal);
 				rgbcolor.alpha = PIN(rgbcolor.alpha, 0.f, 1.f);
 				vertices[1].color = real_argb_color_to_pixel32(&rgbcolor);
 				vertices[0].color = vertices[1].color;
@@ -375,13 +375,13 @@ static void render_contrail(
 
 			vertices -= vertex_count;
 
-			if (!TEST_FLAG(definition->flags, _contrail_first_point_unfaded_bit))
+			if (!TEST_FLAG(contrail_definition->flags, _contrail_first_point_unfaded_bit))
 			{
 				vertices[0].color &= ~PIXEL32_ALPHA_MASK;
 				vertices[1].color &= ~PIXEL32_ALPHA_MASK;
 			}
 
-			if (!TEST_FLAG(definition->flags, _contrail_last_point_unfaded_bit))
+			if (!TEST_FLAG(contrail_definition->flags, _contrail_last_point_unfaded_bit))
 			{
 				vertices[vertex_count - 1].color &= ~PIXEL32_ALPHA_MASK;
 				vertices[vertex_count - 2].color &= ~PIXEL32_ALPHA_MASK;
