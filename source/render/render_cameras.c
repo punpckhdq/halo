@@ -18,6 +18,13 @@ RENDER_CAMERAS.C
 
 enum
 {
+	_frustum_visibility_none = 0,	/* fake name */
+	_frustum_visibility_partial,	/* fake name */
+	_frustum_visibility_full,		/* fake name */
+};
+
+enum
+{
 	MAXIMUM_RENDER_CAMERA_WARNING_CONDITIONS = 64,
 };
 
@@ -593,32 +600,32 @@ short render_frustum_cube_visible(
 
 	if (frustum->world_bounds.x1 < bounds->x0)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.y1 < bounds->y0)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.z1 < bounds->z0)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.x0 > bounds->x1)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.y0 > bounds->y1)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.z0 > bounds->z1)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	and_flags = MASK(NUMBER_OF_FRUSTUM_BITS);
@@ -662,12 +669,12 @@ short render_frustum_cube_visible(
 
 	if (!or_flags)
 	{
-		return 2;
+		return _frustum_visibility_full;
 	}
 
 	if (and_flags)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (test_frustum_against_cube)
@@ -690,11 +697,11 @@ short render_frustum_cube_visible(
 
 		if (vertex_and_flags)
 		{
-			return 0;
+			return _frustum_visibility_none;
 		}
 	}
 
-	return 1;
+	return _frustum_visibility_partial;
 }
 
 short render_frustum_sphere_visible(
@@ -711,82 +718,82 @@ short render_frustum_sphere_visible(
 
 	if (point->x - radius > frustum->world_bounds.x1)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (point->y - radius > frustum->world_bounds.y1)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (point->z - radius > frustum->world_bounds.z1)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.x0 > point->x + radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.y0 > point->y + radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (frustum->world_bounds.z0 > point->z + radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	distance0 = plane3d_distance_to_point(&frustum->world_planes[0], point);
 
 	if (distance0 > radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	distance1 = plane3d_distance_to_point(&frustum->world_planes[1], point);
 
 	if (distance1 > radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	distance2 = plane3d_distance_to_point(&frustum->world_planes[2], point);
 
 	if (distance2 > radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	distance3 = plane3d_distance_to_point(&frustum->world_planes[3], point);
 
 	if (distance3 > radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	distance4 = plane3d_distance_to_point(&frustum->world_planes[4], point);
 
 	if (distance4 > radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	distance5 = plane3d_distance_to_point(&frustum->world_planes[5], point);
 
 	if (distance5 > radius)
 	{
-		return 0;
+		return _frustum_visibility_none;
 	}
 
 	if (distance0 < -radius && distance1 < -radius && distance2 < -radius && distance3 < -radius && distance5 < -radius)
 	{
-		return 2;
+		return _frustum_visibility_full;
 	}
 
-	return 1;
+	return _frustum_visibility_partial;
 }
 
 real render_frustum_sphere_diameter_in_pixels(

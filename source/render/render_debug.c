@@ -1305,9 +1305,7 @@ static void render_debug_player(
 			if (biped->object.parent_object_index != NONE && biped->unit.parent_seat_index != NONE)
 			{
 				char string[1025];
-				struct vehicle_datum *vehicle = (struct vehicle_datum *)object_try_and_get_and_verify_type(
-					biped->object.parent_object_index,
-					_object_mask_vehicle);
+				struct vehicle_datum *vehicle = vehicle_try_and_get(biped->object.parent_object_index);
 
 				sprintf(
 					string,

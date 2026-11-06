@@ -11,7 +11,8 @@ RENDER_MEDIA.C
 
 enum
 {
-	MAXIMUM_FRAME_LEVELS_OF_DETAIL = 5,	/* fake name */
+	MAXIMUM_FRAME_LEVELS_OF_DETAIL = 5,			/* fake name */
+	MAXIMUM_RENDER_TARGET_LEVELS_OF_DETAIL = 3,	/* fake name */
 };
 
 /* ---------- macros */
@@ -20,15 +21,15 @@ enum
 
 struct frame_level_of_detail	/* fake name */
 {
-	long level_count;								/* fake name */
-	real minimum_fraction;							/* fake name */
-	real fractions[MAXIMUM_FRAME_LEVELS_OF_DETAIL];	/* fake name */
-	real unused[3];									/* fake name */
-	real render_target_fractions[3];				/* fake name */
-	real minimum_distance;							/* fake name */
-	real distances[MAXIMUM_FRAME_LEVELS_OF_DETAIL];	/* fake name */
-	real maximum_level;								/* fake name */
-	real minimum_level;								/* fake name */
+	long level_count;														/* fake name */
+	real minimum_fraction;													/* fake name */
+	real fractions[MAXIMUM_FRAME_LEVELS_OF_DETAIL];							/* fake name */
+	real unused[3];															/* fake name */
+	real render_target_fractions[MAXIMUM_RENDER_TARGET_LEVELS_OF_DETAIL];	/* fake name */
+	real minimum_distance;													/* fake name */
+	real distances[MAXIMUM_FRAME_LEVELS_OF_DETAIL];							/* fake name */
+	real maximum_level;														/* fake name */
+	real minimum_level;														/* fake name */
 };
 
 struct render_media_globals	/* fake name */

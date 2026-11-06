@@ -672,7 +672,7 @@ static void object_render_state_refresh(
 			if (translational_velocity.i != 0.f ||
 				translational_velocity.j != 0.f ||
 				translational_velocity.k != 0.f ||
-				object_try_and_get_and_verify_type(object_index, _object_mask_machine))
+				machine_try_and_get(object_index))
 			{
 				interpolate_real_rgb_color(
 					&lighting->ambient_color,
