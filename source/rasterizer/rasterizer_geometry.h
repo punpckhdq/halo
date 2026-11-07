@@ -149,8 +149,9 @@ struct debug_vertex /* fake name */
 
 struct detail_object_vertex
 {
-	byte __unknown0[6];
-	word __unknown6;
+	byte position[3];
+	byte color[3];
+	word data;
 };
 
 /* ---------- prototypes/RASTERIZER_GEOMETRY.C */

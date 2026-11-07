@@ -74,6 +74,16 @@ enum
 
 enum
 {
+	_screen_multitexture_blend_func_add = 0,
+	_screen_multitexture_blend_func_multiply,
+	_screen_multitexture_blend_func_subtract,
+	_screen_multitexture_blend_func_multiply2X,
+	_screen_multitexture_blend_func_dot,
+	_screen_multitexture_blend_func_phatty_plasma,
+};
+
+enum
+{
 	_rasterizer_profile_clear = 0,
 	_rasterizer_profile_model_sky,
 	_rasterizer_profile_models,
@@ -154,6 +164,8 @@ enum
 
 #define RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH 640
 #define RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT 480
+#define RASTERIZER_TARGET_RENDER_SECONDARY_WIDTH 320
+#define RASTERIZER_TARGET_RENDER_SECONDARY_HEIGHT 240
 
 /* ---------- structures */
 
@@ -330,12 +342,25 @@ struct rasterizer_frame_statistics_s
 	long decal_primitive_count;
 	long decal_shader_count;
 	long decal_texture_count;
-	long __unknown60[56];
+	long __unknown60[41];
+	long dynamic_unlit_primitive_count; /* fake name */
+	long dynamic_unlit_triangle_count; /* fake name */
+	long dynamic_unlit_maximum_primitive_triangle_count; /* fake name */
+	long dynamic_unlit_vertex_count; /* fake name */
+	long __unknown114[7];
+	long dynamic_vertex_count; /* fake name */
+	long dynamic_vertex_buffer_count; /* fake name */
+	long dynamic_triangle_count; /* fake name */
+	long dynamic_triangle_buffer_count; /* fake name */
 	long debug_primitive_count; /* fake name */
 	long __unknown144;
 	long dynamic_light_count; /* fake name */
 	long lens_flare_count; /* fake name */
-	long __unknown150[8];
+	long skinning_bytes; /* fake name */
+	long lighting_bytes; /* fake name */
+	long vertex_shader_bytes; /* fake name */
+	long pixel_shader_bytes; /* fake name */
+	long __unknown160[4];
 };
 
 struct rasterizer_model_begin_parameters
@@ -574,6 +599,16 @@ void rasterizer_debug_triangle_shaded(real_point3d const *p0, real_point3d const
 void rasterizer_debug_test(void);
 void rasterizer_debug_draw(void);
 
+/* ---------- prototypes/RASTERIZER_FRAME_STATISTICS.C */
+
+boolean rasterizer_frame_statistics_initialize(void);
+void rasterizer_frame_statistics_begin(void);
+void rasterizer_frame_statistics_get_fps(struct rasterizer_frame_statistics_s *frame_statistics);
+long rasterizer_frame_statistics_count_dynamic_vertices(long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count);
+void rasterizer_frame_statistics_end(void);
+void rasterizer_frame_statistics_draw(void);
+void rasterizer_frame_statistics_dispose(void);
+
 /* ---------- prototypes/RASTERIZER_TRANSPARENT_GEOMETRY.C */
 
 boolean rasterizer_transparent_geometry_initialize(void);
@@ -646,9 +681,9 @@ struct rasterizer_globals_struct
 	real z_far;
 	real z_near_first_person;
 	real z_far_first_person;
-	void *default_white_hardware_format;
 	void *default_2d_hardware_format;
 	void *default_3d_hardware_format;
+	void *default_cm_hardware_format;
 	short lightmap_mode;
 	short maximum_nodes_per_model;
 	short max_simultaneous_textures;
