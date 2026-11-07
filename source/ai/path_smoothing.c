@@ -164,23 +164,23 @@ static void find_tangent_point(
 	real_point2d *tangent_point)
 {
 	real_vector2d center_to_point;
-	real distance_squared;
-	real scale;
-	real discriminant;
+	real center_to_point_magnitude_squared;
+	real factor;
+	real radical;
 
 	vector_from_points2d(center, point, &center_to_point);
-	distance_squared = magnitude_squared2d(&center_to_point);
-	scale = radius / distance_squared;
-	discriminant = distance_squared - radius * radius;
+	center_to_point_magnitude_squared = magnitude_squared2d(&center_to_point);
+	factor = radius / center_to_point_magnitude_squared;
+	radical = center_to_point_magnitude_squared - radius * radius;
 
-	if (discriminant > 0.f)
+	if (radical > 0.f)
 	{
 		real_point2d tangent_points[2];
 		real_vector2d tangent_vectors[2];
-		real root = square_root(discriminant);
 
-		set_real_point2d(&tangent_points[0], (center_to_point.i * radius + center_to_point.j * root) * scale + center->x, (center_to_point.j * radius - center_to_point.i * root) * scale + center->y);
-		set_real_point2d(&tangent_points[1], (center_to_point.i * radius - center_to_point.j * root) * scale + center->x, (center_to_point.j * radius + center_to_point.i * root) * scale + center->y);
+		radical = square_root(radical);
+		set_real_point2d(&tangent_points[0], (center_to_point.i * radius + center_to_point.j * radical) * factor + center->x, (center_to_point.j * radius - center_to_point.i * radical) * factor + center->y);
+		set_real_point2d(&tangent_points[1], (center_to_point.i * radius - center_to_point.j * radical) * factor + center->x, (center_to_point.j * radius + center_to_point.i * radical) * factor + center->y);
 		vector_from_points2d(point, &tangent_points[0], &tangent_vectors[0]);
 		vector_from_points2d(point, &tangent_points[1], &tangent_vectors[1]);
 		*tangent_point = tangent_points[(cross_product2d(&tangent_vectors[0], &tangent_vectors[1]) > 0.f) != clockwise];
@@ -211,6 +211,7 @@ static void find_avoidance_point(
 {
 	real_vector2d center_to_tangent[2];
 	real cross;
+	real distance = radius;
 	boolean found = FALSE;
 
 	vector_from_points2d(center, &tangent_points[0], &center_to_tangent[0]);
@@ -228,7 +229,7 @@ static void find_avoidance_point(
 		found = TRUE;
 	}
 
-	if (!found || distance_squared2d(center, avoidance_point) > radius * radius * 4.f)
+	if (!found || distance_squared2d(center, avoidance_point) > 4.f * radius * radius)
 	{
 		real_vector2d tangent_vector;
 
@@ -239,7 +240,7 @@ static void find_avoidance_point(
 			tangent_vector = *global_left2d;
 		}
 
-		point_from_line2d(&tangent_points[0], &tangent_vector, radius, avoidance_point);
+		point_from_line2d(&tangent_points[0], &tangent_vector, distance, avoidance_point);
 	}
 
 	return;
@@ -270,9 +271,9 @@ static boolean choose_turning_point(
 	normalize2d(vector_from_points2d(counterclockwise_turning_point, obstructed_path_point, &counterclockwise_to_obstructed));
 
 	clockwise_angle = signed_angle_between_vectors2d(&clockwise_to_start, &clockwise_to_unobstructed) + signed_angle_between_vectors2d(&clockwise_to_unobstructed, &clockwise_to_obstructed);
-	counterclockwise_angle = signed_angle_between_vectors2d(&counterclockwise_to_start, &counterclockwise_to_unobstructed) + signed_angle_between_vectors2d(&counterclockwise_to_unobstructed, &counterclockwise_to_obstructed);
+	counterclockwise_angle = -(signed_angle_between_vectors2d(&counterclockwise_to_start, &counterclockwise_to_unobstructed) + signed_angle_between_vectors2d(&counterclockwise_to_unobstructed, &counterclockwise_to_obstructed));
 
-	if (clockwise_angle > -counterclockwise_angle)
+	if (clockwise_angle > counterclockwise_angle)
 	{
 		*result = *clockwise_turning_point;
 		return TRUE;

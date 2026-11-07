@@ -57,8 +57,8 @@ real debug_obstacle_path_radius;
 boolean debug_obstacle_path_finishing;
 boolean debug_ignore_broken_surfaces;
 
-static struct obstacles debug_obstacles; /* fake name */
-static struct obstacle_path debug_path; /* fake name */
+static struct obstacles debug_obstacles;
+static struct obstacle_path debug_path;
 
 /* ---------- public code */
 
@@ -104,7 +104,9 @@ __inline real heap_cost(
 	struct obstacle_path *path,
 	short heap_index)
 {
-	return path_get_step(path, path_get_step_index(path, heap_index))->total_distance;
+	struct step *step = path_get_step(path, path_get_step_index(path, heap_index));
+
+	return step->total_distance;
 }
 
 static void error_heap(
@@ -150,15 +152,15 @@ static void heap_up(
 {
 	while (heap_index > 0)
 	{
-		short parent_index = heap_parent_index(heap_index);
+		short parent_heap_index = heap_parent_index(heap_index);
 
-		if (heap_cost(path, parent_index) > heap_cost(path, heap_index))
+		if (heap_cost(path, parent_heap_index) > heap_cost(path, heap_index))
 		{
-			short temporary = path->heap[parent_index];
+			short parent_step_index = path->heap[parent_heap_index];
 
-			path->heap[parent_index] = path->heap[heap_index];
-			path->heap[heap_index] = temporary;
-			heap_index = parent_index;
+			path->heap[parent_heap_index] = path->heap[heap_index];
+			path->heap[heap_index] = parent_step_index;
+			heap_index = parent_heap_index;
 		}
 		else
 		{
@@ -177,30 +179,32 @@ static void heap_down(
 	{
 		while (TRUE)
 		{
-			short temporary;
-			short smallest_index = heap_index;
-			short left_index = heap_left_index(heap_index);
-			short right_index = heap_right_index(heap_index);
+			short best_heap_index = heap_index;
+			short left_heap_index = heap_left_index(heap_index);
+			short right_heap_index = heap_right_index(heap_index);
 
-			if (left_index < path->heap_count && heap_cost(path, heap_index) > heap_cost(path, left_index))
+			if (left_heap_index < path->heap_count && heap_cost(path, best_heap_index) > heap_cost(path, left_heap_index))
 			{
-				smallest_index = left_index;
+				best_heap_index = left_heap_index;
 			}
 
-			if (right_index < path->heap_count && heap_cost(path, smallest_index) > heap_cost(path, right_index))
+			if (right_heap_index < path->heap_count && heap_cost(path, best_heap_index) > heap_cost(path, right_heap_index))
 			{
-				smallest_index = right_index;
+				best_heap_index = right_heap_index;
 			}
 
-			if (smallest_index == heap_index)
+			if (best_heap_index != heap_index)
+			{
+				short best_step_index = path->heap[best_heap_index];
+
+				path->heap[best_heap_index] = path->heap[heap_index];
+				path->heap[heap_index] = best_step_index;
+				heap_index = best_heap_index;
+			}
+			else
 			{
 				break;
 			}
-
-			temporary = path->heap[smallest_index];
-			path->heap[smallest_index] = path->heap[heap_index];
-			path->heap[heap_index] = temporary;
-			heap_index = smallest_index;
 		}
 	}
 
@@ -211,22 +215,21 @@ static boolean heap_insert(
 	struct obstacle_path *path,
 	short step_index)
 {
-	boolean success = FALSE;
-
 	heap_verify(path, "heap_insert input");
 
 	if (path->heap_count < MAXIMUM_OBSTACLE_AVOIDANCE_STEPS)
 	{
 		short heap_index = path->heap_count++;
+		struct step *step = path_get_step(path, step_index);
 
-		path_get_step(path, step_index);
 		path->heap[heap_index] = step_index;
 		heap_up(path, heap_index);
 		heap_verify(path, "heap_insert output");
-		success = TRUE;
+
+		return TRUE;
 	}
 
-	return success;
+	return FALSE;
 }
 
 static short heap_remove(
@@ -627,6 +630,7 @@ static boolean path_iterate(
 	{
 		struct path_test_pill2d_result path_result;
 		struct step *step = path_get_step(path, step_index);
+		boolean first_step = step->previous_step_index == NONE;
 
 		path_test_pill2d(
 			path->structure,
@@ -638,7 +642,7 @@ static boolean path_iterate(
 			&step->direction,
 			path->radius,
 			step->distance,
-			step->previous_step_index == NONE,
+			first_step,
 			TRUE,
 			path->ignore_optional,
 			&path_result);

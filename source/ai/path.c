@@ -153,10 +153,11 @@ boolean path_3d_available(
 	boolean available = FALSE;
 	boolean finishing_path = FALSE;
 	real_point3d found_endpoint = *end_point;
+	boolean blocked = FALSE;
 
 	vector_from_points3d(start_point, end_point, &path_vector);
 
-	if (!collision_bsp_test_vector(
+	if (collision_bsp_test_vector(
 		FLAG(_collision_bsp_test_front_facing_surfaces_bit),
 		TAG_BLOCK_GET_ELEMENT(&structure_bsp->collision_bsp, 0, struct collision_bsp),
 		0,
@@ -164,9 +165,13 @@ boolean path_3d_available(
 		start_point,
 		&path_vector,
 		REAL_MAX,
-		&result) ||
-		result.t >= 1.f ||
-		magnitude_squared3d(&path_vector) * ((1.f - result.t) * (1.f - result.t)) < 0.1f)
+		&result) &&
+		!(result.t >= 1.f || magnitude_squared3d(&path_vector) * ((1.f - result.t) * (1.f - result.t)) < 0.1f))
+	{
+		blocked = TRUE;
+	}
+
+	if (!blocked)
 	{
 		available = TRUE;
 		finishing_path = TRUE;
@@ -970,7 +975,9 @@ static boolean path_heap_verify(
 	short node_index,
 	short heap_location)
 {
-	return TRUE;
+	boolean valid = TRUE;
+
+	return valid;
 }
 
 static void path_heap_bubble_up(
@@ -1253,8 +1260,13 @@ short path_node_from_hash_table(
 	{
 		node_index = state->hash_table[hash_index];
 		hash_index = (hash_index + 1) & PATH_HASH_TABLE_MASK;
+
+		if (node_index == NONE)
+		{
+			break;
+		}
 	}
-	while (node_index != NONE && state->node_list[node_index].surface_index != surface_index);
+	while (state->node_list[node_index].surface_index != surface_index);
 
 	return node_index;
 }

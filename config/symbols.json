@@ -21929,7 +21929,7 @@
 { "file_offset": 2847832, "flags": 0, "name": "_global_ai_meter_definitions" },
 { "file_offset": 2848056, "flags": 0, "name": "?spray_mode_names@?1??ai_profile_change_render_spray@@9@9", "static": true },
 { "file_offset": 2848068, "flags": 0, "name": "_global_ai_default_state_names" },
-{ "file_offset": 2848120, "flags": 0, "name": "_obstacle_colors", "static": true },
+{ "file_offset": 2848120, "flags": 0, "name": "?colors@?1??render_debug_obstacles@@9@9", "static": true },
 { "file_offset": 2850168, "flags": 0, "name": "?last_warning_time@?2??prop_add@@9@9", "static": true },
 { "file_offset": 2850176, "flags": 0, "name": "_rcsid", "static": true },
 { "file_offset": 2850264, "flags": 0, "name": "_rcsid", "static": true },

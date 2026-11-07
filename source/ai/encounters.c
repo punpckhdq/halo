@@ -24,10 +24,10 @@ ENCOUNTERS.C
 
 /* ---------- constants */
 
-#define MAXIMUM_ENCOUNTERS_PER_MAP 128 /* fake name? */
+#define MAXIMUM_ENCOUNTERS_PER_MAP 128 /* fake name */
 #define MAXIMUM_EXAMINED_PURSUIT_POSITIONS_PER_MAP 256
 #define NUMBER_OF_ACTOR_INDICES_PER_EXAMINED_PURSUIT_POSITION 6
-#define MAXIMUM_STARTING_LOCATIONS_PER_SQUAD 64 /* fake name? */
+#define MAXIMUM_STARTING_LOCATIONS_PER_SQUAD 64 /* fake name */
 
 #define ENCOUNTER_UPDATE_TICKS 15 /* fake name */
 #define ENCOUNTER_ACTIVATION_TEST_TICKS TICKS_PER_SECOND /* fake name */
@@ -35,7 +35,7 @@ ENCOUNTERS.C
 #define ENCOUNTERLESS_REMAIN_ACTIVE_TICKS (3*TICKS_PER_SECOND) /* fake name */
 #define ENCOUNTER_POST_COMBAT_DELAY_TICKS (4*TICKS_PER_SECOND) /* fake name */
 #define ENCOUNTER_TIMER_FOREVER 999 /* fake name */
-#define NUMBER_OF_FIRING_POSITION_GROUP_LETTERS 26 /* fake name */
+#define NUMBER_OF_FIRING_POSITION_GROUP_INDICES 26
 
 enum
 {
@@ -125,9 +125,10 @@ enum
 
 enum
 {
-	_group_pursuit_restriction_none = 0,		/* fake name */
-	_group_pursuit_restriction_never,			/* fake name */
-	_group_pursuit_restriction_unlimited		/* fake name */
+	_group_pursuit_normal = 0,
+	_group_pursuit_nobody,
+	_group_pursuit_everyone,
+	NUMBER_OF_GROUP_PURSUIT_RESTRICTIONS
 };
 
 /* ---------- macros */
@@ -1014,7 +1015,14 @@ struct actor_datum *actor_iterator_next(
 		{
 			struct encounter_datum *encounter = data_iterator_next(&iterator->encounter_iterator);
 
-			if (!encounter)
+			if (encounter)
+			{
+				if (!iterator->active_only || encounter->active)
+				{
+					iterator->next_index = encounter->first_actor_index;
+				}
+			}
+			else
 			{
 				if (!iterator->iterated_encounterless_list)
 				{
@@ -1023,11 +1031,6 @@ struct actor_datum *actor_iterator_next(
 				}
 
 				break;
-			}
-
-			if (!iterator->active_only || encounter->active)
-			{
-				iterator->next_index = encounter->first_actor_index;
 			}
 		}
 
@@ -1115,7 +1118,11 @@ boolean encounter_pursuit_position_already_examined(
 		actor_count = pursuit->actor_count;
 		last_examined_time = pursuit->last_examined_time;
 
-		if (actor_count < NUMBER_OF_ACTOR_INDICES_PER_EXAMINED_PURSUIT_POSITION + 1)
+		if (actor_count >= NUMBER_OF_ACTOR_INDICES_PER_EXAMINED_PURSUIT_POSITION + 1)
+		{
+			examined = TRUE;
+		}
+		else
 		{
 			short index;
 
@@ -1127,10 +1134,6 @@ boolean encounter_pursuit_position_already_examined(
 					break;
 				}
 			}
-		}
-		else
-		{
-			examined = TRUE;
 		}
 	}
 
@@ -1257,7 +1260,7 @@ void encounter_modify_pursuit_desires(
 	switch (searching)
 	{
 	case _encounter_search_never:
-		*group_pursuit_restriction = _group_pursuit_restriction_never;
+		*group_pursuit_restriction = _group_pursuit_nobody;
 		*desired_pursuit = 2;
 		*desired_pursuit_search = 2;
 		break;
@@ -1346,10 +1349,10 @@ void encounter_determine_pursuit_availability(
 
 	switch (group_pursuit_restriction)
 	{
-	case _group_pursuit_restriction_never:
+	case _group_pursuit_nobody:
 		maximum_pursue_count = 0;
 		break;
-	case _group_pursuit_restriction_unlimited:
+	case _group_pursuit_everyone:
 		maximum_pursue_count = ENCOUNTER_TIMER_FOREVER;
 		break;
 	default:
@@ -2065,14 +2068,14 @@ void encounter_update_status(
 				encounter->enemy_visible = TRUE;
 				encounter->enemy_alive = TRUE;
 			}
-			else if (prop->state < _prop_state_becoming_unacknowledged || prop->state > _prop_state_acknowledged)
+			else if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged)
 			{
-				if (!TEST_FLAG(unit_get(prop->unit_index)->object.damage_flags, _object_dead_bit))
+				if (!prop->dead)
 				{
 					encounter->enemy_alive = TRUE;
 				}
 			}
-			else if (!prop->dead)
+			else if (!TEST_FLAG(unit_get(prop->unit_index)->object.damage_flags, _object_dead_bit))
 			{
 				encounter->enemy_alive = TRUE;
 			}
@@ -2129,13 +2132,13 @@ void encounter_update_status(
 			encounter_stand_down(encounter_index);
 		}
 	}
-	else if (had_visible_enemy && been_in_combat)
+	else if (!had_visible_enemy || !been_in_combat)
 	{
-		encounter_post_combat(encounter_index);
+		encounter_stand_down(encounter_index);
 	}
 	else
 	{
-		encounter_stand_down(encounter_index);
+		encounter_post_combat(encounter_index);
 	}
 
 	if (encounter->original_count > 0)
@@ -2823,7 +2826,15 @@ static boolean encounter_place_actor(
 			actor_palette_index = starting_location->actor_palette_index;
 		}
 
-		if (actor_palette_index >= 0 && actor_palette_index < scenario->ai_actor_palette.count)
+		if (actor_palette_index < 0 || actor_palette_index >= scenario->ai_actor_palette.count)
+		{
+			error(
+				_error_silent,
+				"WARNING: cannot spawn actors in %s/%s because the actor variant specified for this squad is NONE or invalid",
+				encounter_definition->name,
+				squad_definition->name);
+		}
+		else
 		{
 			struct actor_palette_entry *palette_entry = TAG_BLOCK_GET_ELEMENT(
 				&global_scenario_get()->ai_actor_palette,
@@ -2850,14 +2861,6 @@ static boolean encounter_place_actor(
 
 				success = actor_place(palette_entry->reference.index, encounter_index, squad_index, starting_location, is_major, variant_number) != NONE;
 			}
-		}
-		else
-		{
-			error(
-				_error_silent,
-				"WARNING: cannot spawn actors in %s/%s because the actor variant specified for this squad is NONE or invalid",
-				encounter_definition->name,
-				squad_definition->name);
 		}
 	}
 
@@ -3405,7 +3408,7 @@ static void encounter_update_follow(
 
 			if (target_object_index != NONE)
 			{
-				real group_best_dist_sq[NUMBER_OF_FIRING_POSITION_GROUP_LETTERS];
+				real group_best_dist_sq[NUMBER_OF_FIRING_POSITION_GROUP_INDICES];
 				short firing_position_index;
 				short group_index;
 				short best_squad_index;

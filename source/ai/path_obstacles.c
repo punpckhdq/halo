@@ -21,46 +21,7 @@ static void circle_tangents(real_vector2d const *direction, real distance, real 
 
 /* ---------- globals */
 
-static real_argb_color obstacle_colors[MAXIMUM_DISC_COUNT] = /* fake name */
-{
-	{ 1.f, 1.f, 1.f, .5f },
-	{ 1.f, 1.f, 1.f, 0.f },
-	{ 1.f, 1.f, .5f, 1.f },
-	{ 1.f, 1.f, .5f, .5f },
-	{ 1.f, 1.f, .5f, 0.f },
-	{ 1.f, 1.f, 0.f, 1.f },
-	{ 1.f, 1.f, 0.f, .5f },
-	{ 1.f, 1.f, 0.f, 0.f },
-	{ 1.f, .5f, 1.f, 1.f },
-	{ 1.f, .5f, 1.f, .5f },
-	{ 1.f, .5f, 1.f, 0.f },
-	{ 1.f, .5f, .5f, 1.f },
-	{ 1.f, .5f, .5f, .5f },
-	{ 1.f, .5f, .5f, 0.f },
-	{ 1.f, .5f, 0.f, 1.f },
-	{ 1.f, .5f, 0.f, .5f },
-	{ 1.f, .5f, 0.f, 0.f },
-	{ 1.f, 0.f, 1.f, 1.f },
-	{ 1.f, 0.f, 1.f, .5f },
-	{ 1.f, 0.f, 1.f, 0.f },
-	{ 1.f, 0.f, .5f, 1.f },
-	{ 1.f, 0.f, .5f, .5f },
-	{ 1.f, 0.f, .5f, 0.f },
-	{ 1.f, 0.f, 0.f, 1.f },
-	{ 1.f, 0.f, 0.f, .5f }
-};
-
 /* ---------- public code */
-
-void obstacles_new(
-	struct obstacles *obstacles)
-{
-	obstacles->obstacle_count = 0;
-	obstacles->disc_count = 0;
-	obstacles->disc_optional_count = 0;
-
-	return;
-}
 
 static boolean circle_intersect_ray(
 	real_point2d const *center,
@@ -109,15 +70,21 @@ static void circle_tangents(
 	real cosine_angle;
 	real sine_angle = radius / distance;
 
-	if (sine_angle > 1.f)
-	{
-		sine_angle = 1.f;
-	}
-
+	sine_angle = MIN(sine_angle, 1.f);
 	cosine_angle = square_root(1.f - sine_angle * sine_angle);
 	rotate_vector2d(direction, -sine_angle, cosine_angle, right_direction);
 	rotate_vector2d(direction, sine_angle, cosine_angle, left_direction);
 	*tangent_distance = distance * cosine_angle;
+
+	return;
+}
+
+void obstacles_new(
+	struct obstacles *obstacles)
+{
+	obstacles->obstacle_count = 0;
+	obstacles->disc_count = 0;
+	obstacles->disc_optional_count = 0;
 
 	return;
 }
@@ -181,90 +148,94 @@ void obstacles_get_discs_in_sphere(
 
 	for (object_index_index = 0; object_index_index < object_count; object_index_index++)
 	{
+		real bounding_sphere_radius;
 		long object_index = object_indices[object_index_index];
 		struct object_datum *object = object_get(object_index);
 
-		if (object_index != ignore_source_object_index &&
-			object_index != ignore_target_object_index &&
-			!TEST_FLAG(object->object.flags, _object_invisible_bit) &&
-			(object->object.type != _object_type_biped || !TEST_FLAG(object->object.damage_flags, _object_dead_bit)))
+		if (object_index == ignore_source_object_index || object_index == ignore_target_object_index)
 		{
-			boolean pathfinding_obstacle = TRUE;
+			continue;
+		}
 
-			if (object->object.type == _object_type_machine)
+		if (TEST_FLAG(object->object.flags, _object_invisible_bit))
+		{
+			continue;
+		}
+
+		if (object->object.type == _object_type_biped && TEST_FLAG(object->object.damage_flags, _object_dead_bit))
+		{
+			continue;
+		}
+
+		if (object->object.type == _object_type_machine)
+		{
+			struct machine_definition *machine_definition = machine_definition_get(object->definition_index);
+
+			if (!TEST_FLAG(machine_definition->machine.flags, _machine_is_pathfinding_obstacle_bit) ||
+				(TEST_FLAG(machine_definition->machine.flags, _machine_is_not_pathfinding_obstacle_when_open_bit) && ((struct machine_datum *)object)->device.position == 1.f))
 			{
-				struct machine_definition *machine_definition = machine_definition_get(object->definition_index);
-
-				if (!TEST_FLAG(machine_definition->machine.flags, _machine_is_pathfinding_obstacle_bit) ||
-					(TEST_FLAG(machine_definition->machine.flags, _machine_is_not_pathfinding_obstacle_when_open_bit) && ((struct machine_datum *)object)->device.position == 1.f))
-				{
-					pathfinding_obstacle = FALSE;
-				}
+				continue;
 			}
+		}
 
-			if (pathfinding_obstacle)
+		bounding_sphere_radius = object->object.bounding_sphere_radius;
+
+		if (point_in_sphere(center, &object->object.bounding_sphere_center, bounding_sphere_radius + radius))
+		{
+			struct object_definition *object_definition = object_definition_get(object->definition_index);
+			struct collision_model *collision_model = collision_model_definition_get(object_definition->object.collision_model.index);
+
+			if (!TEST_FLAG(object_definition->object.flags, _object_not_pathfinding_obstacle_bit) && collision_model->pathfinding_spheres.count > 0)
 			{
-				real bounding_sphere_radius = object->object.bounding_sphere_radius;
+				real_matrix4x3 world_matrix;
+				short sphere_index;
 
-				if (point_in_sphere(center, &object->object.bounding_sphere_center, bounding_sphere_radius + radius))
+				object_get_world_matrix(object_index, &world_matrix);
+
+				for (sphere_index = 0; sphere_index < collision_model->pathfinding_spheres.count; sphere_index++)
 				{
-					struct object_definition *object_definition = object_definition_get(object->definition_index);
-					struct collision_model *collision_model = collision_model_definition_get(object_definition->object.collision_model.index);
+					real_point3d transformed_center;
+					real sphere_radius;
+					struct pathfinding_sphere *sphere = TAG_BLOCK_GET_ELEMENT(&collision_model->pathfinding_spheres, sphere_index, struct pathfinding_sphere);
 
-					if (!TEST_FLAG(object_definition->object.flags, _object_not_pathfinding_obstacle_bit) && collision_model->pathfinding_spheres.count > 0)
+					if (sphere->node_index != NONE)
 					{
-						real_matrix4x3 world_matrix;
-						short sphere_index;
+						real_matrix4x3 *node_matrix = object_get_node_matrix(object_index, sphere->node_index);
 
-						object_get_world_matrix(object_index, &world_matrix);
+						matrix4x3_transform_point(node_matrix, &sphere->center, &transformed_center);
+						sphere_radius = sphere->radius * node_matrix->scale;
+					}
+					else
+					{
+						matrix4x3_transform_point(&world_matrix, &sphere->center, &transformed_center);
+						sphere_radius = world_matrix.scale * sphere->radius;
+					}
 
-						for (sphere_index = 0; sphere_index < collision_model->pathfinding_spheres.count; sphere_index++)
+					if (!(transformed_center.z + sphere_radius + 0.5f < center->z && movement_direction->k > -0.2f) &&
+						!(transformed_center.z - sphere_radius - 0.5f > center->z && movement_direction->k < 0.2f))
+					{
+						real_vector3d offset;
+
+						vector_from_points3d(center, &transformed_center, &offset);
+
+						if (offset.i * offset.i + offset.j * offset.j + 4.f * offset.k * offset.k <= (sphere_radius + radius) * (sphere_radius + radius))
 						{
-							real_point3d transformed_center;
-							real sphere_radius;
-							struct pathfinding_sphere *sphere = TAG_BLOCK_GET_ELEMENT(&collision_model->pathfinding_spheres, sphere_index, struct pathfinding_sphere);
+							short disc_flags = 0;
 
-							if (sphere->node_index != NONE)
+							if (object->object.type == _object_type_biped &&
+								dot_product3d(&offset, movement_direction) > 0.f &&
+								dot_product3d(&object->object.translational_velocity, movement_direction) > 2.f / TICKS_PER_SECOND)
 							{
-								real_matrix4x3 *node_matrix = object_get_node_matrix(object_index, sphere->node_index);
-
-								matrix4x3_transform_point(node_matrix, &sphere->center, &transformed_center);
-								sphere_radius = sphere->radius * node_matrix->scale;
-							}
-							else
-							{
-								matrix4x3_transform_point(&world_matrix, &sphere->center, &transformed_center);
-								sphere_radius = world_matrix.scale * sphere->radius;
+								SET_FLAG(disc_flags, _disc_optional_bit, TRUE);
 							}
 
-							if (!(transformed_center.z + sphere_radius + 0.5f < center->z && movement_direction->k > -0.2f) &&
-								!(transformed_center.z - sphere_radius - 0.5f > center->z && movement_direction->k < 0.2f))
-							{
-								real_vector3d offset;
-
-								vector_from_points3d(center, &transformed_center, &offset);
-
-								if (offset.i * offset.i + offset.j * offset.j + 4.f * offset.k * offset.k <= (sphere_radius + radius) * (sphere_radius + radius))
-								{
-									short disc_flags = 0;
-
-									if (object->object.type == _object_type_biped &&
-										dot_product3d(&offset, movement_direction) > 0.f &&
-										dot_product3d(&object->object.translational_velocity, movement_direction) > 2.f / TICKS_PER_SECOND)
-									{
-										SET_FLAG(disc_flags, _disc_optional_bit, TRUE);
-									}
-
-									obstacles_add_disc(obstacles, object_index, disc_flags, &transformed_center, sphere_radius);
-								}
-							}
+							obstacles_add_disc(obstacles, object_index, disc_flags, &transformed_center, sphere_radius);
 						}
 					}
 				}
 			}
 		}
 	}
-
 	return;
 }
 
@@ -314,19 +285,20 @@ boolean obstacles_test_pill(
 		if (disc_index != ignore_disc_index)
 		{
 			struct disc const *disc = obstacles_get_disc(obstacles, disc_index);
+			real disc_distance;
 
-			if (!ignore_optional || !TEST_FLAG(disc->flags, _disc_optional_bit))
+			if (ignore_optional && TEST_FLAG(disc->flags, _disc_optional_bit))
 			{
-				real disc_distance;
+				continue;
+			}
 
-				if (circle_intersect_ray(&disc->center, disc->radius + radius, point, direction, &disc_distance))
+			if (circle_intersect_ray(&disc->center, disc->radius + radius, point, direction, &disc_distance))
+			{
+				if (result->distance > disc_distance)
 				{
-					if (result->distance > disc_distance)
-					{
-						result->distance = disc_distance;
-						result->disc_index = disc_index;
-						result->obstacle_index = disc->obstacle_index;
-					}
+					result->distance = disc_distance;
+					result->disc_index = disc_index;
+					result->obstacle_index = disc->obstacle_index;
 				}
 			}
 		}
@@ -346,11 +318,12 @@ void obstacles_disc_tangents(
 {
 	real_vector2d direction;
 	real distance;
+	real const radius_epsilon = 1.f / 256.f;
 	struct disc const *disc = obstacles_get_disc(obstacles, disc_index);
 
 	vector_from_points2d(point, &disc->center, &direction);
 	distance = normalize2d(&direction);
-	circle_tangents(&direction, distance, disc->radius + radius + 1.f / 256.f, right_direction, left_direction, tangent_distance);
+	circle_tangents(&direction, distance, disc->radius + radius + radius_epsilon, right_direction, left_direction, tangent_distance);
 
 	return;
 }
@@ -404,30 +377,38 @@ void obstacles_recompute(
 	struct obstacles *obstacles,
 	real radius)
 {
-	short disc_index;
-
 	obstacles->obstacle_count = 0;
 
-	for (disc_index = 0; disc_index < obstacles->disc_count; disc_index++)
 	{
-		obstacles->discs[disc_index].obstacle_index = NONE;
+		short disc_index;
+
+		for (disc_index = 0; disc_index < obstacles->disc_count; disc_index++)
+		{
+			struct disc *disc = &obstacles->discs[disc_index];
+
+			disc->obstacle_index = NONE;
+		}
 	}
 
-	for (disc_index = 0; disc_index < obstacles->disc_count; disc_index++)
 	{
-		if (obstacles->discs[disc_index].obstacle_index == NONE)
+		short seed_disc_index;
+
+		for (seed_disc_index = 0; seed_disc_index < obstacles->disc_count; seed_disc_index++)
 		{
-			unsigned long obstacle_flags[BIT_VECTOR_SIZE_IN_LONGS(MAXIMUM_DISC_COUNT)];
-			short neighbor_index;
-			short obstacle_index = obstacles->obstacle_count++;
-
-			obstacles_disc_neighborhood(obstacles, radius, disc_index, (byte *)obstacle_flags);
-
-			for (neighbor_index = 0; neighbor_index < obstacles->disc_count; neighbor_index++)
+			if (obstacles->discs[seed_disc_index].obstacle_index == NONE)
 			{
-				if (BIT_VECTOR_TEST_FLAG(obstacle_flags, neighbor_index))
+				unsigned long obstacle_flags[BIT_VECTOR_SIZE_IN_LONGS(MAXIMUM_DISC_COUNT)];
+				short disc_index;
+				short obstacle_index = obstacles->obstacle_count++;
+
+				obstacles_disc_neighborhood(obstacles, radius, seed_disc_index, (byte *)obstacle_flags);
+
+				for (disc_index = 0; disc_index < obstacles->disc_count; disc_index++)
 				{
-					obstacles->discs[neighbor_index].obstacle_index = obstacle_index;
+					if (BIT_VECTOR_TEST_FLAG(obstacle_flags, disc_index))
+					{
+						obstacles->discs[disc_index].obstacle_index = obstacle_index;
+					}
 				}
 			}
 		}
@@ -440,6 +421,34 @@ void render_debug_obstacles(
 	struct obstacles const *obstacles,
 	real radius)
 {
+	static real_argb_color colors[MAXIMUM_DISC_COUNT] =
+	{
+		{ 1.f, 1.f, 1.f, .5f },
+		{ 1.f, 1.f, 1.f, 0.f },
+		{ 1.f, 1.f, .5f, 1.f },
+		{ 1.f, 1.f, .5f, .5f },
+		{ 1.f, 1.f, .5f, 0.f },
+		{ 1.f, 1.f, 0.f, 1.f },
+		{ 1.f, 1.f, 0.f, .5f },
+		{ 1.f, 1.f, 0.f, 0.f },
+		{ 1.f, .5f, 1.f, 1.f },
+		{ 1.f, .5f, 1.f, .5f },
+		{ 1.f, .5f, 1.f, 0.f },
+		{ 1.f, .5f, .5f, 1.f },
+		{ 1.f, .5f, .5f, .5f },
+		{ 1.f, .5f, .5f, 0.f },
+		{ 1.f, .5f, 0.f, 1.f },
+		{ 1.f, .5f, 0.f, .5f },
+		{ 1.f, .5f, 0.f, 0.f },
+		{ 1.f, 0.f, 1.f, 1.f },
+		{ 1.f, 0.f, 1.f, .5f },
+		{ 1.f, 0.f, 1.f, 0.f },
+		{ 1.f, 0.f, .5f, 1.f },
+		{ 1.f, 0.f, .5f, .5f },
+		{ 1.f, 0.f, .5f, 0.f },
+		{ 1.f, 0.f, 0.f, 1.f },
+		{ 1.f, 0.f, 0.f, .5f }
+	};
 	short disc_index;
 
 	for (disc_index = 0; disc_index < obstacles->disc_count; disc_index++)
@@ -455,20 +464,20 @@ void render_debug_obstacles(
 
 		if (collision_test_vector(FLAG(_collision_test_front_facing_surfaces_bit) | FLAG(_collision_test_structure_bit), &center, &vector, NONE, &collision))
 		{
-			render_debug_circle(TRUE, &collision.plane, _z, TRUE, &disc->center, disc->radius, &obstacle_colors[disc->obstacle_index], 1.f / 64.f);
+			render_debug_circle(TRUE, &collision.plane, _z, TRUE, &disc->center, disc->radius, &colors[disc->obstacle_index], 1.f / 64.f);
 
 			if (radius > 0.f)
 			{
-				render_debug_circle(TRUE, &collision.plane, _z, TRUE, &disc->center, disc->radius + radius, &obstacle_colors[disc->obstacle_index], 1.f / 64.f);
+				render_debug_circle(TRUE, &collision.plane, _z, TRUE, &disc->center, disc->radius + radius, &colors[disc->obstacle_index], 1.f / 64.f);
 			}
 		}
 		else
 		{
-			render_debug_sphere(TRUE, &center, disc->radius, &obstacle_colors[disc->obstacle_index]);
+			render_debug_sphere(TRUE, &center, disc->radius, &colors[disc->obstacle_index]);
 
 			if (radius > 0.f)
 			{
-				render_debug_sphere(TRUE, &center, disc->radius + radius, &obstacle_colors[disc->obstacle_index]);
+				render_debug_sphere(TRUE, &center, disc->radius + radius, &colors[disc->obstacle_index]);
 			}
 		}
 	}
