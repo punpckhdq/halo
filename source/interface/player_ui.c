@@ -39,9 +39,6 @@ enum
 
 /* ---------- macros */
 
-#define PREGAME_SCREEN_WIDGET_NAME "ui\\shell\\main_menu\\multiplayer_type_select\\connected\\pregame\\connected_pregame_screen"	/* fake name */
-#define TEMPORARY_STRINGS_TAG_NAME "ui\\shell\\strings\\temp_strings"																/* fake name */
-
 /* ---------- structures */
 
 struct _player_data

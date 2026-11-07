@@ -28,6 +28,9 @@ enum
 
 /* ---------- macros */
 
+#define VIRTUAL_KEYBOARD_TAG_NAME "ui\\english"								/* fake name */
+#define VIRTUAL_KEYBOARD_CARET_BITMAP_TAG_NAME "ui\\shell\\bitmaps\\white"	/* fake name */
+
 #define virtual_keyboard_definition_get(index) ((struct virtual_keyboard *)tag_get(VIRTUAL_KEYBOARD_TAG, index)) /* fake name */
 
 /* ---------- structures */

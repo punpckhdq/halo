@@ -626,7 +626,7 @@
 				{ "name": "source/interface/virtual_keyboard.c", "index": 246, "status": "Matching" },
 				{ "name": "source/interface/ui_widget_text_search_and_replace_functions.c", "index": 247, "status": "Matching" },
 				{ "name": "source/interface/ui_widget_group.c", "index": 248, "status": "Matching" },
-				{ "name": "source/interface/ui_widget_game_data_input_functions.c", "index": 249, "status": "NonMatching" },
+				{ "name": "source/interface/ui_widget_game_data_input_functions.c", "index": 249, "status": "Matching" },
 				{ "name": "source/interface/ui_widget_event_handler_functions.c", "index": 250, "status": "Matching" },
 				{ "name": "source/interface/ui_widget.c", "index": 251, "status": "Matching" },
 				{ "name": "source/interface/terminal.c", "index": 252, "status": "Matching" },

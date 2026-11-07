@@ -26,7 +26,7 @@ struct scenario_description *multiplayer_scenario_description_get_list(
 	long scenario_list_index;
 
 	match_assert("c:\\halo\\SOURCE\\scenario\\multiplayer_scenario_description.c", 60, count);
-	scenario_list_index = tag_loaded(MULTIPLAYER_SCENARIO_DESCRIPTION_TAG, "ui\\multiplayer_scenarios");
+	scenario_list_index = tag_loaded(MULTIPLAYER_SCENARIO_DESCRIPTION_TAG, MULTIPLAYER_SCENARIO_DESCRIPTION_TAG_NAME);
 
 	if (scenario_list_index != NONE)
 	{

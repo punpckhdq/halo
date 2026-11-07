@@ -89,6 +89,8 @@ enum
 #define PLAYER_PROFILE_FILE_NAME "blam.sav"																/* fake name */
 #define PLAYLIST_PROFILE_FILE_NAME "blam.lst"															/* fake name */
 #define DEFAULT_MULTIPLAYER_GAME_SETTING_NAMES_TAG_NAME "ui\\default_multiplayer_game_setting_names"	/* fake name */
+#define SAVED_GAME_FILE_STRINGS_TAG_NAME "ui\\saved_game_file_strings"								/* fake name */
+#define DEFAULT_PLAYER_PROFILE_NAMES_TAG_NAME "ui\\shell\\strings\\default_player_profile_names"	/* fake name */
 
 /* ---------- structures */
 

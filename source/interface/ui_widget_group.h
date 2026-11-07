@@ -301,6 +301,23 @@ enum
 
 /* ---------- macros */
 
+#define GENERIC_WHITE_BITMAP_TAG_NAME "ui\\shell\\bitmaps\\white"																		/* fake name */
+#define SOLO_WIDGET_COLLECTION_TAG_NAME "ui\\shell\\solo"																				/* fake name */
+#define MULTIPLAYER_WIDGET_COLLECTION_TAG_NAME "ui\\shell\\multiplayer"																	/* fake name */
+#define MAIN_MENU_WIDGET_COLLECTION_TAG_NAME "ui\\shell\\main_menu"																		/* fake name */
+#define GAME_VARIANT_DESCRIPTIONS_TAG_NAME "ui\\shell\\strings\\game_variant_descriptions"												/* fake name */
+#define DIFFICULTY_NAMES_TAG_NAME "ui\\shell\\main_menu\\player_profiles_select\\difficulty_names"										/* fake name */
+#define BUTTON_SET_LONG_DESCRIPTIONS_TAG_NAME "ui\\shell\\main_menu\\player_profiles_select\\button_set_long_descriptions"				/* fake name */
+#define BUTTON_SET_SHORT_DESCRIPTIONS_TAG_NAME "ui\\shell\\main_menu\\player_profiles_select\\button_set_short_descriptions"			/* fake name */
+#define JOYSTICK_SET_DEFAULTS_DESCRIPTIONS_TAG_NAME "ui\\shell\\main_menu\\player_profiles_select\\joystick_set_defaults_descriptions"	/* fake name */
+#define JOYSTICK_SET_SHORT_DESCRIPTIONS_TAG_NAME "ui\\shell\\main_menu\\player_profiles_select\\joystick_set_short_descriptions"		/* fake name */
+#define PROFILE_DESCRIPTION_LABELS_TAG_NAME "ui\\shell\\main_menu\\player_profiles_select\\profile_description_labels"					/* fake name */
+#define UI_CURSOR_SOUND_TAG_NAME "sound\\sfx\\ui\\cursor"																				/* fake name */
+#define UI_FORWARD_SOUND_TAG_NAME "sound\\sfx\\ui\\forward"																				/* fake name */
+#define UI_BACK_SOUND_TAG_NAME "sound\\sfx\\ui\\back"																					/* fake name */
+#define UI_FAILURE_SOUND_TAG_NAME "sound\\sfx\\ui\\flag_failure"																		/* fake name */
+#define MAIN_MENU_MUSIC_TAG_NAME "sound\\music\\title1\\title1"																			/* fake name */
+
 #define ui_widget_definition_get(index) ((struct ui_widget_definition *)tag_get(UI_WIDGET_DEFINITION_TAG, (index))) /* fake name */
 
 /* ---------- structures */

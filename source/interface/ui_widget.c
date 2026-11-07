@@ -70,16 +70,6 @@ enum
 
 enum
 {
-	_screen_multitexture_blend_func_add = 0,
-	_screen_multitexture_blend_func_multiply,
-	_screen_multitexture_blend_func_subtract,
-	_screen_multitexture_blend_func_multiply2X,
-	_screen_multitexture_blend_func_dot,
-	_screen_multitexture_blend_func_phatty_plasma
-};
-
-enum
-{
 	WIDGET_MEMORY_POOL_BUFFER_SIZE = 0x4000,
 	MAXIMUM_WIDGET_MEMORY_POOL_BLOCKS = 0x1000 /* fake name */
 };
@@ -100,6 +90,26 @@ enum
 };
 
 /* ---------- macros */
+
+#define SMALL_UI_FONT_TAG_NAME "ui\\small_ui"																										/* fake name */
+#define MAIN_MENU_WIDGET_NAME "ui\\shell\\main_menu\\main_menu"																						/* fake name */
+#define SPLITSCREEN_PREGAME_WIDGET_NAME "ui\\shell\\main_menu\\multiplayer_type_select\\split_screen\\pregame\\splitscreen_pregame_wrapper_normal"	/* fake name */
+#define SPLITSCREEN_POSTGAME_WIDGET_NAME "ui\\shell\\main_menu\\multiplayer_type_select\\split_screen\\splitscreen_map_select_postgame_wrapper"		/* fake name */
+#define CONNECTED_POSTGAME_WIDGET_NAME "ui\\shell\\main_menu\\multiplayer_type_select\\connected\\connected_map_select_postgame_wrapper"			/* fake name */
+#define ERROR_MODAL_FULLSCREEN_WIDGET_NAME "ui\\shell\\error\\error_modal_fullscreen"																/* fake name */
+#define ERROR_NONMODAL_FULLSCREEN_WIDGET_NAME "ui\\shell\\error\\error_nonmodal_fullscreen"															/* fake name */
+#define ERROR_MODAL_HALFSCREEN_WIDGET_NAME "ui\\shell\\error\\error_modal_halfscreen"																/* fake name */
+#define ERROR_NONMODAL_HALFSCREEN_WIDGET_NAME "ui\\shell\\error\\error_nonmodal_halfscreen"															/* fake name */
+#define ERROR_MODAL_QTRSCREEN_WIDGET_NAME "ui\\shell\\error\\error_modal_qtrscreen"																	/* fake name */
+#define ERROR_NONMODAL_QTRSCREEN_WIDGET_NAME "ui\\shell\\error\\error_nonmodal_qtrscreen"															/* fake name */
+#define ERROR_ABORT_TO_DASHBOARD_WIDGET_NAME "ui\\shell\\error\\error_abort_to_dashboard"															/* fake name */
+#define ERROR_ABORT_TO_DASHBOARD_NO_CHOICE_WIDGET_NAME "ui\\shell\\error\\error_abort_to_dashboard_you_have_no_choice"								/* fake name */
+#define MULTIPLAYER_1P_PAUSE_GAME_WIDGET_NAME "ui\\shell\\multiplayer_game\\pause_game\\1p_pause_game"												/* fake name */
+#define MULTIPLAYER_2P_PAUSE_GAME_WIDGET_NAME "ui\\shell\\multiplayer_game\\pause_game\\2p_pause_game"												/* fake name */
+#define MULTIPLAYER_4P_PAUSE_GAME_WIDGET_NAME "ui\\shell\\multiplayer_game\\pause_game\\4p_pause_game"												/* fake name */
+#define SOLO_PAUSE_GAME_WIDGET_NAME "ui\\shell\\solo_game\\pause_game\\pause_game"																	/* fake name */
+#define SOLO_SPLIT_SCREEN_PAUSE_GAME_WIDGET_NAME "ui\\shell\\solo_game\\pause_game\\pause_game_split_screen"										/* fake name */
+#define PLAYER_HELP_SCREEN_WIDGET_NAME(level) "ui\\shell\\solo_game\\player_help\\player_help_screen_" level										/* fake name */
 
 /* ---------- structures */
 
@@ -724,10 +734,10 @@ void process_ui_widgets(
 			display_error_abort_to_dashboard(widget_globals.deferred_dashboard_error.error_code, widget_globals.deferred_dashboard_error.allow_user_to_continue);
 			widget_globals.deferred_dashboard_error.error_code = NONE;
 		}
-		else if (widget_globals.deferred_error[0].error_code == NONE &&
-			widget_globals.deferred_error[1].error_code == NONE &&
-			widget_globals.deferred_error[2].error_code == NONE &&
-			widget_globals.deferred_error[3].error_code == NONE)
+		else if (widget_globals.deferred_error[PLAYER1].error_code == NONE &&
+			widget_globals.deferred_error[PLAYER2].error_code == NONE &&
+			widget_globals.deferred_error[PLAYER3].error_code == NONE &&
+			widget_globals.deferred_error[PLAYER4].error_code == NONE)
 		{
 			boolean error_displayed[MAXIMUM_GAMEPADS];
 			long widget_stack;
@@ -996,7 +1006,7 @@ void render_ui_widgets(
 						bounds.x1 += 32;
 						bounds.y0 += 32;
 						bounds.y1 += 32;
-						draw_string_set_draw_mode(tag_loaded(FONT_GROUP_TAG, "ui\\small_ui"), NONE, _text_justification_left, 0, &color);
+						draw_string_set_draw_mode(tag_loaded(FONT_GROUP_TAG, SMALL_UI_FONT_TAG_NAME), NONE, _text_justification_left, 0, &color);
 						rasterizer_draw_string(&bounds, NULL, NULL, 0, tag_get_name(widget_globals.active_widgets[widget_stack]->tag_index));
 					}
 				}
@@ -1485,16 +1495,16 @@ void ui_play_audio_feedback_sound(
 	switch (audio_feedback)
 	{
 	case _audio_feedback_cursor:
-		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, "sound\\sfx\\ui\\cursor"));
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_CURSOR_SOUND_TAG_NAME));
 		break;
 	case _audio_feedback_forward:
-		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, "sound\\sfx\\ui\\forward"));
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_FORWARD_SOUND_TAG_NAME));
 		break;
 	case _audio_feedback_backward:
-		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, "sound\\sfx\\ui\\back"));
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_BACK_SOUND_TAG_NAME));
 		break;
 	case _audio_feedback_failure:
-		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, "sound\\sfx\\ui\\flag_failure"));
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_FAILURE_SOUND_TAG_NAME));
 		break;
 	}
 
@@ -1853,7 +1863,7 @@ void main_screen_shell_load(
 		attract_mode_reset_timer();
 		ui_widgets_close_all();
 
-		if (!ui_widget_load_by_name_or_tag("ui\\shell\\main_menu\\main_menu", NONE, NULL, NONE, NONE, NONE, NONE))
+		if (!ui_widget_load_by_name_or_tag(MAIN_MENU_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
 		{
 			error(_error_silent, "failed to load main screen shell window");
 		}
@@ -1891,12 +1901,12 @@ void network_game_reset_to_pregame_ui(
 	{
 		if (network_game_is_quickstart_local())
 		{
-			if (!ui_widget_load_by_name_or_tag("ui\\shell\\main_menu\\multiplayer_type_select\\split_screen\\pregame\\splitscreen_pregame_wrapper_normal", NONE, NULL, NONE, NONE, NONE, NONE))
+			if (!ui_widget_load_by_name_or_tag(SPLITSCREEN_PREGAME_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
 			{
 				error(_error_silent, "failed to load pregame screen after quickstart match");
 			}
 		}
-		else if (!ui_widget_load_by_name_or_tag("ui\\shell\\main_menu\\multiplayer_type_select\\split_screen\\splitscreen_map_select_postgame_wrapper", NONE, NULL, NONE, NONE, NONE, NONE))
+		else if (!ui_widget_load_by_name_or_tag(SPLITSCREEN_POSTGAME_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
 		{
 			error(_error_silent, "failed to load map select postgame screen");
 		}
@@ -1905,12 +1915,12 @@ void network_game_reset_to_pregame_ui(
 	{
 		network_game_server_pause_countdown(global_network_game_server_get(), TRUE);
 
-		if (!ui_widget_load_by_name_or_tag("ui\\shell\\main_menu\\multiplayer_type_select\\connected\\connected_map_select_postgame_wrapper", NONE, NULL, NONE, NONE, NONE, NONE))
+		if (!ui_widget_load_by_name_or_tag(CONNECTED_POSTGAME_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
 		{
 			error(_error_silent, "failed to load map select postgame screen");
 		}
 	}
-	else if (!ui_widget_load_by_name_or_tag("ui\\shell\\main_menu\\multiplayer_type_select\\connected\\pregame\\connected_pregame_screen", NONE, NULL, NONE, NONE, NONE, NONE))
+	else if (!ui_widget_load_by_name_or_tag(PREGAME_SCREEN_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
 	{
 		error(_error_silent, "failed to load networked pregame status screen");
 	}
@@ -2001,23 +2011,23 @@ void display_error(
 		{
 		case 0:
 		case 1:
-			widget_name = modal ? "ui\\shell\\error\\error_modal_fullscreen" : "ui\\shell\\error\\error_nonmodal_fullscreen";
+			widget_name = modal ? ERROR_MODAL_FULLSCREEN_WIDGET_NAME : ERROR_NONMODAL_FULLSCREEN_WIDGET_NAME;
 			break;
 		case 2:
-			widget_name = modal ? "ui\\shell\\error\\error_modal_halfscreen" : "ui\\shell\\error\\error_nonmodal_halfscreen";
+			widget_name = modal ? ERROR_MODAL_HALFSCREEN_WIDGET_NAME : ERROR_NONMODAL_HALFSCREEN_WIDGET_NAME;
 			break;
 		case 3:
 			if (first_local_player == TRUE)
 			{
-				widget_name = modal ? "ui\\shell\\error\\error_modal_halfscreen" : "ui\\shell\\error\\error_nonmodal_halfscreen";
+				widget_name = modal ? ERROR_MODAL_HALFSCREEN_WIDGET_NAME : ERROR_NONMODAL_HALFSCREEN_WIDGET_NAME;
 			}
 			else
 			{
-				widget_name = modal ? "ui\\shell\\error\\error_modal_qtrscreen" : "ui\\shell\\error\\error_nonmodal_qtrscreen";
+				widget_name = modal ? ERROR_MODAL_QTRSCREEN_WIDGET_NAME : ERROR_NONMODAL_QTRSCREEN_WIDGET_NAME;
 			}
 			break;
 		case 4:
-			widget_name = modal ? "ui\\shell\\error\\error_modal_qtrscreen" : "ui\\shell\\error\\error_nonmodal_qtrscreen";
+			widget_name = modal ? ERROR_MODAL_QTRSCREEN_WIDGET_NAME : ERROR_NONMODAL_QTRSCREEN_WIDGET_NAME;
 			break;
 		default:
 			match_vhalt("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2161, "invalid local player count");
@@ -2164,7 +2174,7 @@ void display_error_abort_to_dashboard(
 	boolean optional)
 {
 	struct widget_instance *widget;
-	char const *widget_name = optional == TRUE ? "ui\\shell\\error\\error_abort_to_dashboard" : "ui\\shell\\error\\error_abort_to_dashboard_you_have_no_choice";
+	char const *widget_name = optional == TRUE ? ERROR_ABORT_TO_DASHBOARD_WIDGET_NAME : ERROR_ABORT_TO_DASHBOARD_NO_CHOICE_WIDGET_NAME;
 
 	if (!optional)
 	{
@@ -2244,54 +2254,54 @@ void display_scenario_help(
 
 	if (global_scenario_index != NONE)
 	{
-		char scenario_name[256];
+		char scenario_name[MAXIMUM_FILENAME_LENGTH+1];
 		char const *widget_name;
 		short local_player_index;
 		struct widget_instance *widget;
 
-		strncpy(scenario_name, tag_get_name(global_scenario_index), sizeof(scenario_name) - 1);
-		scenario_name[sizeof(scenario_name) - 1] = '\0';
+		strncpy(scenario_name, tag_get_name(global_scenario_index), NUMBEROF(scenario_name) - 1);
+		scenario_name[NUMBEROF(scenario_name) - 1] = '\0';
 		strlwr(scenario_name);
 
 		if (strstr(scenario_name, "a10"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_a10";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("a10");
 		}
 		else if (strstr(scenario_name, "a30"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_a30";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("a30");
 		}
 		else if (strstr(scenario_name, "a50"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_a50";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("a50");
 		}
 		else if (strstr(scenario_name, "b30"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_b30";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("b30");
 		}
 		else if (strstr(scenario_name, "b40"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_b40";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("b40");
 		}
 		else if (strstr(scenario_name, "c10"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_c10";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("c10");
 		}
 		else if (strstr(scenario_name, "c20"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_c20";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("c20");
 		}
 		else if (strstr(scenario_name, "c40"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_c40";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("c40");
 		}
 		else if (strstr(scenario_name, "d20"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_d20";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("d20");
 		}
 		else if (strstr(scenario_name, "d40"))
 		{
-			widget_name = "ui\\shell\\solo_game\\player_help\\player_help_screen_d40";
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("d40");
 		}
 		else
 		{
@@ -2328,7 +2338,7 @@ void ui_start_main_menu_music(
 {
 	if (!widget_globals.main_menu_music_active && !main_menu_fade_active())
 	{
-		long music_tag_index = tag_loaded(LOOPING_SOUND_DEFINITION_TAG, "sound\\music\\title1\\title1");
+		long music_tag_index = tag_loaded(LOOPING_SOUND_DEFINITION_TAG, MAIN_MENU_MUSIC_TAG_NAME);
 
 		if (music_tag_index != NONE)
 		{
@@ -2350,7 +2360,7 @@ void ui_stop_main_menu_music(
 {
 	if (widget_globals.main_menu_music_active == TRUE)
 	{
-		long music_tag_index = tag_loaded(LOOPING_SOUND_DEFINITION_TAG, "sound\\music\\title1\\title1");
+		long music_tag_index = tag_loaded(LOOPING_SOUND_DEFINITION_TAG, MAIN_MENU_MUSIC_TAG_NAME);
 
 		if (music_tag_index != NONE)
 		{
@@ -2448,7 +2458,9 @@ static boolean ui_widget_load_children_recursive(
 		struct unicode_string_list_group_header *string_list;
 
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2592, widget->type == _ui_widget_type_spinner_list, "_list_items_generated_from_string_list_tag flag should only be set for 1-wide spinner list widgets");
+
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2594, !definition->child_widgets.count, "no child widget references are needed to define list items when generating a list from a string list tag");
+
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2596, definition->text_label_unicode_string_list_tag.index != NONE, "_list_items_generated_from_string_list_tag flag was set but no string list tag was specified");
 
 		string_list = unicode_string_list_definition_get(definition->text_label_unicode_string_list_tag.index);
@@ -4029,6 +4041,14 @@ void draw_string_and_hack_in_icons(
 			width_offset = icon->width_offset;
 			pixel32_to_real_argb_color(icon->color, &icon_color);
 			SET_FLAG(icon->flags, _hud_icon_use_color_bit, FALSE);
+
+
+
+
+
+
+
+
 			match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4362, icon_index>=0 && icon_index<NUM_ICONS);
 
 			if (icon_is_special[icon_index])
@@ -4872,23 +4892,23 @@ static boolean ui_check_for_pause_game(
 					switch (local_player_count)
 					{
 					case 1:
-						widget_name = "ui\\shell\\multiplayer_game\\pause_game\\1p_pause_game";
+						widget_name = MULTIPLAYER_1P_PAUSE_GAME_WIDGET_NAME;
 						break;
 					case 2:
-						widget_name = "ui\\shell\\multiplayer_game\\pause_game\\2p_pause_game";
+						widget_name = MULTIPLAYER_2P_PAUSE_GAME_WIDGET_NAME;
 						break;
 					case 3:
 						if (first_local_player == TRUE)
 						{
-							widget_name = "ui\\shell\\multiplayer_game\\pause_game\\2p_pause_game";
+							widget_name = MULTIPLAYER_2P_PAUSE_GAME_WIDGET_NAME;
 						}
 						else
 						{
-							widget_name = "ui\\shell\\multiplayer_game\\pause_game\\4p_pause_game";
+							widget_name = MULTIPLAYER_4P_PAUSE_GAME_WIDGET_NAME;
 						}
 						break;
 					case 4:
-						widget_name = "ui\\shell\\multiplayer_game\\pause_game\\4p_pause_game";
+						widget_name = MULTIPLAYER_4P_PAUSE_GAME_WIDGET_NAME;
 						break;
 					default:
 						error(_error_silent, "invalid local player count for multiplayer game");
@@ -4922,7 +4942,7 @@ static boolean ui_check_for_pause_game(
 						ui_widgets_close_all();
 					}
 				}
-				else if (!ui_widget_load_by_name_or_tag("ui\\shell\\solo_game\\pause_game\\pause_game", NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
+				else if (!ui_widget_load_by_name_or_tag(SOLO_PAUSE_GAME_WIDGET_NAME, NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
 				{
 					error(_error_silent, "failed to load full screen pause game window");
 				}
@@ -4936,7 +4956,7 @@ static boolean ui_check_for_pause_game(
 					}
 				}
 				else if (!game_time_get_paused() &&
-					!ui_widget_load_by_name_or_tag("ui\\shell\\solo_game\\pause_game\\pause_game_split_screen", NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
+					!ui_widget_load_by_name_or_tag(SOLO_SPLIT_SCREEN_PAUSE_GAME_WIDGET_NAME, NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
 				{
 					error(_error_silent, "failed to load split screen pause game window");
 				}
@@ -4946,7 +4966,7 @@ static boolean ui_check_for_pause_game(
 
 				if (!ui_widgets_active())
 				{
-					if (!ui_widget_load_by_name_or_tag("ui\\shell\\solo_game\\pause_game\\pause_game", NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
+					if (!ui_widget_load_by_name_or_tag(SOLO_PAUSE_GAME_WIDGET_NAME, NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
 					{
 						error(_error_silent, "failed to load full screen pause game window");
 					}
