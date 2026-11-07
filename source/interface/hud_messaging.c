@@ -121,7 +121,7 @@ static int __cdecl compare_messages(struct hud_message const *lhs, struct hud_me
 
 struct hud_messaging_parameters_definition *hud_msg_def;
 
-static char button_mappings[] = /* fake name */
+static char button_mappings[] =
 {
 	_button_action_reload,
 	_button_throw_grenade,

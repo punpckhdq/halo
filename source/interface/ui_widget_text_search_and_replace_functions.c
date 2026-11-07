@@ -22,16 +22,14 @@ UI_WIDGET_TEXT_SEARCH_AND_REPLACE_FUNCTIONS.C
 
 /* ---------- structures */
 
-typedef wchar_t const *(*search_and_replace_proc)(struct widget_instance *widget); /* fake name */
-
 /* ---------- prototypes */
 
-static wchar_t const *widget_replace_function_null(struct widget_instance *widget);
-static wchar_t const *widget_controller(struct widget_instance *widget);
+static wchar_t *widget_replace_function_null(struct widget_instance *widget);
+static wchar_t *widget_controller(struct widget_instance *widget);
 
 /* ---------- globals */
 
-static search_and_replace_proc search_and_replace_functions[NUMBER_OF_SEARCH_AND_REPLACE_FUNCTIONS] = /* fake name */
+static wchar_t *(*replace_function_list[])(struct widget_instance *widget) =
 {
 	widget_replace_function_null,
 	widget_controller,
@@ -39,51 +37,49 @@ static search_and_replace_proc search_and_replace_functions[NUMBER_OF_SEARCH_AND
 
 /* ---------- public code */
 
-static wchar_t const *widget_replace_function_null(
-	struct widget_instance *widget)
-{
-	return L"";
-}
-
-static wchar_t const *widget_controller(
-	struct widget_instance *widget)
-{
-	static wchar_t buffer[2];
-
-	switch (widget->local_player_index)
-	{
-	case NONE:
-		buffer[0] = L'1';
-		break;
-	case 0:
-		buffer[0] = L'1';
-		break;
-	case 1:
-		buffer[0] = L'2';
-		break;
-	case 2:
-		buffer[0] = L'3';
-		break;
-	case 3:
-		buffer[0] = L'4';
-		break;
-	default:
-		buffer[0] = L'?';
-		break;
-	}
-
-	buffer[NUMBEROF(buffer) - 1] = L'\0';
-
-	return buffer;
-}
-
-wchar_t const *ui_widget_search_and_replace_invoke(
+wchar_t *ui_widget_search_and_replace_invoke(
 	struct widget_instance *widget,
 	short function)
 {
 	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_text_search_and_replace_functions.c", 45, widget);
 
-	return (function >= 0 && function < NUMBEROF(search_and_replace_functions)) ? search_and_replace_functions[function](widget) : L"<invalid>";
+	return (function >= 0 && function < NUMBEROF(replace_function_list)) ? replace_function_list[function](widget) : L"<invalid>";
 }
 
-/* ---------- private code */
+static wchar_t *widget_replace_function_null(
+	struct widget_instance *widget)
+{
+	return L"";
+}
+
+static wchar_t *widget_controller(
+	struct widget_instance *widget)
+{
+	static wchar_t result[2];
+
+	switch (widget->local_player_index)
+	{
+	case NONE:
+		result[0] = L'1';
+		break;
+	case 0:
+		result[0] = L'1';
+		break;
+	case 1:
+		result[0] = L'2';
+		break;
+	case 2:
+		result[0] = L'3';
+		break;
+	case 3:
+		result[0] = L'4';
+		break;
+	default:
+		result[0] = L'?';
+		break;
+	}
+
+	result[NUMBEROF(result) - 1] = L'\0';
+
+	return result;
+}

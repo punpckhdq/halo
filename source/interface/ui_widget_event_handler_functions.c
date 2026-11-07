@@ -267,12 +267,12 @@ enum
 /* ---------- prototypes */
 
 static boolean widget_event_function_null(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean solo_level_initialize_list_single_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean solo_level_initialize_list_coop(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean solo_level_dispose_list(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean solo_level_set_next_map_name(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean difficulty_set(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean start_new_game(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_initialize_list_single_player(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_initialize_list_coop(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_dispose_list(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_set_next_map_name(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean difficulty_set(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean start_new_game(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
 static boolean pause_game_restart_at_checkpoint(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean pause_game_restart_level(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean pause_game_quit_to_main_menu(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
@@ -288,19 +288,19 @@ static boolean coop_game_initialize(struct widget_instance *widget, struct event
 static boolean main_menu_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean multiplayer_type_menu_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean multiplayer_pick_quick_start_play_stage(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean multiplayer_level_list_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean multiplayer_level_list_dispose(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean multiplayer_level_select(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean multiplayer_profiles_list_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean multiplayer_profiles_list_dispose(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean multiplayer_profile_set_for_game(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean multiplayer_game_swap_teams(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_level_list_initialize(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_level_list_dispose(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_level_select(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_profiles_list_initialize(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_profiles_list_dispose(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_profile_set_for_game(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_game_swap_teams(struct widget_instance *local_player_data_widget, struct event_record *event, boolean *widget_deleted);
 static boolean netgame_join_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean player_profiles_list_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean player_profiles_list_dispose(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean player_profile_set_for_game_3wide(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean player_profile_set_for_game_1wide(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean playlist_profile_begin_editing(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profiles_list_initialize(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profiles_list_dispose(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_set_for_game_3wide(struct widget_instance *select_screen_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_set_for_game_1wide(struct widget_instance *list_widgets_parent, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_begin_editing(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
 static boolean playlist_profile_end_editing(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean playlist_profile_set_game_engine(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean playlist_profile_change_name(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
@@ -325,8 +325,8 @@ static boolean playlist_profile_initialize_indicator_options(struct widget_insta
 static boolean playlist_profile_save_changes(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean player_profile_color_picker_menu_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean player_profile_color_picker_menu_dispose(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean player_profile_color_picker_select_color(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean player_profile_begin_editing(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_color_picker_select_color(struct widget_instance *screen_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_begin_editing(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
 static boolean player_profile_end_editing(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean player_profile_change_name(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean player_profile_save_changes(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
@@ -336,10 +336,10 @@ static boolean player_profile_change_controller_settings(struct widget_instance 
 static boolean player_profile_change_advanced_controller_settings(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean network_game_remove_local_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean switch_from_main_menu_to_single_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean delete_player_profile_request(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean delete_playlist_profile_request(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean delete_player_profile_final(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-static boolean delete_playlist_profile_final(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_player_profile_request(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_playlist_profile_request(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_player_profile_final(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_playlist_profile_final(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
 static boolean cancel_profile_delete(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean create_and_begin_editing_new_gametype_profile(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
 static boolean create_and_begin_editing_new_player_profile(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
@@ -367,7 +367,7 @@ static boolean new_campaign_if_no_custom_player_profiles_exist(struct widget_ins
 
 /* ---------- globals */
 
-static boolean (*event_handler_function_table[NUMBER_OF_EVENT_HANDLER_FUNCTIONS])(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted) = /* fake name */
+static boolean (*event_handler_function_list[NUMBER_OF_EVENT_HANDLER_FUNCTIONS])(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted) =
 {
 	widget_event_function_null,
 	widget_event_function_list_widget_goto_next_item,
@@ -585,9 +585,9 @@ struct enum_definition event_handler_functions =
 	event_handler_functions_strings
 };
 
-static long profile_index_to_delete = NONE; /* fake name */
+static long delete_profile_index = NONE;
 
-static char *single_player_level_names[NUMBER_OF_SINGLE_PLAYER_LEVELS] = /* fake name */
+static char *scenario_paths[NUMBER_OF_SINGLE_PLAYER_LEVELS] =
 {
 	"levels\\a10\\a10",
 	"levels\\a30\\a30",
@@ -601,8 +601,8 @@ static char *single_player_level_names[NUMBER_OF_SINGLE_PLAYER_LEVELS] = /* fake
 	"levels\\d40\\d40",
 };
 
-static long last_player1_profile_index = NONE; /* fake name */
-static long corrupted_saved_game_profile_index = NONE; /* fake name */
+static long last_player1_profile_index = NONE;
+static long previous_corrupt_player1_profile_index = NONE;
 
 static char *multiplayer_level_names[NUMBER_OF_MULTIPLAYER_LEVELS] = /* fake name */
 {
@@ -621,7 +621,7 @@ static char *multiplayer_level_names[NUMBER_OF_MULTIPLAYER_LEVELS] = /* fake nam
 	"levels\\test\\longest\\longest",
 };
 
-static short new_campaign_controller_index = NONE; /* fake name */
+static short new_campaign_controller_index = NONE;
 
 static wchar_t new_campaign_profile_name[MAXIMUM_PLAYER_PROFILE_NAME_LENGTH+1]; /* fake name */
 struct _single_player_level_data single_player_level_data[NUMBER_OF_SINGLE_PLAYER_LEVELS] = {0};
@@ -639,9 +639,9 @@ boolean ui_widget_event_handler_function_invoke(
 
 	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 478, (widget != NULL) && (widget_deleted != NULL), "(widget != NULL) && (widget_deleted != NULL)");
 
-	if (function >= 0 && function < NUMBEROF(event_handler_function_table))
+	if (function >= 0 && function < NUMBEROF(event_handler_function_list))
 	{
-		success = event_handler_function_table[function](widget, event, widget_deleted);
+		success = event_handler_function_list[function](widget, event, widget_deleted);
 
 		if (!success)
 		{
@@ -674,7 +674,7 @@ void reset_last_player1_profile_index(
 }
 
 static boolean solo_level_initialize_list_single_player(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -687,7 +687,7 @@ static boolean solo_level_initialize_list_single_player(
 	if (player_spawn_count >= 2)
 	{
 		memset(&persistant_game_data_info, 0, sizeof(persistant_game_data_info));
-		solo_level_initialize_list_coop(widget, event, widget_deleted);
+		solo_level_initialize_list_coop(list_widget, event, widget_deleted);
 	}
 	else
 	{
@@ -710,7 +710,7 @@ static boolean solo_level_initialize_list_single_player(
 
 		for (level_index = 0; level_index < NUMBER_OF_SINGLE_PLAYER_LEVELS; level_index++)
 		{
-			single_player_level_data[level_index].scenario_tag_path = single_player_level_names[level_index];
+			single_player_level_data[level_index].scenario_tag_path = scenario_paths[level_index];
 
 			if (profile.single_player_map_flags[level_index] || level_index == last_level_completed + 1 || level_index == _single_player_map_a10)
 			{
@@ -721,12 +721,12 @@ static boolean solo_level_initialize_list_single_player(
 			}
 		}
 
-		definition = ui_widget_definition_get(widget->tag_index);
-		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 603, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'solo level list' widget");
-		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 604, definition->child_widgets.count == 3, "expected 3 list items for 'solo level list' widget");
-		widget->list.items = single_player_level_data;
-		widget->list.item_count = NUMBER_OF_SINGLE_PLAYER_LEVELS;
-		widget->list.item_index = PIN(player_ui_get_last_single_player_level_played(PLAYER1), 0, NUMBER_OF_SINGLE_PLAYER_LEVELS - 1);
+		definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 603, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'solo level list' widget");
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 604, definition->child_widget_references.count == 3, "expected 3 list items for 'solo level list' widget");
+		list_widget->parameters.list_parameters.list_items = single_player_level_data;
+		list_widget->parameters.list_parameters.number_of_items = NUMBER_OF_SINGLE_PLAYER_LEVELS;
+		list_widget->parameters.list_parameters.current_list_item_index = PIN(player_ui_get_last_single_player_level_played(PLAYER1), 0, NUMBER_OF_SINGLE_PLAYER_LEVELS - 1);
 
 		if (persistant_game_data_info.valid == TRUE)
 		{
@@ -734,7 +734,7 @@ static boolean solo_level_initialize_list_single_player(
 
 			for (level_index = 0; level_index < NUMBER_OF_SINGLE_PLAYER_LEVELS; level_index++)
 			{
-				if (!_stricmp(persistant_game_data_info.map_name, single_player_level_names[level_index]))
+				if (!_stricmp(persistant_game_data_info.map_name, scenario_paths[level_index]))
 				{
 					persistant_game_data_info.map_index = (char)level_index;
 					persistant_game_data_info.difficulty = PIN(persistant_game_data_info.difficulty, 0, NUMBER_OF_GAME_DIFFICULTY_LEVELS - 1);
@@ -753,14 +753,14 @@ static boolean solo_level_initialize_list_single_player(
 
 			if (active_profile_index != NONE)
 			{
-				if (corrupted_saved_game_profile_index == NONE)
+				if (previous_corrupt_player1_profile_index == NONE)
 				{
 					display_error_deferred(_error_saved_game_state_corrupt, NONE, TRUE, FALSE);
-					corrupted_saved_game_profile_index = active_profile_index;
+					previous_corrupt_player1_profile_index = active_profile_index;
 				}
 				else
 				{
-					corrupted_saved_game_profile_index = NONE;
+					previous_corrupt_player1_profile_index = NONE;
 				}
 			}
 		}
@@ -770,7 +770,7 @@ static boolean solo_level_initialize_list_single_player(
 }
 
 static boolean solo_level_initialize_list_coop(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -788,7 +788,7 @@ static boolean solo_level_initialize_list_coop(
 
 	for (level_index = 0; level_index < NUMBER_OF_SINGLE_PLAYER_LEVELS; level_index++)
 	{
-		single_player_level_data[level_index].scenario_tag_path = single_player_level_names[level_index];
+		single_player_level_data[level_index].scenario_tag_path = scenario_paths[level_index];
 
 		if (profile[PLAYER1].single_player_map_flags[level_index] || level_index == last_level_completed[PLAYER1] + 1 ||
 			profile[PLAYER2].single_player_map_flags[level_index] || level_index == last_level_completed[PLAYER2] + 1 ||
@@ -803,30 +803,30 @@ static boolean solo_level_initialize_list_coop(
 		}
 	}
 
-	definition = ui_widget_definition_get(widget->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 689, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'solo level list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 690, definition->child_widgets.count == 3, "expected 3 list items for 'solo level list' widget");
-	widget->list.items = single_player_level_data;
-	widget->list.item_count = NUMBER_OF_SINGLE_PLAYER_LEVELS;
-	widget->list.item_index = PIN(player_ui_get_last_single_player_level_played(PLAYER1), 0, NUMBER_OF_SINGLE_PLAYER_LEVELS - 1);
+	definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 689, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'solo level list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 690, definition->child_widget_references.count == 3, "expected 3 list items for 'solo level list' widget");
+	list_widget->parameters.list_parameters.list_items = single_player_level_data;
+	list_widget->parameters.list_parameters.number_of_items = NUMBER_OF_SINGLE_PLAYER_LEVELS;
+	list_widget->parameters.list_parameters.current_list_item_index = PIN(player_ui_get_last_single_player_level_played(PLAYER1), 0, NUMBER_OF_SINGLE_PLAYER_LEVELS - 1);
 
 	return TRUE;
 }
 
 static boolean solo_level_dispose_list(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
 	memset(single_player_level_data, 0, sizeof(single_player_level_data));
-	widget->list.items = NULL;
-	widget->list.item_count = 0;
+	list_widget->parameters.list_parameters.list_items = NULL;
+	list_widget->parameters.list_parameters.number_of_items = 0;
 
 	return TRUE;
 }
 
 static boolean solo_level_set_next_map_name(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -836,7 +836,7 @@ static boolean solo_level_set_next_map_name(
 	short local_player_index;
 	boolean level_available = FALSE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 724, (widget->list.item_index>=0) && (widget->list.item_index<NUMBER_OF_SINGLE_PLAYER_LEVELS), "I don't think this is the solo level list widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 724, (list_widget->parameters.list_parameters.current_list_item_index>=0) && (list_widget->parameters.list_parameters.current_list_item_index<NUMBER_OF_SINGLE_PLAYER_LEVELS), "I don't think this is the solo level list widget");
 
 	switch (player_spawn_count)
 	{
@@ -844,7 +844,7 @@ static boolean solo_level_set_next_map_name(
 		player_ui_get_active_player_profile(PLAYER1, &profile);
 		player_profile_get_highest_completed_solo_level(&profile, &last_level_completed, &difficulty);
 
-		if (profile.single_player_map_flags[widget->list.item_index] || widget->list.item_index == last_level_completed + 1 || widget->list.item_index == 0)
+		if (profile.single_player_map_flags[list_widget->parameters.list_parameters.current_list_item_index] || list_widget->parameters.list_parameters.current_list_item_index == last_level_completed + 1 || list_widget->parameters.list_parameters.current_list_item_index == 0)
 		{
 			level_available = TRUE;
 		}
@@ -856,7 +856,7 @@ static boolean solo_level_set_next_map_name(
 			player_ui_get_active_player_profile(local_player_index, &profile);
 			player_profile_get_highest_completed_solo_level(&profile, &last_level_completed, &difficulty);
 
-			if (profile.single_player_map_flags[widget->list.item_index] || widget->list.item_index == last_level_completed + 1 || widget->list.item_index == 0)
+			if (profile.single_player_map_flags[list_widget->parameters.list_parameters.current_list_item_index] || list_widget->parameters.list_parameters.current_list_item_index == last_level_completed + 1 || list_widget->parameters.list_parameters.current_list_item_index == 0)
 			{
 				level_available = TRUE;
 				break;
@@ -870,7 +870,7 @@ static boolean solo_level_set_next_map_name(
 
 	if (level_available == TRUE)
 	{
-		main_set_map_name(single_player_level_names[widget->list.item_index]);
+		main_set_map_name(scenario_paths[list_widget->parameters.list_parameters.current_list_item_index]);
 		main_defer_map_map_change();
 	}
 	else
@@ -883,24 +883,24 @@ static boolean solo_level_set_next_map_name(
 }
 
 static boolean difficulty_set(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 787, (widget->list.item_index>=0) && (widget->list.item_index<NUMBER_OF_GAME_DIFFICULTY_LEVELS), "I don't think this is the difficulty list widget");
-	main_set_difficulty(widget->list.item_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 787, (list_widget->parameters.list_parameters.current_list_item_index>=0) && (list_widget->parameters.list_parameters.current_list_item_index<NUMBER_OF_GAME_DIFFICULTY_LEVELS), "I don't think this is the difficulty list widget");
+	main_set_difficulty(list_widget->parameters.list_parameters.current_list_item_index);
 	ui_play_audio_feedback_sound(_audio_feedback_forward);
 
 	return TRUE;
 }
 
 static boolean start_new_game(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
 	main_set_difficulty(_game_difficulty_level_normal);
-	main_set_map_name(single_player_level_names[_single_player_map_a10]);
+	main_set_map_name(scenario_paths[_single_player_map_a10]);
 	game_connection_set(_game_connection_local);
 	main_menu_switch_to_single_player();
 	player_ui_remember_player1_profile(FALSE);
@@ -1035,13 +1035,13 @@ static boolean network_game_join_game_from_server_list(
 {
 	boolean success = FALSE;
 
-	if (widget->focused_child && widget->list.item_index >= 0)
+	if (widget->focused_child && widget->parameters.list_parameters.current_list_item_index >= 0)
 	{
-		if (widget->list.item_index < widget->list.item_count && widget->list.items)
+		if (widget->parameters.list_parameters.current_list_item_index < widget->parameters.list_parameters.number_of_items && widget->parameters.list_parameters.list_items)
 		{
-			if (widget->list.item_count > 0)
+			if (widget->parameters.list_parameters.number_of_items > 0)
 			{
-				struct advertised_game_data *game = ((struct advertised_game_data **)widget->list.items)[widget->list.item_index];
+				struct advertised_game_data *game = ((struct advertised_game_data **)widget->parameters.list_parameters.list_items)[widget->parameters.list_parameters.current_list_item_index];
 
 				if (game->open == TRUE)
 				{
@@ -1072,8 +1072,8 @@ static boolean network_game_join_game_from_server_list(
 									NONE,
 									NULL,
 									NONE,
-									topmost_parent->tag_index,
-									widget->parent ? widget->parent->tag_index : NONE,
+									topmost_parent->ui_widget_tag_index,
+									widget->parent ? widget->parent->ui_widget_tag_index : NONE,
 									(short)widget_instance_get_child_index_from_parent(widget)))
 								{
 									error(_error_silent, "event handler failed to spawn widget");
@@ -1127,8 +1127,8 @@ static boolean network_server_list_dispose(
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	widget->list.items = NULL;
-	widget->list.item_count = 0;
+	widget->parameters.list_parameters.list_items = NULL;
+	widget->parameters.list_parameters.number_of_items = 0;
 
 	return TRUE;
 }
@@ -1236,31 +1236,31 @@ static boolean multiplayer_pick_quick_start_play_stage(
 }
 
 static boolean multiplayer_level_list_initialize(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	char last_used_map[MAXIMUM_FILENAME_LENGTH+1];
-	struct ui_widget_definition *definition = ui_widget_definition_get(widget->tag_index);
+	char last_used_mp_map[MAXIMUM_FILENAME_LENGTH+1];
+	struct ui_widget_definition *definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1228, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'multiplayer level list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1229, definition->child_widgets.count == 3, "expected 3 list items for 'multiplayer level list' widget");
-	widget->list.items = multiplayer_level_names;
-	widget->list.item_count = NUMBER_OF_MULTIPLAYER_LEVELS;
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1228, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer level list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1229, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer level list' widget");
+	list_widget->parameters.list_parameters.list_items = multiplayer_level_names;
+	list_widget->parameters.list_parameters.number_of_items = NUMBER_OF_MULTIPLAYER_LEVELS;
 
-	if (saved_game_file_retrieve_last_used_multiplayer_map(last_used_map))
+	if (saved_game_file_retrieve_last_used_multiplayer_map(last_used_mp_map))
 	{
-		for (widget->list.item_index = 0; widget->list.item_index < NUMBER_OF_MULTIPLAYER_LEVELS; widget->list.item_index++)
+		for (list_widget->parameters.list_parameters.current_list_item_index = 0; list_widget->parameters.list_parameters.current_list_item_index < NUMBER_OF_MULTIPLAYER_LEVELS; list_widget->parameters.list_parameters.current_list_item_index++)
 		{
-			if (!_stricmp(last_used_map, multiplayer_level_names[widget->list.item_index]))
+			if (!_stricmp(last_used_mp_map, multiplayer_level_names[list_widget->parameters.list_parameters.current_list_item_index]))
 			{
 				break;
 			}
 		}
 
-		if (widget->list.item_index == NUMBER_OF_MULTIPLAYER_LEVELS)
+		if (list_widget->parameters.list_parameters.current_list_item_index == NUMBER_OF_MULTIPLAYER_LEVELS)
 		{
-			widget->list.item_index = 0;
+			list_widget->parameters.list_parameters.current_list_item_index = 0;
 		}
 	}
 
@@ -1268,18 +1268,18 @@ static boolean multiplayer_level_list_initialize(
 }
 
 static boolean multiplayer_level_list_dispose(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	widget->list.items = NULL;
-	widget->list.item_count = 0;
+	list_widget->parameters.list_parameters.list_items = NULL;
+	list_widget->parameters.list_parameters.number_of_items = 0;
 
 	return TRUE;
 }
 
 static boolean multiplayer_level_select(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -1292,26 +1292,26 @@ static boolean multiplayer_level_select(
 	FILE *automation_file;
 	long level_index;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1280, ui_widget_definition_get(widget->tag_index)->child_widgets.count == 1, "expected a wrapper widget around the multiplayer level select screen");
-	child = widget->first_child;
-	definition = ui_widget_definition_get(child->tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1280, ui_widget_definition_get(wrapper_widget->ui_widget_tag_index)->child_widget_references.count == 1, "expected a wrapper widget around the multiplayer level select screen");
+	child = wrapper_widget->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1285, definition->type == _ui_widget_type_container && definition->child_widgets.count == 3, "expected the multiplayer level select screen to be a container w/ 3 children");
-	child = child->first_child;
-	definition = ui_widget_definition_get(child->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1288, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'multiplayer level list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1289, definition->child_widgets.count == 3, "expected 3 list items for 'multiplayer level list' widget");
-	level_list = widget->first_child->first_child;
-
-
-
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1285, definition->type == _widget_type_container && definition->child_widget_references.count == 3, "expected the multiplayer level select screen to be a container w/ 3 children");
+	child = child->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1288, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer level list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1289, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer level list' widget");
+	level_list = wrapper_widget->children->children;
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1298, (level_list->list.item_index>=0) && (level_list->list.item_index<NUMBER_OF_MULTIPLAYER_LEVELS), "invalid multiplayer level specified from 'multiplayer level list' list widget");
-	map_name = multiplayer_level_names[level_list->list.item_index];
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1298, (level_list->parameters.list_parameters.current_list_item_index>=0) && (level_list->parameters.list_parameters.current_list_item_index<NUMBER_OF_MULTIPLAYER_LEVELS), "invalid multiplayer level specified from 'multiplayer level list' list widget");
+	map_name = multiplayer_level_names[level_list->parameters.list_parameters.current_list_item_index];
 
 	automation_file = fopen("d:\\map_automation.txt", "r");
 
@@ -1346,7 +1346,7 @@ static boolean multiplayer_level_select(
 }
 
 static boolean multiplayer_profiles_list_initialize(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -1355,17 +1355,17 @@ static boolean multiplayer_profiles_list_initialize(
 	long *profile_indices;
 	word profile_index;
 
-	profile_index_to_delete = NONE;
+	delete_profile_index = NONE;
 	memset(cached_variant_profile, NONE, sizeof(cached_variant_profile));
-	definition = ui_widget_definition_get(widget->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1384, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'multiplayer settings list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1385, definition->child_widgets.count == 3, "expected 3 list items for 'multiplayer settings list' widget");
+	definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1384, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer settings list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1385, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer settings list' widget");
 
 
 
 
-	profile_indices = ui_widget_realloc(widget->list.items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1390));
-	widget->list.items = profile_indices;
+	profile_indices = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1390));
+	list_widget->parameters.list_parameters.list_items = profile_indices;
 
 	if (profile_indices)
 	{
@@ -1382,7 +1382,7 @@ static boolean multiplayer_profiles_list_initialize(
 			number_of_profiles++;
 		}
 
-		widget->list.item_count = number_of_profiles;
+		list_widget->parameters.list_parameters.number_of_items = number_of_profiles;
 
 		if (saved_game_file_retrieve_last_used_multiplayer_variant_directory(last_variant_profile_directory_path))
 		{
@@ -1394,7 +1394,7 @@ static boolean multiplayer_profiles_list_initialize(
 				{
 					if (profile_indices[profile_index] == last_used_profile_index)
 					{
-						widget->list.item_index = profile_index;
+						list_widget->parameters.list_parameters.current_list_item_index = profile_index;
 						break;
 					}
 				}
@@ -1406,23 +1406,23 @@ static boolean multiplayer_profiles_list_initialize(
 }
 
 static boolean multiplayer_profiles_list_dispose(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	if (widget->list.items)
+	if (list_widget->parameters.list_parameters.list_items)
 	{
-		widget_free(widget->list.items);
-		widget->list.items = NULL;
+		widget_free(list_widget->parameters.list_parameters.list_items);
+		list_widget->parameters.list_parameters.list_items = NULL;
 	}
 
-	widget->list.item_count = 0;
+	list_widget->parameters.list_parameters.number_of_items = 0;
 
 	return TRUE;
 }
 
 static boolean multiplayer_profile_set_for_game(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -1437,26 +1437,26 @@ static boolean multiplayer_profile_set_for_game(
 	long profile_index;
 	boolean success;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1465, ui_widget_definition_get(widget->tag_index)->child_widgets.count == 1, "expected a wrapper widget around the multiplayer profile select screen");
-	child = widget->first_child;
-	definition = ui_widget_definition_get(child->tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1465, ui_widget_definition_get(wrapper_widget->ui_widget_tag_index)->child_widget_references.count == 1, "expected a wrapper widget around the multiplayer profile select screen");
+	child = wrapper_widget->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1470, definition->type == _ui_widget_type_container && definition->child_widgets.count == 3, "expected the multiplayer profile select screen to be a container w/ 3 children");
-	child = child->first_child;
-	definition = ui_widget_definition_get(child->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1473, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1474, definition->child_widgets.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
-	profile_list = widget->first_child->first_child;
-
-
-
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1470, definition->type == _widget_type_container && definition->child_widget_references.count == 3, "expected the multiplayer profile select screen to be a container w/ 3 children");
+	child = child->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1473, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1474, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
+	profile_list = wrapper_widget->children->children;
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1483, (profile_list->list.item_index>=0) && (profile_list->list.item_index<profile_list->list.item_count), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
-	profile_index = ((long *)profile_list->list.items)[profile_list->list.item_index];
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1483, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
 
 	if (profile_index == NONE)
 	{
@@ -1516,7 +1516,7 @@ static boolean multiplayer_profile_set_for_game(
 }
 
 static boolean multiplayer_game_swap_teams(
-	struct widget_instance *widget,
+	struct widget_instance *local_player_data_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -1596,64 +1596,64 @@ static boolean netgame_join_player(
 }
 
 static boolean player_profiles_list_initialize(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	struct ui_widget_definition *definition = ui_widget_definition_get(widget->tag_index);
+	struct ui_widget_definition *definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
 
-	profile_index_to_delete = NONE;
+	delete_profile_index = NONE;
 	memset(cached_player_profile, NONE, sizeof(cached_player_profile));
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1686, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'player settings list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1686, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player settings list' widget");
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1688, definition->child_widgets.count == 0 || definition->child_widgets.count == 3, "expected either 1 or 3 list items for 'player settings list' widget");
-
-
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1688, definition->child_widget_references.count == 0 || definition->child_widget_references.count == 3, "expected either 1 or 3 list items for 'player settings list' widget");
 
 
-	widget->list.items = ui_widget_realloc(widget->list.items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1693));
 
-	if (widget->list.items)
+
+	list_widget->parameters.list_parameters.list_items = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1693));
+
+	if (list_widget->parameters.list_parameters.list_items)
 	{
 		long last_used_profile_index;
 		word number_of_profiles = MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT;
 		boolean include_default_profiles = TRUE;
 
-		if (definition->child_widgets.count == 3)
+		if (definition->child_widget_references.count == 3)
 		{
 			include_default_profiles = FALSE;
 		}
 
 		player_profiles_enumerate_available_to_local_player_index(
-			widget->local_player_index,
+			list_widget->local_player_index,
 			&number_of_profiles,
-			widget->list.items,
+			list_widget->parameters.list_parameters.list_items,
 			include_default_profiles);
 
-		if (definition->child_widgets.count == 3)
+		if (definition->child_widget_references.count == 3)
 		{
 			word empty_index;
 
 			for (empty_index = number_of_profiles; empty_index < MINIMUM_SAVED_GAME_FILES_LIST_SIZE; empty_index++)
 			{
-				((long *)widget->list.items)[empty_index] = NONE;
+				((long *)list_widget->parameters.list_parameters.list_items)[empty_index] = NONE;
 				number_of_profiles++;
 			}
 		}
 
-		widget->list.item_count = number_of_profiles;
+		list_widget->parameters.list_parameters.number_of_items = number_of_profiles;
 		last_used_profile_index = player_ui_get_player1_last_used_profile_index();
 
 		if (last_used_profile_index != NONE)
 		{
 			long profile_index;
-			long *profile_indices = widget->list.items;
+			long *profile_indices = list_widget->parameters.list_parameters.list_items;
 
-			for (profile_index = 0; profile_index < widget->list.item_count; profile_index++)
+			for (profile_index = 0; profile_index < list_widget->parameters.list_parameters.number_of_items; profile_index++)
 			{
 				if (profile_indices[profile_index] == last_used_profile_index)
 				{
-					widget->list.item_index = (short)profile_index;
+					list_widget->parameters.list_parameters.current_list_item_index = (short)profile_index;
 					break;
 				}
 			}
@@ -1664,23 +1664,23 @@ static boolean player_profiles_list_initialize(
 }
 
 static boolean player_profiles_list_dispose(
-	struct widget_instance *widget,
+	struct widget_instance *list_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	if (widget->list.items)
+	if (list_widget->parameters.list_parameters.list_items)
 	{
-		widget_free(widget->list.items);
-		widget->list.items = NULL;
+		widget_free(list_widget->parameters.list_parameters.list_items);
+		list_widget->parameters.list_parameters.list_items = NULL;
 	}
 
-	widget->list.item_count = 0;
+	list_widget->parameters.list_parameters.number_of_items = 0;
 
 	return TRUE;
 }
 
 static boolean player_profile_set_for_game_3wide(
-	struct widget_instance *widget,
+	struct widget_instance *select_screen_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -1692,7 +1692,7 @@ static boolean player_profile_set_for_game_3wide(
 	boolean success;
 
 	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1763, event && event->controller_index!=NONE, "setting a player profile requires a valid controller index");
-	definition = ui_widget_definition_get(widget->tag_index);
+	definition = ui_widget_definition_get(select_screen_widget->ui_widget_tag_index);
 
 
 
@@ -1700,21 +1700,21 @@ static boolean player_profile_set_for_game_3wide(
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1772, definition->type == _ui_widget_type_container && definition->child_widgets.count >= 3, "expected the player profile select screen to be a container w/ 3 or more children");
-	profile_list = widget->first_child;
-	definition = ui_widget_definition_get(profile_list->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1775, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'player profile list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1776, definition->child_widgets.count == 3, "expected 3 list items for 'player profile list' widget");
-	profile_list = widget->first_child;
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1772, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the player profile select screen to be a container w/ 3 or more children");
+	profile_list = select_screen_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1775, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1776, definition->child_widget_references.count == 3, "expected 3 list items for 'player profile list' widget");
+	profile_list = select_screen_widget->children;
 
 
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1784, (profile_list->list.item_index>=0) && (profile_list->list.item_index<profile_list->list.item_count), "invalid multiplayer profile specified from 'player profile list' list widget");
-	profile_indices = profile_list->list.items;
-	profile_index = profile_indices[profile_list->list.item_index];
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1784, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'player profile list' list widget");
+	profile_indices = profile_list->parameters.list_parameters.list_items;
+	profile_index = profile_indices[profile_list->parameters.list_parameters.current_list_item_index];
 
 	if (profile_index != NONE)
 	{
@@ -1729,7 +1729,7 @@ static boolean player_profile_set_for_game_3wide(
 		{
 			short local_player_index = player_ui_get_single_player_local_player_from_controller(event->controller_index);
 
-			player_ui_set_active_player_profile(local_player_index, profile_indices[profile_list->list.item_index], &profile);
+			player_ui_set_active_player_profile(local_player_index, profile_indices[profile_list->parameters.list_parameters.current_list_item_index], &profile);
 			success = TRUE;
 		}
 		else
@@ -1749,7 +1749,7 @@ static boolean player_profile_set_for_game_3wide(
 }
 
 static boolean player_profile_set_for_game_1wide(
-	struct widget_instance *widget,
+	struct widget_instance *list_widgets_parent,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -1763,7 +1763,7 @@ static boolean player_profile_set_for_game_1wide(
 	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1834, event && event->controller_index!=NONE, "setting a player profile requires a valid controller index");
 	local_player_index = event->controller_index;
 
-	for (profile_list = widget->first_child; profile_list && profile_list->type != _ui_widget_type_spinner_list; profile_list = profile_list->next);
+	for (profile_list = list_widgets_parent->children; profile_list && profile_list->widget_type != _widget_type_spinner_list; profile_list = profile_list->next);
 	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1838, profile_list, "failed to find the 1-wide spinner list for player profiles (expected it to be a child of this widget)");
 
 
@@ -1771,15 +1771,15 @@ static boolean player_profile_set_for_game_1wide(
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1845, ui_widget_definition_get(profile_list->tag_index)->child_widgets.count == 0, "expected a code-generated 1-wide spinner list for 'mp player profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1845, ui_widget_definition_get(profile_list->ui_widget_tag_index)->child_widget_references.count == 0, "expected a code-generated 1-wide spinner list for 'mp player profile list' widget");
 
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1851, (profile_list->list.item_index>=0) && (profile_list->list.item_index<profile_list->list.item_count), "invalid multiplayer profile specified from 'mp player profile list' list widget");
-	profile_indices = profile_list->list.items;
-	profile_index = profile_indices[profile_list->list.item_index];
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1851, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'mp player profile list' list widget");
+	profile_indices = profile_list->parameters.list_parameters.list_items;
+	profile_index = profile_indices[profile_list->parameters.list_parameters.current_list_item_index];
 
 	if (!TEST_FLAG(profile_index, _profile_checksum_valid_bit31))
 	{
@@ -1789,7 +1789,7 @@ static boolean player_profile_set_for_game_1wide(
 	}
 	else if (player_profile_get(profile_index, &profile))
 	{
-		player_ui_set_active_player_profile(local_player_index, profile_indices[profile_list->list.item_index], &profile);
+		player_ui_set_active_player_profile(local_player_index, profile_indices[profile_list->parameters.list_parameters.current_list_item_index], &profile);
 	}
 	else
 	{
@@ -1801,7 +1801,7 @@ static boolean player_profile_set_for_game_1wide(
 }
 
 static boolean playlist_profile_begin_editing(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -1810,14 +1810,14 @@ static boolean playlist_profile_begin_editing(
 	long profile_index;
 	boolean success = FALSE;
 
-	profile_index_to_delete = NONE;
-	definition = ui_widget_definition_get(widget->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1896, definition->type == _ui_widget_type_container && definition->child_widgets.count >= 3, "expected the multiplayer profile select screen to be a container w/ 3+ children");
-	profile_list = widget->first_child;
-	definition = ui_widget_definition_get(profile_list->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1899, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1900, definition->child_widgets.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
-	profile_list = widget->first_child;
+	delete_profile_index = NONE;
+	definition = ui_widget_definition_get(wrapper_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1896, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the multiplayer profile select screen to be a container w/ 3+ children");
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1899, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1900, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
+	profile_list = wrapper_widget->children;
 
 
 
@@ -1825,8 +1825,8 @@ static boolean playlist_profile_begin_editing(
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1909, (profile_list->list.item_index>=0) && (profile_list->list.item_index<profile_list->list.item_count), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
-	profile_index = ((long *)profile_list->list.items)[profile_list->list.item_index];
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1909, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
 
 	if (profile_index != NONE)
 	{
@@ -1854,7 +1854,7 @@ static boolean playlist_profile_end_editing(
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	profile_index_to_delete = NONE;
+	delete_profile_index = NONE;
 	player_ui_end_editing_profile();
 
 	return TRUE;
@@ -1869,13 +1869,13 @@ static boolean playlist_profile_set_game_engine(
 	struct widget_instance *game_engine_list = widget->parent;
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1958, game_engine_list && game_engine_list->type == _ui_widget_type_column_list, "expected column list for game engine type list");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1958, game_engine_list && game_engine_list->widget_type == _widget_type_column_list, "expected column list for game engine type list");
 
 	if (variant)
 	{
 		long game_engine_index;
 
-		switch (game_engine_list->list.item_index)
+		switch (game_engine_list->parameters.list_parameters.current_list_item_index)
 		{
 		case _game_engine_option_ctf:
 			game_engine_index = _game_engine_ctf;
@@ -1954,11 +1954,11 @@ static boolean playlist_profile_change_ctf_rules(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2040, list_item, "expected 'assault' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2042, spinner, "expected 'assault' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.ctf.assault = TRUE; break;
 		case _toggle_option_off: variant->game_engine_variant.ctf.assault = FALSE; break;
@@ -1967,9 +1967,9 @@ static boolean playlist_profile_change_ctf_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2051, list_item, "expected 'single flag' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2053, spinner, "expected 'single flag' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _single_flag_option_off: variant->game_engine_variant.ctf.single_flag_time = 0; break;
 		case _single_flag_option_1_minute: variant->game_engine_variant.ctf.single_flag_time = 1 * TICKS_PER_MINUTE; break;
@@ -1982,9 +1982,9 @@ static boolean playlist_profile_change_ctf_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2066, list_item, "expected 'flag must reset' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2068, spinner, "expected 'flag must reset' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.ctf.flag_must_reset = TRUE; break;
 		case _toggle_option_off: variant->game_engine_variant.ctf.flag_must_reset = FALSE; break;
@@ -1993,9 +1993,9 @@ static boolean playlist_profile_change_ctf_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2077, list_item, "expected 'flag at home to score' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2079, spinner, "expected 'flag at home to score' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.ctf.flag_at_home_to_score = TRUE; break;
 		case _toggle_option_off: variant->game_engine_variant.ctf.flag_at_home_to_score = FALSE; break;
@@ -2004,10 +2004,10 @@ static boolean playlist_profile_change_ctf_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2088, list_item, "expected 'captures to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2090, spinner, "expected 'captures to win' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _captures_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
 		case _captures_to_win_option_3: variant->universal_variant.score_to_win = 3; break;
@@ -2040,11 +2040,11 @@ static boolean playlist_profile_change_koth_rules(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2126, list_item, "expected 'moving hill' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2128, spinner, "expected 'moving hill' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.king.moving_hill = TRUE; break;
 		case _toggle_option_off: variant->game_engine_variant.king.moving_hill = FALSE; break;
@@ -2053,9 +2053,9 @@ static boolean playlist_profile_change_koth_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2137, list_item, "expected 'score to win' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2139, spinner, "expected 'score to win' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _score_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
 		case _score_to_win_option_2: variant->universal_variant.score_to_win = 2; break;
@@ -2067,10 +2067,10 @@ static boolean playlist_profile_change_koth_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2151, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2153, spinner, "expected 'teams' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
 		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
@@ -2101,11 +2101,11 @@ static boolean playlist_profile_change_slayer_rules(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2187, list_item, "expected 'death bonus' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2189, spinner, "expected 'death bonus' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.slayer.no_death_bonus = FALSE; break;
 		case _toggle_option_off: variant->game_engine_variant.slayer.no_death_bonus = TRUE; break;
@@ -2114,9 +2114,9 @@ static boolean playlist_profile_change_slayer_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2198, list_item, "expected 'kill in order' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2200, spinner, "expected 'kill in order' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.slayer.kill_in_order = TRUE; break;
 		case _toggle_option_off: variant->game_engine_variant.slayer.kill_in_order = FALSE; break;
@@ -2125,9 +2125,9 @@ static boolean playlist_profile_change_slayer_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2209, list_item, "expected 'kill penalty' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2211, spinner, "expected 'kill penalty' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.slayer.no_kill_penalty = FALSE; break;
 		case _toggle_option_off: variant->game_engine_variant.slayer.no_kill_penalty = TRUE; break;
@@ -2136,9 +2136,9 @@ static boolean playlist_profile_change_slayer_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2220, list_item, "expected 'kills to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2222, spinner, "expected 'kills to win' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _kills_to_win_option_5: variant->universal_variant.score_to_win = 5; break;
 		case _kills_to_win_option_10: variant->universal_variant.score_to_win = 10; break;
@@ -2150,10 +2150,10 @@ static boolean playlist_profile_change_slayer_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2234, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2236, spinner, "expected 'teams' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
 		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
@@ -2184,11 +2184,11 @@ static boolean playlist_profile_change_oddball_rules(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2270, list_item, "expected 'trait with ball' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2272, spinner, "expected 'trait with ball' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _trait_option_none: variant->game_engine_variant.oddball.trait_with_ball = _game_trait_none; break;
 		case _trait_option_invisible: variant->game_engine_variant.oddball.trait_with_ball = _game_trait_invisible; break;
@@ -2199,9 +2199,9 @@ static boolean playlist_profile_change_oddball_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2283, list_item, "expected 'trait without ball' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2285, spinner, "expected 'trait without ball' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _trait_option_none: variant->game_engine_variant.oddball.trait_without_ball = _game_trait_none; break;
 		case _trait_option_invisible: variant->game_engine_variant.oddball.trait_without_ball = _game_trait_invisible; break;
@@ -2212,9 +2212,9 @@ static boolean playlist_profile_change_oddball_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2296, list_item, "expected 'speed with ball' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2298, spinner, "expected 'speed with ball' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _speed_with_ball_option_normal: variant->game_engine_variant.oddball.speed_with_ball = _oddball_speed_normal; break;
 		case _speed_with_ball_option_slow: variant->game_engine_variant.oddball.speed_with_ball = _oddball_speed_slow; break;
@@ -2224,9 +2224,9 @@ static boolean playlist_profile_change_oddball_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2308, list_item, "expected 'ball type' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2310, spinner, "expected 'ball type' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _ball_type_option_normal: variant->game_engine_variant.oddball.oddball_ball_type = _oddball_normal; break;
 		case _ball_type_option_magic: variant->game_engine_variant.oddball.oddball_ball_type = _oddball_magic; break;
@@ -2236,9 +2236,9 @@ static boolean playlist_profile_change_oddball_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2320, list_item, "expected 'random start' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2322, spinner, "expected 'random start' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->game_engine_variant.oddball.random_start = TRUE; break;
 		case _toggle_option_off: variant->game_engine_variant.oddball.random_start = FALSE; break;
@@ -2247,10 +2247,10 @@ static boolean playlist_profile_change_oddball_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2331, list_item, "expected 'ball spawn count' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2333, spinner, "expected 'ball spawn count' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case 0:
 		case 1:
@@ -2268,7 +2268,7 @@ static boolean playlist_profile_change_oddball_rules(
 		case 13:
 		case 14:
 		case 15:
-			variant->game_engine_variant.oddball.ball_spawn_count = spinner->list.item_index + 1;
+			variant->game_engine_variant.oddball.ball_spawn_count = spinner->parameters.list_parameters.current_list_item_index + 1;
 			break;
 		default:
 			error(_error_silent, "unknown option selected in 'ball spawn count' option spinner list");
@@ -2277,9 +2277,9 @@ static boolean playlist_profile_change_oddball_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2358, list_item, "expected 'score to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2360, spinner, "expected 'score to win' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _score_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
 		case _score_to_win_option_2: variant->universal_variant.score_to_win = 2; break;
@@ -2291,10 +2291,10 @@ static boolean playlist_profile_change_oddball_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2372, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2374, spinner, "expected 'teams' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
 		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
@@ -2325,11 +2325,11 @@ static boolean playlist_profile_change_racing_rules(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2408, list_item, "expected 'team scoring' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2410, spinner, "expected 'team scoring' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _team_scoring_option_min: variant->game_engine_variant.race.team_scoring = _race_team_scoring_min; break;
 		case _team_scoring_option_max: variant->game_engine_variant.race.team_scoring = _race_team_scoring_max; break;
@@ -2339,9 +2339,9 @@ static boolean playlist_profile_change_racing_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2420, list_item, "expected 'race type' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2422, spinner, "expected 'race type' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _race_type_option_normal: variant->game_engine_variant.race.race_type = _race_type_normal; break;
 		case _race_type_option_any_order: variant->game_engine_variant.race.race_type = _race_type_any_order; break;
@@ -2351,9 +2351,9 @@ static boolean playlist_profile_change_racing_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2432, list_item, "expected 'laps to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2434, spinner, "expected 'laps to win' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _laps_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
 		case _laps_to_win_option_3: variant->universal_variant.score_to_win = 3; break;
@@ -2366,10 +2366,10 @@ static boolean playlist_profile_change_racing_rules(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2447, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2449, spinner, "expected 'teams' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
 		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
@@ -2400,11 +2400,11 @@ static boolean playlist_profile_change_player_options(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2483, list_item, "expected 'number of lives' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2485, spinner, "expected 'number of lives' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _lives_option_infinite: variant->universal_variant.lives = 0; break;
 		case _lives_option_1: variant->universal_variant.lives = 1; break;
@@ -2415,9 +2415,9 @@ static boolean playlist_profile_change_player_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2496, list_item, "expected 'maximum health' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2498, spinner, "expected 'maximum health' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _maximum_health_option_50_percent: variant->universal_variant.health = 0.5f; break;
 		case _maximum_health_option_100_percent: variant->universal_variant.health = 1.f; break;
@@ -2430,9 +2430,9 @@ static boolean playlist_profile_change_player_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2511, list_item, "expected 'shields' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2513, spinner, "expected 'shields' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _no_shields_bit, FALSE); break;
 		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _no_shields_bit, TRUE); break;
@@ -2441,9 +2441,9 @@ static boolean playlist_profile_change_player_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2522, list_item, "expected 'respawn time' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2524, spinner, "expected 'respawn time' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _respawn_time_option_instant: variant->universal_variant.respawn_time = 0; break;
 		case _respawn_time_option_5_seconds: variant->universal_variant.respawn_time = 5 * TICKS_PER_SECOND; break;
@@ -2454,9 +2454,9 @@ static boolean playlist_profile_change_player_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2535, list_item, "expected 'respawn time growth' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2537, spinner, "expected 'respawn time growth' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _respawn_time_option_instant: variant->universal_variant.respawn_time_growth = 0; break;
 		case _respawn_time_option_5_seconds: variant->universal_variant.respawn_time_growth = 5 * TICKS_PER_SECOND; break;
@@ -2467,9 +2467,9 @@ static boolean playlist_profile_change_player_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2548, list_item, "expected 'odd man out' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2550, spinner, "expected 'odd man out' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: variant->universal_variant.odd_man_out = TRUE; break;
 		case _toggle_option_off: variant->universal_variant.odd_man_out = FALSE; break;
@@ -2478,9 +2478,9 @@ static boolean playlist_profile_change_player_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2559, list_item, "expected 'invisible players' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2561, spinner, "expected 'invisible players' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _always_invisible_bit, TRUE); break;
 		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _always_invisible_bit, FALSE); break;
@@ -2491,10 +2491,10 @@ static boolean playlist_profile_change_player_options(
 
 		if (list_item)
 		{
-			for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+			for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 			match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2574, spinner, "expected 'suicide penalty' option spinner list");
 
-			switch (spinner->list.item_index)
+			switch (spinner->parameters.list_parameters.current_list_item_index)
 			{
 			case _suicide_penalty_option_none: variant->universal_variant.suicide_penalty = 0; break;
 			case _suicide_penalty_option_5_seconds: variant->universal_variant.suicide_penalty = 5 * TICKS_PER_SECOND; break;
@@ -2526,11 +2526,11 @@ static boolean playlist_profile_change_item_options(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2608, list_item, "expected 'infinite grenades' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2610, spinner, "expected 'infinite grenades' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _infinite_grenades_bit, TRUE); break;
 		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _infinite_grenades_bit, FALSE); break;
@@ -2539,9 +2539,9 @@ static boolean playlist_profile_change_item_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2619, list_item, "expected 'vehicle set' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2621, spinner, "expected 'vehicle set' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _vehicle_set_option_default: variant->universal_variant.vehicle_set = _game_engine_vehicles_default; break;
 		case _vehicle_set_option_none: variant->universal_variant.vehicle_set = _game_engine_vehicles_none; break;
@@ -2553,10 +2553,10 @@ static boolean playlist_profile_change_item_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2633, list_item, "expected 'weapon set' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2635, spinner, "expected 'weapon set' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _weapon_set_option_normal: variant->universal_variant.weapon_set = _game_engine_weapons_normal; break;
 		case _weapon_set_option_pistols: variant->universal_variant.weapon_set = _game_engine_weapons_pistols; break;
@@ -2574,10 +2574,10 @@ static boolean playlist_profile_change_item_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2654, list_item, "expected 'starting equipment' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2656, spinner, "expected 'starting equipment' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _starting_equipment_option_custom: SET_FLAG(variant->universal_variant.flags, _generic_starting_equipment_bit, FALSE); break;
 		case _starting_equipment_option_generic: SET_FLAG(variant->universal_variant.flags, _generic_starting_equipment_bit, TRUE); break;
@@ -2606,11 +2606,11 @@ static boolean playlist_profile_change_indicator_options(
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2688, list_item, "expected 'radar display' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2690, spinner, "expected 'radar display' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _radar_display_option_motion_tracker: variant->universal_variant.goal_radar = _radar_motion_tracker; break;
 		case _radar_display_option_nav_point: variant->universal_variant.goal_radar = _radar_nav_point; break;
@@ -2620,9 +2620,9 @@ static boolean playlist_profile_change_indicator_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2700, list_item, "expected 'other players on radar' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2702, spinner, "expected 'other players on radar' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _allow_motion_tracker_bit, TRUE); break;
 		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _allow_motion_tracker_bit, FALSE); break;
@@ -2631,10 +2631,10 @@ static boolean playlist_profile_change_indicator_options(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2711, list_item, "expected 'friends on screen' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2713, spinner, "expected 'friends on screen' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _allow_friendly_navpoints_bit, TRUE); break;
 		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _allow_friendly_navpoints_bit, FALSE); break;
@@ -2658,21 +2658,21 @@ static boolean playlist_profile_initialize_game_engine(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2738, widget->type == _ui_widget_type_column_list, "expected a column list for the list of available game engines");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2738, widget->widget_type == _widget_type_column_list, "expected a column list for the list of available game engines");
 
 	if (variant)
 	{
 		switch (variant->game_engine_index)
 		{
-		case _game_engine_ctf: widget->list.item_index = _game_engine_option_ctf; break;
-		case _game_engine_king: widget->list.item_index = _game_engine_option_king; break;
-		case _game_engine_slayer: widget->list.item_index = _game_engine_option_slayer; break;
-		case _game_engine_oddball: widget->list.item_index = _game_engine_option_oddball; break;
-		case _game_engine_race: widget->list.item_index = _game_engine_option_race; break;
-		default: widget->list.item_index = _game_engine_option_ctf; break;
+		case _game_engine_ctf: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_ctf; break;
+		case _game_engine_king: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_king; break;
+		case _game_engine_slayer: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_slayer; break;
+		case _game_engine_oddball: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_oddball; break;
+		case _game_engine_race: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_race; break;
+		default: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_ctf; break;
 		}
 
-		widget->focused_child = widget_instance_get_nth_child(widget, widget->list.item_index);
+		widget->focused_child = widget_instance_get_nth_child(widget, widget->parameters.list_parameters.current_list_item_index);
 	}
 	else
 	{
@@ -2691,16 +2691,16 @@ static boolean playlist_profile_initialize_name(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2770, widget->type == _ui_widget_type_text_box, "expected text box widget for profile name");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2770, widget->widget_type == _widget_type_text_box, "expected text box widget for profile name");
 
 	if (variant)
 	{
-		widget->text_box.string = ui_widget_realloc(widget->text_box.string, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(2774));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(2774));
 
-		if (widget->text_box.string)
+		if (widget->parameters.text_box_parameters.text)
 		{
-			ustrncpy(widget->text_box.string, variant->human_readable_game_description, 127);
-			widget->text_box.string[127] = L'\0';
+			ustrncpy(widget->parameters.text_box_parameters.text, variant->human_readable_game_description, 127);
+			widget->parameters.text_box_parameters.text[127] = L'\0';
 		}
 	}
 	else
@@ -2720,74 +2720,74 @@ static boolean playlist_profile_initialize_ctf_rules(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2797, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2797, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2805, list_item, "expected 'assault' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2807, spinner, "expected 'assault' option spinner list");
 		switch (variant->game_engine_variant.ctf.assault)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2816, list_item, "expected 'single flag' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2818, spinner, "expected 'single flag' option spinner list");
 		switch (variant->game_engine_variant.ctf.single_flag_time)
 		{
-		case 0: spinner->list.item_index = _single_flag_option_off; break;
-		case 1 * TICKS_PER_MINUTE: spinner->list.item_index = _single_flag_option_1_minute; break;
-		case 2 * TICKS_PER_MINUTE: spinner->list.item_index = _single_flag_option_2_minutes; break;
-		case 3 * TICKS_PER_MINUTE: spinner->list.item_index = _single_flag_option_3_minutes; break;
-		case 5 * TICKS_PER_MINUTE: spinner->list.item_index = _single_flag_option_5_minutes; break;
-		case 10 * TICKS_PER_MINUTE: spinner->list.item_index = _single_flag_option_10_minutes; break;
-		default: spinner->list.item_index = _single_flag_option_off; break;
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_off; break;
+		case 1 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_1_minute; break;
+		case 2 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_2_minutes; break;
+		case 3 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_3_minutes; break;
+		case 5 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_5_minutes; break;
+		case 10 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_10_minutes; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_off; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2831, list_item, "expected 'flag must reset' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2833, spinner, "expected 'flag must reset' option spinner list");
 		switch (variant->game_engine_variant.ctf.flag_must_reset)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2842, list_item, "expected 'flag at home to score' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2844, spinner, "expected 'flag at home to score' option spinner list");
 		switch (variant->game_engine_variant.ctf.flag_at_home_to_score)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2853, list_item, "expected 'captures to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2855, spinner, "expected 'captures to win' option spinner list");
 
 		switch (variant->universal_variant.score_to_win)
 		{
-		case 1: spinner->list.item_index = _captures_to_win_option_1; break;
-		case 3: spinner->list.item_index = _captures_to_win_option_3; break;
-		case 5: spinner->list.item_index = _captures_to_win_option_5; break;
-		case 10: spinner->list.item_index = _captures_to_win_option_10; break;
-		case 15: spinner->list.item_index = _captures_to_win_option_15; break;
-		default: spinner->list.item_index = _captures_to_win_option_1; break;
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_1; break;
+		case 3: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_3; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_15; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_1; break;
 		}
 	}
 	else
@@ -2807,48 +2807,48 @@ static boolean playlist_profile_initialize_koth_rules(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2883, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2883, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2891, list_item, "expected 'moving hill' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2893, spinner, "expected 'moving hill' option spinner list");
 		switch (variant->game_engine_variant.king.moving_hill)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2902, list_item, "expected 'score to win' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2904, spinner, "expected 'score to win' option spinner list");
 		switch (variant->universal_variant.score_to_win)
 		{
-		case 1: spinner->list.item_index = _score_to_win_option_1; break;
-		case 2: spinner->list.item_index = _score_to_win_option_2; break;
-		case 5: spinner->list.item_index = _score_to_win_option_5; break;
-		case 10: spinner->list.item_index = _score_to_win_option_10; break;
-		case 15: spinner->list.item_index = _score_to_win_option_15; break;
-		default: spinner->list.item_index = _score_to_win_option_1; break;
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
+		case 2: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_2; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_15; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2916, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2918, spinner, "expected 'teams' option spinner list");
 
 		switch (variant->universal_variant.teams)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 	}
 	else
@@ -2868,70 +2868,70 @@ static boolean playlist_profile_initialize_slayer_rules(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2943, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2943, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2951, list_item, "expected 'death bonus' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2953, spinner, "expected 'death bonus' option spinner list");
 		switch (variant->game_engine_variant.slayer.no_death_bonus)
 		{
-		case FALSE: spinner->list.item_index = _toggle_option_on; break;
-		case TRUE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2962, list_item, "expected 'kill in order' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2964, spinner, "expected 'kill in order' option spinner list");
 
 		switch (variant->game_engine_variant.slayer.kill_in_order)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2973, list_item, "expected 'kill penalty' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2975, spinner, "expected 'kill penalty' option spinner list");
 		switch (variant->game_engine_variant.slayer.no_kill_penalty)
 		{
-		case FALSE: spinner->list.item_index = _toggle_option_on; break;
-		case TRUE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2984, list_item, "expected 'kills to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2986, spinner, "expected 'kills to win' option spinner list");
 		switch (variant->universal_variant.score_to_win)
 		{
-		case 5: spinner->list.item_index = _kills_to_win_option_5; break;
-		case 10: spinner->list.item_index = _kills_to_win_option_10; break;
-		case 15: spinner->list.item_index = _kills_to_win_option_15; break;
-		case 25: spinner->list.item_index = _kills_to_win_option_25; break;
-		case 50: spinner->list.item_index = _kills_to_win_option_50; break;
-		default: spinner->list.item_index = _kills_to_win_option_5; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_15; break;
+		case 25: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_25; break;
+		case 50: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_50; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_5; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2998, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3000, spinner, "expected 'teams' option spinner list");
 
 		switch (variant->universal_variant.teams)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 	}
 	else
@@ -2951,77 +2951,77 @@ static boolean playlist_profile_initialize_oddball_rules(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3025, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3025, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3033, list_item, "expected 'trait with ball' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3035, spinner, "expected 'trait with ball' option spinner list");
 		switch (variant->game_engine_variant.oddball.trait_with_ball)
 		{
-		case _game_trait_none: spinner->list.item_index = _trait_option_none; break;
-		case _game_trait_invisible: spinner->list.item_index = _trait_option_invisible; break;
-		case _game_trait_extra_damage: spinner->list.item_index = _trait_option_extra_damage; break;
-		case _game_trait_damage_resistant: spinner->list.item_index = _trait_option_damage_resistant; break;
-		default: spinner->list.item_index = _trait_option_none; break;
+		case _game_trait_none: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
+		case _game_trait_invisible: spinner->parameters.list_parameters.current_list_item_index = _trait_option_invisible; break;
+		case _game_trait_extra_damage: spinner->parameters.list_parameters.current_list_item_index = _trait_option_extra_damage; break;
+		case _game_trait_damage_resistant: spinner->parameters.list_parameters.current_list_item_index = _trait_option_damage_resistant; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3046, list_item, "expected 'trait without ball' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3048, spinner, "expected 'trait without ball' option spinner list");
 		switch (variant->game_engine_variant.oddball.trait_without_ball)
 		{
-		case _game_trait_none: spinner->list.item_index = _trait_option_none; break;
-		case _game_trait_invisible: spinner->list.item_index = _trait_option_invisible; break;
-		case _game_trait_extra_damage: spinner->list.item_index = _trait_option_extra_damage; break;
-		case _game_trait_damage_resistant: spinner->list.item_index = _trait_option_damage_resistant; break;
-		default: spinner->list.item_index = _trait_option_none; break;
+		case _game_trait_none: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
+		case _game_trait_invisible: spinner->parameters.list_parameters.current_list_item_index = _trait_option_invisible; break;
+		case _game_trait_extra_damage: spinner->parameters.list_parameters.current_list_item_index = _trait_option_extra_damage; break;
+		case _game_trait_damage_resistant: spinner->parameters.list_parameters.current_list_item_index = _trait_option_damage_resistant; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3059, list_item, "expected 'speed with ball' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3061, spinner, "expected 'speed with ball' option spinner list");
 		switch (variant->game_engine_variant.oddball.speed_with_ball)
 		{
-		case _oddball_speed_normal: spinner->list.item_index = _speed_with_ball_option_normal; break;
-		case _oddball_speed_slow: spinner->list.item_index = _speed_with_ball_option_slow; break;
-		case _oddball_speed_faster: spinner->list.item_index = _speed_with_ball_option_faster; break;
-		default: spinner->list.item_index = _speed_with_ball_option_normal; break;
+		case _oddball_speed_normal: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_normal; break;
+		case _oddball_speed_slow: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_slow; break;
+		case _oddball_speed_faster: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_faster; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_normal; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3071, list_item, "expected 'ball type' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3073, spinner, "expected 'ball type' option spinner list");
 		switch (variant->game_engine_variant.oddball.oddball_ball_type)
 		{
-		case _oddball_normal: spinner->list.item_index = _ball_type_option_normal; break;
-		case _oddball_magic: spinner->list.item_index = _ball_type_option_magic; break;
-		case _oddball_terminator: spinner->list.item_index = _ball_type_option_terminator; break;
-		default: spinner->list.item_index = _ball_type_option_normal; break;
+		case _oddball_normal: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_normal; break;
+		case _oddball_magic: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_magic; break;
+		case _oddball_terminator: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_terminator; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_normal; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3083, list_item, "expected 'random start' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3085, spinner, "expected 'random start' option spinner list");
 		switch (variant->game_engine_variant.oddball.random_start)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3094, list_item, "expected 'ball spawn count' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3096, spinner, "expected 'ball spawn count' option spinner list");
 
 		switch (variant->game_engine_variant.oddball.ball_spawn_count)
@@ -3042,37 +3042,37 @@ static boolean playlist_profile_initialize_oddball_rules(
 		case 14:
 		case 15:
 		case 16:
-			spinner->list.item_index = (short)(variant->game_engine_variant.oddball.ball_spawn_count - 1);
+			spinner->parameters.list_parameters.current_list_item_index = (short)(variant->game_engine_variant.oddball.ball_spawn_count - 1);
 			break;
 		default:
-			spinner->list.item_index = 0;
+			spinner->parameters.list_parameters.current_list_item_index = 0;
 			break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3121, list_item, "expected 'score to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3123, spinner, "expected 'score to win' option spinner list");
 		switch (variant->universal_variant.score_to_win)
 		{
-		case 1: spinner->list.item_index = _score_to_win_option_1; break;
-		case 2: spinner->list.item_index = _score_to_win_option_2; break;
-		case 5: spinner->list.item_index = _score_to_win_option_5; break;
-		case 10: spinner->list.item_index = _score_to_win_option_10; break;
-		case 15: spinner->list.item_index = _score_to_win_option_15; break;
-		default: spinner->list.item_index = _score_to_win_option_1; break;
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
+		case 2: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_2; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_15; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3135, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3137, spinner, "expected 'teams' option spinner list");
 
 		switch (variant->universal_variant.teams)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 	}
 	else
@@ -3092,62 +3092,62 @@ static boolean playlist_profile_initialize_racing_rules(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3162, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3162, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3170, list_item, "expected 'team scoring' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3172, spinner, "expected 'team scoring' option spinner list");
 		switch (variant->game_engine_variant.race.team_scoring)
 		{
-		case _race_team_scoring_min: spinner->list.item_index = _team_scoring_option_min; break;
-		case _race_team_scoring_max: spinner->list.item_index = _team_scoring_option_max; break;
-		case _race_team_scoring_accumulate: spinner->list.item_index = _team_scoring_option_accumulate; break;
-		default: spinner->list.item_index = _team_scoring_option_min; break;
+		case _race_team_scoring_min: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_min; break;
+		case _race_team_scoring_max: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_max; break;
+		case _race_team_scoring_accumulate: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_accumulate; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_min; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3182, list_item, "expected 'race type' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3184, spinner, "expected 'race type' option spinner list");
 		switch (variant->game_engine_variant.race.race_type)
 		{
-		case _race_type_normal: spinner->list.item_index = _race_type_option_normal; break;
-		case _race_type_any_order: spinner->list.item_index = _race_type_option_any_order; break;
-		case _race_type_flag_rally: spinner->list.item_index = _race_type_option_flag_rally; break;
-		default: spinner->list.item_index = _race_type_option_normal; break;
+		case _race_type_normal: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_normal; break;
+		case _race_type_any_order: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_any_order; break;
+		case _race_type_flag_rally: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_flag_rally; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_normal; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3194, list_item, "expected 'laps to win' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3196, spinner, "expected 'laps to win' option spinner list");
 		switch (variant->universal_variant.score_to_win)
 		{
-		case 1: spinner->list.item_index = _laps_to_win_option_1; break;
-		case 3: spinner->list.item_index = _laps_to_win_option_3; break;
-		case 5: spinner->list.item_index = _laps_to_win_option_5; break;
-		case 10: spinner->list.item_index = _laps_to_win_option_10; break;
-		case 15: spinner->list.item_index = _laps_to_win_option_15; break;
-		case 25: spinner->list.item_index = _laps_to_win_option_25; break;
-		default: spinner->list.item_index = _laps_to_win_option_1; break;
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_1; break;
+		case 3: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_3; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_15; break;
+		case 25: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_25; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_1; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3209, list_item, "expected 'teams' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3211, spinner, "expected 'teams' option spinner list");
 
 		switch (variant->universal_variant.teams)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 	}
 	else
@@ -3167,115 +3167,115 @@ static boolean playlist_profile_initialize_player_options(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3237, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3237, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3245, list_item, "expected 'number of lives' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3247, spinner, "expected 'number of lives' option spinner list");
 		switch (variant->universal_variant.lives)
 		{
-		case 0: spinner->list.item_index = _lives_option_infinite; break;
-		case 1: spinner->list.item_index = _lives_option_1; break;
-		case 3: spinner->list.item_index = _lives_option_3; break;
-		case 5: spinner->list.item_index = _lives_option_5; break;
-		default: spinner->list.item_index = _lives_option_infinite; break;
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _lives_option_infinite; break;
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _lives_option_1; break;
+		case 3: spinner->parameters.list_parameters.current_list_item_index = _lives_option_3; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _lives_option_5; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _lives_option_infinite; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3258, list_item, "expected 'maximum health' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3260, spinner, "expected 'maximum health' option spinner list");
 		switch ((long)(10.f * variant->universal_variant.health))
 		{
-		case 5: spinner->list.item_index = _maximum_health_option_50_percent; break;
-		case 10: spinner->list.item_index = _maximum_health_option_100_percent; break;
-		case 15: spinner->list.item_index = _maximum_health_option_150_percent; break;
-		case 20: spinner->list.item_index = _maximum_health_option_200_percent; break;
-		case 30: spinner->list.item_index = _maximum_health_option_300_percent; break;
-		case 40: spinner->list.item_index = _maximum_health_option_400_percent; break;
-		default: spinner->list.item_index = _maximum_health_option_50_percent; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_50_percent; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_100_percent; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_150_percent; break;
+		case 20: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_200_percent; break;
+		case 30: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_300_percent; break;
+		case 40: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_400_percent; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_50_percent; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3273, list_item, "expected 'shields' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3275, spinner, "expected 'shields' option spinner list");
 
 		switch (TEST_FLAG(variant->universal_variant.flags, _no_shields_bit))
 		{
-		case FALSE: spinner->list.item_index = _toggle_option_on; break;
-		case TRUE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3285, list_item, "expected 'respawn time' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3287, spinner, "expected 'respawn time' option spinner list");
 		switch (variant->universal_variant.respawn_time)
 		{
-		case 0: spinner->list.item_index = _respawn_time_option_instant; break;
-		case 5 * TICKS_PER_SECOND: spinner->list.item_index = _respawn_time_option_5_seconds; break;
-		case 10 * TICKS_PER_SECOND: spinner->list.item_index = _respawn_time_option_10_seconds; break;
-		case 15 * TICKS_PER_SECOND: spinner->list.item_index = _respawn_time_option_15_seconds; break;
-		default: spinner->list.item_index = _respawn_time_option_instant; break;
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
+		case 5 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_5_seconds; break;
+		case 10 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_10_seconds; break;
+		case 15 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_15_seconds; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3298, list_item, "expected 'respawn time growth' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3300, spinner, "expected 'respawn time growth' option spinner list");
 		switch (variant->universal_variant.respawn_time_growth)
 		{
-		case 0: spinner->list.item_index = _respawn_time_option_instant; break;
-		case 5 * TICKS_PER_SECOND: spinner->list.item_index = _respawn_time_option_5_seconds; break;
-		case 10 * TICKS_PER_SECOND: spinner->list.item_index = _respawn_time_option_10_seconds; break;
-		case 15 * TICKS_PER_SECOND: spinner->list.item_index = _respawn_time_option_15_seconds; break;
-		default: spinner->list.item_index = _respawn_time_option_instant; break;
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
+		case 5 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_5_seconds; break;
+		case 10 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_10_seconds; break;
+		case 15 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_15_seconds; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3311, list_item, "expected 'odd man out' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3313, spinner, "expected 'odd man out' option spinner list");
 		switch (variant->universal_variant.odd_man_out)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3322, list_item, "expected 'invisible players' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3324, spinner, "expected 'invisible players' option spinner list");
 
 		switch (TEST_FLAG(variant->universal_variant.flags, _always_invisible_bit))
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3335, list_item, "expected 'suicide penalty' item");
 
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 
 		switch (variant->universal_variant.suicide_penalty)
 		{
-		case 0: spinner->list.item_index = _suicide_penalty_option_none; break;
-		case 5 * TICKS_PER_SECOND: spinner->list.item_index = _suicide_penalty_option_5_seconds; break;
-		case 10 * TICKS_PER_SECOND: spinner->list.item_index = _suicide_penalty_option_10_seconds; break;
-		case 15 * TICKS_PER_SECOND: spinner->list.item_index = _suicide_penalty_option_15_seconds; break;
-		default: spinner->list.item_index = _suicide_penalty_option_none; break;
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_none; break;
+		case 5 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_5_seconds; break;
+		case 10 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_10_seconds; break;
+		case 15 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_15_seconds; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_none; break;
 		}
 	}
 	else
@@ -3295,70 +3295,70 @@ static boolean playlist_profile_initialize_item_options(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3366, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3366, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3374, list_item, "expected 'infinite grenades' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3376, spinner, "expected 'infinite grenades' option spinner list");
 
 		switch (TEST_FLAG(variant->universal_variant.flags, _infinite_grenades_bit))
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3386, list_item, "expected 'vehicle set' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3388, spinner, "expected 'vehicle set' option spinner list");
 		switch (variant->universal_variant.vehicle_set)
 		{
-		case _game_engine_vehicles_default: spinner->list.item_index = _vehicle_set_option_default; break;
-		case _game_engine_vehicles_none: spinner->list.item_index = _vehicle_set_option_none; break;
-		case _game_engine_vehicles_warthog: spinner->list.item_index = _vehicle_set_option_warthog; break;
-		case _game_engine_vehicles_ghost: spinner->list.item_index = _vehicle_set_option_ghost; break;
-		case _game_engine_vehicles_tank: spinner->list.item_index = _vehicle_set_option_tank; break;
-		default: spinner->list.item_index = _vehicle_set_option_default; break;
+		case _game_engine_vehicles_default: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_default; break;
+		case _game_engine_vehicles_none: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_none; break;
+		case _game_engine_vehicles_warthog: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_warthog; break;
+		case _game_engine_vehicles_ghost: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_ghost; break;
+		case _game_engine_vehicles_tank: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_tank; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_default; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3400, list_item, "expected 'weapon set' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3402, spinner, "expected 'weapon set' option spinner list");
 
 		switch (variant->universal_variant.weapon_set)
 		{
-		case _game_engine_weapons_normal: spinner->list.item_index = _weapon_set_option_normal; break;
-		case _game_engine_weapons_pistols: spinner->list.item_index = _weapon_set_option_pistols; break;
-		case _game_engine_weapons_assault_rifles: spinner->list.item_index = _weapon_set_option_assault_rifles; break;
-		case _game_engine_weapons_plasma_weapons: spinner->list.item_index = _weapon_set_option_plasma_weapons; break;
-		case _game_engine_weapons_sniping: spinner->list.item_index = _weapon_set_option_sniping; break;
-		case _game_engine_weapons_no_sniping: spinner->list.item_index = _weapon_set_option_no_sniping; break;
-		case _game_engine_weapons_rocket_launchers: spinner->list.item_index = _weapon_set_option_rocket_launchers; break;
-		case _game_engine_weapons_shotguns: spinner->list.item_index = _weapon_set_option_shotguns; break;
-		case _game_engine_weapons_short_range: spinner->list.item_index = _weapon_set_option_short_range; break;
-		case _game_engine_weapons_human: spinner->list.item_index = _weapon_set_option_human; break;
-		case _game_engine_weapons_no_grenades: spinner->list.item_index = _weapon_set_option_no_grenades; break;
-		default: spinner->list.item_index = _weapon_set_option_normal; break;
+		case _game_engine_weapons_normal: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_normal; break;
+		case _game_engine_weapons_pistols: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_pistols; break;
+		case _game_engine_weapons_assault_rifles: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_assault_rifles; break;
+		case _game_engine_weapons_plasma_weapons: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_plasma_weapons; break;
+		case _game_engine_weapons_sniping: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_sniping; break;
+		case _game_engine_weapons_no_sniping: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_no_sniping; break;
+		case _game_engine_weapons_rocket_launchers: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_rocket_launchers; break;
+		case _game_engine_weapons_shotguns: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_shotguns; break;
+		case _game_engine_weapons_short_range: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_short_range; break;
+		case _game_engine_weapons_human: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_human; break;
+		case _game_engine_weapons_no_grenades: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_no_grenades; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_normal; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3421, list_item, "expected 'starting equipment' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3423, spinner, "expected 'starting equpiment' option spinner list");
 
 		switch (TEST_FLAG(variant->universal_variant.flags, _generic_starting_equipment_bit))
 		{
-		case FALSE: spinner->list.item_index = _starting_equipment_option_custom; break;
-		case TRUE: spinner->list.item_index = _starting_equipment_option_generic; break;
-		default: spinner->list.item_index = _starting_equipment_option_custom; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _starting_equipment_option_custom; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _starting_equipment_option_generic; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _starting_equipment_option_custom; break;
 		}
 	}
 	else
@@ -3378,47 +3378,47 @@ static boolean playlist_profile_initialize_indicator_options(
 	struct game_variant *variant = player_ui_get_edit_playlist_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3450, widget->type == _ui_widget_type_column_list, "expected column list for multiplayer game settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3450, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
 
 	if (variant)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3458, list_item, "expected 'radar display' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3460, spinner, "expected 'radar display' option spinner list");
 		switch (variant->universal_variant.goal_radar)
 		{
-		case _radar_motion_tracker: spinner->list.item_index = _radar_display_option_motion_tracker; break;
-		case _radar_nav_point: spinner->list.item_index = _radar_display_option_nav_point; break;
-		case _radar_none: spinner->list.item_index = _radar_display_option_none; break;
-		default: spinner->list.item_index = _radar_display_option_motion_tracker; break;
+		case _radar_motion_tracker: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_motion_tracker; break;
+		case _radar_nav_point: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_nav_point; break;
+		case _radar_none: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_none; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_motion_tracker; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3470, list_item, "expected 'other players on radar' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3472, spinner, "expected 'other players on radar' option spinner list");
 
 		switch (TEST_FLAG(variant->universal_variant.flags, _allow_motion_tracker_bit))
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3482, list_item, "expected 'friends on screen' item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3484, spinner, "expected 'friends on screen' option spinner list");
 
 		switch (TEST_FLAG(variant->universal_variant.flags, _allow_friendly_navpoints_bit))
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 	}
 	else
@@ -3473,31 +3473,31 @@ static boolean player_profile_color_picker_menu_initialize(
 {
 	word number_of_colors = player_profile_number_of_available_primary_colors();
 	struct player_profile *profile = player_ui_get_edit_player_profile();
-	struct ui_widget_definition *definition = ui_widget_definition_get(widget->tag_index);
+	struct ui_widget_definition *definition = ui_widget_definition_get(widget->ui_widget_tag_index);
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3576, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'player color picker list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3577, definition->child_widgets.count == 3, "expected 3 list items for 'player color picker list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3576, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player color picker list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3577, definition->child_widget_references.count == 3, "expected 3 list items for 'player color picker list' widget");
 
 
 
-	widget->list.items = ui_widget_realloc(widget->list.items, number_of_colors, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(3581));
+	widget->parameters.list_parameters.list_items = ui_widget_realloc(widget->parameters.list_parameters.list_items, number_of_colors, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(3581));
 
-	if (widget->list.items)
+	if (widget->parameters.list_parameters.list_items)
 	{
 		long color_index;
 
 		for (color_index = 0; color_index < number_of_colors; color_index++)
 		{
-			((byte *)widget->list.items)[color_index] = (byte)color_index;
+			((byte *)widget->parameters.list_parameters.list_items)[color_index] = (byte)color_index;
 		}
 
-		widget->list.item_count = number_of_colors;
+		widget->parameters.list_parameters.number_of_items = number_of_colors;
 	}
 
 	if (profile)
 	{
 		profile->primary_color_index = PIN(profile->primary_color_index, 0, number_of_colors - 1);
-		widget->list.item_index = profile->primary_color_index;
+		widget->parameters.list_parameters.current_list_item_index = profile->primary_color_index;
 	}
 	else
 	{
@@ -3512,44 +3512,44 @@ static boolean player_profile_color_picker_menu_dispose(
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	if (widget->list.items)
+	if (widget->parameters.list_parameters.list_items)
 	{
-		widget_free(widget->list.items);
-		widget->list.items = NULL;
+		widget_free(widget->parameters.list_parameters.list_items);
+		widget->parameters.list_parameters.list_items = NULL;
 	}
 
 	return TRUE;
 }
 
 static boolean player_profile_color_picker_select_color(
-	struct widget_instance *widget,
+	struct widget_instance *screen_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
 	struct ui_widget_definition *definition;
-	struct widget_instance *color_list = widget->focused_child;
+	struct widget_instance *color_list = screen_widget->focused_child;
 	struct player_profile *profile = player_ui_get_edit_player_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3630, color_list && color_list->type == _ui_widget_type_spinner_list, "expected the color select screen to contain a spinner list for the color picker");
-	definition = ui_widget_definition_get(color_list->tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3630, color_list && color_list->widget_type == _widget_type_spinner_list, "expected the color select screen to contain a spinner list for the color picker");
+	definition = ui_widget_definition_get(color_list->ui_widget_tag_index);
 
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3637, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'player color picker list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3638, definition->child_widgets.count == 3, "expected 3 list items for 'player color picker list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3637, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player color picker list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3638, definition->child_widget_references.count == 3, "expected 3 list items for 'player color picker list' widget");
 
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3644, (color_list->list.item_index>=0) && (color_list->list.item_index<player_profile_number_of_available_primary_colors()), "invalid player profile color index specified");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3644, (color_list->parameters.list_parameters.current_list_item_index>=0) && (color_list->parameters.list_parameters.current_list_item_index<player_profile_number_of_available_primary_colors()), "invalid player profile color index specified");
 
 	if (profile)
 	{
-		profile->primary_color_index = color_list->list.item_index;
+		profile->primary_color_index = color_list->parameters.list_parameters.current_list_item_index;
 	}
 	else
 	{
@@ -3561,7 +3561,7 @@ static boolean player_profile_color_picker_select_color(
 }
 
 static boolean player_profile_begin_editing(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -3570,19 +3570,19 @@ static boolean player_profile_begin_editing(
 	long profile_index;
 	boolean success = FALSE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3667, widget->type == _ui_widget_type_container, "expected the player profile select screen to be a container widget");
-	profile_index_to_delete = NONE;
-	profile_list = widget->first_child;
-	definition = ui_widget_definition_get(profile_list->tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3667, wrapper_widget->widget_type == _widget_type_container, "expected the player profile select screen to be a container widget");
+	delete_profile_index = NONE;
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
 
 
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3677, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'player profile list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3678, definition->child_widgets.count == 3, "expected 3 list items for 'player profile list' widget");
-	profile_list = widget->first_child;
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3677, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3678, definition->child_widget_references.count == 3, "expected 3 list items for 'player profile list' widget");
+	profile_list = wrapper_widget->children;
 
 
 
@@ -3590,14 +3590,14 @@ static boolean player_profile_begin_editing(
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3687, (profile_list->list.item_index>=0) && (profile_list->list.item_index<profile_list->list.item_count), "invalid player profile specified from 'player profile list' list widget");
-	profile_index = ((long *)profile_list->list.items)[profile_list->list.item_index];
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3687, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid player profile specified from 'player profile list' list widget");
+	profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
 
 	if (profile_index != NONE)
 	{
 		if (TEST_FLAG(profile_index, _profile_checksum_valid_bit31))
 		{
-			player_ui_begin_editing_profile(((long *)profile_list->list.items)[profile_list->list.item_index]);
+			player_ui_begin_editing_profile(((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index]);
 			success = TRUE;
 		}
 		else
@@ -3619,7 +3619,7 @@ static boolean player_profile_end_editing(
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	profile_index_to_delete = NONE;
+	delete_profile_index = NONE;
 	player_ui_end_editing_profile();
 
 	return TRUE;
@@ -3694,39 +3694,39 @@ static boolean player_profile_initialize_controller_settings(
 	struct player_profile *profile = player_ui_get_edit_player_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3793, widget->type == _ui_widget_type_column_list, "expected column list for controller settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3793, widget->widget_type == _widget_type_column_list, "expected column list for controller settings widget");
 
 	if (profile)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3801, list_item, "expected 'joystick config' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3803, spinner, "expected 'joystick config' option spinner list");
 		switch (profile->controller_settings.joystick_preset)
 		{
-		case _joystick_preset_standard: spinner->list.item_index = _joystick_config_option_standard; break;
-		case _joystick_preset_south_paw: spinner->list.item_index = _joystick_config_option_south_paw; break;
-		case _joystick_preset_legacy: spinner->list.item_index = _joystick_config_option_legacy; break;
-		case _joystick_preset_legacy_south_paw: spinner->list.item_index = _joystick_config_option_legacy_south_paw; break;
-		default: spinner->list.item_index = _joystick_config_option_standard; break;
+		case _joystick_preset_standard: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_standard; break;
+		case _joystick_preset_south_paw: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_south_paw; break;
+		case _joystick_preset_legacy: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_legacy; break;
+		case _joystick_preset_legacy_south_paw: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_legacy_south_paw; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_standard; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3814, list_item, "expected 'button config' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3816, spinner, "expected 'button config' option spinner list");
 
 		switch (profile->controller_settings.button_preset)
 		{
-		case _button_preset_standard: spinner->list.item_index = _button_config_option_standard; break;
-		case _button_preset_southpaw: spinner->list.item_index = _button_config_option_southpaw; break;
-		case _button_preset_jumpy: spinner->list.item_index = _button_config_option_jumpy; break;
-		case _button_preset_bumperjumper: spinner->list.item_index = _button_config_option_bumperjumper; break;
-		case _button_preset_boxer: spinner->list.item_index = _button_config_option_boxer; break;
-		default: spinner->list.item_index = _button_config_option_standard; break;
+		case _button_preset_standard: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_standard; break;
+		case _button_preset_southpaw: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_southpaw; break;
+		case _button_preset_jumpy: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_jumpy; break;
+		case _button_preset_bumperjumper: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_bumperjumper; break;
+		case _button_preset_boxer: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_boxer; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_standard; break;
 		}
 	}
 	else
@@ -3746,27 +3746,27 @@ static boolean player_profile_initialize_advanced_controller_settings(
 	struct player_profile *profile = player_ui_get_edit_player_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3844, widget->type == _ui_widget_type_column_list, "expected column list for advanced controller settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3844, widget->widget_type == _widget_type_column_list, "expected column list for advanced controller settings widget");
 
 	if (profile)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3852, list_item, "expected 'invert joystick' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3854, spinner, "expected 'invert joystick' option spinner list");
 		switch (profile->controller_settings.invert_look)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3863, list_item, "expected 'look sensitivity' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3865, spinner, "expected 'look sensitivity' option spinner list");
 
 		switch (profile->controller_settings.look_sensitivity)
@@ -3781,45 +3781,45 @@ static boolean player_profile_initialize_advanced_controller_settings(
 		case 8:
 		case 9:
 		case 10:
-			spinner->list.item_index = profile->controller_settings.look_sensitivity - 1;
+			spinner->parameters.list_parameters.current_list_item_index = profile->controller_settings.look_sensitivity - 1;
 			break;
 		default:
-			spinner->list.item_index = 0;
+			spinner->parameters.list_parameters.current_list_item_index = 0;
 			break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3884, list_item, "expected 'controller vibration' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3886, spinner, "expected 'controller vibration' option spinner list");
 		switch (profile->controller_settings.vibration_disabled)
 		{
-		case FALSE: spinner->list.item_index = _toggle_option_on; break;
-		case TRUE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3895, list_item, "expected 'flight stick controls' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3897, spinner, "expected 'flight stick controls' option spinner list");
 		switch (profile->controller_settings.flight_stick_aircraft_controls)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3906, list_item, "expected 'autocenter' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3908, spinner, "expected 'autocenter' option spinner list");
 
 		switch (profile->controller_settings.autocenter)
 		{
-		case TRUE: spinner->list.item_index = _toggle_option_on; break;
-		case FALSE: spinner->list.item_index = _toggle_option_off; break;
-		default: spinner->list.item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
 		}
 	}
 	else
@@ -3839,18 +3839,18 @@ static boolean player_profile_change_controller_settings(
 	struct player_profile *profile = player_ui_get_edit_player_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3933, widget->type == _ui_widget_type_column_list, "expected column list for controller settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3933, widget->widget_type == _widget_type_column_list, "expected column list for controller settings widget");
 
 	if (profile)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3941, list_item, "expected 'joystick config' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3943, spinner, "expected 'joystick config' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _joystick_config_option_standard: profile->controller_settings.joystick_preset = _joystick_preset_standard; break;
 		case _joystick_config_option_south_paw: profile->controller_settings.joystick_preset = _joystick_preset_south_paw; break;
@@ -3861,10 +3861,10 @@ static boolean player_profile_change_controller_settings(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3954, list_item, "expected 'button config' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3956, spinner, "expected 'button config' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _button_config_option_standard: profile->controller_settings.button_preset = _button_preset_standard; break;
 		case _button_config_option_southpaw: profile->controller_settings.button_preset = _button_preset_southpaw; break;
@@ -3891,18 +3891,18 @@ static boolean player_profile_change_advanced_controller_settings(
 	struct player_profile *profile = player_ui_get_edit_player_profile();
 	boolean success = TRUE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3984, widget->type == _ui_widget_type_column_list, "expected column list for advanced controller settings widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3984, widget->widget_type == _widget_type_column_list, "expected column list for advanced controller settings widget");
 
 	if (profile)
 	{
 		struct widget_instance *list_item;
 		struct widget_instance *spinner;
 
-		list_item = widget->first_child;
+		list_item = widget->children;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3992, list_item, "expected 'invert joystick' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3994, spinner, "expected 'invert joystick' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: profile->controller_settings.invert_look = TRUE; break;
 		case _toggle_option_off: profile->controller_settings.invert_look = FALSE; break;
@@ -3911,10 +3911,10 @@ static boolean player_profile_change_advanced_controller_settings(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4003, list_item, "expected 'look sensitivity' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4005, spinner, "expected 'look sensitivity' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case 0:
 		case 1:
@@ -3926,7 +3926,7 @@ static boolean player_profile_change_advanced_controller_settings(
 		case 7:
 		case 8:
 		case 9:
-			profile->controller_settings.look_sensitivity = (byte)(spinner->list.item_index + 1);
+			profile->controller_settings.look_sensitivity = (byte)(spinner->parameters.list_parameters.current_list_item_index + 1);
 			break;
 		default:
 			error(_error_silent, "unknown option selected for look sensitivity");
@@ -3935,9 +3935,9 @@ static boolean player_profile_change_advanced_controller_settings(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4024, list_item, "expected 'controller vibration' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4026, spinner, "expected 'controller vibration' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: profile->controller_settings.vibration_disabled = FALSE; break;
 		case _toggle_option_off: profile->controller_settings.vibration_disabled = TRUE; break;
@@ -3946,9 +3946,9 @@ static boolean player_profile_change_advanced_controller_settings(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4035, list_item, "expected 'flight stick controls' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4037, spinner, "expected 'flight stick controls' option spinner list");
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: profile->controller_settings.flight_stick_aircraft_controls = TRUE; break;
 		case _toggle_option_off: profile->controller_settings.flight_stick_aircraft_controls = FALSE; break;
@@ -3957,10 +3957,10 @@ static boolean player_profile_change_advanced_controller_settings(
 
 		list_item = list_item->next;
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4046, list_item, "expected 'autocenter' list item");
-		for (spinner = list_item->first_child; spinner && spinner->type != _ui_widget_type_spinner_list; spinner = spinner->next);
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4048, spinner, "expected 'autocenter' option spinner list");
 
-		switch (spinner->list.item_index)
+		switch (spinner->parameters.list_parameters.current_list_item_index)
 		{
 		case _toggle_option_on: profile->controller_settings.autocenter = TRUE; break;
 		case _toggle_option_off: profile->controller_settings.autocenter = FALSE; break;
@@ -4000,7 +4000,7 @@ static boolean switch_from_main_menu_to_single_player(
 }
 
 static boolean delete_player_profile_request(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -4008,13 +4008,13 @@ static boolean delete_player_profile_request(
 	struct widget_instance *profile_list;
 	boolean success;
 
-	definition = ui_widget_definition_get(widget->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4111, definition->type == _ui_widget_type_container && definition->child_widgets.count >= 3, "expected the multiplayer profile select screen to be a container w/ 3+ children");
-	profile_list = widget->first_child;
-	definition = ui_widget_definition_get(profile_list->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4114, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4115, definition->child_widgets.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
-	profile_list = widget->first_child;
+	definition = ui_widget_definition_get(wrapper_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4111, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the multiplayer profile select screen to be a container w/ 3+ children");
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4114, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4115, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
+	profile_list = wrapper_widget->children;
 
 
 
@@ -4022,10 +4022,10 @@ static boolean delete_player_profile_request(
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4124, (profile_list->list.item_index>=0) && (profile_list->list.item_index<profile_list->list.item_count), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
-	profile_index_to_delete = ((long *)profile_list->list.items)[profile_list->list.item_index];
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4124, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	delete_profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
 
-	if (profile_index_to_delete != NONE)
+	if (delete_profile_index != NONE)
 	{
 		success = TRUE;
 	}
@@ -4039,7 +4039,7 @@ static boolean delete_player_profile_request(
 }
 
 static boolean delete_playlist_profile_request(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
@@ -4047,25 +4047,25 @@ static boolean delete_playlist_profile_request(
 	struct widget_instance *profile_list;
 	boolean success = FALSE;
 
-	definition = ui_widget_definition_get(widget->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4157, definition->type == _ui_widget_type_container && definition->child_widgets.count >= 3, "expected the playlist profile select screen to be a container w/ 3+ children");
-	profile_list = widget->first_child;
-	definition = ui_widget_definition_get(profile_list->tag_index);
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4160, definition->type == _ui_widget_type_spinner_list, "expected a spinner list widget for 'playlist profile list' widget");
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4161, definition->child_widgets.count == 3, "expected 3 list items for 'playlist profile list' widget");
-	profile_list = widget->first_child;
+	definition = ui_widget_definition_get(wrapper_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4157, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the playlist profile select screen to be a container w/ 3+ children");
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4160, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'playlist profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4161, definition->child_widget_references.count == 3, "expected 3 list items for 'playlist profile list' widget");
+	profile_list = wrapper_widget->children;
 
 
 
 
 
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4169, (profile_list->list.item_index>=0) && (profile_list->list.item_index<profile_list->list.item_count), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
-	profile_index_to_delete = ((long *)profile_list->list.items)[profile_list->list.item_index];
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4169, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	delete_profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
 
-	if (profile_index_to_delete != NONE)
+	if (delete_profile_index != NONE)
 	{
-		if (TEST_FLAG(profile_index_to_delete, _default_profile_bit30))
+		if (TEST_FLAG(delete_profile_index, _default_profile_bit30))
 		{
 			display_error_deferred(_error_cannot_delete_default_game_settings, NONE, TRUE, FALSE);
 			ui_play_audio_feedback_sound(_audio_feedback_failure);
@@ -4084,22 +4084,22 @@ static boolean delete_playlist_profile_request(
 }
 
 static boolean delete_player_profile_final(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
 	boolean success = FALSE;
 
-	if (!TEST_FLAG(profile_index_to_delete, _default_profile_bit30))
+	if (!TEST_FLAG(delete_profile_index, _default_profile_bit30))
 	{
-		if ((profile_index_to_delete & SAVED_GAME_FILE_TYPE_MASK) == _saved_game_file_type_player_profile)
+		if ((delete_profile_index & SAVED_GAME_FILE_TYPE_MASK) == _saved_game_file_type_player_profile)
 		{
-			player_profile_delete(profile_index_to_delete);
+			player_profile_delete(delete_profile_index);
 			success = TRUE;
 		}
 		else
 		{
-			error(_error_silent, "#0x%08lX is not a player profile index", profile_index_to_delete);
+			error(_error_silent, "#0x%08lX is not a player profile index", delete_profile_index);
 		}
 	}
 	else
@@ -4112,20 +4112,20 @@ static boolean delete_player_profile_final(
 }
 
 static boolean delete_playlist_profile_final(
-	struct widget_instance *widget,
+	struct widget_instance *wrapper_widget,
 	struct event_record *event,
 	boolean *widget_deleted)
 {
 	boolean success = FALSE;
 
-	if ((profile_index_to_delete & SAVED_GAME_FILE_TYPE_MASK) == _saved_game_file_type_play_list)
+	if ((delete_profile_index & SAVED_GAME_FILE_TYPE_MASK) == _saved_game_file_type_play_list)
 	{
-		playlist_profile_delete(profile_index_to_delete);
+		playlist_profile_delete(delete_profile_index);
 		success = TRUE;
 	}
 	else
 	{
-		error(_error_silent, "#0x%08lX is not a playlist profile index", profile_index_to_delete);
+		error(_error_silent, "#0x%08lX is not a playlist profile index", delete_profile_index);
 	}
 
 	return success;
@@ -4136,7 +4136,7 @@ static boolean cancel_profile_delete(
 	struct event_record *event,
 	boolean *widget_deleted)
 {
-	profile_index_to_delete = NONE;
+	delete_profile_index = NONE;
 
 	return TRUE;
 }
@@ -4382,7 +4382,7 @@ static boolean disable_widget_if_no_xdemos(
 {
 	if (!xbox_demos_available())
 	{
-		widget->disabled = TRUE;
+		widget->never_receive_events = TRUE;
 		widget->visible = FALSE;
 	}
 
@@ -4471,9 +4471,9 @@ static boolean start_network_game_if_no_advertised_servers(
 {
 	boolean success = FALSE;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4593, widget->type == _ui_widget_type_column_list, "expected a column list for server list");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4593, widget->widget_type == _widget_type_column_list, "expected a column list for server list");
 
-	if (!widget->list.item_count)
+	if (!widget->parameters.list_parameters.number_of_items)
 	{
 		word client_state_progress;
 		struct network_game_client *client = global_network_game_client_get();
@@ -4681,7 +4681,7 @@ static boolean new_campaign_decision(
 
 				if (success == TRUE)
 				{
-					main_set_map_name(single_player_level_names[_single_player_map_a10]);
+					main_set_map_name(scenario_paths[_single_player_map_a10]);
 					main_defer_map_map_change();
 				}
 				else
@@ -4721,13 +4721,13 @@ static boolean difficulty_menu_initialize(
 {
 	struct widget_instance *difficulty_item;
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4860, widget->type == _ui_widget_type_column_list, "expected column list for difficulty menu widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4860, widget->widget_type == _widget_type_column_list, "expected column list for difficulty menu widget");
 
 	if (persistant_game_data_info.valid == TRUE && !_stricmp(persistant_game_data_info.map_name, main_get_map_name()))
 	{
 		difficulty_item = widget_instance_get_nth_child(widget, persistant_game_data_info.difficulty);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4865, difficulty_item, "failed to find 'difficulty' menu item");
-		widget->list.item_index = persistant_game_data_info.difficulty;
+		widget->parameters.list_parameters.current_list_item_index = persistant_game_data_info.difficulty;
 		widget->focused_child = difficulty_item;
 	}
 	else
@@ -4735,7 +4735,7 @@ static boolean difficulty_menu_initialize(
 		difficulty_item = widget_instance_get_nth_child(widget, _game_difficulty_level_normal);
 		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4871, difficulty_item, "failed to find 'difficulty' menu item");
 		widget->focused_child = difficulty_item;
-		widget->list.item_index = _game_difficulty_level_normal;
+		widget->parameters.list_parameters.current_list_item_index = _game_difficulty_level_normal;
 	}
 
 	return TRUE;
@@ -4777,5 +4777,3 @@ static boolean new_campaign_if_no_custom_player_profiles_exist(
 
 	return success;
 }
-
-/* ---------- private code */

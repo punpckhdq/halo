@@ -20,13 +20,13 @@ enum
 
 enum
 {
-	_ui_widget_type_container = 0,
-	_ui_widget_type_text_box,
-	_ui_widget_type_spinner_list,
-	_ui_widget_type_column_list,
-	_ui_widget_type_game_model,
-	_ui_widget_type_movie,
-	_ui_widget_type_custom,
+	_widget_type_container = 0,
+	_widget_type_text_box,
+	_widget_type_spinner_list,
+	_widget_type_column_list,
+	_widget_type_game_model,
+	_widget_type_movie,
+	_widget_type_custom,
 	NUMBER_OF_UI_WIDGET_TYPES,
 };
 
@@ -62,100 +62,7 @@ enum
 
 enum
 {
-	_game_data_input_function_null = 0, /* fake name */
-	_game_data_input_function_player_settings_menu_update_description, /* fake name */
-	_game_data_input_function_unused, /* fake name */
-	_game_data_input_function_playlist_settings_menu_update_description, /* fake name */
-	_game_data_input_function_gametype_select_menu_update_description, /* fake name */
-	_game_data_input_function_multiplayer_type_menu_update_description, /* fake name */
-	_game_data_input_function_solo_level_select_update, /* fake name */
-	_game_data_input_function_difficulty_menu_update_description, /* fake name */
-	_game_data_input_function_build_number, /* fake name */
-	_game_data_input_function_server_list_update, /* fake name */
-	_game_data_input_function_network_pregame_status_update, /* fake name */
-	_game_data_input_function_splitscreen_pregame_status_update, /* fake name */
-	_game_data_input_function_network_splitscreen_prejoin_players, /* fake name */
-	_game_data_input_function_multiplayer_profile_list_update, /* fake name */
-	_game_data_input_function_player_profile_list_3wide_update, /* fake name */
-	_game_data_input_function_player_profile_edit_select_menu_update, /* fake name */
-	_game_data_input_function_player_profile_small_menu_update, /* fake name */
-	_game_data_input_function_game_settings_lists_text_update, /* fake name */
-	_game_data_input_function_solo_game_objective_text, /* fake name */
-	_game_data_input_function_color_picker_update, /* fake name */
-	_game_data_input_function_game_settings_lists_picture_update, /* fake name */
-	_game_data_input_function_main_menu_fake_animate, /* fake name */
-	_game_data_input_function_multiplayer_level_select_update, /* fake name */
-	_game_data_input_function_get_active_player_profile_name, /* fake name */
-	_game_data_input_function_get_edit_player_profile_name, /* fake name */
-	_game_data_input_function_get_edit_game_settings_name, /* fake name */
-	_game_data_input_function_get_active_player_profile_color, /* fake name */
-	_game_data_input_function_multiplayer_set_textbox_map_name, /* fake name */
-	_game_data_input_function_multiplayer_set_textbox_game_ruleset, /* fake name */
-	_game_data_input_function_multiplayer_set_textbox_teams_noteams, /* fake name */
-	_game_data_input_function_multiplayer_set_textbox_score_limit, /* fake name */
-	_game_data_input_function_multiplayer_set_textbox_score_limit_type, /* fake name */
-	_game_data_input_function_multiplayer_set_bitmap_for_map, /* fake name */
-	_game_data_input_function_multiplayer_set_bitmap_for_ruleset, /* fake name */
-	_game_data_input_function_multiplayer_set_textbox_number_of_players, /* fake name */
-	_game_data_input_function_multiplayer_edit_profile_set_rule_text, /* fake name */
-	_game_data_input_function_system_link_status_check, /* fake name */
-	_game_data_input_function_multiplayer_game_directions, /* fake name */
-	_game_data_input_function_teams_no_teams_bitmap_update, /* fake name */
-	_game_data_input_function_warn_if_difficulty_will_delete_saved_game, /* fake name */
-	_game_data_input_function_dim_if_no_network_cable, /* fake name */
-	NUMBER_OF_GAME_DATA_INPUT_FUNCTIONS, /* fake name */
-};
-
-enum
-{
-	_event_handler_close_current_widget_bit = 0,
-	_event_handler_close_other_widget_bit,
-	_event_handler_close_all_widgets_bit,
-	_event_handler_open_widget_bit,
-	_event_handler_reload_self_bit,
-	_event_handler_reload_widget_bit,
-	_event_handler_give_focus_to_widget,
-	_event_handler_run_function_bit,
-	_event_handler_replace_with_other_widget_bit,
-	_event_handler_go_back_to_previous_widget_bit,
-	_event_handler_run_scenario_script_bit,
-	_event_handler_look_for_conditional_widget_on_failure_bit,
-	NUMBER_OF_EVENT_HANDLER_FLAGS,
-};
-
-enum
-{
-	_widget_event_button_a = 0,
-	_widget_event_button_b,
-	_widget_event_button_x,
-	_widget_event_button_y,
-	_widget_event_button_black,
-	_widget_event_button_white,
-	_widget_event_button_left_trigger,
-	_widget_event_button_right_trigger,
-	_widget_event_button_dpad_up,
-	_widget_event_button_dpad_down,
-	_widget_event_button_dpad_left,
-	_widget_event_button_dpad_right,
-	_widget_event_button_start,
-	_widget_event_button_back,
-	_widget_event_button_left_thumb,
-	_widget_event_button_right_thumb,
-	NUMBER_OF_WIDGET_EVENT_BUTTONS,
-
-	_widget_event_left_analog_stick_up = NUMBER_OF_WIDGET_EVENT_BUTTONS,
-	_widget_event_left_analog_stick_down,
-	_widget_event_left_analog_stick_left,
-	_widget_event_left_analog_stick_right,
-	_widget_event_right_analog_stick_up,
-	_widget_event_right_analog_stick_down,
-	_widget_event_right_analog_stick_left,
-	_widget_event_right_analog_stick_right,
-	_widget_event_created,
-	_widget_event_deleted,
-	_widget_event_get_focus,
-	_widget_event_lose_focus,
-	NUMBER_OF_WIDGET_EVENTS,
+	NUMBER_OF_GAME_DATA_INPUT_FUNCTIONS = 41 /* fake name */
 };
 
 enum
@@ -267,9 +174,54 @@ enum
 
 enum
 {
-	_search_and_replace_function_null = 0, /* fake name */
-	_search_and_replace_function_widget_controller, /* fake name */
-	NUMBER_OF_SEARCH_AND_REPLACE_FUNCTIONS, /* fake name */
+	_event_handler_close_current_widget_bit = 0,
+	_event_handler_close_other_widget_bit,
+	_event_handler_close_all_widgets_bit,
+	_event_handler_open_widget_bit,
+	_event_handler_reload_self_bit,
+	_event_handler_reload_widget_bit,
+	_event_handler_give_focus_to_widget,
+	_event_handler_run_function_bit,
+	_event_handler_replace_with_other_widget_bit,
+	_event_handler_go_back_to_previous_widget_bit,
+	_event_handler_run_scenario_script_bit,
+	_event_handler_look_for_conditional_widget_on_failure_bit,
+	NUMBER_OF_EVENT_HANDLER_FLAGS,
+};
+
+enum
+{
+	_widget_event_button_a = 0,
+	_widget_event_button_b,
+	_widget_event_button_x,
+	_widget_event_button_y,
+	_widget_event_button_black,
+	_widget_event_button_white,
+	_widget_event_button_left_trigger,
+	_widget_event_button_right_trigger,
+	_widget_event_button_dpad_up,
+	_widget_event_button_dpad_down,
+	_widget_event_button_dpad_left,
+	_widget_event_button_dpad_right,
+	_widget_event_button_start,
+	_widget_event_button_back,
+	_widget_event_button_left_thumb,
+	_widget_event_button_right_thumb,
+	NUMBER_OF_WIDGET_EVENT_BUTTONS,
+
+	_widget_event_left_analog_stick_up = NUMBER_OF_WIDGET_EVENT_BUTTONS,
+	_widget_event_left_analog_stick_down,
+	_widget_event_left_analog_stick_left,
+	_widget_event_left_analog_stick_right,
+	_widget_event_right_analog_stick_up,
+	_widget_event_right_analog_stick_down,
+	_widget_event_right_analog_stick_left,
+	_widget_event_right_analog_stick_right,
+	_widget_event_created,
+	_widget_event_deleted,
+	_widget_event_get_focus,
+	_widget_event_lose_focus,
+	NUMBER_OF_WIDGET_EVENTS,
 };
 
 enum
@@ -387,8 +339,9 @@ struct ui_widget_definition
 	struct tag_reference font_tag;
 	real_argb_color text_color;
 	short justification;
-	word text_box_flags; // the tag field is 32 bits wide, cachebeta reads only the low bits
-	word pad1[7];
+	short text_box_flags;
+	struct tag_block unused_tag_block;
+	short pad1;
 	short string_list_index;
 	short hoffset;
 	short voffset;
@@ -413,7 +366,7 @@ struct ui_widget_definition
 	struct tag_block conditional_widget_references;		// conditional_widget_reference
 	long widget_type_movie_unused[32];
 	long widget_type_custom_unused[32];
-	struct tag_block child_widgets;						// child_widget_reference
+	struct tag_block child_widget_references;			// child_widget_reference
 };
 
 struct ui_widget_reference

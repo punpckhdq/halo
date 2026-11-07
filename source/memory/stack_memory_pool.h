@@ -8,6 +8,15 @@ header included in hcex build.
 #define __STACK_MEMORY_POOL_H
 #pragma once
 
+/* ---------- constants */
+
+enum
+{
+	NUMBER_OF_SMALL_MEMORY_POOL_MASTER_POINTERS = 1024,
+	NUMBER_OF_MEDIUM_MEMORY_POOL_MASTER_POINTERS = 4096,
+	NUMBER_OF_LARGE_MEMORY_POOL_MASTER_POINTERS = 16384
+};
+
 /* ---------- structures */
 
 typedef void **handle;
@@ -31,6 +40,27 @@ struct stack_memory_pool
 	struct memory_block *first_block;
 	struct memory_block *last_block;
 	struct memory_block *blocks[];
+};
+
+struct stack_memory_pool_medium
+{
+	char *name;
+	byte *base_address;
+	unsigned long pool_size;
+	long number_of_blocks;
+	long next_block_index;
+	struct
+	{
+		long bytes_allocated;
+		long peak_bytes_allocated;
+		unsigned long blocks_used;
+		unsigned long peak_blocks_used;
+		long largest_block_allocated;
+	} statistics;
+	boolean locked;
+	struct memory_block *first_block;
+	struct memory_block *last_block;
+	struct memory_block *blocks[NUMBER_OF_MEDIUM_MEMORY_POOL_MASTER_POINTERS];
 };
 
 /* ---------- prototypes/STACK_MEMORY_POOL.C */

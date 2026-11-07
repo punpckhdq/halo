@@ -73,21 +73,45 @@ enum
 
 /* ---------- structures */
 
+struct _text_box_parameters
+{
+	wchar_t *text;
+	short string_list_index;
+};
+
+struct _list_parameters
+{
+	short current_list_item_index;
+	short last_list_tab_direction;
+	void *list_items;
+	word number_of_items;
+	struct widget_instance *extended_description;
+	wchar_t *item_text;
+};
+
+struct _animation_data
+{
+	short current_frame_index;
+	short first_frame_index;
+	short last_frame_index;
+	short number_of_sprite_frames;
+};
+
 struct widget_instance
 {
-	long tag_index; /* fake name */
+	long ui_widget_tag_index;
 	char const *name;
 	short local_player_index;
-	point2d position; /* fake name */
-	short type; /* fake name */
+	short horizontal_offset;
+	short vertical_offset;
+	short widget_type;
 	boolean visible;
 	boolean render_regardless_of_controller_index;
-	boolean disabled; /* fake name */
+	boolean never_receive_events;
 	boolean pause_game_time;
 	boolean delete_recursion_lock;
 	boolean widget_is_error_dialog;
 	boolean close_if_local_player_controller_present;
-	byte pad;
 	unsigned long creation_time;
 	unsigned long milliseconds_to_auto_close;
 	unsigned long auto_close_fade_time;
@@ -95,30 +119,14 @@ struct widget_instance
 	struct widget_instance *previous;
 	struct widget_instance *next;
 	struct widget_instance *parent;
-	struct widget_instance *first_child; /* fake name */
+	struct widget_instance *children;
 	struct widget_instance *focused_child;
 	union
 	{
-		struct
-		{
-			wchar_t *string; /* fake name */
-			short string_list_index;
-		} text_box;
-		struct
-		{
-			short item_index; /* fake name */
-			short last_list_tab_direction;
-			void *items; /* fake name */
-			word item_count; /* fake name */
-			short pad;
-			struct widget_instance *extended_description_widget; /* fake name */
-			wchar_t *string; /* fake name */
-		} list;
-	};
-	short bitmap_frame_index; /* fake name */
-	short bitmap_frame_minimum; /* fake name */
-	short bitmap_frame_maximum; /* fake name */
-	short bitmap_frame_count; /* fake name */
+		struct _text_box_parameters text_box_parameters;
+		struct _list_parameters list_parameters;
+	} parameters;
+	struct _animation_data animation_data;
 };
 
 /* ---------- prototypes/UI_WIDGET.C */
@@ -138,8 +146,8 @@ void render_ui_widgets_postgame(short local_player_index, rectangle2d const *win
 void render_ui_widgets(short local_player_index, rectangle2d const *window_bounds);
 int widget_instance_count_children(struct widget_instance const *widget);
 struct widget_instance *widget_instance_get_nth_child(struct widget_instance const *widget, int n);
-void *ui_widget_realloc(void *pointer, word size, char const *file, long line);
-void widget_free(void *pointer);
+void *ui_widget_realloc(void *ptr, word size, char const *file, long line);
+void widget_free(void *ptr);
 boolean ui_widgets_active(void);
 boolean ui_widgets_active_for_local_player(short local_player_index);
 void ui_widgets_close_all(void);

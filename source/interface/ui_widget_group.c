@@ -166,5 +166,3 @@ void ui_load_tags_for_scenario(
 
 	return;
 }
-
-/* ---------- private code */
