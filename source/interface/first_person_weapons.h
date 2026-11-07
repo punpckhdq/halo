@@ -23,7 +23,7 @@ void first_person_weapons_dispose_from_old_map(void);
 void first_person_weapons_update(void);
 void first_person_weapon_render_update(void);
 void first_person_weapon_draw(void);
-long first_person_weapon_get_local_index(long weapon_index);
+long first_person_weapon_get_local_index(long object_index);
 void first_person_weapon_message_from_unit(long unit_index, short message_type);
 void first_person_weapon_message_from_weapon(long weapon_index, short message_type);
 void first_person_weapon_center_flashlight(long unit_index, union real_point3d *position, union real_vector3d *forward, union real_vector3d *up);

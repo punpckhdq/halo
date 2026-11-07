@@ -27,7 +27,7 @@ enum
 {
 	MAX_SENSOR_HISTORY = 10,
 	MAX_CUSTOM_BLIPS = 16,
-	MAXIMUM_BLIPS_PER_SENSOR = 16, /* fake name */
+	MAX_BLIPS_ON_SCREEN = 16,
 	SENSOR_UPDATE_TICKS = 15,
 	SENSOR_LATENCY_TICKS = 1
 };
@@ -46,17 +46,16 @@ enum
 
 enum
 {
-	_blip_size_medium = 0,	/* fake name */
-	_blip_size_small,		/* fake name */
-	_blip_size_large,		/* fake name */
-	NUMBER_OF_BLIP_SIZES	/* fake name */
+	_hud_blip_type_medium = 0,
+	_hud_blip_type_small,
+	_hud_blip_type_large,
+	NUMBER_OF_HUD_BLIP_TYPES
 };
 
 /* ---------- macros */
 
 #define SECONDS_PER_TICK (1.f/TICKS_PER_SECOND) /* fake name */
 #define DROPSHIP_SEAT_LABEL "c_dropship"										/* fake name */
-#define CUSTOM_BLIP_FLASH_ANGULAR_VELOCITY (3.141592f / TICKS_PER_SECOND)		/* fake name */
 
 /* ---------- structures */
 
@@ -75,7 +74,7 @@ struct motion_sensor_blip
 
 struct motion_sensor_datum
 {
-	struct motion_sensor_blip blips[MAXIMUM_BLIPS_PER_SENSOR];
+	struct motion_sensor_blip blips[MAX_BLIPS_ON_SCREEN];
 	struct tiny_point2d custom_blips[MAX_CUSTOM_BLIPS];
 	char custom_blip_goal_indices[MAX_CUSTOM_BLIPS];
 	real_point2d reference_point;
@@ -87,7 +86,7 @@ struct motion_sensor_datum
 struct motion_sensor_player_datum
 {
 	struct motion_sensor_datum sensor_data[MAX_SENSOR_HISTORY];
-	long current_unit_indices[MAXIMUM_BLIPS_PER_SENSOR];
+	long current_unit_indices[MAX_BLIPS_ON_SCREEN];
 };
 
 struct motion_sensor_globals_definition
@@ -100,15 +99,15 @@ struct motion_sensor_globals_definition
 
 /* ---------- prototypes */
 
-static void tiny_point2d_set(struct tiny_point2d *tiny_position, real_point2d const *position);
-static void tiny_point2d_get(struct tiny_point2d const *tiny_position, real_point2d *position);
+static void tiny_point2d_set(struct tiny_point2d *tiny_position, real_point2d *position);
+static void tiny_point2d_get(struct tiny_point2d *tiny_position, real_point2d *position);
 static char blip_type_get(long object_index, long local_player_index);
 static void motion_sensor_blip_set_type_and_size(struct motion_sensor_blip *blip, long unit_index, long local_player_index);
 static real blip_size_get(char size_type);
 static struct motion_sensor_player_datum *get_motion_sensor_data(short local_player_index);
 static boolean should_track_object(long object_index);
 static boolean should_draw_object(long object_index);
-static void render_blip(struct motion_sensor_datum const *sensor_datum, char blip_type, char blip_size_type, real_point2d const *point, real relative_scale, real fade, real radius);
+static void render_blip(struct motion_sensor_datum *sensor_datum, char blip_type, char blip_size_type, real_point2d const *point, real relative_scale, real fade, real radius);
 static void motion_sensor_update(void);
 static void update_motion_sensor(short local_player_index);
 static void render_motion_sensor(short local_player_index, boolean in_multiplayer, point2d const *reference);
@@ -140,7 +139,7 @@ boolean debug_motion_sensor_draw_all_units = FALSE;
 
 static void tiny_point2d_set(
 	struct tiny_point2d *tiny_position,
-	real_point2d const *position)
+	real_point2d *position)
 {
 	match_assert("c:\\halo\\SOURCE\\interface\\motion_sensor.c", 105, fabs(position->x) < hud_globals->defaults.motion_sensor_range);
 	match_assert("c:\\halo\\SOURCE\\interface\\motion_sensor.c", 106, fabs(position->y) < hud_globals->defaults.motion_sensor_range);
@@ -152,7 +151,7 @@ static void tiny_point2d_set(
 }
 
 static void tiny_point2d_get(
-	struct tiny_point2d const *tiny_position,
+	struct tiny_point2d *tiny_position,
 	real_point2d *position)
 {
 	position->x = tiny_position->x * hud_globals->defaults.motion_sensor_range * (1.f / CHAR_MAX);
@@ -256,20 +255,26 @@ static void motion_sensor_blip_set_type_and_size(
 
 	blip->type = blip_type_get(unit_index, local_player_index);
 
-	if (unit_index != NONE && unit_try_and_get(unit_index))
+	if (unit_index == NONE)
 	{
-		short blip_size = unit_definition_get(unit_get(unit_index)->definition_index)->unit.blip_type;
+		size_type = _hud_blip_type_medium;
+	}
+	else if (unit_try_and_get(unit_index))
+	{
+		struct unit_datum *unit = unit_get(unit_index);
+		struct unit_definition *definition = unit_definition_get(unit->definition_index);
+		short blip_size = definition->unit.blip_type;
 
-		if (blip_size < 0 || blip_size >= NUMBER_OF_BLIP_SIZES)
+		if (blip_size < 0 || blip_size >= NUMBER_OF_HUD_BLIP_TYPES)
 		{
-			blip_size = _blip_size_medium;
+			blip_size = _hud_blip_type_medium;
 		}
 
 		size_type = (char)blip_size;
 	}
 	else
 	{
-		size_type = _blip_size_medium;
+		size_type = _hud_blip_type_medium;
 	}
 
 	blip->size = size_type;
@@ -280,7 +285,7 @@ static void motion_sensor_blip_set_type_and_size(
 static real blip_size_get(
 	char size_type)
 {
-	static real sizes[NUMBER_OF_BLIP_SIZES] = { 0.f, -.75f, 1.f };
+	static real sizes[NUMBER_OF_HUD_BLIP_TYPES] = { 0.f, -.75f, 1.f };
 
 	return sizes[size_type];
 }
@@ -325,7 +330,7 @@ void motion_sensor_initialize_for_new_map(
 		{
 			long blip_index;
 
-			for (blip_index = 0; blip_index < MAXIMUM_BLIPS_PER_SENSOR; blip_index++)
+			for (blip_index = 0; blip_index < MAX_BLIPS_ON_SCREEN; blip_index++)
 			{
 				motion_sensor_globals->motion_sensors[local_player_index].sensor_data[sensor_index].blips[blip_index].type = _blip_type_none;
 			}
@@ -389,7 +394,7 @@ static boolean should_draw_object(
 }
 
 static void render_blip(
-	struct motion_sensor_datum const *sensor_datum,
+	struct motion_sensor_datum *sensor_datum,
 	char blip_type,
 	char blip_size_type,
 	real_point2d const *point,
@@ -429,7 +434,7 @@ static void render_blip(
 
 		if (blip_type == _blip_type_custom)
 		{
-			real angle = game_time_get() * CUSTOM_BLIP_FLASH_ANGULAR_VELOCITY;
+			real angle = game_time_get() * 3.141592f / TICKS_PER_SECOND;
 
 			flash = (real)((sine(angle) + 1.0) * (1.0 / 3.0) + 1.0);
 		}
@@ -558,10 +563,10 @@ static void motion_sensor_update(
 			if (should_track_object(iter.index) && should_draw_object(iter.index))
 			{
 				real_point3d center;
-				real radius;
+				real dummy;
 				long full_sensor_count = 0;
 
-				object_get_bounding_sphere(iter.index, &center, &radius);
+				object_get_bounding_sphere(iter.index, &center, &dummy);
 
 				for (i = 0; i < player_count; i++)
 				{
@@ -569,7 +574,7 @@ static void motion_sensor_update(
 					short *num_blips = &num_recorded_blips[true_local_player_index];
 					short blip_index = *num_blips;
 
-					if (blip_index < MAXIMUM_BLIPS_PER_SENSOR)
+					if (blip_index < MAX_BLIPS_ON_SCREEN)
 					{
 						center.z = positions[true_local_player_index].z;
 
@@ -632,11 +637,11 @@ static void update_motion_sensor(
 			short blip_index;
 
 			{
-				real_point3d camera_position;
+				real_point3d reference_point;
 
-				unit_get_camera_position(unit_index, &camera_position);
-				sensor->reference_point.x = camera_position.x;
-				sensor->reference_point.y = camera_position.y;
+				unit_get_camera_position(unit_index, &reference_point);
+				sensor->reference_point.x = reference_point.x;
+				sensor->reference_point.y = reference_point.y;
 			}
 
 			for (blip_index = 0; blip_index < (long)NUMBEROF(player_sensor->current_unit_indices); blip_index++)
@@ -645,22 +650,22 @@ static void update_motion_sensor(
 
 				if (unit_try_and_get(object_index))
 				{
-					real_point3d center;
-					real radius;
-					real_point2d relative_position;
-					real_point3d sensor_position;
+					real_point3d unit_center;
+					real dummy;
+					real_point2d point;
+					real_point3d player_center;
 					boolean draw = should_draw_object(object_index);
 
-					object_get_bounding_sphere(object_index, &center, &radius);
-					relative_position.x = center.x - sensor->reference_point.x;
-					relative_position.y = center.y - sensor->reference_point.y;
-					sensor_position.x = sensor->reference_point.x;
-					sensor_position.y = sensor->reference_point.y;
-					sensor_position.z = center.z;
+					object_get_bounding_sphere(object_index, &unit_center, &dummy);
+					point.x = unit_center.x - sensor->reference_point.x;
+					point.y = unit_center.y - sensor->reference_point.y;
+					player_center.x = sensor->reference_point.x;
+					player_center.y = sensor->reference_point.y;
+					player_center.z = unit_center.z;
 
-					if (draw && distance_squared3d(&sensor_position, &center) <= hud_globals->defaults.motion_sensor_range * hud_globals->defaults.motion_sensor_range)
+					if (draw && distance_squared3d(&player_center, &unit_center) <= hud_globals->defaults.motion_sensor_range * hud_globals->defaults.motion_sensor_range)
 					{
-						tiny_point2d_set(&sensor->blips[blip_index].pt, &relative_position);
+						tiny_point2d_set(&sensor->blips[blip_index].pt, &point);
 					}
 					else
 					{
@@ -683,15 +688,15 @@ static void update_motion_sensor(
 
 				for (custom_index = 0; custom_index < sensor->custom_blips_active; custom_index++)
 				{
-					real_point3d custom_position;
+					real_point3d custom_temp;
 
-					custom_position.x = customs[custom_index].x;
-					custom_position.y = customs[custom_index].y;
-					custom_position.z = reference_point.z;
+					custom_temp.x = customs[custom_index].x;
+					custom_temp.y = customs[custom_index].y;
+					custom_temp.z = reference_point.z;
 					customs[custom_index].x -= reference_point.x;
 					customs[custom_index].y -= reference_point.y;
 
-					if (distance_squared3d(&reference_point, &custom_position) <= hud_globals->defaults.motion_sensor_range * hud_globals->defaults.motion_sensor_range)
+					if (distance_squared3d(&reference_point, &custom_temp) <= hud_globals->defaults.motion_sensor_range * hud_globals->defaults.motion_sensor_range)
 					{
 						tiny_point2d_set(&sensor->custom_blips[custom_index - custom_blips_skipped], &customs[custom_index]);
 					}
@@ -772,7 +777,7 @@ static void render_motion_sensor(
 					real_point2d blip_pos;
 
 					tiny_point2d_get(&sensor->custom_blips[blip_index], &blip_pos);
-					render_blip(sensor, _blip_type_custom, _blip_size_medium, &blip_pos, relative_scale, fade, radius);
+					render_blip(sensor, _blip_type_custom, _hud_blip_type_medium, &blip_pos, relative_scale, fade, radius);
 				}
 			}
 		}

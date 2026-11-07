@@ -12,8 +12,8 @@ header included in hcex build.
 
 enum
 {
-	COLOR_TABLE_GROUP_TAG = 'colo',	/* fake name */
-	COLOR_TABLE_GROUP_VERSION = 1	/* fake name */
+	COLOR_TABLE_GROUP_TAG = 'colo',
+	COLOR_TABLE_GROUP_VERSION = 1
 };
 
 /* ---------- macros */

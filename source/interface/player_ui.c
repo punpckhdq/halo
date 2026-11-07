@@ -81,7 +81,7 @@ struct _player_ui_globals
 
 /* ---------- prototypes */
 
-static void hud_message_to_all(wchar_t const *string);
+static void hud_message_to_all(wchar_t *string);
 static void generate_default_player_profile(struct player_profile *profile);
 static void set_local_player_controls_from_player_profile(short local_player_index);
 static void clear_profile_edit_data(void);
@@ -239,7 +239,7 @@ void player_ui_clear_multiplayer_variant(
 void player_ui_set_active_player_profile(
 	short local_player_index,
 	long profile_index,
-	struct player_profile const *profile)
+	struct player_profile *profile)
 {
 	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", 226, (local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS) && (profile != NULL));
 
@@ -287,7 +287,7 @@ short player_ui_get_last_single_player_level_played(
 }
 
 void player_ui_set_game_variant(
-	struct game_variant const *variant)
+	struct game_variant *variant)
 {
 	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", 273, variant);
 
@@ -759,6 +759,7 @@ boolean player_ui_edit_profile_is_dirty(
 void player_ui_activate_all_solo_levels(
 	void)
 {
+	struct player_profile *profile = &player_ui_globals.player_data[0].profile;
 	long level_index;
 
 	for (level_index = 0; level_index < NUMBER_OF_SINGLE_PLAYER_LEVELS; level_index++)
@@ -767,7 +768,7 @@ void player_ui_activate_all_solo_levels(
 
 		for (difficulty = 0; difficulty < NUMBER_OF_GAME_DIFFICULTY_LEVELS; difficulty++)
 		{
-			SET_FLAG(player_ui_globals.player_data[0].profile.single_player_map_flags[level_index], difficulty, TRUE);
+			SET_FLAG(profile->single_player_map_flags[level_index], difficulty, TRUE);
 		}
 	}
 
@@ -780,14 +781,14 @@ void player_ui_activate_all_solo_levels(
 }
 
 static void hud_message_to_all(
-	wchar_t const *string)
+	wchar_t *string)
 {
-	struct data_iterator iterator;
+	struct data_iterator player_iterator;
 	struct player_datum *player;
 
-	data_iterator_new(&iterator, player_data);
+	data_iterator_new(&player_iterator, player_data);
 
-	while (player = data_iterator_next(&iterator))
+	while (player = data_iterator_next(&player_iterator))
 	{
 		if (player->local_player_index != NONE)
 		{

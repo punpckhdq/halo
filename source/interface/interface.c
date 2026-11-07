@@ -95,12 +95,12 @@ enum
 struct profile_value /* fake name */
 {
 	char name[256];
-	char label[256];
+	char label[256];					/* fake name */
 	real_argb_color const **color;
-	short frame_value;
-	short section_index;
-	boolean subtract_previous;
-	boolean enabled;
+	short frame_value;					/* fake name */
+	short section_index;				/* fake name */
+	boolean subtract_previous;			/* fake name */
+	boolean enabled;					/* fake name */
 };
 
 /* ---------- prototypes */
@@ -310,11 +310,12 @@ static long interface_get_weapon_hud_index(
 
 			if (weapon_index != NONE)
 			{
-				long hud_interface_index = weapon_definition_get(weapon_get(weapon_index)->definition_index)->weapon.interface_definition.hud_interface.index;
+				struct weapon_datum *weapon = weapon_get(weapon_index);
+				struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
 
-				if (hud_interface_index != NONE)
+				if (weapon_definition->weapon.interface_definition.hud_interface.index != NONE)
 				{
-					weapon_hud_index = hud_interface_index;
+					weapon_hud_index = weapon_definition->weapon.interface_definition.hud_interface.index;
 				}
 				else if (!unit_get_weapon_count(player->unit_index))
 				{

@@ -66,15 +66,15 @@ enum
 
 enum
 {
-	_first_person_weapon_overlay_frame_forward = 0,		/* fake name */
-	_first_person_weapon_overlay_frame_backward,		/* fake name */
-	_first_person_weapon_overlay_frame_right,			/* fake name */
-	_first_person_weapon_overlay_frame_left,			/* fake name */
-	_first_person_weapon_overlay_frame_turn_left,		/* fake name */
-	_first_person_weapon_overlay_frame_turn_right,		/* fake name */
-	_first_person_weapon_overlay_frame_pitch_up,		/* fake name */
-	_first_person_weapon_overlay_frame_pitch_down,		/* fake name */
-	_first_person_weapon_overlay_frame_firing,			/* fake name */
+	_first_person_overlay_frame_moving_front = 0,
+	_first_person_overlay_frame_moving_back,
+	_first_person_overlay_frame_moving_left,
+	_first_person_overlay_frame_moving_right,
+	_first_person_overlay_frame_turning_up,
+	_first_person_overlay_frame_turning_down,
+	_first_person_overlay_frame_turning_left,
+	_first_person_overlay_frame_turning_right,
+	_first_person_overlay_frame_firing_push_back,
 	NUMBER_OF_FIRST_PERSON_WEAPON_OVERLAY_FRAMES
 };
 
@@ -349,7 +349,7 @@ void first_person_weapon_draw(
 }
 
 long first_person_weapon_get_local_index(
-	long weapon_index)
+	long object_index)
 {
 	short local_player_index;
 	long result;
@@ -358,7 +358,7 @@ long first_person_weapon_get_local_index(
 	{
 		struct first_person_weapon *first_person_weapon = first_person_weapon_get(local_player_index);
 
-		if (first_person_weapon->weapon_index == weapon_index && first_person_weapon->visible)
+		if (first_person_weapon->weapon_index == object_index && first_person_weapon->visible)
 		{
 			break;
 		}
@@ -566,7 +566,8 @@ static void weapon_play_first_person_weapon_sound(
 {
 	if (weapon_index != NONE && message_type != NONE && weapon_try_and_get(weapon_index))
 	{
-		struct weapon_definition *weapon_definition = weapon_definition_get(weapon_get(weapon_index)->definition_index);
+		struct weapon_datum *weapon = weapon_get(weapon_index);
+		struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
 
 		if (weapon_definition->weapon.interface_definition.first_person_animations.index != NONE)
 		{
@@ -761,8 +762,6 @@ static void first_person_weapon_next_state(
 	case _first_person_weapon_state_melee:
 	case _first_person_weapon_state_light_on:
 	case _first_person_weapon_state_light_off:
-	case _first_person_weapon_state_shotgun_exit_reload_empty:
-	case _first_person_weapon_state_shotgun_exit_reload_full:
 	case _first_person_weapon_state_ready:
 	case _first_person_weapon_state_throw_grenade:
 	case _first_person_weapon_state_overheated_exit:
@@ -778,7 +777,11 @@ static void first_person_weapon_next_state(
 		first_person_weapon->state_animation.frame_index--;
 		break;
 	case _first_person_weapon_state_shotgun_enter_reload:
-		if (weapon_definition_get(weapon_get(first_person_weapon->weapon_index)->definition_index)->weapon.weapon_type == _weapon_type_shotgun &&
+	{
+		struct weapon_datum *weapon = weapon_get(first_person_weapon->weapon_index);
+		struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
+
+		if (weapon_definition->weapon.weapon_type == _weapon_type_shotgun &&
 			first_person_weapon->shotgun_reload_type == _shotgun_reload_type_first_and_last_round)
 		{
 			new_state = first_person_weapon->shotgun_empty ? _first_person_weapon_state_shotgun_exit_reload_empty : _first_person_weapon_state_shotgun_exit_reload_full;
@@ -788,9 +791,14 @@ static void first_person_weapon_next_state(
 			new_state = _first_person_weapon_state_idle;
 		}
 		break;
+	}
 	case _first_person_weapon_state_reload_while_empty:
 	case _first_person_weapon_state_reload_while_full:
-		if (weapon_definition_get(weapon_get(first_person_weapon->weapon_index)->definition_index)->weapon.weapon_type == _weapon_type_shotgun)
+	{
+		struct weapon_datum *weapon = weapon_get(first_person_weapon->weapon_index);
+		struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
+
+		if (weapon_definition->weapon.weapon_type == _weapon_type_shotgun)
 		{
 			if (!first_person_weapon->shotgun_reload_type || first_person_weapon->shotgun_reload_type == NONE)
 			{
@@ -806,6 +814,11 @@ static void first_person_weapon_next_state(
 		{
 			new_state = _first_person_weapon_state_idle;
 		}
+		break;
+	}
+	case _first_person_weapon_state_shotgun_exit_reload_empty:
+	case _first_person_weapon_state_shotgun_exit_reload_full:
+		new_state = _first_person_weapon_state_idle;
 		break;
 	}
 
@@ -915,7 +928,9 @@ static void first_person_weapon_set_state(
 
 		if (first_person_weapon->unit_index != NONE && first_person_weapon->weapon_index != NONE)
 		{
-			struct animation_graph *animation_graph = animation_graph_definition_get(weapon_definition_get(weapon_get(first_person_weapon->weapon_index)->definition_index)->weapon.interface_definition.first_person_animations.index);
+			struct weapon_datum *weapon = weapon_get(first_person_weapon->weapon_index);
+			struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
+			struct animation_graph *animation_graph = animation_graph_definition_get(weapon_definition->weapon.interface_definition.first_person_animations.index);
 			struct animation_graph_first_person_weapon_animations *weapon_animations = animation_graph->first_person_weapon_animations.count ? TAG_BLOCK_GET_ELEMENT(&animation_graph->first_person_weapon_animations, 0, struct animation_graph_first_person_weapon_animations) : NULL;
 
 			if (weapon_animations)
@@ -1329,7 +1344,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_forward,
+							_first_person_overlay_frame_moving_front,
 							first_person_weapon->position.i,
 							first_person_weapon->node_orientations);
 					}
@@ -1337,7 +1352,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_backward,
+							_first_person_overlay_frame_moving_back,
 							-first_person_weapon->position.i,
 							first_person_weapon->node_orientations);
 					}
@@ -1346,7 +1361,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_left,
+							_first_person_overlay_frame_moving_right,
 							first_person_weapon->position.j,
 							first_person_weapon->node_orientations);
 					}
@@ -1354,7 +1369,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_right,
+							_first_person_overlay_frame_moving_left,
 							-first_person_weapon->position.j,
 							first_person_weapon->node_orientations);
 					}
@@ -1363,7 +1378,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_turn_left,
+							_first_person_overlay_frame_turning_up,
 							first_person_weapon->turning.i,
 							first_person_weapon->node_orientations);
 					}
@@ -1371,7 +1386,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_turn_right,
+							_first_person_overlay_frame_turning_down,
 							-first_person_weapon->turning.i,
 							first_person_weapon->node_orientations);
 					}
@@ -1380,7 +1395,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_pitch_down,
+							_first_person_overlay_frame_turning_right,
 							first_person_weapon->turning.j,
 							first_person_weapon->node_orientations);
 					}
@@ -1388,7 +1403,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_pitch_up,
+							_first_person_overlay_frame_turning_left,
 							-first_person_weapon->turning.j,
 							first_person_weapon->node_orientations);
 					}
@@ -1397,7 +1412,7 @@ static void first_person_weapon_build_node_matrices(
 					{
 						overlay_animation_apply_scaled(
 							animation,
-							_first_person_weapon_overlay_frame_firing,
+							_first_person_overlay_frame_firing_push_back,
 							first_person_weapon->firing_push_back,
 							first_person_weapon->node_orientations);
 					}
@@ -1450,11 +1465,13 @@ static void first_person_weapon_switch_weapons(
 
 	if (first_person_weapon->unit_index != NONE)
 	{
-		long weapon_index = unit_inventory_get_weapon(first_person_weapon->unit_index, unit_get(first_person_weapon->unit_index)->unit.current_weapon_index);
+		struct unit_datum *unit = unit_get(first_person_weapon->unit_index);
+		long weapon_index = unit_inventory_get_weapon(first_person_weapon->unit_index, unit->unit.current_weapon_index);
 
 		if (weapon_index != NONE)
 		{
-			struct weapon_definition *weapon_definition = weapon_definition_get(weapon_get(weapon_index)->definition_index);
+			struct weapon_datum *weapon = weapon_get(weapon_index);
+			struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
 
 			if (weapon_definition->weapon.interface_definition.first_person_model.index != NONE && weapon_definition->weapon.interface_definition.first_person_animations.index != NONE)
 			{
@@ -1776,7 +1793,10 @@ static void first_person_weapon_predict(
 
 	if (first_person_weapon->weapon_index != NONE)
 	{
-		predicted_resources_precache(&weapon_definition_get(weapon_get(first_person_weapon->weapon_index)->definition_index)->weapon.predicted_resources);
+		struct weapon_datum *weapon = weapon_get(first_person_weapon->weapon_index);
+		struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
+
+		predicted_resources_precache(&weapon_definition->weapon.predicted_resources);
 	}
 
 	first_person_weapon->ticks_until_predict = TICKS_PER_SECOND;

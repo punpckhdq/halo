@@ -20,17 +20,17 @@ enum
 
 struct overhead_map_globals	/* fake name */
 {
-	boolean active;
-	rectangle2d bounds;
-	boolean throttle_updates;
-	boolean dirty;
-	rectangle2d screen_bounds;
-	real_point2d position;
-	point2d screen_position;
-	long last_update_time;
-	long unknown24;
-	struct bitmap_data *bitmap;
-	long unknown2C;
+	boolean active;				/* fake name */
+	rectangle2d bounds;			/* fake name */
+	boolean throttle_updates;	/* fake name */
+	boolean dirty;				/* fake name */
+	rectangle2d screen_bounds;	/* fake name */
+	real_point2d position;		/* fake name */
+	point2d screen_position;	/* fake name */
+	long last_update_time;		/* fake name */
+	long unknown24;				/* fake name */
+	struct bitmap_data *bitmap;	/* fake name */
+	long unknown2C;				/* fake name */
 };
 
 /* ---------- prototypes */

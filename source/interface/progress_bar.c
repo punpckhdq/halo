@@ -247,6 +247,218 @@ boolean progress_bar_is_active(
 	return progress_bar_active;
 }
 
+void to_screen(
+	real x,
+	real y,
+	real z,
+	real *screen_x,
+	real *screen_y)
+{
+	D3DXVECTOR4 point;
+	D3DXVECTOR4 screen_point;
+
+	point.x = x;
+	point.y = y;
+	point.z = z;
+	point.w = 1.f;
+	D3DXVec4Transform(&screen_point, &point, &gravy_projection);
+	*screen_x = screen_point.x / screen_point.w;
+	*screen_y = screen_point.y / screen_point.w;
+
+	return;
+}
+
+void generate_gravy_rect(
+	struct gravy_layer const *layer,
+	struct gravy_rect *rect)
+{
+	to_screen(
+		layer->x - layer->half_width,
+		layer->y - layer->half_height,
+		1000.f - layer->distance,
+		&rect->x0,
+		&rect->y0);
+	to_screen(
+		layer->x + layer->half_width,
+		layer->y + layer->half_height,
+		1000.f - layer->distance,
+		&rect->x1,
+		&rect->y1);
+	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", 898, rect->x0 < rect->x1);
+	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", 899, rect->y0 < rect->y1);
+
+	return;
+}
+
+static void progress_bar_create_noise_texture(
+	void)
+{
+	return;
+}
+
+void gen_cloud_coord(
+	real x,
+	real y,
+	real offset)
+{
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD1, x * 32.f + offset, y * 20.f);
+
+	return;
+}
+
+void gen_mask_coord(
+	real x,
+	real y,
+	real t)
+{
+	IDirect3DDevice8_SetVertexData2f(
+		global_d3d_device,
+		D3DVSDE_TEXCOORD1,
+		x - (t * 768.f - 64.f - 64.f),
+		y * (1.f / 30.f));
+
+	return;
+}
+
+static void draw_layer_int(
+	struct gravy_layer const *layer,
+	real_rgb_color const *color,
+	real alpha,
+	real t)
+{
+	volatile struct gravy_rect rect;
+	real x0;
+	real y0;
+	real x1;
+	real y1;
+	real u = layer->width * .5f;
+	real v = (real)(layer->height * .5f);
+
+	generate_gravy_rect(layer, (struct gravy_rect *)&rect);
+	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_DIFFUSE, color->red, color->green, color->blue, alpha);
+	gen_mask_coord(0.f, 0.f, t);
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.f, v);
+	y0 = rect.y0;
+	x0 = rect.x0;
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y0, .5f, 1.f);
+	gen_mask_coord(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH, 0.f, t);
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, u, v);
+	x1 = rect.x1;
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y0, .5f, 1.f);
+	gen_mask_coord(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT, t);
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, u, 0.f);
+	y1 = rect.y1;
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y1, .5f, 1.f);
+	gen_mask_coord(0.f, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT, t);
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.f, 0.f);
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y1, .5f, 1.f);
+	IDirect3DDevice8_End(global_d3d_device);
+
+	return;
+}
+
+static void draw_layer(
+	real distance,
+	real alpha,
+	real_rgb_color const *color,
+	real t)
+{
+	struct gravy_layer layer;
+
+	layer.width = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH;
+	layer.height = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT;
+	layer.x = 0.f;
+	layer.y = 0.f;
+	layer.half_width = (real)fabs(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2.0);
+	layer.half_height = (real)fabs(RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2.0);
+	layer.distance = distance;
+	draw_layer_int(&layer, color, alpha, t);
+
+	return;
+}
+
+static void draw_initial_layer(
+	real_rgb_color const *color,
+	real t)
+{
+	draw_layer(0.f, 1.f, color, t);
+
+	return;
+}
+
+// This is a hack used to make a usable texture struct out of a surface.
+static void this_is_awful(
+	D3DBaseTexture *texture,
+	D3DSurface const *surface)
+{
+	// (NUMBER_OF_TEXTURE_STAGES + 1) = refcount
+	texture->Common = D3DCOMMON_TYPE_TEXTURE | (NUMBER_OF_TEXTURE_STAGES + 1);
+	texture->Data = surface->Data;
+	texture->Lock = 0;
+	texture->Size =
+		(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - 1) |
+		((RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT - 1) << D3DSIZE_HEIGHT_SHIFT) |
+		((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH * sizeof(D3DCOLOR) / D3DTEXTURE_PITCH_ALIGNMENT - 1) << D3DSIZE_PITCH_SHIFT);
+	texture->Format =
+		D3DFORMAT_DMACHANNEL_A |
+		D3DFORMAT_BORDERSOURCE_COLOR |
+		(2 << D3DFORMAT_DIMENSION_SHIFT) |
+		(D3DFMT_LIN_A8R8G8B8 << D3DFORMAT_FORMAT_SHIFT) |
+		(1 << D3DFORMAT_MIPMAP_SHIFT);
+
+	return;
+}
+
+static void do_convoluation_coords(
+	real x,
+	real y)
+{
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, x - convolution_offset, convolution_offset + y);
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD1, x - convolution_offset, y - convolution_offset);
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD2, convolution_offset + x, y - convolution_offset);
+	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD3, convolution_offset + x, convolution_offset + y);
+
+	return;
+}
+
+static void draw_fade_layer(
+	real x_offset,
+	real y_offset,
+	real alpha)
+{
+	real x0;
+	real y0;
+	real x1;
+	real y1;
+
+	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_DIFFUSE, 254.f / 255.f, 254.f / 255.f, 1.f, alpha);
+	do_convoluation_coords(3.f, 0.f);
+	y0 = (1.f - y_offset) / 128.f + 1.f;
+	x0 = (-1.f - x_offset) / 128.f - 1.f;
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y0, .5f, 1.f);
+	do_convoluation_coords(637.f, 0.f);
+	x1 = (1.f - x_offset) / 128.f + 1.f;
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y0, .5f, 1.f);
+	do_convoluation_coords(637.f, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT);
+	y1 = (-1.f - y_offset) / 128.f - 1.f;
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y1, .5f, 1.f);
+	do_convoluation_coords(3.f, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT);
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y1, .5f, 1.f);
+	IDirect3DDevice8_End(global_d3d_device);
+
+	return;
+}
+
+void progress_bar_enable(
+	boolean enable)
+{
+	progress_bar_enabled = enable;
+
+	return;
+}
+
 __inline void SetRenderStateSmart(
 	D3DRENDERSTATETYPE State,
 	DWORD Value)
@@ -722,218 +934,6 @@ void progress_bar_display(
 			progress_bar_render((progress - progress_bar_start_progress) / (1.f - progress_bar_start_progress));
 		}
 	}
-
-	return;
-}
-
-void to_screen(
-	real x,
-	real y,
-	real z,
-	real *screen_x,
-	real *screen_y)
-{
-	D3DXVECTOR4 point;
-	D3DXVECTOR4 screen_point;
-
-	point.x = x;
-	point.y = y;
-	point.z = z;
-	point.w = 1.f;
-	D3DXVec4Transform(&screen_point, &point, &gravy_projection);
-	*screen_x = screen_point.x / screen_point.w;
-	*screen_y = screen_point.y / screen_point.w;
-
-	return;
-}
-
-void generate_gravy_rect(
-	struct gravy_layer const *layer,
-	struct gravy_rect *rect)
-{
-	to_screen(
-		layer->x - layer->half_width,
-		layer->y - layer->half_height,
-		1000.f - layer->distance,
-		&rect->x0,
-		&rect->y0);
-	to_screen(
-		layer->x + layer->half_width,
-		layer->y + layer->half_height,
-		1000.f - layer->distance,
-		&rect->x1,
-		&rect->y1);
-	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", 898, rect->x0 < rect->x1);
-	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", 899, rect->y0 < rect->y1);
-
-	return;
-}
-
-static void progress_bar_create_noise_texture(
-	void)
-{
-	return;
-}
-
-void gen_cloud_coord(
-	real x,
-	real y,
-	real offset)
-{
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD1, x * 32.f + offset, y * 20.f);
-
-	return;
-}
-
-void gen_mask_coord(
-	real x,
-	real y,
-	real t)
-{
-	IDirect3DDevice8_SetVertexData2f(
-		global_d3d_device,
-		D3DVSDE_TEXCOORD1,
-		x - (t * 768.f - 64.f - 64.f),
-		y * (1.f / 30.f));
-
-	return;
-}
-
-static void draw_layer_int(
-	struct gravy_layer const *layer,
-	real_rgb_color const *color,
-	real alpha,
-	real t)
-{
-	volatile struct gravy_rect rect;
-	real x0;
-	real y0;
-	real x1;
-	real y1;
-	real u = layer->width * .5f;
-	real v = (real)(layer->height * .5f);
-
-	generate_gravy_rect(layer, (struct gravy_rect *)&rect);
-	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_DIFFUSE, color->red, color->green, color->blue, alpha);
-	gen_mask_coord(0.f, 0.f, t);
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.f, v);
-	y0 = rect.y0;
-	x0 = rect.x0;
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y0, .5f, 1.f);
-	gen_mask_coord(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH, 0.f, t);
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, u, v);
-	x1 = rect.x1;
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y0, .5f, 1.f);
-	gen_mask_coord(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT, t);
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, u, 0.f);
-	y1 = rect.y1;
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y1, .5f, 1.f);
-	gen_mask_coord(0.f, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT, t);
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.f, 0.f);
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y1, .5f, 1.f);
-	IDirect3DDevice8_End(global_d3d_device);
-
-	return;
-}
-
-static void draw_layer(
-	real distance,
-	real alpha,
-	real_rgb_color const *color,
-	real t)
-{
-	struct gravy_layer layer;
-
-	layer.width = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH;
-	layer.height = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT;
-	layer.x = 0.f;
-	layer.y = 0.f;
-	layer.half_width = (real)fabs(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2.0);
-	layer.half_height = (real)fabs(RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2.0);
-	layer.distance = distance;
-	draw_layer_int(&layer, color, alpha, t);
-
-	return;
-}
-
-static void draw_initial_layer(
-	real_rgb_color const *color,
-	real t)
-{
-	draw_layer(0.f, 1.f, color, t);
-
-	return;
-}
-
-// This is a hack used to make a usable texture struct out of a surface.
-static void this_is_awful(
-	D3DBaseTexture *texture,
-	D3DSurface const *surface)
-{
-	// (NUMBER_OF_TEXTURE_STAGES + 1) = refcount
-	texture->Common = D3DCOMMON_TYPE_TEXTURE | (NUMBER_OF_TEXTURE_STAGES + 1);
-	texture->Data = surface->Data;
-	texture->Lock = 0;
-	texture->Size =
-		(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - 1) |
-		((RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT - 1) << D3DSIZE_HEIGHT_SHIFT) |
-		((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH * sizeof(D3DCOLOR) / D3DTEXTURE_PITCH_ALIGNMENT - 1) << D3DSIZE_PITCH_SHIFT);
-	texture->Format =
-		D3DFORMAT_DMACHANNEL_A |
-		D3DFORMAT_BORDERSOURCE_COLOR |
-		(2 << D3DFORMAT_DIMENSION_SHIFT) |
-		(D3DFMT_LIN_A8R8G8B8 << D3DFORMAT_FORMAT_SHIFT) |
-		(1 << D3DFORMAT_MIPMAP_SHIFT);
-
-	return;
-}
-
-static void do_convoluation_coords(
-	real x,
-	real y)
-{
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD0, x - convolution_offset, convolution_offset + y);
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD1, x - convolution_offset, y - convolution_offset);
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD2, convolution_offset + x, y - convolution_offset);
-	IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_TEXCOORD3, convolution_offset + x, convolution_offset + y);
-
-	return;
-}
-
-static void draw_fade_layer(
-	real x_offset,
-	real y_offset,
-	real alpha)
-{
-	real x0;
-	real y0;
-	real x1;
-	real y1;
-
-	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_DIFFUSE, 254.f / 255.f, 254.f / 255.f, 1.f, alpha);
-	do_convoluation_coords(3.f, 0.f);
-	y0 = (1.f - y_offset) / 128.f + 1.f;
-	x0 = (-1.f - x_offset) / 128.f - 1.f;
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y0, .5f, 1.f);
-	do_convoluation_coords(637.f, 0.f);
-	x1 = (1.f - x_offset) / 128.f + 1.f;
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y0, .5f, 1.f);
-	do_convoluation_coords(637.f, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT);
-	y1 = (-1.f - y_offset) / 128.f - 1.f;
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x1, y1, .5f, 1.f);
-	do_convoluation_coords(3.f, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT);
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_VERTEX, x0, y1, .5f, 1.f);
-	IDirect3DDevice8_End(global_d3d_device);
-
-	return;
-}
-
-void progress_bar_enable(
-	boolean enable)
-{
-	progress_bar_enabled = enable;
 
 	return;
 }

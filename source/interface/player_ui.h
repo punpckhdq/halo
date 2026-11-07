@@ -28,11 +28,11 @@ void player_ui_clear_multiplayer_autojoin_for_local_player(short local_player_in
 void player_ui_autojoin_players_to_next_multiplayer_game(void);
 void player_ui_clear_multiplayer_joins(void);
 void player_ui_clear_multiplayer_variant(void);
-void player_ui_set_active_player_profile(short local_player_index, long profile_index, struct player_profile const *profile);
+void player_ui_set_active_player_profile(short local_player_index, long profile_index, struct player_profile *profile);
 void player_ui_get_active_player_profile(short local_player_index, struct player_profile *profile);
 long player_ui_get_active_player_profile_index(short local_player_index);
 short player_ui_get_last_single_player_level_played(short local_player_index);
-void player_ui_set_game_variant(struct game_variant const *variant);
+void player_ui_set_game_variant(struct game_variant *variant);
 boolean player_ui_game_variant_specified(struct game_variant *variant);
 boolean player_ui_rumble_disabled(short local_player_index);
 boolean player_ui_autolevel_enabled(short controller_index);

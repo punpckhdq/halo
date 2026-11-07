@@ -12,21 +12,21 @@ EVENT_MANAGER.C
 
 enum
 {
-	MAXIMUM_QUEUED_EVENTS_PER_GAMEPAD = 8,			/* fake name */
+	EVENT_QUEUE_SIZE = 8,
 
-	STICK_EVENT_THRESHOLD = (9 * SHORT_MAX) / 10,	/* fake name */
-	STICK_EVENT_REPEAT_DELAY = 250,					/* fake name */
-	NUMBER_OF_GAMEPAD_STICK_AXES = 2				/* fake name */
+	MILLISECOND_DELAY_BETWEEN_SUBSEQUENT_ANALOG_STICK_EVENTS = 250,
+	ANALOG_STICK_RECOGNITION_THRESHOLD = (9 * SHORT_MAX) / 10,
+	NUMBER_OF_GAMEPAD_STICK_AXES = 2	/* fake name */
 };
 
 /* ---------- structures */
 
-struct event_manager_globals
+struct _event_manager_globals
 {
 	boolean initialized;
 	boolean suppressed;
 	unsigned long milliseconds_at_last_event_queue;
-	struct event_record event_queue[MAXIMUM_GAMEPADS][MAXIMUM_QUEUED_EVENTS_PER_GAMEPAD];
+	struct event_record event_queue[MAXIMUM_GAMEPADS][EVENT_QUEUE_SIZE];
 };
 
 /* ---------- prototypes */
@@ -35,7 +35,7 @@ static void queue_event(struct event_record *event, short local_player_index);
 
 /* ---------- globals */
 
-struct event_manager_globals event_manager_globals = {0};
+struct _event_manager_globals event_manager_globals = {0};
 
 static unsigned long stick_event_milliseconds[NUMBER_OF_GAMEPAD_STICKS][MAXIMUM_GAMEPADS] = {0};	/* fake name */
 static long previous_stick_values[NUMBER_OF_GAMEPAD_STICKS][NUMBER_OF_GAMEPAD_STICK_AXES][MAXIMUM_GAMEPADS] = {0};			/* fake name */
@@ -159,14 +159,15 @@ boolean get_next_event(
 		{
 			long event_index;
 
-			for (event_index = MAXIMUM_QUEUED_EVENTS_PER_GAMEPAD - 1; event_index >= 0; event_index--)
+			for (event_index = EVENT_QUEUE_SIZE - 1; event_index >= 0; event_index--)
 			{
 				if (event_manager_globals.event_queue[local_player_index][event_index].type != _event_type_none)
 				{
 					*event = event_manager_globals.event_queue[local_player_index][event_index];
 					event_manager_globals.event_queue[local_player_index][event_index].type = _event_type_none;
+					result = TRUE;
 
-					return TRUE;
+					break;
 				}
 			}
 		}
@@ -197,13 +198,13 @@ static void queue_event(
 			long x = event->value.analog_value.x;
 			long y = event->value.analog_value.y;
 
-			if (ABS(x) < STICK_EVENT_THRESHOLD && ABS(y) < STICK_EVENT_THRESHOLD)
+			if (ABS(x) < ANALOG_STICK_RECOGNITION_THRESHOLD && ABS(y) < ANALOG_STICK_RECOGNITION_THRESHOLD)
 			{
 				queue = FALSE;
 			}
-			else if ((ABS(x) < STICK_EVENT_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_left][0][local_player_index]) >= STICK_EVENT_THRESHOLD) &&
-				(ABS(y) < STICK_EVENT_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_left][1][local_player_index]) >= STICK_EVENT_THRESHOLD) &&
-				milliseconds - stick_event_milliseconds[_gamepad_stick_left][local_player_index] < STICK_EVENT_REPEAT_DELAY)
+			else if ((ABS(x) < ANALOG_STICK_RECOGNITION_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_left][0][local_player_index]) >= ANALOG_STICK_RECOGNITION_THRESHOLD) &&
+				(ABS(y) < ANALOG_STICK_RECOGNITION_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_left][1][local_player_index]) >= ANALOG_STICK_RECOGNITION_THRESHOLD) &&
+				milliseconds - stick_event_milliseconds[_gamepad_stick_left][local_player_index] < MILLISECOND_DELAY_BETWEEN_SUBSEQUENT_ANALOG_STICK_EVENTS)
 			{
 				queue = FALSE;
 			}
@@ -212,7 +213,7 @@ static void queue_event(
 				stick_event_milliseconds[_gamepad_stick_left][local_player_index] = milliseconds;
 				queue = TRUE;
 
-				if (ABS(x) >= STICK_EVENT_THRESHOLD)
+				if (ABS(x) >= ANALOG_STICK_RECOGNITION_THRESHOLD)
 				{
 					switch ((x >= 0) ? 1 : -1)
 					{
@@ -227,7 +228,7 @@ static void queue_event(
 					}
 				}
 
-				if (ABS(y) >= STICK_EVENT_THRESHOLD)
+				if (ABS(y) >= ANALOG_STICK_RECOGNITION_THRESHOLD)
 				{
 					switch ((y >= 0) ? 1 : -1)
 					{
@@ -251,13 +252,13 @@ static void queue_event(
 			long x = event->value.analog_value.x;
 			long y = event->value.analog_value.y;
 
-			if (ABS(x) < STICK_EVENT_THRESHOLD && ABS(y) < STICK_EVENT_THRESHOLD)
+			if (ABS(x) < ANALOG_STICK_RECOGNITION_THRESHOLD && ABS(y) < ANALOG_STICK_RECOGNITION_THRESHOLD)
 			{
 				queue = FALSE;
 			}
-			else if ((ABS(x) < STICK_EVENT_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_right][0][local_player_index]) >= STICK_EVENT_THRESHOLD) &&
-				(ABS(y) < STICK_EVENT_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_right][1][local_player_index]) >= STICK_EVENT_THRESHOLD) &&
-				milliseconds - stick_event_milliseconds[_gamepad_stick_right][local_player_index] < STICK_EVENT_REPEAT_DELAY)
+			else if ((ABS(x) < ANALOG_STICK_RECOGNITION_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_right][0][local_player_index]) >= ANALOG_STICK_RECOGNITION_THRESHOLD) &&
+				(ABS(y) < ANALOG_STICK_RECOGNITION_THRESHOLD || ABS(previous_stick_values[_gamepad_stick_right][1][local_player_index]) >= ANALOG_STICK_RECOGNITION_THRESHOLD) &&
+				milliseconds - stick_event_milliseconds[_gamepad_stick_right][local_player_index] < MILLISECOND_DELAY_BETWEEN_SUBSEQUENT_ANALOG_STICK_EVENTS)
 			{
 				queue = FALSE;
 			}
@@ -266,7 +267,7 @@ static void queue_event(
 				stick_event_milliseconds[_gamepad_stick_right][local_player_index] = milliseconds;
 				queue = TRUE;
 
-				if (ABS(x) >= STICK_EVENT_THRESHOLD)
+				if (ABS(x) >= ANALOG_STICK_RECOGNITION_THRESHOLD)
 				{
 					switch ((x >= 0) ? 1 : -1)
 					{
@@ -281,7 +282,7 @@ static void queue_event(
 					}
 				}
 
-				if (ABS(y) >= STICK_EVENT_THRESHOLD)
+				if (ABS(y) >= ANALOG_STICK_RECOGNITION_THRESHOLD)
 				{
 					switch ((y >= 0) ? 1 : -1)
 					{
