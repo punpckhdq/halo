@@ -12,7 +12,8 @@ header included in hcex build.
 
 enum
 {
-	DETAIL_OBJECT_COLLECTION_DEFINITION_TAG = 'dobc' /* fake name */
+	DETAIL_OBJECT_COLLECTION_DEFINITION_TAG = 'dobc',	/* fake name */
+	DETAIL_OBJECT_COLLECTION_DEFINITION_VERSION = 1,	/* fake name */
 };
 
 enum

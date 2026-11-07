@@ -869,10 +869,10 @@ void _rasterizer_window_end(
 	{
 		rectangle2d bounds;
 
-		bounds.x0 = 512;
-		bounds.x1 = 640;
+		bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH;
+		bounds.x1 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH;
 		bounds.y0 = 0;
-		bounds.y1 = 96;
+		bounds.y1 = RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT;
 		rasterizer_secondary_render_target_debug(&bounds);
 	}
 

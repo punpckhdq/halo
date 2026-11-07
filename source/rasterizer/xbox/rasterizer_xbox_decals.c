@@ -425,7 +425,7 @@ void _rasterizer_decals_draw(
 			vertex_data_offset = lruv_block_get_address(local_vertex_cache, decal_index);
 
 			color = decal->color;
-			intensity = (PIXEL32_ALPHA(color)*decal->intensity + 127)>>8;
+			intensity = (PIXEL32_ALPHA(color) * decal->intensity + CHAR_MAX) >> 8;
 
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 510, intensity<=PIXEL32_COMPONENT_MASK);
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 511, vertex_data_offset%sizeof(struct decal_vertex)==0);

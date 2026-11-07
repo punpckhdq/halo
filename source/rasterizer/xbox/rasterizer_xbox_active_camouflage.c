@@ -112,10 +112,10 @@ void rasterizer_active_camouflage_cache_primary_render_target(
 		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_reject);
 
-		bounds.x0 = 512;
-		bounds.x1 = 640;
-		bounds.y0 = (local_active_camouflage_debug_cache_count + 1)*96;
-		bounds.y1 = (local_active_camouflage_debug_cache_count + 2)*96;
+		bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH;
+		bounds.x1 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH;
+		bounds.y0 = (local_active_camouflage_debug_cache_count + 1) * RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT;
+		bounds.y1 = (local_active_camouflage_debug_cache_count + 2) * RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT;
 		rasterizer_secondary_render_target_debug(&bounds);
 		local_active_camouflage_debug_cache_count++;
 

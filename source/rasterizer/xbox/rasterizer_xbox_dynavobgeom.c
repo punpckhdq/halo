@@ -65,7 +65,9 @@ void _rasterizer_dynamic_unlit_geometry_draw(
 		real_vector3d forward;
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 42, !TEST_FLAG(geometry_flags, _rasterizer_geometry_viewspace_bit) || shader->base.type==_shader_type_effect);
+
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 44, shader->base.type==_shader_type_effect);
+
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 52, centroid);
 
 		vector_from_points3d(&global_window_parameters.camera.position, centroid, &forward);
@@ -218,8 +220,11 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 		short vertex_index;
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 761, parameters);
+
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 763, parameters->map[0]);
+
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 765, !parameters->map[2] || parameters->map[1]);
+
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 767, !parameters->map[1] || !parameters->meter_parameters);
 
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_NONE);

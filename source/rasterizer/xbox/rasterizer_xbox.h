@@ -54,6 +54,9 @@ enum
 #define RASTERIZER_DYNAMIC_BUFFER_USAGE (D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY) /* fake name */
 #define RASTERIZER_DYNAMIC_BUFFER_POOL D3DPOOL_DEFAULT /* fake name */
 
+#define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH (RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 5) /* fake name */
+#define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT (RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 5) /* fake name */
+
 // original name unknown
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
 
