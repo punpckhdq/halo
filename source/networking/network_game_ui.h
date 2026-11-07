@@ -12,6 +12,8 @@ header included in hcex build.
 
 /* ---------- macros */
 
+#define RANDOM_PLAYER_NAMES_TAG_NAME "ui\\random_player_names" /* fake name */
+
 /* ---------- structures */
 
 /* ---------- prototypes/NETWORK_GAME_UI.C */

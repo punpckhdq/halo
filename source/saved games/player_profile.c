@@ -250,7 +250,7 @@ real_argb_color player_profile_get_argb_color(
 	return color;
 }
 
-short player_profile_number_of_available_primary_colors(
+word player_profile_number_of_available_primary_colors(
 	void)
 {
 	return NUMBER_OF_PRIMARY_COLORS;

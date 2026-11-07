@@ -90,7 +90,7 @@ boolean player_profile_get(long player_profile_index, struct player_profile *pro
 boolean player_profile_get_from_path(char *full_path, struct player_profile *profile);
 void player_profile_save(long player_profile_index, struct player_profile *profile);
 real_argb_color player_profile_get_argb_color(long index);
-short player_profile_number_of_available_primary_colors(void);
+word player_profile_number_of_available_primary_colors(void);
 real_rgb_color player_profile_get_rgb_color(long index);
 long player_profile_get_random_good_color(void);
 long player_profile_get_random_color(void);

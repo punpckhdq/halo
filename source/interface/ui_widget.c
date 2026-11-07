@@ -1,626 +1,5 @@
 /*
 UI_WIDGET.C
-
-symbols in this file:
-000D32C0 0020:
-	_pool_alloc (0000)
-000D32E0 0020:
-	_pool_free (0000)
-000D3300 0030:
-	_event_controller_index_compatible_with_widget (0000)
-000D3330 0030:
-	_set_ui_plasma_effect_color (0000)
-000D3360 00a0:
-	_ui_widgets_initialize (0000)
-000D3400 0010:
-	_ui_widgets_safe_to_load (0000)
-000D3410 0010:
-	_ui_widgets_set_fade_value (0000)
-000D3420 0010:
-	_ui_widget_debug_show_path (0000)
-000D3430 0020:
-	_widget_instance_count_children (0000)
-000D3450 0050:
-	_widget_instance_get_nth_child (0000)
-000D34A0 0030:
-	_ui_widget_realloc (0000)
-000D34D0 0020:
-	_widget_free (0000)
-000D34F0 0030:
-	_ui_widgets_active (0000)
-000D3520 0070:
-	_ui_widgets_active_for_local_player (0000)
-000D3590 0050:
-	_ui_widgets_inhibit_processing (0000)
-000D35E0 0020:
-	_compute_offset_coordinate (0000)
-000D3600 0490:
-	_draw_bitmap_in_rect (0000)
-000D3A90 0020:
-	_widget_instance_get_topmost_parent (0000)
-000D3AB0 0040:
-	_widget_instance_get_child_index_from_parent (0000)
-000D3AF0 0060:
-	_widget_instance_set_visibility_recursive (0000)
-000D3B50 0010:
-	_main_menu_active (0000)
-000D3B60 0010:
-	_main_menu_is_active (0000)
-000D3B70 0030:
-	_main_menu_screen_is_active (0000)
-000D3BA0 0050:
-	_ui_set_next_level (0000)
-000D3BF0 0010:
-	_ui_widget_load_progress_widget (0000)
-000D3C00 0010:
-	_filesystem_check_thread_is_active (0000)
-000D3C10 0040:
-	_transition_to_game_in_progress (0000)
-000D3C50 0030:
-	_display_error_when_main_menu_loaded (0000)
-000D3C80 0090:
-	_display_error_deferred (0000)
-000D3D10 0040:
-	_display_error_abort_to_dashboard_deferred (0000)
-000D3D50 0070:
-	_ui_start_main_menu_music (0000)
-000D3DC0 0060:
-	_ui_stop_main_menu_music (0000)
-000D3E20 0010:
-	_ui_main_menu_music_active (0000)
-000D3E30 0040:
-	_ui_widgets_disable_pause_game (0000)
-000D3E70 0080:
-	_push_widget (0000)
-000D3EF0 0060:
-	_pop_widget (0000)
-000D3F50 0030:
-	_dispose_widget_stack (0000)
-000D3F80 0090:
-	_ui_widget_add_child (0000)
-000D4010 0080:
-	_ui_widget_delete_children_recursive (0000)
-000D4090 0050:
-	_widget_instance_find_by_tag_index_recursive (0000)
-000D40E0 0020:
-	_widget_instance_get_cumulative_alpha_modifier (0000)
-000D4100 0080:
-	_widget_instance_can_receive_events (0000)
-000D4180 0040:
-	_widget_instance_can_handle_events (0000)
-000D41C0 0040:
-	_widget_instance_text_box_is_focused (0000)
-000D4200 0050:
-	_get_icon_type (0000)
-000D4250 01a0:
-	_render_state_bitmap (0000)
-000D43F0 0070:
-	_render_state_text (0000)
-000D4460 0060:
-	_string_has_icons_to_draw (0000)
-000D44C0 0060:
-	_should_flip_sticks_for_local_player (0000)
-000D4520 0130:
-	_remap_sticks_for_local_player (0000)
-000D4650 0030:
-	_widget_instance_update_animation_parameters (0000)
-000D4680 0010:
-	_widget_instance_reload_recursive (0000)
-000D4690 0010:
-	_ui_widget_reload_by_tag (0000)
-000D46A0 0170:
-	_widget_instance_give_focus_directly (0000)
-000D4810 00d0:
-	_widget_instance_set_focused_child_by_index (0000)
-000D48E0 0020:
-	_play_sound_tag (0000)
-000D4900 01d0:
-	_search_and_replace (0000)
-000D4AD0 0030:
-	_spinner_list_update (0000)
-000D4B00 0040:
-	_column_list_update (0000)
-000D4B40 0020:
-	_widget_instance_get_tail_child_widget (0000)
-000D4B60 0060:
-	_widget_instance_tab_to_next_valid_widget (0000)
-000D4BC0 00a0:
-	_widget_instance_tab_to_previous_valid_widget (0000)
-000D4C60 0050:
-	_get_ui_rgb_white (0000)
-000D4CB0 0060:
-	_get_ui_argb_white (0000)
-000D4D10 0050:
-	_filesystem_initialization_thread_proc@4 (0000)
-000D4D60 0040:
-	_modulate_pixel32_by_real_alpha (0000)
-000D4DA0 02a0:
-	_ui_widget_delete (0000)
-000D5040 0050:
-	_ui_widgets_close_all (0000)
-000D5090 0090:
-	_ui_widgets_close_all_for_local_player (0000)
-000D5120 0040:
-	_ui_widgets_delete_history (0000)
-000D5160 0060:
-	_ui_widgets_pop_stack (0000)
-000D51C0 0070:
-	_main_screen_shell_begin_fade (0000)
-000D5230 0060:
-	_ui_play_audio_feedback_sound (0000)
-000D5290 02a0:
-	_ui_widget_load_children_recursive (0000)
-000D5530 0030:
-	_widget_instance_find_by_tag_index (0000)
-000D5560 0360:
-	_draw_string_and_hack_in_icons (0000)
-000D58C0 0310:
-	_widget_instance_render_text_box (0000)
-000D5BD0 0440:
-	_widget_instance_render_spinner_list (0000)
-000D6010 0050:
-	_widget_instance_give_focus_by_tag (0000)
-000D6060 00a0:
-	_widget_instance_go_back_to_previous (0000)
-000D6100 00e0:
-	_perform_filesystem_initialization (0000)
-000D61E0 0050:
-	_ui_widgets_dispose (0000)
-000D6230 0200:
-	_widget_event_function_list_widget_goto_next_item (0000)
-000D6430 0220:
-	_widget_event_function_list_widget_goto_previous_item (0000)
-000D6650 04f0:
-	_event_handler_dispatch (0000)
-000D6B40 02f0:
-	_widget_instance_render_recursive (0000)
-000D6E30 00b0:
-	_widget_instance_render_column_list (0000)
-000D6EE0 0180:
-	_render_ui_widgets_postgame (0000)
-000D7060 0230:
-	_render_ui_widgets (0000)
-000D7290 01f0:
-	_widget_instance_initialize (0000)
-000D7480 07e0:
-	_widget_instance_process_one_event_recursive (0000)
-000D7C60 0220:
-	_ui_widget_load_by_name_or_tag (0000)
-000D7E80 0130:
-	_main_screen_shell_load (0000)
-000D7FB0 00e0:
-	_network_game_reset_to_pregame_ui (0000)
-000D8090 0380:
-	_display_error (0000)
-000D8410 0090:
-	_display_error_abort_to_dashboard (0000)
-000D84A0 0090:
-	_display_error_damaged_media (0000)
-000D8530 0070:
-	_display_errors_deferred_until_cinematic_stop (0000)
-000D85A0 0260:
-	_display_scenario_help (0000)
-000D8800 02a0:
-	_ui_check_for_pause_game (0000)
-000D8AA0 0130:
-	_ui_widget_launch_widget (0000)
-000D8BD0 03c0:
-	_process_ui_widgets (0000)
-00271380 0012:
-	??_C@_1BC@GEHLELKL@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA8?$AA?$AA@ (0000)
-00271394 0012:
-	??_C@_1BC@DMBIFLPN@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA7?$AA?$AA@ (0000)
-002713A8 0012:
-	??_C@_1BC@IEKEDMJI@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA6?$AA?$AA@ (0000)
-002713BC 0012:
-	??_C@_1BC@JGBBJDHG@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA5?$AA?$AA@ (0000)
-002713D0 0012:
-	??_C@_1BC@COKNPEBD@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA4?$AA?$AA@ (0000)
-002713E4 0012:
-	??_C@_1BC@LDHKMMKK@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA3?$AA?$AA@ (0000)
-002713F8 0012:
-	??_C@_1BC@LMGKLMP@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA2?$AA?$AA@ (0000)
-0027140C 0012:
-	??_C@_1BC@BJHDAECB@?$AAc?$AAu?$AAs?$AAt?$AAo?$AAm?$AA?9?$AA1?$AA?$AA@ (0000)
-00271420 000a:
-	??_C@_19MLOAAMON@?$AAl?$AAo?$AAo?$AAk?$AA?$AA@ (0000)
-0027142C 000a:
-	??_C@_19OACEEDLD@?$AAm?$AAo?$AAv?$AAe?$AA?$AA@ (0000)
-00271438 000a:
-	??_C@_19LHGBOOBH@?$AAb?$AAa?$AAc?$AAk?$AA?$AA@ (0000)
-00271444 000e:
-	??_C@_1O@CNPOHNDJ@?$AAa?$AAc?$AAc?$AAe?$AAp?$AAt?$AA?$AA@ (0000)
-00271454 000a:
-	??_C@_19MEDLKCJO@?$AAz?$AAo?$AAo?$AAm?$AA?$AA@ (0000)
-00271460 000e:
-	??_C@_1O@KCCHFBLA@?$AAc?$AAr?$AAo?$AAu?$AAc?$AAh?$AA?$AA@ (0000)
-00271470 0020:
-	??_C@_1CA@KFDCIJKK@?$AAr?$AAo?$AAt?$AAa?$AAt?$AAe?$AA?9?$AAg?$AAr?$AAe?$AAn?$AAa?$AAd?$AAe?$AAs?$AA?$AA@ (0000)
-00271490 001e:
-	??_C@_1BO@POELNCJG@?$AAr?$AAo?$AAt?$AAa?$AAt?$AAe?$AA?9?$AAw?$AAe?$AAa?$AAp?$AAo?$AAn?$AAs?$AA?$AA@ (0000)
-002714B0 001c:
-	??_C@_1BM@IKPPIMCO@?$AAu?$AAs?$AAe?$AA?9?$AAe?$AAq?$AAu?$AAi?$AAp?$AAm?$AAe?$AAn?$AAt?$AA?$AA@ (0000)
-002714CC 000a:
-	??_C@_19OBFFCANM@?$AAj?$AAu?$AAm?$AAp?$AA?$AA@ (0000)
-002714D8 0022:
-	??_C@_1CC@OGCINJG@?$AAi?$AAn?$AAt?$AAe?$AAg?$AAr?$AAa?$AAt?$AAe?$AAd?$AA?9?$AAl?$AAi?$AAg?$AAh?$AAt?$AA?$AA@ (0000)
-002714FC 0020:
-	??_C@_1CA@BEHOBGA@?$AAp?$AAr?$AAi?$AAm?$AAa?$AAr?$AAy?$AA?9?$AAt?$AAr?$AAi?$AAg?$AAg?$AAe?$AAr?$AA?$AA@ (0000)
-0027151C 001c:
-	??_C@_1BM@HECBOACM@?$AAt?$AAh?$AAr?$AAo?$AAw?$AA?9?$AAg?$AAr?$AAe?$AAn?$AAa?$AAd?$AAe?$AA?$AA@ (0000)
-00271538 000e:
-	??_C@_1O@HCAHPFFC@?$AAa?$AAc?$AAt?$AAi?$AAo?$AAn?$AA?$AA@ (0000)
-00271548 0018:
-	??_C@_1BI@IAFIHGKJ@?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?9?$AAs?$AAt?$AAi?$AAc?$AAk?$AA?$AA@ (0000)
-00271560 0016:
-	??_C@_1BG@GNIACJFB@?$AAl?$AAe?$AAf?$AAt?$AA?9?$AAs?$AAt?$AAi?$AAc?$AAk?$AA?$AA@ (0000)
-00271578 0018:
-	??_C@_1BI@KFEEPENO@?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?9?$AAt?$AAh?$AAu?$AAm?$AAb?$AA?$AA@ (0000)
-00271590 0016:
-	??_C@_1BG@EIJMKLCG@?$AAl?$AAe?$AAf?$AAt?$AA?9?$AAt?$AAh?$AAu?$AAm?$AAb?$AA?$AA@ (0000)
-002715A8 0018:
-	??_C@_1BI@KIILCNEB@?$AAb?$AAa?$AAc?$AAk?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-002715C0 001a:
-	??_C@_1BK@CFIHHNDP@?$AAs?$AAt?$AAa?$AAr?$AAt?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-002715DC 0016:
-	??_C@_1BG@CGEEKDJO@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?$AA@ (0000)
-002715F4 0014:
-	??_C@_1BE@LFENLMOB@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAl?$AAe?$AAf?$AAt?$AA?$AA@ (0000)
-00271608 0014:
-	??_C@_1BE@MAHEIGBI@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAd?$AAo?$AAw?$AAn?$AA?$AA@ (0000)
-0027161C 0010:
-	??_C@_1BA@CNADAJOL@?$AAd?$AAp?$AAa?$AAd?$AA?9?$AAu?$AAp?$AA?$AA@ (0000)
-0027162C 001c:
-	??_C@_1BM@DNLFOGBJ@?$AAr?$AAi?$AAg?$AAh?$AAt?$AA?9?$AAt?$AAr?$AAi?$AAg?$AAg?$AAe?$AAr?$AA?$AA@ (0000)
-00271648 001a:
-	??_C@_1BK@IONNGAAO@?$AAl?$AAe?$AAf?$AAt?$AA?9?$AAt?$AAr?$AAi?$AAg?$AAg?$AAe?$AAr?$AA?$AA@ (0000)
-00271664 001a:
-	??_C@_1BK@DHOCGHBB@?$AAw?$AAh?$AAi?$AAt?$AAe?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-00271680 001a:
-	??_C@_1BK@JINDKLEA@?$AAb?$AAl?$AAa?$AAc?$AAk?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-0027169C 0012:
-	??_C@_1BC@JDEDLPGE@?$AAy?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-002716B0 0012:
-	??_C@_1BC@HMBBAJIF@?$AAx?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-002716C4 0012:
-	??_C@_1BC@EADHJABC@?$AAb?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-002716D8 0012:
-	??_C@_1BC@KKLBENHA@?$AAa?$AA?9?$AAb?$AAu?$AAt?$AAt?$AAo?$AAn?$AA?$AA@ (0000)
-002716EC 000f:
-	??_C@_0P@OHNLNAJA@levels?2d40?2d40?$AA@ (0000)
-002716FC 000f:
-	??_C@_0P@IAIGJJBI@levels?2d20?2d20?$AA@ (0000)
-0027170C 000f:
-	??_C@_0P@HAMJOBDA@levels?2c40?2c40?$AA@ (0000)
-0027171C 000f:
-	??_C@_0P@BHJEKILI@levels?2c20?2c20?$AA@ (0000)
-0027172C 000f:
-	??_C@_0P@CEDKAMHM@levels?2c10?2c10?$AA@ (0000)
-0027173C 000f:
-	??_C@_0P@ENPIGML@levels?2b40?2b40?$AA@ (0000)
-0027174C 000f:
-	??_C@_0P@MEDHKOMA@levels?2b30?2b30?$AA@ (0000)
-0027175C 000f:
-	??_C@_0P@DPFAEPEF@levels?2a50?2a50?$AA@ (0000)
-0027176C 000f:
-	??_C@_0P@FIANAGMN@levels?2a30?2a30?$AA@ (0000)
-0027177C 000f:
-	??_C@_0P@MMBGMDIK@levels?2a10?2a10?$AA@ (0000)
-0027178C 0013:
-	??_C@_0BD@CKKOGMCD@widget_memory_pool?$AA@ (0000)
-002717A0 0008:
-	__one_over_255 (0000)
-	_SECONDS_PER_MILLISECOND (0004)
-002717A8 0025:
-	??_C@_0CF@BFKKDAFO@c?3?2halo?2SOURCE?2interface?2ui_widg@ (0000)
-002717D0 0007:
-	??_C@_06KLKLDLLI@widget?$AA@ (0000)
-002717D8 0024:
-	??_C@_0CE@JONHIOKA@expected?5a?5valid?5local_player_in@ (0000)
-002717FC 001b:
-	??_C@_0BL@IGOIGKAA@widget_globals?4initialized?$AA@ (0000)
-00271818 0004:
-	__real@38026b7e (0000)
-0027181C 0004:
-	__real@43490000 (0000)
-00271820 0004:
-	__real@38150d23 (0000)
-00271824 0004:
-	__real@37e0c670 (0000)
-00271828 0004:
-	__real@439b8000 (0000)
-0027182C 0004:
-	__real@3806dd76 (0000)
-00271830 000e:
-	??_C@_0O@CJGPHCNG@the_main_menu?$AA@ (0000)
-00271840 000e:
-	??_C@_0O@LGOJGHAO@unknown?5level?$AA@ (0000)
-00271850 0048:
-	??_C@_0EI@DFLNAEDH@the?5old?5loading?5progress?5screen?5@ (0000)
-00271898 0059:
-	??_C@_0FJ@HLIPNJGE@there?5is?5already?5an?5error?5messag@ (0000)
-002718F8 0051:
-	??_C@_0FB@JEKLNNGC@there?5is?5already?5a?5deferred?5erro@ (0000)
-0027194C 0036:
-	??_C@_0DG@OLDDPPAF@?$CIindex?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIindex?$DMMAXIMUM_NUM@ (0000)
-00271988 0047:
-	??_C@_0EH@LLPKBLA@there?5is?5already?5a?5deferred?5dash@ (0000)
-002719D0 001a:
-	??_C@_0BK@LDNBEGIO@title?5music?5tag?5not?5found?$AA@ (0000)
-002719EC 0019:
-	??_C@_0BJ@DOPIPCPC@starting?5main?5menu?5music?$AA@ (0000)
-00271A08 001a:
-	??_C@_0BK@GFHNHPPO@sound?2music?2title1?2title1?$AA@ (0000)
-00271A24 0019:
-	??_C@_0BJ@OPCCAOJF@stopping?5main?5menu?5music?$AA@ (0000)
-00271A40 0012:
-	??_C@_0BC@MKLFKPBF@duration_ticks?$DO?$DN0?$AA@ (0000)
-00271A54 0034:
-	??_C@_0DE@HOKJOLHA@out?5of?5memory?$CB?5the?5UI?5screen?5his@ (0000)
-00271A88 000c:
-	??_C@_0M@EABMFPBO@top?5?$CG?$CG?5data?$AA@ (0000)
-00271A94 0019:
-	??_C@_0BJ@FOOJDKHD@tail_child?9?$DOnext?5?$DN?$DN?5NULL?$AA@ (0000)
-00271AB0 0033:
-	??_C@_0DD@MMOLGAOL@?$CIchild?9?$DOprevious?5?$DN?$DN?5NULL?$CJ?5?$CG?$CG?5?$CIch@ (0000)
-00271AE4 0018:
-	??_C@_0BI@LBDKLIFA@next?9?$DOprevious?5?$DN?$DN?5child?$AA@ (0000)
-00271AFC 0018:
-	??_C@_0BI@LBKIDJB@child?9?$DOprevious?5?$DN?$DN?5NULL?$AA@ (0000)
-00271B18 0041:
-	??_C@_0EB@BEJBEEHM@initial_indent?$DM0?5in?5render_state@ (0000)
-00271B5C 001d:
-	??_C@_0BN@EEMEPEOK@31?5?$DN?$DN?5get_icon_type?$CIL?$CClook?$CC?$CJ?$AA@ (0000)
-00271B7C 0024:
-	??_C@_0CE@DPIKLLNB@17?5?$DN?$DN?5get_icon_type?$CIL?$CCright?9stic@ (0000)
-00271BA0 001d:
-	??_C@_0BN@GOCJIAID@30?5?$DN?$DN?5get_icon_type?$CIL?$CCmove?$CC?$CJ?$AA@ (0000)
-00271BC0 0023:
-	??_C@_0CD@BJHDPKGJ@16?5?$DN?$DN?5get_icon_type?$CIL?$CCleft?9stick@ (0000)
-00271BE8 0041:
-	??_C@_0EB@PKGKIBFB@?$CD?$CD?$CDWARNING?3?5possible?5memory?5leak@ (0000)
-00271C2C 0022:
-	??_C@_0CC@MHEDEDIP@widget?5pause?5counter?5out?5of?5whac@ (0000)
-00271C50 0025:
-	??_C@_0CF@EFHCMBNF@event?5handler?5failed?5to?5spawn?5wi@ (0000)
-00271C78 004b:
-	??_C@_0EL@BONJAKAK@a?5?8widget?5deleted?8?5event?5handler@ (0000)
-00271CC4 0025:
-	??_C@_0CF@OIBDABJ@widget?5?$CG?$CG?5widget_globals?4initial@ (0000)
-00271CEC 001a:
-	??_C@_0BK@EFAHKEKA@sound?2sfx?2ui?2flag_failure?$AA@ (0000)
-00271D08 0012:
-	??_C@_0BC@LFDBPFAD@sound?2sfx?2ui?2back?$AA@ (0000)
-00271D1C 0015:
-	??_C@_0BF@FGMCPHMP@sound?2sfx?2ui?2forward?$AA@ (0000)
-00271D34 0014:
-	??_C@_0BE@EOGFPNHD@sound?2sfx?2ui?2cursor?$AA@ (0000)
-00271D48 003a:
-	??_C@_0DK@MJICNCDL@invalid?5controller?5index?5specifi@ (0000)
-00271D88 005d:
-	??_C@_0FN@LKLJLEJ@_list_items_generated_from_strin@ (0000)
-00271DE8 0069:
-	??_C@_0GJ@EGCLHEFN@no?5child?5widget?5references?5are?5n@ (0000)
-00271E58 0063:
-	??_C@_0GD@BFCMHBJK@_list_items_generated_from_strin@ (0000)
-00271EBC 0026:
-	??_C@_0CG@GCOFCMPN@icon_index?$DO?$DN0?5?$CG?$CG?5icon_index?$DMNUM_@ (0000)
-00271EE4 0006:
-	??_C@_05MAJJAKPI@FALSE?$AA@ (0000)
-00271EEC 0004:
-	??_C@_13EJFHHPOP@?$AA?$CF?$AA?$AA@ (0000)
-00271EF0 0047:
-	??_C@_0EH@BDEOCECI@failed?5to?5render?5text?5box?5widget@ (0000)
-00271F38 0042:
-	??_C@_0EC@OINFLBMA@failed?5to?5render?5text?5box?5widget@ (0000)
-00271F7C 0020:
-	??_C@_1CA@EBMNPDDP@?$AA?$DM?$AAo?$AAu?$AAt?$AA?5?$AAo?$AAf?$AA?5?$AAm?$AAe?$AAm?$AAo?$AAr?$AAy?$AA?$DO?$AA?$AA@ (0000)
-00271FA0 0049:
-	??_C@_0EJ@ICFFKBCK@failed?5to?5render?5spinner?5list?5it@ (0000)
-00271FF0 0044:
-	??_C@_0EE@GFHAOED@failed?5to?5render?5spinner?5list?5it@ (0000)
-00272034 0029:
-	??_C@_0CJ@CLCMGDOK@failed?5to?5find?5event?5focus?5targe@ (0000)
-00272060 0046:
-	??_C@_0EG@GAAKHNIE@failed?5to?5spawn?5thread?5for?5files@ (0000)
-002720A8 003c:
-	??_C@_0DM@DBODFMFA@begining?5filesystem?5checks?5?$CG?5sav@ (0000)
-002720E4 002b:
-	??_C@_0CL@DAIOFIBL@widget_globals?4initialization_th@ (0000)
-00272110 003d:
-	??_C@_0DN@CLOOAICL@failed?5to?5set?5focus?5to?5the?5next?5@ (0000)
-00272150 006d:
-	??_C@_0GN@CDIJNPDM@spinner?5lists?5with?5more?5that?51?5v@ (0000)
-002721C0 0033:
-	??_C@_0DD@MMCOEHPE@spinner?5lists?5must?5be?5either?51?9?5@ (0000)
-002721F8 0041:
-	??_C@_0EB@HAOLGJEB@failed?5to?5set?5focus?5to?5the?5?$CD?$CFd?5l@ (0000)
-0027223C 0034:
-	??_C@_0DE@PKDHGMBO@calling?5a?5list?5widget?5function?5o@ (0000)
-00272270 0016:
-	??_C@_0BG@ENJMIAKH@widget?9?$DOfocused_child?$AA@ (0000)
-00272288 0048:
-	??_C@_0EI@GEFPBJMP@couldn?8t?5load?5conditional?5widget@ (0000)
-002722D0 0029:
-	??_C@_0CJ@FPJLGLJO@condition?5handler?5failed?5to?5spaw@ (0000)
-00272300 0045:
-	??_C@_0EF@JLKENOEN@failed?5to?5open?5widget?5because?5th@ (0000)
-00272348 0019:
-	??_C@_0BJ@KIDHBPBC@previous?9?$DOnext?5?$DN?$DN?5widget?$AA@ (0000)
-00272364 0019:
-	??_C@_0BJ@FGBHJFEB@next?9?$DOprevious?5?$DN?$DN?5widget?$AA@ (0000)
-00272380 0044:
-	??_C@_0EE@NFLPKLKO@failed?5to?5close?5widget?5because?5e@ (0000)
-002723C8 0045:
-	??_C@_0EF@EEMBCNDP@failed?5to?5reload?5widget?5because?5@ (0000)
-00272410 004e:
-	??_C@_0EO@PGEAPKEN@failed?5to?5give?5focus?5to?5a?5widget@ (0000)
-00272460 001e:
-	??_C@_0BO@HFOFCHPP@event?5handler?5function?5failed?$AA@ (0000)
-00272480 002a:
-	??_C@_0CK@GOFLJEI@failed?5to?5run?5ui?5widget?5event?5sc@ (0000)
-002724AC 000c:
-	??_C@_0M@EJOMDMOI@ui?2small_ui?$AA@ (0000)
-002724B8 0016:
-	??_C@_0BG@ELECBMPG@window_bounds?5?$CB?$DN?5NULL?$AA@ (0000)
-002724D0 001f:
-	??_C@_0BP@JAOAINDB@failed?5to?5load?5widget?5children?$AA@ (0000)
-002724F0 009a:
-	??_C@_0JK@BLPAHHHK@if?5the?5_widget_pass_handled_even@ (0000)
-0027258C 0021:
-	??_C@_0CB@BADDKMAA@widget?9?$DOlocal_player_index?$DN?$DNNONE@ (0000)
-002725B0 0037:
-	??_C@_0DH@DCPBMEID@widget?5?$CG?$CG?5definition?5?$CG?$CG?5event?5?$CG?$CG@ (0000)
-002725E8 002c:
-	??_C@_0CM@OJPOGECC@ui_widget_definition?5tag?5?8?$CFs?8?1?$CFd@ (0000)
-00272614 002c:
-	??_C@_0CM@MEFFCNMB@failed?5to?5create?5new?5widget?$DL?5out@ (0000)
-00272640 0035:
-	??_C@_0DF@PBOMEHIM@?$CIwidget_stack?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIwidget_sta@ (0000)
-00272678 0026:
-	??_C@_0CG@GBPNNCLI@?$CIname?5?$CB?$DN?5NULL?$CJ?5?$HM?$HM?5?$CItag_index?5?$CB?$DN?5@ (0000)
-002726A0 002a:
-	??_C@_0CK@OFOHOPCB@failed?5to?5initialize?5the?5virtual@ (0000)
-002726CC 0028:
-	??_C@_0CI@EBHLJEJP@failed?5to?5load?5main?5screen?5shell@ (0000)
-002726F4 001d:
-	??_C@_0BN@PLHBGNEF@ui?2shell?2main_menu?2main_menu?$AA@ (0000)
-00272714 0018:
-	??_C@_0BI@HFFEIMKP@xbox?5command?5line?$DN?5?8?$CFs?8?$AA@ (0000)
-0027272C 0006:
-	??_C@_05GLGMCIFH@xdemo?$AA@ (0000)
-00272734 002f:
-	??_C@_0CP@FMNMOLIB@failed?5to?5load?5networked?5pregame@ (0000)
-00272768 005b:
-	??_C@_0FL@CANKNMEF@ui?2shell?2main_menu?2multiplayer_t@ (0000)
-002727C4 002a:
-	??_C@_0CK@BADOGGKF@failed?5to?5load?5map?5select?5postga@ (0000)
-002727F0 0060:
-	??_C@_0GA@GFIHBLPH@ui?2shell?2main_menu?2multiplayer_t@ (0000)
-00272850 0035:
-	??_C@_0DF@GJABDHAE@failed?5to?5load?5pregame?5screen?5af@ (0000)
-00272888 0063:
-	??_C@_0GD@HIMIFBNM@ui?2shell?2main_menu?2multiplayer_t@ (0000)
-002728EC 0025:
-	??_C@_0CF@GLGHHELH@widget?5pause?5counter?5is?5out?5of?5w@ (0000)
-00272914 002f:
-	??_C@_0CP@BGKPJLCC@expected?5a?5text?5box?5widget?5in?5th@ (0000)
-00272944 0032:
-	??_C@_0DC@JNAKMNPN@error?5screen?5widget?5tag?5not?5laye@ (0000)
-00272978 0020:
-	??_C@_0CA@PLEKCLAA@failed?5to?5display?5error?5message?$AA@ (0000)
-00272998 0048:
-	??_C@_0EI@MDMAJGJE@there?5is?5already?5an?5error?5messag@ (0000)
-002729E0 0032:
-	??_C@_0DC@JLPDPOMG@aborting?5to?5the?5main?5menu?5root?0?5@ (0000)
-00272A18 0044:
-	??_C@_0EE@HGHDGOBG@?$CIwidget_stack?$DO?$DN0?$CJ?5?$CG?$CG?5?$CIwidget_sta@ (0000)
-00272A5C 001b:
-	??_C@_0BL@ILOCFJOB@invalid?5local?5player?5count?$AA@ (0000)
-00272A78 0028:
-	??_C@_0CI@NLLLFMIK@ui?2shell?2error?2error_nonmodal_qt@ (0000)
-00272AA0 0025:
-	??_C@_0CF@IPCJKMOA@ui?2shell?2error?2error_modal_qtrsc@ (0000)
-00272AC8 0029:
-	??_C@_0CJ@MDGMGIIG@ui?2shell?2error?2error_nonmodal_ha@ (0000)
-00272AF4 0026:
-	??_C@_0CG@GOFPHCDA@ui?2shell?2error?2error_modal_halfs@ (0000)
-00272B1C 0029:
-	??_C@_0CJ@COJPHONK@ui?2shell?2error?2error_nonmodal_fu@ (0000)
-00272B48 0026:
-	??_C@_0CG@IDKMGEGM@ui?2shell?2error?2error_modal_fulls@ (0000)
-00272B70 0059:
-	??_C@_0FJ@LCJINDPJ@there?5is?5already?5a?5deferred?9for?9@ (0000)
-00272BCC 001b:
-	??_C@_0BL@DHJKOIEB@failed?5to?5load?5?8?$CFs?8?5widget?$AA@ (0000)
-00272BE8 001b:
-	??_C@_0BL@PIJOAKFD@expected?5a?5text?5box?5widget?$AA@ (0000)
-00272C04 003b:
-	??_C@_0DL@MFGPNPO@ui?2shell?2error?2error_abort_to_da@ (0000)
-00272C40 0028:
-	??_C@_0CI@JFEBNJBP@ui?2shell?2error?2error_abort_to_da@ (0000)
-00272C68 0017:
-	??_C@_0BH@FIKKMDKG@Noooooooooooooooooo?$CB?$CB?$CB?$AA@ (0000)
-00272C80 003a:
-	??_C@_0DK@KGMPEFEN@can?8t?5display?5scenario?5help?5beca@ (0000)
-00272CBC 003d:
-	??_C@_0DN@BOLHGMPP@can?8t?5display?5scenario?5help?$DL?5unk@ (0000)
-00272CFC 0023:
-	??_C@_0CD@DGCLPNFD@failed?5to?5load?5in?9game?5help?5dial@ (0000)
-00272D20 002f:
-	??_C@_0CP@ODEPBIAI@expected?5text?5box?5widget?5in?5play@ (0000)
-00272D50 0036:
-	??_C@_0DG@EMGDHLEG@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272D88 0004:
-	??_C@_03JGNLDLAI@d40?$AA@ (0000)
-00272D8C 0036:
-	??_C@_0DG@EIOOAHPE@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272DC4 0004:
-	??_C@_03JCFGEHLK@d20?$AA@ (0000)
-00272DC8 0036:
-	??_C@_0DG@NBLEEDPP@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272E00 0004:
-	??_C@_03LAMADLB@c40?$AA@ (0000)
-00272E04 0036:
-	??_C@_0DG@NFDJDPEN@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272E3C 0004:
-	??_C@_03PIBHPAD@c20?$AA@ (0000)
-00272E40 0036:
-	??_C@_0DG@NHHPIBBE@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272E78 0004:
-	??_C@_03NMHMBFK@c10?$AA@ (0000)
-00272E7C 0036:
-	??_C@_0DG@GJAICEJK@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272EB4 0004:
-	??_C@_03LDLAGENE@b40?$AA@ (0000)
-00272EB8 0036:
-	??_C@_0DG@GMEHDCBP@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272EF0 0004:
-	??_C@_03LGPPHCFB@b30?$AA@ (0000)
-00272EF4 0036:
-	??_C@_0DG@HKHPOBED@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272F2C 0004:
-	??_C@_03KAMHKBAN@a50?$AA@ (0000)
-00272F30 0036:
-	??_C@_0DG@HOPCJNPB@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272F68 0004:
-	??_C@_03KEEKNNLP@a30?$AA@ (0000)
-00272F6C 0036:
-	??_C@_0DG@HNHGEJJP@ui?2shell?2solo_game?2player_help?2p@ (0000)
-00272FA4 0004:
-	??_C@_03KHMOAJNB@a10?$AA@ (0000)
-00272FA8 0010:
-	??_C@_0BA@CDPMFNHN@string_index?$DO?$DN0?$AA@ (0000)
-00272FB8 002d:
-	??_C@_0CN@FAHAPHCM@failed?5to?5load?5full?5screen?5pause@ (0000)
-00272FE8 0029:
-	??_C@_0CJ@OJHKNGAB@ui?2shell?2solo_game?2pause_game?2pa@ (0000)
-00273018 0053:
-	??_C@_0FD@MJAJHNPK@the?5ui?5seems?5to?5be?5confused?4?4?4?5a@ (0000)
-0027306C 002e:
-	??_C@_0CO@LCDPHEGN@failed?5to?5load?5split?5screen?5paus@ (0000)
-0027309C 0036:
-	??_C@_0DG@NEJLJPFI@ui?2shell?2solo_game?2pause_game?2pa@ (0000)
-002730D4 0030:
-	??_C@_0DA@JLINLCDA@invalid?5local?5player?5count?5for?5m@ (0000)
-00273104 0033:
-	??_C@_0DD@CLAJLOAB@ui?2shell?2multiplayer_game?2pause_@ (0000)
-00273138 0033:
-	??_C@_0DD@NDMLPFLH@ui?2shell?2multiplayer_game?2pause_@ (0000)
-0027316C 002d:
-	??_C@_0CN@BIDFDGIG@failed?5to?5load?5multiplayer?5pause@ (0000)
-0027319C 0033:
-	??_C@_0DD@KPKKNAGM@ui?2shell?2multiplayer_game?2pause_@ (0000)
-002731D0 002a:
-	??_C@_0CK@MAHDJCLA@invalid?5widget?5controller?5index?5@ (0000)
-002731FC 0037:
-	??_C@_0DH@EDIJCICF@waiting?5for?5?$CFd?5ticks?5before?5disp@ (0000)
-00301DA0 413c:
-	_data_00301da0 (0000)
-	_widget_memory_pool (4034)
-	_dashboard_abort_error (403c)
-00454240 08b0:
-	_bss_00454240 (0000)
 */
 
 /* ---------- headers */
@@ -668,16 +47,5056 @@ symbols in this file:
 
 /* ---------- constants */
 
+enum
+{
+	_fscheck_result_no_error = 0,
+	_fscheck_result_not_enough_free_space,
+	_fscheck_result_maximum_saved_games,
+	NUMBER_OF_FILE_SYSTEM_CHECK_RESULTS
+};
+
+enum
+{
+	PLAYER1 = 0,
+	PLAYER2,
+	PLAYER3,
+	PLAYER4
+};
+
+enum
+{
+	LIST_ARROW_ILLUMINATION_DURATION_TICKS = 15
+};
+
+enum
+{
+	WIDGET_MEMORY_POOL_BUFFER_SIZE = 0x4000
+};
+
+enum
+{
+	WIDGET_DELETED_PLAYER_CONTROL_INHIBIT_FLAGS = 0xFFF
+};
+
+enum
+{
+	CINEMATIC_START_GRACE_PERIOD_TICKS = 30
+};
+
+enum
+{
+	NUM_ICONS = 18
+};
+
 /* ---------- macros */
+
+#define SMALL_UI_FONT_TAG_NAME "ui\\small_ui"																										/* fake name */
+#define MAIN_MENU_WIDGET_NAME "ui\\shell\\main_menu\\main_menu"																						/* fake name */
+#define SPLITSCREEN_PREGAME_WIDGET_NAME "ui\\shell\\main_menu\\multiplayer_type_select\\split_screen\\pregame\\splitscreen_pregame_wrapper_normal"	/* fake name */
+#define SPLITSCREEN_POSTGAME_WIDGET_NAME "ui\\shell\\main_menu\\multiplayer_type_select\\split_screen\\splitscreen_map_select_postgame_wrapper"		/* fake name */
+#define CONNECTED_POSTGAME_WIDGET_NAME "ui\\shell\\main_menu\\multiplayer_type_select\\connected\\connected_map_select_postgame_wrapper"			/* fake name */
+#define ERROR_MODAL_FULLSCREEN_WIDGET_NAME "ui\\shell\\error\\error_modal_fullscreen"																/* fake name */
+#define ERROR_NONMODAL_FULLSCREEN_WIDGET_NAME "ui\\shell\\error\\error_nonmodal_fullscreen"															/* fake name */
+#define ERROR_MODAL_HALFSCREEN_WIDGET_NAME "ui\\shell\\error\\error_modal_halfscreen"																/* fake name */
+#define ERROR_NONMODAL_HALFSCREEN_WIDGET_NAME "ui\\shell\\error\\error_nonmodal_halfscreen"															/* fake name */
+#define ERROR_MODAL_QTRSCREEN_WIDGET_NAME "ui\\shell\\error\\error_modal_qtrscreen"																	/* fake name */
+#define ERROR_NONMODAL_QTRSCREEN_WIDGET_NAME "ui\\shell\\error\\error_nonmodal_qtrscreen"															/* fake name */
+#define ERROR_ABORT_TO_DASHBOARD_WIDGET_NAME "ui\\shell\\error\\error_abort_to_dashboard"															/* fake name */
+#define ERROR_ABORT_TO_DASHBOARD_NO_CHOICE_WIDGET_NAME "ui\\shell\\error\\error_abort_to_dashboard_you_have_no_choice"								/* fake name */
+#define MULTIPLAYER_1P_PAUSE_GAME_WIDGET_NAME "ui\\shell\\multiplayer_game\\pause_game\\1p_pause_game"												/* fake name */
+#define MULTIPLAYER_2P_PAUSE_GAME_WIDGET_NAME "ui\\shell\\multiplayer_game\\pause_game\\2p_pause_game"												/* fake name */
+#define MULTIPLAYER_4P_PAUSE_GAME_WIDGET_NAME "ui\\shell\\multiplayer_game\\pause_game\\4p_pause_game"												/* fake name */
+#define SOLO_PAUSE_GAME_WIDGET_NAME "ui\\shell\\solo_game\\pause_game\\pause_game"																	/* fake name */
+#define SOLO_SPLIT_SCREEN_PAUSE_GAME_WIDGET_NAME "ui\\shell\\solo_game\\pause_game\\pause_game_split_screen"										/* fake name */
+#define PLAYER_HELP_SCREEN_WIDGET_NAME(level) "ui\\shell\\solo_game\\player_help\\player_help_screen_" level										/* fake name */
 
 /* ---------- structures */
 
+struct _widget_stack_node_data
+{
+	long previous_widget_tag;
+	long focused_child_parent_widget_tag;
+	short focused_child_index;
+	short local_player_index;
+};
+
+struct widget_stack_node
+{
+	struct _widget_stack_node_data data;
+	struct widget_stack_node *next;
+};
+
+struct _deferred_error
+{
+	short error_code;
+	short local_player_index;
+	boolean modal;
+	boolean pause_game_time;
+};
+
+struct _deferred_dashboard_error
+{
+	short error_code;
+	boolean allow_user_to_continue;
+};
+
+struct _deferred_cinematic_error
+{
+	short error_code;
+	boolean modal;
+	boolean pause_game_time;
+};
+
+struct _widget_globals
+{
+	struct widget_instance *active_widgets[MAXIMUM_GAMEPADS];
+	struct widget_stack_node *widget_stack[MAXIMUM_GAMEPADS];
+	unsigned long current_system_milliseconds;
+	long pause_disabled_ticks;
+	short main_menu_deferred_error_code;
+	short pause_game_time_count;
+	real fade_to_black;
+	struct _deferred_error deferred_error[MAXIMUM_NUMBER_OF_LOCAL_PLAYERS];
+	struct _deferred_dashboard_error deferred_dashboard_error;
+	struct _deferred_cinematic_error deferred_cinematic_error[MAXIMUM_NUMBER_OF_LOCAL_PLAYERS];
+	struct thread *initialization_thread;
+	short filesystem_check_result;
+	boolean initialized;
+	boolean dont_load_children_recursive;
+	boolean debug_show_path;
+	boolean processing_inhibited;
+	boolean main_menu_music_active;
+	boolean sound_paused;
+};
+
 /* ---------- prototypes */
+
+static void *pool_alloc(unsigned long size);
+static void pool_free(void *pointer);
+static real compute_offset_coordinate(long time, real delta_per_sec);
+static boolean transition_to_game_in_progress(void);
+static void push_widget(struct widget_stack_node **top, struct _widget_stack_node_data const *data);
+static void pop_widget(struct widget_stack_node **top, struct _widget_stack_node_data *data);
+static void dispose_widget_stack(struct widget_stack_node **top);
+static boolean ui_widget_load_children_recursive(struct widget_instance *widget, struct ui_widget_definition *widget_definition);
+static struct widget_instance *widget_instance_find_by_tag_index(long tag_index);
+static void ui_widget_add_child(struct widget_instance *child, struct widget_instance *parent);
+static void ui_widget_delete_children_recursive(struct widget_instance *widget);
+static struct widget_instance *widget_instance_find_by_tag_index_recursive(struct widget_instance *widget, long tag_index);
+static real widget_instance_get_cumulative_alpha_modifier(struct widget_instance const *widget);
+static boolean widget_instance_can_receive_events(struct widget_instance const *widget);
+static boolean widget_instance_can_handle_events(struct widget_instance const *widget);
+static void widget_instance_initialize(struct widget_instance *widget, struct widget_instance *parent, long ui_widget_definition_index, short local_player_index, short widget_stack, struct ui_widget_definition *definition);
+static void widget_instance_process_one_event_recursive(struct widget_instance *widget, struct ui_widget_definition *definition, struct event_record *event, boolean *return_widget_deleted);
+static void event_handler_dispatch(struct widget_instance *widget, struct ui_widget_definition *definition, struct event_record *event, struct event_handler_reference *event_handler, boolean *return_widget_deleted);
+static void widget_instance_render_recursive(struct widget_instance *widget, rectangle2d *clip_rect, point2d offset, boolean focus, boolean use_nifty_plasma_fx);
+static void widget_instance_render_column_list(struct widget_instance *widget, struct ui_widget_definition *definition, rectangle2d *clip_rect, point2d offset, boolean focus);
+static boolean widget_instance_text_box_is_focused(struct widget_instance const *widget);
+static short get_icon_type(wchar_t const *string);
+static void render_state_bitmap(rectangle2d *bounds, rectangle2d *cursor_bounds, unsigned long color, struct icon_hud_element_definition const *icon);
+static void render_state_text(rectangle2d *bounds, rectangle2d *cursor_bounds, wchar_t const *text);
+static boolean string_has_icons_to_draw(wchar_t const *string);
+static boolean should_flip_sticks_for_local_player(short local_player);
+static void widget_instance_render_text_box(struct widget_instance *widget, struct ui_widget_definition *definition, rectangle2d *clip_rect, point2d offset, boolean focus);
+static void widget_instance_render_spinner_list(struct ui_widget_definition *definition, struct widget_instance *widget, rectangle2d *clip_rect, point2d offset, boolean focus);
+static void widget_instance_give_focus_by_tag(struct widget_instance *widget, long tag_index, short local_player_index);
+static void widget_instance_go_back_to_previous(struct widget_instance *widget);
+static void widget_instance_update_animation_parameters(struct widget_instance *widget);
+static void widget_instance_reload_recursive(struct widget_instance *widget);
+static void ui_widget_reload_by_tag(long tag_index);
+static void widget_instance_give_focus_directly(struct widget_instance *widget, struct widget_instance *target);
+static void widget_instance_set_focused_child_by_index(long focused_child_parent_widget_tag, struct widget_instance *widget, short focused_child_index);
+static void play_sound_tag(long definition_index);
+static long search_and_replace(wchar_t const *search, wchar_t const *replace, wchar_t **in_buffer);
+static void spinner_list_update(struct widget_instance *widget);
+static void column_list_update(struct widget_instance *widget, struct ui_widget_definition *definition);
+static struct widget_instance *widget_instance_get_tail_child_widget(struct widget_instance const *widget);
+static void widget_instance_tab_to_next_valid_widget(struct widget_instance *widget);
+static void widget_instance_tab_to_previous_valid_widget(struct widget_instance *widget);
+static boolean ui_check_for_pause_game(void);
+static struct widget_instance *ui_widget_launch_widget(struct widget_instance *widget, long new_widget_tag_index);
+static void perform_filesystem_initialization(void);
+static unsigned long __stdcall filesystem_initialization_thread_proc(void *input);
 
 /* ---------- globals */
 
+real const _one_over_255 = 1.f / 255.f;
+real const SECONDS_PER_MILLISECOND = 0.001f;
+
+static struct stack_memory_pool_medium __medium_widget_memory_pool =
+{
+	"widget_memory_pool",
+	NULL,
+	0,
+	NUMBER_OF_MEDIUM_MEMORY_POOL_MASTER_POINTERS
+};
+
+struct stack_memory_pool *widget_memory_pool = (struct stack_memory_pool *)&__medium_widget_memory_pool;
+static boolean first_time = TRUE;
 short dashboard_abort_error = NONE;
+
+static char *scenario_paths[NUMBER_OF_SINGLE_PLAYER_LEVELS] =
+{
+	"levels\\a10\\a10",
+	"levels\\a30\\a30",
+	"levels\\a50\\a50",
+	"levels\\b30\\b30",
+	"levels\\b40\\b40",
+	"levels\\c10\\c10",
+	"levels\\c20\\c20",
+	"levels\\c40\\c40",
+	"levels\\d20\\d20",
+	"levels\\d40\\d40",
+};
+
+static boolean icon_is_special[NUM_ICONS] =
+{
+	FALSE,
+	FALSE,
+	FALSE,
+	FALSE,
+	FALSE,
+	FALSE,
+	TRUE,
+	TRUE,
+	FALSE,
+	FALSE,
+	FALSE,
+	FALSE,
+	FALSE,
+	FALSE,
+	TRUE,
+	TRUE,
+	TRUE,
+	TRUE,
+};
+
+static wchar_t const *icon_names[NUMBER_OF_HUD_ICON_TYPES] =
+{
+	L"a-button",
+	L"b-button",
+	L"x-button",
+	L"y-button",
+	L"black-button",
+	L"white-button",
+	L"left-trigger",
+	L"right-trigger",
+	L"dpad-up",
+	L"dpad-down",
+	L"dpad-left",
+	L"dpad-right",
+	L"start-button",
+	L"back-button",
+	L"left-thumb",
+	L"right-thumb",
+	L"left-stick",
+	L"right-stick",
+	L"action",
+	L"throw-grenade",
+	L"primary-trigger",
+	L"integrated-light",
+	L"jump",
+	L"use-equipment",
+	L"rotate-weapons",
+	L"rotate-grenades",
+	L"crouch",
+	L"zoom",
+	L"accept",
+	L"back",
+	L"move",
+	L"look",
+	L"custom-1",
+	L"custom-2",
+	L"custom-3",
+	L"custom-4",
+	L"custom-5",
+	L"custom-6",
+	L"custom-7",
+	L"custom-8",
+};
+
+static char button_mappings[_hud_icon_misc_start - _hud_icon_remapped_button_start] =
+{
+	_button_action_reload,
+	_button_throw_grenade,
+	_button_fire,
+	_button_flashlight,
+	_button_jump,
+	_button_melee_attack,
+	_button_switch_weapon,
+	_button_switch_grenade,
+	_button_scope_zoom,
+	_button_crouch,
+	_gamepad_analog_button_a,
+	_gamepad_analog_button_b,
+	_gamepad_stick_left_icon,
+	_gamepad_stick_right_icon,
+};
+
+static real global_ui_white_red = 0.8f;
+static real global_ui_white_green = 0.8f;
+static real global_ui_white_blue = 0.8f;
+
+static unsigned long dpad_event_times[MAXIMUM_NUMBER_OF_LOCAL_PLAYERS][_widget_event_button_dpad_right - _widget_event_button_dpad_up + 1]; /* fake name */
+static boolean we_are_at_the_main_menu;
+static struct _widget_globals widget_globals;
 
 /* ---------- public code */
 
-/* ---------- private code */
+static void *pool_alloc(
+	unsigned long size)
+{
+	return match_malloc("c:\\halo\\SOURCE\\interface\\ui_widget.c", 117, size);
+}
+
+static void pool_free(
+	void *pointer)
+{
+	match_free("c:\\halo\\SOURCE\\interface\\ui_widget.c", 118, pointer);
+
+	return;
+}
+
+pixel32 modulate_pixel32_by_real_alpha(
+	pixel32 argb,
+	real alpha)
+{
+	return PIXEL32_RGB_BITS(argb) | PIXEL32_FROM_ALPHA(fast_ftol(PIXEL32_ALPHA(argb) * alpha));
+}
+
+boolean event_controller_index_compatible_with_widget(
+	struct event_record const *event,
+	struct widget_instance const *widget)
+{
+	return widget->local_player_index == NONE || widget->local_player_index == event->controller_index;
+}
+
+void set_ui_plasma_effect_color(
+	real a,
+	real r,
+	real g,
+	real b)
+{
+	ui_plasma_effect_color.alpha = a;
+	ui_plasma_effect_color.red = r;
+	ui_plasma_effect_color.green = g;
+	ui_plasma_effect_color.blue = b;
+
+	return;
+}
+
+void ui_widgets_initialize(
+	void)
+{
+	long local_player_index;
+	boolean success = TRUE;
+	void *pool_memory = pool_alloc(WIDGET_MEMORY_POOL_BUFFER_SIZE);
+
+	if (pool_memory)
+	{
+		widget_memory_pool->base_address = pool_memory;
+		widget_memory_pool->pool_size = WIDGET_MEMORY_POOL_BUFFER_SIZE;
+	}
+	else
+	{
+		success = FALSE;
+	}
+
+	stack_memory_pool_reset(widget_memory_pool);
+
+	memset(&widget_globals, 0, sizeof(widget_globals));
+	widget_globals.main_menu_deferred_error_code = NONE;
+	widget_globals.deferred_dashboard_error.error_code = NONE;
+
+	for (local_player_index = 0; local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; local_player_index++)
+	{
+		widget_globals.deferred_error[local_player_index].error_code = NONE;
+		widget_globals.deferred_cinematic_error[local_player_index].error_code = NONE;
+	}
+
+	widget_globals.initialized = success;
+	widget_globals.fade_to_black = -1.f;
+
+	return;
+}
+
+void ui_widgets_dispose(
+	void)
+{
+	ui_widgets_close_all();
+
+	if (widget_memory_pool->base_address)
+	{
+		pool_free(widget_memory_pool->base_address);
+	}
+
+	widget_memory_pool->base_address = NULL;
+	widget_memory_pool->pool_size = 0;
+	memset(&widget_globals, 0, sizeof(widget_globals));
+
+	return;
+}
+
+void ui_widgets_safe_to_load(
+	boolean safe)
+{
+	return;
+}
+
+struct widget_instance *ui_widget_load_by_name_or_tag(
+	char const *name,
+	long tag_index,
+	struct widget_instance *parent,
+	short local_player_index,
+	long invoking_widget_tag,
+	long focused_child_parent_widget_tag,
+	short focused_child_index)
+{
+	struct widget_instance *widget = NULL;
+	short widget_stack = local_player_index == NONE ? 0 : local_player_index;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 377, widget_globals.initialized);
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 378, (name != NULL) || (tag_index != NONE));
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 379, (widget_stack>=0) && (widget_stack<MAXIMUM_GAMEPADS));
+
+	if (tag_index == NONE)
+	{
+		tag_index = tag_loaded(UI_WIDGET_DEFINITION_TAG, name);
+	}
+
+	if (tag_index != NONE)
+	{
+		struct ui_widget_definition *definition = ui_widget_definition_get(tag_index);
+
+		widget = pool_new_pointer(widget_memory_pool, sizeof(*widget), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 395);
+
+		if (widget)
+		{
+			if (!parent)
+			{
+				short previous_local_player_index;
+
+				if (widget_globals.active_widgets[widget_stack])
+				{
+					previous_local_player_index = widget_globals.active_widgets[widget_stack]->local_player_index;
+					ui_widget_delete(widget_globals.active_widgets[widget_stack]);
+				}
+				else
+				{
+					previous_local_player_index = NONE;
+				}
+
+				widget_globals.active_widgets[widget_stack] = widget;
+
+				if (invoking_widget_tag != NONE && !TEST_FLAG(ui_widget_definition_get(invoking_widget_tag)->flags, _widget_dont_push_history_data_bit))
+				{
+					struct _widget_stack_node_data data;
+
+					data.previous_widget_tag = invoking_widget_tag;
+					data.focused_child_parent_widget_tag = focused_child_parent_widget_tag;
+					data.focused_child_index = focused_child_index;
+					data.local_player_index = previous_local_player_index;
+					push_widget(&widget_globals.widget_stack[widget_stack], &data);
+				}
+			}
+
+			if (local_player_index == NONE)
+			{
+				switch (definition->controller_index)
+				{
+				case _widget_controller0:
+					local_player_index = PLAYER1;
+					break;
+				case _widget_controller1:
+					local_player_index = PLAYER2;
+					break;
+				case _widget_controller2:
+					local_player_index = PLAYER3;
+					break;
+				case _widget_controller3:
+					local_player_index = PLAYER4;
+					break;
+				case _widget_controller_any:
+					local_player_index = NONE;
+					break;
+				}
+			}
+
+			widget_instance_initialize(widget, parent, tag_index, local_player_index, widget_stack, definition);
+		}
+		else
+		{
+			error(_error_silent, "failed to create new widget; out of memory!");
+		}
+	}
+	else
+	{
+		error(_error_silent, "ui_widget_definition tag '%s'/%d not loaded", name, tag_index);
+	}
+
+	return widget;
+}
+
+void ui_widget_delete(
+	struct widget_instance *widget)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 469, widget && widget_globals.initialized);
+
+	if (!widget->delete_recursion_lock)
+	{
+		struct ui_widget_definition *definition;
+		long event_handler_index;
+		long widget_stack;
+
+		widget->delete_recursion_lock = TRUE;
+
+		if (widget->local_player_index != NONE && !widget->parent)
+		{
+			player_control_inhibit_buttons(widget->local_player_index, WIDGET_DELETED_PLAYER_CONTROL_INHIBIT_FLAGS, TRUE);
+		}
+
+		definition = ui_widget_definition_get(widget->ui_widget_tag_index);
+
+		for (event_handler_index = 0; event_handler_index < definition->event_handler_references.count; event_handler_index++)
+		{
+			struct event_handler_reference *event_handler = &((struct event_handler_reference *)definition->event_handler_references.address)[event_handler_index];
+
+			if (event_handler->event_type == _widget_event_deleted && TEST_FLAG(event_handler->flags, _event_handler_run_function_bit))
+			{
+				boolean widget_deleted = FALSE;
+				boolean success = ui_widget_event_handler_function_invoke(widget, NULL, event_handler->function, &widget_deleted);
+
+				match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 520, !widget_deleted, "a 'widget deleted' event handler tried to delete the widget being deleted!");
+
+				if (success == TRUE &&
+					TEST_FLAG(event_handler->flags, _event_handler_open_widget_bit) &&
+					event_handler->ui_widget_tag.index != NONE &&
+					!ui_widget_launch_widget(widget, event_handler->ui_widget_tag.index))
+				{
+					error(_error_silent, "event handler failed to spawn widget");
+				}
+			}
+		}
+
+		if (widget->pause_game_time == TRUE)
+		{
+			match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 544, widget_globals.pause_game_time_count > 0, "widget pause counter out of whack");
+
+			if (!--widget_globals.pause_game_time_count)
+			{
+				if (game_time_get_paused())
+				{
+					game_time_set_paused(FALSE);
+
+					if (we_are_at_the_main_menu)
+					{
+						main_menu_ensure_player_queues_exist();
+						game_time_dispose_from_old_map();
+						game_time_initialize_for_new_map();
+						game_time_start();
+					}
+				}
+
+				if (widget_globals.sound_paused == TRUE)
+				{
+					sound_pause(FALSE);
+					widget_globals.sound_paused = FALSE;
+				}
+			}
+		}
+
+		ui_widget_delete_children_recursive(widget);
+
+		if (widget->previous)
+		{
+			widget->previous->next = widget->next;
+		}
+
+		if (widget->next)
+		{
+			widget->next->previous = widget->previous;
+		}
+
+		if (widget->parent && widget->parent->children == widget)
+		{
+			widget->parent->children = widget->next;
+		}
+
+		switch (widget->widget_type)
+		{
+		case _widget_type_text_box:
+			if (widget->parameters.text_box_parameters.text)
+			{
+				dispose_pointer(widget_memory_pool, widget->parameters.text_box_parameters.text);
+			}
+			break;
+		case _widget_type_spinner_list:
+		case _widget_type_column_list:
+			if (widget->parameters.list_parameters.list_items)
+			{
+				error(_error_silent, "###WARNING: possible memory leak disposing of a list widget (%s)", definition->name ? definition->name : "<unknown>");
+			}
+
+			if (widget->parameters.list_parameters.item_text)
+			{
+				dispose_pointer(widget_memory_pool, widget->parameters.list_parameters.item_text);
+			}
+
+			if (widget->parameters.list_parameters.extended_description)
+			{
+				ui_widget_delete(widget->parameters.list_parameters.extended_description);
+			}
+			break;
+		}
+
+		dispose_pointer(widget_memory_pool, widget);
+
+		for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+		{
+			if (widget_globals.active_widgets[widget_stack] == widget)
+			{
+				widget_globals.active_widgets[widget_stack] = NULL;
+				break;
+			}
+		}
+	}
+
+	return;
+}
+
+void process_ui_widgets(
+	void)
+{
+	boolean events_processed = FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 644, widget_globals.initialized);
+
+	widget_globals.current_system_milliseconds = system_milliseconds();
+
+	if (widget_globals.initialization_thread)
+	{
+		if (thread_has_exited(widget_globals.initialization_thread))
+		{
+			dispose_thread(widget_globals.initialization_thread);
+			widget_globals.initialization_thread = NULL;
+			ui_widgets_inhibit_processing(FALSE);
+
+			switch (widget_globals.filesystem_check_result)
+			{
+			case _fscheck_result_not_enough_free_space:
+				if (bink_playback_in_progress())
+				{
+					bink_playback_stop();
+				}
+
+				display_error_abort_to_dashboard(_error_hard_drive_not_enough_free_space, TRUE);
+				break;
+			case _fscheck_result_maximum_saved_games:
+				if (bink_playback_in_progress())
+				{
+					bink_playback_stop();
+				}
+
+				display_error_abort_to_dashboard(_error_hard_drive_maximum_saved_game_files, TRUE);
+				break;
+			}
+		}
+	}
+	else if (!progress_bar_is_active())
+	{
+		if (virtual_keyboard_active())
+		{
+			virtual_keyboard_process();
+			event_manager_flush();
+		}
+		else if (attract_mode_should_start())
+		{
+			attract_mode_start();
+		}
+		else if (widget_globals.deferred_dashboard_error.error_code != NONE)
+		{
+			display_error_abort_to_dashboard(widget_globals.deferred_dashboard_error.error_code, widget_globals.deferred_dashboard_error.allow_user_to_continue);
+			widget_globals.deferred_dashboard_error.error_code = NONE;
+		}
+		else if (widget_globals.deferred_error[PLAYER1].error_code == NONE &&
+			widget_globals.deferred_error[PLAYER2].error_code == NONE &&
+			widget_globals.deferred_error[PLAYER3].error_code == NONE &&
+			widget_globals.deferred_error[PLAYER4].error_code == NONE)
+		{
+			boolean error_dialog_active[MAXIMUM_GAMEPADS];
+			long widget_stack;
+			boolean game_paused = ui_check_for_pause_game();
+			boolean any_error_displayed = FALSE;
+
+			for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+			{
+				error_dialog_active[widget_stack] = widget_globals.active_widgets[widget_stack] && widget_globals.active_widgets[widget_stack]->widget_is_error_dialog == TRUE;
+				any_error_displayed |= error_dialog_active[widget_stack];
+			}
+
+			for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+			{
+				boolean process_widget;
+				struct widget_instance *widget = widget_globals.active_widgets[widget_stack];
+
+				if (error_dialog_active[widget_stack] == TRUE)
+				{
+					process_widget = widget && widget->widget_is_error_dialog == TRUE;
+				}
+				else if (we_are_at_the_main_menu)
+				{
+					process_widget = widget && !any_error_displayed;
+				}
+				else
+				{
+					process_widget = widget != NULL;
+				}
+
+				if (process_widget == TRUE)
+				{
+					boolean widget_deleted;
+					struct ui_widget_definition *definition = ui_widget_definition_get(widget->ui_widget_tag_index);
+					struct event_record event = { _event_type_none };
+
+					if (!widget_globals.processing_inhibited && get_next_event(&event, widget->local_player_index))
+					{
+						do
+						{
+							if (!game_paused)
+							{
+								widget_instance_process_one_event_recursive(widget, definition, &event, &widget_deleted);
+
+								if (widget_deleted == TRUE)
+								{
+									break;
+								}
+							}
+						}
+						while (widget == widget_globals.active_widgets[widget_stack] && get_next_event(&event, widget->local_player_index));
+					}
+					else if (!game_paused)
+					{
+						event.controller_index = widget->local_player_index;
+						widget_instance_process_one_event_recursive(widget, definition, &event, &widget_deleted);
+					}
+
+					events_processed = TRUE;
+
+					if (!widget_globals.active_widgets[widget_stack] && widget_globals.widget_stack[widget_stack])
+					{
+						struct _widget_stack_node_data data;
+
+						pop_widget(&widget_globals.widget_stack[widget_stack], &data);
+
+						if (data.previous_widget_tag != NONE)
+						{
+							struct widget_instance *previous_widget = ui_widget_load_by_name_or_tag(
+								NULL,
+								data.previous_widget_tag,
+								NULL,
+								data.local_player_index,
+								NONE,
+								NONE,
+								NONE);
+
+							if (previous_widget)
+							{
+								widget_instance_set_focused_child_by_index(data.focused_child_parent_widget_tag, previous_widget, data.focused_child_index);
+							}
+						}
+					}
+				}
+			}
+
+			if (events_processed)
+			{
+				event_manager_flush();
+			}
+		}
+		else
+		{
+			long local_player_index;
+
+			for (local_player_index = 0; local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; local_player_index++)
+			{
+				struct _deferred_error *deferred_error = &widget_globals.deferred_error[local_player_index];
+
+				if (deferred_error->error_code != NONE)
+				{
+					if (we_are_at_the_main_menu || network_game_is_active() || game_time_get() >= CINEMATIC_START_GRACE_PERIOD_TICKS)
+					{
+						display_error(deferred_error->error_code, deferred_error->local_player_index, deferred_error->modal, deferred_error->pause_game_time);
+						deferred_error->error_code = NONE;
+					}
+					else
+					{
+						error(_error_silent, "waiting for %d ticks before displaying deferred errors", CINEMATIC_START_GRACE_PERIOD_TICKS);
+					}
+				}
+			}
+		}
+	}
+
+	return;
+}
+
+void render_ui_widgets_postgame(
+	short local_player_index,
+	rectangle2d const *window_bounds)
+{
+	point2d offsets[MAXIMUM_NUMBER_OF_LOCAL_PLAYERS][MAXIMUM_NUMBER_OF_LOCAL_PLAYERS] =
+	{
+		{ { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },
+		{ { 0, 0 }, { 0, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2 }, { 0, 0 }, { 0, 0 } },
+		{ { 0, 0 }, { 0, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2 }, { RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2 }, { 0, 0 } },
+		{ { 0, 0 }, { RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2, 0 }, { 0, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2 }, { RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2 } },
+	};
+
+	if (!virtual_keyboard_active())
+	{
+		long widget_stack;
+
+		if (local_player_index < 0)
+		{
+			local_player_index = 0;
+		}
+		else
+		{
+			local_player_index = MIN(local_player_index, MAXIMUM_NUMBER_OF_LOCAL_PLAYERS - 1);
+		}
+
+		for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+		{
+			boolean render = FALSE;
+
+			if (widget_globals.active_widgets[widget_stack])
+			{
+				if (widget_globals.active_widgets[widget_stack]->render_regardless_of_controller_index == TRUE)
+				{
+					render = TRUE;
+				}
+				else if (widget_globals.active_widgets[widget_stack]->widget_is_error_dialog == TRUE)
+				{
+					if (widget_globals.active_widgets[widget_stack]->local_player_index == local_player_index || widget_globals.active_widgets[widget_stack]->local_player_index == NONE || local_player_index == NONE || we_are_at_the_main_menu)
+					{
+						render = TRUE;
+					}
+				}
+				else if (widget_globals.active_widgets[widget_stack]->local_player_index != NONE || widget_stack)
+				{
+					if (widget_globals.active_widgets[widget_stack]->local_player_index == local_player_index)
+					{
+						render = TRUE;
+					}
+				}
+				else
+				{
+					render = TRUE;
+				}
+			}
+
+			if (render == TRUE)
+			{
+				rectangle2d local_window_bounds;
+
+				local_window_bounds.x0 = 0;
+				local_window_bounds.y0 = 0;
+				local_window_bounds.x1 = window_bounds->x1 - window_bounds->x0;
+				local_window_bounds.y1 = window_bounds->y1 - window_bounds->y0;
+				widget_instance_render_recursive(
+					widget_globals.active_widgets[widget_stack],
+					&local_window_bounds,
+					offsets[local_player_count() - 1][local_player_index],
+					TRUE,
+					FALSE);
+			}
+		}
+	}
+
+	return;
+}
+
+void render_ui_widgets(
+	short local_player_index,
+	rectangle2d const *window_bounds)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 911, window_bounds != NULL);
+
+	local_player_index_for_draw_string_and_hack_in_icons = local_player_index == NONE ? 0 : local_player_index;
+
+	if (!bink_playback_ui_rendering_inhibited())
+	{
+		if (!virtual_keyboard_active())
+		{
+			long widget_stack;
+
+			if (local_player_index < 0)
+			{
+				local_player_index = 0;
+			}
+			else
+			{
+				local_player_index = MIN(local_player_index, MAXIMUM_NUMBER_OF_LOCAL_PLAYERS - 1);
+			}
+
+			for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+			{
+				boolean render = FALSE;
+
+				if (widget_globals.active_widgets[widget_stack])
+				{
+					if (widget_globals.active_widgets[widget_stack]->render_regardless_of_controller_index == TRUE)
+					{
+						render = TRUE;
+					}
+					else if (widget_globals.active_widgets[widget_stack]->widget_is_error_dialog == TRUE)
+					{
+						if (widget_globals.active_widgets[widget_stack]->local_player_index == local_player_index || widget_globals.active_widgets[widget_stack]->local_player_index == NONE || local_player_index == NONE || we_are_at_the_main_menu)
+						{
+							render = TRUE;
+						}
+					}
+					else if (widget_globals.active_widgets[widget_stack]->local_player_index != NONE || widget_stack)
+					{
+						if (widget_globals.active_widgets[widget_stack]->local_player_index == local_player_index)
+						{
+							render = TRUE;
+						}
+					}
+					else
+					{
+						render = TRUE;
+					}
+				}
+
+				if (render == TRUE)
+				{
+					rectangle2d local_window_bounds;
+					point2d offset;
+
+					local_window_bounds.x1 = window_bounds->x1 - window_bounds->x0;
+					local_window_bounds.y1 = window_bounds->y1 - window_bounds->y0;
+					offset.x = 0;
+					offset.y = 0;
+					local_window_bounds.x0 = 0;
+					local_window_bounds.y0 = 0;
+					widget_instance_render_recursive(widget_globals.active_widgets[widget_stack], &local_window_bounds, offset, TRUE, FALSE);
+
+					if (widget_globals.debug_show_path)
+					{
+						real_argb_color color = { 1.f, 1.f, 1.f, 1.f };
+
+						local_window_bounds.x0 += 32;
+						local_window_bounds.x1 += 32;
+						local_window_bounds.y0 += 32;
+						local_window_bounds.y1 += 32;
+						draw_string_set_draw_mode(tag_loaded(FONT_GROUP_TAG, SMALL_UI_FONT_TAG_NAME), NONE, _text_justification_left, 0, &color);
+						rasterizer_draw_string(&local_window_bounds, NULL, NULL, 0, tag_get_name(widget_globals.active_widgets[widget_stack]->ui_widget_tag_index));
+					}
+				}
+			}
+
+			if (widget_globals.fade_to_black >= 0.f && widget_globals.fade_to_black <= 1.f)
+			{
+				rectangle2d bounds;
+
+				bounds.x0 = 0;
+				bounds.x1 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH;
+				bounds.y0 = 0;
+				bounds.y1 = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT;
+
+				if (widget_globals.fade_to_black >= 0.95f)
+				{
+					widget_globals.fade_to_black = 1.f;
+				}
+
+				draw_quad(&bounds, PIXEL32_FROM_ALPHA(fast_ftol(widget_globals.fade_to_black * 255.f)));
+			}
+		}
+		else
+		{
+			virtual_keyboard_render();
+		}
+	}
+
+	return;
+}
+
+void ui_widgets_set_fade_value(
+	real value)
+{
+	widget_globals.fade_to_black = value;
+
+	return;
+}
+
+void ui_widget_debug_show_path(
+	boolean show)
+{
+	widget_globals.debug_show_path = show;
+
+	return;
+}
+
+int widget_instance_count_children(
+	struct widget_instance const *widget)
+{
+	int count = 0;
+
+	if (widget)
+	{
+		struct widget_instance *child;
+
+		for (child = widget->children; child; child = child->next)
+		{
+			count++;
+		}
+	}
+
+	return count;
+}
+
+struct widget_instance *widget_instance_get_nth_child(
+	struct widget_instance const *widget,
+	int n)
+{
+	struct widget_instance *child;
+	int child_index;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1050, widget);
+
+	child = widget->children;
+
+	for (child_index = 0; child_index < n && child; child_index++)
+	{
+		child = child->next;
+	}
+
+	return child;
+}
+
+void *ui_widget_realloc(
+	void *ptr,
+	word size,
+	char const *file,
+	long line)
+{
+	return pool_resize_pointer(widget_memory_pool, ptr, size, file, line);
+}
+
+void widget_free(
+	void *ptr)
+{
+	dispose_pointer(widget_memory_pool, ptr);
+
+	return;
+}
+
+boolean ui_widgets_active(
+	void)
+{
+	boolean active = FALSE;
+
+	if (widget_globals.initialized)
+	{
+		long widget_stack;
+
+		for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+		{
+			if (widget_globals.active_widgets[widget_stack])
+			{
+				active = TRUE;
+				break;
+			}
+		}
+	}
+
+	return active;
+}
+
+boolean ui_widgets_active_for_local_player(
+	short local_player_index)
+{
+	boolean active = FALSE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1110, (local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS), "expected a valid local_player_index");
+
+	if (widget_globals.initialized)
+	{
+		long widget_stack;
+
+		for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+		{
+			struct widget_instance *widget = widget_globals.active_widgets[widget_stack];
+
+			if (widget && widget->local_player_index == local_player_index)
+			{
+				active = TRUE;
+				break;
+			}
+		}
+	}
+
+	return active;
+}
+
+void ui_widgets_close_all(
+	void)
+{
+	long widget_stack;
+
+	for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+	{
+		if (widget_globals.active_widgets[widget_stack])
+		{
+			ui_widget_delete(widget_globals.active_widgets[widget_stack]);
+		}
+
+		if (widget_globals.widget_stack[widget_stack])
+		{
+			dispose_widget_stack(&widget_globals.widget_stack[widget_stack]);
+		}
+	}
+
+	return;
+}
+
+void ui_widgets_close_all_for_local_player(
+	short local_player_index)
+{
+	long widget_stack;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1154, (local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS), "expected a valid local_player_index");
+
+	for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+	{
+		if (widget_globals.active_widgets[widget_stack] && widget_globals.active_widgets[widget_stack]->local_player_index == local_player_index)
+		{
+			ui_widget_delete(widget_globals.active_widgets[widget_stack]);
+
+			if (widget_globals.widget_stack[widget_stack])
+			{
+				dispose_widget_stack(&widget_globals.widget_stack[widget_stack]);
+			}
+		}
+	}
+
+	return;
+}
+
+void ui_widgets_inhibit_processing(
+	boolean inhibit)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1174, widget_globals.initialized);
+
+	widget_globals.processing_inhibited = inhibit;
+
+	return;
+}
+
+void ui_widgets_delete_history(
+	void)
+{
+	long widget_stack;
+
+	for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+	{
+		if (widget_globals.widget_stack[widget_stack])
+		{
+			dispose_widget_stack(&widget_globals.widget_stack[widget_stack]);
+		}
+	}
+
+	return;
+}
+
+void ui_widgets_pop_stack(
+	short local_player_index)
+{
+	if (local_player_index == NONE)
+	{
+		local_player_index = 0;
+	}
+	else
+	{
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1204, (local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS));
+	}
+
+	if (widget_globals.widget_stack[local_player_index])
+	{
+		struct _widget_stack_node_data data;
+
+		pop_widget(&widget_globals.widget_stack[local_player_index], &data);
+	}
+
+	return;
+}
+
+boolean widget_event_function_list_widget_goto_next_item(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition;
+	struct widget_instance *child;
+	long item_index;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1230, widget);
+
+	definition = ui_widget_definition_get(widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1233, widget->widget_type == _widget_type_spinner_list || widget->widget_type == _widget_type_column_list, "calling a list widget function on a non-list widget");
+
+	if (widget->parameters.list_parameters.list_items && widget->parameters.list_parameters.number_of_items > 0)
+	{
+		item_index = widget->parameters.list_parameters.current_list_item_index + 1;
+
+		if (item_index >= widget->parameters.list_parameters.number_of_items)
+		{
+			item_index = 0;
+		}
+
+		if (widget->widget_type == _widget_type_column_list)
+		{
+			child = widget_instance_get_nth_child(widget, item_index);
+
+			if (!child)
+			{
+				error(_error_silent, "failed to set focus to the #%d list item of a column list widget", item_index);
+				return FALSE;
+			}
+
+			widget_instance_give_focus_by_tag(widget, child->ui_widget_tag_index, widget->local_player_index);
+			widget->parameters.list_parameters.current_list_item_index = (short)item_index;
+			widget->parameters.list_parameters.last_list_tab_direction = LIST_ARROW_ILLUMINATION_DURATION_TICKS;
+
+			return TRUE;
+		}
+		else if (widget->widget_type == _widget_type_spinner_list)
+		{
+			if (definition->child_widget_references.count > 1)
+			{
+				match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1268, definition->child_widget_references.count == 3, "spinner lists must be either 1- or 3-wide... sorry");
+
+				if (widget->focused_child == widget->children || widget->focused_child == widget->children->next)
+				{
+					if (widget->focused_child->next)
+					{
+						widget_instance_give_focus_directly(widget, widget->focused_child->next);
+					}
+				}
+			}
+
+			widget->parameters.list_parameters.current_list_item_index = (short)item_index;
+		}
+	}
+	else
+	{
+		if (widget->widget_type == _widget_type_spinner_list)
+		{
+			match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1288, definition->child_widget_references.count <= 1, "spinner lists with more that 1 visible item need to have code-generated lists associated with them... sorry.");
+		}
+
+		if (widget->widget_type == _widget_type_spinner_list &&
+			TEST_FLAG(definition->list_flags, _list_items_generated_from_string_list_tag) &&
+			!definition->child_widget_references.count)
+		{
+			if (++widget->parameters.list_parameters.current_list_item_index != widget->parameters.list_parameters.number_of_items)
+			{
+				widget->parameters.list_parameters.last_list_tab_direction = LIST_ARROW_ILLUMINATION_DURATION_TICKS;
+
+				return TRUE;
+			}
+
+			widget->parameters.list_parameters.current_list_item_index = 0;
+		}
+		else
+		{
+			child = NULL;
+
+			if (widget->focused_child)
+			{
+				child = widget->focused_child->next;
+				item_index = widget->parameters.list_parameters.current_list_item_index + 1;
+
+				if (item_index == widget->parameters.list_parameters.number_of_items)
+				{
+					child = NULL;
+				}
+			}
+
+			if (!child)
+			{
+				child = widget->children;
+				item_index = 0;
+			}
+
+			if (child)
+			{
+				widget_instance_give_focus_by_tag(widget, child->ui_widget_tag_index, widget->local_player_index);
+				widget->parameters.list_parameters.current_list_item_index = (short)item_index;
+			}
+			else
+			{
+				error(_error_silent, "failed to set focus to the next list item of a column widget");
+
+				return FALSE;
+			}
+		}
+
+		widget->parameters.list_parameters.last_list_tab_direction = LIST_ARROW_ILLUMINATION_DURATION_TICKS;
+
+		return TRUE;
+	}
+
+	widget->parameters.list_parameters.last_list_tab_direction = LIST_ARROW_ILLUMINATION_DURATION_TICKS;
+
+	return TRUE;
+}
+
+boolean widget_event_function_list_widget_goto_previous_item(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition;
+	struct widget_instance *child;
+	long item_index;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1359, widget);
+
+	definition = ui_widget_definition_get(widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1362, widget->widget_type == _widget_type_spinner_list || widget->widget_type == _widget_type_column_list, "calling a list widget function on a non-list widget");
+
+	if (widget->parameters.list_parameters.list_items && widget->parameters.list_parameters.number_of_items > 0)
+	{
+		item_index = widget->parameters.list_parameters.current_list_item_index - 1;
+
+		if (item_index < 0)
+		{
+			item_index = widget->parameters.list_parameters.number_of_items - 1;
+		}
+
+		if (widget->widget_type == _widget_type_column_list)
+		{
+			child = widget_instance_get_nth_child(widget, item_index);
+
+			if (child)
+			{
+				widget_instance_give_focus_by_tag(widget, child->ui_widget_tag_index, widget->local_player_index);
+			}
+			else
+			{
+				error(_error_silent, "failed to set focus to the #%d list item of a column list widget", item_index);
+				return FALSE;
+			}
+
+			widget->parameters.list_parameters.current_list_item_index = (short)item_index;
+		}
+		else if (widget->widget_type == _widget_type_spinner_list)
+		{
+			if (definition->child_widget_references.count > 1)
+			{
+				match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1396, definition->child_widget_references.count == 3, "spinner lists must be either 1- or 3-wide... sorry");
+
+				if (widget->focused_child != widget->children)
+				{
+					match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1405, widget->focused_child);
+
+					if (widget->focused_child->previous)
+					{
+						widget_instance_give_focus_directly(widget, widget->focused_child->previous);
+					}
+				}
+			}
+
+			widget->parameters.list_parameters.current_list_item_index = (short)item_index;
+		}
+
+		widget->parameters.list_parameters.last_list_tab_direction = -LIST_ARROW_ILLUMINATION_DURATION_TICKS;
+
+		return TRUE;
+	}
+	else
+	{
+		if (widget->widget_type == _widget_type_spinner_list)
+		{
+			match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1420, definition->child_widget_references.count <= 1, "spinner lists with more that 1 visible item need to have code-generated lists associated with them... sorry.");
+		}
+
+		if (widget->widget_type == _widget_type_spinner_list &&
+			TEST_FLAG(definition->list_flags, _list_items_generated_from_string_list_tag) &&
+			!definition->child_widget_references.count)
+		{
+			if (--widget->parameters.list_parameters.current_list_item_index < 0)
+			{
+				widget->parameters.list_parameters.current_list_item_index = widget->parameters.list_parameters.number_of_items - 1;
+			}
+
+			widget->parameters.list_parameters.last_list_tab_direction = -LIST_ARROW_ILLUMINATION_DURATION_TICKS;
+
+			return TRUE;
+		}
+
+		child = NULL;
+
+		if (widget->focused_child)
+		{
+			item_index = widget->parameters.list_parameters.current_list_item_index - 1;
+			child = widget->focused_child->previous;
+		}
+
+		if (!child)
+		{
+			child = widget->children;
+			item_index = 0;
+
+			while (child->next)
+			{
+				child = child->next;
+				item_index++;
+			}
+		}
+	}
+
+	widget_instance_give_focus_by_tag(widget, child->ui_widget_tag_index, widget->local_player_index);
+	widget->parameters.list_parameters.current_list_item_index = (short)item_index;
+	widget->parameters.list_parameters.last_list_tab_direction = -LIST_ARROW_ILLUMINATION_DURATION_TICKS;
+
+	return TRUE;
+}
+
+void main_screen_shell_load(
+	void)
+{
+	boolean load_main_menu = TRUE;
+
+	ui_widgets_inhibit_processing(FALSE);
+
+	if (first_time == TRUE)
+	{
+		char const *command_line = shell_get_command_line();
+
+		if (command_line && !_stricmp(command_line, "xdemo"))
+		{
+			error(_error_silent, "xbox command line= '%s'", command_line);
+		}
+		else
+		{
+			unsigned long flags = 0;
+
+			SET_FLAG(flags, _bink_playback_button_click_stops_movie_bit, TRUE);
+			SET_FLAG(flags, _bink_playback_prevent_events_to_ui_bit, TRUE);
+			SET_FLAG(flags, _bink_playback_return_to_main_menu_when_finished_bit, TRUE);
+			SET_FLAG(flags, _bink_playback_dont_allow_skipping_if_filesystem_check_thread_is_active_bit, TRUE);
+			SET_FLAG(flags, _bink_playback_eat_up_memory_like_a_goddamn_beaver_bit, TRUE);
+			bink_playback_start(attract_mode_get_localized_movie_path(_bink_intro_movie), flags);
+			load_main_menu = FALSE;
+
+			if (!bink_playback_active())
+			{
+				load_main_menu = TRUE;
+			}
+		}
+
+		perform_filesystem_initialization();
+		input_abstraction_reset_controller_detection_timer();
+	}
+
+	if (load_main_menu)
+	{
+		attract_mode_reset_timer();
+		ui_widgets_close_all();
+
+		if (!ui_widget_load_by_name_or_tag(MAIN_MENU_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
+		{
+			error(_error_silent, "failed to load main screen shell window");
+		}
+
+		if (widget_globals.main_menu_deferred_error_code != NONE)
+		{
+			display_error(widget_globals.main_menu_deferred_error_code, NONE, TRUE, FALSE);
+			widget_globals.main_menu_deferred_error_code = NONE;
+		}
+
+		if (!widget_globals.main_menu_music_active)
+		{
+			ui_start_main_menu_music();
+		}
+
+		reset_last_player1_profile_index();
+	}
+
+	if (!virtual_keyboard_initialize())
+	{
+		error(_error_silent, "failed to initialize the virtual keyboard");
+	}
+
+	first_time = FALSE;
+
+	return;
+}
+
+void main_screen_shell_begin_fade(
+	unsigned long fade_duration_milliseconds)
+{
+	long widget_stack;
+
+	ui_stop_main_menu_music();
+
+	for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+	{
+		if (widget_globals.active_widgets[widget_stack] && !widget_globals.active_widgets[widget_stack]->widget_is_error_dialog)
+		{
+			widget_globals.active_widgets[widget_stack]->auto_close_fade_time = fade_duration_milliseconds;
+			widget_globals.active_widgets[widget_stack]->milliseconds_to_auto_close = widget_globals.current_system_milliseconds - widget_globals.active_widgets[widget_stack]->creation_time + 100;
+
+			if (widget_globals.widget_stack[widget_stack])
+			{
+				dispose_widget_stack(&widget_globals.widget_stack[widget_stack]);
+			}
+		}
+	}
+
+	return;
+}
+
+static real compute_offset_coordinate(
+	long time,
+	real delta_per_sec)
+{
+	real offset = time * (delta_per_sec / MILLISECONDS_PER_SECOND);
+
+	return (real)fmod(offset, 1.0);
+}
+
+void draw_bitmap_in_rect(
+	struct bitmap_data *bitmap,
+	rectangle2d const *rect,
+	rectangle2d const *bitmap_rect,
+	rectangle2d const *clip_rect,
+	pixel32 argb,
+	struct rasterizer_dynamic_screen_geometry_parameters *multitexture_params,
+	boolean no_plasma)
+{
+	if (bitmap && rect)
+	{
+		struct dynamic_screen_vertex vertices[NUMBER_OF_POINTS_PER_RECTANGLE];
+		struct rasterizer_dynamic_screen_geometry_parameters parameters;
+		real_point2d points[NUMBER_OF_POINTS_PER_RECTANGLE];
+		real_point2d plasma_map1_offset;
+		real_point2d plasma_map0_offset;
+		rectangle2d temp;
+		short width;
+		short height;
+		short bitmap_width;
+		short bitmap_height;
+		real u;
+		real v;
+		short vertex_index;
+		real_rgb_color color = { 0.9f, 0.9f, 0.9f };
+		real_argb_color plasma_fade = ui_plasma_effect_color;
+		real plasma_map_fade = 0.9f;
+
+		if (!bitmap_rect)
+		{
+			temp.x1 = bitmap->width;
+			temp.x0 = 0;
+			temp.y0 = 0;
+			temp.y1 = bitmap->height;
+			bitmap_rect = &temp;
+		}
+
+		width = rect->x1 - rect->x0;
+		height = rect->y1 - rect->y0;
+		bitmap_width = bitmap_rect->x1 - bitmap_rect->x0;
+		bitmap_height = bitmap_rect->y1 - bitmap_rect->y0;
+
+		points[0].x = rect->x0;
+		points[0].y = rect->y0;
+		points[1].x = rect->x0 + width;
+		points[1].y = rect->y0;
+		points[2].x = rect->x0 + width;
+		points[2].y = rect->y0 + height;
+		points[3].x = rect->x0;
+		points[3].y = rect->y0 + height;
+
+		if (clip_rect)
+		{
+			if (clip_rect->x0 > rect->x0)
+			{
+				points[3].x = clip_rect->x0;
+				points[0].x = clip_rect->x0;
+			}
+
+			if (clip_rect->x1 < rect->x1)
+			{
+				points[2].x = clip_rect->x1;
+				points[1].x = clip_rect->x1;
+			}
+
+			if (clip_rect->y0 > rect->y0)
+			{
+				points[1].y = clip_rect->y0;
+				points[0].y = clip_rect->y0;
+			}
+
+			if (clip_rect->y1 < rect->y1)
+			{
+				points[3].y = clip_rect->y1;
+				points[2].y = clip_rect->y1;
+			}
+		}
+
+		u = bitmap->width;
+
+		if (1.f > u)
+		{
+			u = 1.f;
+		}
+
+		u = bitmap_width / u;
+
+		if (u > 1.f)
+		{
+			u = 1.f;
+		}
+
+		v = bitmap->height;
+
+		if (1.f > v)
+		{
+			v = 1.f;
+		}
+
+		v = bitmap_height / v;
+
+		if (v > 1.f)
+		{
+			v = 1.f;
+		}
+
+		for (vertex_index = 0; vertex_index < NUMBER_OF_POINTS_PER_RECTANGLE; vertex_index++)
+		{
+			vertices[vertex_index].color = argb;
+			vertices[vertex_index].texcoord.x = (vertex_index % 3) ? u : 0.f;
+			vertices[vertex_index].texcoord.y = (vertex_index > 1) ? v : 0.f;
+			vertices[vertex_index].position = points[vertex_index];
+		}
+
+		memset(&parameters, 0, sizeof(parameters));
+
+		if (no_plasma)
+		{
+			parameters.map_texture_scale[0].j = 1.f;
+			parameters.map_texture_scale[0].i = 1.f;
+			parameters.map_scale[0].j = 1.f;
+			parameters.map_scale[0].i = 1.f;
+			parameters.map[0] = bitmap;
+		}
+		else
+		{
+			struct bitmap_data *plasma_bitmap = TAG_BLOCK_GET_ELEMENT(&bitmap_group_get(interface_get_tag_index(_interface_bitmap_iface_map3))->bitmaps, 0, struct bitmap_data);
+			long milliseconds = system_milliseconds();
+
+			plasma_map0_offset.x = (compute_offset_coordinate(milliseconds, 1000.f / (100.f * 311.f))) * 311.f;
+			plasma_map0_offset.y = (compute_offset_coordinate(milliseconds, 1000.f / (120.f * 311.f))) * 311.f;
+			plasma_map1_offset.x = (-compute_offset_coordinate(milliseconds, 1000.f / (140.f * 201.f))) * 201.f;
+			plasma_map1_offset.y = (-compute_offset_coordinate(milliseconds, 1000.f / (160.f * 201.f))) * 201.f;
+
+			parameters.map_tint[0] = &color;
+			parameters.map_fade[0] = &plasma_map_fade;
+			parameters.map_offset[0] = &plasma_map0_offset;
+			parameters.map[0] = plasma_bitmap;
+			parameters.map0_to_1_blend_function = _screen_multitexture_blend_func_phatty_plasma;
+			parameters.map_scale[0].i = 1.f;
+			parameters.map_scale[0].j = 1.f;
+			parameters.map_wrapped[0] = TRUE;
+			parameters.map_anchor_screen[0] = TRUE;
+			parameters.map_texture_scale[0].i = 1.f / 311.f;
+			parameters.map_texture_scale[0].j = 1.f / 311.f;
+
+			parameters.map_tint[1] = &color;
+			parameters.map_fade[1] = &plasma_map_fade;
+			parameters.map[1] = plasma_bitmap;
+			parameters.map_offset[1] = &plasma_map1_offset;
+			parameters.map1_to_2_blend_function = _screen_multitexture_blend_func_add;
+			parameters.map_scale[1].i = 1.f;
+			parameters.map_scale[1].j = 1.f;
+			parameters.map_wrapped[1] = TRUE;
+			parameters.map_anchor_screen[1] = TRUE;
+			parameters.map_texture_scale[1].i = 1.f / 201.f;
+			parameters.map_texture_scale[1].j = 1.f / 201.f;
+
+			parameters.plasma_fade = plasma_fade;
+			parameters.map_fade[2] = NULL;
+			parameters.map_texture_scale[2].j = 1.f;
+			parameters.map_texture_scale[2].i = 1.f;
+			parameters.map_scale[2].j = 1.f;
+			parameters.map_scale[2].i = 1.f;
+			parameters.map[2] = bitmap;
+			parameters.doing_plasma_effect = TRUE;
+		}
+
+		parameters.meter_parameters = NULL;
+		parameters.point_sampled = FALSE;
+		parameters.framebuffer_blend_function = _shader_framebuffer_blend_function_alpha_blend;
+		rasterizer_psuedo_dynamic_screen_quad_draw(&parameters, vertices);
+	}
+
+	return;
+}
+
+struct widget_instance *widget_instance_get_topmost_parent(
+	struct widget_instance *widget)
+{
+	while (widget->parent)
+	{
+		widget = widget->parent;
+	}
+
+	return widget;
+}
+
+int widget_instance_get_child_index_from_parent(
+	struct widget_instance const *widget)
+{
+	int child_index = NONE;
+
+	if (widget->parent)
+	{
+		struct widget_instance *child = widget->parent->children;
+		int index = 0;
+
+		while (child)
+		{
+			if (child == widget)
+			{
+				child_index = index;
+				break;
+			}
+
+			child = child->next;
+			index++;
+		}
+	}
+
+	return child_index;
+}
+
+void widget_instance_set_visibility_recursive(
+	struct widget_instance *widget,
+	boolean visible)
+{
+	struct widget_instance *child;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 1859, widget);
+
+	widget->visible = visible;
+
+	for (child = widget->children; child; child = child->next)
+	{
+		widget_instance_set_visibility_recursive(child, visible);
+	}
+
+	return;
+}
+
+void network_game_reset_to_pregame_ui(
+	void)
+{
+	ui_widgets_close_all();
+
+	if (network_game_is_splitscreen_local())
+	{
+		if (network_game_is_quickstart_local())
+		{
+			if (!ui_widget_load_by_name_or_tag(SPLITSCREEN_PREGAME_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
+			{
+				error(_error_silent, "failed to load pregame screen after quickstart match");
+			}
+		}
+		else if (!ui_widget_load_by_name_or_tag(SPLITSCREEN_POSTGAME_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
+		{
+			error(_error_silent, "failed to load map select postgame screen");
+		}
+	}
+	else if (global_network_game_server_get())
+	{
+		network_game_server_pause_countdown(global_network_game_server_get(), TRUE);
+
+		if (!ui_widget_load_by_name_or_tag(CONNECTED_POSTGAME_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
+		{
+			error(_error_silent, "failed to load map select postgame screen");
+		}
+	}
+	else if (!ui_widget_load_by_name_or_tag(PREGAME_SCREEN_WIDGET_NAME, NONE, NULL, NONE, NONE, NONE, NONE))
+	{
+		error(_error_silent, "failed to load networked pregame status screen");
+	}
+
+	return;
+}
+
+void main_menu_active(
+	boolean active)
+{
+	we_are_at_the_main_menu = active;
+
+	return;
+}
+
+boolean main_menu_is_active(
+	void)
+{
+	return we_are_at_the_main_menu;
+}
+
+boolean main_menu_screen_is_active(
+	void)
+{
+	if (we_are_at_the_main_menu == TRUE && widget_globals.active_widgets[0] && !strcmp(widget_globals.active_widgets[0]->name, "the_main_menu"))
+	{
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+void ui_set_next_level(
+	short level)
+{
+	switch (level)
+	{
+	case NONE:
+		main_roll_credits();
+		break;
+	case _single_player_map_a10:
+	case _single_player_map_a30:
+	case _single_player_map_a50:
+	case _single_player_map_b30:
+	case _single_player_map_b40:
+	case _single_player_map_c10:
+	case _single_player_map_c20:
+	case _single_player_map_c40:
+	case _single_player_map_d20:
+	case _single_player_map_d40:
+		main_set_map_name(main_get_solo_level_name(level));
+		main_disallow_persistent_storage();
+		break;
+	default:
+		error(_error_silent, "unknown level");
+		main_goto_main_menu();
+		break;
+	}
+
+	return;
+}
+
+void ui_widget_load_progress_widget(
+	void)
+{
+	error(_error_silent, "the old loading progress screen has been replaced with glowy halo gravy");
+
+	return;
+}
+
+void ui_play_audio_feedback_sound(
+	short audio_feedback)
+{
+	switch (audio_feedback)
+	{
+	case _audio_feedback_cursor:
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_CURSOR_SOUND_TAG_NAME));
+		break;
+	case _audio_feedback_forward:
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_FORWARD_SOUND_TAG_NAME));
+		break;
+	case _audio_feedback_backward:
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_BACK_SOUND_TAG_NAME));
+		break;
+	case _audio_feedback_failure:
+		play_sound_tag(tag_loaded(SOUND_DEFINITION_TAG, UI_FAILURE_SOUND_TAG_NAME));
+		break;
+	}
+
+	return;
+}
+
+boolean filesystem_check_thread_is_active(
+	void)
+{
+	return widget_globals.initialization_thread != NULL;
+}
+
+static boolean transition_to_game_in_progress(
+	void)
+{
+	if (we_are_at_the_main_menu && widget_globals.fade_to_black <= 1.f && widget_globals.fade_to_black >= 0.f)
+	{
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+void display_error(
+	short error_code,
+	short local_player_index,
+	boolean modal,
+	boolean pause_game_time)
+{
+	if (cinematic_in_progress())
+	{
+		if (local_player_index == NONE)
+		{
+			local_player_index = 0;
+		}
+		else
+		{
+			match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2077, local_player_index>=0 && local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+		}
+
+		if (widget_globals.deferred_cinematic_error[local_player_index].error_code == NONE)
+		{
+			widget_globals.deferred_cinematic_error[local_player_index].error_code = error_code;
+			widget_globals.deferred_cinematic_error[local_player_index].modal = modal;
+			widget_globals.deferred_cinematic_error[local_player_index].pause_game_time = pause_game_time;
+		}
+		else
+		{
+			error(_error_silent, "there is already a deferred-for-cinematic error queued for player #%d; ignoring this one", local_player_index);
+		}
+	}
+	else
+	{
+		short local_player_count;
+		short found_local_player_index;
+		boolean first_local_player = TRUE;
+		char const *widget_name = NULL;
+
+		if (local_player_index == NONE)
+		{
+			found_local_player_index = NONE;
+			local_player_count = 0;
+		}
+		else
+		{
+			short player_index;
+
+			local_player_count = 0;
+			found_local_player_index = NONE;
+
+			for (player_index = local_player_get_next(NONE); player_index != NONE; player_index = local_player_get_next(player_index))
+			{
+				if (player_index == local_player_index)
+				{
+					found_local_player_index = local_player_index;
+
+					if (local_player_count > 0)
+					{
+						first_local_player = FALSE;
+					}
+				}
+
+				local_player_count++;
+			}
+		}
+
+		if (found_local_player_index == NONE && !we_are_at_the_main_menu)
+		{
+			local_player_index = NONE;
+		}
+
+		switch (local_player_count)
+		{
+		case 0:
+		case 1:
+			widget_name = modal ? ERROR_MODAL_FULLSCREEN_WIDGET_NAME : ERROR_NONMODAL_FULLSCREEN_WIDGET_NAME;
+			break;
+		case 2:
+			widget_name = modal ? ERROR_MODAL_HALFSCREEN_WIDGET_NAME : ERROR_NONMODAL_HALFSCREEN_WIDGET_NAME;
+			break;
+		case 3:
+			if (first_local_player == TRUE)
+			{
+				widget_name = modal ? ERROR_MODAL_HALFSCREEN_WIDGET_NAME : ERROR_NONMODAL_HALFSCREEN_WIDGET_NAME;
+			}
+			else
+			{
+				widget_name = modal ? ERROR_MODAL_QTRSCREEN_WIDGET_NAME : ERROR_NONMODAL_QTRSCREEN_WIDGET_NAME;
+			}
+			break;
+		case 4:
+			widget_name = modal ? ERROR_MODAL_QTRSCREEN_WIDGET_NAME : ERROR_NONMODAL_QTRSCREEN_WIDGET_NAME;
+			break;
+		default:
+			match_vhalt("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2161, "invalid local player count");
+		}
+
+		if (widget_name)
+		{
+			struct widget_instance *invoking_widget;
+			long invoking_widget_tag;
+			struct widget_instance *error_widget;
+			short widget_stack = local_player_index == NONE ? 0 : local_player_index;
+
+			match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2168, (widget_stack>=0) && (widget_stack<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS));
+
+			if (transition_to_game_in_progress())
+			{
+				error(_error_silent, "aborting to the main menu root, for safety's sake");
+				main_screen_shell_load();
+				main_defer_map_map_change();
+				widget_globals.fade_to_black = -1.f;
+			}
+
+			invoking_widget = widget_globals.active_widgets[widget_stack];
+			invoking_widget_tag = invoking_widget ? invoking_widget->ui_widget_tag_index : NONE;
+
+			if (invoking_widget && invoking_widget->widget_is_error_dialog == TRUE)
+			{
+				error(_error_silent, "there is already an error message displayed for this local player index");
+				error_widget = NULL;
+			}
+			else
+			{
+				error_widget = ui_widget_load_by_name_or_tag(widget_name, NONE, NULL, local_player_index, invoking_widget_tag, NONE, NONE);
+			}
+
+			if (error_widget)
+			{
+				struct widget_instance *text_box;
+
+				match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2206, error_widget->children && error_widget->children->children, "error screen widget tag not layed out as expected");
+				text_box = error_widget->children->children;
+				match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2208, text_box->widget_type == _widget_type_text_box, "expected a text box widget in the error widget");
+				text_box->parameters.text_box_parameters.string_list_index = error_code < 0 ? 0 : MIN(error_code, NUMBER_OF_ERROR_CODES - 1);
+				error_widget->widget_is_error_dialog = TRUE;
+
+				if (!error_widget->pause_game_time)
+				{
+					error_widget->pause_game_time = pause_game_time;
+
+					if (error_widget->pause_game_time == TRUE)
+					{
+						match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2217, widget_globals.pause_game_time_count >= 0, "widget pause counter is out of whack");
+						widget_globals.pause_game_time_count++;
+
+						if (!game_time_get_paused())
+						{
+							game_time_set_paused(TRUE);
+						}
+
+						if (!widget_globals.sound_paused && !we_are_at_the_main_menu)
+						{
+							sound_pause(TRUE);
+							widget_globals.sound_paused = TRUE;
+						}
+					}
+				}
+
+				switch (error_code)
+				{
+				case _error_controller_unplugged_start_to_continue:
+					error_widget->milliseconds_to_auto_close = 0;
+					error_widget->auto_close_fade_time = 0;
+					break;
+				case _error_controller_unplugged:
+					error_widget->close_if_local_player_controller_present = TRUE;
+					error_widget->milliseconds_to_auto_close = 0;
+					error_widget->auto_close_fade_time = 0;
+					break;
+				default:
+					error_widget->close_if_local_player_controller_present = FALSE;
+					break;
+				}
+			}
+			else
+			{
+				error(_error_silent, "failed to display error message");
+			}
+		}
+	}
+
+	return;
+}
+
+void display_error_when_main_menu_loaded(
+	short error_code)
+{
+	if (widget_globals.main_menu_deferred_error_code == NONE)
+	{
+		widget_globals.main_menu_deferred_error_code = error_code;
+	}
+	else
+	{
+		error(_error_silent, "there is already an error message queued for display at the main menu; ignoring this one");
+	}
+
+	return;
+}
+
+void display_error_deferred(
+	short error_code,
+	short local_player_index,
+	boolean modal,
+	boolean pause_game_time)
+{
+	long index;
+
+	if (local_player_index == NONE)
+	{
+		index = 0;
+	}
+	else
+	{
+		index = local_player_index;
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2288, (index>=0) && (index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS));
+	}
+
+	if (widget_globals.deferred_error[index].error_code == NONE)
+	{
+		widget_globals.deferred_error[index].error_code = error_code;
+		widget_globals.deferred_error[index].local_player_index = local_player_index;
+		widget_globals.deferred_error[index].modal = modal;
+		widget_globals.deferred_error[index].pause_game_time = pause_game_time;
+	}
+	else
+	{
+		error(_error_silent, "there is already a deferred error message for local player %d; ignoring this one", index);
+	}
+
+	return;
+}
+
+void display_error_abort_to_dashboard(
+	short error_code,
+	boolean optional)
+{
+	struct widget_instance *widget;
+	char const *widget_name = optional == TRUE ? ERROR_ABORT_TO_DASHBOARD_WIDGET_NAME : ERROR_ABORT_TO_DASHBOARD_NO_CHOICE_WIDGET_NAME;
+
+	if (!optional)
+	{
+		ui_widgets_close_all();
+	}
+
+	widget = ui_widget_load_by_name_or_tag(widget_name, NONE, NULL, NONE, NONE, NONE, NONE);
+
+	if (widget)
+	{
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2319, widget->widget_type == _widget_type_text_box, "expected a text box widget");
+		widget->parameters.text_box_parameters.string_list_index = error_code;
+		widget->widget_is_error_dialog = TRUE;
+		dashboard_abort_error = error_code;
+	}
+	else
+	{
+		error(_error_silent, "failed to load '%s' widget", widget_name);
+	}
+
+	return;
+}
+
+void display_error_damaged_media(
+	void)
+{
+	display_error_abort_to_dashboard(_error_media_damaged, FALSE);
+	input_frame_end();
+	main_loop_of_death();
+
+	return;
+}
+
+void display_error_abort_to_dashboard_deferred(
+	short error_code,
+	boolean optional)
+{
+	if (widget_globals.deferred_dashboard_error.error_code == NONE)
+	{
+		widget_globals.deferred_dashboard_error.error_code = error_code;
+		widget_globals.deferred_dashboard_error.allow_user_to_continue = optional;
+	}
+	else
+	{
+		error(_error_silent, "there is already a deferred dashbaord error queued; ignoring this one!");
+	}
+
+	return;
+}
+
+void display_errors_deferred_until_cinematic_stop(
+	void)
+{
+	short local_player_index;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2367, !cinematic_in_progress(), "Noooooooooooooooooo!!!");
+
+	for (local_player_index = 0; local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; local_player_index++)
+	{
+		struct _deferred_cinematic_error *deferred_error = &widget_globals.deferred_cinematic_error[local_player_index];
+
+		if (deferred_error->error_code >= 0 && deferred_error->error_code < NUMBER_OF_ERROR_CODES)
+		{
+			display_error(deferred_error->error_code, local_player_index, deferred_error->modal, deferred_error->pause_game_time);
+		}
+
+		deferred_error->error_code = NONE;
+	}
+
+	return;
+}
+
+void display_scenario_help(
+	short string_index)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2407, string_index>=0);
+
+	if (global_scenario_index != NONE)
+	{
+		char scenario_name[MAXIMUM_FILENAME_LENGTH+1];
+		char const *widget_name;
+		short local_player_index;
+		struct widget_instance *widget;
+
+		strncpy(scenario_name, tag_get_name(global_scenario_index), NUMBEROF(scenario_name) - 1);
+		scenario_name[NUMBEROF(scenario_name) - 1] = '\0';
+		strlwr(scenario_name);
+
+		if (strstr(scenario_name, "a10"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("a10");
+		}
+		else if (strstr(scenario_name, "a30"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("a30");
+		}
+		else if (strstr(scenario_name, "a50"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("a50");
+		}
+		else if (strstr(scenario_name, "b30"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("b30");
+		}
+		else if (strstr(scenario_name, "b40"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("b40");
+		}
+		else if (strstr(scenario_name, "c10"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("c10");
+		}
+		else if (strstr(scenario_name, "c20"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("c20");
+		}
+		else if (strstr(scenario_name, "c40"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("c40");
+		}
+		else if (strstr(scenario_name, "d20"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("d20");
+		}
+		else if (strstr(scenario_name, "d40"))
+		{
+			widget_name = PLAYER_HELP_SCREEN_WIDGET_NAME("d40");
+		}
+		else
+		{
+			error(_error_silent, "can't display scenario help; unknown scenario is active '%s'", scenario_name);
+			return;
+		}
+
+		local_player_index = player_ui_get_single_player_local_player_controller(0);
+		widget = ui_widget_load_by_name_or_tag(widget_name, NONE, NULL, local_player_index, NONE, NONE, NONE);
+
+		if (widget)
+		{
+			struct widget_instance *child;
+
+			for (child = widget->children; child && child->widget_type != _widget_type_text_box; child = child->next);
+			match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2438, child && child->widget_type == _widget_type_text_box, "expected text box widget in player help screen");
+			child->parameters.text_box_parameters.string_list_index = string_index;
+		}
+		else
+		{
+			error(_error_silent, "failed to load in-game help dialog");
+		}
+	}
+	else
+	{
+		error(_error_silent, "can't display scenario help because no scenario is loaded");
+	}
+
+	return;
+}
+
+void ui_start_main_menu_music(
+	void)
+{
+	if (!widget_globals.main_menu_music_active && !main_menu_fade_active())
+	{
+		long music_tag_index = tag_loaded(LOOPING_SOUND_DEFINITION_TAG, MAIN_MENU_MUSIC_TAG_NAME);
+
+		if (music_tag_index != NONE)
+		{
+			error(_error_silent, "starting main menu music");
+			scripted_looping_sound_start(music_tag_index, NONE, 1.f);
+			widget_globals.main_menu_music_active = TRUE;
+		}
+		else
+		{
+			error(_error_silent, "title music tag not found");
+		}
+	}
+
+	return;
+}
+
+void ui_stop_main_menu_music(
+	void)
+{
+	if (widget_globals.main_menu_music_active == TRUE)
+	{
+		long music_tag_index = tag_loaded(LOOPING_SOUND_DEFINITION_TAG, MAIN_MENU_MUSIC_TAG_NAME);
+
+		if (music_tag_index != NONE)
+		{
+			error(_error_silent, "stopping main menu music");
+			scripted_looping_sound_stop(music_tag_index);
+		}
+		else
+		{
+			error(_error_silent, "title music tag not found");
+		}
+
+		widget_globals.main_menu_music_active = FALSE;
+	}
+
+	return;
+}
+
+boolean ui_main_menu_music_active(
+	void)
+{
+	return widget_globals.main_menu_music_active;
+}
+
+void ui_widgets_disable_pause_game(
+	long duration_ticks)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2519, duration_ticks>=0);
+
+	widget_globals.pause_disabled_ticks = duration_ticks;
+
+	return;
+}
+
+static void push_widget(
+	struct widget_stack_node **top,
+	struct _widget_stack_node_data const *data)
+{
+	struct widget_stack_node *node = pool_new_pointer(widget_memory_pool, sizeof(*node), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 2532);
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2534, top && data);
+
+	if (node)
+	{
+		node->data = *data;
+		node->next = *top;
+		*top = node;
+	}
+	else
+	{
+		match_vwarn("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2544, FALSE, "out of memory! the UI screen history will be hosed.");
+	}
+
+	return;
+}
+
+static void pop_widget(
+	struct widget_stack_node **top,
+	struct _widget_stack_node_data *data)
+{
+	struct widget_stack_node *node;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2556, top && data);
+
+	node = *top;
+	*data = node->data;
+	*top = node->next;
+	dispose_pointer(widget_memory_pool, node);
+
+	return;
+}
+
+static void dispose_widget_stack(
+	struct widget_stack_node **top)
+{
+	while (*top)
+	{
+		struct widget_stack_node *node = *top;
+
+		*top = node->next;
+		dispose_pointer(widget_memory_pool, node);
+	}
+
+	return;
+}
+
+static boolean ui_widget_load_children_recursive(
+	struct widget_instance *widget,
+	struct ui_widget_definition *widget_definition)
+{
+	long child_index;
+	boolean success = TRUE;
+
+	if (TEST_FLAG(widget_definition->list_flags, _list_items_generated_from_string_list_tag))
+	{
+		struct unicode_string_list_group_header *string_list;
+
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2592, widget->widget_type == _widget_type_spinner_list, "_list_items_generated_from_string_list_tag flag should only be set for 1-wide spinner list widgets");
+
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2594, !widget_definition->child_widget_references.count, "no child widget references are needed to define list items when generating a list from a string list tag");
+
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2596, widget_definition->text_label_unicode_string_list_tag.index != NONE, "_list_items_generated_from_string_list_tag flag was set but no string list tag was specified");
+
+		string_list = unicode_string_list_definition_get(widget_definition->text_label_unicode_string_list_tag.index);
+		widget_globals.dont_load_children_recursive = TRUE;
+
+		for (child_index = 0; child_index < string_list->string_references.count; child_index++)
+		{
+			struct widget_instance *child = ui_widget_load_by_name_or_tag(
+				NULL,
+				widget->ui_widget_tag_index,
+				widget,
+				widget->local_player_index,
+				NONE,
+				NONE,
+				NONE);
+
+			if (!child)
+			{
+				success = FALSE;
+				break;
+			}
+
+			ui_widget_add_child(child, widget);
+			widget->parameters.list_parameters.number_of_items++;
+		}
+
+		widget_globals.dont_load_children_recursive = FALSE;
+	}
+
+	for (child_index = 0; child_index < widget_definition->child_widget_references.count; child_index++)
+	{
+		struct child_widget_reference *child_reference = &((struct child_widget_reference *)widget_definition->child_widget_references.address)[child_index];
+		short local_player_index = widget->local_player_index;
+
+		if (TEST_FLAG(child_reference->flags, _child_widget_use_custom_controller_index_bit))
+		{
+			if (child_reference->custom_controller_index >= 0 && child_reference->custom_controller_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)
+			{
+				local_player_index = child_reference->custom_controller_index;
+			}
+			else
+			{
+				error(_error_silent, "invalid controller index specified for child widget (#%d)", child_reference->custom_controller_index);
+			}
+		}
+
+		if (child_reference->ui_widget_tag.index != NONE)
+		{
+			struct widget_instance *child = ui_widget_load_by_name_or_tag(
+				NULL,
+				child_reference->ui_widget_tag.index,
+				widget,
+				local_player_index,
+				NONE,
+				NONE,
+				NONE);
+
+			if (!child)
+			{
+				success = FALSE;
+				break;
+			}
+
+			child->horizontal_offset = child_reference->horizontal_offset + widget->horizontal_offset;
+			child->vertical_offset = child_reference->vertical_offset + widget->vertical_offset;
+			ui_widget_add_child(child, widget);
+		}
+	}
+
+	if (widget->widget_type == _widget_type_column_list && widget_definition->extended_description_widget_tag.index != NONE)
+	{
+		widget->parameters.list_parameters.extended_description = ui_widget_load_by_name_or_tag(
+			NULL,
+			widget_definition->extended_description_widget_tag.index,
+			widget,
+			widget->local_player_index,
+			NONE,
+			NONE,
+			NONE);
+
+		if (widget->parameters.list_parameters.extended_description)
+		{
+			if (widget->parameters.list_parameters.extended_description->previous)
+			{
+				widget->parameters.list_parameters.extended_description->previous->next = NULL;
+			}
+
+			widget->parameters.list_parameters.extended_description->previous = NULL;
+			widget->parameters.list_parameters.extended_description->parent = NULL;
+		}
+	}
+
+	if (!TEST_FLAG(widget_definition->flags, _widget_dont_focus_a_specific_child_bit))
+	{
+		struct widget_instance *child = NULL;
+
+		if (widget->widget_type == _widget_type_spinner_list || widget->widget_type == _widget_type_column_list)
+		{
+			widget->parameters.list_parameters.current_list_item_index = 0;
+			widget->parameters.list_parameters.last_list_tab_direction = 0;
+			child = widget->children;
+		}
+		else if (TEST_FLAG(widget_definition->flags, _widget_pass_unhandled_events_to_children_bit))
+		{
+			child = widget->children;
+		}
+
+		for (; child; child = child->next)
+		{
+			if (widget->widget_type == _widget_type_spinner_list ||
+				widget->widget_type == _widget_type_column_list ||
+				widget_instance_can_handle_events(child))
+			{
+				widget->focused_child = child;
+				break;
+			}
+		}
+	}
+
+	return success;
+}
+
+static void ui_widget_add_child(
+	struct widget_instance *child,
+	struct widget_instance *parent)
+{
+	struct widget_instance *next_child = parent->children;
+	struct widget_instance *tail_child = NULL;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2719, (child->previous == NULL) && (child->next == NULL));
+
+	while (next_child)
+	{
+		tail_child = next_child;
+		next_child = next_child->next;
+	}
+
+	if (tail_child)
+	{
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2729, tail_child->next == NULL);
+
+		tail_child->next = child;
+		child->previous = tail_child;
+	}
+	else
+	{
+		parent->children = child;
+	}
+
+	return;
+}
+
+static void ui_widget_delete_children_recursive(
+	struct widget_instance *widget)
+{
+	struct widget_instance *child = widget->children;
+
+	while (child)
+	{
+		struct widget_instance *next = child->next;
+
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2750, child->previous == NULL);
+
+		if (next)
+		{
+			match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2754, next->previous == child);
+		}
+
+		ui_widget_delete(child);
+
+		if (next)
+		{
+			next->previous = NULL;
+		}
+
+		child = next;
+	}
+
+	return;
+}
+
+static void widget_instance_initialize(
+	struct widget_instance *widget,
+	struct widget_instance *parent,
+	long ui_widget_definition_index,
+	short local_player_index,
+	short widget_stack,
+	struct ui_widget_definition *definition)
+{
+	long event_handler_index;
+
+	memset(widget, 0, sizeof(*widget));
+
+	if (TEST_FLAG(definition->list_flags, _list_items_generated_from_string_list_tag) && parent && ui_widget_definition_index == parent->ui_widget_tag_index)
+	{
+		widget->widget_type = _widget_type_text_box;
+	}
+
+	widget->ui_widget_tag_index = ui_widget_definition_index;
+	widget->name = definition->name;
+	widget->local_player_index = local_player_index;
+	widget->widget_type = definition->type;
+	widget->visible = TRUE;
+	widget->render_regardless_of_controller_index = TEST_FLAG(definition->flags, _widget_render_regardless_of_controller_index_bit);
+	widget->pause_game_time = TEST_FLAG(definition->flags, _widget_pause_game_time_bit);
+	widget->creation_time = widget_globals.current_system_milliseconds;
+	widget->milliseconds_to_auto_close = definition->millisecond_to_auto_close <= 0 ? 0 : definition->millisecond_to_auto_close;
+	widget->auto_close_fade_time = definition->millisecond_auto_close_fade_time <= 0 ? 0 : definition->millisecond_auto_close_fade_time;
+	widget->alpha_modifier = 1.f;
+	widget->parent = parent;
+
+	switch (widget->widget_type)
+	{
+	case _widget_type_text_box:
+		widget->parameters.text_box_parameters.string_list_index = NONE;
+		break;
+	}
+
+	if (definition->background_bitmap.index != NONE)
+	{
+		widget->animation_data.number_of_sprite_frames = TAG_BLOCK_GET_ELEMENT(&bitmap_group_get(definition->background_bitmap.index)->sequences, 0, struct bitmap_group_sequence)->bitmap_count;
+	}
+
+	if (!widget_globals.dont_load_children_recursive && !ui_widget_load_children_recursive(widget, definition))
+	{
+		error(_error_silent, "failed to load widget children");
+	}
+
+	for (event_handler_index = 0; event_handler_index < definition->event_handler_references.count; event_handler_index++)
+	{
+		struct event_handler_reference *event_handler = &((struct event_handler_reference *)definition->event_handler_references.address)[event_handler_index];
+
+		if (event_handler->event_type == _widget_event_created)
+		{
+			boolean widgets_were_deleted;
+			struct event_record null_event = {0};
+
+			null_event.controller_index = widget->local_player_index;
+			event_handler_dispatch(widget, definition, &null_event, event_handler, &widgets_were_deleted);
+		}
+	}
+
+	if (!widget->focused_child)
+	{
+		struct widget_instance *child;
+
+		for (child = widget->children; child; child = child->next)
+		{
+			if (widget_instance_can_handle_events(child))
+			{
+				widget_instance_give_focus_directly(widget, child);
+			}
+		}
+	}
+
+	if (widget->pause_game_time == TRUE)
+	{
+		widget_globals.pause_game_time_count++;
+
+		if (!game_time_get_paused())
+		{
+			game_time_set_paused(TRUE);
+		}
+
+		if (!widget_globals.sound_paused && !we_are_at_the_main_menu)
+		{
+			sound_pause(TRUE);
+			widget_globals.sound_paused = TRUE;
+		}
+	}
+
+	return;
+}
+
+static struct widget_instance *widget_instance_find_by_tag_index(
+	long tag_index)
+{
+	long widget_stack;
+	struct widget_instance *result = NULL;
+
+	for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS && !result; widget_stack++)
+	{
+		if (widget_globals.active_widgets[widget_stack])
+		{
+			result = widget_instance_find_by_tag_index_recursive(widget_globals.active_widgets[widget_stack], tag_index);
+		}
+	}
+
+	return result;
+}
+
+static struct widget_instance *widget_instance_find_by_tag_index_recursive(
+	struct widget_instance *widget,
+	long tag_index)
+{
+	struct widget_instance *result = NULL;
+
+	if (widget->ui_widget_tag_index == tag_index)
+	{
+		result = widget;
+	}
+	else
+	{
+		struct widget_instance *child;
+
+		for (child = widget->children; child && !result; child = child->next)
+		{
+			result = (child->ui_widget_tag_index == tag_index) ? child : widget_instance_find_by_tag_index_recursive(child, tag_index);
+		}
+	}
+
+	return result;
+}
+
+static real widget_instance_get_cumulative_alpha_modifier(
+	struct widget_instance const *widget)
+{
+	struct widget_instance *parent;
+	real alpha_modifier = widget->alpha_modifier;
+
+	for (parent = widget->parent; parent; parent = parent->parent)
+	{
+		alpha_modifier *= parent->alpha_modifier;
+	}
+
+	return alpha_modifier;
+}
+
+static boolean widget_instance_can_receive_events(
+	struct widget_instance const *widget)
+{
+	boolean result;
+
+	if (widget->never_receive_events)
+	{
+		result = FALSE;
+	}
+	else if (widget->parent)
+	{
+		struct widget_instance *parent;
+		struct ui_widget_definition *definition = ui_widget_definition_get(widget->parent->ui_widget_tag_index);
+
+		for (parent = widget->parent, result = TRUE; parent && result; parent = parent->parent)
+		{
+			struct ui_widget_definition *parent_definition = ui_widget_definition_get(parent->ui_widget_tag_index);
+
+			result = TEST_FLAG(definition->flags, _widget_pass_unhandled_events_to_children_bit) || parent->widget_type == _widget_type_spinner_list || parent->widget_type == _widget_type_column_list;
+			definition = parent_definition;
+		}
+	}
+	else
+	{
+		result = TRUE;
+	}
+
+	return result;
+}
+
+static boolean widget_instance_can_handle_events(
+	struct widget_instance const *widget)
+{
+	struct ui_widget_definition *definition = ui_widget_definition_get(widget->ui_widget_tag_index);
+
+	if (!widget->never_receive_events && (definition->event_handler_references.count > 0 || widget->widget_type == _widget_type_spinner_list || widget->widget_type == _widget_type_column_list))
+	{
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static boolean widget_instance_text_box_is_focused(
+	struct widget_instance const *widget)
+{
+	struct widget_instance *parent = widget->parent;
+	boolean focused = parent ? parent->focused_child == widget : TRUE;
+
+	if (!focused && parent)
+	{
+		while (parent)
+		{
+			struct widget_instance *grandparent = parent->parent;
+
+			if (grandparent)
+			{
+				if (grandparent->focused_child != parent)
+				{
+					break;
+				}
+
+				focused = (grandparent->widget_type == _widget_type_spinner_list || grandparent->widget_type == _widget_type_column_list) && grandparent->focused_child == parent;
+			}
+
+			parent = grandparent;
+		}
+	}
+
+	return focused;
+}
+
+static void widget_instance_process_one_event_recursive(
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition,
+	struct event_record *event,
+	boolean *return_widget_deleted)
+{
+	boolean handled = FALSE;
+	boolean widget_deleted = FALSE;
+	boolean event_is_for_widget = event_controller_index_compatible_with_widget(event, widget);
+	long audio_feedback = _audio_feedback_none;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 3067, widget && definition && event && return_widget_deleted);
+
+	if (event->type == _event_type_button &&
+		event->value.button_value.value > 1 &&
+		event->controller_index >= 0 && event->controller_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS &&
+		event->value.button_value.button >= _widget_event_button_dpad_up && event->value.button_value.button <= _widget_event_button_dpad_right &&
+		widget_globals.current_system_milliseconds - dpad_event_times[event->controller_index][event->value.button_value.button - _widget_event_button_dpad_up] >= 250)
+	{
+		event->value.button_value.value = 1;
+	}
+
+	if (widget->close_if_local_player_controller_present == TRUE)
+	{
+		if (widget->local_player_index >= 0 && widget->local_player_index < MAXIMUM_GAMEPADS)
+		{
+			if (input_has_gamepad(widget->local_player_index))
+			{
+				ui_widget_delete(widget_instance_get_topmost_parent(widget));
+				widget_deleted = TRUE;
+			}
+		}
+		else
+		{
+			long gamepad_index;
+
+			match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 3107, widget->local_player_index==NONE);
+
+			for (gamepad_index = 0; gamepad_index < MAXIMUM_GAMEPADS; gamepad_index++)
+			{
+				if (input_has_gamepad((short)gamepad_index))
+				{
+					ui_widget_delete(widget_instance_get_topmost_parent(widget));
+					widget_deleted = TRUE;
+					break;
+				}
+			}
+		}
+	}
+
+	if (event_is_for_widget && !widget_deleted && event->type == _event_type_button && event->value.button_value.value == 1)
+	{
+		long event_handler_index;
+		boolean go_back = FALSE;
+
+		if (event->value.button_value.button == _widget_event_button_back)
+		{
+			go_back = TRUE;
+
+			for (event_handler_index = 0; event_handler_index < definition->event_handler_references.count; event_handler_index++)
+			{
+				if (((struct event_handler_reference *)definition->event_handler_references.address)[event_handler_index].event_type == _widget_event_button_back)
+				{
+					go_back = FALSE;
+					break;
+				}
+			}
+		}
+		else if (event->value.button_value.button == _widget_event_button_b)
+		{
+			go_back = TRUE;
+
+			for (event_handler_index = 0; event_handler_index < definition->event_handler_references.count; event_handler_index++)
+			{
+				if (((struct event_handler_reference *)definition->event_handler_references.address)[event_handler_index].event_type == _widget_event_button_b)
+				{
+					go_back = FALSE;
+					break;
+				}
+			}
+		}
+
+		if (go_back)
+		{
+			widget_instance_go_back_to_previous(widget);
+			audio_feedback = _audio_feedback_backward;
+			widget_deleted = TRUE;
+			handled = TRUE;
+		}
+	}
+
+	if (!widget_deleted && widget->milliseconds_to_auto_close > 0)
+	{
+		if (widget_globals.current_system_milliseconds - widget->creation_time >= widget->milliseconds_to_auto_close + widget->auto_close_fade_time)
+		{
+			ui_widget_delete(widget_instance_get_topmost_parent(widget));
+			widget_deleted = TRUE;
+		}
+		else if (widget->auto_close_fade_time > 0)
+		{
+			long fade_milliseconds = widget_globals.current_system_milliseconds - widget->creation_time - widget->milliseconds_to_auto_close;
+
+			if (fade_milliseconds > 0)
+			{
+				widget->alpha_modifier = 1.f - (real)fade_milliseconds / widget->auto_close_fade_time;
+			}
+		}
+	}
+
+	if (!widget_deleted)
+	{
+		widget_instance_update_animation_parameters(widget);
+
+		if (widget->widget_type == _widget_type_spinner_list)
+		{
+			spinner_list_update(widget);
+		}
+		else if (widget->widget_type == _widget_type_column_list)
+		{
+			column_list_update(widget, definition);
+		}
+
+		if (event_is_for_widget && !handled && TEST_FLAG(definition->flags, _widget_dpad_updown_tabs_thru_children_bit) && widget->focused_child && !widget_deleted)
+		{
+			if (event->type == _event_type_button && event->value.button_value.value == 1)
+			{
+				switch (event->value.button_value.button)
+				{
+				case _widget_event_button_dpad_up:
+					widget_instance_tab_to_previous_valid_widget(widget);
+					audio_feedback = _audio_feedback_cursor;
+					handled = TRUE;
+					break;
+				case _widget_event_button_dpad_down:
+					widget_instance_tab_to_next_valid_widget(widget);
+					audio_feedback = _audio_feedback_cursor;
+					handled = TRUE;
+					break;
+				}
+			}
+			else if (event->type == _event_type_left_analog_stick)
+			{
+				switch (event->value.analog_value.y)
+				{
+				case SHORT_MIN:
+					widget_instance_tab_to_next_valid_widget(widget);
+					audio_feedback = _audio_feedback_cursor;
+					handled = TRUE;
+					break;
+				case SHORT_MAX:
+					widget_instance_tab_to_previous_valid_widget(widget);
+					audio_feedback = _audio_feedback_cursor;
+					handled = TRUE;
+					break;
+				}
+			}
+		}
+
+		if (event_is_for_widget && !handled && TEST_FLAG(definition->flags, _widget_dpad_leftright_tabs_thru_children_bit) && widget->focused_child && !widget_deleted)
+		{
+			if (event->type == _event_type_button && event->value.button_value.value == 1)
+			{
+				switch (event->value.button_value.button)
+				{
+				case _widget_event_button_dpad_left:
+					widget_instance_tab_to_previous_valid_widget(widget);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				case _widget_event_button_dpad_right:
+					widget_instance_tab_to_next_valid_widget(widget);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				}
+			}
+			else if (event->type == _event_type_left_analog_stick)
+			{
+				switch (event->value.analog_value.x)
+				{
+				case SHORT_MIN:
+					widget_instance_tab_to_previous_valid_widget(widget);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				case SHORT_MAX:
+					widget_instance_tab_to_next_valid_widget(widget);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				}
+			}
+		}
+
+		if (event_is_for_widget &&
+			TEST_FLAG(definition->flags, _widget_dpad_updown_tabs_thru_list_items_bit) &&
+			(widget->widget_type == _widget_type_spinner_list || widget->widget_type == _widget_type_column_list) &&
+			!handled && !widget_deleted)
+		{
+			if (event->type == _event_type_button && event->value.button_value.value == 1)
+			{
+				switch (event->value.button_value.button)
+				{
+				case _widget_event_button_dpad_up:
+					widget_event_function_list_widget_goto_previous_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				case _widget_event_button_dpad_down:
+					widget_event_function_list_widget_goto_next_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				}
+			}
+			else if (event->type == _event_type_left_analog_stick)
+			{
+				switch (event->value.analog_value.y)
+				{
+				case SHORT_MIN:
+					widget_event_function_list_widget_goto_next_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				case SHORT_MAX:
+					widget_event_function_list_widget_goto_previous_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				}
+			}
+		}
+
+		if (event_is_for_widget &&
+			TEST_FLAG(definition->flags, _widget_dpad_leftright_tabs_thru_list_items_bit) &&
+			(widget->widget_type == _widget_type_spinner_list || widget->widget_type == _widget_type_column_list) &&
+			!handled && !widget_deleted)
+		{
+			if (event->type == _event_type_button && event->value.button_value.value == 1)
+			{
+				switch (event->value.button_value.button)
+				{
+				case _widget_event_button_dpad_left:
+					widget_event_function_list_widget_goto_previous_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				case _widget_event_button_dpad_right:
+					widget_event_function_list_widget_goto_next_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				}
+			}
+			else if (event->type == _event_type_left_analog_stick)
+			{
+				switch (event->value.analog_value.x)
+				{
+				case SHORT_MIN:
+					widget_event_function_list_widget_goto_previous_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				case SHORT_MAX:
+					widget_event_function_list_widget_goto_next_item(widget, event, &widget_deleted);
+
+					if (!audio_feedback)
+					{
+						audio_feedback = _audio_feedback_cursor;
+					}
+
+					handled = TRUE;
+					break;
+				}
+			}
+		}
+	}
+
+	if (event_is_for_widget)
+	{
+		long event_handler_index;
+
+		for (event_handler_index = 0; event_handler_index < definition->event_handler_references.count && !widget_deleted; event_handler_index++)
+		{
+			struct event_handler_reference *event_handler = &((struct event_handler_reference *)definition->event_handler_references.address)[event_handler_index];
+			boolean matches = FALSE;
+
+			switch (event->type)
+			{
+			case _event_type_left_analog_stick:
+				switch (event_handler->event_type)
+				{
+				case _widget_event_left_analog_stick_up:
+					if (event->value.analog_value.y == SHORT_MAX)
+					{
+						matches = TRUE;
+					}
+					break;
+				case _widget_event_left_analog_stick_down:
+					if (event->value.analog_value.y == SHORT_MIN)
+					{
+						matches = TRUE;
+					}
+					break;
+				case _widget_event_left_analog_stick_left:
+					if (event->value.analog_value.x == SHORT_MIN)
+					{
+						matches = TRUE;
+					}
+					break;
+				case _widget_event_left_analog_stick_right:
+					if (event->value.analog_value.x == SHORT_MAX)
+					{
+						matches = TRUE;
+					}
+					break;
+				}
+				break;
+			case _event_type_right_analog_stick:
+				switch (event_handler->event_type)
+				{
+				case _widget_event_right_analog_stick_up:
+					if (event->value.analog_value.y == SHORT_MAX)
+					{
+						matches = TRUE;
+					}
+					break;
+				case _widget_event_right_analog_stick_down:
+					if (event->value.analog_value.y == SHORT_MIN)
+					{
+						matches = TRUE;
+					}
+					break;
+				case _widget_event_right_analog_stick_left:
+					if (event->value.analog_value.x == SHORT_MIN)
+					{
+						matches = TRUE;
+					}
+					break;
+				case _widget_event_right_analog_stick_right:
+					if (event->value.analog_value.x == SHORT_MAX)
+					{
+						matches = TRUE;
+					}
+					break;
+				}
+				break;
+			case _event_type_button:
+				if (event_handler->event_type == event->value.button_value.button)
+				{
+					if (event->value.button_value.value == 1)
+					{
+						matches = TRUE;
+					}
+				}
+				break;
+			}
+
+			if (matches == TRUE)
+			{
+				handled = TRUE;
+				event_handler_dispatch(widget, definition, event, event_handler, &widget_deleted);
+			}
+		}
+	}
+
+	if (TEST_FLAG(definition->flags, _widget_pass_handled_events_to_all_children_bit) && !TEST_FLAG(definition->flags, _widget_pass_unhandled_events_to_children_bit))
+	{
+		match_vwarn("c:\\halo\\SOURCE\\interface\\ui_widget.c", 3477, FALSE, "if the _widget_pass_handled_events_to_all_children_bit flag is checked, _widget_pass_unhandled_events_to_children_bit must also be checked for it to work");
+	}
+
+	if ((TEST_FLAG(definition->flags, _widget_pass_handled_events_to_all_children_bit) || !handled) &&
+		(TEST_FLAG(definition->flags, _widget_pass_unhandled_events_to_children_bit) || TEST_FLAG(definition->flags, _widget_pass_unhandled_events_to_all_children_bit)) &&
+		!widget_deleted)
+	{
+		if (TEST_FLAG(definition->flags, _widget_pass_unhandled_events_to_all_children_bit))
+		{
+			struct widget_instance *child;
+
+			for (child = widget->children; child; child = child->next)
+			{
+				if (event_controller_index_compatible_with_widget(event, child))
+				{
+					widget_instance_process_one_event_recursive(child, ui_widget_definition_get(child->ui_widget_tag_index), event, &widget_deleted);
+
+					if (widget_deleted == TRUE)
+					{
+						break;
+					}
+				}
+			}
+		}
+		else if (widget->focused_child && event_controller_index_compatible_with_widget(event, widget->focused_child))
+		{
+			widget_instance_process_one_event_recursive(widget->focused_child, ui_widget_definition_get(widget->focused_child->ui_widget_tag_index), event, &widget_deleted);
+		}
+	}
+
+	if (widget_deleted == TRUE && TEST_FLAG(definition->flags, _widget_return_to_main_menu_if_no_history_bit))
+	{
+		long widget_stack;
+
+		for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+		{
+			if (widget_globals.active_widgets[widget_stack])
+			{
+				break;
+			}
+		}
+
+		if (widget_stack == MAXIMUM_GAMEPADS)
+		{
+			main_goto_main_menu();
+		}
+	}
+
+	if (event->type == _event_type_button &&
+		event->value.button_value.value == 1 &&
+		event->controller_index >= 0 && event->controller_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS &&
+		event->value.button_value.button >= _widget_event_button_dpad_up && event->value.button_value.button <= _widget_event_button_dpad_right)
+	{
+		dpad_event_times[event->controller_index][event->value.button_value.button - _widget_event_button_dpad_up] = widget_globals.current_system_milliseconds;
+	}
+
+	ui_play_audio_feedback_sound(audio_feedback);
+	*return_widget_deleted = widget_deleted;
+
+	return;
+}
+
+static void event_handler_dispatch(
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition,
+	struct event_record *event,
+	struct event_handler_reference *event_handler,
+	boolean *return_widget_deleted)
+{
+	boolean widget_deleted = FALSE;
+	boolean success = TRUE;
+	boolean function_failed = FALSE;
+	long audio_feedback = _audio_feedback_none;
+	boolean close_current_widget = FALSE;
+	boolean delete_widget = FALSE;
+	boolean close_all_widgets = FALSE;
+
+	if (TEST_FLAG(event_handler->flags, _event_handler_run_scenario_script_bit) &&
+		event_handler->script_command[0] &&
+		!hs_evaluate_by_name(event_handler->script_command))
+	{
+		error(_error_silent, "failed to run ui widget event script '%s'", event_handler->script_command);
+	}
+
+	if (TEST_FLAG(event_handler->flags, _event_handler_run_function_bit) &&
+		!widget_deleted &&
+		!ui_widget_event_handler_function_invoke(widget, event, event_handler->function, &widget_deleted))
+	{
+		error(_error_silent, "event handler function failed");
+		function_failed = TRUE;
+	}
+	else
+	{
+		if (TEST_FLAG(event_handler->flags, _event_handler_give_focus_to_widget) && !widget_deleted)
+		{
+			if (event_handler->ui_widget_tag.index != NONE)
+			{
+				widget_instance_give_focus_by_tag(widget, event_handler->ui_widget_tag.index, widget->local_player_index);
+				audio_feedback = _audio_feedback_cursor;
+			}
+			else
+			{
+				error(_error_silent, "failed to give focus to a widget because event_handler->ui_widget_tag == NONE");
+				success = FALSE;
+			}
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_reload_self_bit) && !widget_deleted)
+		{
+			widget_instance_reload_recursive(widget);
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_reload_widget_bit) && !widget_deleted)
+		{
+			if (event_handler->ui_widget_tag.index != NONE)
+			{
+				ui_widget_reload_by_tag(event_handler->ui_widget_tag.index);
+			}
+			else
+			{
+				error(_error_silent, "failed to reload widget because event_handler->ui_widget_tag == NONE");
+				success = FALSE;
+			}
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_close_current_widget_bit) && !widget_deleted)
+		{
+			close_current_widget = TRUE;
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_close_other_widget_bit) && !widget_deleted && event_handler->ui_widget_tag.index != NONE)
+		{
+			struct widget_instance *other_widget = widget_instance_find_by_tag_index(event_handler->ui_widget_tag.index);
+
+			if (other_widget)
+			{
+				if (other_widget == widget)
+				{
+					delete_widget = TRUE;
+				}
+				else
+				{
+					ui_widget_delete(other_widget);
+				}
+			}
+			else
+			{
+				error(_error_silent, "failed to close widget because event_handler->ui_widget_tag == NONE");
+				success = FALSE;
+			}
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_close_all_widgets_bit) && !widget_deleted)
+		{
+			close_all_widgets = TRUE;
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_open_widget_bit) && event_handler->ui_widget_tag.index != NONE)
+		{
+			if (!ui_widget_launch_widget(widget, event_handler->ui_widget_tag.index))
+			{
+				error(_error_silent, "event handler failed to spawn widget");
+				success = FALSE;
+			}
+			else
+			{
+				if (!audio_feedback)
+				{
+					audio_feedback = _audio_feedback_forward;
+				}
+
+				widget_deleted = TRUE;
+			}
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_replace_with_other_widget_bit) && !widget_deleted && event_handler->ui_widget_tag.index != NONE)
+		{
+			struct widget_instance *new_widget = ui_widget_load_by_name_or_tag(
+				NULL,
+				event_handler->ui_widget_tag.index,
+				widget,
+				widget->local_player_index,
+				NONE,
+				NONE,
+				NONE);
+
+			if (new_widget)
+			{
+				long widget_stack;
+				struct widget_instance *parent = widget->parent;
+				struct widget_instance *next = widget->next;
+				struct widget_instance *previous = widget->previous;
+
+				if (new_widget->previous)
+				{
+					new_widget->previous->next = NULL;
+				}
+
+				new_widget->previous = NULL;
+				new_widget->parent = NULL;
+				new_widget->horizontal_offset += widget->horizontal_offset;
+				new_widget->vertical_offset += widget->vertical_offset;
+
+				if (parent)
+				{
+					new_widget->parent = parent;
+
+					if (parent->children == widget)
+					{
+						parent->children = new_widget;
+					}
+
+					if (parent->focused_child == widget)
+					{
+						parent->focused_child = new_widget;
+					}
+				}
+
+				if (next)
+				{
+					match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 3721, next->previous == widget);
+					next->previous = new_widget;
+				}
+
+				new_widget->next = next;
+
+				if (previous)
+				{
+					match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 3728, previous->next == widget);
+					previous->next = new_widget;
+				}
+
+				new_widget->previous = previous;
+
+				for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+				{
+					if (widget_globals.active_widgets[widget_stack] == new_widget)
+					{
+						widget_globals.active_widgets[widget_stack] = NULL;
+						break;
+					}
+				}
+
+				if (!audio_feedback)
+				{
+					audio_feedback = _audio_feedback_forward;
+				}
+
+				widget->previous = NULL;
+				widget->next = NULL;
+				widget->parent = NULL;
+				delete_widget = TRUE;
+			}
+			else
+			{
+				error(_error_silent, "failed to open widget because the specified widget tag was not found");
+				success = FALSE;
+			}
+		}
+
+		if (TEST_FLAG(event_handler->flags, _event_handler_go_back_to_previous_widget_bit))
+		{
+			widget_instance_go_back_to_previous(widget);
+
+			if (!audio_feedback)
+			{
+				audio_feedback = _audio_feedback_backward;
+			}
+
+			widget_deleted = TRUE;
+		}
+
+		play_sound_tag(event_handler->sound_effect_tag.index);
+
+		if (close_all_widgets)
+		{
+			long widget_stack;
+
+			for (widget_stack = 0; widget_stack < MAXIMUM_GAMEPADS; widget_stack++)
+			{
+				if (widget_globals.active_widgets[widget_stack])
+				{
+					ui_widget_delete(widget_globals.active_widgets[widget_stack]);
+				}
+
+				while (widget_globals.widget_stack[widget_stack])
+				{
+					struct _widget_stack_node_data data;
+
+					pop_widget(&widget_globals.widget_stack[widget_stack], &data);
+				}
+			}
+
+			widget_deleted = TRUE;
+		}
+		else if (close_current_widget)
+		{
+			ui_widget_delete(widget_instance_get_topmost_parent(widget));
+			widget_deleted = TRUE;
+		}
+		else if (delete_widget)
+		{
+			ui_widget_delete(widget);
+			widget_deleted = TRUE;
+		}
+	}
+
+	if ((!success || function_failed) && TEST_FLAG(event_handler->flags, _event_handler_look_for_conditional_widget_on_failure_bit))
+	{
+		long conditional_widget_index;
+
+		for (conditional_widget_index = 0; conditional_widget_index < definition->conditional_widget_references.count; conditional_widget_index++)
+		{
+			struct conditional_widget_reference *conditional_widget = &((struct conditional_widget_reference *)definition->conditional_widget_references.address)[conditional_widget_index];
+
+			if (function_failed == TRUE && TEST_FLAG(conditional_widget->flags, _conditional_widget_load_if_event_handler_function_fails_bit))
+			{
+				if (!widget_deleted)
+				{
+					if (conditional_widget->ui_widget_tag.index != NONE)
+					{
+						if (!ui_widget_launch_widget(widget, conditional_widget->ui_widget_tag.index))
+						{
+							error(_error_silent, "condition handler failed to spawn widget");
+						}
+						else
+						{
+							widget_deleted = TRUE;
+						}
+					}
+				}
+				else
+				{
+					error(_error_silent, "couldn't load conditional widget because the calling widget was deleted");
+				}
+			}
+		}
+	}
+
+	ui_play_audio_feedback_sound(audio_feedback);
+	*return_widget_deleted = widget_deleted;
+
+	return;
+}
+
+static void widget_instance_render_recursive(
+	struct widget_instance *widget,
+	rectangle2d *clip_rect,
+	point2d offset,
+	boolean focus,
+	boolean use_nifty_plasma_fx)
+{
+	long game_data_input_index;
+	struct ui_widget_definition *definition = ui_widget_definition_get(widget->ui_widget_tag_index);
+	real alpha_modifier = widget_instance_get_cumulative_alpha_modifier(widget);
+
+	if (!use_nifty_plasma_fx && TEST_FLAG(definition->flags, _widget_always_render_with_nifty_fx_bit))
+	{
+		use_nifty_plasma_fx = TRUE;
+	}
+
+	offset.x += widget->horizontal_offset;
+	offset.y += widget->vertical_offset;
+
+	for (game_data_input_index = 0; game_data_input_index < definition->game_data_input_references.count; game_data_input_index++)
+	{
+		ui_widget_game_data_function_invoke(widget, ((struct game_data_input_reference *)definition->game_data_input_references.address)[game_data_input_index].function);
+	}
+
+	if (widget->visible)
+	{
+		struct widget_instance *child;
+		struct bitmap_data *bitmap = bitmap_group_get_bitmap_from_sequence(definition->background_bitmap.index, 0, widget->animation_data.current_frame_index);
+		boolean render_children = TRUE;
+
+		if (bitmap)
+		{
+			struct rasterizer_dynamic_screen_geometry_parameters multitexture_params;
+			rectangle2d local_clip;
+			real alpha = alpha_modifier;
+			rectangle2d bounds = definition->bounds;
+			rectangle2d *bitmap_clip_rect = clip_rect;
+			struct bitmap_group *bitmap_group = bitmap_group_get(definition->background_bitmap.index);
+
+			TAG_BLOCK_GET_ELEMENT(&bitmap_group->sequences, 0, struct bitmap_group_sequence);
+
+			if (use_nifty_plasma_fx)
+			{
+				set_ui_plasma_effect_color(0.f, 0.05f, 0.05f, 0.05f);
+			}
+
+			bounds.x0 += offset.x;
+			bounds.x1 += offset.x;
+			bounds.y0 += offset.y;
+			bounds.y1 += offset.y;
+
+			if (bitmap_clip_rect)
+			{
+				local_clip = *bitmap_clip_rect;
+				bitmap_clip_rect = &local_clip;
+				bitmap_clip_rect->x0 += offset.x;
+				bitmap_clip_rect->x1 += offset.x;
+				bitmap_clip_rect->y0 += offset.y;
+				bitmap_clip_rect->y1 += offset.y;
+			}
+
+			if (TEST_FLAG(definition->flags, _widget_flash_background_bitmap_bit))
+			{
+				alpha = alpha_modifier * ((cosine(widget_globals.current_system_milliseconds * SECONDS_PER_MILLISECOND * 3.f) + 1.f) * 0.5f);
+			}
+
+			draw_bitmap_in_rect(bitmap, &bounds, &bounds, bitmap_clip_rect, PIXEL32_FROM_ALPHA(fast_ftol(alpha * 255.f)) | PIXEL32_RGB_MASK, &multitexture_params, FALSE);
+
+			if (use_nifty_plasma_fx)
+			{
+				set_ui_plasma_effect_color(0.f, 0.f, 0.f, 0.f);
+			}
+		}
+
+		switch (widget->widget_type)
+		{
+		case _widget_type_text_box:
+			widget_instance_render_text_box(widget, definition, clip_rect, offset, widget_instance_text_box_is_focused(widget));
+			break;
+		case _widget_type_spinner_list:
+			widget_instance_render_spinner_list(definition, widget, clip_rect, offset, focus);
+
+			if (TEST_FLAG(definition->list_flags, _list_items_generated_from_string_list_tag) && !definition->child_widget_references.count)
+			{
+				render_children = FALSE;
+			}
+			break;
+		case _widget_type_column_list:
+			widget_instance_render_column_list(widget, definition, clip_rect, offset, focus);
+			render_children = !TEST_FLAG(definition->list_flags, _list_items_generated_in_code);
+			break;
+		}
+
+		if (render_children)
+		{
+			for (child = widget->children; child; child = child->next)
+			{
+				focus = child == widget->focused_child;
+				use_nifty_plasma_fx = focus && (widget->widget_type == _widget_type_spinner_list || widget->widget_type == _widget_type_column_list);
+				widget_instance_render_recursive(child, clip_rect, offset, focus, use_nifty_plasma_fx);
+			}
+		}
+	}
+
+	return;
+}
+
+static short get_icon_type(
+	wchar_t const *string)
+{
+	short icon_type;
+
+	for (icon_type = 0; icon_type < NUMBEROF(icon_names); icon_type++)
+	{
+		if (!_wcsnicmp(string, icon_names[icon_type], wcslen(icon_names[icon_type])))
+		{
+			break;
+		}
+	}
+
+	if (icon_type == NUMBEROF(icon_names))
+	{
+		icon_type = NONE;
+	}
+
+	return icon_type;
+}
+
+static void render_state_bitmap(
+	rectangle2d *bounds,
+	rectangle2d *cursor_bounds,
+	unsigned long color,
+	struct icon_hud_element_definition const *icon)
+{
+	struct scenario *scenario = global_scenario_get();
+	struct game_globals *game_globals = scenario_get_game_globals();
+	struct game_globals_interface_tag_references *interface_tag_references = game_globals->interface_tag_references.count ?
+		TAG_BLOCK_GET_ELEMENT(&game_globals->interface_tag_references, 0, struct game_globals_interface_tag_references) :
+		NULL;
+	long bitmap_group_index = interface_tag_references->interface_tag_references[_interface_bitmap_iface_map2].index;
+	struct bitmap_data const *bitmap = NULL;
+	real_rectangle2d const *clip = NULL;
+	short frame_index = 0;
+
+	if (icon->frame_rate)
+	{
+		frame_index = (short)(system_milliseconds() * TICKS_PER_SECOND / MILLISECONDS_PER_SECOND / icon->frame_rate);
+	}
+
+	hud_retrieve_bitmap_and_bounding_rect(bitmap_group_index, icon->sequence_index, frame_index, &bitmap, &clip);
+
+	if (bitmap && _texture_cache_bitmap_get_hardware_format(bitmap, FALSE, TRUE))
+	{
+		point2d corner;
+		real scale = hud_globals_get_scale(local_player_count() > 1);
+
+		corner.x = (short)(icon->offset.x * scale + cursor_bounds->x0 + 1.f);
+		corner.y = (short)(cursor_bounds->y1 - icon->offset.y * scale - 2.f);
+		hud_draw_bitmap_direct(
+			bitmap,
+			_hud_bottom_left,
+			&corner,
+			clip,
+			scale,
+			0.f,
+			TEST_FLAG(icon->flags, _hud_icon_use_color_bit) ? icon->color : color,
+			FALSE);
+
+		if (TEST_FLAG(icon->flags, _hud_icon_absolute_width_bit))
+		{
+			cursor_bounds->x0 = icon->width_offset + corner.x;
+		}
+		else if (clip)
+		{
+			cursor_bounds->x0 = (short)((clip->x1 - clip->x0) * bitmap->width + icon->width_offset + corner.x);
+		}
+		else
+		{
+			cursor_bounds->x0 = bitmap->width + icon->width_offset + corner.x;
+		}
+	}
+
+	return;
+}
+
+static void render_state_text(
+	rectangle2d *bounds,
+	rectangle2d *cursor_bounds,
+	wchar_t const *text)
+{
+	rectangle2d message_bounds;
+	short initial_indent = cursor_bounds->x0 - bounds->x0;
+
+	if (initial_indent < 0)
+	{
+		error(_error_silent, "initial_indent<0 in render_state_text() and was about to explode");
+	}
+
+	initial_indent = MAX(0, initial_indent);
+
+	draw_string_set_indents(initial_indent, 0);
+	draw_unicode_string_compute_bounds(bounds, text, &message_bounds, cursor_bounds);
+	cursor_bounds->x0 -= 3;
+	message_bounds.x0 = bounds->x0;
+	rasterizer_draw_unicode_string(&message_bounds, NULL, NULL, 0, text);
+	bounds->y0 = cursor_bounds->y0;
+
+	return;
+}
+
+static boolean string_has_icons_to_draw(
+	wchar_t const *string)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4181, string);
+
+	while (string)
+	{
+		wchar_t const *icon_string = wcschr(string, L'%');
+
+		if (!icon_string)
+		{
+			break;
+		}
+
+		icon_string++;
+
+		if (get_icon_type(icon_string) != NONE)
+		{
+			return TRUE;
+		}
+
+		string = icon_string;
+	}
+
+	return FALSE;
+}
+
+static boolean should_flip_sticks_for_local_player(
+	short local_player)
+{
+	struct game_input_preferences input_preferences;
+
+	if (local_player == NONE)
+	{
+		local_player = local_player_get_next(NONE);
+	}
+
+	memset(&input_preferences, 0, sizeof(input_preferences));
+
+	if (local_player != NONE)
+	{
+		input_abstraction_get_local_player_preferences(local_player, &input_preferences);
+	}
+
+	switch (input_preferences.joystick_controls)
+	{
+	case _joystick_preset_south_paw:
+	case _joystick_preset_legacy_south_paw:
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+short remap_sticks_for_local_player(
+	short icon,
+	short local_player_index)
+{
+	switch (icon)
+	{
+	case _gamepad_stick_left_icon:
+	case _hud_icon_move:
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4243, 16 == get_icon_type(L"left-stick"));
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4244, 30 == get_icon_type(L"move"));
+		icon = should_flip_sticks_for_local_player(local_player_index) ? _gamepad_stick_right_icon : _gamepad_stick_left_icon;
+		break;
+	case _gamepad_stick_right_icon:
+	case _hud_icon_look:
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4250, 17 == get_icon_type(L"right-stick"));
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4251, 31 == get_icon_type(L"look"));
+		icon = should_flip_sticks_for_local_player(local_player_index) ? _gamepad_stick_left_icon : _gamepad_stick_right_icon;
+		break;
+	}
+
+	return icon;
+}
+
+void draw_string_and_hack_in_icons(
+	rectangle2d *bounds,
+	rectangle2d *clip,
+	point2d *cursor_reference,
+	short height_adjust,
+	wchar_t const *instring,
+	boolean ignore_icon_color)
+{
+	static wchar_t string_data[1024];
+	wchar_t *string = string_data;
+	rectangle2d cursor_bounds = *bounds;
+
+	wcscpy(string_data, instring);
+
+	while (string)
+	{
+		short icon_type;
+		wchar_t *icon_string = wcschr(string, L'%');
+
+		if (!icon_string)
+		{
+			break;
+		}
+
+		*icon_string = L'\0';
+		icon_string++;
+		render_state_text(bounds, &cursor_bounds, string);
+		string = icon_string;
+
+		icon_type = get_icon_type(icon_string);
+
+		if (icon_type == NONE)
+		{
+			render_state_text(bounds, &cursor_bounds, L"%");
+		}
+		else
+		{
+			struct icon_hud_element_definition *icon;
+			real_argb_color iconColor;
+			real_argb_color textColor;
+			pixel32 alpha;
+			short icon_index;
+			short width_offset;
+			byte flags;
+
+			string = icon_string + wcslen(icon_names[icon_type]);
+			icon_type = remap_sticks_for_local_player(icon_type, local_player_index_for_draw_string_and_hack_in_icons);
+			icon_index = NONE;
+
+			if (icon_type > _hud_icon_specific_button_end)
+			{
+				if (icon_type <= _hud_icon_remapped_button_end)
+				{
+					if (icon_type <= _hud_icon_remapped_action_button_end)
+					{
+						struct game_input_preferences preferences;
+
+						input_abstraction_get_local_player_preferences(local_player_index_for_draw_string_and_hack_in_icons, &preferences);
+						icon_index = preferences.game_control_to_xbox_buttons[button_mappings[icon_type - _hud_icon_remapped_button_start]];
+					}
+					else
+					{
+						icon_index = button_mappings[icon_type - _hud_icon_remapped_button_start];
+
+						switch (icon_type)
+						{
+						case _hud_icon_accept:
+							icon_index = _gamepad_binary_button_start;
+							break;
+						case _hud_icon_back:
+							icon_index = _gamepad_binary_button_back;
+							break;
+						case _hud_icon_move:
+							icon_index = _gamepad_stick_left_icon;
+							break;
+						case _hud_icon_look:
+							icon_index = _gamepad_stick_right_icon;
+							break;
+						}
+					}
+				}
+				else
+				{
+					match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4341, FALSE);
+				}
+			}
+			else
+			{
+				icon_index = icon_type;
+			}
+
+			icon = TAG_BLOCK_GET_ELEMENT(&hud_globals->messaging.button_icons, icon_index, struct icon_hud_element_definition);
+			flags = icon->flags;
+			width_offset = icon->width_offset;
+			pixel32_to_real_argb_color(icon->color, &iconColor);
+			SET_FLAG(icon->flags, _hud_icon_use_color_bit, FALSE);
+
+
+
+
+
+
+
+
+			match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 4362, icon_index>=0 && icon_index<NUM_ICONS);
+
+			if (icon_is_special[icon_index])
+			{
+				SET_FLAG(icon->flags, _hud_icon_absolute_width_bit, FALSE);
+				icon->width_offset = -5;
+			}
+
+			draw_string_get_color(&textColor);
+			alpha = PIXEL32_FROM_ALPHA((pixel32)(textColor.alpha * 255.f));
+
+			if (!icon->color || ignore_icon_color)
+			{
+				iconColor = textColor;
+			}
+
+			iconColor.red *= textColor.alpha;
+			iconColor.green *= textColor.alpha;
+			iconColor.blue *= textColor.alpha;
+			render_state_bitmap(bounds, &cursor_bounds, alpha | PIXEL32_RGB_BITS(real_argb_color_to_pixel32(&iconColor)), icon);
+			bounds->x0++;
+			icon->flags = flags;
+			icon->width_offset = width_offset;
+		}
+	}
+
+	if (string)
+	{
+		render_state_text(bounds, &cursor_bounds, string);
+	}
+
+	draw_string_set_indents(0, 0);
+
+	return;
+}
+
+static void widget_instance_render_text_box(
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition,
+	rectangle2d *clip_rect,
+	point2d offset,
+	boolean focus)
+{
+	long font_index;
+	short justification;
+
+	if (definition->text_label_unicode_string_list_tag.index != NONE)
+	{
+		short string_index;
+		wchar_t *string;
+		long string_length;
+
+		if (widget->parameters.text_box_parameters.string_list_index == NONE)
+		{
+			string_index = definition->string_list_index;
+		}
+		else
+		{
+			string_index = widget->parameters.text_box_parameters.string_list_index;
+		}
+
+		string = unicode_string_list_get_string(definition->text_label_unicode_string_list_tag.index, string_index);
+		string_length = ustrlen(string);
+		widget->parameters.text_box_parameters.text = pool_resize_pointer(widget_memory_pool, widget->parameters.text_box_parameters.text, (string_length + 1) * sizeof(wchar_t), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4421);
+
+		if (widget->parameters.text_box_parameters.text)
+		{
+			memcpy(widget->parameters.text_box_parameters.text, string, string_length * sizeof(wchar_t));
+			widget->parameters.text_box_parameters.text[string_length] = L'\0';
+		}
+		else
+		{
+			widget->parameters.text_box_parameters.text = L"<out of memory>";
+		}
+	}
+
+	if (widget->parameters.text_box_parameters.text && *widget->parameters.text_box_parameters.text)
+	{
+		long search_and_replace_index;
+
+		for (search_and_replace_index = 0; search_and_replace_index < definition->search_and_replace_references.count; search_and_replace_index++)
+		{
+			struct search_and_replace_reference *reference = &((struct search_and_replace_reference *)definition->search_and_replace_references.address)[search_and_replace_index];
+
+			if (reference && reference->search_string[0])
+			{
+				wchar_t search_string[TAG_STRING_LENGTH+1];
+				wchar_t const *replace_string = ui_widget_search_and_replace_invoke(widget, reference->replace_function);
+
+				search_and_replace(ascii_to_wide(reference->search_string, search_string, sizeof(search_string)), replace_string, &widget->parameters.text_box_parameters.text);
+			}
+		}
+
+		font_index = definition->font_tag.index;
+
+		if (font_index == NONE)
+		{
+			error(_error_silent, "failed to render text box widget because the font tag was invalid");
+		}
+		else
+		{
+			justification = definition->justification;
+
+			if (justification >= 0 && justification < NUMBER_OF_TEXT_JUSTIFICATIONS)
+			{
+				if (widget->visible)
+				{
+					real_argb_color text_color;
+					real alpha_modifier = widget_instance_get_cumulative_alpha_modifier(widget);
+					rectangle2d bounds = definition->bounds;
+					rectangle2d clip = clip_rect ? *clip_rect : definition->bounds;
+
+					bounds.y1 += offset.y;
+					bounds.x1 += offset.x;
+					bounds.x0 += offset.x;
+					bounds.y0 += offset.y;
+					bounds.x0 += definition->hoffset;
+					bounds.y0 += definition->voffset;
+
+					if (focus)
+					{
+						text_color = get_ui_argb_white();
+						text_color.alpha = definition->text_color.alpha;
+					}
+					else
+					{
+						text_color = definition->text_color;
+
+						if (1.f == text_color.red && 1.f == text_color.green && 1.f == text_color.blue)
+						{
+							text_color = get_ui_argb_white();
+							text_color.alpha = definition->text_color.alpha;
+						}
+					}
+
+					text_color.alpha *= alpha_modifier;
+
+					if (TEST_FLAG(definition->text_box_flags, _text_box_flashing_text_bit))
+					{
+						text_color.alpha = text_color.alpha * ((cosine(widget_globals.current_system_milliseconds * SECONDS_PER_MILLISECOND * 3.f) + 1.5f) * 0.4f);
+					}
+
+					draw_string_set_draw_mode(font_index, NONE, justification, 0, &text_color);
+
+					if (string_has_icons_to_draw(widget->parameters.text_box_parameters.text))
+					{
+						draw_string_and_hack_in_icons(&bounds, &clip, NULL, 0, widget->parameters.text_box_parameters.text, FALSE);
+					}
+					else
+					{
+						rasterizer_draw_unicode_string(&bounds, &clip, NULL, 0, widget->parameters.text_box_parameters.text);
+					}
+				}
+			}
+			else
+			{
+				error(_error_silent, "failed to render text box widget because the justification was invalid");
+			}
+		}
+	}
+
+	return;
+}
+
+static void widget_instance_render_spinner_list(
+	struct ui_widget_definition *definition,
+	struct widget_instance *widget,
+	rectangle2d *clip_rect,
+	point2d offset,
+	boolean focus)
+{
+	short header_frame_index = 0;
+	short footer_frame_index = 0;
+	real alpha_modifier = widget_instance_get_cumulative_alpha_modifier(widget);
+
+	if (widget->visible)
+	{
+		struct rasterizer_dynamic_screen_geometry_parameters parameters;
+		rectangle2d bounds;
+		struct bitmap_data *bitmap;
+		wchar_t *string;
+
+		if (widget->parameters.list_parameters.last_list_tab_direction)
+		{
+			switch (widget->parameters.list_parameters.last_list_tab_direction >= 0 ? 1 : -1)
+			{
+			case -1:
+				widget->parameters.list_parameters.last_list_tab_direction++;
+				header_frame_index = 1;
+				break;
+			case 1:
+				widget->parameters.list_parameters.last_list_tab_direction--;
+				footer_frame_index = 1;
+				break;
+			}
+		}
+
+		bitmap = bitmap_group_get_bitmap_from_sequence(definition->list_header_bitmap.index, 0, header_frame_index);
+
+		if (bitmap)
+		{
+			pixel32 alpha = fast_ftol(alpha_modifier * 255.f);
+
+			memset(&parameters, 0, sizeof(parameters));
+			bounds = definition->list_header_bounds;
+			bounds.x0 += offset.x;
+			bounds.y0 += offset.y;
+			bounds.x1 += offset.x;
+			bounds.y1 += offset.y;
+			draw_bitmap_in_rect(bitmap, &bounds, &bounds, clip_rect, PIXEL32_FROM_ALPHA(alpha) | PIXEL32_RGB_MASK, &parameters, FALSE);
+		}
+
+		bitmap = bitmap_group_get_bitmap_from_sequence(definition->list_footer_bitmap.index, 0, footer_frame_index);
+
+		if (bitmap)
+		{
+			pixel32 alpha = fast_ftol(alpha_modifier * 255.f);
+
+			memset(&parameters, 0, sizeof(parameters));
+			bounds = definition->list_footer_bounds;
+			bounds.x0 += offset.x;
+			bounds.y0 += offset.y;
+			bounds.x1 += offset.x;
+			bounds.y1 += offset.y;
+			draw_bitmap_in_rect(bitmap, &bounds, &bounds, clip_rect, PIXEL32_FROM_ALPHA(alpha) | PIXEL32_RGB_MASK, &parameters, FALSE);
+		}
+
+		if (!definition->child_widget_references.count)
+		{
+			if (definition->text_label_unicode_string_list_tag.index != NONE)
+			{
+				short item_index = widget->parameters.list_parameters.current_list_item_index;
+				wchar_t *list_string = unicode_string_list_get_string(definition->text_label_unicode_string_list_tag.index, item_index);
+				long string_length = ustrlen(list_string);
+
+				string = pool_new_pointer(widget_memory_pool, (string_length + 1) * sizeof(wchar_t), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4610);
+
+				if (string)
+				{
+					long search_and_replace_index;
+
+					memcpy(string, list_string, string_length * sizeof(wchar_t));
+					string[string_length] = L'\0';
+
+					for (search_and_replace_index = 0; search_and_replace_index < definition->search_and_replace_references.count; search_and_replace_index++)
+					{
+						struct search_and_replace_reference *reference = &((struct search_and_replace_reference *)definition->search_and_replace_references.address)[search_and_replace_index];
+
+						if (reference && reference->search_string[0])
+						{
+							wchar_t search_string[TAG_STRING_LENGTH+1];
+							wchar_t const *replace_string = ui_widget_search_and_replace_invoke(widget, reference->replace_function);
+
+							search_and_replace(ascii_to_wide(reference->search_string, search_string, sizeof(search_string)), replace_string, &string);
+						}
+					}
+				}
+			}
+			else
+			{
+				string = widget->parameters.list_parameters.item_text;
+			}
+
+			if (string)
+			{
+				if (definition->font_tag.index == NONE)
+				{
+					error(_error_silent, "failed to render spinner list item because the font tag was invalid");
+				}
+				else if (definition->justification >= 0 && definition->justification < NUMBER_OF_TEXT_JUSTIFICATIONS)
+				{
+					real_argb_color text_color;
+					real text_alpha_modifier = widget_instance_get_cumulative_alpha_modifier(widget);
+					rectangle2d clip = clip_rect ? *clip_rect : definition->bounds;
+					rectangle2d bounds = definition->bounds;
+
+					bounds.x1 += offset.x;
+					bounds.y1 += offset.y;
+					bounds.x0 += offset.x;
+					bounds.y0 += offset.y;
+
+					if (focus)
+					{
+						text_color.alpha = definition->text_color.alpha;
+						text_color.rgb = get_ui_rgb_white();
+					}
+					else
+					{
+						text_color = definition->text_color;
+
+						if (1.f == text_color.red && 1.f == text_color.green && 1.f == text_color.blue)
+						{
+							text_color.alpha = definition->text_color.alpha;
+						}
+					}
+
+					text_color.alpha *= text_alpha_modifier;
+
+					if (TEST_FLAG(definition->text_box_flags, _text_box_flashing_text_bit))
+					{
+						text_color.alpha = text_color.alpha * ((sine(widget_globals.current_system_milliseconds * SECONDS_PER_MILLISECOND * 3.f) + 1.f) * 0.5f);
+					}
+
+					draw_string_set_draw_mode(definition->font_tag.index, NONE, definition->justification, 0, &text_color);
+					rasterizer_draw_unicode_string(&bounds, &clip, NULL, 0, string);
+				}
+				else
+				{
+					error(_error_silent, "failed to render spinner list item because the justification was invalid");
+				}
+			}
+
+			if (definition->text_label_unicode_string_list_tag.index != NONE)
+			{
+				dispose_pointer(widget_memory_pool, string);
+			}
+		}
+	}
+
+	return;
+}
+
+static void widget_instance_render_column_list(
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition,
+	rectangle2d *clip_rect,
+	point2d offset,
+	boolean focus)
+{
+	if (widget->parameters.list_parameters.extended_description)
+	{
+		widget->parameters.list_parameters.extended_description->alpha_modifier = widget_instance_get_cumulative_alpha_modifier(widget);
+		widget_instance_render_recursive(widget->parameters.list_parameters.extended_description, clip_rect, offset, FALSE, TRUE);
+	}
+
+	if (TEST_FLAG(definition->list_flags, _list_items_generated_in_code))
+	{
+		struct widget_instance *child;
+		long item_index;
+
+		for (child = widget->children, item_index = 0; child && item_index < widget->parameters.list_parameters.number_of_items; child = child->next, item_index++)
+		{
+			widget_instance_render_recursive(child, clip_rect, offset, focus, item_index == widget->parameters.list_parameters.current_list_item_index);
+		}
+	}
+
+	widget->parameters.list_parameters.last_list_tab_direction = 0;
+
+	return;
+}
+
+static void widget_instance_update_animation_parameters(
+	struct widget_instance *widget)
+{
+	widget->animation_data.first_frame_index = FLOOR(widget->animation_data.first_frame_index, 0);
+	widget->animation_data.last_frame_index = FLOOR(widget->animation_data.last_frame_index, 0);
+
+	return;
+}
+
+static void widget_instance_reload_recursive(
+	struct widget_instance *widget)
+{
+	return;
+}
+
+static void ui_widget_reload_by_tag(
+	long tag_index)
+{
+	return;
+}
+
+static void widget_instance_give_focus_by_tag(
+	struct widget_instance *widget,
+	long tag_index,
+	short local_player_index)
+{
+	struct widget_instance *topmost_parent = widget_instance_get_topmost_parent(widget);
+	struct widget_instance *focus_widget = widget_instance_find_by_tag_index_recursive(topmost_parent, tag_index);
+
+	if (focus_widget)
+	{
+		widget_instance_give_focus_directly(topmost_parent, focus_widget);
+	}
+	else
+	{
+		error(_error_silent, "failed to find event focus target widget");
+	}
+
+	return;
+}
+
+static void widget_instance_give_focus_directly(
+	struct widget_instance *widget,
+	struct widget_instance *target)
+{
+	struct widget_instance *old_focused_child = widget_instance_get_topmost_parent(widget)->focused_child;
+
+	if (target->never_receive_events == TRUE)
+	{
+		struct widget_instance *candidate;
+
+		for (candidate = target->next; candidate; candidate = candidate->next)
+		{
+			if (widget_instance_can_handle_events(candidate))
+			{
+				break;
+			}
+		}
+
+		if (!candidate && target->parent)
+		{
+			for (candidate = target->parent->children; candidate; candidate = candidate->next)
+			{
+				if (widget_instance_can_handle_events(candidate))
+				{
+					break;
+				}
+			}
+
+			if (candidate == target->parent->focused_child)
+			{
+				for (candidate = target->previous; candidate; candidate = candidate->previous)
+				{
+					if (widget_instance_can_handle_events(candidate))
+					{
+						break;
+					}
+				}
+			}
+		}
+
+		if (candidate)
+		{
+			target = candidate;
+		}
+	}
+
+	if (old_focused_child && target && old_focused_child->parent == target->parent && old_focused_child->parent)
+	{
+		target->parent->focused_child = target;
+	}
+	else
+	{
+		if (old_focused_child)
+		{
+			do
+			{
+				old_focused_child->parent->focused_child = NULL;
+				old_focused_child = old_focused_child->focused_child;
+			}
+			while (old_focused_child);
+		}
+
+		while (target->parent)
+		{
+			target->parent->focused_child = target;
+			target = target->parent;
+		}
+	}
+
+	return;
+}
+
+static void widget_instance_set_focused_child_by_index(
+	long focused_child_parent_widget_tag,
+	struct widget_instance *widget,
+	short focused_child_index)
+{
+	if (focused_child_parent_widget_tag != NONE)
+	{
+		struct widget_instance *parent = widget_instance_find_by_tag_index_recursive(widget, focused_child_parent_widget_tag);
+
+		if (parent)
+		{
+			if (focused_child_index >= 0)
+			{
+				struct widget_instance *child;
+				long index;
+
+				for (child = parent->children, index = 0; child; child = child->next, index++)
+				{
+					if (child->widget_type == _widget_type_spinner_list && ui_widget_definition_get(child->ui_widget_tag_index)->child_widget_references.count > 1)
+					{
+						break;
+					}
+
+					if (index == focused_child_index)
+					{
+						widget_instance_give_focus_directly(widget, child);
+
+						if (child->parent && (child->parent->widget_type == _widget_type_spinner_list || child->parent->widget_type == _widget_type_column_list))
+						{
+							child->parent->parameters.list_parameters.current_list_item_index = (short)index;
+						}
+						break;
+					}
+				}
+			}
+			else
+			{
+				if (widget_instance_can_receive_events(parent) &&
+					(parent->widget_type != _widget_type_spinner_list || ui_widget_definition_get(parent->ui_widget_tag_index)->child_widget_references.count <= 1))
+				{
+					widget_instance_give_focus_directly(widget, parent);
+				}
+			}
+		}
+	}
+
+	return;
+}
+
+static void play_sound_tag(
+	long definition_index)
+{
+	if (definition_index != NONE)
+	{
+		unspatialized_impulse_sound_new(definition_index, 1.f);
+	}
+
+	return;
+}
+
+static long search_and_replace(
+	wchar_t const *search,
+	wchar_t const *replace,
+	wchar_t **in_buffer)
+{
+	long replace_count = 0;
+
+	if (in_buffer && *in_buffer)
+	{
+		long difference;
+		long replace_length;
+		long search_length;
+		long string_length;
+		wchar_t *match;
+		wchar_t *result = *in_buffer;
+
+		search_length = ustrlen(search);
+		replace_length = ustrlen(replace);
+		string_length = ustrlen(result) + 1;
+
+		if (replace_length <= search_length)
+		{
+			difference = search_length - replace_length;
+
+			for (match = ustrstr(result, search); match; match = ustrstr(result, search))
+			{
+				replace_count++;
+				memcpy(match, replace, sizeof(wchar_t) * replace_length);
+
+				if (difference > 0)
+				{
+					memmove(match + replace_length, match + search_length, sizeof(wchar_t) * (string_length - (match - result + replace_length)));
+					string_length -= difference;
+				}
+			}
+		}
+		else
+		{
+			difference = replace_length - search_length;
+
+			for (match = ustrstr(result, search); match; match = ustrstr(match + search_length, search))
+			{
+				replace_count++;
+			}
+
+			if (replace_count > 0)
+			{
+				result = pool_resize_pointer(widget_memory_pool, result, sizeof(wchar_t) * (string_length + difference * replace_count), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4994);
+
+				if (!result)
+				{
+					replace_count = NONE;
+				}
+				else
+				{
+					for (match = ustrstr(result, search); match; match = ustrstr(result, search))
+					{
+						memmove(match + replace_length, match + search_length, sizeof(wchar_t) * (string_length - (match - result + search_length)));
+						memcpy(match, replace, sizeof(wchar_t) * replace_length);
+						string_length += difference;
+					}
+
+					*in_buffer = result;
+				}
+			}
+		}
+	}
+
+	return replace_count;
+}
+
+static void spinner_list_update(
+	struct widget_instance *widget)
+{
+	struct widget_instance *child;
+
+	for (child = widget->children; child; child = child->next)
+	{
+		child->animation_data.current_frame_index = 0;
+
+		if (child == widget->focused_child && child->animation_data.number_of_sprite_frames == 2)
+		{
+			child->animation_data.current_frame_index = 1;
+		}
+	}
+
+	return;
+}
+
+static void column_list_update(
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition)
+{
+	struct widget_instance *child;
+
+	for (child = widget->children; child; child = child->next)
+	{
+		if (child == widget->focused_child)
+		{
+			if (child->animation_data.number_of_sprite_frames == 2)
+			{
+				child->animation_data.current_frame_index = 1;
+			}
+		}
+		else if (child->animation_data.number_of_sprite_frames == 2)
+		{
+			child->animation_data.current_frame_index = 0;
+		}
+	}
+
+	return;
+}
+
+static struct widget_instance *widget_instance_get_tail_child_widget(
+	struct widget_instance const *widget)
+{
+	struct widget_instance *child = widget->children;
+
+	if (child)
+	{
+		while (child->next)
+		{
+			child = child->next;
+		}
+	}
+
+	return child;
+}
+
+static void widget_instance_tab_to_next_valid_widget(
+	struct widget_instance *widget)
+{
+	struct widget_instance *child;
+
+	if (widget->focused_child && widget->focused_child->next)
+	{
+		child = widget->focused_child->next;
+	}
+	else
+	{
+		child = widget->children;
+	}
+
+	while (child && child != widget->focused_child)
+	{
+		struct ui_widget_definition *definition = ui_widget_definition_get(child->ui_widget_tag_index);
+
+		if (definition->event_handler_references.count > 0 ||
+			TEST_FLAG(definition->flags, _widget_pass_unhandled_events_to_children_bit) ||
+			widget->widget_type == _widget_type_spinner_list ||
+			widget->widget_type == _widget_type_column_list)
+		{
+			widget->focused_child = child;
+			break;
+		}
+
+		child = child->next;
+
+		if (!child)
+		{
+			child = widget->children;
+		}
+	}
+
+	return;
+}
+
+static void widget_instance_tab_to_previous_valid_widget(
+	struct widget_instance *widget)
+{
+	struct widget_instance *child;
+
+	if (widget->focused_child)
+	{
+		if (widget->focused_child->previous)
+		{
+			child = widget->focused_child->previous;
+		}
+		else
+		{
+			child = widget_instance_get_tail_child_widget(widget);
+		}
+	}
+	else if (widget->children->previous)
+	{
+		child = widget->children->previous;
+	}
+	else
+	{
+		child = widget->children;
+	}
+
+	while (child && child != widget->focused_child)
+	{
+		struct ui_widget_definition *definition = ui_widget_definition_get(child->ui_widget_tag_index);
+
+		if (definition->event_handler_references.count > 0 ||
+			TEST_FLAG(definition->flags, _widget_pass_unhandled_events_to_children_bit) ||
+			widget->widget_type == _widget_type_spinner_list ||
+			widget->widget_type == _widget_type_column_list)
+		{
+			widget->focused_child = child;
+			break;
+		}
+
+		if (child->previous)
+		{
+			child = child->previous;
+		}
+		else
+		{
+			child = widget_instance_get_tail_child_widget(widget);
+		}
+	}
+
+	return;
+}
+
+static boolean ui_check_for_pause_game(
+	void)
+{
+	long gamepad_index;
+	boolean start_pressed = FALSE;
+	boolean network_game = network_game_is_active();
+
+	if (game_in_progress() &&
+		!cinematic_in_progress() &&
+		game_connection() != _game_connection_film_playback &&
+		!we_are_at_the_main_menu &&
+		!widget_globals.pause_disabled_ticks)
+	{
+		for (gamepad_index = 0; gamepad_index < MAXIMUM_GAMEPADS; gamepad_index++)
+		{
+			if (input_has_gamepad((short)gamepad_index) && local_player_exists(gamepad_index))
+			{
+				struct gamepad_state const *gamepad_state = input_get_gamepad_state((short)gamepad_index);
+
+				if (gamepad_state->buttons[_gamepad_binary_button_start] == 1)
+				{
+					start_pressed = TRUE;
+					break;
+				}
+			}
+		}
+	}
+
+	if (start_pressed)
+	{
+		short local_player_index;
+		boolean first_local_player = TRUE;
+		short local_player_count = 0;
+		short found_local_player_index = NONE;
+
+		for (local_player_index = local_player_get_next(NONE); local_player_index != NONE; local_player_index = local_player_get_next(local_player_index))
+		{
+			if (local_player_index == (short)gamepad_index)
+			{
+				found_local_player_index = (short)gamepad_index;
+
+				if (local_player_count >= 1)
+				{
+					first_local_player = FALSE;
+				}
+			}
+
+			local_player_count++;
+		}
+
+		if (network_game)
+		{
+			if (game_engine_allow_pause() && found_local_player_index == (short)gamepad_index)
+			{
+				if (!widget_globals.active_widgets[(short)gamepad_index])
+				{
+					struct network_game_client *client = global_network_game_client_get();
+					char const *widget_name = NULL;
+
+					network_game_client_get_game(client);
+					network_game_client_get_machine_index(client);
+
+					switch (local_player_count)
+					{
+					case 1:
+						widget_name = MULTIPLAYER_1P_PAUSE_GAME_WIDGET_NAME;
+						break;
+					case 2:
+						widget_name = MULTIPLAYER_2P_PAUSE_GAME_WIDGET_NAME;
+						break;
+					case 3:
+						if (first_local_player == TRUE)
+						{
+							widget_name = MULTIPLAYER_2P_PAUSE_GAME_WIDGET_NAME;
+						}
+						else
+						{
+							widget_name = MULTIPLAYER_4P_PAUSE_GAME_WIDGET_NAME;
+						}
+						break;
+					case 4:
+						widget_name = MULTIPLAYER_4P_PAUSE_GAME_WIDGET_NAME;
+						break;
+					default:
+						error(_error_silent, "invalid local player count for multiplayer game");
+						break;
+					}
+
+					if (widget_name)
+					{
+						if (!ui_widget_load_by_name_or_tag(widget_name, NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
+						{
+							error(_error_silent, "failed to load multiplayer pause game window");
+						}
+					}
+				}
+				else
+				{
+					ui_widget_delete(widget_globals.active_widgets[(short)gamepad_index]);
+				}
+			}
+		}
+		else
+		{
+			switch (local_player_count)
+			{
+			case 0:
+			case 1:
+				if (widget_globals.active_widgets[(short)gamepad_index])
+				{
+					if (game_time_get_paused() == TRUE)
+					{
+						ui_widgets_close_all();
+					}
+				}
+				else if (!ui_widget_load_by_name_or_tag(SOLO_PAUSE_GAME_WIDGET_NAME, NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
+				{
+					error(_error_silent, "failed to load full screen pause game window");
+				}
+				break;
+			case 2:
+				if (widget_globals.active_widgets[(short)gamepad_index])
+				{
+					if (game_time_get_paused() == TRUE)
+					{
+						ui_widgets_close_all();
+					}
+				}
+				else if (!game_time_get_paused() &&
+					!ui_widget_load_by_name_or_tag(SOLO_SPLIT_SCREEN_PAUSE_GAME_WIDGET_NAME, NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
+				{
+					error(_error_silent, "failed to load split screen pause game window");
+				}
+				break;
+			default:
+				error(_error_silent, "the ui seems to be confused... assuming you are playing full-screen single player?");
+
+				if (!ui_widgets_active())
+				{
+					if (!ui_widget_load_by_name_or_tag(SOLO_PAUSE_GAME_WIDGET_NAME, NONE, NULL, (short)gamepad_index, NONE, NONE, NONE))
+					{
+						error(_error_silent, "failed to load full screen pause game window");
+					}
+				}
+				else
+				{
+					ui_widgets_close_all();
+				}
+				break;
+			}
+		}
+	}
+
+	widget_globals.pause_disabled_ticks = FLOOR(widget_globals.pause_disabled_ticks - 1, 0);
+
+	return start_pressed;
+}
+
+static void widget_instance_go_back_to_previous(
+	struct widget_instance *widget)
+{
+	struct _widget_stack_node_data data;
+	long previous_widget_tag_index;
+	short widget_stack = widget->local_player_index == NONE ? 0 : widget->local_player_index;
+	short previous_local_player_index = NONE;
+
+	if (widget_globals.widget_stack[widget_stack])
+	{
+		pop_widget(&widget_globals.widget_stack[widget_stack], &data);
+		previous_local_player_index = data.local_player_index;
+		previous_widget_tag_index = data.previous_widget_tag;
+	}
+	else
+	{
+		previous_widget_tag_index = NONE;
+	}
+
+	ui_widget_delete(widget_instance_get_topmost_parent(widget));
+
+	if (previous_widget_tag_index != NONE)
+	{
+		struct widget_instance *previous_widget = ui_widget_load_by_name_or_tag(
+			NULL,
+			previous_widget_tag_index,
+			NULL,
+			previous_local_player_index,
+			NONE,
+			NONE,
+			NONE);
+
+		if (previous_widget)
+		{
+			widget_instance_set_focused_child_by_index(data.focused_child_parent_widget_tag, previous_widget, data.focused_child_index);
+		}
+	}
+
+	return;
+}
+
+static struct widget_instance *ui_widget_launch_widget(
+	struct widget_instance *widget,
+	long new_widget_tag_index)
+{
+	struct widget_instance *topmost_parent;
+	long parent_tag_index;
+	short child_index;
+	struct widget_instance *result;
+	short local_player_index;
+	struct ui_widget_definition *definition = ui_widget_definition_get(new_widget_tag_index);
+
+	if (TEST_FLAG(definition->flags, _widget_always_use_tag_controller_index_bit))
+	{
+		switch (definition->controller_index)
+		{
+		case _widget_controller0:
+			local_player_index = PLAYER1;
+			break;
+		case _widget_controller1:
+			local_player_index = PLAYER2;
+			break;
+		case _widget_controller2:
+			local_player_index = PLAYER3;
+			break;
+		case _widget_controller3:
+			local_player_index = PLAYER4;
+			break;
+		case _widget_controller_any:
+			local_player_index = NONE;
+			break;
+		default:
+			match_vhalt("c:\\halo\\SOURCE\\interface\\ui_widget.c", 5380, "invalid widget controller index specified");
+		}
+	}
+	else
+	{
+		switch (definition->controller_index)
+		{
+		case _widget_controller0:
+			local_player_index = PLAYER1;
+			break;
+		case _widget_controller1:
+			local_player_index = PLAYER2;
+			break;
+		case _widget_controller2:
+			local_player_index = PLAYER3;
+			break;
+		case _widget_controller3:
+			local_player_index = PLAYER4;
+			break;
+		case _widget_controller_any:
+			local_player_index = widget->local_player_index;
+			break;
+		default:
+			match_vhalt("c:\\halo\\SOURCE\\interface\\ui_widget.c", 5392, "invalid widget controller index specified");
+		}
+	}
+
+	topmost_parent = widget_instance_get_topmost_parent(widget);
+	parent_tag_index = widget->parent ? widget->parent->ui_widget_tag_index : NONE;
+	child_index = (short)widget_instance_get_child_index_from_parent(widget);
+	result = ui_widget_load_by_name_or_tag(
+		NULL,
+		new_widget_tag_index,
+		NULL,
+		local_player_index,
+		topmost_parent->ui_widget_tag_index,
+		parent_tag_index,
+		child_index);
+
+	if (!result)
+	{
+		error(_error_silent, "event handler failed to spawn widget");
+	}
+
+	return result;
+}
+
+real_rgb_color get_ui_rgb_white(
+	void)
+{
+	real_rgb_color color = *global_real_rgb_white;
+
+	color.red = global_ui_white_red;
+	color.green = global_ui_white_green;
+	color.blue = global_ui_white_blue;
+
+	return color;
+}
+
+real_argb_color get_ui_argb_white(
+	void)
+{
+	real_argb_color color = *global_real_argb_white;
+
+	color.red = global_ui_white_red;
+	color.green = global_ui_white_green;
+	color.blue = global_ui_white_blue;
+
+	return color;
+}
+
+static void perform_filesystem_initialization(
+	void)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 5439, widget_globals.initialization_thread==NULL);
+
+	error(_error_silent, "begining filesystem checks & saved game file enumeration...");
+	ui_widgets_inhibit_processing(TRUE);
+	widget_globals.filesystem_check_result = _fscheck_result_no_error;
+
+	if (!create_thread(0, filesystem_initialization_thread_proc, NULL, &widget_globals.initialization_thread))
+	{
+		error(_error_silent, "failed to spawn thread for filesystem checks - running synchronously!");
+		widget_globals.initialization_thread = NULL;
+		filesystem_initialization_thread_proc(NULL);
+		ui_widgets_inhibit_processing(FALSE);
+	}
+
+	return;
+}
+
+static unsigned long __stdcall filesystem_initialization_thread_proc(
+	void *input)
+{
+	widget_globals.filesystem_check_result = saved_game_perform_file_system_checks();
+
+	if (widget_globals.filesystem_check_result == _fscheck_result_no_error)
+	{
+		long unused_saved_game_file_index;
+		word number_of_files = 1;
+
+		playlist_profiles_enumerate_available_to_local_player_index(NONE, &number_of_files, &unused_saved_game_file_index);
+		player_profiles_enumerate_available_to_local_player_index(NONE, &number_of_files, &unused_saved_game_file_index, TRUE);
+		player_ui_get_player1_last_used_profile_index();
+	}
+
+	return 0;
+}

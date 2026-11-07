@@ -1,87 +1,22 @@
 /*
 UI_WIDGET_GROUP.C
-
-symbols in this file:
-000E4620 0420:
-	_ui_load_tags_for_scenario (0000)
-0027857C 0033:
-	??_C@_0DD@HIJLBPHL@failed?5to?5load?5miscellaneous?5loc@ (0000)
-002785B0 003a:
-	??_C@_0DK@MPPHFEHK@failed?5to?5load?5the?5solo?5scenario@ (0000)
-002785EC 000e:
-	??_C@_0O@INBKELDJ@ui?2shell?2solo?$AA@ (0000)
-00278600 0041:
-	??_C@_0EB@BLFLKJID@failed?5to?5load?5the?5multiplayer?5s@ (0000)
-00278644 0015:
-	??_C@_0BF@FHGIICCE@ui?2shell?2multiplayer?$AA@ (0000)
-0027865C 0025:
-	??_C@_0CF@LCDPGNMG@failed?5to?5load?5main?5menu?5title?5m@ (0000)
-00278684 0024:
-	??_C@_0CE@BPCKAMEK@failed?5to?5load?5ui?5failure?5sound?5@ (0000)
-002786A8 0021:
-	??_C@_0CB@DFIKOPNL@failed?5to?5load?5ui?5back?5sound?5tag@ (0000)
-002786CC 0024:
-	??_C@_0CE@JMNPCHFG@failed?5to?5load?5ui?5forward?5sound?5@ (0000)
-002786F0 0023:
-	??_C@_0CD@PCFDGADJ@failed?5to?5load?5ui?5cursor?5sound?5t@ (0000)
-00278718 0045:
-	??_C@_0EF@KPOLMCHO@failed?5to?5load?5the?5player?5profil@ (0000)
-00278760 0052:
-	??_C@_0FC@PFKACJEP@failed?5to?5load?5the?5player?5profil@ (0000)
-002787B8 0054:
-	??_C@_0FE@JKNKGHDC@failed?5to?5load?5the?5default?5playe@ (0000)
-00278810 0045:
-	??_C@_0EF@IDLODINJ@failed?5to?5load?5the?5player?5profil@ (0000)
-00278858 004f:
-	??_C@_0EP@GBOCIPKK@failed?5to?5load?5the?5player?5profil@ (0000)
-002788A8 0040:
-	??_C@_0EA@DGNKALF@failed?5to?5load?5the?5default?5playe@ (0000)
-002788E8 0038:
-	??_C@_0DI@OBALKBC@failed?5to?5load?5the?5game?5difficul@ (0000)
-00278920 003b:
-	??_C@_0DL@CNLOFCOK@ui?2shell?2main_menu?2player_profil@ (0000)
-00278960 0043:
-	??_C@_0ED@GHAOMBDD@failed?5to?5load?5the?5multiplayer?5v@ (0000)
-002789A8 0042:
-	??_C@_0EC@HAFOJMAH@failed?5to?5load?5the?5default?5playl@ (0000)
-002789EC 002a:
-	??_C@_0CK@DLIFJMDN@ui?2default_multiplayer_game_sett@ (0000)
-00278A18 003f:
-	??_C@_0DP@CGKBNILG@failed?5to?5load?5the?5default?5saved@ (0000)
-00278A58 001b:
-	??_C@_0BL@GMMNCEMI@ui?2saved_game_file_strings?$AA@ (0000)
-00278A74 0038:
-	??_C@_0DI@IALAJLCD@failed?5to?5load?5the?5multiplayer?5s@ (0000)
-00278AAC 0019:
-	??_C@_0BJ@PMBLKDHA@ui?2multiplayer_scenarios?$AA@ (0000)
-00278AC8 0033:
-	??_C@_0DD@OHHIGLLE@failed?5to?5load?5random?5player?5nam@ (0000)
-00278AFC 0017:
-	??_C@_0BH@HPKMNAPF@ui?2random_player_names?$AA@ (0000)
-00278B14 0032:
-	??_C@_0DC@KHBOAMNN@failed?5to?5load?5the?5browser?8s?5vir@ (0000)
-00278B48 000b:
-	??_C@_0L@BFJFJOJM@ui?2english?$AA@ (0000)
-00278B54 003f:
-	??_C@_0DP@IJPGFCNJ@failed?5to?5load?5the?5main?5menu?5sce@ (0000)
-00278B94 0013:
-	??_C@_0BD@OAAJMPAE@ui?2shell?2main_menu?$AA@ (0000)
-00278BA8 0016:
-	??_C@_0BG@PFHAIEEK@unknown?5scenario?5type?$AA@ (0000)
-00278BC0 002b:
-	??_C@_0CL@GIFHHALH@c?3?2halo?2SOURCE?2interface?2ui_widg@ (0000)
-00278BEC 001d:
-	??_C@_0BN@PIOKPAAC@generic?5white?5texture?5bitmap?$AA@ (0000)
-00278C0C 0017:
-	??_C@_0BH@CENABDIJ@ui?2shell?2bitmaps?2white?$AA@ (0000)
-00278C24 0039:
-	??_C@_0DJ@FKCKCMDM@failed?5to?5load?5the?5multiplayer?5g@ (0000)
 */
 
 /* ---------- headers */
 
 #include "cseries.h"
 #include "ui_widget_group.h"
+#include "bitmap_group.h"
+#include "text_group.h"
+#include "sound_definitions.h"
+#include "virtual_keyboard.h"
+#include "scenario.h"
+#include "scenario_definitions.h"
+#include "multiplayer_scenario_description.h"
+#include "game_engine.h"
+#include "player_ui.h"
+#include "saved_game_files.h"
+#include "network_game_ui.h"
 
 /* ---------- constants */
 
@@ -95,4 +30,139 @@ symbols in this file:
 
 /* ---------- public code */
 
-/* ---------- private code */
+void ui_load_tags_for_scenario(
+	long scenario_index)
+{
+	struct scenario *scenario = scenario_definition_get(scenario_index);
+
+	if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, MULTIPLAYER_GAME_TEXT_TAG_NAME, 0) == NONE)
+	{
+		error(_error_silent, "failed to load the multiplayer game text string list tag");
+	}
+
+	if (tag_load(BITMAP_GROUP_TAG, GENERIC_WHITE_BITMAP_TAG_NAME, 0) == NONE)
+	{
+		error(_error_silent, "generic white texture bitmap");
+	}
+
+	switch (scenario->type)
+	{
+	case _scenario_type_solo:
+		if (tag_load(UI_WIDGET_COLLECTION_TAG, SOLO_WIDGET_COLLECTION_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the solo scenario ui_widget_collection tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, TEMPORARY_STRINGS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load miscellaneous localized strings tag");
+		}
+		break;
+	case _scenario_type_multiplayer:
+		if (tag_load(UI_WIDGET_COLLECTION_TAG, MULTIPLAYER_WIDGET_COLLECTION_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the multiplayer scenario ui_widget_collection tag");
+		}
+		break;
+	case _scenario_type_main_menu:
+		if (tag_load(UI_WIDGET_COLLECTION_TAG, MAIN_MENU_WIDGET_COLLECTION_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the main menu scenario ui_widget_collection_tag");
+		}
+
+		if (tag_load(VIRTUAL_KEYBOARD_TAG, VIRTUAL_KEYBOARD_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the browser's virtual keyboard tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, RANDOM_PLAYER_NAMES_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load random player names string list tag");
+		}
+
+		if (tag_load(MULTIPLAYER_SCENARIO_DESCRIPTION_TAG, MULTIPLAYER_SCENARIO_DESCRIPTION_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the multiplayer scenario description tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, SAVED_GAME_FILE_STRINGS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the default saved game filename string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, DEFAULT_MULTIPLAYER_GAME_SETTING_NAMES_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the default playlist profile names string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, GAME_VARIANT_DESCRIPTIONS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the multiplayer variant description string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, DIFFICULTY_NAMES_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the game difficulty name string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, DEFAULT_PLAYER_PROFILE_NAMES_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the default player profile names string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, BUTTON_SET_LONG_DESCRIPTIONS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the player profile button set long descriptions string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, BUTTON_SET_SHORT_DESCRIPTIONS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the player profile short descriptions string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, JOYSTICK_SET_DEFAULTS_DESCRIPTIONS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the default player profile joystick set descriptions string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, JOYSTICK_SET_SHORT_DESCRIPTIONS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the player profile joystick set short descriptions string list tag");
+		}
+
+		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, PROFILE_DESCRIPTION_LABELS_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load the player profile description labels string list tag");
+		}
+
+		if (tag_load(SOUND_DEFINITION_TAG, UI_CURSOR_SOUND_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load ui cursor sound tag");
+		}
+
+		if (tag_load(SOUND_DEFINITION_TAG, UI_FORWARD_SOUND_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load ui forward sound tag");
+		}
+
+		if (tag_load(SOUND_DEFINITION_TAG, UI_BACK_SOUND_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load ui back sound tag");
+		}
+
+		if (tag_load(SOUND_DEFINITION_TAG, UI_FAILURE_SOUND_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load ui failure sound tag");
+		}
+
+		if (tag_load(LOOPING_SOUND_DEFINITION_TAG, MAIN_MENU_MUSIC_TAG_NAME, 0) == NONE)
+		{
+			error(_error_silent, "failed to load main menu title music");
+		}
+		break;
+	default:
+		match_vhalt("c:\\halo\\SOURCE\\interface\\ui_widget_group.c", 506, "unknown scenario type");
+	}
+
+	return;
+}

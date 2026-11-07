@@ -14,7 +14,9 @@ header included in hcex build.
 
 /* ---------- structures */
 
-/* ---------- prototypes/EXAMPLE.C */
+/* ---------- prototypes/UI_WIDGET_TEXT_SEARCH_AND_REPLACE_FUNCTIONS.C */
+
+wchar_t *ui_widget_search_and_replace_invoke(struct widget_instance *widget, short function);
 
 /* ---------- globals */
 

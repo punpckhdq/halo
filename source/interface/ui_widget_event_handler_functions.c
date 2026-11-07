@@ -1,908 +1,5 @@
 /*
 UI_WIDGET_EVENT_HANDLER_FUNCTIONS.C
-
-symbols in this file:
-000D8F90 0090:
-	_ui_widget_event_handler_function_invoke (0000)
-000D9020 0010:
-	_widget_event_function_null (0000)
-000D9030 0010:
-	_reset_last_player1_profile_index (0000)
-000D9040 01a0:
-	_solo_level_initialize_list_coop (0000)
-000D91E0 0030:
-	_solo_level_dispose_list (0000)
-000D9210 0140:
-	_solo_level_set_next_map_name (0000)
-000D9350 0060:
-	_difficulty_set (0000)
-000D93B0 0030:
-	_start_new_game (0000)
-000D93E0 0010:
-	_pause_game_restart_at_checkpoint (0000)
-000D93F0 0010:
-	_pause_game_restart_level (0000)
-000D9400 0010:
-	_pause_game_quit_to_main_menu (0000)
-000D9410 0020:
-	_clear_multiplayer_player_joins (0000)
-000D9430 0050:
-	_player_wants_to_join_multiplayer_game (0000)
-000D9480 0040:
-	_network_game_server_list_initialize (0000)
-000D94C0 0090:
-	_network_game_start_new_server (0000)
-000D9550 0200:
-	_network_game_join_game_from_server_list (0000)
-000D9750 0020:
-	_network_server_list_dispose (0000)
-000D9770 0020:
-	_network_game_cancel (0000)
-000D9790 0070:
-	_split_screen_game_initialize (0000)
-000D9800 0010:
-	_coop_game_initialize (0000)
-000D9810 0040:
-	_main_menu_initialize (0000)
-000D9850 0010:
-	_multiplayer_type_menu_initialize (0000)
-000D9860 0020:
-	_multiplayer_pick_quick_start_play_stage (0000)
-000D9880 00f0:
-	_multiplayer_level_list_initialize (0000)
-000D9970 0020:
-	_multiplayer_level_list_dispose (0000)
-000D9990 01d0:
-	_multiplayer_level_select (0000)
-000D9B60 0160:
-	_multiplayer_profiles_list_initialize (0000)
-000D9CC0 0030:
-	_multiplayer_profiles_list_dispose (0000)
-000D9CF0 02a0:
-	_multiplayer_profile_set_for_game (0000)
-000D9F90 00f0:
-	_multiplayer_game_swap_teams (0000)
-000DA080 0110:
-	_netgame_join_player (0000)
-000DA190 0160:
-	_player_profiles_list_initialize (0000)
-000DA2F0 0030:
-	_player_profiles_list_dispose (0000)
-000DA320 01c0:
-	_player_profile_set_for_game_3wide (0000)
-000DA4E0 0160:
-	_player_profile_set_for_game_1wide (0000)
-000DA640 0140:
-	_playlist_profile_begin_editing (0000)
-000DA780 0020:
-	_playlist_profile_end_editing (0000)
-000DA7A0 00e0:
-	_playlist_profile_set_game_engine (0000)
-000DA880 0050:
-	_playlist_profile_change_name (0000)
-000DA8D0 03a0:
-	_playlist_profile_change_ctf_rules (0000)
-000DAC70 0220:
-	_playlist_profile_change_koth_rules (0000)
-000DAE90 0360:
-	_playlist_profile_change_slayer_rules (0000)
-000DB1F0 0580:
-	_playlist_profile_change_oddball_rules (0000)
-000DB770 02d0:
-	_playlist_profile_change_racing_rules (0000)
-000DBA40 0580:
-	_playlist_profile_change_player_options (0000)
-000DBFC0 0320:
-	_playlist_profile_change_item_options (0000)
-000DC2E0 01f0:
-	_playlist_profile_change_indicator_options (0000)
-000DC4D0 00c0:
-	_playlist_profile_initialize_game_engine (0000)
-000DC590 00a0:
-	_playlist_profile_initialize_name (0000)
-000DC630 0390:
-	_playlist_profile_initialize_ctf_rules (0000)
-000DC9C0 0230:
-	_playlist_profile_initialize_koth_rules (0000)
-000DCBF0 0350:
-	_playlist_profile_initialize_slayer_rules (0000)
-000DCF40 0510:
-	_playlist_profile_initialize_oddball_rules (0000)
-000DD450 02e0:
-	_playlist_profile_initialize_racing_rules (0000)
-000DD730 0550:
-	_playlist_profile_initialize_player_options (0000)
-000DDC80 0310:
-	_playlist_profile_initialize_item_options (0000)
-000DDF90 0200:
-	_playlist_profile_initialize_indicator_options (0000)
-000DE190 00c0:
-	_playlist_profile_save_changes (0000)
-000DE250 0110:
-	_player_profile_color_picker_menu_initialize (0000)
-000DE360 0030:
-	_player_profile_color_picker_menu_dispose (0000)
-000DE390 0100:
-	_player_profile_color_picker_select_color (0000)
-000DE490 0130:
-	_player_profile_begin_editing (0000)
-000DE5C0 0020:
-	_player_profile_end_editing (0000)
-000DE5E0 0050:
-	_player_profile_change_name (0000)
-000DE630 0080:
-	_player_profile_save_changes (0000)
-000DE6B0 01e0:
-	_player_profile_initialize_controller_settings (0000)
-000DE890 02e0:
-	_player_profile_initialize_advanced_controller_settings (0000)
-000DEB70 01d0:
-	_player_profile_change_controller_settings (0000)
-000DED40 0340:
-	_player_profile_change_advanced_controller_settings (0000)
-000DF080 0050:
-	_network_game_remove_local_player (0000)
-000DF0D0 0020:
-	_switch_from_main_menu_to_single_player (0000)
-000DF0F0 0110:
-	_delete_player_profile_request (0000)
-000DF200 0140:
-	_delete_playlist_profile_request (0000)
-000DF340 0050:
-	_delete_player_profile_final (0000)
-000DF390 0040:
-	_delete_playlist_profile_final (0000)
-000DF3D0 0010:
-	_cancel_profile_delete (0000)
-000DF3E0 0180:
-	_create_and_begin_editing_new_gametype_profile (0000)
-000DF560 00f0:
-	_create_and_begin_editing_new_player_profile (0000)
-000DF650 00a0:
-	_network_game_start_faster (0000)
-000DF6F0 00a0:
-	_network_game_start_slower (0000)
-000DF790 0020:
-	_network_game_server_accept_connections (0000)
-000DF7B0 0020:
-	_network_game_server_defer_game_start (0000)
-000DF7D0 0020:
-	_network_game_server_allow_game_start (0000)
-000DF7F0 0020:
-	_disable_widget_if_no_xdemos (0000)
-000DF810 0010:
-	_run_xdemos (0000)
-000DF820 0010:
-	_single_player_reset_controller_choices (0000)
-000DF830 0050:
-	_single_player_set_player1_controller_choice (0000)
-000DF880 0070:
-	_single_player_set_player2_controller_choice (0000)
-000DF8F0 0060:
-	_display_error_if_no_network_connection (0000)
-000DF950 0080:
-	_start_network_game_if_no_advertised_servers (0000)
-000DF9D0 0180:
-	_netgame_unjoin_player (0000)
-000DFB50 0050:
-	_close_calling_widget_if_not_editing_profile (0000)
-000DFBA0 0010:
-	_exit_to_xbox_dashboard (0000)
-000DFBB0 0090:
-	_new_campaign_chosen (0000)
-000DFC40 0160:
-	_new_campaign_decision (0000)
-000DFDA0 0020:
-	_go_back_twice_next_time (0000)
-000DFDC0 00e0:
-	_difficulty_menu_initialize (0000)
-000DFEA0 0020:
-	_begin_music_fade_out (0000)
-000DFEC0 0050:
-	_new_campaign_if_no_custom_player_profiles_exist (0000)
-000DFF10 02a0:
-	_solo_level_initialize_list_single_player (0000)
-00273234 001c:
-	??_C@_0BM@CKKFJKOP@levels?2test?2longest?2longest?$AA@ (0000)
-00273250 001a:
-	??_C@_0BK@MPFNKPCD@levels?2test?2putput?2putput?$AA@ (0000)
-0027326C 001a:
-	??_C@_0BK@OFNDPNPO@levels?2test?2wizard?2wizard?$AA@ (0000)
-00273288 0022:
-	??_C@_0CC@POIILJDH@levels?2test?2bloodgulch?2bloodgulc@ (0000)
-002732AC 002a:
-	??_C@_0CK@HECAMEMK@levels?2test?2boardingaction?2board@ (0000)
-002732D8 001e:
-	??_C@_0BO@FIJEGPFC@levels?2test?2chillout?2chillout?$AA@ (0000)
-002732F8 0022:
-	??_C@_0CC@MJDACFAF@levels?2test?2hangemhigh?2hangemhig@ (0000)
-0027331C 001e:
-	??_C@_0BO@NDKKNFGF@levels?2test?2prisoner?2prisoner?$AA@ (0000)
-0027333C 001c:
-	??_C@_0BM@IKJMNKIP@levels?2test?2ratrace?2ratrace?$AA@ (0000)
-00273358 0020:
-	??_C@_0CA@JNPLOBAC@levels?2test?2damnation?2damnation?$AA@ (0000)
-00273378 0022:
-	??_C@_0CC@JCCBAGPB@levels?2test?2sidewinder?2sidewinde@ (0000)
-0027339C 0024:
-	??_C@_0CE@KHFKIHNB@levels?2test?2beavercreek?2beavercr@ (0000)
-002733C0 001d:
-	??_C@_0BN@PJAAEBLK@new?5game?5if?5no?5plyr?5profiles?$AA@ (0000)
-002733E0 0015:
-	??_C@_0BF@GNFLEJPM@begin?5music?5fade?5out?$AA@ (0000)
-002733F8 0015:
-	??_C@_0BF@NOJBMGJJ@difficulty?5menu?5init?$AA@ (0000)
-00273410 0017:
-	??_C@_0BH@MPIABOAL@pop?5history?5stack?5once?$AA@ (0000)
-00273428 0016:
-	??_C@_0BG@DCONGAJK@new?5campaign?5decision?$AA@ (0000)
-00273440 0014:
-	??_C@_0BE@LAFLJECA@new?5campaign?5chosen?$AA@ (0000)
-00273454 0017:
-	??_C@_0BH@PGIFGDHO@exit?5to?5xbox?5dashboard?$AA@ (0000)
-0027346C 001d:
-	??_C@_0BN@CMCONINM@close?5if?5not?5editing?5profile?$AA@ (0000)
-0027348C 0017:
-	??_C@_0BH@GEKFCEPO@net?5game?5unjoin?5player?$AA@ (0000)
-002734A4 0020:
-	??_C@_0CA@FJIAAMCI@start?5server?5if?5none?5advertised?$AA@ (0000)
-002734C4 001f:
-	??_C@_0BP@JGPNCJEH@error?5if?5no?5network?5connection?$AA@ (0000)
-002734E4 001c:
-	??_C@_0BM@CNEIABDN@sp?5set?5p2?5controller?5choice?$AA@ (0000)
-00273500 001c:
-	??_C@_0BM@ICOBEMPH@sp?5set?5p1?5controller?5choice?$AA@ (0000)
-0027351C 001c:
-	??_C@_0BM@MMMCBMPA@sp?5reset?5controller?5choices?$AA@ (0000)
-00273538 000b:
-	??_C@_0L@NMGEHBFG@run?5xdemos?$AA@ (0000)
-00273544 0015:
-	??_C@_0BF@KAAHCELF@disable?5if?5no?5xdemos?$AA@ (0000)
-0027355C 0017:
-	??_C@_0BH@LFMLNMCG@net?5server?5allow?5start?$AA@ (0000)
-00273574 0017:
-	??_C@_0BH@JMMJIBIA@net?5server?5defer?5start?$AA@ (0000)
-0027358C 0017:
-	??_C@_0BH@JOMFGOKO@net?5server?5accept?5conx?$AA@ (0000)
-002735A4 0015:
-	??_C@_0BF@OPPDMGPP@net?5game?5delay?5start?$AA@ (0000)
-002735BC 0015:
-	??_C@_0BF@OJFPEDJ@net?5game?5speed?5start?$AA@ (0000)
-002735D4 001b:
-	??_C@_0BL@PLPJJODF@create?$CGedit?5player?5profile?$AA@ (0000)
-002735F0 001d:
-	??_C@_0BN@ECPIMEEB@create?$CGedit?5playlist?5profile?$AA@ (0000)
-00273610 0016:
-	??_C@_0BG@MKAEGKD@cancel?5profile?5delete?$AA@ (0000)
-00273628 001b:
-	??_C@_0BL@NOENJPBG@final?5del?5playlist?5profile?$AA@ (0000)
-00273644 0019:
-	??_C@_0BJ@MAIEEAIE@final?5del?5player?5profile?$AA@ (0000)
-00273660 001d:
-	??_C@_0BN@JEGEKGKO@request?5del?5playlist?5profile?$AA@ (0000)
-00273680 001b:
-	??_C@_0BL@OFFLHPFB@request?5del?5player?5profile?$AA@ (0000)
-0027369C 001e:
-	??_C@_0BO@CDIODLMI@main?5menu?5switch?5to?5solo?5game?$AA@ (0000)
-002736BC 0014:
-	??_C@_0BE@OBGOABGF@mp?5game?5player?5quit?$AA@ (0000)
-002736D0 001b:
-	??_C@_0BL@KBEIKELI@plyr?5prf?5save?5adv?5cntl?5set?$AA@ (0000)
-002736EC 001c:
-	??_C@_0BM@JCFNELGA@plyr?5prf?5save?5cntl?5settings?$AA@ (0000)
-00273708 001b:
-	??_C@_0BL@MOLIBDPJ@plyr?5prf?5init?5adv?5cntl?5set?$AA@ (0000)
-00273724 001c:
-	??_C@_0BM@JDOJMKNB@plyr?5prf?5init?5cntl?5settings?$AA@ (0000)
-00273740 001c:
-	??_C@_0BM@IDODMIOF@player?5profile?5save?5changes?$AA@ (0000)
-0027375C 001b:
-	??_C@_0BL@LNBEKBDK@player?5profile?5change?5name?$AA@ (0000)
-00273778 001b:
-	??_C@_0BL@FJHEPBDC@player?5profile?5end?5editing?$AA@ (0000)
-00273794 001d:
-	??_C@_0BN@JGMAOMFB@player?5profile?5begin?5editing?$AA@ (0000)
-002737B4 001a:
-	??_C@_0BK@DDPMGOLB@color?5picker?5select?5color?$AA@ (0000)
-002737D0 001a:
-	??_C@_0BK@KLIELBBF@color?5picker?5menu?5dispose?$AA@ (0000)
-002737EC 001d:
-	??_C@_0BN@LOBGBHKN@color?5picker?5menu?5initialize?$AA@ (0000)
-0027380C 0018:
-	??_C@_0BI@BEFJGPMM@mp?5profile?5save?5changes?$AA@ (0000)
-00273824 001f:
-	??_C@_0BP@NNAOBMAO@mp?5profile?5init?5indicator?5opts?$AA@ (0000)
-00273844 001d:
-	??_C@_0BN@DOGEIAEE@mp?5profile?5init?5item?5options?$AA@ (0000)
-00273864 001c:
-	??_C@_0BM@HMFJPO@mp?5profile?5init?5player?5opts?$AA@ (0000)
-00273880 001d:
-	??_C@_0BN@JDIGJKOO@mp?5profile?5init?5racing?5rules?$AA@ (0000)
-002738A0 001e:
-	??_C@_0BO@HEJNENFA@mp?5profile?5init?5oddball?5rules?$AA@ (0000)
-002738C0 001d:
-	??_C@_0BN@BJHDNLDO@mp?5profile?5init?5slayer?5rules?$AA@ (0000)
-002738E0 001b:
-	??_C@_0BL@CECKFCFG@mp?5profile?5init?5koth?5rules?$AA@ (0000)
-002738FC 001a:
-	??_C@_0BK@OOPLKCME@mp?5profile?5init?5ctf?5rules?$AA@ (0000)
-00273918 0015:
-	??_C@_0BF@CGAEGGLI@mp?5profile?5init?5name?$AA@ (0000)
-00273930 001c:
-	??_C@_0BM@FLOIEBB@mp?5profile?5init?5game?5engine?$AA@ (0000)
-0027394C 001e:
-	??_C@_0BO@MBNNOLCN@mp?5profile?5set?5indicator?5opts?$AA@ (0000)
-0027396C 001c:
-	??_C@_0BM@HIEEMHHH@mp?5profile?5set?5item?5options?$AA@ (0000)
-00273988 001e:
-	??_C@_0BO@JOANNGJK@mp?5profile?5set?5player?5options?$AA@ (0000)
-002739A8 001c:
-	??_C@_0BM@NFKGNNNN@mp?5profile?5set?5racing?5rules?$AA@ (0000)
-002739C4 001d:
-	??_C@_0BN@MLALAMAB@mp?5profile?5set?5oddball?5rules?$AA@ (0000)
-002739E4 001c:
-	??_C@_0BM@FPFDJMAN@mp?5profile?5set?5slayer?5rules?$AA@ (0000)
-00273A00 001a:
-	??_C@_0BK@LECHLALA@mp?5profile?5set?5koth?5rules?$AA@ (0000)
-00273A1C 0019:
-	??_C@_0BJ@FMAENFML@mp?5profile?5set?5ctf?5rules?$AA@ (0000)
-00273A38 0017:
-	??_C@_0BH@NFGKAADB@mp?5profile?5change?5name?$AA@ (0000)
-00273A50 001b:
-	??_C@_0BL@EMEHMOLO@mp?5profile?5set?5game?5engine?$AA@ (0000)
-00273A6C 0017:
-	??_C@_0BH@DBAKFADJ@mp?5profile?5end?5editing?$AA@ (0000)
-00273A84 0019:
-	??_C@_0BJ@NEOFMOJK@mp?5profile?5begin?5editing?$AA@ (0000)
-00273AA0 001d:
-	??_C@_0BN@JEELJKPD@1wide?5plyr?5prof?5set?5for?5game?$AA@ (0000)
-00273AC0 001d:
-	??_C@_0BN@FCEECILL@3wide?5plyr?5prof?5set?5for?5game?$AA@ (0000)
-00273AE0 001c:
-	??_C@_0BM@FDFIEBEE@player?5profile?5list?5dispose?$AA@ (0000)
-00273AFC 001f:
-	??_C@_0BP@EILBCMJA@player?5profile?5list?5initialize?$AA@ (0000)
-00273B1C 0015:
-	??_C@_0BF@DEFPINBF@net?5game?5join?5player?$AA@ (0000)
-00273B34 0011:
-	??_C@_0BB@OAGILGIB@swap?5player?5team?$AA@ (0000)
-00273B48 0018:
-	??_C@_0BI@PANNINNP@mp?5profile?5set?5for?5game?$AA@ (0000)
-00273B60 0019:
-	??_C@_0BJ@LEMMAL@mp?5profiles?5list?5dispose?$AA@ (0000)
-00273B7C 001c:
-	??_C@_0BM@BEOGKOGL@mp?5profiles?5list?5initialize?$AA@ (0000)
-00273B98 0010:
-	??_C@_0BA@HKPGOGHG@mp?5level?5select?$AA@ (0000)
-00273BA8 0016:
-	??_C@_0BG@DPANKKCK@mp?5level?5list?5dispose?$AA@ (0000)
-00273BC0 0019:
-	??_C@_0BJ@KMHDEFIK@mp?5level?5list?5initialize?$AA@ (0000)
-00273BDC 0020:
-	??_C@_0CA@IHMPEHAC@pick?5play?5stage?5for?5quick?5start?$AA@ (0000)
-00273BFC 0018:
-	??_C@_0BI@GLDLEOML@mp?5type?5menu?5initialize?$AA@ (0000)
-00273C14 0014:
-	??_C@_0BE@IAMGJKAG@main?5menu?5intialize?$AA@ (0000)
-00273C28 0015:
-	??_C@_0BF@IPNDONHP@coop?5game?5initialize?$AA@ (0000)
-00273C40 001d:
-	??_C@_0BN@NGOBJECA@split?5screen?5game?5initialize?$AA@ (0000)
-00273C60 001f:
-	??_C@_0BP@OKMDBJFP@net?5game?5join?5from?5server?5list?$AA@ (0000)
-00273C80 0016:
-	??_C@_0BG@KCDKAAGE@shutdown?5network?5game?$AA@ (0000)
-00273C98 001d:
-	??_C@_0BN@BNONIGKN@dispose?5net?5game?5server?5list?$AA@ (0000)
-00273CB8 001a:
-	??_C@_0BK@OIAMDICB@start?5network?5game?5server?$AA@ (0000)
-00273CD4 0020:
-	??_C@_0CA@BOOGOHNA@initialize?5net?5game?5server?5list?$AA@ (0000)
-00273CF4 001b:
-	??_C@_0BL@HNHGNHOC@join?5controller?5to?5mp?5game?$AA@ (0000)
-00273D10 001f:
-	??_C@_0BP@NOHMKMMJ@clear?5multiplayer?5player?5joins?$AA@ (0000)
-00273D30 001f:
-	??_C@_0BP@HKCAHEBO@pause?5game?5return?5to?5main?5menu?$AA@ (0000)
-00273D50 0019:
-	??_C@_0BJ@MBLNANKA@pause?5game?5restart?5level?$AA@ (0000)
-00273D6C 0021:
-	??_C@_0CB@MLJNKJPN@pause?5game?5restart?5at?5checkpoint@ (0000)
-00273D90 000f:
-	??_C@_0P@ELIKNFC@start?5new?5game?$AA@ (0000)
-00273DA0 000f:
-	??_C@_0P@NMIEKKIE@set?5difficulty?$AA@ (0000)
-00273DB0 0013:
-	??_C@_0BD@CFCHPLOM@solo?5level?5set?5map?$AA@ (0000)
-00273DC4 0016:
-	??_C@_0BG@GLIOCLOO@dispose?5sp?5level?5list?$AA@ (0000)
-00273DDC 001e:
-	??_C@_0BO@GFDJFBIC@initialize?5sp?5level?5list?5coop?$AA@ (0000)
-00273DFC 001e:
-	??_C@_0BO@MKMFHGMH@initialize?5sp?5level?5list?5solo?$AA@ (0000)
-00273E1C 0018:
-	??_C@_0BI@KBLNOBEE@list?5goto?5previous?5item?$AA@ (0000)
-00273E34 0014:
-	??_C@_0BE@GIAPNLMB@list?5goto?5next?5item?$AA@ (0000)
-00273E48 0005:
-	??_C@_04HIBGFPH@NULL?$AA@ (0000)
-00273E50 001f:
-	??_C@_0BP@LILGJJIN@invalid?5event_handler_function?$AA@ (0000)
-00273E70 001a:
-	??_C@_0BK@KLBEFMEG@event?5handler?5?8?$CFs?8?5failed?$AA@ (0000)
-00273E8C 002d:
-	??_C@_0CN@PLPCDKAG@?$CIwidget?5?$CB?$DN?5NULL?$CJ?5?$CG?$CG?5?$CIwidget_dele@ (0000)
-00273EBC 003d:
-	??_C@_0DN@CNKLADJF@c?3?2halo?2SOURCE?2interface?2ui_widg@ (0000)
-00273EFC 0033:
-	??_C@_0DD@OHOLFOBA@expected?53?5list?5items?5for?5?8solo?5@ (0000)
-00273F30 003c:
-	??_C@_0DM@NMDHJKNH@expected?5a?5spinner?5list?5widget?5f@ (0000)
-00273F6C 0022:
-	??_C@_0CC@PKIAILIE@this?5level?5is?5unavailable?5to?5you@ (0000)
-00273F90 002c:
-	??_C@_0CM@JJCEJILN@invalid?5player?5count?5for?5single?5@ (0000)
-00273FBC 0031:
-	??_C@_0DB@OCCHKEGI@I?5don?8t?5think?5this?5is?5the?5solo?5l@ (0000)
-00273FF0 0031:
-	??_C@_0DB@KBOONLAB@I?5don?8t?5think?5this?5is?5the?5diffic@ (0000)
-00274028 0043:
-	??_C@_0ED@FBGCADHE@need?5a?5specific?5local?5player?5ind@ (0000)
-0027406C 0038:
-	??_C@_0DI@HJCBGPBM@failed?5to?5create?5network?5client?5@ (0000)
-002740A8 0071:
-	??_C@_0HB@LIIHEKKC@unable?5to?5join?5server?3?5this?5does@ (0000)
-00274120 0065:
-	??_C@_0GF@PKNHAMOD@unable?5to?5join?5server?3?5there?5are@ (0000)
-00274188 0020:
-	??_C@_0CA@NOFBALF@attempted?5to?5join?5a?5closed?5game?$AA@ (0000)
-002741A8 0057:
-	??_C@_0FH@LKFHGHJL@attempted?5to?5join?5a?5network?5game@ (0000)
-00274200 0036:
-	??_C@_0DG@KBGBLHKP@attempted?5to?5join?5a?5network?5game@ (0000)
-00274238 0028:
-	??_C@_0CI@FDBEIAII@failed?5to?5initiate?5join?5game?5pro@ (0000)
-00274260 0030:
-	??_C@_0DA@JMNAFPHL@failed?5to?5initiate?5split?5screen?5@ (0000)
-00274290 003a:
-	??_C@_0DK@FAPNEHOE@expected?53?5list?5items?5for?5?8multi@ (0000)
-002742D0 0043:
-	??_C@_0ED@LIBBFHLL@expected?5a?5spinner?5list?5widget?5f@ (0000)
-00274314 0005:
-	??_C@_04GIIIDFDH@?6?$AN?5?7?$AA@ (0000)
-0027431C 0016:
-	??_C@_0BG@JCJMDKIB@d?3?2map_automation?4txt?$AA@ (0000)
-00274338 004e:
-	??_C@_0EO@BEGBILMM@invalid?5multiplayer?5level?5specif@ (0000)
-00274388 004d:
-	??_C@_0EN@ECKNGNPN@expected?5the?5multiplayer?5level?5s@ (0000)
-002743D8 0045:
-	??_C@_0EF@MKBKJGIH@expected?5a?5wrapper?5widget?5around@ (0000)
-00274420 003d:
-	??_C@_0DN@CGGANPPO@expected?53?5list?5items?5for?5?8multi@ (0000)
-00274460 0046:
-	??_C@_0EG@KCPOAKJJ@expected?5a?5spinner?5list?5widget?5f@ (0000)
-002744A8 002e:
-	??_C@_0CO@IOMLMFLI@failed?5to?5retrieve?5user?5selected@ (0000)
-002744D8 001a:
-	??_C@_0BK@IHCJGFAG@d?3?2variant_automation?4txt?$AA@ (0000)
-002744F8 0052:
-	??_C@_0FC@NPAIGO@invalid?5multiplayer?5profile?5spec@ (0000)
-0027454C 003c:
-	??_C@_0DM@EHEIABGG@expected?53?5list?5items?5for?5?8multi@ (0000)
-00274588 0045:
-	??_C@_0EF@GHNMLIHF@expected?5a?5spinner?5list?5widget?5f@ (0000)
-002745D0 004f:
-	??_C@_0EP@BPILFDAD@expected?5the?5multiplayer?5profile@ (0000)
-00274620 0047:
-	??_C@_0EH@IDEDNEPI@expected?5a?5wrapper?5widget?5around@ (0000)
-00274668 0034:
-	??_C@_0DE@BFAJHNAN@failed?5to?5update?5player?8s?5team?5f@ (0000)
-0027469C 0006:
-	??_C@_05GFHEIIDD@event?$AA@ (0000)
-002746A4 001c:
-	??_C@_0BM@ODJCCMDB@failed?5to?5send?5join?5request?$AA@ (0000)
-002746C0 0005:
-	??_C@_04MJNAPEEI@game?$AA@ (0000)
-002746C8 0044:
-	??_C@_0EE@OLLGDBGO@expected?5either?51?5or?53?5list?5item@ (0000)
-00274710 0041:
-	??_C@_0EB@DCCMCEEJ@expected?5a?5spinner?5list?5widget?5f@ (0000)
-00274754 0028:
-	??_C@_0CI@FBPJAHMJ@this?5is?5not?5a?5selectable?5player?5@ (0000)
-0027477C 0030:
-	??_C@_0DA@INIMKAED@failed?5to?5retrieve?5user?5selected@ (0000)
-002747B0 004d:
-	??_C@_0EN@DAMMCLCE@invalid?5multiplayer?5profile?5spec@ (0000)
-00274800 0037:
-	??_C@_0DH@OLFFHCGO@expected?53?5list?5items?5for?5?8playe@ (0000)
-00274838 0040:
-	??_C@_0EA@KOPPJHK@expected?5a?5spinner?5list?5widget?5f@ (0000)
-00274878 0052:
-	??_C@_0FC@GCMGMAHG@expected?5the?5player?5profile?5sele@ (0000)
-002748CC 003b:
-	??_C@_0DL@DGCCINMB@setting?5a?5player?5profile?5require@ (0000)
-00274908 0050:
-	??_C@_0FA@MNFIIJIE@invalid?5multiplayer?5profile?5spec@ (0000)
-00274958 0052:
-	??_C@_0FC@GEGBOOAJ@expected?5a?5code?9generated?51?9wide@ (0000)
-002749B0 0066:
-	??_C@_0GG@HKMBCICA@failed?5to?5find?5the?51?9wide?5spinne@ (0000)
-00274A18 0050:
-	??_C@_0FA@OKGLHGEL@expected?5the?5multiplayer?5profile@ (0000)
-00274A68 0029:
-	??_C@_0CJ@BILCCILP@failed?5to?5retrieve?5editable?5game@ (0000)
-00274A94 0024:
-	??_C@_0CE@EHKAIEHI@unknown?5game?5engine?5option?5selec@ (0000)
-00274AB8 002f:
-	??_C@_0CP@NEIOJJBH@expected?5column?5list?5for?5game?5en@ (0000)
-00274AE8 0032:
-	??_C@_0DC@BKONMLHO@failed?5to?5invoke?5virtual?5keyboar@ (0000)
-00274B20 0041:
-	??_C@_0EB@HBCCICNL@unknown?5option?5selected?5in?5?8capt@ (0000)
-00274B64 002f:
-	??_C@_0CP@LPNNIAMP@expected?5?8captures?5to?5win?8?5optio@ (0000)
-00274B94 0020:
-	??_C@_0CA@JIGFKFNJ@expected?5?8captures?5to?5win?8?5item?$AA@ (0000)
-00274BB8 0047:
-	??_C@_0EH@JFABHGNL@unknown?5option?5selected?5in?5?8flag@ (0000)
-00274C00 0035:
-	??_C@_0DF@DCLCNIIN@expected?5?8flag?5at?5home?5to?5score?8@ (0000)
-00274C38 0026:
-	??_C@_0CG@HKINOOCO@expected?5?8flag?5at?5home?5to?5score?8@ (0000)
-00274C60 0041:
-	??_C@_0EB@CGKNEHBN@unknown?5option?5selected?5in?5?8flag@ (0000)
-00274CA4 002f:
-	??_C@_0CP@OIFCEFAJ@expected?5?8flag?5must?5reset?8?5optio@ (0000)
-00274CD4 0020:
-	??_C@_0CA@MJDABGHA@expected?5?8flag?5must?5reset?8?5item?$AA@ (0000)
-00274CF4 003d:
-	??_C@_0DN@PHJOOEPC@unknown?5option?5selected?5in?5?8sing@ (0000)
-00274D34 002b:
-	??_C@_0CL@LLJHPHCN@expected?5?8single?5flag?8?5option?5sp@ (0000)
-00274D60 0021:
-	??_C@_0CB@LHIFFFIG@expected?5?8single?5flag?8?5list?5item@ (0000)
-00274D84 0039:
-	??_C@_0DJ@HLIJINGC@unknown?5option?5selected?5in?5?8assa@ (0000)
-00274DC0 0027:
-	??_C@_0CH@PDPKILPB@expected?5?8assault?8?5option?5spinne@ (0000)
-00274DE8 001d:
-	??_C@_0BN@CBOBGHLN@expected?5?8assault?8?5list?5item?$AA@ (0000)
-00274E08 0037:
-	??_C@_0DH@MEHAIAGM@unknown?5option?5selected?5in?5?8team@ (0000)
-00274E40 0025:
-	??_C@_0CF@CJCOPGKG@expected?5?8teams?8?5option?5spinner?5@ (0000)
-00274E68 0016:
-	??_C@_0BG@PCIKNPB@expected?5?8teams?8?5item?$AA@ (0000)
-00274E80 003e:
-	??_C@_0DO@BCHNEKIC@unknown?5option?5selected?5in?5?8scor@ (0000)
-00274EC0 002c:
-	??_C@_0CM@EFNIMNE@expected?5?8score?5to?5win?8?5option?5s@ (0000)
-00274EEC 0022:
-	??_C@_0CC@HPHFEIIB@expected?5?8score?5to?5win?8?5list?5ite@ (0000)
-00274F10 003d:
-	??_C@_0DN@CIHCFDHC@unknown?5option?5selected?5in?5?8movi@ (0000)
-00274F50 002b:
-	??_C@_0CL@GEHLEAKN@expected?5?8moving?5hill?8?5option?5sp@ (0000)
-00274F7C 0021:
-	??_C@_0CB@GMMNACEB@expected?5?8moving?5hill?8?5list?5item@ (0000)
-00274FA0 003e:
-	??_C@_0DO@EGAILLBM@unknown?5option?5selected?5in?5?8kill@ (0000)
-00274FE0 002c:
-	??_C@_0CM@FACIHNEK@expected?5?8kills?5to?5win?8?5option?5s@ (0000)
-0027500C 001d:
-	??_C@_0BN@ONFPNDEA@expected?5?8kills?5to?5win?8?5item?$AA@ (0000)
-0027502C 003e:
-	??_C@_0DO@LOCDLFDG@unknown?5option?5selected?5in?5?8kill@ (0000)
-0027506C 002c:
-	??_C@_0CM@KIADHDGA@expected?5?8kill?5penalty?8?5option?5s@ (0000)
-00275098 001d:
-	??_C@_0BN@EEPNIEIC@expected?5?8kill?5penalty?8?5item?$AA@ (0000)
-002750B8 003f:
-	??_C@_0DP@OMJBMMFJ@unknown?5option?5selected?5in?5?8kill@ (0000)
-002750F8 002d:
-	??_C@_0CN@GOIPBIFO@expected?5?8kill?5in?5order?8?5option?5@ (0000)
-00275128 001e:
-	??_C@_0BO@BPPJICBD@expected?5?8kill?5in?5order?8?5item?$AA@ (0000)
-00275148 003d:
-	??_C@_0DN@CAAKCEOG@unknown?5option?5selected?5in?5?8deat@ (0000)
-00275188 002b:
-	??_C@_0CL@GMADDHDJ@expected?5?8death?5bonus?8?5option?5sp@ (0000)
-002751B4 0021:
-	??_C@_0CB@GGOOLOIH@expected?5?8death?5bonus?8?5list?5item@ (0000)
-002751D8 001d:
-	??_C@_0BN@BGJOOIEM@expected?5?8score?5to?5win?8?5item?$AA@ (0000)
-002751F8 0042:
-	??_C@_0EC@CNGNLKIP@unknown?5option?5selected?5in?5?8ball@ (0000)
-0027523C 0030:
-	??_C@_0DA@DHHJJBPA@expected?5?8ball?5spawn?5count?8?5opti@ (0000)
-0027526C 0021:
-	??_C@_0CB@KFIKNLPP@expected?5?8ball?5spawn?5count?8?5item@ (0000)
-00275290 003e:
-	??_C@_0DO@CNOIDBIE@unknown?5option?5selected?5in?5?8rand@ (0000)
-002752D0 002c:
-	??_C@_0CM@DLMIPHNC@expected?5?8random?5start?8?5option?5s@ (0000)
-002752FC 001d:
-	??_C@_0BN@IGOMDGMO@expected?5?8random?5start?8?5item?$AA@ (0000)
-0027531C 003b:
-	??_C@_0DL@ELHEFNKJ@unknown?5option?5selected?5in?5?8ball@ (0000)
-00275358 0029:
-	??_C@_0CJ@PIHLKJDG@expected?5?8ball?5type?8?5option?5spin@ (0000)
-00275384 001a:
-	??_C@_0BK@KGJGIPPN@expected?5?8ball?5type?8?5item?$AA@ (0000)
-002753A0 0041:
-	??_C@_0EB@PAOCLLOA@unknown?5option?5selected?5in?5?8spee@ (0000)
-002753E4 002f:
-	??_C@_0CP@DOBNLJPE@expected?5?8speed?5with?5ball?8?5optio@ (0000)
-00275414 0020:
-	??_C@_0CA@JLLKBAE@expected?5?8speed?5with?5ball?8?5item?$AA@ (0000)
-00275438 0044:
-	??_C@_0EE@JGOKJLCD@unknown?5option?5selected?5in?5?8trai@ (0000)
-0027547C 0032:
-	??_C@_0DC@JCPBBNEO@expected?5?8trait?5without?5ball?8?5op@ (0000)
-002754B0 0028:
-	??_C@_0CI@OIIALKKI@expected?5?8trait?5without?5ball?8?5li@ (0000)
-002754D8 0041:
-	??_C@_0EB@JHLOGGN@unknown?5option?5selected?5in?5?8trai@ (0000)
-0027551C 002f:
-	??_C@_0CP@MHIEOEHJ@expected?5?8trait?5with?5ball?8?5optio@ (0000)
-0027554C 0025:
-	??_C@_0CF@IEGNKFJE@expected?5?8trait?5with?5ball?8?5list?5@ (0000)
-00275574 003d:
-	??_C@_0DN@MLCIAKGM@unknown?5option?5selected?5in?5?8laps@ (0000)
-002755B4 002b:
-	??_C@_0CL@IHCBBJLD@expected?5?8laps?5to?5win?8?5option?5sp@ (0000)
-002755E0 001c:
-	??_C@_0BM@PDNFGFIN@expected?5?8laps?5to?5win?8?5item?$AA@ (0000)
-002755FC 003b:
-	??_C@_0DL@PFKKAJFD@unknown?5option?5selected?5in?5?8race@ (0000)
-00275638 0029:
-	??_C@_0CJ@EGKFPNMM@expected?5?8race?5type?8?5option?5spin@ (0000)
-00275664 001f:
-	??_C@_0BP@OOINMFFA@expected?5?8race?5type?8?5list?5item?$AA@ (0000)
-00275684 003e:
-	??_C@_0DO@BBKCLPHM@unknown?5option?5selected?5in?5?8team@ (0000)
-002756C4 002c:
-	??_C@_0CM@HICHJCK@expected?5?8team?5scoring?8?5option?5s@ (0000)
-002756F0 0022:
-	??_C@_0CC@EHLHFBCF@expected?5?8team?5scoring?8?5list?5ite@ (0000)
-00275718 0041:
-	??_C@_0EB@JIMOAOFB@unknown?5option?5selected?5in?5?8suic@ (0000)
-0027575C 002f:
-	??_C@_0CP@FGDBAMEF@expected?5?8suicide?5penalty?8?5optio@ (0000)
-00275790 0043:
-	??_C@_0ED@DAPJCPMO@unknown?5option?5selected?5in?5?8invi@ (0000)
-002757D4 0031:
-	??_C@_0DB@PAFJFHEI@expected?5?8invisible?5players?8?5opt@ (0000)
-00275808 0022:
-	??_C@_0CC@PDNGOBNG@expected?5?8invisible?5players?8?5ite@ (0000)
-0027582C 003d:
-	??_C@_0DN@CLJGJJAA@unknown?5option?5selected?5in?5?8odd?5@ (0000)
-0027586C 002b:
-	??_C@_0CL@GHJPIKNP@expected?5?8odd?5man?5out?8?5option?5sp@ (0000)
-00275898 001c:
-	??_C@_0BM@BHDHCLKH@expected?5?8odd?5man?5out?8?5item?$AA@ (0000)
-002758B8 0045:
-	??_C@_0EF@OIKIDCBL@unknown?5option?5selected?5in?5?8resp@ (0000)
-00275900 0033:
-	??_C@_0DD@NLKPDEHI@expected?5?8respawn?5time?5growth?8?5o@ (0000)
-00275934 0024:
-	??_C@_0CE@KBCHINMN@expected?5?8respawn?5time?5growth?8?5i@ (0000)
-00275958 003e:
-	??_C@_0DO@CKKLAEB@unknown?5option?5selected?5in?5?8resp@ (0000)
-00275998 002c:
-	??_C@_0CM@BEIKHGBH@expected?5?8respawn?5time?8?5option?5s@ (0000)
-002759C4 001d:
-	??_C@_0BN@DPHKLODK@expected?5?8respawn?5time?8?5item?$AA@ (0000)
-002759E4 0039:
-	??_C@_0DJ@DBDJNBHE@unknown?5option?5selected?5in?5?8shie@ (0000)
-00275A20 0027:
-	??_C@_0CH@LJEKNHOH@expected?5?8shields?8?5option?5spinne@ (0000)
-00275A48 0018:
-	??_C@_0BI@CEHIOBPG@expected?5?8shields?8?5item?$AA@ (0000)
-00275A60 0040:
-	??_C@_0EA@DABIHKOK@unknown?5option?5selected?5in?5?8maxi@ (0000)
-00275AA0 002e:
-	??_C@_0CO@KOPOPBJN@expected?5?8maximum?5health?8?5option@ (0000)
-00275AD0 0024:
-	??_C@_0CE@PMIGFAEH@expected?5?8maximum?5health?8?5list?5i@ (0000)
-00275AF8 0041:
-	??_C@_0EB@CKLNCFJI@unknown?5option?5selected?5in?5?8numb@ (0000)
-00275B3C 002f:
-	??_C@_0CP@OEECCHIM@expected?5?8number?5of?5lives?8?5optio@ (0000)
-00275B6C 0025:
-	??_C@_0CF@HPCBIIEO@expected?5?8number?5of?5lives?8?5list?5@ (0000)
-00275B98 0044:
-	??_C@_0EE@OIHOJDAL@unknown?5option?5selected?5in?5?8star@ (0000)
-00275BDC 0032:
-	??_C@_0DC@OMGFBFGG@expected?5?8starting?5equipment?8?5op@ (0000)
-00275C10 0023:
-	??_C@_0CD@CEBCLNHA@expected?5?8starting?5equipment?8?5it@ (0000)
-00275C34 003c:
-	??_C@_0DM@LJEKOMEA@unknown?5option?5selected?5in?5?8weap@ (0000)
-00275C70 002a:
-	??_C@_0CK@NJEJGNGB@expected?5?8weapon?5set?8?5option?5spi@ (0000)
-00275C9C 001b:
-	??_C@_0BL@EIPHFBCA@expected?5?8weapon?5set?8?5item?$AA@ (0000)
-00275CB8 003d:
-	??_C@_0DN@LNELOOFC@unknown?5option?5selected?5in?5?8vehi@ (0000)
-00275CF8 002b:
-	??_C@_0CL@PBECPNIN@expected?5?8vehicle?5set?8?5option?5sp@ (0000)
-00275D24 0021:
-	??_C@_0CB@EJJNGEPI@expected?5?8vehicle?5set?8?5list?5item@ (0000)
-00275D48 0043:
-	??_C@_0ED@LEBGDHCG@unknown?5option?5selected?5in?5?8infi@ (0000)
-00275D8C 0031:
-	??_C@_0DB@HELGEPKA@expected?5?8infinite?5grenades?8?5opt@ (0000)
-00275DC0 0027:
-	??_C@_0CH@DKDNJNOJ@expected?5?8infinite?5grenades?8?5lis@ (0000)
-00275DE8 0043:
-	??_C@_0ED@IMDCIIKE@unknown?5option?5selected?5in?5?8frie@ (0000)
-00275E2C 0031:
-	??_C@_0DB@EMJCPACC@expected?5?8friends?5on?5screen?8?5opt@ (0000)
-00275E60 0022:
-	??_C@_0CC@LMGDHIAO@expected?5?8friends?5on?5screen?8?5ite@ (0000)
-00275E88 0048:
-	??_C@_0EI@FOCJOPJP@unknown?5option?5selected?5in?5?8othe@ (0000)
-00275ED0 0036:
-	??_C@_0DG@NMIGKIPA@expected?5?8other?5players?5on?5radar@ (0000)
-00275F08 002c:
-	??_C@_0CM@LDFEKJGI@expected?5?8other?5players?5on?5radar@ (0000)
-00275F34 003f:
-	??_C@_0DP@GEBGHLEK@unknown?5option?5selected?5in?5?8rada@ (0000)
-00275F74 002d:
-	??_C@_0CN@OGAIKPEN@expected?5?8radar?5display?8?5option?5@ (0000)
-00275FA4 0023:
-	??_C@_0CD@GBAFKDJE@expected?5?8radar?5display?8?5list?5it@ (0000)
-00275FC8 003e:
-	??_C@_0DO@ENIMCAMG@expected?5a?5column?5list?5for?5the?5l@ (0000)
-00276008 002a:
-	??_C@_0CK@PKAEGOCK@expected?5text?5box?5widget?5for?5pro@ (0000)
-00276034 003a:
-	??_C@_0DK@FCMOBEK@expected?5column?5list?5for?5multipl@ (0000)
-00276070 0020:
-	??_C@_0CA@CBEFDPK@expected?5?8suicide?5penalty?8?5item?$AA@ (0000)
-00276090 0004:
-	__real@c1200000 (0000)
-00276094 0032:
-	??_C@_0DC@JFKLHNN@expected?5?8starting?5equpiment?8?5op@ (0000)
-002760C8 003c:
-	??_C@_0DM@HKEJCMPM@no?5changes?5to?5playlist?5profile?5d@ (0000)
-00276104 0037:
-	??_C@_0DH@LFKJEPCM@failed?5to?5save?5changes?5to?5multip@ (0000)
-0027613C 0028:
-	??_C@_0CI@CFFCECLC@failed?5to?5prompt?5user?5to?5rename?5@ (0000)
-00276164 0026:
-	??_C@_0CG@PAOGPANA@failed?5to?5find?5editing?5player?5pr@ (0000)
-0027618C 003c:
-	??_C@_0DM@CEMIACLO@expected?53?5list?5items?5for?5?8playe@ (0000)
-002761C8 0045:
-	??_C@_0EF@EFMLLKN@expected?5a?5spinner?5list?5widget?5f@ (0000)
-00276210 0050:
-	??_C@_0FA@JLLIDFJH@failed?5to?5set?5player?5profile?5col@ (0000)
-00276260 002d:
-	??_C@_0CN@MOIEDJPH@invalid?5player?5profile?5color?5ind@ (0000)
-00276290 0050:
-	??_C@_0FA@DIAMNMAL@expected?5the?5color?5select?5screen@ (0000)
-002762E0 0048:
-	??_C@_0EI@LGBBIBIN@invalid?5player?5profile?5specified@ (0000)
-00276328 0043:
-	??_C@_0ED@KGGAFPOI@expected?5the?5player?5profile?5sele@ (0000)
-0027636C 002b:
-	??_C@_0CL@BMHGDODI@failed?5to?5retrieve?5editable?5play@ (0000)
-00276398 0039:
-	??_C@_0DJ@EEDBFAPF@failed?5to?5invoke?5virtual?5keyboar@ (0000)
-002763D4 003a:
-	??_C@_0DK@GNCHNLBL@no?5changes?5to?5player?5profile?5det@ (0000)
-00276410 0029:
-	??_C@_0CJ@IAAFIHHO@failed?5to?5save?5changes?5to?5player@ (0000)
-0027643C 002d:
-	??_C@_0CN@MPCLCLKM@expected?5?8button?5config?8?5option?5@ (0000)
-0027646C 0023:
-	??_C@_0CD@OLPIPNIN@expected?5?8button?5config?8?5list?5it@ (0000)
-00276490 002f:
-	??_C@_0CP@BIPIEEBI@expected?5?8joystick?5config?8?5optio@ (0000)
-002764C0 0025:
-	??_C@_0CF@OPPPALBL@expected?5?8joystick?5config?8?5list?5@ (0000)
-002764E8 0034:
-	??_C@_0DE@COFFBEJJ@expected?5column?5list?5for?5control@ (0000)
-0027651C 002a:
-	??_C@_0CK@PDIFHFLO@expected?5?8autocenter?8?5option?5spi@ (0000)
-00276548 0020:
-	??_C@_0CA@LHOLDKPN@expected?5?8autocenter?8?5list?5item?$AA@ (0000)
-00276568 0035:
-	??_C@_0DF@CKIKEEOB@expected?5?8flight?5stick?5controls?8@ (0000)
-002765A0 002b:
-	??_C@_0CL@LGILJIEO@expected?5?8flight?5stick?5controls?8@ (0000)
-002765CC 0034:
-	??_C@_0DE@GKAMOJCH@expected?5?8controller?5vibration?8?5@ (0000)
-00276600 002a:
-	??_C@_0CK@MHECGMGN@expected?5?8controller?5vibration?8?5@ (0000)
-0027662C 0030:
-	??_C@_0DA@MCAAKNGI@expected?5?8look?5sensitivity?8?5opti@ (0000)
-0027665C 0026:
-	??_C@_0CG@JKPEBBJO@expected?5?8look?5sensitivity?8?5list@ (0000)
-00276684 002f:
-	??_C@_0CP@MJKCDOAK@expected?5?8invert?5joystick?8?5optio@ (0000)
-002766B4 0025:
-	??_C@_0CF@HEHNOJIA@expected?5?8invert?5joystick?8?5list?5@ (0000)
-002766DC 003d:
-	??_C@_0DN@EHAOJAGJ@expected?5column?5list?5for?5advance@ (0000)
-0027671C 0026:
-	??_C@_0CG@GJIEMKFG@unknown?5button?5config?5option?5sel@ (0000)
-00276744 002c:
-	??_C@_0CM@LCPFMMAJ@unknown?5option?5selected?5for?5joys@ (0000)
-00276770 0032:
-	??_C@_0DC@GJKGKFFM@unknown?5option?5selected?5for?5cont@ (0000)
-002767A8 0046:
-	??_C@_0EG@EHBHKPIP@unknown?5option?5selected?5for?5cont@ (0000)
-002767F0 0031:
-	??_C@_0DB@FDCPOOAP@unknown?5option?5selected?5for?5cont@ (0000)
-00276824 002d:
-	??_C@_0CN@OOBHBLBJ@unknown?5option?5selected?5for?5look@ (0000)
-00276854 002c:
-	??_C@_0CM@BMAPGOKA@unknown?5option?5selected?5for?5inve@ (0000)
-00276880 0043:
-	??_C@_0ED@LCCDOMCC@valid?5controller?5index?5required?5@ (0000)
-002768C4 0039:
-	??_C@_0DJ@HCJBFEGF@expected?53?5list?5items?5for?5?8playl@ (0000)
-00276900 0042:
-	??_C@_0EC@CGFFDICC@expected?5a?5spinner?5list?5widget?5f@ (0000)
-00276948 004d:
-	??_C@_0EN@KMDPJKLA@expected?5the?5playlist?5profile?5se@ (0000)
-00276998 003d:
-	??_C@_0DN@BMNEAMJB@sorry?0?5you?5are?5not?5allowed?5to?5de@ (0000)
-002769D8 0027:
-	??_C@_0CH@DEJGJFNG@?$CD0x?$CF08lX?5is?5not?5a?5player?5profile@ (0000)
-00276A00 0029:
-	??_C@_0CJ@OBODLPNP@?$CD0x?$CF08lX?5is?5not?5a?5playlist?5profi@ (0000)
-00276A2C 0028:
-	??_C@_0CI@ICBONEFN@unable?5to?5create?5a?5new?5untitled?5@ (0000)
-00276A54 0035:
-	??_C@_0DF@GHAGJAFN@failed?5to?5create?5a?5new?5multiplay@ (0000)
-00276A8C 0032:
-	??_C@_0DC@DAKIGPNM@failed?5to?5retrieve?5editable?5game@ (0000)
-00276AC0 003b:
-	??_C@_0DL@KBABGNPK@creating?5a?5new?5profile?5requires?5@ (0000)
-00276AFC 0026:
-	??_C@_0CG@JJGJJAEA@failed?5to?5create?5a?5new?5player?5pr@ (0000)
-00276B24 002c:
-	??_C@_0CM@KEIBNLED@failed?5to?5retrieve?5editable?5play@ (0000)
-00276B50 0037:
-	??_C@_0DH@GECHANBJ@network_game_client_request_star@ (0000)
-00276B88 000e:
-	??_C@_0O@DGLDALDL@event?5?$CB?$DN?5NULL?$AA@ (0000)
-00276B98 0048:
-	??_C@_0EI@BKECLHHJ@not?5attempting?5to?5start?5a?5new?5se@ (0000)
-00276BE0 0027:
-	??_C@_0CH@JIOCLNMI@expected?5a?5column?5list?5for?5serve@ (0000)
-00276C08 0053:
-	??_C@_0FD@LCEGCPBM@can?8t?5request?5player?5removal?5fro@ (0000)
-00276C5C 0021:
-	??_C@_0CB@NGMIIKKH@failed?5to?5request?5player?5removal@ (0000)
-00276C80 0024:
-	??_C@_0CE@CJLNJCKF@duplicate?5player?5registered?5in?5g@ (0000)
-00276CA4 003f:
-	??_C@_0DP@OCEIDKPE@closing?5widget?5?8?$CFs?8?5because?5no?5s@ (0000)
-00276CE8 0046:
-	??_C@_0EG@LAGPKDPO@failed?5to?5invoke?5the?5virtual?5key@ (0000)
-00276D30 002e:
-	??_C@_0CO@CIHPLIFE@can?8t?5create?5a?5new?5profile?5with?5@ (0000)
-00276D60 0024:
-	??_C@_0CE@MOMFODCN@failed?5to?5create?5new?5player?5prof@ (0000)
-00276D84 0030:
-	??_C@_0DA@HDOIMLAN@failed?5to?5retrieve?5newly?5created@ (0000)
-00276DB4 0026:
-	??_C@_0CG@GODFIEFJ@failed?5to?5find?5?8difficulty?8?5menu@ (0000)
-00276DDC 0030:
-	??_C@_0DA@CLKNGJMF@expected?5column?5list?5for?5difficu@ (0000)
-00305EE0 03a6:
-	_data_00305ee0 (0000)
-	_event_handler_functions (0330)
-00454AF0 016e:
-	_bss_00454af0 (0000)
-	_single_player_level_data (0018)
-	_persistant_game_data_info (0068)
 */
 
 /* ---------- headers */
@@ -935,8 +32,233 @@ symbols in this file:
 #include "network_server_manager.h"
 #include "playlist_profile.h"
 #include "network_connection.h"
+#include "event_manager.h"
+#include "game.h"
+#include "game_engine.h"
+#include "players.h"
+#include "bungie_net/network/transport.h"
 
 /* ---------- constants */
+
+enum
+{
+	PLAYER1 = 0,
+	PLAYER2
+};
+
+enum
+{
+	MINIMUM_SAVED_GAME_FILES_LIST_SIZE = 3,
+	LOCAL_PLAYER_TO_GET_PLAYSTAGE_PROFILES_FROM = 0
+};
+
+enum
+{
+	_toggle_option_on = 0,		/* fake name */
+	_toggle_option_off,			/* fake name */
+	NUMBER_OF_TOGGLE_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_starting_equipment_option_custom = 0,	/* fake name */
+	_starting_equipment_option_generic,		/* fake name */
+	NUMBER_OF_STARTING_EQUIPMENT_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_single_flag_option_off = 0,	/* fake name */
+	_single_flag_option_1_minute,	/* fake name */
+	_single_flag_option_2_minutes,	/* fake name */
+	_single_flag_option_3_minutes,	/* fake name */
+	_single_flag_option_5_minutes,	/* fake name */
+	_single_flag_option_10_minutes,	/* fake name */
+	NUMBER_OF_SINGLE_FLAG_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_captures_to_win_option_1 = 0,		/* fake name */
+	_captures_to_win_option_3,			/* fake name */
+	_captures_to_win_option_5,			/* fake name */
+	_captures_to_win_option_10,			/* fake name */
+	_captures_to_win_option_15,			/* fake name */
+	NUMBER_OF_CAPTURES_TO_WIN_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_score_to_win_option_1 = 0,		/* fake name */
+	_score_to_win_option_2,			/* fake name */
+	_score_to_win_option_5,			/* fake name */
+	_score_to_win_option_10,		/* fake name */
+	_score_to_win_option_15,		/* fake name */
+	NUMBER_OF_SCORE_TO_WIN_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_kills_to_win_option_5 = 0,		/* fake name */
+	_kills_to_win_option_10,		/* fake name */
+	_kills_to_win_option_15,		/* fake name */
+	_kills_to_win_option_25,		/* fake name */
+	_kills_to_win_option_50,		/* fake name */
+	NUMBER_OF_KILLS_TO_WIN_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_laps_to_win_option_1 = 0,		/* fake name */
+	_laps_to_win_option_3,			/* fake name */
+	_laps_to_win_option_5,			/* fake name */
+	_laps_to_win_option_10,			/* fake name */
+	_laps_to_win_option_15,			/* fake name */
+	_laps_to_win_option_25,			/* fake name */
+	NUMBER_OF_LAPS_TO_WIN_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_lives_option_infinite = 0,	/* fake name */
+	_lives_option_1,			/* fake name */
+	_lives_option_3,			/* fake name */
+	_lives_option_5,			/* fake name */
+	NUMBER_OF_LIVES_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_maximum_health_option_50_percent = 0,	/* fake name */
+	_maximum_health_option_100_percent,		/* fake name */
+	_maximum_health_option_150_percent,		/* fake name */
+	_maximum_health_option_200_percent,		/* fake name */
+	_maximum_health_option_300_percent,		/* fake name */
+	_maximum_health_option_400_percent,		/* fake name */
+	NUMBER_OF_MAXIMUM_HEALTH_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_respawn_time_option_instant = 0,	/* fake name */
+	_respawn_time_option_5_seconds,		/* fake name */
+	_respawn_time_option_10_seconds,	/* fake name */
+	_respawn_time_option_15_seconds,	/* fake name */
+	NUMBER_OF_RESPAWN_TIME_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_suicide_penalty_option_none = 0,	/* fake name */
+	_suicide_penalty_option_5_seconds,	/* fake name */
+	_suicide_penalty_option_10_seconds,	/* fake name */
+	_suicide_penalty_option_15_seconds,	/* fake name */
+	NUMBER_OF_SUICIDE_PENALTY_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_trait_option_none = 0,			/* fake name */
+	_trait_option_invisible,		/* fake name */
+	_trait_option_extra_damage,		/* fake name */
+	_trait_option_damage_resistant,	/* fake name */
+	NUMBER_OF_TRAIT_OPTIONS			/* fake name */
+};
+
+enum
+{
+	_speed_with_ball_option_normal = 0,	/* fake name */
+	_speed_with_ball_option_slow,		/* fake name */
+	_speed_with_ball_option_faster,		/* fake name */
+	NUMBER_OF_SPEED_WITH_BALL_OPTIONS	/* fake name */
+};
+
+enum
+{
+	_ball_type_option_normal = 0,	/* fake name */
+	_ball_type_option_magic,		/* fake name */
+	_ball_type_option_terminator,	/* fake name */
+	NUMBER_OF_BALL_TYPE_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_team_scoring_option_min = 0,		/* fake name */
+	_team_scoring_option_max,			/* fake name */
+	_team_scoring_option_accumulate,	/* fake name */
+	NUMBER_OF_TEAM_SCORING_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_race_type_option_normal = 0,	/* fake name */
+	_race_type_option_any_order,	/* fake name */
+	_race_type_option_flag_rally,	/* fake name */
+	NUMBER_OF_RACE_TYPE_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_vehicle_set_option_default = 0,	/* fake name */
+	_vehicle_set_option_none,			/* fake name */
+	_vehicle_set_option_warthog,		/* fake name */
+	_vehicle_set_option_ghost,			/* fake name */
+	_vehicle_set_option_tank,			/* fake name */
+	NUMBER_OF_VEHICLE_SET_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_weapon_set_option_normal = 0,			/* fake name */
+	_weapon_set_option_pistols,				/* fake name */
+	_weapon_set_option_assault_rifles,		/* fake name */
+	_weapon_set_option_plasma_weapons,		/* fake name */
+	_weapon_set_option_sniping,				/* fake name */
+	_weapon_set_option_no_sniping,			/* fake name */
+	_weapon_set_option_rocket_launchers,	/* fake name */
+	_weapon_set_option_shotguns,			/* fake name */
+	_weapon_set_option_short_range,			/* fake name */
+	_weapon_set_option_human,				/* fake name */
+	_weapon_set_option_no_grenades,			/* fake name */
+	NUMBER_OF_WEAPON_SET_OPTIONS			/* fake name */
+};
+
+enum
+{
+	_radar_display_option_motion_tracker = 0,	/* fake name */
+	_radar_display_option_nav_point,			/* fake name */
+	_radar_display_option_none,					/* fake name */
+	NUMBER_OF_RADAR_DISPLAY_OPTIONS				/* fake name */
+};
+
+enum
+{
+	_joystick_config_option_standard = 0,		/* fake name */
+	_joystick_config_option_south_paw,			/* fake name */
+	_joystick_config_option_legacy,				/* fake name */
+	_joystick_config_option_legacy_south_paw,	/* fake name */
+	NUMBER_OF_JOYSTICK_CONFIG_OPTIONS			/* fake name */
+};
+
+enum
+{
+	_button_config_option_standard = 0,	/* fake name */
+	_button_config_option_southpaw,		/* fake name */
+	_button_config_option_jumpy,		/* fake name */
+	_button_config_option_bumperjumper,	/* fake name */
+	_button_config_option_boxer,		/* fake name */
+	NUMBER_OF_BUTTON_CONFIG_OPTIONS		/* fake name */
+};
+
+enum
+{
+	_game_engine_option_ctf = 0,	/* fake name */
+	_game_engine_option_king,		/* fake name */
+	_game_engine_option_slayer,		/* fake name */
+	_game_engine_option_oddball,	/* fake name */
+	_game_engine_option_race,		/* fake name */
+	NUMBER_OF_GAME_ENGINE_OPTIONS	/* fake name */
+};
 
 /* ---------- macros */
 
@@ -944,8 +266,4514 @@ symbols in this file:
 
 /* ---------- prototypes */
 
+static boolean widget_event_function_null(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_initialize_list_single_player(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_initialize_list_coop(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_dispose_list(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean solo_level_set_next_map_name(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean difficulty_set(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean start_new_game(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean pause_game_restart_at_checkpoint(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean pause_game_restart_level(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean pause_game_quit_to_main_menu(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean clear_multiplayer_player_joins(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_wants_to_join_multiplayer_game(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_server_list_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_start_new_server(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_join_game_from_server_list(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_server_list_dispose(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_cancel(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean split_screen_game_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean coop_game_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean main_menu_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_type_menu_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_pick_quick_start_play_stage(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_level_list_initialize(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_level_list_dispose(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_level_select(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_profiles_list_initialize(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_profiles_list_dispose(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_profile_set_for_game(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean multiplayer_game_swap_teams(struct widget_instance *local_player_data_widget, struct event_record *event, boolean *widget_deleted);
+static boolean netgame_join_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profiles_list_initialize(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profiles_list_dispose(struct widget_instance *list_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_set_for_game_3wide(struct widget_instance *select_screen_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_set_for_game_1wide(struct widget_instance *list_widgets_parent, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_begin_editing(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_end_editing(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_set_game_engine(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_name(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_ctf_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_koth_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_slayer_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_oddball_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_racing_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_player_options(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_item_options(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_change_indicator_options(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_game_engine(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_name(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_ctf_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_koth_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_slayer_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_oddball_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_racing_rules(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_player_options(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_item_options(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_initialize_indicator_options(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean playlist_profile_save_changes(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_color_picker_menu_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_color_picker_menu_dispose(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_color_picker_select_color(struct widget_instance *screen_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_begin_editing(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_end_editing(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_change_name(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_save_changes(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_initialize_controller_settings(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_initialize_advanced_controller_settings(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_change_controller_settings(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean player_profile_change_advanced_controller_settings(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_remove_local_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean switch_from_main_menu_to_single_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_player_profile_request(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_playlist_profile_request(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_player_profile_final(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean delete_playlist_profile_final(struct widget_instance *wrapper_widget, struct event_record *event, boolean *widget_deleted);
+static boolean cancel_profile_delete(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean create_and_begin_editing_new_gametype_profile(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean create_and_begin_editing_new_player_profile(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_start_faster(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_start_slower(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_server_accept_connections(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_server_defer_game_start(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean network_game_server_allow_game_start(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean disable_widget_if_no_xdemos(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean run_xdemos(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean single_player_reset_controller_choices(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean single_player_set_player1_controller_choice(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean single_player_set_player2_controller_choice(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean display_error_if_no_network_connection(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean start_network_game_if_no_advertised_servers(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean netgame_unjoin_player(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean close_calling_widget_if_not_editing_profile(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean exit_to_xbox_dashboard(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean new_campaign_chosen(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean new_campaign_decision(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean go_back_twice_next_time(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean difficulty_menu_initialize(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean begin_music_fade_out(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+static boolean new_campaign_if_no_custom_player_profiles_exist(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+
 /* ---------- globals */
+
+static boolean (*event_handler_function_list[NUMBER_OF_EVENT_HANDLER_FUNCTIONS])(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted) =
+{
+	widget_event_function_null,
+	widget_event_function_list_widget_goto_next_item,
+	widget_event_function_list_widget_goto_previous_item,
+	widget_event_function_null,
+	widget_event_function_null,
+	solo_level_initialize_list_single_player,
+	solo_level_initialize_list_coop,
+	solo_level_dispose_list,
+	solo_level_set_next_map_name,
+	difficulty_set,
+	start_new_game,
+	pause_game_restart_at_checkpoint,
+	pause_game_restart_level,
+	pause_game_quit_to_main_menu,
+	clear_multiplayer_player_joins,
+	player_wants_to_join_multiplayer_game,
+	network_game_server_list_initialize,
+	network_game_start_new_server,
+	network_server_list_dispose,
+	network_game_cancel,
+	network_game_join_game_from_server_list,
+	split_screen_game_initialize,
+	coop_game_initialize,
+	main_menu_initialize,
+	multiplayer_type_menu_initialize,
+	multiplayer_pick_quick_start_play_stage,
+	multiplayer_level_list_initialize,
+	multiplayer_level_list_dispose,
+	multiplayer_level_select,
+	multiplayer_profiles_list_initialize,
+	multiplayer_profiles_list_dispose,
+	multiplayer_profile_set_for_game,
+	multiplayer_game_swap_teams,
+	netgame_join_player,
+	player_profiles_list_initialize,
+	player_profiles_list_dispose,
+	player_profile_set_for_game_3wide,
+	player_profile_set_for_game_1wide,
+	playlist_profile_begin_editing,
+	playlist_profile_end_editing,
+	playlist_profile_set_game_engine,
+	playlist_profile_change_name,
+	playlist_profile_change_ctf_rules,
+	playlist_profile_change_koth_rules,
+	playlist_profile_change_slayer_rules,
+	playlist_profile_change_oddball_rules,
+	playlist_profile_change_racing_rules,
+	playlist_profile_change_player_options,
+	playlist_profile_change_item_options,
+	playlist_profile_change_indicator_options,
+	playlist_profile_initialize_game_engine,
+	playlist_profile_initialize_name,
+	playlist_profile_initialize_ctf_rules,
+	playlist_profile_initialize_koth_rules,
+	playlist_profile_initialize_slayer_rules,
+	playlist_profile_initialize_oddball_rules,
+	playlist_profile_initialize_racing_rules,
+	playlist_profile_initialize_player_options,
+	playlist_profile_initialize_item_options,
+	playlist_profile_initialize_indicator_options,
+	playlist_profile_save_changes,
+	player_profile_color_picker_menu_initialize,
+	player_profile_color_picker_menu_dispose,
+	player_profile_color_picker_select_color,
+	player_profile_begin_editing,
+	player_profile_end_editing,
+	player_profile_change_name,
+	player_profile_save_changes,
+	player_profile_initialize_controller_settings,
+	player_profile_initialize_advanced_controller_settings,
+	player_profile_change_controller_settings,
+	player_profile_change_advanced_controller_settings,
+	network_game_remove_local_player,
+	switch_from_main_menu_to_single_player,
+	delete_player_profile_request,
+	delete_playlist_profile_request,
+	delete_player_profile_final,
+	delete_playlist_profile_final,
+	cancel_profile_delete,
+	create_and_begin_editing_new_gametype_profile,
+	create_and_begin_editing_new_player_profile,
+	network_game_start_faster,
+	network_game_start_slower,
+	network_game_server_accept_connections,
+	network_game_server_defer_game_start,
+	network_game_server_allow_game_start,
+	disable_widget_if_no_xdemos,
+	run_xdemos,
+	single_player_reset_controller_choices,
+	single_player_set_player1_controller_choice,
+	single_player_set_player2_controller_choice,
+	display_error_if_no_network_connection,
+	start_network_game_if_no_advertised_servers,
+	netgame_unjoin_player,
+	close_calling_widget_if_not_editing_profile,
+	exit_to_xbox_dashboard,
+	new_campaign_chosen,
+	new_campaign_decision,
+	go_back_twice_next_time,
+	difficulty_menu_initialize,
+	begin_music_fade_out,
+	new_campaign_if_no_custom_player_profiles_exist,
+};
+
+static char *event_handler_functions_strings[NUMBER_OF_EVENT_HANDLER_FUNCTIONS] =
+{
+	"NULL",
+	"list goto next item",
+	"list goto previous item",
+	"unused",
+	"unused",
+	"initialize sp level list solo",
+	"initialize sp level list coop",
+	"dispose sp level list",
+	"solo level set map",
+	"set difficulty",
+	"start new game",
+	"pause game restart at checkpoint",
+	"pause game restart level",
+	"pause game return to main menu",
+	"clear multiplayer player joins",
+	"join controller to mp game",
+	"initialize net game server list",
+	"start network game server",
+	"dispose net game server list",
+	"shutdown network game",
+	"net game join from server list",
+	"split screen game initialize",
+	"coop game initialize",
+	"main menu intialize",
+	"mp type menu initialize",
+	"pick play stage for quick start",
+	"mp level list initialize",
+	"mp level list dispose",
+	"mp level select",
+	"mp profiles list initialize",
+	"mp profiles list dispose",
+	"mp profile set for game",
+	"swap player team",
+	"net game join player",
+	"player profile list initialize",
+	"player profile list dispose",
+	"3wide plyr prof set for game",
+	"1wide plyr prof set for game",
+	"mp profile begin editing",
+	"mp profile end editing",
+	"mp profile set game engine",
+	"mp profile change name",
+	"mp profile set ctf rules",
+	"mp profile set koth rules",
+	"mp profile set slayer rules",
+	"mp profile set oddball rules",
+	"mp profile set racing rules",
+	"mp profile set player options",
+	"mp profile set item options",
+	"mp profile set indicator opts",
+	"mp profile init game engine",
+	"mp profile init name",
+	"mp profile init ctf rules",
+	"mp profile init koth rules",
+	"mp profile init slayer rules",
+	"mp profile init oddball rules",
+	"mp profile init racing rules",
+	"mp profile init player opts",
+	"mp profile init item options",
+	"mp profile init indicator opts",
+	"mp profile save changes",
+	"color picker menu initialize",
+	"color picker menu dispose",
+	"color picker select color",
+	"player profile begin editing",
+	"player profile end editing",
+	"player profile change name",
+	"player profile save changes",
+	"plyr prf init cntl settings",
+	"plyr prf init adv cntl set",
+	"plyr prf save cntl settings",
+	"plyr prf save adv cntl set",
+	"mp game player quit",
+	"main menu switch to solo game",
+	"request del player profile",
+	"request del playlist profile",
+	"final del player profile",
+	"final del playlist profile",
+	"cancel profile delete",
+	"create&edit playlist profile",
+	"create&edit player profile",
+	"net game speed start",
+	"net game delay start",
+	"net server accept conx",
+	"net server defer start",
+	"net server allow start",
+	"disable if no xdemos",
+	"run xdemos",
+	"sp reset controller choices",
+	"sp set p1 controller choice",
+	"sp set p2 controller choice",
+	"error if no network connection",
+	"start server if none advertised",
+	"net game unjoin player",
+	"close if not editing profile",
+	"exit to xbox dashboard",
+	"new campaign chosen",
+	"new campaign decision",
+	"pop history stack once",
+	"difficulty menu init",
+	"begin music fade out",
+	"new game if no plyr profiles",
+};
+
+struct enum_definition event_handler_functions =
+{
+	NUMBER_OF_EVENT_HANDLER_FUNCTIONS,
+	event_handler_functions_strings
+};
+
+static long delete_profile_index = NONE;
+
+static char *scenario_paths[NUMBER_OF_SINGLE_PLAYER_LEVELS] =
+{
+	"levels\\a10\\a10",
+	"levels\\a30\\a30",
+	"levels\\a50\\a50",
+	"levels\\b30\\b30",
+	"levels\\b40\\b40",
+	"levels\\c10\\c10",
+	"levels\\c20\\c20",
+	"levels\\c40\\c40",
+	"levels\\d20\\d20",
+	"levels\\d40\\d40",
+};
+
+static long last_player1_profile_index = NONE;
+static long previous_corrupt_player1_profile_index = NONE;
+
+static char *multiplayer_level_names[NUMBER_OF_MULTIPLAYER_LEVELS] = /* fake name */
+{
+	"levels\\test\\beavercreek\\beavercreek",
+	"levels\\test\\sidewinder\\sidewinder",
+	"levels\\test\\damnation\\damnation",
+	"levels\\test\\ratrace\\ratrace",
+	"levels\\test\\prisoner\\prisoner",
+	"levels\\test\\hangemhigh\\hangemhigh",
+	"levels\\test\\chillout\\chillout",
+	"levels\\test\\carousel\\carousel",
+	"levels\\test\\boardingaction\\boardingaction",
+	"levels\\test\\bloodgulch\\bloodgulch",
+	"levels\\test\\wizard\\wizard",
+	"levels\\test\\putput\\putput",
+	"levels\\test\\longest\\longest",
+};
+
+static short new_campaign_controller_index = NONE;
+
+static wchar_t new_campaign_profile_name[MAXIMUM_PLAYER_PROFILE_NAME_LENGTH+1]; /* fake name */
+struct _single_player_level_data single_player_level_data[NUMBER_OF_SINGLE_PLAYER_LEVELS] = {0};
+struct _persistant_game_data_info persistant_game_data_info = {0};
 
 /* ---------- public code */
 
-/* ---------- private code */
+boolean ui_widget_event_handler_function_invoke(
+	struct widget_instance *widget,
+	struct event_record *event,
+	short function,
+	boolean *widget_deleted)
+{
+	boolean success;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 478, (widget != NULL) && (widget_deleted != NULL), "(widget != NULL) && (widget_deleted != NULL)");
+
+	if (function >= 0 && function < NUMBEROF(event_handler_function_list))
+	{
+		success = event_handler_function_list[function](widget, event, widget_deleted);
+
+		if (!success)
+		{
+			console_warning("event handler '%s' failed", event_handler_functions_strings[function]);
+		}
+	}
+	else
+	{
+		error(_error_silent, "invalid event_handler_function");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean widget_event_function_null(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	return TRUE;
+}
+
+void reset_last_player1_profile_index(
+	void)
+{
+	last_player1_profile_index = NONE;
+
+	return;
+}
+
+static boolean solo_level_initialize_list_single_player(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile profile;
+	short last_level_completed;
+	short difficulty;
+	long level_index;
+	struct ui_widget_definition *definition;
+
+	if (player_spawn_count >= 2)
+	{
+		memset(&persistant_game_data_info, 0, sizeof(persistant_game_data_info));
+		solo_level_initialize_list_coop(list_widget, event, widget_deleted);
+	}
+	else
+	{
+		long profile_index = player_ui_get_active_player_profile_index(PLAYER1);
+
+		memset(single_player_level_data, 0, sizeof(single_player_level_data));
+
+		if (profile_index != last_player1_profile_index)
+		{
+			memset(&persistant_game_data_info, 0, sizeof(persistant_game_data_info));
+			persistant_game_data_info.valid = game_state_test_persistent_storage(
+				persistant_game_data_info.map_name,
+				&persistant_game_data_info.difficulty,
+				&persistant_game_data_info.corrupted);
+			last_player1_profile_index = profile_index;
+		}
+
+		player_ui_get_active_player_profile(PLAYER1, &profile);
+		player_profile_get_highest_completed_solo_level(&profile, &last_level_completed, &difficulty);
+
+		for (level_index = 0; level_index < NUMBER_OF_SINGLE_PLAYER_LEVELS; level_index++)
+		{
+			single_player_level_data[level_index].scenario_tag_path = scenario_paths[level_index];
+
+			if (profile.single_player_map_flags[level_index] || level_index == last_level_completed + 1 || level_index == _single_player_map_a10)
+			{
+				single_player_level_data[level_index].level_completed[_game_difficulty_level_easy] = TRUE;
+				single_player_level_data[level_index].level_completed[_game_difficulty_level_normal] = TEST_FLAG(profile.single_player_map_flags[level_index], _game_difficulty_level_normal);
+				single_player_level_data[level_index].level_completed[_game_difficulty_level_hard] = TEST_FLAG(profile.single_player_map_flags[level_index], _game_difficulty_level_hard);
+				single_player_level_data[level_index].level_completed[_game_difficulty_level_impossible] = TEST_FLAG(profile.single_player_map_flags[level_index], _game_difficulty_level_impossible);
+			}
+		}
+
+		definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 603, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'solo level list' widget");
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 604, definition->child_widget_references.count == 3, "expected 3 list items for 'solo level list' widget");
+		list_widget->parameters.list_parameters.list_items = single_player_level_data;
+		list_widget->parameters.list_parameters.number_of_items = NUMBER_OF_SINGLE_PLAYER_LEVELS;
+		list_widget->parameters.list_parameters.current_list_item_index = PIN(player_ui_get_last_single_player_level_played(PLAYER1), 0, NUMBER_OF_SINGLE_PLAYER_LEVELS - 1);
+
+		if (persistant_game_data_info.valid == TRUE)
+		{
+			persistant_game_data_info.map_name[NUMBEROF(persistant_game_data_info.map_name) - 1] = '\0';
+
+			for (level_index = 0; level_index < NUMBER_OF_SINGLE_PLAYER_LEVELS; level_index++)
+			{
+				if (!_stricmp(persistant_game_data_info.map_name, scenario_paths[level_index]))
+				{
+					persistant_game_data_info.map_index = (char)level_index;
+					persistant_game_data_info.difficulty = PIN(persistant_game_data_info.difficulty, 0, NUMBER_OF_GAME_DIFFICULTY_LEVELS - 1);
+					break;
+				}
+			}
+
+			if (level_index == NUMBER_OF_SINGLE_PLAYER_LEVELS)
+			{
+				persistant_game_data_info.valid = FALSE;
+			}
+		}
+		else if (persistant_game_data_info.corrupted == TRUE)
+		{
+			long active_profile_index = player_ui_get_active_player_profile_index(PLAYER1);
+
+			if (active_profile_index != NONE)
+			{
+				if (previous_corrupt_player1_profile_index == NONE)
+				{
+					display_error_deferred(_error_saved_game_state_corrupt, NONE, TRUE, FALSE);
+					previous_corrupt_player1_profile_index = active_profile_index;
+				}
+				else
+				{
+					previous_corrupt_player1_profile_index = NONE;
+				}
+			}
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean solo_level_initialize_list_coop(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile profile[2];
+	short last_level_completed[2];
+	short difficulty[2];
+	long level_index;
+	struct ui_widget_definition *definition;
+
+	memset(single_player_level_data, 0, sizeof(single_player_level_data));
+	player_ui_get_active_player_profile(PLAYER1, &profile[PLAYER1]);
+	player_profile_get_highest_completed_solo_level(&profile[PLAYER1], &last_level_completed[PLAYER1], &difficulty[PLAYER1]);
+	player_ui_get_active_player_profile(PLAYER2, &profile[PLAYER2]);
+	player_profile_get_highest_completed_solo_level(&profile[PLAYER2], &last_level_completed[PLAYER2], &difficulty[PLAYER2]);
+
+	for (level_index = 0; level_index < NUMBER_OF_SINGLE_PLAYER_LEVELS; level_index++)
+	{
+		single_player_level_data[level_index].scenario_tag_path = scenario_paths[level_index];
+
+		if (profile[PLAYER1].single_player_map_flags[level_index] || level_index == last_level_completed[PLAYER1] + 1 ||
+			profile[PLAYER2].single_player_map_flags[level_index] || level_index == last_level_completed[PLAYER2] + 1 ||
+			level_index == _single_player_map_a10)
+		{
+			long map_flags = profile[PLAYER1].single_player_map_flags[level_index] | profile[PLAYER2].single_player_map_flags[level_index];
+
+			single_player_level_data[level_index].level_completed[_game_difficulty_level_easy] = TRUE;
+			single_player_level_data[level_index].level_completed[_game_difficulty_level_normal] = TEST_FLAG(map_flags, _game_difficulty_level_normal);
+			single_player_level_data[level_index].level_completed[_game_difficulty_level_hard] = TEST_FLAG(map_flags, _game_difficulty_level_hard);
+			single_player_level_data[level_index].level_completed[_game_difficulty_level_impossible] = TEST_FLAG(map_flags, _game_difficulty_level_impossible);
+		}
+	}
+
+	definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 689, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'solo level list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 690, definition->child_widget_references.count == 3, "expected 3 list items for 'solo level list' widget");
+	list_widget->parameters.list_parameters.list_items = single_player_level_data;
+	list_widget->parameters.list_parameters.number_of_items = NUMBER_OF_SINGLE_PLAYER_LEVELS;
+	list_widget->parameters.list_parameters.current_list_item_index = PIN(player_ui_get_last_single_player_level_played(PLAYER1), 0, NUMBER_OF_SINGLE_PLAYER_LEVELS - 1);
+
+	return TRUE;
+}
+
+static boolean solo_level_dispose_list(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	memset(single_player_level_data, 0, sizeof(single_player_level_data));
+	list_widget->parameters.list_parameters.list_items = NULL;
+	list_widget->parameters.list_parameters.number_of_items = 0;
+
+	return TRUE;
+}
+
+static boolean solo_level_set_next_map_name(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile profile;
+	short last_level_completed;
+	short difficulty;
+	short local_player_index;
+	boolean level_available = FALSE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 724, (list_widget->parameters.list_parameters.current_list_item_index>=0) && (list_widget->parameters.list_parameters.current_list_item_index<NUMBER_OF_SINGLE_PLAYER_LEVELS), "I don't think this is the solo level list widget");
+
+	switch (player_spawn_count)
+	{
+	case 1:
+		player_ui_get_active_player_profile(PLAYER1, &profile);
+		player_profile_get_highest_completed_solo_level(&profile, &last_level_completed, &difficulty);
+
+		if (profile.single_player_map_flags[list_widget->parameters.list_parameters.current_list_item_index] || list_widget->parameters.list_parameters.current_list_item_index == last_level_completed + 1 || list_widget->parameters.list_parameters.current_list_item_index == 0)
+		{
+			level_available = TRUE;
+		}
+
+		player_ui_remember_player1_profile(FALSE);
+	case 2:
+		for (local_player_index = PLAYER1; local_player_index <= PLAYER2; local_player_index++)
+		{
+			player_ui_get_active_player_profile(local_player_index, &profile);
+			player_profile_get_highest_completed_solo_level(&profile, &last_level_completed, &difficulty);
+
+			if (profile.single_player_map_flags[list_widget->parameters.list_parameters.current_list_item_index] || list_widget->parameters.list_parameters.current_list_item_index == last_level_completed + 1 || list_widget->parameters.list_parameters.current_list_item_index == 0)
+			{
+				level_available = TRUE;
+				break;
+			}
+		}
+		break;
+	default:
+		error(_error_silent, "invalid player count for single player game");
+		break;
+	}
+
+	if (level_available == TRUE)
+	{
+		main_set_map_name(scenario_paths[list_widget->parameters.list_parameters.current_list_item_index]);
+		main_defer_map_map_change();
+	}
+	else
+	{
+		error(_error_silent, "this level is unavailable to you!");
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+	}
+
+	return level_available;
+}
+
+static boolean difficulty_set(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 787, (list_widget->parameters.list_parameters.current_list_item_index>=0) && (list_widget->parameters.list_parameters.current_list_item_index<NUMBER_OF_GAME_DIFFICULTY_LEVELS), "I don't think this is the difficulty list widget");
+	main_set_difficulty(list_widget->parameters.list_parameters.current_list_item_index);
+	ui_play_audio_feedback_sound(_audio_feedback_forward);
+
+	return TRUE;
+}
+
+static boolean start_new_game(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	main_set_difficulty(_game_difficulty_level_normal);
+	main_set_map_name(scenario_paths[_single_player_map_a10]);
+	game_connection_set(_game_connection_local);
+	main_menu_switch_to_single_player();
+	player_ui_remember_player1_profile(FALSE);
+
+	return TRUE;
+}
+
+static boolean pause_game_restart_at_checkpoint(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	main_revert_map();
+
+	return TRUE;
+}
+
+static boolean pause_game_restart_level(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	main_reset_map();
+
+	return TRUE;
+}
+
+static boolean pause_game_quit_to_main_menu(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	game_state_save_to_persistent_storage();
+	main_goto_main_menu();
+
+	return TRUE;
+}
+
+static boolean clear_multiplayer_player_joins(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	dispose_global_network_game_client();
+	dispose_global_network_game_server();
+	player_ui_clear_multiplayer_joins();
+	player_ui_clear_multiplayer_variant();
+
+	return TRUE;
+}
+
+static boolean player_wants_to_join_multiplayer_game(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 873, widget->local_player_index!=NONE, "need a specific local player index when joining a multiplayer game");
+	player_ui_local_player_joined_multiplayer_game(widget->local_player_index);
+
+	return TRUE;
+}
+
+static boolean network_game_server_list_initialize(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = TRUE;
+
+	dispose_global_network_game_client();
+	dispose_global_network_game_server();
+	player_ui_clear_multiplayer_variant();
+
+	if (create_global_network_game_client())
+	{
+		game_connection_set(_game_connection_network_client);
+	}
+	else
+	{
+		error(_error_silent, "failed to create network client to initiate game search");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean network_game_start_new_server(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = TRUE;
+
+	dispose_global_network_game_client();
+	player_ui_clear_multiplayer_variant();
+	network_game_accept_remote_connections(TRUE);
+
+	if (!global_network_game_server_get())
+	{
+		game_engine_playlist_initialize();
+		success = create_global_network_game_server();
+
+		if (success == TRUE)
+		{
+			network_game_server_pause_countdown(global_network_game_server_get(), TRUE);
+			game_engine_playlist_begin();
+			game_connection_set(_game_connection_network_server);
+		}
+	}
+
+	if (success && !global_network_game_client_get())
+	{
+		success = create_global_network_game_client();
+	}
+
+	if (!success)
+	{
+		dispose_global_network_game_server();
+		dispose_global_network_game_client();
+		network_game_accept_remote_connections(FALSE);
+		player_ui_clear_multiplayer_variant();
+		error(_error_silent, "failed to initiate a multiplayer game server");
+	}
+
+	return success;
+}
+
+static boolean network_game_join_game_from_server_list(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = FALSE;
+
+	if (widget->focused_child && widget->parameters.list_parameters.current_list_item_index >= 0)
+	{
+		if (widget->parameters.list_parameters.current_list_item_index < widget->parameters.list_parameters.number_of_items && widget->parameters.list_parameters.list_items)
+		{
+			if (widget->parameters.list_parameters.number_of_items > 0)
+			{
+				struct advertised_game_data *game = ((struct advertised_game_data **)widget->parameters.list_parameters.list_items)[widget->parameters.list_parameters.current_list_item_index];
+
+				if (game->open == TRUE)
+				{
+					if (!game->platform)
+					{
+						struct transport_address address = {0};
+
+						transport_client_start(
+							&game->host_address,
+							&game->key,
+							&game->key_id,
+							NETWORK_SERVER_PORT,
+							&address);
+
+						if (address.address.ipv4_address && address.port)
+						{
+							struct network_game_join_parameters join_parameters;
+
+							join_parameters.password[0] = L'\0';
+							network_game_generate_join_game_token(join_parameters.join_token);
+
+							if (network_game_client_initiate_join_game(global_network_game_client_get(), game, &join_parameters, &address))
+							{
+								struct widget_instance *topmost_parent = widget_instance_get_topmost_parent(widget);
+
+								if (!ui_widget_load_by_name_or_tag(
+									PREGAME_SCREEN_WIDGET_NAME,
+									NONE,
+									NULL,
+									NONE,
+									topmost_parent->ui_widget_tag_index,
+									widget->parent ? widget->parent->ui_widget_tag_index : NONE,
+									(short)widget_instance_get_child_index_from_parent(widget)))
+								{
+									error(_error_silent, "event handler failed to spawn widget");
+								}
+								else
+								{
+									game_connection_set(_game_connection_network_client);
+									success = TRUE;
+								}
+
+								*widget_deleted = TRUE;
+							}
+							else
+							{
+								network_game_abort();
+								error(_error_silent, "failed to initiate join game procedures");
+							}
+						}
+						else
+						{
+							error(_error_silent, "attempted to join a network game with a bogus address");
+						}
+					}
+					else
+					{
+						error(_error_silent, "attempted to join a network game running on a different platform than the local system");
+					}
+				}
+				else
+				{
+					error(_error_silent, "attempted to join a closed game");
+					ui_play_audio_feedback_sound(_audio_feedback_failure);
+				}
+			}
+			else
+			{
+				error(_error_silent, "unable to join server: there are no servers in the server list (maybe the server list was disposed?)");
+			}
+		}
+		else
+		{
+			error(_error_silent, "unable to join server: this doesn't look like a valid server list to me... or the server list has been disposed?");
+		}
+	}
+
+	return success;
+}
+
+static boolean network_server_list_dispose(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	widget->parameters.list_parameters.list_items = NULL;
+	widget->parameters.list_parameters.number_of_items = 0;
+
+	return TRUE;
+}
+
+static boolean network_game_cancel(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	dispose_global_network_game_server();
+	dispose_global_network_game_client();
+	player_ui_clear_multiplayer_variant();
+
+	return TRUE;
+}
+
+static boolean split_screen_game_initialize(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = TRUE;
+
+	network_game_accept_remote_connections(FALSE);
+
+	if (!global_network_game_server_get())
+	{
+		game_engine_playlist_initialize();
+		success = create_global_network_game_server();
+
+		if (success == TRUE)
+		{
+			game_engine_playlist_begin();
+			game_connection_set(_game_connection_network_server);
+		}
+	}
+
+	if (success && !global_network_game_client_get())
+	{
+		success = create_global_network_game_client();
+	}
+
+	if (!success)
+	{
+		dispose_global_network_game_server();
+		dispose_global_network_game_client();
+		player_ui_clear_multiplayer_variant();
+		error(_error_silent, "failed to initiate split screen game networking");
+	}
+
+	return success;
+}
+
+static boolean coop_game_initialize(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	player_spawn_count = 2;
+
+	return TRUE;
+}
+
+static boolean main_menu_initialize(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	player_ui_clear_multiplayer_joins();
+	player_ui_clear_multiplayer_variant();
+	dispose_global_network_game_client();
+	dispose_global_network_game_server();
+	network_game_accept_remote_connections(FALSE);
+	player_spawn_count = 1;
+	player_ui_end_editing_profile();
+
+	if (!ui_main_menu_music_active())
+	{
+		ui_start_main_menu_music();
+	}
+
+	return TRUE;
+}
+
+static boolean multiplayer_type_menu_initialize(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	player_spawn_count = 1;
+
+	return TRUE;
+}
+
+static boolean multiplayer_pick_quick_start_play_stage(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	game_engine_playlist_initialize();
+	game_engine_playlist_next(0, 0, 4);
+	network_game_set_quickstart_local();
+
+	return TRUE;
+}
+
+static boolean multiplayer_level_list_initialize(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	char last_used_mp_map[MAXIMUM_FILENAME_LENGTH+1];
+	struct ui_widget_definition *definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1228, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer level list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1229, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer level list' widget");
+	list_widget->parameters.list_parameters.list_items = multiplayer_level_names;
+	list_widget->parameters.list_parameters.number_of_items = NUMBER_OF_MULTIPLAYER_LEVELS;
+
+	if (saved_game_file_retrieve_last_used_multiplayer_map(last_used_mp_map))
+	{
+		for (list_widget->parameters.list_parameters.current_list_item_index = 0; list_widget->parameters.list_parameters.current_list_item_index < NUMBER_OF_MULTIPLAYER_LEVELS; list_widget->parameters.list_parameters.current_list_item_index++)
+		{
+			if (!_stricmp(last_used_mp_map, multiplayer_level_names[list_widget->parameters.list_parameters.current_list_item_index]))
+			{
+				break;
+			}
+		}
+
+		if (list_widget->parameters.list_parameters.current_list_item_index == NUMBER_OF_MULTIPLAYER_LEVELS)
+		{
+			list_widget->parameters.list_parameters.current_list_item_index = 0;
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean multiplayer_level_list_dispose(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	list_widget->parameters.list_parameters.list_items = NULL;
+	list_widget->parameters.list_parameters.number_of_items = 0;
+
+	return TRUE;
+}
+
+static boolean multiplayer_level_select(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	char automation_map_name[64];
+	struct widget_instance *child;
+	struct widget_instance *level_list;
+	struct ui_widget_definition *definition;
+	struct network_game_server *server;
+	char *map_name;
+	FILE *automation_file;
+	long level_index;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1280, ui_widget_definition_get(wrapper_widget->ui_widget_tag_index)->child_widget_references.count == 1, "expected a wrapper widget around the multiplayer level select screen");
+	child = wrapper_widget->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1285, definition->type == _widget_type_container && definition->child_widget_references.count == 3, "expected the multiplayer level select screen to be a container w/ 3 children");
+	child = child->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1288, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer level list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1289, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer level list' widget");
+	level_list = wrapper_widget->children->children;
+
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1298, (level_list->parameters.list_parameters.current_list_item_index>=0) && (level_list->parameters.list_parameters.current_list_item_index<NUMBER_OF_MULTIPLAYER_LEVELS), "invalid multiplayer level specified from 'multiplayer level list' list widget");
+	map_name = multiplayer_level_names[level_list->parameters.list_parameters.current_list_item_index];
+
+	automation_file = fopen("d:\\map_automation.txt", "r");
+
+	if (automation_file)
+	{
+		fgets(automation_map_name, NUMBEROF(automation_map_name), automation_file);
+		automation_map_name[NUMBEROF(automation_map_name) - 1] = '\0';
+		strtok(automation_map_name, "\n\r \t");
+		map_name = automation_map_name;
+		fclose(automation_file);
+	}
+
+	main_set_multiplayer_map_name(map_name);
+	game_engine_override_map_name(map_name);
+	server = global_network_game_server_get();
+
+	if (server)
+	{
+		network_game_server_change_map_name(server, map_name);
+	}
+
+	for (level_index = 0; level_index < NUMBER_OF_MULTIPLAYER_LEVELS; level_index++)
+	{
+		if (!_stricmp(map_name, multiplayer_level_names[level_index]))
+		{
+			saved_game_file_remember_last_used_multiplayer_map(multiplayer_level_names[level_index]);
+			break;
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean multiplayer_profiles_list_initialize(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	char last_variant_profile_directory_path[MAXIMUM_FILENAME_LENGTH+1];
+	struct ui_widget_definition *definition;
+	long *profile_indices;
+	word profile_index;
+
+	delete_profile_index = NONE;
+	memset(cached_variant_profile, NONE, sizeof(cached_variant_profile));
+	definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1384, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer settings list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1385, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer settings list' widget");
+
+
+
+
+	profile_indices = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1390));
+	list_widget->parameters.list_parameters.list_items = profile_indices;
+
+	if (profile_indices)
+	{
+		word number_of_profiles = MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT;
+
+		playlist_profiles_enumerate_available_to_local_player_index(
+			LOCAL_PLAYER_TO_GET_PLAYSTAGE_PROFILES_FROM,
+			&number_of_profiles,
+			profile_indices);
+
+		for (profile_index = number_of_profiles; profile_index < MINIMUM_SAVED_GAME_FILES_LIST_SIZE; profile_index++)
+		{
+			profile_indices[profile_index] = NONE;
+			number_of_profiles++;
+		}
+
+		list_widget->parameters.list_parameters.number_of_items = number_of_profiles;
+
+		if (saved_game_file_retrieve_last_used_multiplayer_variant_directory(last_variant_profile_directory_path))
+		{
+			long last_used_profile_index = saved_game_file_find_profile_index_for_directory_path(last_variant_profile_directory_path, _saved_game_file_type_play_list);
+
+			if (last_used_profile_index != NONE)
+			{
+				for (profile_index = 0; profile_index < number_of_profiles; profile_index++)
+				{
+					if (profile_indices[profile_index] == last_used_profile_index)
+					{
+						list_widget->parameters.list_parameters.current_list_item_index = profile_index;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean multiplayer_profiles_list_dispose(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	if (list_widget->parameters.list_parameters.list_items)
+	{
+		widget_free(list_widget->parameters.list_parameters.list_items);
+		list_widget->parameters.list_parameters.list_items = NULL;
+	}
+
+	list_widget->parameters.list_parameters.number_of_items = 0;
+
+	return TRUE;
+}
+
+static boolean multiplayer_profile_set_for_game(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	char profile_directory_path[MAXIMUM_FILENAME_LENGTH+1];
+	struct game_variant automation_variant;
+	struct game_variant empty_variant;
+	char automation_variant_name[128];
+	struct game_variant variant;
+	struct widget_instance *child;
+	struct ui_widget_definition *definition;
+	struct widget_instance *profile_list;
+	long profile_index;
+	boolean success;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1465, ui_widget_definition_get(wrapper_widget->ui_widget_tag_index)->child_widget_references.count == 1, "expected a wrapper widget around the multiplayer profile select screen");
+	child = wrapper_widget->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1470, definition->type == _widget_type_container && definition->child_widget_references.count == 3, "expected the multiplayer profile select screen to be a container w/ 3 children");
+	child = child->children;
+	definition = ui_widget_definition_get(child->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1473, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1474, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
+	profile_list = wrapper_widget->children->children;
+
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1483, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
+
+	if (profile_index == NONE)
+	{
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+		success = FALSE;
+	}
+	else if (!TEST_FLAG(profile_index, _profile_checksum_valid_bit31))
+	{
+		display_error_deferred(_error_warning_saved_game_file_damaged, NONE, TRUE, FALSE);
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+		success = FALSE;
+	}
+	else if (playlist_profile_get(profile_index, &variant))
+	{
+		FILE *automation_file;
+		struct network_game_server *server = global_network_game_server_get();
+
+		if (saved_game_file_get_path_to_enclosing_directory(profile_index, profile_directory_path))
+		{
+			saved_game_file_remember_last_used_multiplayer_variant_directory(profile_directory_path);
+		}
+
+		automation_file = fopen("d:\\variant_automation.txt", "r");
+
+		if (automation_file)
+		{
+			fgets(automation_variant_name, NUMBEROF(automation_variant_name), automation_file);
+			automation_variant_name[NUMBEROF(automation_variant_name) - 1] = '\0';
+			strtok(automation_variant_name, "\n\r \t");
+			memset(&empty_variant, 0, sizeof(empty_variant));
+			automation_variant = game_engine_get_variant_by_name(automation_variant_name);
+
+			if (memcmp(&automation_variant, &empty_variant, sizeof(automation_variant)))
+			{
+				variant = automation_variant;
+			}
+
+			fclose(automation_file);
+		}
+
+		player_ui_set_game_variant(&variant);
+
+		if (server)
+		{
+			network_game_server_change_game_variant(server, &variant);
+		}
+
+		success = TRUE;
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve user selected game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean multiplayer_game_swap_teams(
+	struct widget_instance *local_player_data_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_data *game;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1572, event);
+
+	game = network_game_get_game();
+
+	if (game && game->variant.universal_variant.teams == TRUE)
+	{
+		short local_machine_index = network_game_client_get_local_machine_index();
+
+		if (local_machine_index != NONE)
+		{
+			long player_index;
+
+			for (player_index = 0; player_index < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; player_index++)
+			{
+				if (network_player_is_valid(&game->players[player_index]) && game->players[player_index].machine_index == local_machine_index && game->players[player_index].controller_index == event->controller_index)
+				{
+					struct network_player new_player = game->players[player_index];
+
+					new_player.team_index = !new_player.team_index;
+
+					if (!network_game_client_update_local_player_data(global_network_game_client_get(), &new_player))
+					{
+						error(_error_silent, "failed to update player's team for multiplayer game");
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean netgame_join_player(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_client *client;
+	short player_index;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1618, event);
+
+	client = global_network_game_client_get();
+
+	if (client && network_game_client_get_state(client, (word *)&player_index) == _network_game_client_state_pregame)
+	{
+		struct network_game_data *game = network_game_get_game();
+		short local_machine_index = network_game_client_get_local_machine_index();
+		boolean player_joined = FALSE;
+		match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1627, game);
+
+		if (local_machine_index != NONE)
+		{
+			for (player_index = 0; player_index < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; player_index++)
+			{
+				if (network_player_is_valid(&game->players[player_index]) && game->players[player_index].machine_index == local_machine_index && game->players[player_index].controller_index == event->controller_index)
+				{
+					player_joined = TRUE;
+					break;
+				}
+			}
+		}
+
+		if (!player_joined && !network_game_client_add_player(client, event->controller_index))
+		{
+			network_event("failed to send join request");
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean player_profiles_list_initialize(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition = ui_widget_definition_get(list_widget->ui_widget_tag_index);
+
+	delete_profile_index = NONE;
+	memset(cached_player_profile, NONE, sizeof(cached_player_profile));
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1686, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player settings list' widget");
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1688, definition->child_widget_references.count == 0 || definition->child_widget_references.count == 3, "expected either 1 or 3 list items for 'player settings list' widget");
+
+
+
+
+	list_widget->parameters.list_parameters.list_items = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1693));
+
+	if (list_widget->parameters.list_parameters.list_items)
+	{
+		long last_used_profile_index;
+		word number_of_profiles = MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT;
+		boolean include_default_profiles = TRUE;
+
+		if (definition->child_widget_references.count == 3)
+		{
+			include_default_profiles = FALSE;
+		}
+
+		player_profiles_enumerate_available_to_local_player_index(
+			list_widget->local_player_index,
+			&number_of_profiles,
+			list_widget->parameters.list_parameters.list_items,
+			include_default_profiles);
+
+		if (definition->child_widget_references.count == 3)
+		{
+			word empty_index;
+
+			for (empty_index = number_of_profiles; empty_index < MINIMUM_SAVED_GAME_FILES_LIST_SIZE; empty_index++)
+			{
+				((long *)list_widget->parameters.list_parameters.list_items)[empty_index] = NONE;
+				number_of_profiles++;
+			}
+		}
+
+		list_widget->parameters.list_parameters.number_of_items = number_of_profiles;
+		last_used_profile_index = player_ui_get_player1_last_used_profile_index();
+
+		if (last_used_profile_index != NONE)
+		{
+			long profile_index;
+			long *profile_indices = list_widget->parameters.list_parameters.list_items;
+
+			for (profile_index = 0; profile_index < list_widget->parameters.list_parameters.number_of_items; profile_index++)
+			{
+				if (profile_indices[profile_index] == last_used_profile_index)
+				{
+					list_widget->parameters.list_parameters.current_list_item_index = (short)profile_index;
+					break;
+				}
+			}
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean player_profiles_list_dispose(
+	struct widget_instance *list_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	if (list_widget->parameters.list_parameters.list_items)
+	{
+		widget_free(list_widget->parameters.list_parameters.list_items);
+		list_widget->parameters.list_parameters.list_items = NULL;
+	}
+
+	list_widget->parameters.list_parameters.number_of_items = 0;
+
+	return TRUE;
+}
+
+static boolean player_profile_set_for_game_3wide(
+	struct widget_instance *select_screen_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile profile;
+	struct ui_widget_definition *definition;
+	struct widget_instance *profile_list;
+	long *profile_indices;
+	long profile_index;
+	boolean success;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1763, event && event->controller_index!=NONE, "setting a player profile requires a valid controller index");
+	definition = ui_widget_definition_get(select_screen_widget->ui_widget_tag_index);
+
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1772, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the player profile select screen to be a container w/ 3 or more children");
+	profile_list = select_screen_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1775, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1776, definition->child_widget_references.count == 3, "expected 3 list items for 'player profile list' widget");
+	profile_list = select_screen_widget->children;
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1784, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'player profile list' list widget");
+	profile_indices = profile_list->parameters.list_parameters.list_items;
+	profile_index = profile_indices[profile_list->parameters.list_parameters.current_list_item_index];
+
+	if (profile_index != NONE)
+	{
+		if (!TEST_FLAG(profile_index, _profile_checksum_valid_bit31))
+		{
+			display_error_deferred(_error_warning_saved_game_file_damaged, NONE, TRUE, FALSE);
+			ui_play_audio_feedback_sound(_audio_feedback_failure);
+			*widget_deleted = TRUE;
+			success = FALSE;
+		}
+		else if (player_profile_get(profile_index, &profile))
+		{
+			short local_player_index = player_ui_get_single_player_local_player_from_controller(event->controller_index);
+
+			player_ui_set_active_player_profile(local_player_index, profile_indices[profile_list->parameters.list_parameters.current_list_item_index], &profile);
+			success = TRUE;
+		}
+		else
+		{
+			error(_error_silent, "failed to retrieve user selected player profile");
+			success = FALSE;
+		}
+	}
+	else
+	{
+		error(_error_silent, "this is not a selectable player profile");
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_set_for_game_1wide(
+	struct widget_instance *list_widgets_parent,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile profile;
+	struct widget_instance *profile_list;
+	long *profile_indices;
+	long profile_index;
+	short local_player_index;
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1834, event && event->controller_index!=NONE, "setting a player profile requires a valid controller index");
+	local_player_index = event->controller_index;
+
+	for (profile_list = list_widgets_parent->children; profile_list && profile_list->widget_type != _widget_type_spinner_list; profile_list = profile_list->next);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1838, profile_list, "failed to find the 1-wide spinner list for player profiles (expected it to be a child of this widget)");
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1845, ui_widget_definition_get(profile_list->ui_widget_tag_index)->child_widget_references.count == 0, "expected a code-generated 1-wide spinner list for 'mp player profile list' widget");
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1851, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'mp player profile list' list widget");
+	profile_indices = profile_list->parameters.list_parameters.list_items;
+	profile_index = profile_indices[profile_list->parameters.list_parameters.current_list_item_index];
+
+	if (!TEST_FLAG(profile_index, _profile_checksum_valid_bit31))
+	{
+		display_error_deferred(_error_warning_saved_game_file_damaged, local_player_index, TRUE, FALSE);
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+		success = FALSE;
+	}
+	else if (player_profile_get(profile_index, &profile))
+	{
+		player_ui_set_active_player_profile(local_player_index, profile_indices[profile_list->parameters.list_parameters.current_list_item_index], &profile);
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve user selected player profile");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_begin_editing(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition;
+	struct widget_instance *profile_list;
+	long profile_index;
+	boolean success = FALSE;
+
+	delete_profile_index = NONE;
+	definition = ui_widget_definition_get(wrapper_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1896, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the multiplayer profile select screen to be a container w/ 3+ children");
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1899, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1900, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
+	profile_list = wrapper_widget->children;
+
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1909, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
+
+	if (profile_index != NONE)
+	{
+		if (TEST_FLAG(profile_index, _profile_checksum_valid_bit31))
+		{
+			player_ui_begin_editing_profile(profile_index);
+			success = TRUE;
+		}
+		else
+		{
+			display_error_deferred(_error_warning_saved_game_file_damaged, NONE, TRUE, FALSE);
+			ui_play_audio_feedback_sound(_audio_feedback_failure);
+		}
+	}
+	else
+	{
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_end_editing(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	delete_profile_index = NONE;
+	player_ui_end_editing_profile();
+
+	return TRUE;
+}
+
+static boolean playlist_profile_set_game_engine(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	struct widget_instance *game_engine_list = widget->parent;
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1958, game_engine_list && game_engine_list->widget_type == _widget_type_column_list, "expected column list for game engine type list");
+
+	if (variant)
+	{
+		long game_engine_index;
+
+		switch (game_engine_list->parameters.list_parameters.current_list_item_index)
+		{
+		case _game_engine_option_ctf:
+			game_engine_index = _game_engine_ctf;
+			break;
+		case _game_engine_option_king:
+			game_engine_index = _game_engine_king;
+			break;
+		case _game_engine_option_slayer:
+			game_engine_index = _game_engine_slayer;
+			break;
+		case _game_engine_option_oddball:
+			game_engine_index = _game_engine_oddball;
+			break;
+		case _game_engine_option_race:
+			game_engine_index = _game_engine_race;
+			break;
+		default:
+			error(_error_silent, "unknown game engine option selected");
+			game_engine_index = variant->game_engine_index;
+			break;
+		}
+
+		if (game_engine_index != variant->game_engine_index)
+		{
+			memset(&variant->game_engine_variant, 0, sizeof(variant->game_engine_variant));
+		}
+
+		variant->game_engine_index = game_engine_index;
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_name(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		if (!virtual_keyboard_launch(
+			variant->human_readable_game_description,
+			sizeof(variant->human_readable_game_description),
+			_virtual_keyboard_caption_variant_name))
+		{
+			error(_error_silent, "failed to invoke virtual keyboard on profile name");
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_ctf_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2040, list_item, "expected 'assault' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2042, spinner, "expected 'assault' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.ctf.assault = TRUE; break;
+		case _toggle_option_off: variant->game_engine_variant.ctf.assault = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'assault' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2051, list_item, "expected 'single flag' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2053, spinner, "expected 'single flag' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _single_flag_option_off: variant->game_engine_variant.ctf.single_flag_time = 0; break;
+		case _single_flag_option_1_minute: variant->game_engine_variant.ctf.single_flag_time = 1 * TICKS_PER_MINUTE; break;
+		case _single_flag_option_2_minutes: variant->game_engine_variant.ctf.single_flag_time = 2 * TICKS_PER_MINUTE; break;
+		case _single_flag_option_3_minutes: variant->game_engine_variant.ctf.single_flag_time = 3 * TICKS_PER_MINUTE; break;
+		case _single_flag_option_5_minutes: variant->game_engine_variant.ctf.single_flag_time = 5 * TICKS_PER_MINUTE; break;
+		case _single_flag_option_10_minutes: variant->game_engine_variant.ctf.single_flag_time = 10 * TICKS_PER_MINUTE; break;
+		default: error(_error_silent, "unknown option selected in 'single flag' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2066, list_item, "expected 'flag must reset' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2068, spinner, "expected 'flag must reset' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.ctf.flag_must_reset = TRUE; break;
+		case _toggle_option_off: variant->game_engine_variant.ctf.flag_must_reset = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'flag must reset' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2077, list_item, "expected 'flag at home to score' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2079, spinner, "expected 'flag at home to score' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.ctf.flag_at_home_to_score = TRUE; break;
+		case _toggle_option_off: variant->game_engine_variant.ctf.flag_at_home_to_score = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'flag at home to score' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2088, list_item, "expected 'captures to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2090, spinner, "expected 'captures to win' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _captures_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
+		case _captures_to_win_option_3: variant->universal_variant.score_to_win = 3; break;
+		case _captures_to_win_option_5: variant->universal_variant.score_to_win = 5; break;
+		case _captures_to_win_option_10: variant->universal_variant.score_to_win = 10; break;
+		case _captures_to_win_option_15: variant->universal_variant.score_to_win = 15; break;
+		default: error(_error_silent, "unknown option selected in 'captures to win' option spinner list"); break;
+		}
+
+		ui_widgets_pop_stack(widget->local_player_index);
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_koth_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2126, list_item, "expected 'moving hill' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2128, spinner, "expected 'moving hill' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.king.moving_hill = TRUE; break;
+		case _toggle_option_off: variant->game_engine_variant.king.moving_hill = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'moving hill' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2137, list_item, "expected 'score to win' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2139, spinner, "expected 'score to win' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _score_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
+		case _score_to_win_option_2: variant->universal_variant.score_to_win = 2; break;
+		case _score_to_win_option_5: variant->universal_variant.score_to_win = 5; break;
+		case _score_to_win_option_10: variant->universal_variant.score_to_win = 10; break;
+		case _score_to_win_option_15: variant->universal_variant.score_to_win = 15; break;
+		default: error(_error_silent, "unknown option selected in 'score to win' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2151, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2153, spinner, "expected 'teams' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
+		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'teams' option spinner list"); break;
+		}
+
+		ui_widgets_pop_stack(widget->local_player_index);
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_slayer_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2187, list_item, "expected 'death bonus' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2189, spinner, "expected 'death bonus' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.slayer.no_death_bonus = FALSE; break;
+		case _toggle_option_off: variant->game_engine_variant.slayer.no_death_bonus = TRUE; break;
+		default: error(_error_silent, "unknown option selected in 'death bonus' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2198, list_item, "expected 'kill in order' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2200, spinner, "expected 'kill in order' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.slayer.kill_in_order = TRUE; break;
+		case _toggle_option_off: variant->game_engine_variant.slayer.kill_in_order = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'kill in order' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2209, list_item, "expected 'kill penalty' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2211, spinner, "expected 'kill penalty' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.slayer.no_kill_penalty = FALSE; break;
+		case _toggle_option_off: variant->game_engine_variant.slayer.no_kill_penalty = TRUE; break;
+		default: error(_error_silent, "unknown option selected in 'kill penalty' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2220, list_item, "expected 'kills to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2222, spinner, "expected 'kills to win' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _kills_to_win_option_5: variant->universal_variant.score_to_win = 5; break;
+		case _kills_to_win_option_10: variant->universal_variant.score_to_win = 10; break;
+		case _kills_to_win_option_15: variant->universal_variant.score_to_win = 15; break;
+		case _kills_to_win_option_25: variant->universal_variant.score_to_win = 25; break;
+		case _kills_to_win_option_50: variant->universal_variant.score_to_win = 50; break;
+		default: error(_error_silent, "unknown option selected in 'kills to win' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2234, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2236, spinner, "expected 'teams' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
+		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'teams' option spinner list"); break;
+		}
+
+		ui_widgets_pop_stack(widget->local_player_index);
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_oddball_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2270, list_item, "expected 'trait with ball' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2272, spinner, "expected 'trait with ball' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _trait_option_none: variant->game_engine_variant.oddball.trait_with_ball = _game_trait_none; break;
+		case _trait_option_invisible: variant->game_engine_variant.oddball.trait_with_ball = _game_trait_invisible; break;
+		case _trait_option_extra_damage: variant->game_engine_variant.oddball.trait_with_ball = _game_trait_extra_damage; break;
+		case _trait_option_damage_resistant: variant->game_engine_variant.oddball.trait_with_ball = _game_trait_damage_resistant; break;
+		default: error(_error_silent, "unknown option selected in 'trait with ball' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2283, list_item, "expected 'trait without ball' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2285, spinner, "expected 'trait without ball' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _trait_option_none: variant->game_engine_variant.oddball.trait_without_ball = _game_trait_none; break;
+		case _trait_option_invisible: variant->game_engine_variant.oddball.trait_without_ball = _game_trait_invisible; break;
+		case _trait_option_extra_damage: variant->game_engine_variant.oddball.trait_without_ball = _game_trait_extra_damage; break;
+		case _trait_option_damage_resistant: variant->game_engine_variant.oddball.trait_without_ball = _game_trait_damage_resistant; break;
+		default: error(_error_silent, "unknown option selected in 'trait without ball' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2296, list_item, "expected 'speed with ball' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2298, spinner, "expected 'speed with ball' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _speed_with_ball_option_normal: variant->game_engine_variant.oddball.speed_with_ball = _oddball_speed_normal; break;
+		case _speed_with_ball_option_slow: variant->game_engine_variant.oddball.speed_with_ball = _oddball_speed_slow; break;
+		case _speed_with_ball_option_faster: variant->game_engine_variant.oddball.speed_with_ball = _oddball_speed_faster; break;
+		default: error(_error_silent, "unknown option selected in 'speed with ball' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2308, list_item, "expected 'ball type' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2310, spinner, "expected 'ball type' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _ball_type_option_normal: variant->game_engine_variant.oddball.oddball_ball_type = _oddball_normal; break;
+		case _ball_type_option_magic: variant->game_engine_variant.oddball.oddball_ball_type = _oddball_magic; break;
+		case _ball_type_option_terminator: variant->game_engine_variant.oddball.oddball_ball_type = _oddball_terminator; break;
+		default: error(_error_silent, "unknown option selected in 'ball type' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2320, list_item, "expected 'random start' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2322, spinner, "expected 'random start' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->game_engine_variant.oddball.random_start = TRUE; break;
+		case _toggle_option_off: variant->game_engine_variant.oddball.random_start = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'random start' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2331, list_item, "expected 'ball spawn count' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2333, spinner, "expected 'ball spawn count' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+			variant->game_engine_variant.oddball.ball_spawn_count = spinner->parameters.list_parameters.current_list_item_index + 1;
+			break;
+		default:
+			error(_error_silent, "unknown option selected in 'ball spawn count' option spinner list");
+			break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2358, list_item, "expected 'score to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2360, spinner, "expected 'score to win' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _score_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
+		case _score_to_win_option_2: variant->universal_variant.score_to_win = 2; break;
+		case _score_to_win_option_5: variant->universal_variant.score_to_win = 5; break;
+		case _score_to_win_option_10: variant->universal_variant.score_to_win = 10; break;
+		case _score_to_win_option_15: variant->universal_variant.score_to_win = 15; break;
+		default: error(_error_silent, "unknown option selected in 'score to win' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2372, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2374, spinner, "expected 'teams' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
+		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'teams' option spinner list"); break;
+		}
+
+		ui_widgets_pop_stack(widget->local_player_index);
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_racing_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2408, list_item, "expected 'team scoring' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2410, spinner, "expected 'team scoring' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _team_scoring_option_min: variant->game_engine_variant.race.team_scoring = _race_team_scoring_min; break;
+		case _team_scoring_option_max: variant->game_engine_variant.race.team_scoring = _race_team_scoring_max; break;
+		case _team_scoring_option_accumulate: variant->game_engine_variant.race.team_scoring = _race_team_scoring_accumulate; break;
+		default: error(_error_silent, "unknown option selected in 'team scoring' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2420, list_item, "expected 'race type' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2422, spinner, "expected 'race type' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _race_type_option_normal: variant->game_engine_variant.race.race_type = _race_type_normal; break;
+		case _race_type_option_any_order: variant->game_engine_variant.race.race_type = _race_type_any_order; break;
+		case _race_type_option_flag_rally: variant->game_engine_variant.race.race_type = _race_type_flag_rally; break;
+		default: error(_error_silent, "unknown option selected in 'race type' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2432, list_item, "expected 'laps to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2434, spinner, "expected 'laps to win' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _laps_to_win_option_1: variant->universal_variant.score_to_win = 1; break;
+		case _laps_to_win_option_3: variant->universal_variant.score_to_win = 3; break;
+		case _laps_to_win_option_5: variant->universal_variant.score_to_win = 5; break;
+		case _laps_to_win_option_10: variant->universal_variant.score_to_win = 10; break;
+		case _laps_to_win_option_15: variant->universal_variant.score_to_win = 15; break;
+		case _laps_to_win_option_25: variant->universal_variant.score_to_win = 25; break;
+		default: error(_error_silent, "unknown option selected in 'laps to win' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2447, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2449, spinner, "expected 'teams' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->universal_variant.teams = TRUE; break;
+		case _toggle_option_off: variant->universal_variant.teams = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'teams' option spinner list"); break;
+		}
+
+		ui_widgets_pop_stack(widget->local_player_index);
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_player_options(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2483, list_item, "expected 'number of lives' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2485, spinner, "expected 'number of lives' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _lives_option_infinite: variant->universal_variant.lives = 0; break;
+		case _lives_option_1: variant->universal_variant.lives = 1; break;
+		case _lives_option_3: variant->universal_variant.lives = 3; break;
+		case _lives_option_5: variant->universal_variant.lives = 5; break;
+		default: error(_error_silent, "unknown option selected in 'number of lives' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2496, list_item, "expected 'maximum health' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2498, spinner, "expected 'maximum health' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _maximum_health_option_50_percent: variant->universal_variant.health = 0.5f; break;
+		case _maximum_health_option_100_percent: variant->universal_variant.health = 1.f; break;
+		case _maximum_health_option_150_percent: variant->universal_variant.health = 1.5f; break;
+		case _maximum_health_option_200_percent: variant->universal_variant.health = 2.f; break;
+		case _maximum_health_option_300_percent: variant->universal_variant.health = 3.f; break;
+		case _maximum_health_option_400_percent: variant->universal_variant.health = 4.f; break;
+		default: error(_error_silent, "unknown option selected in 'maximum health' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2511, list_item, "expected 'shields' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2513, spinner, "expected 'shields' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _no_shields_bit, FALSE); break;
+		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _no_shields_bit, TRUE); break;
+		default: error(_error_silent, "unknown option selected in 'shields' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2522, list_item, "expected 'respawn time' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2524, spinner, "expected 'respawn time' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _respawn_time_option_instant: variant->universal_variant.respawn_time = 0; break;
+		case _respawn_time_option_5_seconds: variant->universal_variant.respawn_time = 5 * TICKS_PER_SECOND; break;
+		case _respawn_time_option_10_seconds: variant->universal_variant.respawn_time = 10 * TICKS_PER_SECOND; break;
+		case _respawn_time_option_15_seconds: variant->universal_variant.respawn_time = 15 * TICKS_PER_SECOND; break;
+		default: error(_error_silent, "unknown option selected in 'respawn time' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2535, list_item, "expected 'respawn time growth' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2537, spinner, "expected 'respawn time growth' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _respawn_time_option_instant: variant->universal_variant.respawn_time_growth = 0; break;
+		case _respawn_time_option_5_seconds: variant->universal_variant.respawn_time_growth = 5 * TICKS_PER_SECOND; break;
+		case _respawn_time_option_10_seconds: variant->universal_variant.respawn_time_growth = 10 * TICKS_PER_SECOND; break;
+		case _respawn_time_option_15_seconds: variant->universal_variant.respawn_time_growth = 15 * TICKS_PER_SECOND; break;
+		default: error(_error_silent, "unknown option selected in 'respawn time growth' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2548, list_item, "expected 'odd man out' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2550, spinner, "expected 'odd man out' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: variant->universal_variant.odd_man_out = TRUE; break;
+		case _toggle_option_off: variant->universal_variant.odd_man_out = FALSE; break;
+		default: error(_error_silent, "unknown option selected in 'odd man out' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2559, list_item, "expected 'invisible players' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2561, spinner, "expected 'invisible players' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _always_invisible_bit, TRUE); break;
+		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _always_invisible_bit, FALSE); break;
+		default: error(_error_silent, "unknown option selected in 'invisible players' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+
+		if (list_item)
+		{
+			for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+			match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2574, spinner, "expected 'suicide penalty' option spinner list");
+
+			switch (spinner->parameters.list_parameters.current_list_item_index)
+			{
+			case _suicide_penalty_option_none: variant->universal_variant.suicide_penalty = 0; break;
+			case _suicide_penalty_option_5_seconds: variant->universal_variant.suicide_penalty = 5 * TICKS_PER_SECOND; break;
+			case _suicide_penalty_option_10_seconds: variant->universal_variant.suicide_penalty = 10 * TICKS_PER_SECOND; break;
+			case _suicide_penalty_option_15_seconds: variant->universal_variant.suicide_penalty = 15 * TICKS_PER_SECOND; break;
+			default: error(_error_silent, "unknown option selected in 'suicide penalty' option spinner list"); break;
+			}
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_item_options(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2608, list_item, "expected 'infinite grenades' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2610, spinner, "expected 'infinite grenades' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _infinite_grenades_bit, TRUE); break;
+		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _infinite_grenades_bit, FALSE); break;
+		default: error(_error_silent, "unknown option selected in 'infinite grenades' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2619, list_item, "expected 'vehicle set' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2621, spinner, "expected 'vehicle set' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _vehicle_set_option_default: variant->universal_variant.vehicle_set = _game_engine_vehicles_default; break;
+		case _vehicle_set_option_none: variant->universal_variant.vehicle_set = _game_engine_vehicles_none; break;
+		case _vehicle_set_option_warthog: variant->universal_variant.vehicle_set = _game_engine_vehicles_warthog; break;
+		case _vehicle_set_option_ghost: variant->universal_variant.vehicle_set = _game_engine_vehicles_ghost; break;
+		case _vehicle_set_option_tank: variant->universal_variant.vehicle_set = _game_engine_vehicles_tank; break;
+		default: error(_error_silent, "unknown option selected in 'vehicle set' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2633, list_item, "expected 'weapon set' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2635, spinner, "expected 'weapon set' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _weapon_set_option_normal: variant->universal_variant.weapon_set = _game_engine_weapons_normal; break;
+		case _weapon_set_option_pistols: variant->universal_variant.weapon_set = _game_engine_weapons_pistols; break;
+		case _weapon_set_option_assault_rifles: variant->universal_variant.weapon_set = _game_engine_weapons_assault_rifles; break;
+		case _weapon_set_option_plasma_weapons: variant->universal_variant.weapon_set = _game_engine_weapons_plasma_weapons; break;
+		case _weapon_set_option_sniping: variant->universal_variant.weapon_set = _game_engine_weapons_sniping; break;
+		case _weapon_set_option_no_sniping: variant->universal_variant.weapon_set = _game_engine_weapons_no_sniping; break;
+		case _weapon_set_option_rocket_launchers: variant->universal_variant.weapon_set = _game_engine_weapons_rocket_launchers; break;
+		case _weapon_set_option_shotguns: variant->universal_variant.weapon_set = _game_engine_weapons_shotguns; break;
+		case _weapon_set_option_short_range: variant->universal_variant.weapon_set = _game_engine_weapons_short_range; break;
+		case _weapon_set_option_human: variant->universal_variant.weapon_set = _game_engine_weapons_human; break;
+		case _weapon_set_option_no_grenades: variant->universal_variant.weapon_set = _game_engine_weapons_no_grenades; break;
+		default: error(_error_silent, "unknown option selected in 'weapon set' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2654, list_item, "expected 'starting equipment' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2656, spinner, "expected 'starting equipment' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _starting_equipment_option_custom: SET_FLAG(variant->universal_variant.flags, _generic_starting_equipment_bit, FALSE); break;
+		case _starting_equipment_option_generic: SET_FLAG(variant->universal_variant.flags, _generic_starting_equipment_bit, TRUE); break;
+		default: error(_error_silent, "unknown option selected in 'starting equipment' option spinner list"); break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_change_indicator_options(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2688, list_item, "expected 'radar display' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2690, spinner, "expected 'radar display' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _radar_display_option_motion_tracker: variant->universal_variant.goal_radar = _radar_motion_tracker; break;
+		case _radar_display_option_nav_point: variant->universal_variant.goal_radar = _radar_nav_point; break;
+		case _radar_display_option_none: variant->universal_variant.goal_radar = _radar_none; break;
+		default: error(_error_silent, "unknown option selected in 'radar display' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2700, list_item, "expected 'other players on radar' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2702, spinner, "expected 'other players on radar' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _allow_motion_tracker_bit, TRUE); break;
+		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _allow_motion_tracker_bit, FALSE); break;
+		default: error(_error_silent, "unknown option selected in 'other players on radar' option spinner list"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2711, list_item, "expected 'friends on screen' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2713, spinner, "expected 'friends on screen' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: SET_FLAG(variant->universal_variant.flags, _allow_friendly_navpoints_bit, TRUE); break;
+		case _toggle_option_off: SET_FLAG(variant->universal_variant.flags, _allow_friendly_navpoints_bit, FALSE); break;
+		default: error(_error_silent, "unknown option selected in 'friends on screen' option spinner list"); break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_game_engine(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2738, widget->widget_type == _widget_type_column_list, "expected a column list for the list of available game engines");
+
+	if (variant)
+	{
+		switch (variant->game_engine_index)
+		{
+		case _game_engine_ctf: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_ctf; break;
+		case _game_engine_king: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_king; break;
+		case _game_engine_slayer: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_slayer; break;
+		case _game_engine_oddball: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_oddball; break;
+		case _game_engine_race: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_race; break;
+		default: widget->parameters.list_parameters.current_list_item_index = _game_engine_option_ctf; break;
+		}
+
+		widget->focused_child = widget_instance_get_nth_child(widget, widget->parameters.list_parameters.current_list_item_index);
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_name(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2770, widget->widget_type == _widget_type_text_box, "expected text box widget for profile name");
+
+	if (variant)
+	{
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(2774));
+
+		if (widget->parameters.text_box_parameters.text)
+		{
+			ustrncpy(widget->parameters.text_box_parameters.text, variant->human_readable_game_description, 127);
+			widget->parameters.text_box_parameters.text[127] = L'\0';
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_ctf_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2797, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2805, list_item, "expected 'assault' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2807, spinner, "expected 'assault' option spinner list");
+		switch (variant->game_engine_variant.ctf.assault)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2816, list_item, "expected 'single flag' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2818, spinner, "expected 'single flag' option spinner list");
+		switch (variant->game_engine_variant.ctf.single_flag_time)
+		{
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_off; break;
+		case 1 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_1_minute; break;
+		case 2 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_2_minutes; break;
+		case 3 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_3_minutes; break;
+		case 5 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_5_minutes; break;
+		case 10 * TICKS_PER_MINUTE: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_10_minutes; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _single_flag_option_off; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2831, list_item, "expected 'flag must reset' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2833, spinner, "expected 'flag must reset' option spinner list");
+		switch (variant->game_engine_variant.ctf.flag_must_reset)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2842, list_item, "expected 'flag at home to score' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2844, spinner, "expected 'flag at home to score' option spinner list");
+		switch (variant->game_engine_variant.ctf.flag_at_home_to_score)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2853, list_item, "expected 'captures to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2855, spinner, "expected 'captures to win' option spinner list");
+
+		switch (variant->universal_variant.score_to_win)
+		{
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_1; break;
+		case 3: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_3; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_15; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _captures_to_win_option_1; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_koth_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2883, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2891, list_item, "expected 'moving hill' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2893, spinner, "expected 'moving hill' option spinner list");
+		switch (variant->game_engine_variant.king.moving_hill)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2902, list_item, "expected 'score to win' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2904, spinner, "expected 'score to win' option spinner list");
+		switch (variant->universal_variant.score_to_win)
+		{
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
+		case 2: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_2; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_15; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2916, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2918, spinner, "expected 'teams' option spinner list");
+
+		switch (variant->universal_variant.teams)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_slayer_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2943, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2951, list_item, "expected 'death bonus' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2953, spinner, "expected 'death bonus' option spinner list");
+		switch (variant->game_engine_variant.slayer.no_death_bonus)
+		{
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2962, list_item, "expected 'kill in order' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2964, spinner, "expected 'kill in order' option spinner list");
+
+		switch (variant->game_engine_variant.slayer.kill_in_order)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2973, list_item, "expected 'kill penalty' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2975, spinner, "expected 'kill penalty' option spinner list");
+		switch (variant->game_engine_variant.slayer.no_kill_penalty)
+		{
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2984, list_item, "expected 'kills to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2986, spinner, "expected 'kills to win' option spinner list");
+		switch (variant->universal_variant.score_to_win)
+		{
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_15; break;
+		case 25: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_25; break;
+		case 50: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_50; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _kills_to_win_option_5; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 2998, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3000, spinner, "expected 'teams' option spinner list");
+
+		switch (variant->universal_variant.teams)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_oddball_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3025, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3033, list_item, "expected 'trait with ball' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3035, spinner, "expected 'trait with ball' option spinner list");
+		switch (variant->game_engine_variant.oddball.trait_with_ball)
+		{
+		case _game_trait_none: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
+		case _game_trait_invisible: spinner->parameters.list_parameters.current_list_item_index = _trait_option_invisible; break;
+		case _game_trait_extra_damage: spinner->parameters.list_parameters.current_list_item_index = _trait_option_extra_damage; break;
+		case _game_trait_damage_resistant: spinner->parameters.list_parameters.current_list_item_index = _trait_option_damage_resistant; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3046, list_item, "expected 'trait without ball' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3048, spinner, "expected 'trait without ball' option spinner list");
+		switch (variant->game_engine_variant.oddball.trait_without_ball)
+		{
+		case _game_trait_none: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
+		case _game_trait_invisible: spinner->parameters.list_parameters.current_list_item_index = _trait_option_invisible; break;
+		case _game_trait_extra_damage: spinner->parameters.list_parameters.current_list_item_index = _trait_option_extra_damage; break;
+		case _game_trait_damage_resistant: spinner->parameters.list_parameters.current_list_item_index = _trait_option_damage_resistant; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _trait_option_none; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3059, list_item, "expected 'speed with ball' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3061, spinner, "expected 'speed with ball' option spinner list");
+		switch (variant->game_engine_variant.oddball.speed_with_ball)
+		{
+		case _oddball_speed_normal: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_normal; break;
+		case _oddball_speed_slow: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_slow; break;
+		case _oddball_speed_faster: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_faster; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _speed_with_ball_option_normal; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3071, list_item, "expected 'ball type' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3073, spinner, "expected 'ball type' option spinner list");
+		switch (variant->game_engine_variant.oddball.oddball_ball_type)
+		{
+		case _oddball_normal: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_normal; break;
+		case _oddball_magic: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_magic; break;
+		case _oddball_terminator: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_terminator; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _ball_type_option_normal; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3083, list_item, "expected 'random start' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3085, spinner, "expected 'random start' option spinner list");
+		switch (variant->game_engine_variant.oddball.random_start)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3094, list_item, "expected 'ball spawn count' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3096, spinner, "expected 'ball spawn count' option spinner list");
+
+		switch (variant->game_engine_variant.oddball.ball_spawn_count)
+		{
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+			spinner->parameters.list_parameters.current_list_item_index = (short)(variant->game_engine_variant.oddball.ball_spawn_count - 1);
+			break;
+		default:
+			spinner->parameters.list_parameters.current_list_item_index = 0;
+			break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3121, list_item, "expected 'score to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3123, spinner, "expected 'score to win' option spinner list");
+		switch (variant->universal_variant.score_to_win)
+		{
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
+		case 2: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_2; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_15; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _score_to_win_option_1; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3135, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3137, spinner, "expected 'teams' option spinner list");
+
+		switch (variant->universal_variant.teams)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_racing_rules(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3162, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3170, list_item, "expected 'team scoring' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3172, spinner, "expected 'team scoring' option spinner list");
+		switch (variant->game_engine_variant.race.team_scoring)
+		{
+		case _race_team_scoring_min: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_min; break;
+		case _race_team_scoring_max: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_max; break;
+		case _race_team_scoring_accumulate: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_accumulate; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _team_scoring_option_min; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3182, list_item, "expected 'race type' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3184, spinner, "expected 'race type' option spinner list");
+		switch (variant->game_engine_variant.race.race_type)
+		{
+		case _race_type_normal: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_normal; break;
+		case _race_type_any_order: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_any_order; break;
+		case _race_type_flag_rally: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_flag_rally; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _race_type_option_normal; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3194, list_item, "expected 'laps to win' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3196, spinner, "expected 'laps to win' option spinner list");
+		switch (variant->universal_variant.score_to_win)
+		{
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_1; break;
+		case 3: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_3; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_5; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_10; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_15; break;
+		case 25: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_25; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _laps_to_win_option_1; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3209, list_item, "expected 'teams' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3211, spinner, "expected 'teams' option spinner list");
+
+		switch (variant->universal_variant.teams)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_player_options(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3237, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3245, list_item, "expected 'number of lives' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3247, spinner, "expected 'number of lives' option spinner list");
+		switch (variant->universal_variant.lives)
+		{
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _lives_option_infinite; break;
+		case 1: spinner->parameters.list_parameters.current_list_item_index = _lives_option_1; break;
+		case 3: spinner->parameters.list_parameters.current_list_item_index = _lives_option_3; break;
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _lives_option_5; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _lives_option_infinite; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3258, list_item, "expected 'maximum health' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3260, spinner, "expected 'maximum health' option spinner list");
+		switch ((long)(10.f * variant->universal_variant.health))
+		{
+		case 5: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_50_percent; break;
+		case 10: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_100_percent; break;
+		case 15: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_150_percent; break;
+		case 20: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_200_percent; break;
+		case 30: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_300_percent; break;
+		case 40: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_400_percent; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _maximum_health_option_50_percent; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3273, list_item, "expected 'shields' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3275, spinner, "expected 'shields' option spinner list");
+
+		switch (TEST_FLAG(variant->universal_variant.flags, _no_shields_bit))
+		{
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3285, list_item, "expected 'respawn time' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3287, spinner, "expected 'respawn time' option spinner list");
+		switch (variant->universal_variant.respawn_time)
+		{
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
+		case 5 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_5_seconds; break;
+		case 10 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_10_seconds; break;
+		case 15 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_15_seconds; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3298, list_item, "expected 'respawn time growth' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3300, spinner, "expected 'respawn time growth' option spinner list");
+		switch (variant->universal_variant.respawn_time_growth)
+		{
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
+		case 5 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_5_seconds; break;
+		case 10 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_10_seconds; break;
+		case 15 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_15_seconds; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _respawn_time_option_instant; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3311, list_item, "expected 'odd man out' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3313, spinner, "expected 'odd man out' option spinner list");
+		switch (variant->universal_variant.odd_man_out)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3322, list_item, "expected 'invisible players' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3324, spinner, "expected 'invisible players' option spinner list");
+
+		switch (TEST_FLAG(variant->universal_variant.flags, _always_invisible_bit))
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3335, list_item, "expected 'suicide penalty' item");
+
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+
+		switch (variant->universal_variant.suicide_penalty)
+		{
+		case 0: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_none; break;
+		case 5 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_5_seconds; break;
+		case 10 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_10_seconds; break;
+		case 15 * TICKS_PER_SECOND: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_15_seconds; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _suicide_penalty_option_none; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_item_options(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3366, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3374, list_item, "expected 'infinite grenades' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3376, spinner, "expected 'infinite grenades' option spinner list");
+
+		switch (TEST_FLAG(variant->universal_variant.flags, _infinite_grenades_bit))
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3386, list_item, "expected 'vehicle set' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3388, spinner, "expected 'vehicle set' option spinner list");
+		switch (variant->universal_variant.vehicle_set)
+		{
+		case _game_engine_vehicles_default: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_default; break;
+		case _game_engine_vehicles_none: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_none; break;
+		case _game_engine_vehicles_warthog: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_warthog; break;
+		case _game_engine_vehicles_ghost: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_ghost; break;
+		case _game_engine_vehicles_tank: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_tank; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _vehicle_set_option_default; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3400, list_item, "expected 'weapon set' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3402, spinner, "expected 'weapon set' option spinner list");
+
+		switch (variant->universal_variant.weapon_set)
+		{
+		case _game_engine_weapons_normal: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_normal; break;
+		case _game_engine_weapons_pistols: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_pistols; break;
+		case _game_engine_weapons_assault_rifles: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_assault_rifles; break;
+		case _game_engine_weapons_plasma_weapons: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_plasma_weapons; break;
+		case _game_engine_weapons_sniping: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_sniping; break;
+		case _game_engine_weapons_no_sniping: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_no_sniping; break;
+		case _game_engine_weapons_rocket_launchers: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_rocket_launchers; break;
+		case _game_engine_weapons_shotguns: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_shotguns; break;
+		case _game_engine_weapons_short_range: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_short_range; break;
+		case _game_engine_weapons_human: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_human; break;
+		case _game_engine_weapons_no_grenades: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_no_grenades; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _weapon_set_option_normal; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3421, list_item, "expected 'starting equipment' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3423, spinner, "expected 'starting equpiment' option spinner list");
+
+		switch (TEST_FLAG(variant->universal_variant.flags, _generic_starting_equipment_bit))
+		{
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _starting_equipment_option_custom; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _starting_equipment_option_generic; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _starting_equipment_option_custom; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_initialize_indicator_options(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct game_variant *variant = player_ui_get_edit_playlist_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3450, widget->widget_type == _widget_type_column_list, "expected column list for multiplayer game settings widget");
+
+	if (variant)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3458, list_item, "expected 'radar display' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3460, spinner, "expected 'radar display' option spinner list");
+		switch (variant->universal_variant.goal_radar)
+		{
+		case _radar_motion_tracker: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_motion_tracker; break;
+		case _radar_nav_point: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_nav_point; break;
+		case _radar_none: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_none; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _radar_display_option_motion_tracker; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3470, list_item, "expected 'other players on radar' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3472, spinner, "expected 'other players on radar' option spinner list");
+
+		switch (TEST_FLAG(variant->universal_variant.flags, _allow_motion_tracker_bit))
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3482, list_item, "expected 'friends on screen' item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3484, spinner, "expected 'friends on screen' option spinner list");
+
+		switch (TEST_FLAG(variant->universal_variant.flags, _allow_friendly_navpoints_bit))
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable game variant");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean playlist_profile_save_changes(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3510, event);
+
+	if (player_ui_edit_profile_is_dirty())
+	{
+		if (!player_ui_edit_profile_is_default_profile() || player_ui_edit_profile_name_is_dirty())
+		{
+			success = player_ui_save_profile();
+
+			if (!success)
+			{
+				error(_error_silent, "failed to save changes to multiplayer playlist profile");
+			}
+		}
+		else if (!player_ui_prompt_user_to_rename_edit_profile())
+		{
+			error(_error_silent, "failed to prompt user to rename profile");
+		}
+	}
+	else
+	{
+		error(_error_silent, "no changes to playlist profile detected; not saving to disk");
+		player_ui_end_editing_profile();
+		ui_widget_delete(widget_instance_get_topmost_parent(widget));
+		*widget_deleted = TRUE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_color_picker_menu_initialize(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	word number_of_colors = player_profile_number_of_available_primary_colors();
+	struct player_profile *profile = player_ui_get_edit_player_profile();
+	struct ui_widget_definition *definition = ui_widget_definition_get(widget->ui_widget_tag_index);
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3576, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player color picker list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3577, definition->child_widget_references.count == 3, "expected 3 list items for 'player color picker list' widget");
+
+
+
+	widget->parameters.list_parameters.list_items = ui_widget_realloc(widget->parameters.list_parameters.list_items, number_of_colors, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(3581));
+
+	if (widget->parameters.list_parameters.list_items)
+	{
+		long color_index;
+
+		for (color_index = 0; color_index < number_of_colors; color_index++)
+		{
+			((byte *)widget->parameters.list_parameters.list_items)[color_index] = (byte)color_index;
+		}
+
+		widget->parameters.list_parameters.number_of_items = number_of_colors;
+	}
+
+	if (profile)
+	{
+		profile->primary_color_index = PIN(profile->primary_color_index, 0, number_of_colors - 1);
+		widget->parameters.list_parameters.current_list_item_index = profile->primary_color_index;
+	}
+	else
+	{
+		error(_error_silent, "failed to find editing player profile");
+	}
+
+	return TRUE;
+}
+
+static boolean player_profile_color_picker_menu_dispose(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	if (widget->parameters.list_parameters.list_items)
+	{
+		widget_free(widget->parameters.list_parameters.list_items);
+		widget->parameters.list_parameters.list_items = NULL;
+	}
+
+	return TRUE;
+}
+
+static boolean player_profile_color_picker_select_color(
+	struct widget_instance *screen_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition;
+	struct widget_instance *color_list = screen_widget->focused_child;
+	struct player_profile *profile = player_ui_get_edit_player_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3630, color_list && color_list->widget_type == _widget_type_spinner_list, "expected the color select screen to contain a spinner list for the color picker");
+	definition = ui_widget_definition_get(color_list->ui_widget_tag_index);
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3637, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player color picker list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3638, definition->child_widget_references.count == 3, "expected 3 list items for 'player color picker list' widget");
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3644, (color_list->parameters.list_parameters.current_list_item_index>=0) && (color_list->parameters.list_parameters.current_list_item_index<player_profile_number_of_available_primary_colors()), "invalid player profile color index specified");
+
+	if (profile)
+	{
+		profile->primary_color_index = color_list->parameters.list_parameters.current_list_item_index;
+	}
+	else
+	{
+		error(_error_silent, "failed to set player profile color because no profile is currently being edited");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_begin_editing(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition;
+	struct widget_instance *profile_list;
+	long profile_index;
+	boolean success = FALSE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3667, wrapper_widget->widget_type == _widget_type_container, "expected the player profile select screen to be a container widget");
+	delete_profile_index = NONE;
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3677, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'player profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3678, definition->child_widget_references.count == 3, "expected 3 list items for 'player profile list' widget");
+	profile_list = wrapper_widget->children;
+
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3687, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid player profile specified from 'player profile list' list widget");
+	profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
+
+	if (profile_index != NONE)
+	{
+		if (TEST_FLAG(profile_index, _profile_checksum_valid_bit31))
+		{
+			player_ui_begin_editing_profile(((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index]);
+			success = TRUE;
+		}
+		else
+		{
+			display_error_deferred(_error_warning_saved_game_file_damaged, NONE, TRUE, FALSE);
+			ui_play_audio_feedback_sound(_audio_feedback_failure);
+		}
+	}
+	else
+	{
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+	}
+
+	return success;
+}
+
+static boolean player_profile_end_editing(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	delete_profile_index = NONE;
+	player_ui_end_editing_profile();
+
+	return TRUE;
+}
+
+static boolean player_profile_change_name(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile *profile = player_ui_get_edit_player_profile();
+	boolean success = TRUE;
+
+	if (profile)
+	{
+		if (!virtual_keyboard_launch(
+			profile->player_name,
+			sizeof(profile->player_name),
+			_virtual_keyboard_caption_player_profile_name))
+		{
+			error(_error_silent, "failed to invoke virtual keyboard on player profile name");
+			success = FALSE;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable player profile");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_save_changes(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3759, event);
+
+	if (player_ui_edit_profile_is_dirty())
+	{
+		success = player_ui_save_profile();
+
+		if (!success)
+		{
+			error(_error_silent, "failed to save changes to player profile");
+		}
+	}
+	else
+	{
+		error(_error_silent, "no changes to player profile detected; not saving to disk");
+	}
+
+	if (!success)
+	{
+		player_ui_end_editing_profile();
+		ui_widget_delete(widget_instance_get_topmost_parent(widget));
+		*widget_deleted = TRUE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_initialize_controller_settings(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile *profile = player_ui_get_edit_player_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3793, widget->widget_type == _widget_type_column_list, "expected column list for controller settings widget");
+
+	if (profile)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3801, list_item, "expected 'joystick config' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3803, spinner, "expected 'joystick config' option spinner list");
+		switch (profile->controller_settings.joystick_preset)
+		{
+		case _joystick_preset_standard: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_standard; break;
+		case _joystick_preset_south_paw: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_south_paw; break;
+		case _joystick_preset_legacy: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_legacy; break;
+		case _joystick_preset_legacy_south_paw: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_legacy_south_paw; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _joystick_config_option_standard; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3814, list_item, "expected 'button config' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3816, spinner, "expected 'button config' option spinner list");
+
+		switch (profile->controller_settings.button_preset)
+		{
+		case _button_preset_standard: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_standard; break;
+		case _button_preset_southpaw: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_southpaw; break;
+		case _button_preset_jumpy: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_jumpy; break;
+		case _button_preset_bumperjumper: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_bumperjumper; break;
+		case _button_preset_boxer: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_boxer; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _button_config_option_standard; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable player profile");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_initialize_advanced_controller_settings(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile *profile = player_ui_get_edit_player_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3844, widget->widget_type == _widget_type_column_list, "expected column list for advanced controller settings widget");
+
+	if (profile)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3852, list_item, "expected 'invert joystick' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3854, spinner, "expected 'invert joystick' option spinner list");
+		switch (profile->controller_settings.invert_look)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3863, list_item, "expected 'look sensitivity' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3865, spinner, "expected 'look sensitivity' option spinner list");
+
+		switch (profile->controller_settings.look_sensitivity)
+		{
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+			spinner->parameters.list_parameters.current_list_item_index = profile->controller_settings.look_sensitivity - 1;
+			break;
+		default:
+			spinner->parameters.list_parameters.current_list_item_index = 0;
+			break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3884, list_item, "expected 'controller vibration' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3886, spinner, "expected 'controller vibration' option spinner list");
+		switch (profile->controller_settings.vibration_disabled)
+		{
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3895, list_item, "expected 'flight stick controls' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3897, spinner, "expected 'flight stick controls' option spinner list");
+		switch (profile->controller_settings.flight_stick_aircraft_controls)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3906, list_item, "expected 'autocenter' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3908, spinner, "expected 'autocenter' option spinner list");
+
+		switch (profile->controller_settings.autocenter)
+		{
+		case TRUE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		case FALSE: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_off; break;
+		default: spinner->parameters.list_parameters.current_list_item_index = _toggle_option_on; break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable player profile");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_change_controller_settings(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile *profile = player_ui_get_edit_player_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3933, widget->widget_type == _widget_type_column_list, "expected column list for controller settings widget");
+
+	if (profile)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3941, list_item, "expected 'joystick config' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3943, spinner, "expected 'joystick config' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _joystick_config_option_standard: profile->controller_settings.joystick_preset = _joystick_preset_standard; break;
+		case _joystick_config_option_south_paw: profile->controller_settings.joystick_preset = _joystick_preset_south_paw; break;
+		case _joystick_config_option_legacy: profile->controller_settings.joystick_preset = _joystick_preset_legacy; break;
+		case _joystick_config_option_legacy_south_paw: profile->controller_settings.joystick_preset = _joystick_preset_legacy_south_paw; break;
+		default: error(_error_silent, "unknown option selected for joystick config"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3954, list_item, "expected 'button config' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3956, spinner, "expected 'button config' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _button_config_option_standard: profile->controller_settings.button_preset = _button_preset_standard; break;
+		case _button_config_option_southpaw: profile->controller_settings.button_preset = _button_preset_southpaw; break;
+		case _button_config_option_jumpy: profile->controller_settings.button_preset = _button_preset_jumpy; break;
+		case _button_config_option_bumperjumper: profile->controller_settings.button_preset = _button_preset_bumperjumper; break;
+		case _button_config_option_boxer: profile->controller_settings.button_preset = _button_preset_boxer; break;
+		default: error(_error_silent, "unknown button config option selected"); break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable player profile");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean player_profile_change_advanced_controller_settings(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct player_profile *profile = player_ui_get_edit_player_profile();
+	boolean success = TRUE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3984, widget->widget_type == _widget_type_column_list, "expected column list for advanced controller settings widget");
+
+	if (profile)
+	{
+		struct widget_instance *list_item;
+		struct widget_instance *spinner;
+
+		list_item = widget->children;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3992, list_item, "expected 'invert joystick' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 3994, spinner, "expected 'invert joystick' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: profile->controller_settings.invert_look = TRUE; break;
+		case _toggle_option_off: profile->controller_settings.invert_look = FALSE; break;
+		default: error(_error_silent, "unknown option selected for invert joystick"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4003, list_item, "expected 'look sensitivity' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4005, spinner, "expected 'look sensitivity' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+			profile->controller_settings.look_sensitivity = (byte)(spinner->parameters.list_parameters.current_list_item_index + 1);
+			break;
+		default:
+			error(_error_silent, "unknown option selected for look sensitivity");
+			break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4024, list_item, "expected 'controller vibration' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4026, spinner, "expected 'controller vibration' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: profile->controller_settings.vibration_disabled = FALSE; break;
+		case _toggle_option_off: profile->controller_settings.vibration_disabled = TRUE; break;
+		default: error(_error_silent, "unknown option selected for controller vibration"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4035, list_item, "expected 'flight stick controls' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4037, spinner, "expected 'flight stick controls' option spinner list");
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: profile->controller_settings.flight_stick_aircraft_controls = TRUE; break;
+		case _toggle_option_off: profile->controller_settings.flight_stick_aircraft_controls = FALSE; break;
+		default: error(_error_silent, "unknown option selected for controller flight_stick_aircraft_controls"); break;
+		}
+
+		list_item = list_item->next;
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4046, list_item, "expected 'autocenter' list item");
+		for (spinner = list_item->children; spinner && spinner->widget_type != _widget_type_spinner_list; spinner = spinner->next);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4048, spinner, "expected 'autocenter' option spinner list");
+
+		switch (spinner->parameters.list_parameters.current_list_item_index)
+		{
+		case _toggle_option_on: profile->controller_settings.autocenter = TRUE; break;
+		case _toggle_option_off: profile->controller_settings.autocenter = FALSE; break;
+		default: error(_error_silent, "unknown option selected for controller autocenter"); break;
+		}
+	}
+	else
+	{
+		error(_error_silent, "failed to retrieve editable player profile");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean network_game_remove_local_player(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4073, event && (event->controller_index>=0) && (event->controller_index<MAXIMUM_GAMEPADS), "valid controller index required to remove player from network game");
+	network_game_client_local_player_quit(event->controller_index);
+
+	return TRUE;
+}
+
+static boolean switch_from_main_menu_to_single_player(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	game_connection_set(_game_connection_local);
+	main_menu_switch_to_single_player();
+	player_ui_remember_player1_profile(FALSE);
+
+	return TRUE;
+}
+
+static boolean delete_player_profile_request(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition;
+	struct widget_instance *profile_list;
+	boolean success;
+
+	definition = ui_widget_definition_get(wrapper_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4111, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the multiplayer profile select screen to be a container w/ 3+ children");
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4114, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'multiplayer profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4115, definition->child_widget_references.count == 3, "expected 3 list items for 'multiplayer profile list' widget");
+	profile_list = wrapper_widget->children;
+
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4124, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	delete_profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
+
+	if (delete_profile_index != NONE)
+	{
+		success = TRUE;
+	}
+	else
+	{
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean delete_playlist_profile_request(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct ui_widget_definition *definition;
+	struct widget_instance *profile_list;
+	boolean success = FALSE;
+
+	definition = ui_widget_definition_get(wrapper_widget->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4157, definition->type == _widget_type_container && definition->child_widget_references.count >= 3, "expected the playlist profile select screen to be a container w/ 3+ children");
+	profile_list = wrapper_widget->children;
+	definition = ui_widget_definition_get(profile_list->ui_widget_tag_index);
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4160, definition->type == _widget_type_spinner_list, "expected a spinner list widget for 'playlist profile list' widget");
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4161, definition->child_widget_references.count == 3, "expected 3 list items for 'playlist profile list' widget");
+	profile_list = wrapper_widget->children;
+
+
+
+
+
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4169, (profile_list->parameters.list_parameters.current_list_item_index>=0) && (profile_list->parameters.list_parameters.current_list_item_index<profile_list->parameters.list_parameters.number_of_items), "invalid multiplayer profile specified from 'multiplayer profile list' list widget");
+	delete_profile_index = ((long *)profile_list->parameters.list_parameters.list_items)[profile_list->parameters.list_parameters.current_list_item_index];
+
+	if (delete_profile_index != NONE)
+	{
+		if (TEST_FLAG(delete_profile_index, _default_profile_bit30))
+		{
+			display_error_deferred(_error_cannot_delete_default_game_settings, NONE, TRUE, FALSE);
+			ui_play_audio_feedback_sound(_audio_feedback_failure);
+		}
+		else
+		{
+			success = TRUE;
+		}
+	}
+	else
+	{
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+	}
+
+	return success;
+}
+
+static boolean delete_player_profile_final(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = FALSE;
+
+	if (!TEST_FLAG(delete_profile_index, _default_profile_bit30))
+	{
+		if ((delete_profile_index & SAVED_GAME_FILE_TYPE_MASK) == _saved_game_file_type_player_profile)
+		{
+			player_profile_delete(delete_profile_index);
+			success = TRUE;
+		}
+		else
+		{
+			error(_error_silent, "#0x%08lX is not a player profile index", delete_profile_index);
+		}
+	}
+	else
+	{
+		error(_error_silent, "sorry, you are not allowed to delete default player profiles");
+		success = FALSE;
+	}
+
+	return success;
+}
+
+static boolean delete_playlist_profile_final(
+	struct widget_instance *wrapper_widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = FALSE;
+
+	if ((delete_profile_index & SAVED_GAME_FILE_TYPE_MASK) == _saved_game_file_type_play_list)
+	{
+		playlist_profile_delete(delete_profile_index);
+		success = TRUE;
+	}
+	else
+	{
+		error(_error_silent, "#0x%08lX is not a playlist profile index", delete_profile_index);
+	}
+
+	return success;
+}
+
+static boolean cancel_profile_delete(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	delete_profile_index = NONE;
+
+	return TRUE;
+}
+
+static boolean create_and_begin_editing_new_gametype_profile(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	wchar_t new_profile_name[MAXIMUM_SAVED_GAME_NAME_LENGTH];
+	char full_path[MAXIMUM_FILENAME_LENGTH+1];
+	boolean success = FALSE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4272, (event->controller_index>=0) && (event->controller_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS), "creating a new profile requires a valid local player index");
+
+	saved_game_file_get_useable_untitled_profile_name(new_profile_name);
+
+	if (new_profile_name[0])
+	{
+		long profile_index = playlist_profile_new(widget->local_player_index, new_profile_name);
+
+		if (profile_index != NONE)
+		{
+			struct game_variant *variant;
+
+			player_ui_begin_editing_profile(profile_index);
+			variant = player_ui_get_edit_playlist_profile();
+
+			if (variant)
+			{
+				struct game_variant slayer = build_game_variant_slayer();
+
+				memcpy(variant, &slayer, sizeof(*variant));
+				variant->flags = 0;
+				ustrncpy(variant->human_readable_game_description, new_profile_name, MAXIMUM_GAME_VARIANT_NAME_LENGTH - 1);
+				variant->human_readable_game_description[MAXIMUM_GAME_VARIANT_NAME_LENGTH - 1] = L'\0';
+				success = virtual_keyboard_launch(
+					variant->human_readable_game_description,
+					sizeof(variant->human_readable_game_description),
+					_virtual_keyboard_caption_variant_name);
+
+				if (success == TRUE)
+				{
+					if (saved_game_file_get_path_to_enclosing_directory(profile_index, full_path))
+					{
+						saved_game_file_remember_last_used_multiplayer_variant_directory(full_path);
+					}
+				}
+			}
+			else
+			{
+				error(_error_silent, "failed to retrieve editable game variant profile!");
+				player_ui_end_editing_profile();
+			}
+		}
+		else
+		{
+			error(_error_silent, "failed to create a new multiplayer game type profile");
+		}
+	}
+	else
+	{
+		error(_error_silent, "unable to create a new untitled profile");
+	}
+
+	if (!success)
+	{
+		display_error_deferred(_error_unable_to_create_multiplayer_game_file, NONE, TRUE, FALSE);
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+	}
+
+	return success;
+}
+
+static boolean create_and_begin_editing_new_player_profile(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	wchar_t new_profile_name[MAXIMUM_SAVED_GAME_NAME_LENGTH];
+	short local_player_index = event->controller_index;
+	boolean success = FALSE;
+
+	if (local_player_index == NONE)
+	{
+		local_player_index = PLAYER1;
+	}
+
+	saved_game_file_get_useable_untitled_profile_name(new_profile_name);
+
+	if (new_profile_name[0])
+	{
+		long profile_index = player_profile_new(local_player_index, new_profile_name);
+
+		if (profile_index != NONE)
+		{
+			struct player_profile *profile;
+
+			player_ui_begin_editing_profile(profile_index);
+			profile = player_ui_get_edit_player_profile();
+
+			if (profile)
+			{
+				ustrncpy(profile->player_name, new_profile_name, MAXIMUM_PLAYER_PROFILE_NAME_LENGTH);
+				profile->player_name[MAXIMUM_PLAYER_PROFILE_NAME_LENGTH] = L'\0';
+				success = virtual_keyboard_launch(
+					profile->player_name,
+					sizeof(profile->player_name),
+					_virtual_keyboard_caption_player_profile_name);
+			}
+			else
+			{
+				error(_error_silent, "failed to retrieve editable player profile!");
+				player_ui_end_editing_profile();
+			}
+		}
+		else
+		{
+			error(_error_silent, "failed to create a new player profile");
+		}
+	}
+	else
+	{
+		error(_error_silent, "unable to create a new untitled profile");
+	}
+
+	if (!success)
+	{
+		display_error_deferred(_error_unable_to_create_player_profile, NONE, TRUE, FALSE);
+		ui_play_audio_feedback_sound(_audio_feedback_failure);
+	}
+
+	return success;
+}
+
+static boolean network_game_start_faster(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_client *client = global_network_game_client_get();
+
+	if (client)
+	{
+		long player_index;
+		struct network_game_data *game = network_game_client_get_game(client);
+		short machine_index = network_game_client_get_machine_index(client);
+
+		for (player_index = 0; player_index < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; player_index++)
+		{
+			if (network_player_is_valid(&game->players[player_index]) && game->players[player_index].machine_index == machine_index && game->players[player_index].controller_index == event->controller_index)
+			{
+				if (!network_game_client_request_start_time_change(client, TRUE))
+				{
+					error(_error_silent, "network_game_client_request_start_time_change() failed");
+				}
+				break;
+			}
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_start_slower(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_client *client = global_network_game_client_get();
+
+	if (client)
+	{
+		long player_index;
+		struct network_game_data *game = network_game_client_get_game(client);
+		short machine_index = network_game_client_get_machine_index(client);
+
+		for (player_index = 0; player_index < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; player_index++)
+		{
+			if (network_player_is_valid(&game->players[player_index]) && game->players[player_index].machine_index == machine_index && game->players[player_index].controller_index == event->controller_index)
+			{
+				if (!network_game_client_request_start_time_change(client, FALSE))
+				{
+					error(_error_silent, "network_game_client_request_start_time_change() failed");
+				}
+				break;
+			}
+		}
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_server_accept_connections(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_server *server = global_network_game_server_get();
+
+	if (server)
+	{
+		network_game_server_open_game(server);
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_server_defer_game_start(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_server *server = global_network_game_server_get();
+
+	if (server)
+	{
+		network_game_server_pause_countdown(server, TRUE);
+	}
+
+	return TRUE;
+}
+
+static boolean network_game_server_allow_game_start(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_server *server = global_network_game_server_get();
+
+	if (server)
+	{
+		network_game_server_pause_countdown(server, FALSE);
+	}
+
+	return TRUE;
+}
+
+static boolean disable_widget_if_no_xdemos(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	if (!xbox_demos_available())
+	{
+		widget->never_receive_events = TRUE;
+		widget->visible = FALSE;
+	}
+
+	return TRUE;
+}
+
+static boolean run_xdemos(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	main_run_demos();
+
+	return TRUE;
+}
+
+static boolean single_player_reset_controller_choices(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	player_ui_reset_single_player_local_player_controllers();
+
+	return TRUE;
+}
+
+static boolean single_player_set_player1_controller_choice(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4537, event != NULL);
+	player_ui_set_single_player_local_player_controller(PLAYER1, event->controller_index);
+
+	return TRUE;
+}
+
+static boolean single_player_set_player2_controller_choice(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	short controller_index;
+	boolean success;
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4551, event != NULL);
+
+	controller_index = event->controller_index;
+
+	if (controller_index == player_ui_get_single_player_local_player_controller(PLAYER1))
+	{
+		display_error(_error_controller_coop_controller_conflict, NONE, TRUE, FALSE);
+		*widget_deleted = TRUE;
+		success = FALSE;
+	}
+	else
+	{
+		player_ui_set_single_player_local_player_controller(PLAYER2, controller_index);
+		success = TRUE;
+	}
+
+	return success;
+}
+
+static boolean display_error_if_no_network_connection(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean network_available = transport_network_available();
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4575, event);
+
+	if (!network_available)
+	{
+		display_error(_error_network_connected_play_no_network, event->controller_index, TRUE, TRUE);
+	}
+
+	return network_available;
+}
+
+static boolean start_network_game_if_no_advertised_servers(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success = FALSE;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4593, widget->widget_type == _widget_type_column_list, "expected a column list for server list");
+
+	if (!widget->parameters.list_parameters.number_of_items)
+	{
+		word client_state_progress;
+		struct network_game_client *client = global_network_game_client_get();
+
+		if (client && network_game_client_get_state(client, &client_state_progress) == _network_game_client_state_searching)
+		{
+			success = network_game_start_new_server(widget, event, widget_deleted);
+		}
+	}
+	else
+	{
+		error(_error_silent, "not attempting to start a new server; there are other servers available");
+	}
+
+	return success;
+}
+
+static boolean netgame_unjoin_player(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct network_game_client *client;
+	boolean success = TRUE;
+
+	client = global_network_game_client_get();
+
+	if (client)
+	{
+		word client_state_progress;
+
+		if (network_game_client_get_state(client, &client_state_progress) == _network_game_client_state_pregame)
+		{
+			struct network_game_data *game = network_game_client_get_game(client);
+			struct network_player *removed_player = NULL;
+			short local_machine_index = network_game_client_get_local_machine_index();
+			long local_player_count = 0;
+
+			if (local_machine_index != NONE)
+			{
+				long player_index;
+
+				for (player_index = 0; player_index < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; player_index++)
+				{
+					struct network_player *player = &game->players[player_index];
+
+					if (network_player_is_valid(player) && player->machine_index == local_machine_index)
+					{
+						local_player_count++;
+
+						if (player->controller_index == event->controller_index)
+						{
+							match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4646, !removed_player, "duplicate player registered in game");
+							removed_player = player;
+						}
+					}
+				}
+
+				if (local_player_count > 0)
+				{
+					if (removed_player)
+					{
+						if (!network_game_client_request_remove_player(client, removed_player))
+						{
+							error(_error_silent, "failed to request player removal");
+						}
+
+						player_ui_clear_multiplayer_autojoin_for_local_player(removed_player->controller_index);
+					}
+
+					if (local_player_count == 1)
+					{
+						if (global_network_game_server_get() && network_game_should_accept_remote_connections() == TRUE)
+						{
+							success = network_game_server_defer_game_start(widget, event, widget_deleted);
+						}
+						else
+						{
+							dispose_global_network_game_client();
+							dispose_global_network_game_server();
+							success = TRUE;
+						}
+
+						player_ui_autojoin_players_to_next_multiplayer_game();
+					}
+					else
+					{
+						success = FALSE;
+					}
+				}
+			}
+		}
+		else
+		{
+			error(_error_silent, "can't request player removal from netgame_unjoin_player() unless we are in pregame");
+		}
+	}
+
+	return success;
+}
+
+static boolean close_calling_widget_if_not_editing_profile(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	boolean success;
+
+	if (!player_ui_get_edit_player_profile() && !player_ui_get_edit_playlist_profile())
+	{
+		struct widget_instance *topmost_parent = widget_instance_get_topmost_parent(widget);
+
+		error(_error_silent, "closing widget '%s' because no saved game file is being edited", topmost_parent->name);
+		topmost_parent->milliseconds_to_auto_close = 1;
+		topmost_parent->visible = FALSE;
+		success = FALSE;
+	}
+	else
+	{
+		success = TRUE;
+	}
+
+	return success;
+}
+
+static boolean exit_to_xbox_dashboard(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	xbox_dashboard_launch();
+
+	return FALSE;
+}
+
+static boolean new_campaign_chosen(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	wchar_t random_name[MAXIMUM_SAVED_GAME_NAME_LENGTH];
+
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4741, event);
+
+	saved_game_file_get_useable_untitled_profile_name(random_name);
+	ustrncpy(new_campaign_profile_name, random_name, MAXIMUM_PLAYER_PROFILE_NAME_LENGTH);
+	new_campaign_profile_name[MAXIMUM_PLAYER_PROFILE_NAME_LENGTH] = L'\0';
+	new_campaign_controller_index = event->controller_index;
+
+	if (!virtual_keyboard_launch(
+		new_campaign_profile_name,
+		sizeof(new_campaign_profile_name),
+		_virtual_keyboard_caption_player_profile_name))
+	{
+		error(_error_silent, "failed to invoke the virtual keyboard for a new campaign profile name");
+	}
+
+	return TRUE;
+}
+
+static boolean new_campaign_decision(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	wchar_t random_name[MAXIMUM_SAVED_GAME_NAME_LENGTH];
+	struct player_profile profile;
+	boolean success = FALSE;
+
+	if (new_campaign_controller_index != NONE)
+	{
+		if (virtual_keyboard_last_exit_saved_text())
+		{
+			if (new_campaign_profile_name[0])
+			{
+				long profile_index;
+
+				player_ui_set_single_player_local_player_controller(PLAYER1, new_campaign_controller_index);
+				profile_index = player_profile_new(new_campaign_controller_index, new_campaign_profile_name);
+
+				if (profile_index == NONE)
+				{
+					saved_game_file_get_useable_untitled_profile_name(random_name);
+					ustrncpy(new_campaign_profile_name, random_name, MAXIMUM_PLAYER_PROFILE_NAME_LENGTH);
+					new_campaign_profile_name[MAXIMUM_PLAYER_PROFILE_NAME_LENGTH] = L'\0';
+					profile_index = player_profile_new(new_campaign_controller_index, new_campaign_profile_name);
+				}
+
+				if (profile_index != NONE)
+				{
+					if (player_profile_get(profile_index, &profile))
+					{
+						player_ui_set_active_player_profile(PLAYER1, profile_index, &profile);
+						success = TRUE;
+					}
+					else
+					{
+						error(_error_silent, "failed to retrieve newly created player profile");
+					}
+				}
+				else
+				{
+					error(_error_silent, "failed to create new player profile");
+				}
+
+				if (success == TRUE)
+				{
+					main_set_map_name(scenario_paths[_single_player_map_a10]);
+					main_defer_map_map_change();
+				}
+				else
+				{
+					main_goto_main_menu();
+					display_error_deferred(_error_unable_to_create_player_profile, NONE, TRUE, FALSE);
+					ui_play_audio_feedback_sound(_audio_feedback_failure);
+				}
+			}
+			else
+			{
+				error(_error_silent, "can't create a new profile with an empty name");
+				ui_play_audio_feedback_sound(_audio_feedback_failure);
+			}
+		}
+
+		new_campaign_controller_index = NONE;
+	}
+
+	return success;
+}
+
+static boolean go_back_twice_next_time(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	ui_widgets_pop_stack(widget->local_player_index);
+
+	return TRUE;
+}
+
+static boolean difficulty_menu_initialize(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	struct widget_instance *difficulty_item;
+
+	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4860, widget->widget_type == _widget_type_column_list, "expected column list for difficulty menu widget");
+
+	if (persistant_game_data_info.valid == TRUE && !_stricmp(persistant_game_data_info.map_name, main_get_map_name()))
+	{
+		difficulty_item = widget_instance_get_nth_child(widget, persistant_game_data_info.difficulty);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4865, difficulty_item, "failed to find 'difficulty' menu item");
+		widget->parameters.list_parameters.current_list_item_index = persistant_game_data_info.difficulty;
+		widget->focused_child = difficulty_item;
+	}
+	else
+	{
+		difficulty_item = widget_instance_get_nth_child(widget, _game_difficulty_level_normal);
+		match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 4871, difficulty_item, "failed to find 'difficulty' menu item");
+		widget->focused_child = difficulty_item;
+		widget->parameters.list_parameters.current_list_item_index = _game_difficulty_level_normal;
+	}
+
+	return TRUE;
+}
+
+static boolean begin_music_fade_out(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	if (ui_main_menu_music_active())
+	{
+		ui_stop_main_menu_music();
+	}
+
+	return TRUE;
+}
+
+static boolean new_campaign_if_no_custom_player_profiles_exist(
+	struct widget_instance *widget,
+	struct event_record *event,
+	boolean *widget_deleted)
+{
+	long unused_profile_index;
+	boolean success;
+	short number_of_custom_profiles = 1;
+
+	player_profiles_enumerate_available_to_local_player_index(NONE, (word *)&number_of_custom_profiles, &unused_profile_index, FALSE);
+
+	if (number_of_custom_profiles > 0)
+	{
+		success = TRUE;
+	}
+	else
+	{
+		success = FALSE;
+		new_campaign_chosen(widget, event, widget_deleted);
+	}
+
+	return success;
+}

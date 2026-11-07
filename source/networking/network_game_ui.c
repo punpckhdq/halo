@@ -30,7 +30,7 @@ wchar_t const *network_game_get_random_player_name(
 	void)
 {
 	wchar_t const *name = L"";
-	long string_list_index = tag_loaded(UNICODE_STRING_LISTS_GROUP_TAG, "ui\\random_player_names");
+	long string_list_index = tag_loaded(UNICODE_STRING_LISTS_GROUP_TAG, RANDOM_PLAYER_NAMES_TAG_NAME);
 
 	if (string_list_index != NONE)
 	{

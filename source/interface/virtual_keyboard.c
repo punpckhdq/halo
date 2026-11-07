@@ -86,16 +86,6 @@ enum
 
 enum
 {
-	_virtual_keyboard_caption_player_profile_name = 8,
-	_virtual_keyboard_caption_variant_name,
-	_virtual_keyboard_caption_edited_default_variant_name,
-	NUMBER_OF_VIRTUAL_KEYBOARD_STRINGS,
-
-	FIRST_VIRTUAL_KEYBOARD_CAPTION_STRING_INDEX = _virtual_keyboard_caption_player_profile_name
-};
-
-enum
-{
 	FIRST_VIRTUAL_KEYBOARD_FORTUNE_STRING_INDEX = 11,	/* fake name */
 	NUMBER_OF_VIRTUAL_KEYBOARD_FORTUNES = 10,			/* fake name */
 	VIRTUAL_KEYBOARD_TAB_REPEAT_MILLISECONDS = 250,		/* fake name */
@@ -131,9 +121,7 @@ enum
 
 /* ---------- macros */
 
-#define VIRTUAL_KEYBOARD_TAG_NAME "ui\\english"								/* fake name */
-#define VIRTUAL_KEYBOARD_CARET_BITMAP_TAG_NAME "ui\\shell\\bitmaps\\white"	/* fake name */
-#define VIRTUAL_KEYBOARD_FORTUNE_TEXT L".fortune"							/* fake name */
+#define VIRTUAL_KEYBOARD_FORTUNE_TEXT L".fortune" /* fake name */
 
 #define KEY_RECTANGLE(row, column, width) {\
 	KEYS_VOFFSET + (row) * KEY_HEIGHT,\

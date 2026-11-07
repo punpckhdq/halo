@@ -155,6 +155,7 @@ short player_control_get_zoom_level(short local_player_index);
 void player_control_permanent_impulse(short local_player_index, real_euler_angles2d const *impulse);
 short unit_get_local_player_index(long unit_index);
 void player_control_set_facing(short local_player_index, real_vector3d const *facing);
+void player_control_inhibit_buttons(short local_player_index, word button_flags, boolean uninhibit_when_released);
 
 /* ---------- prototypes/PLAYERS.C */
 

@@ -37,11 +37,6 @@ HUD_MESSAGING.C
 
 /* ---------- constants */
 
-enum
-{
-	_hud_icon_remapped_action_button_end = 28 /* fake name */
-};
-
 /* ---------- structures */
 
 struct hud_message
@@ -126,7 +121,7 @@ static int __cdecl compare_messages(struct hud_message const *lhs, struct hud_me
 
 struct hud_messaging_parameters_definition *hud_msg_def;
 
-static char button_mappings[] = /* fake name */
+static char button_mappings[] =
 {
 	_button_action_reload,
 	_button_throw_grenade,
@@ -139,9 +134,9 @@ static char button_mappings[] = /* fake name */
 	_button_scope_zoom,
 	_button_crouch,
 	_button_jump,
-	1,
-	16,
-	17
+	_gamepad_analog_button_b,
+	_gamepad_stick_left_icon,
+	_gamepad_stick_right_icon
 };
 
 long time_code_time = NONE;

@@ -16,7 +16,20 @@ enum
 	VIRTUAL_KEYBOARD_VERSION = 2,
 };
 
+enum
+{
+	_virtual_keyboard_caption_player_profile_name = 8,
+	_virtual_keyboard_caption_variant_name,
+	_virtual_keyboard_caption_edited_default_variant_name,
+	NUMBER_OF_VIRTUAL_KEYBOARD_STRINGS,
+
+	FIRST_VIRTUAL_KEYBOARD_CAPTION_STRING_INDEX = _virtual_keyboard_caption_player_profile_name
+};
+
 /* ---------- macros */
+
+#define VIRTUAL_KEYBOARD_TAG_NAME "ui\\english"								/* fake name */
+#define VIRTUAL_KEYBOARD_CARET_BITMAP_TAG_NAME "ui\\shell\\bitmaps\\white"	/* fake name */
 
 #define virtual_keyboard_definition_get(index) ((struct virtual_keyboard *)tag_get(VIRTUAL_KEYBOARD_TAG, index)) /* fake name */
 
