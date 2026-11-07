@@ -280,6 +280,7 @@ boolean tag_data_resize(struct tag_data *data, long size);
 /* ---------- prototypes/CACHE_FILES.C */
 
 long tag_loaded(long group_tag, const char *name);
+long tag_load(unsigned long group_tag, char const *name, unsigned long flags);
 
 void *tag_get(long group_tag, long tag_index);
 void tag_block_delete_element(struct tag_block *block, long index);

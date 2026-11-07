@@ -28,6 +28,7 @@ boolean shell_platform_initialize(void);
 void shell_platform_dispose(void);
 void shell_platform_verify(void);
 void shell_screen_pause(boolean paused);
+char const *shell_get_command_line(void);
 void shell_idle(void);
 
 /* ---------- globals */

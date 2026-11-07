@@ -50,6 +50,25 @@ enum
 	NUMBER_OF_HUD_CUSTOM_ICONS = 8,
 };
 
+enum
+{
+	_hud_icon_remapped_action_button_end = 28 /* fake name */
+};
+
+enum
+{
+	_gamepad_stick_left_icon = 16,
+	_gamepad_stick_right_icon = 17
+};
+
+enum
+{
+	_hud_icon_accept = 28,	/* fake name */
+	_hud_icon_back,			/* fake name */
+	_hud_icon_move,			/* fake name */
+	_hud_icon_look			/* fake name */
+};
+
 /* ---------- macros */
 
 #define hud_state_messages_get(index) ((struct hud_state_messages *)tag_get(HUD_STATE_MESSAGES_TAG, (index))) /* fake name */

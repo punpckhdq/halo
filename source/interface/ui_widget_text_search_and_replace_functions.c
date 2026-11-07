@@ -1,21 +1,5 @@
 /*
 UI_WIDGET_TEXT_SEARCH_AND_REPLACE_FUNCTIONS.C
-
-symbols in this file:
-000E4A40 0050:
-	_ui_widget_search_and_replace_invoke (0000)
-000E4A90 0010:
-	_widget_replace_function_null (0000)
-000E4AA0 00b0:
-	_widget_controller (0000)
-00278C60 0014:
-	??_C@_1BE@PJJJEMAC@?$AA?$DM?$AAi?$AAn?$AAv?$AAa?$AAl?$AAi?$AAd?$AA?$DO?$AA?$AA@ (0000)
-00278C78 0047:
-	??_C@_0EH@LDHNIENI@c?3?2halo?2SOURCE?2interface?2ui_widg@ (0000)
-0030632C 0008:
-	_data_0030632c (0000)
-00454D08 0004:
-	_bss_00454d08 (0000)
 */
 
 /* ---------- headers */
@@ -38,10 +22,68 @@ symbols in this file:
 
 /* ---------- structures */
 
+typedef wchar_t const *(*search_and_replace_proc)(struct widget_instance *widget); /* fake name */
+
 /* ---------- prototypes */
+
+static wchar_t const *widget_replace_function_null(struct widget_instance *widget);
+static wchar_t const *widget_controller(struct widget_instance *widget);
 
 /* ---------- globals */
 
+static search_and_replace_proc search_and_replace_functions[NUMBER_OF_SEARCH_AND_REPLACE_FUNCTIONS] = /* fake name */
+{
+	widget_replace_function_null,
+	widget_controller,
+};
+
 /* ---------- public code */
+
+static wchar_t const *widget_replace_function_null(
+	struct widget_instance *widget)
+{
+	return L"";
+}
+
+static wchar_t const *widget_controller(
+	struct widget_instance *widget)
+{
+	static wchar_t buffer[2];
+
+	switch (widget->local_player_index)
+	{
+	case NONE:
+		buffer[0] = L'1';
+		break;
+	case 0:
+		buffer[0] = L'1';
+		break;
+	case 1:
+		buffer[0] = L'2';
+		break;
+	case 2:
+		buffer[0] = L'3';
+		break;
+	case 3:
+		buffer[0] = L'4';
+		break;
+	default:
+		buffer[0] = L'?';
+		break;
+	}
+
+	buffer[NUMBEROF(buffer) - 1] = L'\0';
+
+	return buffer;
+}
+
+wchar_t const *ui_widget_search_and_replace_invoke(
+	struct widget_instance *widget,
+	short function)
+{
+	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget_text_search_and_replace_functions.c", 45, widget);
+
+	return (function >= 0 && function < NUMBEROF(search_and_replace_functions)) ? search_and_replace_functions[function](widget) : L"<invalid>";
+}
 
 /* ---------- private code */

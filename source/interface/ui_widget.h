@@ -53,6 +53,10 @@ enum
 	_error_hard_drive_maximum_saved_game_files,
 	_error_media_damaged,
 	_error_maximum_game_files_created,
+	_error_unable_to_create_player_profile,
+	_error_unable_to_create_multiplayer_game_file,
+	_error_saved_game_state_corrupt,
+	NUMBER_OF_ERROR_CODES
 };
 
 enum
@@ -69,23 +73,87 @@ enum
 
 /* ---------- structures */
 
+struct widget_instance
+{
+	long tag_index; /* fake name */
+	char const *name;
+	short local_player_index;
+	point2d position; /* fake name */
+	short type; /* fake name */
+	boolean visible;
+	boolean render_regardless_of_controller_index;
+	boolean disabled; /* fake name */
+	boolean pause_game_time;
+	boolean delete_recursion_lock;
+	boolean widget_is_error_dialog;
+	boolean close_if_local_player_controller_present;
+	byte pad;
+	unsigned long creation_time;
+	unsigned long milliseconds_to_auto_close;
+	unsigned long auto_close_fade_time;
+	real alpha_modifier;
+	struct widget_instance *previous;
+	struct widget_instance *next;
+	struct widget_instance *parent;
+	struct widget_instance *first_child; /* fake name */
+	struct widget_instance *focused_child;
+	union
+	{
+		struct
+		{
+			wchar_t *string; /* fake name */
+			short string_list_index;
+		} text_box;
+		struct
+		{
+			short item_index; /* fake name */
+			short last_list_tab_direction;
+			void *items; /* fake name */
+			word item_count; /* fake name */
+			short pad;
+			struct widget_instance *extended_description_widget; /* fake name */
+			wchar_t *string; /* fake name */
+		} list;
+	};
+	short bitmap_frame_index; /* fake name */
+	short bitmap_frame_minimum; /* fake name */
+	short bitmap_frame_maximum; /* fake name */
+	short bitmap_frame_count; /* fake name */
+};
+
 /* ---------- prototypes/UI_WIDGET.C */
 
+boolean event_controller_index_compatible_with_widget(struct event_record const *event, struct widget_instance const *widget);
 void set_ui_plasma_effect_color(real a, real r, real g, real b);
 void ui_widgets_initialize(void);
+void ui_widgets_dispose(void);
 void ui_widgets_safe_to_load(boolean safe);
 void ui_widgets_set_fade_value(real value);
 void ui_widget_debug_show_path(boolean show);
-int widget_instance_count_children(struct widget_instance *widget);
-struct widget_instance *widget_instance_get_nth_child(struct widget_instance *widget, int n);
-void *ui_widget_realloc(void *ptr, word size);
-void widget_free(void *ptr);
+pixel32 modulate_pixel32_by_real_alpha(pixel32 argb, real alpha);
+struct widget_instance *ui_widget_load_by_name_or_tag(char const *name, long tag_index, struct widget_instance *parent, short local_player_index, long invoking_widget_tag, long focused_child_parent_widget_tag, short focused_child_index);
+void ui_widget_delete(struct widget_instance *widget);
+void process_ui_widgets(void);
+void render_ui_widgets_postgame(short local_player_index, rectangle2d const *window_bounds);
+void render_ui_widgets(short local_player_index, rectangle2d const *window_bounds);
+int widget_instance_count_children(struct widget_instance const *widget);
+struct widget_instance *widget_instance_get_nth_child(struct widget_instance const *widget, int n);
+void *ui_widget_realloc(void *pointer, word size, char const *file, long line);
+void widget_free(void *pointer);
 boolean ui_widgets_active(void);
 boolean ui_widgets_active_for_local_player(short local_player_index);
+void ui_widgets_close_all(void);
+void ui_widgets_close_all_for_local_player(short local_player_index);
 void ui_widgets_inhibit_processing(boolean inhibit);
-void draw_bitmap_in_rect(struct bitmap_data *bitmap, rectangle2d *rect, rectangle2d *bitmap_rect, rectangle2d *clip_rect, pixel32 argb, struct rasterizer_dynamic_screen_geometry_parameters *multitexture_params, boolean no_plasma);
+void ui_widgets_delete_history(void);
+void ui_widgets_pop_stack(short local_player_index);
+boolean widget_event_function_list_widget_goto_next_item(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+boolean widget_event_function_list_widget_goto_previous_item(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
+void main_screen_shell_begin_fade(unsigned long fade_duration_milliseconds);
+void ui_play_audio_feedback_sound(short audio_feedback);
+void draw_bitmap_in_rect(struct bitmap_data *bitmap, rectangle2d const *rect, rectangle2d const *bitmap_rect, rectangle2d const *clip_rect, pixel32 argb, struct rasterizer_dynamic_screen_geometry_parameters *multitexture_params, boolean no_plasma);
 struct widget_instance *widget_instance_get_topmost_parent(struct widget_instance *widget);
-int widget_instance_get_child_index_from_parent(struct widget_instance *widget);
+int widget_instance_get_child_index_from_parent(struct widget_instance const *widget);
 void widget_instance_set_visibility_recursive(struct widget_instance *widget, boolean visible);
 void main_menu_active(boolean active);
 boolean main_menu_is_active(void);
@@ -93,43 +161,32 @@ boolean main_menu_screen_is_active(void);
 void ui_set_next_level(short level);
 void ui_widget_load_progress_widget(void);
 boolean filesystem_check_thread_is_active(void);
+void main_screen_shell_load(void);
+void network_game_reset_to_pregame_ui(void);
+void display_error(short error_code, short local_player_index, boolean modal, boolean pause_game_time);
 void display_error_when_main_menu_loaded(short error_code);
 void display_error_deferred(short error_code, short local_player_index, boolean modal, boolean pause_game_time);
+void display_error_abort_to_dashboard(short error_code, boolean optional);
+void display_error_damaged_media(void);
 void display_error_abort_to_dashboard_deferred(short error_code, boolean optional);
+void display_errors_deferred_until_cinematic_stop(void);
+void display_scenario_help(short string_index);
 void ui_start_main_menu_music(void);
 void ui_stop_main_menu_music(void);
 boolean ui_main_menu_music_active(void);
 void ui_widgets_disable_pause_game(long duration_ticks);
 short remap_sticks_for_local_player(short icon, short local_player_index);
+void draw_string_and_hack_in_icons(rectangle2d *bounds, rectangle2d *clip, point2d *cursor_reference, short height_adjust, wchar_t const *instring, boolean ignore_icon_color);
 real_rgb_color get_ui_rgb_white(void);
 real_argb_color get_ui_argb_white(void);
-pixel32 modulate_pixel32_by_real_alpha(pixel32 argb, real alpha);
-void ui_widget_delete(struct widget_instance *widget);
-void ui_widgets_close_all(void);
-void ui_widgets_close_all_for_local_player(short local_player_index);
-void ui_widgets_delete_history(void);
-void ui_widgets_pop_stack(short local_player_index);
-void main_screen_shell_begin_fade(unsigned long fade_duration_milliseconds);
-void ui_play_audio_feedback_sound(short audio_feedback);
-void draw_string_and_hack_in_icons(rectangle2d *bounds, rectangle2d *clip, point2d *cursor_reference, short height_adjust, wchar_t const *instring, boolean ignore_icon_color);
-void ui_widgets_dispose(void);
-boolean widget_event_function_list_widget_goto_next_item(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-boolean widget_event_function_list_widget_goto_previous_item(struct widget_instance *widget, struct event_record *event, boolean *widget_deleted);
-void render_ui_widgets_postgame(short local_player_index, rectangle2d *window_bounds);
-void render_ui_widgets(short local_player_index, rectangle2d const *window_bounds);
-struct widget_instance *ui_widget_load_by_name_or_tag(char *name, long tag_index, struct widget_instance *parent, short local_player_index, long invoking_widget_tag, long focused_child_parent_widget_tag, short focused_child_index);
-void main_screen_shell_load(void);
-void network_game_reset_to_pregame_ui(void);
-void display_error(short error_code, short local_player_index, boolean modal, boolean pause_game_time);
-void display_error_abort_to_dashboard(short error_code, boolean optional);
-void display_error_damaged_media(void);
-void display_errors_deferred_until_cinematic_stop(void);
-void display_scenario_help(short string_index);
-void process_ui_widgets(void);
 
 /* ---------- globals */
 
+extern struct stack_memory_pool *widget_memory_pool;
 extern short dashboard_abort_error;
+
+extern real_argb_color ui_plasma_effect_color;
+extern short local_player_index_for_draw_string_and_hack_in_icons;
 
 /* ---------- public code */
 

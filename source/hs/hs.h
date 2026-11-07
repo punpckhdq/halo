@@ -26,6 +26,7 @@ void hs_runtime_initialize_for_new_map(void);
 char const *hs_runtime_get_executing_thread_name(void);
 
 boolean hs_compile_and_evaluate(const char *expression);
+boolean hs_evaluate_by_name(char const *name);
 
 short hs_tokens_enumerate(char const *substring, long type_flags, char const **results, short maximum_count);
 
