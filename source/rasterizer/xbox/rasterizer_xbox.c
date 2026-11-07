@@ -116,25 +116,6 @@ static short previous_stencil_mode = NONE;
 
 /* ---------- public code */
 
-__inline void SetRenderStateSmart(
-	D3DRENDERSTATETYPE state,
-	unsigned long value)
-{
-	IDirect3DDevice8_SetRenderState(global_d3d_device, state, value);
-
-	return;
-}
-
-__inline void SetTextureStageStateSmart(
-	unsigned long stage,
-	D3DTEXTURESTAGESTATETYPE type,
-	unsigned long value)
-{
-	IDirect3DDevice8_SetTextureStageState(global_d3d_device, stage, type, value);
-
-	return;
-}
-
 boolean rasterizer_preinitialize__fill_you_up_with_the_devils_cock(
 	void)
 {
@@ -1605,7 +1586,7 @@ void rasterizer_secondary_render_target_debug(
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, D3DZB_FALSE);
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
-		rasterizer_set_vertex_shader_permutation(4, _rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 0);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;

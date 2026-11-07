@@ -323,10 +323,7 @@ struct rasterizer_frame_statistics_s
 	real fps_average;
 	real fps_min;
 	real fps_max;
-	long fogged_count;
-	long normal_count;
-	long fast_count;
-	long scenery_count;
+	long model_vertex_counts[4]; /* fake name */
 	long environment_lightmap_vertex_count;
 	long environment_lightmap_triangle_count;
 	long environment_lightmap_primitive_count;
@@ -342,7 +339,44 @@ struct rasterizer_frame_statistics_s
 	long decal_primitive_count;
 	long decal_shader_count;
 	long decal_texture_count;
-	long __unknown60[41];
+	long environment_texture_vertex_count; /* fake name */
+	long environment_texture_triangle_count; /* fake name */
+	long environment_texture_primitive_count; /* fake name */
+	long environment_specular_light_vertex_count; /* fake name */
+	long environment_specular_light_triangle_count; /* fake name */
+	long environment_specular_light_primitive_count; /* fake name */
+	long environment_specular_lightmap_vertex_count; /* fake name */
+	long environment_specular_lightmap_triangle_count; /* fake name */
+	long environment_specular_lightmap_primitive_count; /* fake name */
+	long environment_reflection_lightmap_mask_vertex_count; /* fake name */
+	long environment_reflection_lightmap_mask_triangle_count; /* fake name */
+	long environment_reflection_lightmap_mask_primitive_count; /* fake name */
+	long environment_reflection_vertex_count; /* fake name */
+	long environment_reflection_triangle_count; /* fake name */
+	long environment_reflection_primitive_count; /* fake name */
+	long environment_transparent_vertex_count; /* fake name */
+	long environment_transparent_triangle_count; /* fake name */
+	long environment_transparent_maximum_primitive_triangle_count; /* fake name */
+	long environment_transparent_primitive_count; /* fake name */
+	long environment_fog_vertex_count; /* fake name */
+	long environment_fog_triangle_count; /* fake name */
+	long environment_fog_primitive_count; /* fake name */
+	long environment_fog_screen_vertex_count; /* fake name */
+	long environment_fog_screen_triangle_count; /* fake name */
+	long environment_fog_screen_primitive_count; /* fake name */
+	long environment_fog_screen_model_count; /* fake name */
+	long environment_fog_screen_model_vertex_count; /* fake name */
+	long environment_fog_screen_model_triangle_count; /* fake name */
+	long environment_fog_screen_model_primitive_count; /* fake name */
+	long model_count; /* fake name */
+	long model_vertex_count; /* fake name */
+	long model_triangle_count; /* fake name */
+	long model_primitive_count; /* fake name */
+	long model_transparent_vertex_count; /* fake name */
+	long model_transparent_triangle_count; /* fake name */
+	long model_transparent_maximum_primitive_triangle_count; /* fake name */
+	long model_transparent_primitive_count; /* fake name */
+	long __unknownF4[4];
 	long dynamic_unlit_primitive_count; /* fake name */
 	long dynamic_unlit_triangle_count; /* fake name */
 	long dynamic_unlit_maximum_primitive_triangle_count; /* fake name */
@@ -360,7 +394,10 @@ struct rasterizer_frame_statistics_s
 	long lighting_bytes; /* fake name */
 	long vertex_shader_bytes; /* fake name */
 	long pixel_shader_bytes; /* fake name */
-	long __unknown160[4];
+	long model_skinning_bytes; /* fake name */
+	long model_lighting_bytes; /* fake name */
+	long model_vertex_shader_bytes; /* fake name */
+	long __unknown16C;
 };
 
 struct rasterizer_model_begin_parameters
@@ -604,6 +641,7 @@ void rasterizer_debug_draw(void);
 boolean rasterizer_frame_statistics_initialize(void);
 void rasterizer_frame_statistics_begin(void);
 void rasterizer_frame_statistics_get_fps(struct rasterizer_frame_statistics_s *frame_statistics);
+long rasterizer_frame_statistics_count_static_vertices(struct triangle_buffer const *triangle_buffer, struct vertex_buffer const *vertex_buffer);
 long rasterizer_frame_statistics_count_dynamic_vertices(long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count);
 void rasterizer_frame_statistics_end(void);
 void rasterizer_frame_statistics_draw(void);

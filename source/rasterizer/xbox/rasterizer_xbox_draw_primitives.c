@@ -83,6 +83,7 @@ boolean rasterizer_dynamic_geometry_initialize(
 	void)
 {
 	short vertex_type;
+	struct dynamic_vertex_buffer_group *group;
 	boolean success = TRUE;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_draw_primitives.c", 93, global_d3d_device);
@@ -108,7 +109,8 @@ boolean rasterizer_dynamic_geometry_initialize(
 	for (vertex_type = 0; success && vertex_type < NUMBER_OF_RASTERIZER_VERTEX_TYPES; vertex_type++)
 	{
 		long count;
-		struct dynamic_vertex_buffer_group *group = &dynamic_vertices.groups[vertex_type];
+
+		group = &dynamic_vertices.groups[vertex_type];
 
 		switch (vertex_type)
 		{

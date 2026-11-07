@@ -26,6 +26,30 @@ enum
 
 enum
 {
+	_vertex_shader_debug = 0, /* extremely fake name */
+	_vertex_shader_decal = 1, /* extremely fake name */
+	_vertex_shader_screen = 4, /* extremely fake name */
+	_vertex_shader_model_fog_screen = 5, /* extremely fake name */
+	_vertex_shader_environment_fog = 6, /* extremely fake name */
+	_vertex_shader_environment_fog_screen = 8, /* extremely fake name */
+	_vertex_shader_model = 10, /* extremely fake name */
+	_vertex_shader_model_zbuffer = 13, /* extremely fake name */
+	_vertex_shader_environment_lightmap = 16, /* extremely fake name */
+	_vertex_shader_environment_specular_light = 21, /* extremely fake name */
+	_vertex_shader_detail_object = 33, /* extremely fake name */
+	_vertex_shader_environment_vectors_debug = 37, /* extremely fake name */
+	_vertex_shader_screen_texture_animation = 38, /* extremely fake name */
+	_vertex_shader_environment_texture = 40, /* extremely fake name */
+	_vertex_shader_environment_reflection = 42, /* extremely fake name */
+	_vertex_shader_environment_diffuse_light = 49, /* extremely fake name */
+	_vertex_shader_environment_reflection_mirror = 51, /* extremely fake name */
+	_vertex_shader_sun_glow = 56, /* extremely fake name */
+	_vertex_shader_environment_reflection_lightmap_mask = 58, /* extremely fake name */
+	_vertex_shader_model_active_camouflage = 64 /* extremely fake name */
+};
+
+enum
+{
 	VSH_CONSTANTS__VIEWPROJ_OFFSET = -96,
 	VSH_CONSTANTS__VIEWPROJ_COUNT = 6,
 	VSH_CONSTANTS__EYEXFORM_OFFSET = -90,
@@ -34,6 +58,12 @@ enum
 	VSH_CONSTANTS__FOG_COUNT = 4,
 	VSH_CONSTANTS__TEXSCALE_OFFSET = -84,
 	VSH_CONSTANTS__TEXSCALE_COUNT = 3,
+	VSH_CONSTANTS__EFFECT_OFFSET = -81,
+	VSH_CONSTANTS__EFFECT_COUNT = 2,
+	VSH_CONSTANTS__TEXANIM_OFFSET = -81,
+	VSH_CONSTANTS__TEXANIM_COUNT = 8,
+	VSH_CONSTANTS__POINTLIGHT_OFFSET = -81,
+	VSH_CONSTANTS__POINTLIGHT_COUNT = 5,
 	VSH_CONSTANTS__DETAILOBJ_OFFSET = -81,
 	VSH_CONSTANTS__DETAILOBJ_COUNT = 6,
 	VSH_CONSTANTS__VERTEXLIGHT_OFFSET = -79,
@@ -57,7 +87,7 @@ enum
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH (RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 5) /* fake name */
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT (RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 5) /* fake name */
 
-// original name unknown
+/* fake name */
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
 
 /* ---------- structures */
@@ -109,8 +139,6 @@ void rasterizer_set_frustum_z(real z_near, real z_far);
 void rasterizer_set_stencil_mode(short stencil_mode);
 short rasterizer_get_stencil_mode(void);
 void SetupSmartStates(void);
-void SetRenderStateSmart(D3DRENDERSTATETYPE state, unsigned long value);
-void SetTextureStageStateSmart(unsigned long stage, D3DTEXTURESTAGESTATETYPE type, unsigned long value);
 
 /* ---------- prototypes/RASTERIZER_XBOX_ERRORS.C */
 
@@ -213,12 +241,14 @@ void _rasterizer_screen_flash(void);
 
 /* ---------- prototypes/RASTERIZER_XBOX_MODELS.C */
 
+void rasterizer_model_draw_environment_shader(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, long dynamic_triangle_buffer_index, long triangle_count, struct vertex_buffer const *vertex_buffer, long dynamic_vertex_buffer_index);
 void _rasterizer_models_begin(boolean sky);
 void _rasterizer_model_begin(struct rasterizer_model_begin_parameters const *parameters, boolean do_not_change_z_stencil_states);
 void _rasterizer_model_draw(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, long dynamic_triangle_buffer_index, long triangle_count, struct vertex_buffer const *vertex_buffer, long dynamic_vertex_buffer_index);
-void _rasterizer_model_transparent_geometry_submit(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, long dynamic_triangle_buffer_index, long triangle_count, struct vertex_buffer const *vertex_buffer, long dynamic_vertex_buffer_index, real_point3d const *centroid, struct render_sort_filth *sort_filth);
+struct transparent_geometry_group *_rasterizer_model_transparent_geometry_submit(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, long dynamic_triangle_buffer_index, long triangle_count, struct vertex_buffer const *vertex_buffer, long dynamic_vertex_buffer_index, real_point3d const *centroid, struct render_sort_filth *sort_filth);
 void _rasterizer_model_end(void);
 void _rasterizer_models_end(void);
+void rasterizer_model_ambient_reflection_tint(real brightness, real red, real green, real blue);
 
 /* ---------- prototypes/RASTERIZER_XBOX_ENVIRONMENT.C */
 
@@ -284,6 +314,9 @@ void _rasterizer_environment_fog_screen_wind_get_vector(short window_index, real
 void _rasterizer_environment_fog_screen_begin(short pass);
 void _rasterizer_environment_fog_screen_draw(struct shader const *shader, short shader_permutation_index, long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count, struct vertex_buffer const *vertex_buffer);
 void _rasterizer_environment_fog_screen_end(void);
+boolean rasterizer_environment_fog_screen_model_begin(struct rasterizer_model_begin_parameters const *parameters);
+void rasterizer_environment_fog_screen_model_submit(struct shader const *shader, short shader_permutation_index, struct triangle_buffer const *triangle_buffer, long dynamic_triangle_buffer_index, long triangle_count, struct vertex_buffer const *vertex_buffer, long dynamic_vertex_buffer_index);
+void rasterizer_environment_fog_screen_model_end(void);
 
 /* ---------- prototypes/RASTERIZER_XBOX_DYNAVOBGEOM.C */
 
@@ -297,7 +330,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(struct rasterizer_dynamic_scree
 
 /* ---------- prototypes/RASTERIZER_XBOX_LIGHTS.C */
 
-void rasterizer_sun_glow_draw(struct rasterizer_lens_flare_submit_parameters const *parameters);
+void rasterizer_sun_glow_draw(struct rasterizer_lens_flare_submit_parameters const *flare);
 
 /* ---------- prototypes/RASTERIZER_XBOX_TRANSPARENT_GEOMETRY.C */
 
@@ -318,6 +351,7 @@ void rasterizer_text_end(void);
 
 void rasterizer_water_set_visibility_for_frame(boolean visibility);
 void rasterizer_water_set_visibility_for_window(boolean visibility);
+boolean rasterizer_water_get_visibility_for_window(void);
 
 /* ---------- prototypes/RASTERIZER_XBOX_WIDGETS.C */
 
@@ -351,5 +385,24 @@ extern IDirect3DBaseTexture8 *texture_table[D3DTSS_MAXSTAGES];
 extern struct rasterizer_vertex_shader vertex_shader_table[NUMBER_OF_VERTEX_SHADERS];
 
 /* ---------- public code */
+
+__inline void SetRenderStateSmart(
+	D3DRENDERSTATETYPE state,
+	unsigned long value)
+{
+	IDirect3DDevice8_SetRenderState(global_d3d_device, state, value);
+
+	return;
+}
+
+__inline void SetTextureStageStateSmart(
+	unsigned long stage,
+	D3DTEXTURESTAGESTATETYPE type,
+	unsigned long value)
+{
+	IDirect3DDevice8_SetTextureStageState(global_d3d_device, stage, type, value);
+
+	return;
+}
 
 #endif // __RASTERIZER_XBOX_H

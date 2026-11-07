@@ -459,25 +459,6 @@ void progress_bar_enable(
 	return;
 }
 
-__inline void SetRenderStateSmart(
-	D3DRENDERSTATETYPE State,
-	DWORD Value)
-{
-	D3DDevice_SetRenderState(State, Value);
-
-	return;
-}
-
-__inline void SetTextureStageStateSmart(
-	DWORD Stage,
-	D3DTEXTURESTAGESTATETYPE Type,
-	DWORD Value)
-{
-	D3DDevice_SetTextureStageState(Stage, Type, Value);
-
-	return;
-}
-
 static void progress_bar_render(
 	real t)
 {

@@ -287,7 +287,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 			IDirect3DDevice8_SetTextureStageState(global_d3d_device, map_index, D3DTSS_MIPFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 		}
 
-		rasterizer_set_vertex_shader_permutation(4, _rasterizer_vertex_type_dynamic_screen, 1);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 1);
 		meter = parameters->meter_parameters;
 
 		if (meter)
@@ -485,7 +485,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
 
-		rasterizer_set_vertex_shader_permutation(4, _rasterizer_vertex_type_dynamic_screen, 1);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 1);
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
 
