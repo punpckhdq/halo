@@ -209,6 +209,8 @@ void player_handle_powerup_minor(long player_index, short powerup_type, short mi
 void players_debug_render(void);
 void debug_player_teleport(short source_local_player_index, short destination_local_player_index);
 
+void players_debug_render(void);
+
 /* ---------- prototypes/PLAYER_RUMBLE.C */
 
 void rumble_initialize(void);

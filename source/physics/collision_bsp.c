@@ -896,7 +896,7 @@ static boolean collision_bsp_test_vector_recursive(
 		if (back && front)
 		{
 			boolean entering_positive = direction > 0.f;
-			real t = -(distance / direction);
+			real t = -distance / direction;
 
 			if (collision_bsp_test_vector_recursive(data, node->child_indices[!entering_positive], t0, t))
 			{
@@ -928,11 +928,9 @@ static boolean collision_bsp_test_vector_recursive(
 
 		if (child_index != NONE)
 		{
-			struct collision_leaf *leaf;
-
 			leaf_index = child_index & LONG_MAX;
-			leaf = TAG_BLOCK_GET_ELEMENT(&data->bsp->leaves, leaf_index, struct collision_leaf);
-			contents = TEST_FLAG(leaf->flags, _collision_leaf_contains_two_sided_bit) ? _contents_semi_empty : _contents_empty;
+			contents = TEST_FLAG(TAG_BLOCK_GET_ELEMENT(&data->bsp->leaves, leaf_index, struct collision_leaf)->flags, _collision_leaf_contains_two_sided_bit) ?
+				_contents_semi_empty : _contents_empty;
 		}
 
 		if (TEST_FLAG(data->flags, _collision_bsp_test_front_facing_surfaces_bit) &&
