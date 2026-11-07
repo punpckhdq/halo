@@ -50,6 +50,8 @@ enum
 #define RASTERIZER_TARGET_RENDER_PRIMARY_FORMAT (D3DFORMAT_DMACHANNEL_A | D3DFORMAT_BORDERSOURCE_COLOR | (2<<D3DFORMAT_DIMENSION_SHIFT) | (D3DFMT_LIN_A8R8G8B8<<D3DFORMAT_FORMAT_SHIFT) | (1<<D3DFORMAT_MIPMAP_SHIFT)) /* fake name */
 #define RASTERIZER_TARGET_RENDER_PRIMARY_SIZE ((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH-1) | ((RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT-1)<<D3DSIZE_HEIGHT_SHIFT) | ((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH*sizeof(pixel32)/64-1)<<D3DSIZE_PITCH_SHIFT)) /* fake name */
 
+#define match_you_got_fucked(file, line, function_name) display_assert("### YOU GOT FUCKED in " function_name, MATCH_FILE(file), MATCH_LINE(line), TRUE) /* fake name */
+
 /* ---------- structures */
 
 struct rasterizer_point_light_constants
@@ -1133,7 +1135,7 @@ boolean rasterizer_set_texture_bitmap_data(
 	}
 	else
 	{
-		display_assert("### YOU GOT FUCKED in rasterizer_set_texture_bitmap_data", MATCH_FILE("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c"), MATCH_LINE(1943), TRUE);
+		match_you_got_fucked("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 1943, "rasterizer_set_texture_bitmap_data");
 		error(_error_silent, "### ERROR direct texture not found (stage=%d)", stage);
 	}
 
@@ -1167,7 +1169,7 @@ boolean rasterizer_set_texture_direct(
 	}
 	else
 	{
-		display_assert("### YOU GOT FUCKED in rasterizer_set_texture_direct", MATCH_FILE("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c"), MATCH_LINE(1982), TRUE);
+		match_you_got_fucked("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 1982, "rasterizer_set_texture_direct");
 		error(_error_silent, "### ERROR direct texture not found (stage=%d)", stage);
 	}
 
@@ -1207,7 +1209,7 @@ boolean rasterizer_set_texture_direct_non_blocking(
 	}
 	else
 	{
-		display_assert("### YOU GOT FUCKED in rasterizer_set_texture_direct_non_blocking", MATCH_FILE("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c"), MATCH_LINE(2035), TRUE);
+		match_you_got_fucked("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 2035, "rasterizer_set_texture_direct_non_blocking");
 		error(_error_silent, "### ERROR direct texture not found (stage=%d)", stage);
 	}
 
@@ -1271,7 +1273,7 @@ point2d *rasterizer_set_texture(
 
 	if (!success)
 	{
-		display_assert("### YOU GOT FUCKED in rasterizer_set_texture", MATCH_FILE("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c"), MATCH_LINE(2117), TRUE);
+		match_you_got_fucked("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 2117, "rasterizer_set_texture");
 		error(_error_silent, "### ERROR default texture not found (stage=%d, type=%d, usage=%d)", stage, type, usage);
 	}
 
@@ -1344,7 +1346,7 @@ boolean rasterizer_set_texture_non_blocking(
 
 	if (!success)
 	{
-		display_assert("### YOU GOT FUCKED in rasterizer_set_texture_non_blocking", MATCH_FILE("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c"), MATCH_LINE(2210), TRUE);
+		match_you_got_fucked("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 2210, "rasterizer_set_texture_non_blocking");
 		error(_error_silent, "### ERROR default texture not found (stage=%d, type=%d, usage=%d)", stage, type, usage);
 	}
 
