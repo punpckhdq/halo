@@ -453,7 +453,7 @@ void physics_compute_new(
 			if (powered_mass_point_definition && TEST_FLAG(powered_mass_point_definition->flags, _powered_mass_point_water_lift_bit) && powered_mass_point->water_lift_ratio != 0.f)
 			{
 				real speed = fabs(dot_product3d(&mass_point->velocity, &mass_point->forward));
-				real lift = water_fraction*powered_mass_point->water_lift_ratio*physics->mass*speed;
+				real lift = ((speed*physics->mass)*water_fraction)*powered_mass_point->water_lift_ratio;
 
 				point_from_line3d((real_point3d *)&mass_point->powered_force, &mass_point->up, lift, (real_point3d *)&mass_point->powered_force);
 			}
@@ -474,7 +474,7 @@ void physics_compute_new(
 		if (powered_mass_point_definition && TEST_FLAG(powered_mass_point_definition->flags, _powered_mass_point_air_lift_bit) && powered_mass_point->air_lift_ratio != 0.f)
 		{
 			real speed = fabs(dot_product3d(&mass_point->velocity, &mass_point->forward));
-			real lift = powered_mass_point->air_lift_ratio*physics->mass*speed;
+			real lift = ((speed*powered_mass_point->air_lift_ratio)*physics->mass);
 
 			point_from_line3d((real_point3d *)&mass_point->powered_force, &mass_point->up, lift, (real_point3d *)&mass_point->powered_force);
 		}
@@ -772,7 +772,7 @@ static void rotate_vectors3d_by_angular_velocity(
 	{
 		real_matrix4x3 rotation;
 
-		matrix4x3_rotation_from_axis_and_angle(&rotation, &axis, sin(angle), cos(angle));
+		matrix4x3_rotation_from_axis_and_angle(&rotation, &axis, sine(angle), cosine(angle));
 		matrix4x3_transform_vector(&rotation, forward, rotated_forward);
 		matrix4x3_transform_vector(&rotation, up, rotated_up);
 		normalize3d(rotated_forward);
