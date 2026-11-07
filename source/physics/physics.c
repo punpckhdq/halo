@@ -772,7 +772,7 @@ static void rotate_vectors3d_by_angular_velocity(
 	{
 		real_matrix4x3 rotation;
 
-		matrix4x3_rotation_from_axis_and_angle(&rotation, &axis, sin(angle), cos(angle));
+		matrix4x3_rotation_from_axis_and_angle(&rotation, &axis, sine(angle), cosine(angle));
 		matrix4x3_transform_vector(&rotation, forward, rotated_forward);
 		matrix4x3_transform_vector(&rotation, up, rotated_up);
 		normalize3d(rotated_forward);
