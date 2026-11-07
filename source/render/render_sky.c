@@ -21,6 +21,8 @@ RENDER_SKY.C
 
 /* ---------- macros */
 
+#define SKY_MODEL_SCALE (1.f / 1024.f) /* fake name */
+
 /* ---------- structures */
 
 /* ---------- prototypes */
@@ -164,13 +166,12 @@ void render_sky(
 		{
 			real_matrix4x3 sky_scale_matrix;
 			short node_index;
-			real const scale = 1.f / 1024.f;
 
 			sky_scale_matrix = *global_identity4x3;
-			sky_scale_matrix.scale = scale;
-			sky_scale_matrix.position.x = (1.f - scale) * render.camera.position.x;
-			sky_scale_matrix.position.y = (1.f - scale) * render.camera.position.y;
-			sky_scale_matrix.position.z = (1.f - scale) * render.camera.position.z;
+			sky_scale_matrix.scale = SKY_MODEL_SCALE;
+			sky_scale_matrix.position.x = (1.f - SKY_MODEL_SCALE) * render.camera.position.x;
+			sky_scale_matrix.position.y = (1.f - SKY_MODEL_SCALE) * render.camera.position.y;
+			sky_scale_matrix.position.z = (1.f - SKY_MODEL_SCALE) * render.camera.position.z;
 
 			for (node_index = 0; node_index < model->nodes.count; node_index++)
 			{
