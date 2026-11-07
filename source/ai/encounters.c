@@ -37,6 +37,9 @@ ENCOUNTERS.C
 #define ENCOUNTER_TIMER_FOREVER 999 /* fake name */
 #define NUMBER_OF_FIRING_POSITION_GROUP_INDICES 26
 
+#define MAXIMUM_UNCOVERING_ACTORS_PER_ENCOUNTER 6 /* fake name */
+#define MAXIMUM_SEARCHING_ACTORS_PER_ENCOUNTER 4 /* fake name */
+
 enum
 {
 	_actor_definition_flags2_avoid_all_enemy_attack_vectors_bit = 0,
@@ -1344,8 +1347,8 @@ void encounter_determine_pursuit_availability(
 		}
 	}
 
-	maximum_uncover_count = 6;
-	maximum_search_count = 4;
+	maximum_uncover_count = MAXIMUM_UNCOVERING_ACTORS_PER_ENCOUNTER;
+	maximum_search_count = MAXIMUM_SEARCHING_ACTORS_PER_ENCOUNTER;
 
 	switch (group_pursuit_restriction)
 	{

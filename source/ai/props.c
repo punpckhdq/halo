@@ -12,6 +12,13 @@ PROPS.C
 #include "unit_definitions.h"
 #include "game_state.h"
 
+/* ---------- constants */
+
+#define MINIMUM_DESIRED_ENEMY_PROP_COUNT 6 /* fake name */
+#define MINIMUM_DESIRED_FRIEND_PROP_COUNT 4 /* fake name */
+#define PROP_INITIALLY_DEAD_TICKS 1000 /* fake name */
+#define ORPHAN_PROP_LIFESPAN_SECONDS 30 /* fake name */
+
 /* ---------- prototypes */
 
 static void prop_add(long actor_index, long unit_index, long prop_index);
@@ -116,7 +123,7 @@ long prop_new_unacknowledged(
 	{
 		if (closest_desired_prop_index != NONE)
 		{
-			short minimum_desired_count = enemy ? 6 : 4;
+			short minimum_desired_count = enemy ? MINIMUM_DESIRED_ENEMY_PROP_COUNT : MINIMUM_DESIRED_FRIEND_PROP_COUNT;
 
 			if (desired_count >= minimum_desired_count)
 			{
@@ -204,7 +211,7 @@ static void prop_add(
 			prop->dead = TEST_FLAG(prop_unit->object.damage_flags, _object_dead_bit);
 			prop->suicide_radius = unit_definition->unit.ai_danger_radius;
 			prop->really_dead = prop->dead && !prop_unit->unit.feign_death_timer;
-			prop->dead_ticks = prop->dead ? 1000 : 0;
+			prop->dead_ticks = prop->dead ? PROP_INITIALLY_DEAD_TICKS : 0;
 			prop->player = prop_unit->object.owner_player_index != NONE;
 
 			if (prop_unit->unit.swarm_actor_index != NONE)
@@ -269,7 +276,7 @@ static void prop_setup_orphan(
 	orphan_prop->next_prop_index = next_prop_index;
 	orphan_prop->parent_prop_index = parent_prop_index;
 	orphan_prop->state = _prop_state_uninspected_orphan;
-	orphan_prop->orphan_lifespan_ticks = 30 * TICKS_PER_SECOND;
+	orphan_prop->orphan_lifespan_ticks = ORPHAN_PROP_LIFESPAN_SECONDS * TICKS_PER_SECOND;
 	orphan_prop->orphan_inspection_ticks = 0;
 	orphan_prop->tried_to_uncover = FALSE;
 	orphan_prop->tried_to_search = FALSE;
@@ -359,8 +366,14 @@ static void prop_remove(
 	struct actor_datum *actor = actor_get(actor_index);
 
 	match_assert("c:\\halo\\SOURCE\\ai\\props.c", 411, actor->target.target_prop_index != prop_index);
+
+
 	match_assert("c:\\halo\\SOURCE\\ai\\props.c", 414, !((actor->control.secondary_look_type != _secondary_look_none) && (actor->control.secondary_look_direction.type == _direction_specification_prop) && (actor->control.secondary_look_direction.prop_index == prop_index)));
+
+
 	match_assert("c:\\halo\\SOURCE\\ai\\props.c", 417, !((actor->control.idle_major_active) && (actor->control.idle_major_direction.type == _direction_specification_prop) && (actor->control.idle_major_direction.prop_index == prop_index)));
+
+
 	match_assert("c:\\halo\\SOURCE\\ai\\props.c", 420, !((actor->control.idle_minor_active) && (actor->control.idle_minor_direction.type == _direction_specification_prop) && (actor->control.idle_minor_direction.prop_index == prop_index)));
 
 	for (prop_index_reference = &actor->meta.first_prop_index; ; prop_index_reference = &prop->next_prop_index)

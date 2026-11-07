@@ -1106,6 +1106,7 @@ static short path_heap_pop_cheapest_node(
 	short node_index = NONE;
 
 	match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1392, path_heap_verify(state, NONE, NONE));
+
 	match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1394, state->heap_count >= 1);
 
 	if (state->heap_count > 1)
@@ -1113,6 +1114,7 @@ static short path_heap_pop_cheapest_node(
 		node_index = state->heap[1].node_index;
 
 		match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1399, (node_index >= 0) && (node_index < PATH_NODE_LIST_SIZE));
+
 		match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1401, state->node_list[node_index].heap_location == 1);
 		match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1402, state->node_list[node_index].quantized_cost_estimate == state->heap[1].quantized_cost_estimate);
 
@@ -1137,6 +1139,7 @@ static void path_heap_insert(
 	short quantized_cost_estimate)
 {
 	match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1426, path_heap_verify(state, node_index, NONE));
+
 	match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1428, state->heap_count >= 1);
 
 	if (state->heap_count < PATH_NODE_LIST_SIZE)
