@@ -672,6 +672,7 @@ void unit_scripting_set_emotion_animation(long unit_index, char const *animation
 boolean unit_drop_current_weapon(long unit_index, boolean immediate);
 
 boolean unit_throw_grenade_begin(long unit_index, real_vector2d const *alignment_vector);
+boolean unit_flying_through_air(long unit_index);
 
 void unit_try_and_exit_seat(long object_index);
 void unit_exit_seat_end(long unit_index);

@@ -563,7 +563,7 @@ boolean saved_game_file_close(
 	return success;
 }
 
-short saved_game_file_get_type(
+word saved_game_file_get_type(
 	long index)
 {
 	return index & SAVED_GAME_FILE_TYPE_MASK;
