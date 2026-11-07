@@ -261,26 +261,26 @@ void _rasterizer_decals_begin(
 
 		rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_multiplicative, NONE, 0);
 
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+		SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
 
 		if (layer == _decal_layer_alpha_tested)
 		{
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 127);
+			SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_ALPHAREF, 127);
 
 			rasterizer_set_stencil_mode(_rasterizer_stencil_mode_write_alpha_tested_decal);
 		}
@@ -294,12 +294,12 @@ void _rasterizer_decals_begin(
 
 			if (local_filthy_decal_fog_hack_enabled)
 			{
-				IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, TRUE);
-				IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 0);
+				SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
+				SetRenderStateSmart(D3DRS_ALPHAREF, 0);
 			}
 			else
 			{
-				IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
+				SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
 			}
 		}
 
@@ -360,11 +360,11 @@ void _rasterizer_decals_draw(
 
 				if (local_framebuffer_blend_function == _shader_framebuffer_blend_function_multiply || local_framebuffer_blend_function == _shader_framebuffer_blend_function_double_multiply)
 				{
-					IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALL);
+					SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALL);
 				}
 				else
 				{
-					IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+					SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 				}
 
 				switch (local_framebuffer_blend_function)

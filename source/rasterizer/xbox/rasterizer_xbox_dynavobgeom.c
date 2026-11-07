@@ -227,12 +227,12 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 767, !parameters->map[1] || !parameters->meter_parameters);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_NONE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_NONE);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
 		rasterizer_set_framebuffer_blend_function(parameters->framebuffer_blend_function);
 
@@ -280,11 +280,11 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 			}
 
 			rasterizer_set_texture_bitmap_data(map_index, parameters->map[map_index]);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, map_index, D3DTSS_ADDRESSU, parameters->map_wrapped[map_index] ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, map_index, D3DTSS_ADDRESSV, parameters->map_wrapped[map_index] ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, map_index, D3DTSS_MAGFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, map_index, D3DTSS_MINFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, map_index, D3DTSS_MIPFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(map_index, D3DTSS_ADDRESSU, parameters->map_wrapped[map_index] ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(map_index, D3DTSS_ADDRESSV, parameters->map_wrapped[map_index] ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(map_index, D3DTSS_MAGFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(map_index, D3DTSS_MINFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(map_index, D3DTSS_MIPFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 		}
 
 		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 1);
@@ -295,12 +295,12 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 886, meter->tint_mode_2);
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_dynavobgeom.c", 887, meter->gradient==1.0f);
 
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_CONSTANTCOLOR);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_SRCALPHA);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDCOLOR, meter->tint_color);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ALPHAKILL, D3DTALPHAKILL_ENABLE);
+			SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_CONSTANTCOLOR);
+			SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_SRCALPHA);
+			SetRenderStateSmart(D3DRS_BLENDCOLOR, meter->tint_color);
+			SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			SetTextureStageStateSmart(0, D3DTSS_ALPHAKILL, D3DTALPHAKILL_ENABLE);
 
 			memset(&pixel_shader, 0, sizeof(pixel_shader));
 			pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
@@ -483,7 +483,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 
 		rasterizer_set_pixel_shader(&pixel_shader);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 
 		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 1);
 
@@ -495,7 +495,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 		}
 
 		IDirect3DDevice8_End(global_d3d_device);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ALPHAKILL, D3DTALPHAKILL_DISABLE);
+		SetTextureStageStateSmart(0, D3DTSS_ALPHAKILL, D3DTALPHAKILL_DISABLE);
 	}
 
 	return;
