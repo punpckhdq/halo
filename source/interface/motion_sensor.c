@@ -551,7 +551,7 @@ static void motion_sensor_update(
 			local_player_index = local_player_get_next(local_player_index);
 		}
 
-		object_iterator_new(&iter, _object_mask_unit, 1);
+		object_iterator_new(&iter, _object_mask_unit, FLAG(_object_header_active_bit));
 
 		while (object_iterator_next(&iter) && !done)
 		{

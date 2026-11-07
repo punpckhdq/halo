@@ -15,7 +15,8 @@ enum
 	MAXIMUM_QUEUED_EVENTS_PER_GAMEPAD = 8,			/* fake name */
 
 	STICK_EVENT_THRESHOLD = (9 * SHORT_MAX) / 10,	/* fake name */
-	STICK_EVENT_REPEAT_DELAY = 250					/* fake name */
+	STICK_EVENT_REPEAT_DELAY = 250,					/* fake name */
+	NUMBER_OF_GAMEPAD_STICK_AXES = 2				/* fake name */
 };
 
 /* ---------- structures */
@@ -37,7 +38,7 @@ static void queue_event(struct event_record *event, short local_player_index);
 struct event_manager_globals event_manager_globals = {0};
 
 static unsigned long stick_event_milliseconds[NUMBER_OF_GAMEPAD_STICKS][MAXIMUM_GAMEPADS] = {0};	/* fake name */
-static long previous_stick_values[NUMBER_OF_GAMEPAD_STICKS][2][MAXIMUM_GAMEPADS] = {0};			/* fake name */
+static long previous_stick_values[NUMBER_OF_GAMEPAD_STICKS][NUMBER_OF_GAMEPAD_STICK_AXES][MAXIMUM_GAMEPADS] = {0};			/* fake name */
 
 /* ---------- public code */
 

@@ -12,12 +12,13 @@ header included in hcex build.
 
 enum
 {
-	COLOR_TABLE_TAG = 'colo' /* fake name */
+	COLOR_TABLE_GROUP_TAG = 'colo',	/* fake name */
+	COLOR_TABLE_GROUP_VERSION = 1	/* fake name */
 };
 
 /* ---------- macros */
 
-#define color_table_definition_get(index) ((struct color_table *)tag_get(COLOR_TABLE_TAG, index)) /* fake name */
+#define color_table_definition_get(index) ((struct color_table *)tag_get(COLOR_TABLE_GROUP_TAG, index)) /* fake name */
 
 /* ---------- structures */
 

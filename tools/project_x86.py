@@ -289,6 +289,20 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         inputs=sln.baserom,
         implicit=dsp_image_script,
     )
+    monk_tone_script = sln.tools_dir / "monk_tone.py"
+    monk_tone_header = generated_include_dir / "progress_bar_monk_tone.h"
+    n.rule(
+        name="monk_tone",
+        command=f"$python {monk_tone_script} $in $out",
+        description="MONK_TONE $out",
+        restat=True,
+    )
+    n.build(
+        outputs=monk_tone_header,
+        rule="monk_tone",
+        inputs=sln.baserom,
+        implicit=monk_tone_script,
+    )
     n.newline()
 
     ###
@@ -345,6 +359,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
                 cflags.append(f"/I\"{generated_include_dir}\"")
                 implicit: List[Path] = [wrapper_implicit] if wrapper_implicit else []
                 implicit.append(dsp_image_header)
+                implicit.append(monk_tone_header)
                 implicit_outputs: List[Path] = []
                 if pch and obj.options["pch"] is not False:
                     header = pch["header"]

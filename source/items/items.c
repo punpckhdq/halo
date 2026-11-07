@@ -434,7 +434,7 @@ boolean dangerous_items_near_player(
 	struct object_iterator iterator;
 	struct item_datum *item;
 
-	object_iterator_new(&iterator, _object_mask_item, 1);
+	object_iterator_new(&iterator, _object_mask_item, FLAG(_object_header_active_bit));
 
 	while (item = (struct item_datum *)object_iterator_next(&iterator))
 	{

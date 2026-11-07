@@ -893,7 +893,6 @@ static void virtual_keyboard_render_internal(
 	real_argb_color caption_color = text_argb;
 
 	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 1036, (virtual_keyboard_globals.keyboard != NULL) && (virtual_keyboard_globals.keyboard->font_tag.index != NONE));
-
 	keyboard_font_header = font_definition_get(virtual_keyboard_globals.keyboard->font_tag.index);
 	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 1038, keyboard_font_header);
 
@@ -969,7 +968,7 @@ static void virtual_keyboard_render_internal(
 
 	if (!virtual_keyboard_globals.first_key_replaces_buffer &&
 		virtual_keyboard_globals.caret_bitmap_tag != NONE &&
-		TEST_FLAG(system_milliseconds() / 1000, 0))
+		(system_milliseconds() / MILLISECONDS_PER_SECOND) % 2)
 	{
 		rectangle2d caret_rect;
 		wchar_t *character = virtual_keyboard_globals.text_buffer;

@@ -50,8 +50,39 @@ enum
 	MAXIMUM_PROFILE_VALUES = 64,					/* fake name */
 	MAXIMUM_PROFILE_GRAPH_POINTS = 512,				/* fake name */
 	MAXIMUM_PROFILE_GRAPH_MESSAGES = 48,			/* fake name */
-	NUMBER_OF_RASTERIZER_STALL_TYPES = 27,			/* fake name */
 	PROFILE_DISPLAY_BUFFER_SIZE = 8192				/* fake name */
+};
+
+enum
+{
+	_rasterizer_stall_unknown = 0,			/* fake name */
+	_rasterizer_stall_pushbuffer,			/* fake name */
+	_rasterizer_stall_object_lock0,		/* fake name */
+	_rasterizer_stall_object_lock1,		/* fake name */
+	_rasterizer_stall_object_lock2,		/* fake name */
+	_rasterizer_stall_object_lock3,		/* fake name */
+	_rasterizer_stall_object_lock4,		/* fake name */
+	_rasterizer_stall_object_lock5,		/* fake name */
+	_rasterizer_stall_object_lock6,		/* fake name */
+	_rasterizer_stall_object_lock7,		/* fake name */
+	_rasterizer_stall_object_lock8,		/* fake name */
+	_rasterizer_stall_object_lock9,		/* fake name */
+	_rasterizer_stall_object_lock10,		/* fake name */
+	_rasterizer_stall_object_lock11,		/* fake name */
+	_rasterizer_stall_object_lock12,		/* fake name */
+	_rasterizer_stall_object_lock13,		/* fake name */
+	_rasterizer_stall_object_lock14,		/* fake name */
+	_rasterizer_stall_object_lock15,		/* fake name */
+	_rasterizer_stall_object_lock16,		/* fake name */
+	_rasterizer_stall_object_lock17,		/* fake name */
+	_rasterizer_stall_unknown20,			/* fake name */
+	_rasterizer_stall_present,				/* fake name */
+	_rasterizer_stall_block_until_idle,		/* fake name */
+	_rasterizer_stall_block_until_vblank,	/* fake name */
+	_rasterizer_stall_block_on_fence,		/* fake name */
+	_rasterizer_stall_cpu,					/* fake name */
+	_rasterizer_stall_occlusion_test,		/* fake name */
+	NUMBER_OF_RASTERIZER_STALL_TYPES		/* fake name */
 };
 
 /* ---------- macros */
@@ -443,33 +474,33 @@ static void render_debug_profile_stall_tick(
 
 	switch (stall_type)
 	{
-	case 1:
+	case _rasterizer_stall_pushbuffer:
 		color = global_real_argb_blue;
 		break;
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-	case 6:
-	case 7:
-	case 8:
-	case 9:
-	case 10:
-	case 11:
-	case 12:
-	case 13:
-	case 14:
-	case 15:
-	case 16:
-	case 17:
-	case 18:
-	case 19:
+	case _rasterizer_stall_object_lock0:
+	case _rasterizer_stall_object_lock1:
+	case _rasterizer_stall_object_lock2:
+	case _rasterizer_stall_object_lock3:
+	case _rasterizer_stall_object_lock4:
+	case _rasterizer_stall_object_lock5:
+	case _rasterizer_stall_object_lock6:
+	case _rasterizer_stall_object_lock7:
+	case _rasterizer_stall_object_lock8:
+	case _rasterizer_stall_object_lock9:
+	case _rasterizer_stall_object_lock10:
+	case _rasterizer_stall_object_lock11:
+	case _rasterizer_stall_object_lock12:
+	case _rasterizer_stall_object_lock13:
+	case _rasterizer_stall_object_lock14:
+	case _rasterizer_stall_object_lock15:
+	case _rasterizer_stall_object_lock16:
+	case _rasterizer_stall_object_lock17:
 		color = global_real_argb_yellow;
 		break;
-	case 21:
+	case _rasterizer_stall_present:
 		color = global_real_argb_green;
 		break;
-	case 26:
+	case _rasterizer_stall_occlusion_test:
 		color = global_real_argb_pink;
 		break;
 	default:
@@ -807,30 +838,30 @@ static void interface_splitscreen_render(
 		{
 			rectangle2d bounds;
 
-			bounds.y0 = 239;
+			bounds.y0 = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2 - 1;
 			bounds.x0 = 0;
-			bounds.y1 = 241;
-			bounds.x1 = 640;
-			draw_quad(&bounds, 0xFF000000);
+			bounds.y1 = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2 + 1;
+			bounds.x1 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH;
+			draw_quad(&bounds, PIXEL32_FROM_ARGB(255, 0, 0, 0));
 
 			if (window_count > 2)
 			{
 				if (window_count == 3)
 				{
-					bounds.y0 = 240;
-					bounds.x0 = 319;
-					bounds.y1 = 480;
-					bounds.x1 = 321;
-					draw_quad(&bounds, 0xFF000000);
+					bounds.y0 = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 2;
+					bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2 - 1;
+					bounds.y1 = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT;
+					bounds.x1 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2 + 1;
+					draw_quad(&bounds, PIXEL32_FROM_ARGB(255, 0, 0, 0));
 				}
 				else
 				{
 					bounds.y0 = 0;
-					bounds.x0 = 319;
-					bounds.y1 = 480;
-					bounds.x1 = 321;
+					bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2 - 1;
+					bounds.y1 = RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT;
+					bounds.x1 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 2 + 1;
 					match_assert("c:\\halo\\SOURCE\\interface\\interface.c", 884, window_count==4);
-					draw_quad(&bounds, 0xFF000000);
+					draw_quad(&bounds, PIXEL32_FROM_ARGB(255, 0, 0, 0));
 				}
 			}
 		}
