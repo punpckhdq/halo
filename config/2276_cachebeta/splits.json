@@ -35,7 +35,7 @@
 { "file_offset": 2379587, "name" : ".XPPCODE" },
 { "file_offset": 2407972, "name" : ".XPPRDATA" },
 { "file_offset": 2408448, "name" : ".idata$5" },
-{ "file_offset": 2409164, "name" : ".rdata" },
+{ "file_offset": 2409132, "name" : ".rdata" },
 { "file_offset": 2888680, "name" : ".rdata$debug" },
 { "file_offset": 2891776, "name" : ".CRT$RIA" },
 { "file_offset": 2891780, "name" : ".CRT$RII10" },
