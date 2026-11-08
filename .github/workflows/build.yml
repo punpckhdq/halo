@@ -37,7 +37,9 @@ jobs:
 
     # Copy the original files to the workspace
     - name: Prepare
-      run: cp -a /orig .
+      run: |
+        cp -a /orig/xbox .
+        cp -a /orig/${{ matrix.version }} orig/
 
     # Restore cached files
     - name: Cache build
