@@ -61,8 +61,8 @@ class Object:
 
         # Resolve paths
         base_name = self.file_path.with_suffix("")
-        obj.base_obj_path = sln.build_dir / "base" / f"{base_name}.obj"
-        obj.split_obj_path = sln.build_dir / "split" / f"{base_name}.obj"
+        obj.base_obj_path = sln.out_path() / "base" / f"{base_name}.obj"
+        obj.split_obj_path = sln.out_path() / "split" / f"{base_name}.obj"
         return obj
 
 class ProjectConfig:
@@ -101,8 +101,10 @@ class ProjectConfig:
 
 class SolutionConfig:
     def __init__(self) -> None:
-        self.build_dir: Optional[Path] = None
+        self.version: Optional[str] = None  # Version name
+        self.build_dir: Path = Path("build")  # Output build files
         self.config_dir: Optional[Path] = None
+        self.version_config_dir: Optional[Path] = None
         self.project_dir: Optional[Path] = None
         self.tools_dir: Optional[Path] = None
         self.name: Optional[str] = None
@@ -120,6 +122,8 @@ class SolutionConfig:
         
         # Project config
         self.baserom: Optional[Path] = None
+        self.cflags: List[str] = []
+        self.defines: List[str] = []
         
         # Progress output and report.json config
         self.progress = True  # Enable report.json generation and CLI progress output
@@ -137,8 +141,10 @@ class SolutionConfig:
 
     def validate(self) -> None:
         required_attrs = [
+            "version",
             "build_dir",
             "config_dir",
+            "version_config_dir",
             "project_dir",
             "tools_dir",
             "name",
@@ -151,6 +157,10 @@ class SolutionConfig:
                 sys.exit(f"SolutionConfig.{attr} missing")
         for proj in self.projects:
             proj.validate()
+
+    # Gets the output path for build-related files.
+    def out_path(self) -> Path:
+        return self.build_dir / str(self.version)
 
     # Gets the wrapper to use for compiler commands, if set.
     def compiler_wrapper(self) -> Optional[Path]:
@@ -209,7 +219,8 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     ###
     n.comment("Tooling")
     
-    report_path = sln.build_dir / "report.json"
+    build_path = sln.out_path()
+    report_path = build_path / "report.json"
     build_tools_path = sln.build_dir / "tools"
     download_tool = sln.tools_dir / "download_tool.py"
     n.rule(
@@ -274,7 +285,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     # Generated headers
     ###
     n.comment("Generated headers")
-    generated_include_dir = sln.build_dir / "include"
+    generated_include_dir = build_path / "include"
     dsp_image_script = sln.tools_dir / "dsp_image.py"
     dsp_image_header = generated_include_dir / "sound_dsound_xbox_effects_image.h"
     n.rule(
@@ -346,7 +357,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         objects: Dict[str, Object] = proj.resolve(sln)
         n.comment(proj.name)
         pch = proj.options["pch"]
-        pch_path = sln.build_dir / "base" / f"{proj.name}.pch"
+        pch_path = build_path / "base" / f"{proj.name}.pch"
         proj_base_object_targets: List[Path] = []
         for obj_name, obj in objects.items():
             split_object_targets.append(obj.split_obj_path)
@@ -354,7 +365,9 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
                 proj_base_object_targets.append(obj.base_obj_path)
                 cflags: List[str] = []
                 cflags.extend(obj.options["cflags"])
+                cflags.extend(sln.cflags)
                 cflags.extend([f"/D{define}" for define in obj.options["defines"]])
+                cflags.extend([f"/D{define}" for define in sln.defines])
                 cflags.extend([f"/I\"{path}\"" for path in obj.options["include_dirs"]])
                 cflags.append(f"/I\"{generated_include_dir}\"")
                 implicit: List[Path] = [wrapper_implicit] if wrapper_implicit else []
@@ -411,25 +424,28 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     ###
     # Split EXE
     ###
+    n.comment("Split EXE")
     n.rule(
         name="csplit",
-        command=f"{csplit} -i $in -p $config_dir -o $out_dir",
+        command=f"{csplit} -i $in -p $version_config_dir -c $config_json -o $out_dir",
+        description="CSPLIT $in",
     )
     n.build(
         outputs=split_object_targets,
         rule="csplit",
         variables={
-            "out_dir": sln.build_dir / "split",
-            "config_dir": sln.config_dir
+            "out_dir": build_path / "split",
+            "version_config_dir": sln.version_config_dir,
+            "config_json": sln.config_dir / "config.json",
         },
         inputs=sln.baserom,
         implicit=[
             csplit,
             sln.config_dir / "config.json",
-            sln.config_dir / "contribs.json",
-            sln.config_dir / "relocs.json",
-            sln.config_dir / "splits.json",
-            sln.config_dir / "symbols.json",
+            sln.version_config_dir / "contribs.json",
+            sln.version_config_dir / "relocs.json",
+            sln.version_config_dir / "splits.json",
+            sln.version_config_dir / "symbols.json",
         ],
     )
     n.newline()
@@ -592,7 +608,7 @@ def generate_solution(sln: SolutionConfig) -> None:
         vc_proj.uuid = proj.guid
         vc_proj.add_config(vc_config)
         
-        vc_macros: List[str] = proj.options["defines"]
+        vc_macros: List[str] = [*(proj.options["defines"] or []), *sln.defines]
         vc_include_dirs: List[Path] = [relative_root / path for path in proj.options["include_dirs"] or []]
         vc_forced: List[Path] = []
         if proj.options["pch"]:
@@ -611,7 +627,7 @@ def generate_solution(sln: SolutionConfig) -> None:
         
         vc_extras: List[Path] = [
             relative_root / sln.config_dir / "config.json",
-            relative_root / sln.config_dir / "symbols.json",
+            relative_root / sln.version_config_dir / "symbols.json",
         ]
         vc_proj.add_extra_files(vc_extras)
         
@@ -626,7 +642,7 @@ def generate_solution(sln: SolutionConfig) -> None:
 # Print progress information from objdiff report
 def calculate_progress(sln: SolutionConfig) -> None:
     sln.validate()
-    report_path = sln.build_dir / "report.json"
+    report_path = sln.out_path() / "report.json"
     if not report_path.is_file():
         sys.exit(f"Report file {report_path} does not exist")
 

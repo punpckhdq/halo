@@ -30,6 +30,26 @@ from tools.project_x86 import (
     is_windows,
 )
 import os
+import sys
+
+# Game versions
+DEFAULT_VERSION = 0
+VERSIONS = [
+    "2342",
+]
+
+VERSION_CONFIGS: Dict[str, Dict[str, Any]] = {
+    "2342": {
+        "build": 2342,
+        "config": "cachebeta",
+        "baserom": "cachebeta.exe",
+    },
+}
+
+CONFIG_CFLAGS: Dict[str, List[str]] = {
+    "cachebeta": ["/O2", "/Oy-"],
+}
+
 # arguments
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -38,6 +58,20 @@ parser.add_argument(
     default="configure",
     help="script mode (default: configure)",
     nargs="?",
+)
+parser.add_argument(
+    "-v",
+    "--version",
+    choices=VERSIONS,
+    default=VERSIONS[DEFAULT_VERSION],
+    help="version to build",
+)
+parser.add_argument(
+    "--build-dir",
+    metavar="DIR",
+    type=Path,
+    default=Path("build"),
+    help="base build directory (default: build)",
 )
 parser.add_argument(
     "--objdiff",
@@ -67,10 +101,13 @@ if not is_windows():
 
 args = parser.parse_args()
 
+version_config = VERSION_CONFIGS[args.version]
+
 # path setup
 
-build_dir = Path("build")
 config_dir = Path("config")
+version_config_dir = config_dir / args.version
+orig_dir = Path("orig") / args.version
 config_json_path = config_dir / "config.json"
 project_dir = Path("projects")
 tools_dir = Path("tools")
@@ -80,7 +117,7 @@ tools_dir = Path("tools")
 class BuildConfigObject(TypedDict):
     name: str
     index: int
-    status: str
+    status: Union[str, Dict[str, List[str]]]
     options: Dict[str, Any]
 
 class BuildConfigProject(TypedDict):
@@ -92,7 +129,6 @@ class BuildConfigProject(TypedDict):
 class BuildConfig(TypedDict):
     name: str
     guid: str
-    baserom: str
     projects: List[BuildConfigProject]
 
 build_config: BuildConfig = json.load(open(config_json_path, "r", encoding="utf-8"))
@@ -100,14 +136,21 @@ build_config: BuildConfig = json.load(open(config_json_path, "r", encoding="utf-
 # solution configuration
 
 sln = SolutionConfig()
-sln.build_dir = build_dir
+sln.version = args.version
+sln.build_dir = args.build_dir
 sln.config_dir = config_dir
+sln.version_config_dir = version_config_dir
 sln.project_dir = project_dir
 sln.tools_dir = tools_dir
 
 sln.name = build_config["name"]
 sln.guid = build_config["guid"]
-sln.baserom = build_config["baserom"]
+sln.baserom = orig_dir / version_config["baserom"]
+sln.cflags = CONFIG_CFLAGS[version_config["config"]]
+sln.defines = [
+    f"CONFIG_VERSION={version_config['build']}",
+    f"VERSION_{args.version}",
+]
 
 # Apply arguments
 sln.objdiff_path = args.objdiff
@@ -118,7 +161,7 @@ if not is_windows():
 
 # Tool versions
 sln.objdiff_tag = "v3.8.2"
-sln.csplit_tag = "v0.0.3"
+sln.csplit_tag = "v0.0.4"
 sln.wibo_tag = "1.2.0-crypt"
 
 sln.projects = []
@@ -128,7 +171,12 @@ for build_project in build_config["projects"]:
     project.guid = build_project["guid"]
     project.objects = []
     for build_object in build_project["objects"]:
-        def get_object_completed(status: str) -> ObjectStatus:
+        def get_object_completed(status: Union[str, Dict[str, List[str]]]) -> ObjectStatus:
+            if isinstance(status, dict):
+                assert list(status.keys()) == ["MatchingFor"], f"{build_object['name']}: invalid status {status}"
+                for version in status["MatchingFor"]:
+                    assert version in VERSIONS, f"{build_object['name']}: unknown version {version}"
+                status = "Matching" if args.version in status["MatchingFor"] else "NonMatching"
             if status == "MISSING":
                 return ObjectStatus.Missing
             elif status == "Matching":

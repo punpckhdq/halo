@@ -1,7 +1,6 @@
 {
 	"name": "cachebeta",
 	"guid": "{5EE42755-A9D2-4175-9BA5-CC209EB68DE0}",
-	"baserom": "cachebeta.exe",
 	"projects": [
 		{
 			"name": "halobetacache",
@@ -10,8 +9,6 @@
 				"cflags": [
 					"/nologo",
 					"/c",
-					"/O2",
-					"/Oy-",
 					"/MT"
 				],
 				"pch": { "header": "headers.h", "source": "source/cseries/headers.c" },
@@ -812,7 +809,7 @@
 				{ "name": "source/ai/ai_script.c", "index": 432, "status": "Matching" },
 				{ "name": "source/ai/ai_scenario_definitions.c", "index": 433, "status": "Matching" },
 				{ "name": "source/ai/ai_profile.c", "index": 434, "status": "Matching" },
-				{ "name": "source/ai/ai_debug.c", "index": 435, "status": "Matching", "options": { "cflags": [ "/nologo", "/c", "/O2", "/Oy-", "/MT", "/QIfist" ] } },
+				{ "name": "source/ai/ai_debug.c", "index": 435, "status": "Matching", "options": { "cflags": [ "/nologo", "/c", "/MT", "/QIfist" ] } },
 				{ "name": "source/ai/ai_communication.c", "index": 436, "status": "Matching" },
 				{ "name": "source/ai/ai.c", "index": 437, "status": "Matching" },
 				{ "name": "source/ai/actors.c", "index": 438, "status": "NonMatching" },
