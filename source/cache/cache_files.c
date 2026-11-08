@@ -511,7 +511,7 @@ boolean cache_file_header_verify(
 					name));
 		}
 	}
-	else if (strcmp(header->build_number, BUILD_STRING))
+	else if (strcmp(header->build_number, BUILD_NUMBER))
 	{
 		if (fatal)
 		{

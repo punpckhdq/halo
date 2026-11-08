@@ -286,11 +286,12 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     ###
     n.comment("Generated headers")
     generated_include_dir = build_path / "include"
+    symbols_json = sln.version_config_dir / "symbols.json"
     dsp_image_script = sln.tools_dir / "dsp_image.py"
     dsp_image_header = generated_include_dir / "sound_dsound_xbox_effects_image.h"
     n.rule(
         name="dsp_image",
-        command=f"$python {dsp_image_script} $in $out",
+        command=f"$python {dsp_image_script} $in $symbols $out",
         description="DSP_IMAGE $out",
         restat=True,
     )
@@ -298,13 +299,14 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         outputs=dsp_image_header,
         rule="dsp_image",
         inputs=sln.baserom,
-        implicit=dsp_image_script,
+        implicit=[dsp_image_script, symbols_json],
+        variables={"symbols": symbols_json},
     )
     monk_tone_script = sln.tools_dir / "monk_tone.py"
     monk_tone_header = generated_include_dir / "progress_bar_monk_tone.h"
     n.rule(
         name="monk_tone",
-        command=f"$python {monk_tone_script} $in $out",
+        command=f"$python {monk_tone_script} $in $symbols $out",
         description="MONK_TONE $out",
         restat=True,
     )
@@ -312,7 +314,8 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         outputs=monk_tone_header,
         rule="monk_tone",
         inputs=sln.baserom,
-        implicit=monk_tone_script,
+        implicit=[monk_tone_script, symbols_json],
+        variables={"symbols": symbols_json},
     )
     n.newline()
 

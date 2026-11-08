@@ -543,7 +543,7 @@ static void set_textbox_to_build_number(
 
 	if (!build_number_string[0])
 	{
-		ascii_to_wide(BUILD_STRING, build_number_string, sizeof(build_number_string));
+		ascii_to_wide(BUILD_NUMBER, build_number_string, sizeof(build_number_string));
 	}
 
 	if (!widget->parameters.text_box_parameters.text)

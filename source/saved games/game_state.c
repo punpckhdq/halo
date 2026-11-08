@@ -175,7 +175,7 @@ void game_state_initialize_for_new_map(
 
 	memset(game_state_globals.header, 0, sizeof(struct game_state_header));
 	strcpy(game_state_globals.header->map_name, tag_get_name(global_scenario_index));
-	strcpy(game_state_globals.header->build_number, BUILD_STRING);
+	strcpy(game_state_globals.header->build_number, BUILD_NUMBER);
 	game_state_globals.header->player_count = player_spawn_count;
 	game_state_globals.header->difficulty = game_difficulty_level_get();
 	game_state_globals.header->cache_file_checksum = cache_files_get_checksum();
@@ -423,7 +423,7 @@ static boolean game_state_header_valid(
 {
 	boolean valid = FALSE;
 
-	if (strcmp(header->build_number, BUILD_STRING))
+	if (strcmp(header->build_number, BUILD_NUMBER))
 	{
 		if (fatal)
 		{
@@ -433,7 +433,7 @@ static boolean game_state_header_valid(
 				csprintf(
 					temporary,
 					"expected build #%d but got #%d",
-					BUILD_STRING,
+					BUILD_NUMBER,
 					header->build_number));
 		}
 	}

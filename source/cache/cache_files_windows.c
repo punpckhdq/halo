@@ -663,7 +663,7 @@ static void cached_map_files_open_all(
 
 			cached_map_file_read_header(map_file_index);
 
-			if (strcmp(read_map_file->header.build_number, BUILD_STRING) != 0)
+			if (strcmp(read_map_file->header.build_number, BUILD_NUMBER) != 0)
 			{
 				valid = FALSE;
 			}
