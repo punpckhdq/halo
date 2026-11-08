@@ -36,6 +36,7 @@ import sys
 DEFAULT_VERSION = 0
 VERSIONS = [
     "2342",
+    "2276_cachebeta",
 ]
 
 VERSION_CONFIGS: Dict[str, Dict[str, Any]] = {
@@ -43,6 +44,11 @@ VERSION_CONFIGS: Dict[str, Dict[str, Any]] = {
         "build": 2342,
         "config": "cachebeta",
         "baserom": "cachebeta.exe",
+    },
+    "2276_cachebeta": {
+        "build": 2276,
+        "config": "cachebeta",
+        "baserom": "cachebeta.xbe",
     },
 }
 
