@@ -306,7 +306,7 @@ static void find_hill(
 		{
 			struct scenario_netgame_flag *flag = TAG_BLOCK_GET_ELEMENT(&scenario->netgame_flags, hill_flag_indicies[index], struct scenario_netgame_flag);
 
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine_king.c", 222, NULL != flag);
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine_king.c", MATCH_LINE_NTSC(221, 222), NULL != flag);
 
 			hill_points_3d[index] = flag->position;
 		}
@@ -402,7 +402,7 @@ static boolean king_engine_initialize_for_new_map(
 	king_globals.hill_state = king_hill_uncontrolled;
 	find_hill();
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_king.c", 340, king_globals.hill_point_count != 0);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_king.c", MATCH_LINE_NTSC(339, 340), king_globals.hill_point_count != 0);
 
 	render_dynamic_quad_initialize();
 
@@ -876,7 +876,7 @@ static boolean king_engine_display_score(
 		}
 		else
 		{
-			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine_king.c", 930);
+			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine_king.c", MATCH_LINE_NTSC(922, 930));
 		}
 		break;
 	}

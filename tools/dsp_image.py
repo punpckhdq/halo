@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+import json
 import sys
 from pathlib import Path
+
+import baserom as baserom_image
 
 HEADER = (
     "/*\n"
@@ -12,19 +15,22 @@ HEADER = (
     "static const byte dsound_effects_image[]= {"
 )
 
-# dsound_effects_image in cachebeta.exe
-DSP_IMAGE_FILE_OFFSET = 0x2AB2A8
+SYMBOL_NAME = "_dsound_effects_image"
 DSP_IMAGE_SIZE = 0x3A5C
 
 def main() -> None:
-    if len(sys.argv) != 3:
-        sys.exit(f"usage: {sys.argv[0]} <baserom> <output>")
+    if len(sys.argv) != 4:
+        sys.exit(f"usage: {sys.argv[0]} <baserom> <symbols.json> <output>")
     baserom = Path(sys.argv[1])
-    output = Path(sys.argv[2])
+    symbols_path = Path(sys.argv[2])
+    output = Path(sys.argv[3])
 
-    with open(baserom, "rb") as f:
-        f.seek(DSP_IMAGE_FILE_OFFSET)
-        data = f.read(DSP_IMAGE_SIZE)
+    with open(symbols_path, "r", encoding="utf-8") as f:
+        addresses = [s["address"] for s in json.load(f) if s["name"] == SYMBOL_NAME]
+    if len(addresses) != 1:
+        sys.exit(f"{symbols_path}: expected one {SYMBOL_NAME}, found {len(addresses)}")
+
+    data = baserom_image.read(baserom, addresses[0], DSP_IMAGE_SIZE)
     if len(data) != DSP_IMAGE_SIZE:
         sys.exit(f"{baserom}: couldn't read the DSP image")
 

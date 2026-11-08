@@ -307,7 +307,7 @@ static void create_the_flag(
 	{
 		long weapon_index = create_the_flag_at_position(&ctf_globals.flags[team_index]->position);
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 189, NONE != weapon_index);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(188, 189), NONE != weapon_index);
 
 		if (weapon_index == NONE)
 		{
@@ -381,7 +381,7 @@ static boolean ctf_engine_initialize_for_new_map(
 	{
 		long flag_to_create = random_range(0, NUMBER_OF_CTF_TEAMS);
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 263, (flag_to_create >= 0) && (flag_to_create <= 1));
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(262, 263), (flag_to_create >= 0) && (flag_to_create <= 1));
 
 		create_the_flag(flag_to_create);
 		ctf_single_flag_what_is_up_message(flag_to_create);
@@ -522,7 +522,7 @@ static void player_reset_flag(
 	struct player_datum *player = player_get(player_index);
 	long unit_index = player->unit_index;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 423, NONE != unit_index);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(418, 423), NONE != unit_index);
 
 	unit_drop_current_weapon(unit_index, TRUE);
 	weapon_reset_flag(weapon_index);
@@ -536,9 +536,9 @@ static void player_score(
 {
 	struct player_datum *player = player_get(player_index);
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 436, game_engine_can_score());
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 437, NONE != player_index);
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 438, NONE != team_index);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(431, 436), game_engine_can_score());
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(432, 437), NONE != player_index);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(433, 438), NONE != team_index);
 
 	ctf_globals.score[team_index]++;
 	player->statistics.multiplayer_statistics.ctf_statistics.flag_scores++;
@@ -619,7 +619,7 @@ static void ctf_engine_player_update(
 	{
 		real scoring_distance = 1.f;
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 532, weapon->object.owner_team_index != player->team_index);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(527, 532), weapon->object.owner_team_index != player->team_index);
 
 		if (in_scoring_range(&unit->object.position, scoring_distance, player->team_index))
 		{
@@ -687,7 +687,7 @@ static void ctf_engine_weapon_update(
 	real_point3d position;
 	real vertical_offset;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 609, weapon_is_flag(weapon_index));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(604, 609), weapon_is_flag(weapon_index));
 
 	if (game_engine_get_variant()->game_engine_variant.ctf.single_flag_time > 0)
 	{
@@ -956,7 +956,7 @@ static boolean ctf_weapon_pickup(
 	boolean result = TRUE;
 	struct weapon_datum *weapon = weapon_get(weapon_index);
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 974, weapon_is_flag(weapon_index));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(937, 974), weapon_is_flag(weapon_index));
 
 	if (player_index != NONE)
 	{
@@ -1013,7 +1013,7 @@ static boolean ctf_weapon_pickup(
 static void ctf_weapon_drop(
 	long weapon_index)
 {
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", 1050, weapon_is_flag(weapon_index));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_ctf.c", MATCH_LINE_NTSC(1013, 1050), weapon_is_flag(weapon_index));
 
 	return;
 }

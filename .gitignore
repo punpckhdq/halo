@@ -37,6 +37,10 @@ compile_commands.json
 xbox/
 !source/**/xbox/
 
+# Original binaries
+orig/*/*
+!orig/*/.gitkeep
+
 # Slop
 .mcp.json
 .claude

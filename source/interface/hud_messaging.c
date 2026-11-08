@@ -690,8 +690,8 @@ wchar_t const *hud_messaging_get_objective(
 		struct hud_state_message_definition *message = hud_messaging_globals->objective.message;
 		struct hud_state_message_element *element = TAG_BLOCK_GET_ELEMENT(&messages->elements, message->element_start_index, struct hud_state_message_element);
 
-		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", 674, message->element_count==1);
-		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", 675, element->type==_hud_message_type_text);
+		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(673, 674), message->element_count==1);
+		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(674, 675), element->type==_hud_message_type_text);
 		result = tag_data_get_pointer(&messages->text_data, message->text_start_index * sizeof(wchar_t), element->data * sizeof(wchar_t));
 	}
 
@@ -969,7 +969,7 @@ void hud_messaging_update(
 
 				if (show_objective)
 				{
-					match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", 1056, hud_messaging_globals->objective.message && hud_messaging_globals->objective.uptime);
+					match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(1054, 1056), hud_messaging_globals->objective.message && hud_messaging_globals->objective.uptime);
 					hud_messaging_globals->objective.uptime = MAX(hud_messaging_globals->objective.uptime - game_time_get_elapsed(), 0);
 					messages = hud_state_messages_get(global_scenario_get()->hud_messages.index);
 					message = hud_messaging_globals->objective.message;
@@ -981,7 +981,7 @@ void hud_messaging_update(
 				}
 				else
 				{
-					match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", 1068, show_state_message);
+					match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(1066, 1068), show_state_message);
 					messages = hud_state_messages_get(hud_globals->messaging.hud_messages.index);
 					message = datum->state_message.state_message;
 				}
@@ -1023,7 +1023,7 @@ void hud_messaging_update(
 							{
 								short custom_index = element->data - _hud_icon_misc_start;
 
-								match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", 1111, custom_index<NUMBER_OF_HUD_CUSTOM_ICONS);
+								match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(1109, 1111), custom_index<NUMBER_OF_HUD_CUSTOM_ICONS);
 
 								if (TEST_FLAG(state_message->is_text_flags, custom_index))
 								{
@@ -1033,7 +1033,7 @@ void hud_messaging_update(
 									{
 										if (state_message->info[custom_index].text.uses_scenario_names)
 										{
-											match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", 1120, global_scenario_get()->custom_object_names.index!=NONE);
+											match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(1118, 1120), global_scenario_get()->custom_object_names.index!=NONE);
 											render_state_text(
 												&bounds,
 												&cursor_bounds,
@@ -1129,7 +1129,7 @@ void hud_messaging_update(
 						break;
 					}
 					default:
-						match_unreachable("c:\\halo\\SOURCE\\interface\\hud_messaging.c", 1191);
+						match_unreachable("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(1189, 1191));
 						break;
 					}
 				}

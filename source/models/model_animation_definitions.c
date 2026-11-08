@@ -237,7 +237,7 @@ void *animation_get_frame_data(
 	boolean compressed = TEST_FLAG(animation->flags, _animation_compressed_bit) && hs_model_animation_compression_enabled;
 	byte *data = tag_data_get_pointer(&animation->data, 0, 0);
 
-	match_assert("c:\\halo\\SOURCE\\models\\model_animation_definitions.c", 1147, frame_index>=0 && frame_index<animation->frame_count);
+	match_assert("c:\\halo\\SOURCE\\models\\model_animation_definitions.c", MATCH_LINE_NTSC(1146, 1147), frame_index>=0 && frame_index<animation->frame_count);
 
 	if (compressed)
 	{
@@ -256,7 +256,7 @@ void *animation_get_frame_info(
 	short frame_index,
 	short size)
 {
-	match_assert("c:\\halo\\SOURCE\\models\\model_animation_definitions.c", 1167, frame_index>=0 && frame_index<animation->frame_count);
+	match_assert("c:\\halo\\SOURCE\\models\\model_animation_definitions.c", MATCH_LINE_NTSC(1166, 1167), frame_index>=0 && frame_index<animation->frame_count);
 
 	return tag_data_get_pointer(&animation->frame_info, size*frame_index, size);
 }

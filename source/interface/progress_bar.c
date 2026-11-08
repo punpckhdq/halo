@@ -284,8 +284,8 @@ void generate_gravy_rect(
 		1000.f - layer->distance,
 		&rect->x1,
 		&rect->y1);
-	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", 898, rect->x0 < rect->x1);
-	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", 899, rect->y0 < rect->y1);
+	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", MATCH_LINE_NTSC(1111, 898), rect->x0 < rect->x1);
+	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", MATCH_LINE_NTSC(1112, 899), rect->y0 < rect->y1);
 
 	return;
 }
@@ -919,7 +919,7 @@ static void progress_bar_make_stuff_ready(
 void progress_bar_display(
 	real progress)
 {
-	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", 827, (progress>=0.f) && (progress<=1.f));
+	match_assert("c:\\halo\\SOURCE\\interface\\progress_bar.c", MATCH_LINE_NTSC(1040, 827), (progress>=0.f) && (progress<=1.f));
 
 	if (progress_bar_active && progress > 0.f)
 	{

@@ -246,7 +246,7 @@ boolean virtual_keyboard_initialize(
 	if (keyboard_tag_index != NONE)
 	{
 		virtual_keyboard_globals.keyboard = virtual_keyboard_definition_get(keyboard_tag_index);
-		match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 364, virtual_keyboard_globals.keyboard);
+		match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(363, 364), virtual_keyboard_globals.keyboard);
 
 		virtual_keyboard_globals.row = 0;
 		virtual_keyboard_globals.column = 0;
@@ -302,8 +302,8 @@ boolean virtual_keyboard_launch(
 {
 	boolean success = FALSE;
 
-	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 418, text_buffer && buffer_size && !(buffer_size&1) && !virtual_keyboard_globals.active);
-	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 419, (caption_index>=FIRST_VIRTUAL_KEYBOARD_CAPTION_STRING_INDEX) && (caption_index<NUMBER_OF_VIRTUAL_KEYBOARD_STRINGS));
+	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(417, 418), text_buffer && buffer_size && !(buffer_size&1) && !virtual_keyboard_globals.active);
+	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(418, 419), (caption_index>=FIRST_VIRTUAL_KEYBOARD_CAPTION_STRING_INDEX) && (caption_index<NUMBER_OF_VIRTUAL_KEYBOARD_STRINGS));
 
 	if (!virtual_keyboard_globals.active && virtual_keyboard_globals.keyboard)
 	{
@@ -567,7 +567,7 @@ static void virtual_keyboard_process_internal(
 				{
 					if (virtual_keyboard_globals.first_key_replaces_buffer == TRUE)
 					{
-						match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 635, virtual_keyboard_globals.buffer_size>0);
+						match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(634, 635), virtual_keyboard_globals.buffer_size>0);
 
 						memset(virtual_keyboard_globals.text_buffer, 0, virtual_keyboard_globals.buffer_size);
 						virtual_keyboard_globals.insertion_point = virtual_keyboard_globals.text_buffer;
@@ -701,7 +701,7 @@ static boolean virtual_keyboard_select(
 	case _vkey_backspace:
 		if (virtual_keyboard_globals.first_key_replaces_buffer == TRUE)
 		{
-			match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 854, virtual_keyboard_globals.buffer_size>0);
+			match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(853, 854), virtual_keyboard_globals.buffer_size>0);
 
 			memset(virtual_keyboard_globals.text_buffer, 0, virtual_keyboard_globals.buffer_size);
 			virtual_keyboard_globals.insertion_point = virtual_keyboard_globals.text_buffer;
@@ -733,7 +733,7 @@ static boolean virtual_keyboard_select(
 	case _vkey_space:
 		if (virtual_keyboard_globals.first_key_replaces_buffer == TRUE)
 		{
-			match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 889, virtual_keyboard_globals.buffer_size>0);
+			match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(888, 889), virtual_keyboard_globals.buffer_size>0);
 
 			memset(virtual_keyboard_globals.text_buffer, 0, virtual_keyboard_globals.buffer_size);
 			virtual_keyboard_globals.insertion_point = virtual_keyboard_globals.text_buffer;
@@ -758,7 +758,7 @@ static boolean virtual_keyboard_select(
 	default:
 		if (virtual_keyboard_globals.first_key_replaces_buffer == TRUE)
 		{
-			match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 914, virtual_keyboard_globals.buffer_size>0);
+			match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(913, 914), virtual_keyboard_globals.buffer_size>0);
 
 			memset(virtual_keyboard_globals.text_buffer, 0, virtual_keyboard_globals.buffer_size);
 			virtual_keyboard_globals.insertion_point = virtual_keyboard_globals.text_buffer;
@@ -819,8 +819,8 @@ static wchar_t virtual_keyboard_get_character(
 	struct virtual_key *key;
 	wchar_t character;
 
-	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 987, virtual_keyboard_globals.keyboard != NULL);
-	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 988, keycode < NUMBER_OF_CONFIGURABLE_VIRTUAL_KEYS);
+	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(986, 987), virtual_keyboard_globals.keyboard != NULL);
+	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(987, 988), keycode < NUMBER_OF_CONFIGURABLE_VIRTUAL_KEYS);
 
 	key = (struct virtual_key *)virtual_keyboard_globals.keyboard->virtual_keys.address + keycode;
 
@@ -880,9 +880,9 @@ static void virtual_keyboard_render_internal(
 	real_argb_color text_argb = { 1.f, .9f, .9f, .9f };
 	real_argb_color caption_color = text_argb;
 
-	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 1036, (virtual_keyboard_globals.keyboard != NULL) && (virtual_keyboard_globals.keyboard->font_tag.index != NONE));
+	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(1035, 1036), (virtual_keyboard_globals.keyboard != NULL) && (virtual_keyboard_globals.keyboard->font_tag.index != NONE));
 	keyboard_font_header = font_definition_get(virtual_keyboard_globals.keyboard->font_tag.index);
-	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 1038, keyboard_font_header);
+	match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(1037, 1038), keyboard_font_header);
 
 	if (virtual_keyboard_globals.keyboard->background_bitmap_tag.index != NONE)
 	{
@@ -894,7 +894,7 @@ static void virtual_keyboard_render_internal(
 		rect.y1 = DISPLAY_HEIGHT;
 		rect.x1 = DISPLAY_WIDTH;
 		bitmap = bitmap_group_get_bitmap_from_sequence(virtual_keyboard_globals.keyboard->background_bitmap_tag.index, 0, 0);
-		match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 1046, bitmap);
+		match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(1045, 1046), bitmap);
 
 		draw_bitmap_in_rect(bitmap, &rect, &rect, NULL, NONE, NULL, FALSE);
 	}
@@ -1270,7 +1270,7 @@ static void virtual_keyboard_render_internal(
 					}
 					break;
 				default:
-					match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", 1408, !"what key is this?");
+					match_assert("c:\\halo\\SOURCE\\interface\\virtual_keyboard.c", MATCH_LINE_NTSC(1407, 1408), !"what key is this?");
 					break;
 				}
 

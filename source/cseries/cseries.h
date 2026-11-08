@@ -110,9 +110,15 @@ enum
 #ifdef NON_MATCHING
 	#define MATCH_FILE(file) __FILE__
 	#define MATCH_LINE(line) __LINE__
+	#define MATCH_LINE_NTSC(ntsc, pal) __LINE__
 #else
 	#define MATCH_FILE(file) file
 	#define MATCH_LINE(line) line
+	#if CONFIG_VERSION == 2276
+		#define MATCH_LINE_NTSC(ntsc, pal) ntsc
+	#else
+		#define MATCH_LINE_NTSC(ntsc, pal) pal
+	#endif
 #endif
 
 #define match_halt(file, line) { display_assert(NULL, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }

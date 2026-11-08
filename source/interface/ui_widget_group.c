@@ -161,7 +161,7 @@ void ui_load_tags_for_scenario(
 		}
 		break;
 	default:
-		match_vhalt("c:\\halo\\SOURCE\\interface\\ui_widget_group.c", 506, "unknown scenario type");
+		match_vhalt("c:\\halo\\SOURCE\\interface\\ui_widget_group.c", MATCH_LINE_NTSC(501, 506), "unknown scenario type");
 	}
 
 	return;

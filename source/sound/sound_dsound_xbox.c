@@ -1152,7 +1152,7 @@ static boolean dsound_channel_stopped(
 	boolean finished;
 	struct dsound_channel *channel = channel_get(channel_index);
 
-	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1212, channel->stopping);
+	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", MATCH_LINE_NTSC(1208, 1212), channel->stopping);
 
 	finished = !DirectSoundGetStreamVoiceStatus(channel->stream);
 	if (finished)
@@ -1219,8 +1219,8 @@ static void dsound_virtual_remap(
 	short channel_index;
 	struct dsound_virtual_channel *vchannel = virtual_channel_get(virtual_channel_index);
 
-	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1420, vchannel->channel_index==NONE);
-	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1421, vchannel->type_index>=0 && vchannel->type_index<NUMBER_OF_SOUND_CHANNEL_TYPES);
+	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", MATCH_LINE_NTSC(1416, 1420), vchannel->channel_index==NONE);
+	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", MATCH_LINE_NTSC(1417, 1421), vchannel->type_index>=0 && vchannel->type_index<NUMBER_OF_SOUND_CHANNEL_TYPES);
 
 	for (channel_index = dsound_globals.first_channel_index[vchannel->type_index];
 		vchannel->channel_index==NONE && channel_index<dsound_globals.actual_channel_count;
@@ -1261,8 +1261,8 @@ static short dsound_virtual_touch(
 		dsound_virtual_remap(virtual_channel_index);
 	}
 
-	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1468, vchannel->channel_index==NONE || channel_get(vchannel->channel_index)->type_flags==sound_channel_type_flags[vchannel->type_index]);
-	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1469, vchannel->channel_index==NONE || channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
+	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", MATCH_LINE_NTSC(1464, 1468), vchannel->channel_index==NONE || channel_get(vchannel->channel_index)->type_flags==sound_channel_type_flags[vchannel->type_index]);
+	match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", MATCH_LINE_NTSC(1465, 1469), vchannel->channel_index==NONE || channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
 
 	return vchannel->channel_index;
 }
@@ -1280,7 +1280,7 @@ static void dsound_virtual_stop(
 
 	if (vchannel->channel_index!=NONE)
 	{
-		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1505, channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
+		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", MATCH_LINE_NTSC(1501, 1505), channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
 
 		dsound_channel_stop(vchannel->channel_index);
 		channel_get(vchannel->channel_index)->virtual_channel_index = NONE;
@@ -1298,7 +1298,7 @@ static short dsound_virtual_get_state(
 
 	if (vchannel->channel_index!=NONE)
 	{
-		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", 1527, channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
+		match_assert("c:\\halo\\SOURCE\\sound\\sound_dsound_xbox.c", MATCH_LINE_NTSC(1523, 1527), channel_get(vchannel->channel_index)->virtual_channel_index==virtual_channel_index);
 
 		state = dsound_channel_get_state(vchannel->channel_index);
 	}

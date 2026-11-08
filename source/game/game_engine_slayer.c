@@ -246,7 +246,7 @@ static void find_next_target(
 			}
 		}
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_slayer.c", 195, next_target != NONE);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_slayer.c", MATCH_LINE_NTSC(194, 195), next_target != NONE);
 	}
 
 	player->multiplayer.special = next_target;
@@ -549,7 +549,7 @@ static void slayer_player_update(
 	{
 		short index = (short)player_index;
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_slayer.c", 513, (index >= 0) && (index < MULTIPLAYER_MAXIMUM_PLAYERS));
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_slayer.c", MATCH_LINE_NTSC(501, 513), (index >= 0) && (index < MULTIPLAYER_MAXIMUM_PLAYERS));
 
 		game_engine_clear_goal_position(index);
 

@@ -25,14 +25,14 @@ struct scenario_description *multiplayer_scenario_description_get_list(
 	struct scenario_description *result;
 	long scenario_list_index;
 
-	match_assert("c:\\halo\\SOURCE\\scenario\\multiplayer_scenario_description.c", 60, count);
+	match_assert("c:\\halo\\SOURCE\\scenario\\multiplayer_scenario_description.c", MATCH_LINE_NTSC(61, 60), count);
 	scenario_list_index = tag_loaded(MULTIPLAYER_SCENARIO_DESCRIPTION_TAG, MULTIPLAYER_SCENARIO_DESCRIPTION_TAG_NAME);
 
 	if (scenario_list_index != NONE)
 	{
 		struct multiplayer_scenario_description *scenario_list = multiplayer_scenario_description_definition_get(scenario_list_index);
 
-		match_assert("c:\\halo\\SOURCE\\scenario\\multiplayer_scenario_description.c", 66, scenario_list);
+		match_assert("c:\\halo\\SOURCE\\scenario\\multiplayer_scenario_description.c", MATCH_LINE_NTSC(67, 66), scenario_list);
 		result = (struct scenario_description *)scenario_list->multiplayer_scenarios.address;
 		*count = scenario_list->multiplayer_scenarios.count;
 	}
@@ -52,7 +52,7 @@ boolean map_name_from_multiplayer_scenario_description_item(
 {
 	long i;
 
-	match_assert("c:\\halo\\SOURCE\\scenario\\multiplayer_scenario_description.c", 88, item);
+	match_assert("c:\\halo\\SOURCE\\scenario\\multiplayer_scenario_description.c", MATCH_LINE_NTSC(89, 88), item);
 	buffer[0] = '\0';
 
 	for (i = strlen(item->scenario_tag_directory_path); i >= 0; i--)

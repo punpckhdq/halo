@@ -137,7 +137,7 @@ long scenario_tags_load(
 			cache_file_globals.tags_header = tag_cache_base_address;
 			match_vassert(
 				"c:\\halo\\SOURCE\\cache\\cache_files.c",
-				148,
+				MATCH_LINE_NTSC(97, 148),
 				cache_file_globals.tags_header->signature==CACHE_FILE_TAGS_HEADER_SIGNATURE,
 				csprintf(
 					temporary,
@@ -206,12 +206,12 @@ boolean scenario_structure_bsp_load(
 	}
 
 	cache_file_globals.structure_bsp_header = reference->address;
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 224, cache_file_globals.structure_bsp_header->signature==CACHE_FILE_STRUCTURE_BSP_HEADER_SIGNATURE);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(173, 224), cache_file_globals.structure_bsp_header->signature==CACHE_FILE_STRUCTURE_BSP_HEADER_SIGNATURE);
 	structure_bsp_header_register_vertex_buffers(cache_file_globals.structure_bsp_header);
 
 	tag_instance = cache_file_tag_instance_get(reference->structure_bsp.index);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 234, !tag_instance->base_address);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 235, tag_instance->group_tag==STRUCTURE_BSP_TAG);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(183, 234), !tag_instance->base_address);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(184, 235), tag_instance->group_tag==STRUCTURE_BSP_TAG);
 	tag_instance->base_address = cache_file_globals.structure_bsp_header->structure_bsp;
 
 	return TRUE;
@@ -225,8 +225,8 @@ void scenario_structure_bsp_unload(
 	structure_bsp_header_deregister_vertex_buffers(cache_file_globals.structure_bsp_header);
 
 	tag_instance = cache_file_tag_instance_get(reference->structure_bsp.index);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 256, tag_instance->base_address);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 257, tag_instance->group_tag==STRUCTURE_BSP_TAG);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(205, 256), tag_instance->base_address);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(206, 257), tag_instance->group_tag==STRUCTURE_BSP_TAG);
 	tag_instance->base_address = NULL;
 	cache_file_globals.structure_bsp_header = NULL;
 }
@@ -253,7 +253,7 @@ void *tag_get(
 
 	match_vassert(
 		"c:\\halo\\SOURCE\\cache\\cache_files.c",
-		298,
+		MATCH_LINE_NTSC(247, 298),
 		tag_instance->group_tag==group_tag || tag_instance->parent_group_tags[0]==group_tag || tag_instance->parent_group_tags[1]==group_tag,
 		csprintf(
 			temporary,
@@ -263,7 +263,7 @@ void *tag_get(
 			tag_index));
 	match_vassert(
 		"c:\\halo\\SOURCE\\cache\\cache_files.c",
-		302,
+		MATCH_LINE_NTSC(251, 302),
 		tag_instance->base_address,
 		csprintf(temporary, "can't get() a tag with a base address!"));
 
@@ -285,7 +285,7 @@ unsigned long tag_get_group_tag(
 unsigned long tag_groups_checksum(
 	void)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 327, cache_file_globals.tags_loaded);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(276, 327), cache_file_globals.tags_loaded);
 
 	return cache_file_globals.tags_header->tags_checksum;
 }
@@ -306,7 +306,7 @@ long tag_loaded(
 	{
 		short absolute_index;
 
-		match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 346, global_tag_instances);
+		match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(295, 346), global_tag_instances);
 
 		for (absolute_index = 0; absolute_index < cache_file_globals.tags_header->tag_count; absolute_index++)
 		{
@@ -458,18 +458,18 @@ static struct cache_file_tag_instance *cache_file_tag_instance_get(
 	struct cache_file_tag_instance *tag_instance;
 	short absolute_index = DATUM_INDEX_TO_ABSOLUTE_INDEX(tag_index);
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 518, cache_file_globals.tags_loaded);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", 519, global_tag_instances);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(467, 518), cache_file_globals.tags_loaded);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files.c", MATCH_LINE_NTSC(468, 519), global_tag_instances);
 	match_vassert(
 		"c:\\halo\\SOURCE\\cache\\cache_files.c",
-		522,
+		MATCH_LINE_NTSC(471, 522),
 		absolute_index>=0 && absolute_index<cache_file_globals.tags_header->tag_count,
 		csprintf(temporary, "i don't think %08x is a tag index", tag_index));
 
 	tag_instance = &global_tag_instances[absolute_index];
 	match_vassert(
 		"c:\\halo\\SOURCE\\cache\\cache_files.c",
-		526,
+		MATCH_LINE_NTSC(475, 526),
 		!DATUM_INDEX_TO_IDENTIFIER(tag_index) || tag_instance->tag_index==tag_index,
 		csprintf(temporary, "i don't think %08x is a tag index", tag_index));
 
@@ -491,7 +491,7 @@ boolean cache_file_header_verify(
 		{
 			match_vhalt(
 				"c:\\halo\\SOURCE\\cache\\cache_files.c",
-				544,
+				MATCH_LINE_NTSC(493, 544),
 				csprintf(
 					temporary,
 					"'%s' does not appear to be a cache file",
@@ -504,20 +504,20 @@ boolean cache_file_header_verify(
 		{
 			match_vhalt(
 				"c:\\halo\\SOURCE\\cache\\cache_files.c",
-				548,
+				MATCH_LINE_NTSC(497, 548),
 				csprintf(
 					temporary,
 					"the cache file '%s' is an old version",
 					name));
 		}
 	}
-	else if (strcmp(header->build_number, BUILD_STRING))
+	else if (strcmp(header->build_number, BUILD_NUMBER))
 	{
 		if (fatal)
 		{
 			match_vhalt(
 				"c:\\halo\\SOURCE\\cache\\cache_files.c",
-				553,
+				MATCH_LINE_NTSC(502, 553),
 				csprintf(
 					temporary,
 					"the cache file '%s' belongs to a different build (%s)",

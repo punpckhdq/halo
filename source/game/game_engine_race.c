@@ -658,7 +658,7 @@ static void race_complete_lap(
 				team_laps += laps;
 				break;
 			default:
-				match_unreachable("c:\\halo\\SOURCE\\game\\game_engine_race.c", 584);
+				match_unreachable("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(583, 584));
 				break;
 			}
 		}
@@ -725,7 +725,7 @@ static boolean can_touch_team(
 			}
 		}
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 650, itr < MAXIMUM_RACE_FLAGS);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(649, 650), itr < MAXIMUM_RACE_FLAGS);
 	}
 	else
 	{
@@ -749,7 +749,7 @@ static long new_rally_flag(
 		count--;
 	}
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 680, count > 0);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(679, 680), count > 0);
 	random_index = random_range(0, (short)count);
 
 	for (flag_index = 0; flag_index < scenario->netgame_flags.count; flag_index++)
@@ -768,7 +768,7 @@ static long new_rally_flag(
 		}
 	}
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 701, new_flag != NONE);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(700, 701), new_flag != NONE);
 
 	return new_flag;
 }
@@ -790,7 +790,7 @@ static void race_touch_flag(
 
 		if (race_globals.first_flag[absolute_player_index] == NONE)
 		{
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 724, _race_type_normal != game_engine_get_variant()->game_engine_variant.race.race_type);
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(723, 724), _race_type_normal != game_engine_get_variant()->game_engine_variant.race.race_type);
 			race_globals.first_flag[absolute_player_index] = flag->team_index;
 		}
 
@@ -805,9 +805,9 @@ static void race_touch_flag(
 		}
 		else
 		{
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 746, !TEST_FLAG(*lap_bit_vector, team_index));
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(745, 746), !TEST_FLAG(*lap_bit_vector, team_index));
 			SET_FLAG(*lap_bit_vector, team_index, TRUE);
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 750, !(*lap_bit_vector & ~race_globals.lap_completed_value));
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(749, 750), !(*lap_bit_vector & ~race_globals.lap_completed_value));
 		}
 	}
 
@@ -1100,7 +1100,7 @@ static boolean race_goal_matches_player(
 
 	if (!TEST_FLAG(race_globals.lap_completed_value, goal_index))
 	{
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 1086, !"race goal matches player called on an invalid goal");
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(1062, 1086), !"race goal matches player called on an invalid goal");
 	}
 	else
 	{
@@ -1198,7 +1198,7 @@ static long race_engine_did_player_win(
 		}
 		else if (!can_team_win[0])
 		{
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", 1196, !can_team_win[1]);
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine_race.c", MATCH_LINE_NTSC(1165, 1196), !can_team_win[1]);
 			result = NONE;
 		}
 		else

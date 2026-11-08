@@ -2312,7 +2312,7 @@ boolean main_taking_screenshot(
 void main_movie_start(
 	real frames_per_second)
 {
-	match_assert("c:\\halo\\SOURCE\\main\\main.c", 2715, main_globals.movie==NULL);
+	match_assert("c:\\halo\\SOURCE\\main\\main.c", MATCH_LINE_NTSC(2667, 2715), main_globals.movie==NULL);
 
 	main_globals.movie = bitmap_2d_new(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT, 0, _bitmap_format_x8r8g8b8);
 
@@ -2518,7 +2518,7 @@ void halt_and_catch_fire(
 				draw_string_set_draw_mode(font_index, _text_style_plain, _text_justification_left, 0, global_real_argb_white);
 				draw_string_set_tab_stops(NULL, 0);
 				draw_string_set_color(global_real_argb_white);
-				rasterizer_draw_string(&bounds, NULL, &cursor, -4, BUILD_NAME " " BUILD_STRING " built at: " BUILD_DATE " " BUILD_TIME);
+				rasterizer_draw_string(&bounds, NULL, &cursor, -4, BUILD_STRING " built at: " BUILD_DATE " " BUILD_TIME);
 				bounds.y0 = cursor.y-1;
 				rasterizer_draw_string(&bounds, NULL, &cursor, -4, error_get());
 			}
@@ -2550,7 +2550,7 @@ void main_crash(
 void main_print_version(
 	void)
 {
-	console_printf(FALSE, BUILD_NAME " " BUILD_STRING " " BUILD_DATE " " BUILD_TIME);
+	console_printf(FALSE, BUILD_STRING " " BUILD_DATE " " BUILD_TIME);
 
 	return;
 }

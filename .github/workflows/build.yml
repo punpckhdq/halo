@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         # Add game versions here
-        version: ["2342"]
+        version: ["2342", "2276_cachebeta"]
 
     steps:
     # Checkout the repository
@@ -37,7 +37,9 @@ jobs:
 
     # Copy the original files to the workspace
     - name: Prepare
-      run: cp -a /orig/* .
+      run: |
+        cp -a /orig/xbox .
+        cp -a /orig/${{ matrix.version }} orig/
 
     # Restore cached files
     - name: Cache build
@@ -53,12 +55,12 @@ jobs:
     # Build the project
     - name: Build
       run: |
-        python configure.py
-        ninja all_source progress build/report.json
+        python configure.py --version ${{ matrix.version }}
+        ninja all_source progress build/${{ matrix.version }}/report.json
 
     # Upload progress report
     - name: Upload report
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.version }}_report
-        path: build/report.json
+        path: build/${{ matrix.version }}/report.json

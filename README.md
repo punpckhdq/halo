@@ -21,7 +21,7 @@ This is a work-in-progress decompilation of Halo: Combat Evolved build 2342 (`ca
 
 You must source the Halo 1 PAL debug build and the August 2001 Xbox SDK yourself. You also need [ninja-build](https://ninja-build.org/) on your PATH.
 
-Extract the `XDK/xbox` folder from the installer into the repository root such that `xbox/{bin,include}` are valid paths. Place `cachebeta.exe` from the Halo 1 build into your repository root. Navigate to the repository and run `configure.py` in the terminal.
+Extract the `XDK/xbox` folder from the installer into the repository root such that `xbox/{bin,include}` are valid paths. Place `cachebeta.exe` from the Halo 1 build into `orig/2342/`. Navigate to the repository and run `configure.py` in the terminal.
 
 Then, use `ninja build` to compile the game and report progress statistics, or open the `cachebeta.sln` VS2022 project under `projects` on Windows.
 
