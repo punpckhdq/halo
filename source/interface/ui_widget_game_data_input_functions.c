@@ -548,7 +548,7 @@ static void set_textbox_to_build_number(
 
 	if (!widget->parameters.text_box_parameters.text)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, sizeof(build_number_string), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(606));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, sizeof(build_number_string), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(606, 606));
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -621,7 +621,7 @@ static void server_list_menu_update(
 
 		for (child = widget->children, game_index = 0; child && game_index < advertised_game_count; child = child->next, game_index++)
 		{
-			child->parameters.text_box_parameters.text = ui_widget_realloc(child->parameters.text_box_parameters.text, 32 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(709));
+			child->parameters.text_box_parameters.text = ui_widget_realloc(child->parameters.text_box_parameters.text, 32 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(709, 709));
 
 			if (child->parameters.text_box_parameters.text)
 			{
@@ -799,7 +799,7 @@ static void server_list_menu_update(
 				teams_text->parameters.text_box_parameters.string_list_index = _string_free_for_all;
 			}
 
-			number_of_players_text->parameters.text_box_parameters.text = ui_widget_realloc(number_of_players_text->parameters.text_box_parameters.text, NUMBER_OF_PLAYERS_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(868));
+			number_of_players_text->parameters.text_box_parameters.text = ui_widget_realloc(number_of_players_text->parameters.text_box_parameters.text, NUMBER_OF_PLAYERS_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(868, 868));
 
 			if (number_of_players_text->parameters.text_box_parameters.text)
 			{
@@ -807,7 +807,7 @@ static void server_list_menu_update(
 				number_of_players_text->parameters.text_box_parameters.text[NUMBER_OF_PLAYERS_STRING_LENGTH - 1] = L'\0';
 			}
 
-			score_limit_text->parameters.text_box_parameters.text = ui_widget_realloc(score_limit_text->parameters.text_box_parameters.text, SCORE_LIMIT_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(873));
+			score_limit_text->parameters.text_box_parameters.text = ui_widget_realloc(score_limit_text->parameters.text_box_parameters.text, SCORE_LIMIT_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(873, 873));
 
 			if (score_limit_text->parameters.text_box_parameters.text)
 			{
@@ -865,14 +865,14 @@ static void server_list_menu_update(
 
 
 
-			number_of_players_text->parameters.text_box_parameters.text = ui_widget_realloc(number_of_players_text->parameters.text_box_parameters.text, NUMBER_OF_PLAYERS_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(931));
+			number_of_players_text->parameters.text_box_parameters.text = ui_widget_realloc(number_of_players_text->parameters.text_box_parameters.text, NUMBER_OF_PLAYERS_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(931, 931));
 
 			if (number_of_players_text->parameters.text_box_parameters.text)
 			{
 				number_of_players_text->parameters.text_box_parameters.text[0] = L'\0';
 			}
 
-			score_limit_text->parameters.text_box_parameters.text = ui_widget_realloc(score_limit_text->parameters.text_box_parameters.text, SCORE_LIMIT_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(935));
+			score_limit_text->parameters.text_box_parameters.text = ui_widget_realloc(score_limit_text->parameters.text_box_parameters.text, SCORE_LIMIT_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(935, 935));
 
 			if (score_limit_text->parameters.text_box_parameters.text)
 			{
@@ -933,7 +933,7 @@ static void network_pregame_status_screen_update(
 		struct widget_instance *countdown_label = remote_machine_widget2->next;
 		struct widget_instance *countdown_text = countdown_label->next;
 
-		countdown_text->parameters.text_box_parameters.text = ui_widget_realloc(countdown_text->parameters.text_box_parameters.text, AUTO_START_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1035));
+		countdown_text->parameters.text_box_parameters.text = ui_widget_realloc(countdown_text->parameters.text_box_parameters.text, AUTO_START_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1035, 1035));
 
 		if (countdown_text->parameters.text_box_parameters.text)
 		{
@@ -1033,7 +1033,7 @@ static void network_pregame_status_screen_update(
 			}
 
 			length = ustrlen(machine_name);
-			machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(machine_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1147));
+			machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(machine_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1147, 1147));
 
 			if (machine_name_text->parameters.text_box_parameters.text)
 			{
@@ -1074,7 +1074,7 @@ static void network_pregame_status_screen_update(
 				if (player_indices[i] == NONE)
 				{
 					controller_bitmap->animation_data.current_frame_index = _controller_inactive_bitmap;
-					player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1181));
+					player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1181, 1181));
 
 					if (player_name_text->parameters.text_box_parameters.text)
 					{
@@ -1086,7 +1086,7 @@ static void network_pregame_status_screen_update(
 				else
 				{
 					length = ustrlen(game->players[player_indices[i]].name);
-					player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1190));
+					player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1190, 1190));
 
 					if (player_name_text->parameters.text_box_parameters.text)
 					{
@@ -1156,7 +1156,7 @@ static void network_pregame_status_screen_update(
 
 					remote_machine_bitmap->animation_data.current_frame_index = _console_inactive_bitmap;
 
-					remote_machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(remote_machine_name_text->parameters.text_box_parameters.text, sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1255));
+					remote_machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(remote_machine_name_text->parameters.text_box_parameters.text, sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1255, 1255));
 
 					if (remote_machine_name_text->parameters.text_box_parameters.text)
 					{
@@ -1175,7 +1175,7 @@ static void network_pregame_status_screen_update(
 
 					remote_machine_bitmap->animation_data.current_frame_index = _console_active_bitmap;
 					length = ustrlen(game->machines[machine_indices[i]].name);
-					remote_machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(remote_machine_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1268));
+					remote_machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(remote_machine_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1268, 1268));
 
 					if (remote_machine_name_text->parameters.text_box_parameters.text)
 					{
@@ -1273,7 +1273,7 @@ static void splitscreen_pregame_status_screen_update(
 		struct widget_instance *countdown_label = local_machine_widget->next;
 		struct widget_instance *countdown_text = countdown_label->next;
 
-		countdown_text->parameters.text_box_parameters.text = ui_widget_realloc(countdown_text->parameters.text_box_parameters.text, AUTO_START_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1372));
+		countdown_text->parameters.text_box_parameters.text = ui_widget_realloc(countdown_text->parameters.text_box_parameters.text, AUTO_START_STRING_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1372, 1372));
 
 		if (countdown_text->parameters.text_box_parameters.text)
 		{
@@ -1375,7 +1375,7 @@ static void splitscreen_pregame_status_screen_update(
 		length = ustrlen(machine_name);
 
 
-		machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(machine_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1474));
+		machine_name_text->parameters.text_box_parameters.text = ui_widget_realloc(machine_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1474, 1474));
 
 		if (machine_name_text->parameters.text_box_parameters.text)
 		{
@@ -1407,7 +1407,7 @@ static void splitscreen_pregame_status_screen_update(
 				controller_bitmap->animation_data.current_frame_index = _controller_inactive_bitmap;
 
 
-				player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1499));
+				player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1499, 1499));
 
 				if (player_name_text->parameters.text_box_parameters.text)
 				{
@@ -1419,7 +1419,7 @@ static void splitscreen_pregame_status_screen_update(
 			else
 			{
 				length = ustrlen(game->players[player_indices[i]].name);
-				player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1508));
+				player_name_text->parameters.text_box_parameters.text = ui_widget_realloc(player_name_text->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1508, 1508));
 
 				if (player_name_text->parameters.text_box_parameters.text)
 				{
@@ -1567,7 +1567,7 @@ static void mutliplayer_settings_select_list_update_displayed_items(
 
 		if (variant)
 		{
-			name_text->parameters.text_box_parameters.text = ui_widget_realloc(name_text->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1722));
+			name_text->parameters.text_box_parameters.text = ui_widget_realloc(name_text->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1722, 1722));
 
 			if (name_text->parameters.text_box_parameters.text)
 			{
@@ -1576,7 +1576,7 @@ static void mutliplayer_settings_select_list_update_displayed_items(
 			}
 
 			picture->animation_data.current_frame_index = _multiplayer_game_type_unknown_bitmap;
-			description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, MAXIMUM_MULTIPLAYER_PROFILE_DESCRIPTION_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1729));
+			description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, MAXIMUM_MULTIPLAYER_PROFILE_DESCRIPTION_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1729, 1729));
 
 			if (description_text->parameters.text_box_parameters.text)
 			{
@@ -1741,7 +1741,7 @@ static void mutliplayer_settings_select_list_update_displayed_items(
 		}
 		else
 		{
-			name_text->parameters.text_box_parameters.text = ui_widget_realloc(name_text->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1873));
+			name_text->parameters.text_box_parameters.text = ui_widget_realloc(name_text->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1873, 1873));
 
 			if (name_text->parameters.text_box_parameters.text)
 			{
@@ -1749,7 +1749,7 @@ static void mutliplayer_settings_select_list_update_displayed_items(
 			}
 
 			picture->animation_data.current_frame_index = _multiplayer_game_type_unknown_bitmap;
-			description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, MAXIMUM_MULTIPLAYER_PROFILE_DESCRIPTION_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(1878));
+			description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, MAXIMUM_MULTIPLAYER_PROFILE_DESCRIPTION_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(1878, 1878));
 
 			if (description_text->parameters.text_box_parameters.text)
 			{
@@ -1874,7 +1874,7 @@ static void player_profile_3wide_list_update(
 			skill_level_text->visible = TRUE;
 			controls_label->visible = TRUE;
 			controls_text->visible = TRUE;
-			name_text->parameters.text_box_parameters.text = ui_widget_realloc(name_text->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2023));
+			name_text->parameters.text_box_parameters.text = ui_widget_realloc(name_text->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2023, 2023));
 
 			if (name_text->parameters.text_box_parameters.text)
 			{
@@ -2018,7 +2018,7 @@ static void player_profile_1wide_list_update(
 
 	if (profile)
 	{
-		list_widget->parameters.list_parameters.item_text = ui_widget_realloc(list_widget->parameters.list_parameters.item_text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2182));
+		list_widget->parameters.list_parameters.item_text = ui_widget_realloc(list_widget->parameters.list_parameters.item_text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2182, 2182));
 
 		if (list_widget->parameters.list_parameters.item_text)
 		{
@@ -2043,7 +2043,7 @@ static void player_profile_1wide_list_update(
 			}
 
 			color_picture->animation_data.current_frame_index = PIN(profile->primary_color_index, 0, player_profile_number_of_available_primary_colors() - 1);
-			description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, MAXIMUM_PLAYER_PROFILE_DESCRIPTION_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2204));
+			description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, MAXIMUM_PLAYER_PROFILE_DESCRIPTION_LENGTH * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2204, 2204));
 
 			if (description_text->parameters.text_box_parameters.text)
 			{
@@ -2103,7 +2103,7 @@ static void player_profile_1wide_list_update(
 	}
 	else
 	{
-		list_widget->parameters.list_parameters.item_text = ui_widget_realloc(list_widget->parameters.list_parameters.item_text, 2 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2258));
+		list_widget->parameters.list_parameters.item_text = ui_widget_realloc(list_widget->parameters.list_parameters.item_text, 2 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2258, 2258));
 
 		if (list_widget->parameters.list_parameters.item_text)
 		{
@@ -2111,7 +2111,7 @@ static void player_profile_1wide_list_update(
 		}
 
 		color_picture->animation_data.current_frame_index = 0;
-		description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, 2 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2263));
+		description_text->parameters.text_box_parameters.text = ui_widget_realloc(description_text->parameters.text_box_parameters.text, 2 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2263, 2263));
 
 		if (description_text->parameters.text_box_parameters.text)
 		{
@@ -2187,7 +2187,7 @@ static void solo_game_objective_text(
 
 	if (length > 0)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2344));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (word)(length * sizeof(wchar_t) + sizeof(wchar_t)), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2344, 2344));
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -2350,7 +2350,7 @@ static void get_active_player_profile_display_name(
 
 	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c", 2542, widget->local_player_index >= 0 && widget->local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS, "profile display name requires a valid local player index");
 	player_ui_get_active_player_profile(widget->local_player_index, &profile);
-	widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2544));
+	widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2544, 2544));
 
 	if (widget->parameters.text_box_parameters.text)
 	{
@@ -2373,7 +2373,7 @@ static void get_editable_player_profile_display_name(
 
 	if (profile)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2564));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2564, 2564));
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -2397,7 +2397,7 @@ static void get_editable_playlist_profile_display_name(
 
 	if (variant)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2585));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, (MAXIMUM_PLAYER_PROFILE_NAME_LENGTH + 1) * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2585, 2585));
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -2617,7 +2617,7 @@ static void multiplayer_game_set_text_box_for_score_limit(
 
 	if (game)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 8 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2760));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 8 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2760, 2760));
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -2805,7 +2805,7 @@ static void multiplayer_game_set_text_box_for_number_of_players(
 
 	if (game)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, NUMBER_OF_PLAYERS_STRING_SIZE * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE(2902));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, NUMBER_OF_PLAYERS_STRING_SIZE * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_game_data_input_functions.c"), MATCH_LINE_NTSC(2902, 2902));
 
 		if (widget->parameters.text_box_parameters.text)
 		{

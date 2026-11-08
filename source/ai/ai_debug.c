@@ -4216,8 +4216,8 @@ static void ai_debug_communication_toggle_bits(
 	short clear_count = 0;
 	short set_count = 0;
 
-	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 4968, lookup);
-	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 4969, vector_size <= 2048);
+	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", MATCH_LINE_NTSC(4947, 4968), lookup);
+	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", MATCH_LINE_NTSC(4948, 4969), vector_size <= 2048);
 
 	memset(vector, 0, BIT_VECTOR_SIZE_IN_BYTES(vector_size));
 
@@ -4227,7 +4227,7 @@ static void ai_debug_communication_toggle_bits(
 
 		if (comm_type!=NONE)
 		{
-			match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 4978, (comm_type >= 0) && (comm_type < vector_size));
+			match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", MATCH_LINE_NTSC(4957, 4978), (comm_type >= 0) && (comm_type < vector_size));
 			BIT_VECTOR_SET_FLAG(vector, comm_type, TRUE);
 		}
 		else if (!strcmp(names[index], "all"))
@@ -4322,7 +4322,7 @@ void ai_debug_idle_look_addprop(
 	long prop_index,
 	real distance)
 {
-	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", 5062, ai_debug.idle_look_valid);
+	match_assert("c:\\halo\\SOURCE\\ai\\ai_debug.c", MATCH_LINE_NTSC(5041, 5062), ai_debug.idle_look_valid);
 
 	if (ai_debug.prop_idle_look_count<MAXIMUM_IDLE_LOOK_PROPS)
 	{

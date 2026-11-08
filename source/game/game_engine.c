@@ -403,7 +403,7 @@ boolean multiple_teams_alive(
 
 			if (participating)
 			{
-				match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 446, player->team_index != NONE);
+				match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(445, 446), player->team_index != NONE);
 
 				if (player->team_index != team_index)
 				{
@@ -456,7 +456,7 @@ boolean team_has_players(
 
 			if (participating)
 			{
-				match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 503, player->team_index != NONE);
+				match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(502, 503), player->team_index != NONE);
 
 				if (player->team_index == team_index)
 				{
@@ -592,7 +592,7 @@ static long adjust_score_for_ranking(
 	struct player_datum *player;
 	long flags = 0;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 669, player_index!=NONE);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(668, 669), player_index!=NONE);
 	player = player_get(player_index);
 
 	if (score < -1000)
@@ -634,7 +634,7 @@ long populate_statistic_buffer(
 
 	while (data_iterator_next(&player_iterator))
 	{
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 712, player_count < MULTIPLAYER_MAXIMUM_PLAYERS);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(711, 712), player_count < MULTIPLAYER_MAXIMUM_PLAYERS);
 
 		if (player_count < MULTIPLAYER_MAXIMUM_PLAYERS)
 		{
@@ -679,7 +679,7 @@ long populate_statistic_buffer(
 			statistic_buffer[index].score = player->statistics.deaths;
 			break;
 		default:
-			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", 765);
+			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(764, 765));
 			break;
 		}
 
@@ -758,7 +758,7 @@ static struct statistic_buffer game_engine_get_player_place(
 		}
 
 		place++;
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 866, place<MULTIPLAYER_MAXIMUM_PLAYERS);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(857, 866), place<MULTIPLAYER_MAXIMUM_PLAYERS);
 	}
 
 	return statistic_buffer[place];
@@ -772,7 +772,7 @@ static void game_engine_generate_title_string(
 	struct player_datum *player = player_get(player_index);
 	wchar_t *lives_string = L"";
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 878, title_string);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(867, 878), title_string);
 
 	if (global_variant.universal_variant.lives > 0)
 	{
@@ -1602,8 +1602,8 @@ static void game_engine_post_rasterize_in_game(
 	long player_index = local_player_get_player_index(local_player_index);
 	struct player_datum *player = player_get(player_index);
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 1904, NONE != local_player_index);
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 1905, NULL != game_engine);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(1778, 1904), NONE != local_player_index);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(1779, 1905), NULL != game_engine);
 
 	if (game_engine && player)
 	{
@@ -1661,7 +1661,7 @@ void game_engine_post_rasterize(
 			game_engine_post_rasterize_post_game();
 			break;
 		default:
-			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", 1975);
+			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(1849, 1975));
 			break;
 		}
 	}
@@ -1742,8 +1742,8 @@ static void update_weapon_inventory(
 	boolean attached;
 	boolean in_inventory;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2058, weapon_index != NONE);
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2059, weapon_is_flag(weapon_index));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(1932, 2058), weapon_index != NONE);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(1933, 2059), weapon_is_flag(weapon_index));
 
 	weapon = weapon_get(weapon_index);
 	attached = weapon->object.parent_object_index != NONE;
@@ -1770,7 +1770,7 @@ static void game_engine_update_weapons(
 {
 	struct object_iterator item_iterator;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2088, NULL != game_engine);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(1962, 2088), NULL != game_engine);
 
 	object_iterator_new(&item_iterator, _object_mask_item, 0);
 
@@ -1787,7 +1787,7 @@ static void game_engine_update_weapons(
 			struct item_definition *definition = item_definition_get(item->definition_index);
 
 			item->object.scale = definition->item.scale != 0.f ? definition->item.scale : 1.f;
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2110, (item->object.scale >= 0.5f) && (item->object.scale <= 3.f));
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(1984, 2110), (item->object.scale >= 0.5f) && (item->object.scale <= 3.f));
 		}
 
 		if (game_engine->weapon_update)
@@ -1993,7 +1993,7 @@ boolean game_engine_get_current_stage(
 	struct game_variant *variant,
 	char *map_name)
 {
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2328, variant && map_name);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(2202, 2328), variant && map_name);
 
 	memcpy(variant, &global_stage.game_variant, sizeof(*variant));
 	strncpy(map_name, global_stage.map_name, sizeof(global_stage.map_name) - 1);
@@ -2206,7 +2206,7 @@ void game_engine_update(
 		case game_engine_mode_postgame_rasterize:
 			break;
 		default:
-			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", 2563);
+			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(2437, 2563));
 		}
 	}
 
@@ -2232,7 +2232,7 @@ void game_engine_player_damaged_player(
 	long dead_player_index,
 	boolean friendly_fire)
 {
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2592, dead_player_index != NONE);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(2466, 2592), dead_player_index != NONE);
 
 	if (game_engine && game_engine->player_damaged_player)
 	{
@@ -2254,7 +2254,7 @@ void game_engine_player_killed(
 	boolean legitimate_kill;
 	long message = NONE;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2609, dead_player_index != NONE);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(2483, 2609), dead_player_index != NONE);
 
 	if (!game_engine)
 	{
@@ -2470,7 +2470,7 @@ void game_show_score_you_ally_enemy(
 	struct player_datum *other_player;
 	struct player_datum *player = player_get(player_index);
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 2842, NONE != player_index);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(2712, 2842), NONE != player_index);
 
 	data_iterator_new(&iterator, player_data);
 
@@ -2704,7 +2704,7 @@ long game_engine_player_get_team_index(
 {
 	long team_index = 1;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 3089, game_engine);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(2959, 3089), game_engine);
 
 	if (game_engine->game_engine_player_get_team_index)
 	{
@@ -3141,7 +3141,7 @@ void game_engine_nonplayer_post_rasterize(
 			break;
 		}
 		default:
-			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", 3643);
+			match_unreachable("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(3509, 3643));
 			break;
 		}
 	}
@@ -3297,13 +3297,13 @@ static boolean nearby_vehicle(
 	{
 		struct object_datum *object = object_get(object_indices[object_index]);
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 3817, object);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(3683, 3817), object);
 
 		if (object->object.type == _object_type_vehicle)
 		{
 			struct vehicle_datum *vehicle = vehicle_get(object_indices[object_index]);
 
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 3822, vehicle);
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(3688, 3822), vehicle);
 
 			if (vehicle)
 			{
@@ -3397,7 +3397,7 @@ boolean game_engine_picking_up(
 				allow_pick_up = game_engine->weapon_pickup(item_index, player_index);
 			}
 
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 3928, !allow_pick_up || !TEST_FLAG(weapon->weapon.flags, _weapon_must_be_readied_bit) || !unit_has_weapon_with_flag(unit_index, _weapon_must_be_readied_bit));
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(3794, 3928), !allow_pick_up || !TEST_FLAG(weapon->weapon.flags, _weapon_must_be_readied_bit) || !unit_has_weapon_with_flag(unit_index, _weapon_must_be_readied_bit));
 		}
 	}
 
@@ -3517,7 +3517,7 @@ boolean game_engine_get_goal_in_use(
 real_point3d game_engine_get_goal_position(
 	short index)
 {
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 4066, global_goal[index].in_use);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(3932, 4066), global_goal[index].in_use);
 
 	return global_goal[index].position;
 }
@@ -4210,7 +4210,7 @@ wchar_t *get_place_name(
 	wchar_t *string;
 	long lookup_index;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 4886, place.place < maximum_places);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(4751, 4886), place.place < maximum_places);
 
 	if (TEST_FLAG(place.flags, _place_two_groups) && TEST_FLAG(place.flags, _place_tied))
 	{
@@ -4238,7 +4238,7 @@ wchar_t *get_place_name(
 		}
 	}
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 4913, NONE != lookup_index);
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(4778, 4913), NONE != lookup_index);
 
 	multiplayer_game_text_get_string(string, lookup_index + _string_first_place);
 
@@ -4316,7 +4316,7 @@ struct game_engine_place game_engine_get_place(
 		}
 	}
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", 4983, (!all_tied || (tied)) || (1 == group_count));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(4847, 4983), (!all_tied || (tied)) || (1 == group_count));
 
 	all_tied &= tied;
 	SET_FLAG(place.flags, _place_team, get_score_type == _get_score_team);

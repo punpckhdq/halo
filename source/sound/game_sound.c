@@ -87,7 +87,7 @@ void game_sound_clear(
 
 		if (definition->runtime_scripting_sound_index == looping_sound_index)
 		{
-			match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 176, TEST_FLAG(sound->flags, _game_looping_sound_scripted_bit));
+			match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(175, 176), TEST_FLAG(sound->flags, _game_looping_sound_scripted_bit));
 			definition->runtime_scripting_sound_index = NONE;
 		}
 		else if (definition->runtime_scripting_sound_index != NONE)
@@ -146,7 +146,7 @@ long game_looping_sound_new(
 {
 	long looping_sound_index = NONE;
 
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 240, marker_name);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(239, 240), marker_name);
 
 	if (definition_index != NONE)
 	{
@@ -184,8 +184,8 @@ void game_looping_sound_delete(
 	struct game_looping_sound_datum *sound = game_looping_sound_get(looping_sound_index);
 	struct looping_sound_definition *definition = looping_sound_definition_get(sound->definition_index);
 
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 281, definition->runtime_scripting_sound_index!=looping_sound_index);
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 282, definition->runtime_scripting_sound_index==NONE || game_looping_sound_get(definition->runtime_scripting_sound_index));
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(280, 281), definition->runtime_scripting_sound_index!=looping_sound_index);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(281, 282), definition->runtime_scripting_sound_index==NONE || game_looping_sound_get(definition->runtime_scripting_sound_index));
 
 	datum_delete(game_looping_sound_data, looping_sound_index);
 
@@ -199,8 +199,8 @@ long unattached_impulse_sound_new(
 {
 	struct sound_source source;
 
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 329, location);
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 330, scale>=0.f && scale<=1.f);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(328, 329), location);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(329, 330), scale>=0.f && scale<=1.f);
 
 	source.location = *location;
 	source.scale = scale;
@@ -216,7 +216,7 @@ long unspatialized_impulse_sound_new(
 {
 	struct sound_source source;
 
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 346, scale>=0.f && scale<=1.f);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(345, 346), scale>=0.f && scale<=1.f);
 
 	source.spatialization_mode = _sound_spatialization_mode_none;
 	source.scale = scale;
@@ -390,7 +390,7 @@ static void update_potentially_audible_looping_sound(
 			real_vector3d unused_velocity;
 			real_matrix4x3 *matrix = object_get_node_matrix(sound->object_index, sound->attachment.node_index);
 
-			match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 619, location);
+			match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(617, 619), location);
 			matrix4x3_transform_point(matrix, &sound->attachment.position, &source.location.position);
 			matrix4x3_transform_normal(matrix, &sound->attachment.forward, &source.location.forward);
 			object_get_velocities(sound->object_index, &source.location.translational_velocity, &unused_velocity);
@@ -420,7 +420,7 @@ static void update_potentially_audible_looping_sound(
 
 			if (sound_refresh_looping(sound->definition_index, looping_sound_index, &source, refresh_state, TEST_FLAG(sound->flags, _game_looping_sound_alternate_bit), 0.f))
 			{
-				match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 657, TEST_FLAG(definition->flags, _looping_sound_fake_impulse_sound_bit));
+				match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(655, 657), TEST_FLAG(definition->flags, _looping_sound_fake_impulse_sound_bit));
 				if (TEST_FLAG(sound->flags, _game_looping_sound_unattached_bit))
 				{
 					if (definition->runtime_scripting_sound_index == looping_sound_index)
@@ -469,8 +469,8 @@ boolean track_object_impulse_sound(
 {
 	struct object_datum *object = object_try_and_get(object_index);
 
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 794, attachment_data);
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 795, source);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(792, 794), attachment_data);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(793, 795), source);
 
 	if (object)
 	{
@@ -541,7 +541,7 @@ static void compute_combined_pas(
 static boolean location_potentially_audible(
 	struct location const *location)
 {
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 870, location->cluster_index>=NONE && location->cluster_index<global_structure_bsp_get()->clusters.count);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(868, 870), location->cluster_index>=NONE && location->cluster_index<global_structure_bsp_get()->clusters.count);
 
 	return location->cluster_index != NONE && BIT_VECTOR_TEST_FLAG(combined_pas, location->cluster_index);
 }
@@ -634,8 +634,8 @@ long object_impulse_sound_new(
 	struct sound_attachment_data attachment_data;
 	long sound_index = NONE;
 
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 301, position && forward);
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 302, scale>=0.f && scale<=1.f);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(300, 301), position && forward);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(301, 302), scale>=0.f && scale<=1.f);
 
 	source.spatialization_mode = _sound_spatialization_mode_absolute;
 	source.gain = 1.f;
@@ -787,11 +787,11 @@ void compute_sound_obstruction(
 {
 	struct observer_result const *camera = observer_get_camera(local_player_index);
 
-	match_collision_log_begin_user("c:\\halo\\SOURCE\\sound\\game_sound.c", 882, _collision_user_sounds);
+	match_collision_log_begin_user("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(880, 882), _collision_user_sounds);
 
 	source->obstruction = 0.6f;
 	source->occlusion = 1.f;
-	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 887, source->spatialization_mode==_sound_spatialization_mode_absolute);
+	match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(885, 887), source->spatialization_mode==_sound_spatialization_mode_absolute);
 
 	if (source->location.game_location.cluster_index != NONE && camera->location.cluster_index != NONE)
 	{
@@ -824,7 +824,7 @@ void compute_sound_obstruction(
 		}
 	}
 
-	match_collision_log_end_user("c:\\halo\\SOURCE\\sound\\game_sound.c", 926);
+	match_collision_log_end_user("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(924, 926));
 
 	return;
 }
@@ -839,7 +839,7 @@ void scripted_looping_sound_start(
 		struct looping_sound_definition *definition = looping_sound_definition_get(definition_index);
 
 		scripted_looping_sound_stop(definition_index);
-		match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", 495, definition->runtime_scripting_sound_index==NONE);
+		match_assert("c:\\halo\\SOURCE\\sound\\game_sound.c", MATCH_LINE_NTSC(493, 495), definition->runtime_scripting_sound_index==NONE);
 
 		if (TEST_FLAG(definition->flags, _looping_sound_stops_music_bit))
 		{

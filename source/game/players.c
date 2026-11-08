@@ -439,7 +439,7 @@ static void machine_add_player(
 		}
 	}
 
-	match_vassert("c:\\halo\\SOURCE\\game\\players.c", 240, index != MAXIMUM_NUMBER_OF_LOCAL_PLAYERS, "failed to create a player");
+	match_vassert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(239, 240), index != MAXIMUM_NUMBER_OF_LOCAL_PLAYERS, "failed to create a player");
 
 	return;
 }
@@ -510,7 +510,7 @@ long player_new(
 		player_index = datum_new_at_index(player_data, player_index);
 	}
 
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 309, ((local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)) || (local_player_index==NONE));
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(308, 309), ((local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)) || (local_player_index==NONE));
 
 	if (player_index != NONE)
 	{
@@ -775,19 +775,19 @@ void players_update_before_game(
 			short action_index = (short)iterator.index;
 			struct player_action *action = &actions[action_index];
 
-			match_assert("c:\\halo\\SOURCE\\game\\players.c", 598, action_index>=0 && action_index<NETWORK_GAME_MAXIMUM_PLAYER_COUNT);
+			match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(597, 598), action_index>=0 && action_index<NETWORK_GAME_MAXIMUM_PLAYER_COUNT);
 
 
 
 
-			match_assert_valid_real("c:\\halo\\SOURCE\\game\\players.c", 603, action->desired_facing.pitch);
-			match_assert_valid_real("c:\\halo\\SOURCE\\game\\players.c", 604, action->desired_facing.yaw);
-			match_assert_valid_real_vector2d("c:\\halo\\SOURCE\\game\\players.c", 605, &action->throttle);
-			match_assert_valid_real("c:\\halo\\SOURCE\\game\\players.c", 606, action->primary_trigger);
+			match_assert_valid_real("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(602, 603), action->desired_facing.pitch);
+			match_assert_valid_real("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(603, 604), action->desired_facing.yaw);
+			match_assert_valid_real_vector2d("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(604, 605), &action->throttle);
+			match_assert_valid_real("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(605, 606), action->primary_trigger);
 
-			match_assert("c:\\halo\\SOURCE\\game\\players.c", 608, (NONE == action->desired_weapon_index) || ((action->desired_weapon_index >= 0) && (action->desired_weapon_index <= MAXIMUM_WEAPONS_PER_UNIT)));
-			match_assert("c:\\halo\\SOURCE\\game\\players.c", 609, (NONE == action->desired_grenade_index) || ((action->desired_grenade_index >= 0) && (action->desired_grenade_index <= NUMBER_OF_UNIT_GRENADE_TYPES)));
-			match_assert("c:\\halo\\SOURCE\\game\\players.c", 610, (NONE == action->desired_zoom_level) || ((action->desired_zoom_level >= 0)));
+			match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(607, 608), (NONE == action->desired_weapon_index) || ((action->desired_weapon_index >= 0) && (action->desired_weapon_index <= MAXIMUM_WEAPONS_PER_UNIT)));
+			match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(608, 609), (NONE == action->desired_grenade_index) || ((action->desired_grenade_index >= 0) && (action->desired_grenade_index <= NUMBER_OF_UNIT_GRENADE_TYPES)));
+			match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(609, 610), (NONE == action->desired_zoom_level) || ((action->desired_zoom_level >= 0)));
 
 			if (player->unit_index == NONE && !game_in_editor())
 			{
@@ -878,9 +878,9 @@ void players_update_before_game(
 					control_data.grenade_index = action->desired_grenade_index;
 					control_data.zoom_level = action->desired_zoom_level;
 					control_data.aiming_speed = 0;
-					match_assert("c:\\halo\\SOURCE\\game\\players.c", 739, (NONE == control_data.weapon_index) || ((control_data.weapon_index >= 0) && (control_data.weapon_index <= MAXIMUM_WEAPONS_PER_UNIT)));
-					match_assert("c:\\halo\\SOURCE\\game\\players.c", 740, (NONE == control_data.grenade_index) || ((control_data.grenade_index >= 0) && (control_data.grenade_index <= NUMBER_OF_UNIT_GRENADE_TYPES)));
-					match_assert("c:\\halo\\SOURCE\\game\\players.c", 741, (NONE == control_data.zoom_level) || ((control_data.zoom_level >= 0)));
+					match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(738, 739), (NONE == control_data.weapon_index) || ((control_data.weapon_index >= 0) && (control_data.weapon_index <= MAXIMUM_WEAPONS_PER_UNIT)));
+					match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(739, 740), (NONE == control_data.grenade_index) || ((control_data.grenade_index >= 0) && (control_data.grenade_index <= NUMBER_OF_UNIT_GRENADE_TYPES)));
+					match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(740, 741), (NONE == control_data.zoom_level) || ((control_data.zoom_level >= 0)));
 					unit_control(player->unit_index, &control_data);
 				}
 				else if (unit->unit.swarm_actor_index == NONE && unit->unit.actor_index == NONE)
@@ -909,7 +909,7 @@ void players_update_before_game(
 	}
 	else
 	{
-		match_halt("c:\\halo\\SOURCE\\game\\players.c", 779);
+		match_halt("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(778, 779));
 	}
 
 	profile_exit(players_update_before_game_section);
@@ -1045,7 +1045,7 @@ void players_update_after_game(
 long local_player_get_player_index(
 	short local_player_index)
 {
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 943, local_player_index>=NONE && local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(939, 943), local_player_index>=NONE && local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
 
 	return local_player_index == NONE ? NONE : players_globals->local_player_indices[local_player_index];
 }
@@ -1054,7 +1054,7 @@ void local_player_set_player_index(
 	short local_player_index,
 	long player_index)
 {
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 952, local_player_index>=0 && local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(948, 952), local_player_index>=0 && local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
 
 	if (players_globals->local_player_indices[local_player_index] != NONE)
 	{
@@ -1155,7 +1155,7 @@ void players_set_local_player_unit(
 	long old_unit_index = player_control_get_unit_index(local_player_index);
 	struct player_datum *player;
 
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 1060, game_connection()==_game_connection_local);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1056, 1060), game_connection()==_game_connection_local);
 
 	if (old_unit_index != NONE)
 	{
@@ -1298,8 +1298,8 @@ static void player_teleport_on_bsp_switch(
 	long unit_index = player->unit_index;
 	struct biped_datum *biped = biped_try_and_get(unit_index);
 
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 1227, player_index!=NONE);
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 1228, position);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1223, 1227), player_index!=NONE);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1224, 1228), position);
 
 	if (biped)
 	{
@@ -1354,7 +1354,7 @@ static boolean player_teleport_internal(
 	struct biped_datum *biped = biped_get(unit_index);
 	boolean success = FALSE;
 
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 1275, source_unit_index==NONE || local_player_count()>1);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1271, 1275), source_unit_index==NONE || local_player_count()>1);
 
 	if (source_unit_index != NONE && object_get_ultimate_parent(source_unit_index) != source_unit_index)
 	{
@@ -1386,8 +1386,8 @@ static boolean player_teleport_internal(
 		best_adjustment_vector.k = 0.f;
 		radius = biped_definition_get(biped->definition_index)->biped.collision_radius;
 		scale = radius * 3.f + vehicle->object.bounding_sphere_radius;
-		match_assert("c:\\halo\\SOURCE\\game\\players.c", 1317, magnitude3d(&best_adjustment_vector));
-		match_assert("c:\\halo\\SOURCE\\game\\players.c", 1318, scale);
+		match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1313, 1317), magnitude3d(&best_adjustment_vector));
+		match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1314, 1318), scale);
 		negate_vector3d(&best_adjustment_vector, &best_adjustment_vector);
 		normalize3d(&best_adjustment_vector);
 		matrix4x3_from_point_and_vectors(&adjustment_matrix, &vehicle->object.bounding_sphere_center, &best_adjustment_vector, global_up3d);
@@ -1428,7 +1428,7 @@ static boolean player_teleport_internal(
 		struct scenario *scenario = global_scenario_get();
 		short trigger_index;
 
-		match_assert("c:\\halo\\SOURCE\\game\\players.c", 1386, player->unit_index!=NONE);
+		match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1382, 1386), player->unit_index!=NONE);
 
 		for (trigger_index = 0; trigger_index < scenario->bsp_switch_trigger_volumes.count; trigger_index++)
 		{
@@ -1481,7 +1481,7 @@ static boolean player_teleport_internal(
 	else
 	{
 		error(_error_silent, "couldn't teleport player into a valid location");
-		match_assert("c:\\halo\\SOURCE\\game\\players.c", 1451, player->local_player_index!=NONE);
+		match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1447, 1451), player->local_player_index!=NONE);
 		player_pseudo_kill(player_index, source_unit_index);
 	}
 
@@ -1612,7 +1612,7 @@ void players_reconnect_to_structure_bsp(
 			}
 		}
 
-		match_vassert("c:\\halo\\SOURCE\\game\\players.c", 1598, found, "no players in the bsp");
+		match_vassert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1594, 1598), found, "no players in the bsp");
 
 		if (found)
 		{
@@ -1827,7 +1827,7 @@ static void player_spawn(
 	{
 		long weapon_index = unit_inventory_get_weapon(unit_index, unit_get(unit_index)->unit.current_weapon_index);
 
-		match_assert("c:\\halo\\SOURCE\\game\\players.c", 1850, player->local_player_index!=NONE);
+		match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(1846, 1850), player->local_player_index!=NONE);
 
 		object_activate(unit_index);
 		object_set_visibility(unit_index, TRUE);
@@ -2055,12 +2055,12 @@ static void player_examine_nearby_vehicle(
 				switch (seat_result)
 				{
 				case _unit_nearby_seat_result_empty:
-					match_assert("c:\\halo\\SOURCE\\game\\players.c", 2108, seat_index != NONE);
+					match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(2104, 2108), seat_index != NONE);
 					player_set_action_result(player_index, _player_action_result_enter_vehicle, vehicle_index, seat_index);
 					break;
 
 				case _unit_nearby_seat_result_occupied_by_friend:
-					match_assert("c:\\halo\\SOURCE\\game\\players.c", 2113, seat_index != NONE);
+					match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(2109, 2113), seat_index != NONE);
 					player_set_action_result(player_index, _player_action_result_evict_from_vehicle, vehicle_index, seat_index);
 					break;
 				}
@@ -2531,7 +2531,7 @@ static void player_handle_powerup_equipment(
 				player_powerup_type = _player_powerup_full_spectrum_vision;
 				break;
 			default:
-				match_halt("c:\\halo\\SOURCE\\game\\players.c", 2763);
+				match_halt("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(2759, 2763));
 			}
 
 			picked_up = player_handle_powerup(player_index, player_powerup_type, duration);
@@ -2566,7 +2566,7 @@ boolean player_handle_powerup(
 	struct player_datum *player = player_get(player_index);
 	boolean handled = FALSE;
 
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 2798, powerup_type>=0 && powerup_type<NUMBER_OF_PLAYER_POWERUPS);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(2794, 2798), powerup_type>=0 && powerup_type<NUMBER_OF_PLAYER_POWERUPS);
 
 	if (powerup_type == _player_powerup_active_camouflage)
 	{
@@ -2601,7 +2601,7 @@ void player_handle_powerup_minor(
 {
 	struct player_datum *player = player_get(player_index);
 
-	match_assert("c:\\halo\\SOURCE\\game\\players.c", 2841, powerup_type>=0 && powerup_type<NUMBER_OF_PLAYER_POWERUPS);
+	match_assert("c:\\halo\\SOURCE\\game\\players.c", MATCH_LINE_NTSC(2837, 2841), powerup_type>=0 && powerup_type<NUMBER_OF_PLAYER_POWERUPS);
 
 	if (player->powerup_durations[powerup_type] == 0)
 	{

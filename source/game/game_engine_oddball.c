@@ -276,7 +276,7 @@ static real_point3d find_position_for_ball(
 		if (!spawn_count)
 		{
 			error(_error_silent, "### failed to find any suitable netgame flag to create the ball");
-			match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", 173, 0 && "this map was not correctly setup for oddball");
+			match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", MATCH_LINE_NTSC(172, 173), 0 && "this map was not correctly setup for oddball");
 		}
 		else
 		{
@@ -671,7 +671,7 @@ static void oddball_engine_weapon_update(
 	real vertical_offset = 0.f;
 	real_point3d position;
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", 595, weapon_is_flag(weapon_index));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", MATCH_LINE_NTSC(594, 595), weapon_is_flag(weapon_index));
 
 	item_get_position_even_if_in_inventory(weapon_index, &position);
 	game_engine_set_goal_position(weapon->object.owner_team_index, &position, vertical_offset, "ball_blue", NONE, NONE, oddball_globals.current_ball_owner[weapon->object.owner_team_index]);
@@ -808,7 +808,7 @@ static void oddball_engine_player_killed_player(
 		long capture_index = NONE;
 		long ball_index;
 
-		match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", 755, dead_player_index != NONE);
+		match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", MATCH_LINE_NTSC(754, 755), dead_player_index != NONE);
 
 		if (killing_player_index != NONE && !friendly_fire)
 		{
@@ -853,7 +853,7 @@ static void oddball_engine_player_killed_player(
 					}
 				}
 
-				match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", 806, !ball_available() || (capture_index != NONE));
+				match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", MATCH_LINE_NTSC(805, 806), !ball_available() || (capture_index != NONE));
 
 				if (capture_index != NONE)
 				{
@@ -967,7 +967,7 @@ static boolean oddball_weapon_pickup(
 	boolean result = TRUE;
 	struct weapon_datum *weapon = weapon_get(weapon_index);
 
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", 942, weapon_is_flag(weapon_index));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", MATCH_LINE_NTSC(922, 942), weapon_is_flag(weapon_index));
 
 	if (oddball_ball_transfer_by_killing())
 	{
@@ -994,7 +994,7 @@ static boolean oddball_weapon_pickup(
 static void oddball_weapon_drop(
 	long weapon_index)
 {
-	match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", 968, weapon_is_flag(weapon_index));
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine_oddball.c", MATCH_LINE_NTSC(948, 968), weapon_is_flag(weapon_index));
 
 	return;
 }

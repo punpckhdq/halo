@@ -842,7 +842,7 @@ boolean player0_joystick_set_is_normal(
 static void generate_default_player_profile(
 	struct player_profile *profile)
 {
-	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", 873, profile);
+	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", MATCH_LINE_NTSC(869, 873), profile);
 
 	memset(profile, 0, sizeof(*profile));
 	profile->primary_color_index = NONE;
@@ -862,7 +862,7 @@ static void set_local_player_controls_from_player_profile(
 	real const pitch_rate[MAXIMUM_LOOK_SENSITIVITY_SETTINGS] = { 40.f, 50.f, 60.f, 70.f, 80.f, 90.f, 100.f, 110.f, 120.f, 130.f };
 	real const yaw_rate[MAXIMUM_LOOK_SENSITIVITY_SETTINGS] = { 80.f, 100.f, 120.f, 140.f, 160.f, 180.f, 200.f, 220.f, 240.f, 260.f };
 
-	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", 918, (local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS));
+	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", MATCH_LINE_NTSC(914, 918), (local_player_index>=0) && (local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS));
 
 	controller_settings = &player_ui_globals.player_data[local_player_index].profile.controller_settings;
 	pitch_index = PIN(controller_settings->look_sensitivity - 1, 0, MAXIMUM_LOOK_SENSITIVITY_SETTINGS - 1);

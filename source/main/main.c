@@ -2312,7 +2312,7 @@ boolean main_taking_screenshot(
 void main_movie_start(
 	real frames_per_second)
 {
-	match_assert("c:\\halo\\SOURCE\\main\\main.c", 2715, main_globals.movie==NULL);
+	match_assert("c:\\halo\\SOURCE\\main\\main.c", MATCH_LINE_NTSC(2667, 2715), main_globals.movie==NULL);
 
 	main_globals.movie = bitmap_2d_new(RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH, RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT, 0, _bitmap_format_x8r8g8b8);
 

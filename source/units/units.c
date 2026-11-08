@@ -1917,7 +1917,7 @@ char const *base_seat_labels[NUMBER_OF_UNIT_BASE_SEATS] = {"asleep", "alert", "s
 static char const *base_seat_label_get(
 	short base_seat_index)
 {
-	match_assert("c:\\halo\\SOURCE\\units\\units.c", 8214, base_seat_index>=0 && base_seat_index<NUMBER_OF_UNIT_BASE_SEATS);
+	match_assert("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8207, 8214), base_seat_index>=0 && base_seat_index<NUMBER_OF_UNIT_BASE_SEATS);
 	return base_seat_labels[base_seat_index];
 }
 
@@ -1944,7 +1944,7 @@ static char const *base_weapon_label_get(
 {
 	char const *base_weapon_labels[NUMBER_OF_UNIT_BASE_WEAPONS] = {"unarmed"};
 
-	match_assert("c:\\halo\\SOURCE\\units\\units.c", 8266, base_weapon_index>=0 && base_weapon_index<NUMBER_OF_UNIT_BASE_WEAPONS);
+	match_assert("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8259, 8266), base_weapon_index>=0 && base_weapon_index<NUMBER_OF_UNIT_BASE_WEAPONS);
 
 	return base_weapon_labels[base_weapon_index];
 }
@@ -2615,7 +2615,7 @@ static char const *unit_get_seat_label(
 	if (unit->object.parent_object_index==NONE || unit->unit.parent_seat_index==NONE)
 	{
 		short base_seat_index = unit->unit.animation.base_seat_index;
-		match_assert("c:\\halo\\SOURCE\\units\\units.c", 8214, base_seat_index>=0 && base_seat_index<NUMBER_OF_UNIT_BASE_SEATS);
+		match_assert("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8207, 8214), base_seat_index>=0 && base_seat_index<NUMBER_OF_UNIT_BASE_SEATS);
 		result = base_seat_labels[base_seat_index];
 	}
 	else
@@ -2636,7 +2636,7 @@ static long unit_get_weapon(
 
 	if (index!=NONE)
 	{
-		match_assert("c:\\halo\\SOURCE\\units\\units.c", 8371, index>=0 && index<MAXIMUM_WEAPONS_PER_UNIT);
+		match_assert("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8364, 8371), index>=0 && index<MAXIMUM_WEAPONS_PER_UNIT);
 		result = unit->unit.weapon_object_indices[index];
 	}
 
@@ -2662,7 +2662,7 @@ static void unit_drop_item(
 	}
 	else
 	{
-		match_assert("c:\\halo\\SOURCE\\units\\units.c", 8396, item->object.parent_object_index==unit_index)
+		match_assert("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8389, 8396), item->object.parent_object_index==unit_index)
 	}
 
 	item_in_unit_inventory(item_index, NONE);
@@ -2718,7 +2718,7 @@ static void unit_cause_continuous_melee_damage(
 
 		if (unit->unit.melee_continuous_damage_effect_timer==0)
 		{
-			match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\units.c", 8941, _collision_user_melee);
+			match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8934, 8941), _collision_user_melee);
 
 			if (collision_model_instance_new(&instance, unit->object.parent_object_index))
 			{
@@ -2745,7 +2745,7 @@ static void unit_cause_continuous_melee_damage(
 				}
 			}
 
-			match_collision_log_end_user("c:\\halo\\SOURCE\\units\\units.c", 8965);
+			match_collision_log_end_user("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8958, 8965));
 		}
 		
 		damage_data_new(&damage_data, unit_definition->unit.melee_damage.index);
@@ -2930,7 +2930,7 @@ static void unit_running_blind(
 		actor_controlled = TRUE;
 	}
 
-	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\units.c", 9541, run_vector);
+	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(9534, 9541), run_vector);
 
 	{
 		real angular_acceleration_this_tick;
@@ -2986,7 +2986,7 @@ static void unit_running_blind(
 	
 	rotate_vector_about_axis(run_vector, global_up3d, sine(unit->unit.run_blindly_angle), cosine(unit->unit.run_blindly_angle));
 
-	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\units.c", 9612, run_vector)
+	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(9605, 9612), run_vector)
 
 	return;
 }

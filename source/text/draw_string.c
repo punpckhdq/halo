@@ -363,8 +363,8 @@ void draw_string(
 	short column_line_index = 0;
 	short maximum_column_line_index = 0;
 
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 648, bounds);
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 649, string);
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(639, 648), bounds);
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(640, 649), string);
 
 	parse_string_new(&parse_state, string, font_drawing_globals.current_font_index, font_drawing_globals.current_style, font_drawing_globals.current_justification, &font_drawing_globals.current_color);
 
@@ -382,7 +382,7 @@ void draw_string(
 
 		if (font_drawing_globals.tab_stop_count > 0)
 		{
-			match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 681, tab_stop_index>=0 && tab_stop_index<=font_drawing_globals.tab_stop_count);
+			match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(672, 681), tab_stop_index>=0 && tab_stop_index<=font_drawing_globals.tab_stop_count);
 
 			if (tab_stop_index)
 			{
@@ -507,7 +507,7 @@ void draw_string(
 			line_index += maximum_column_line_index + 1;
 			break;
 		default:
-			match_vassert("c:\\halo\\SOURCE\\text\\draw_string.c", 817, FALSE, NULL);
+			match_vassert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(808, 817), FALSE, NULL);
 		}
 	}
 	while (parse_state.result != _parsed_end_of_string);
@@ -537,8 +537,8 @@ void draw_unicode_string(
 	short column_line_index = 0;
 	short maximum_column_line_index = 0;
 
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 848, bounds);
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 849, string);
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(839, 848), bounds);
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(840, 849), string);
 
 	parse_string_new(&parse_state, (char *)string, font_drawing_globals.current_font_index, font_drawing_globals.current_style, font_drawing_globals.current_justification, &font_drawing_globals.current_color);
 
@@ -556,7 +556,7 @@ void draw_unicode_string(
 
 		if (font_drawing_globals.tab_stop_count > 0)
 		{
-			match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 881, tab_stop_index>=0 && tab_stop_index<=font_drawing_globals.tab_stop_count);
+			match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(872, 881), tab_stop_index>=0 && tab_stop_index<=font_drawing_globals.tab_stop_count);
 
 			if (tab_stop_index)
 			{
@@ -681,7 +681,7 @@ void draw_unicode_string(
 			line_index += maximum_column_line_index + 1;
 			break;
 		default:
-			match_vassert("c:\\halo\\SOURCE\\text\\draw_string.c", 1017, FALSE, NULL);
+			match_vassert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(1008, 1017), FALSE, NULL);
 		}
 	}
 	while (parse_state.result != _parsed_end_of_string);
@@ -801,8 +801,8 @@ static void bitmap_draw_character(
 		byte *source = character_pixels + x + y * character->bitmap_width;
 		short i;
 
-		match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 495, y0>=0 && y0<=draw_character_software_globals.bitmap->height);
-		match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 496, x0>=0 && x0+dx<=draw_character_software_globals.bitmap->width);
+		match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(486, 495), y0>=0 && y0<=draw_character_software_globals.bitmap->height);
+		match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(487, 496), x0>=0 && x0+dx<=draw_character_software_globals.bitmap->width);
 
 		switch (format)
 		{
@@ -864,7 +864,7 @@ static void bitmap_draw_character(
 			}
 			break;
 		default:
-			match_vassert("c:\\halo\\SOURCE\\text\\draw_string.c", 565, FALSE, "### ERROR unsupported bitmap format");
+			match_vassert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(556, 565), FALSE, "### ERROR unsupported bitmap format");
 		}
 
 		y++;
@@ -880,7 +880,7 @@ static struct font_header *styled_font_get(
 {
 	long font_index;
 
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 1039, style==_text_style_plain || (style>=0 && style<NUMBER_OF_TEXT_STYLES));
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(1030, 1039), style==_text_style_plain || (style>=0 && style<NUMBER_OF_TEXT_STYLES));
 
 	if (style == _text_style_plain)
 	{
@@ -907,8 +907,8 @@ static void parse_string_new(
 	short justification,
 	real_argb_color const *color)
 {
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 1054, style==_text_style_plain || (style>=0 && style<NUMBER_OF_TEXT_STYLES));
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 1055, justification>=0 && justification<NUMBER_OF_TEXT_JUSTIFICATIONS);
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(1045, 1054), style==_text_style_plain || (style>=0 && style<NUMBER_OF_TEXT_STYLES));
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(1046, 1055), justification>=0 && justification<NUMBER_OF_TEXT_JUSTIFICATIONS);
 
 	state->base_font_index = base_font_index;
 	state->string = (byte *)string;
@@ -1020,7 +1020,7 @@ short parse_string(
 	}
 	while (result == _parsed_style_change || result == _parsed_color_change);
 
-	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", 1203, result!=NONE);
+	match_assert("c:\\halo\\SOURCE\\text\\draw_string.c", MATCH_LINE_NTSC(1194, 1203), result!=NONE);
 
 	state->character = character;
 	state->result = result;

@@ -342,7 +342,7 @@ void scripted_camera_update(
 	camera_script_globals.time_stop = MAX(0.f, camera_script_globals.time_stop - speed * controls->seconds_elapsed);
 	camera_script_globals.first_update = FALSE;
 
-	match_assert_valid_observer_command("c:\\halo\\SOURCE\\camera\\camera_scripting.c", 370, result);
+	match_assert_valid_observer_command("c:\\halo\\SOURCE\\camera\\camera_scripting.c", MATCH_LINE_NTSC(366, 370), result);
 
 	return;
 }

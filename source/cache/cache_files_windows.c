@@ -132,8 +132,8 @@ void cache_files_initialize(
 	void)
 {
 	cache_file_globals.open_map_file_index = NONE;
-	cache_file_globals.requests = (struct cache_request *)match_malloc("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 187, MAXIMUM_SIMULTANEOUS_CACHE_REQUESTS * sizeof(struct cache_request));
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 188, cache_file_globals.requests);
+	cache_file_globals.requests = (struct cache_request *)match_malloc("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(183, 187), MAXIMUM_SIMULTANEOUS_CACHE_REQUESTS * sizeof(struct cache_request));
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(184, 188), cache_file_globals.requests);
 	cache_file_windows_thread_create();
 	cache_files_zap_if_language_has_changed();
 	cached_map_files_open_all();
@@ -143,9 +143,9 @@ void cache_files_initialize(
 void cache_files_dispose(
 	void)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 207, cache_file_globals.open_map_file_index==NONE);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(201, 207), cache_file_globals.open_map_file_index==NONE);
 
-	match_free("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 209, cache_file_globals.requests);
+	match_free("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(203, 209), cache_file_globals.requests);
 
 	return;
 }
@@ -156,10 +156,10 @@ boolean cache_file_open(
 {
 	short map_file_index = cached_map_files_find_map(scenario_name);
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 220, scenario_name);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 221, header);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 223, cache_file_globals.open_map_file_index==NONE);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 224, map_file_index!=NONE);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(214, 220), scenario_name);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(215, 221), header);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(217, 223), cache_file_globals.open_map_file_index==NONE);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(218, 224), map_file_index!=NONE);
 	memset(cache_file_globals.requests, 0, MAXIMUM_SIMULTANEOUS_CACHE_REQUESTS * sizeof(struct cache_request));
 	cache_file_globals.open_map_file_index = map_file_index;
 	memcpy(header, &cached_map_file_get(map_file_index)->header, sizeof(*header));
@@ -190,10 +190,10 @@ short cache_file_read(
 	short request_index = cache_request_next_free_index();
 	struct cache_request *request = cache_request_get(request_index);
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 269, cache_file_globals.open_map_file_index!=NONE);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 272, buffer);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 273, completion_flag_reference);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 276, offset>=0);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(263, 269), cache_file_globals.open_map_file_index!=NONE);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(266, 272), buffer);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(267, 273), completion_flag_reference);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(270, 276), offset>=0);
 
 	if (size & (CACHE_FILE_READ_ALIGNMENT - 1))
 	{
@@ -306,12 +306,12 @@ static void cached_map_issue_async_request(
 	LPOVERLAPPED_COMPLETION_ROUTINE completion_routine,
 	volatile boolean *completion_flag)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 390, async_request_function);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 391, file!=INVALID_HANDLE_VALUE);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 392, overlapped);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 393, buffer);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 394, completion_flag);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 395, completion_routine);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(384, 390), async_request_function);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(385, 391), file!=INVALID_HANDLE_VALUE);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(386, 392), overlapped);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(387, 393), buffer);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(388, 394), completion_flag);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(389, 395), completion_routine);
 
 	memset(overlapped, 0, sizeof(*overlapped));
 	overlapped->Offset = offset;
@@ -326,7 +326,7 @@ static void cached_map_issue_async_request(
 
 		match_vassert(
 			"c:\\halo\\SOURCE\\cache\\cache_files_windows.c",
-			422,
+			MATCH_LINE_NTSC(416, 422),
 			error_code == ERROR_NOT_ENOUGH_MEMORY || error_code == ERROR_NO_SYSTEM_RESOURCES || error_code == ERROR_INVALID_USER_BUFFER,
 			csprintf(temporary, "Read/WriteFileEx() returned #%d", GetLastError()));
 		SleepEx(0, TRUE);
@@ -413,7 +413,7 @@ void tags_header_deregister_vertex_and_index_buffers(
 		IDirect3DVertexBuffer8 *vertex_buffer = &tags_header->vertex_buffers[vertex_buffer_index];
 
 		IDirect3DVertexBuffer8_BlockUntilNotBusy(vertex_buffer);
-		match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 523, !IDirect3DVertexBuffer8_IsBusy(vertex_buffer));
+		match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(517, 523), !IDirect3DVertexBuffer8_IsBusy(vertex_buffer));
 	}
 
 	for (index_buffer_index = 0; index_buffer_index < tags_header->index_buffer_count; index_buffer_index++)
@@ -421,7 +421,7 @@ void tags_header_deregister_vertex_and_index_buffers(
 		IDirect3DIndexBuffer8 *index_buffer = &tags_header->index_buffers[index_buffer_index];
 
 		IDirect3DIndexBuffer8_BlockUntilNotBusy(index_buffer);
-		match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 536, !IDirect3DIndexBuffer8_IsBusy(index_buffer));
+		match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(530, 536), !IDirect3DIndexBuffer8_IsBusy(index_buffer));
 	}
 
 	return;
@@ -476,7 +476,7 @@ void structure_bsp_header_deregister_vertex_buffers(
 static struct cache_request *cache_request_get(
 	short request_index)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 614, request_index>=0 && request_index<MAXIMUM_SIMULTANEOUS_CACHE_REQUESTS);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(608, 614), request_index>=0 && request_index<MAXIMUM_SIMULTANEOUS_CACHE_REQUESTS);
 
 	return &cache_file_globals.requests[request_index];
 }
@@ -511,7 +511,7 @@ static void cache_requests_flush(
 {
 	short request_index;
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 651, cache_file_globals.open_map_file_index!=NONE);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(645, 651), cache_file_globals.open_map_file_index!=NONE);
 
 	for (request_index = 0; request_index < MAXIMUM_SIMULTANEOUS_CACHE_REQUESTS; request_index++)
 	{
@@ -637,7 +637,7 @@ static void cached_map_files_open_all(
 				valid = write_complete && SetFilePointer(handle, size, NULL, FILE_BEGIN) != INVALID_SET_FILE_POINTER && SetEndOfFile(handle);
 				match_vassert(
 					"c:\\halo\\SOURCE\\cache\\cache_files_windows.c",
-					811,
+					MATCH_LINE_NTSC(761, 811),
 					valid,
 					csprintf(temporary, "setup for new cache file failed (#%d)", GetLastError()));
 			}
@@ -645,7 +645,7 @@ static void cached_map_files_open_all(
 
 		match_vassert(
 			"c:\\halo\\SOURCE\\cache\\cache_files_windows.c",
-			823,
+			MATCH_LINE_NTSC(773, 823),
 			handle != INVALID_HANDLE_VALUE,
 			csprintf(temporary, "couldn't open or create new cache file (#%d)", GetLastError()));
 
@@ -781,7 +781,7 @@ short cache_files_precache_map_status(
 {
 	short status;
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 984, cache_file_globals.copy_in_progress);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(933, 984), cache_file_globals.copy_in_progress);
 
 	switch (cache_copy_get_status(progress))
 	{
@@ -800,7 +800,7 @@ short cache_files_precache_map_status(
 		status = _cached_map_file_success;
 		break;
 	default:
-		match_halt("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1013);
+		match_halt("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(962, 1013));
 	}
 
 	return status;
@@ -809,7 +809,7 @@ short cache_files_precache_map_status(
 void cache_files_precache_map_queue_end(
 	void)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1022, cache_file_globals.copy_in_progress);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(971, 1022), cache_file_globals.copy_in_progress);
 	cache_copy_queue_end();
 
 	return;
@@ -818,7 +818,7 @@ void cache_files_precache_map_queue_end(
 void cache_files_precache_map_end(
 	void)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1031, cache_file_globals.copy_in_progress);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(980, 1031), cache_file_globals.copy_in_progress);
 	cache_copy_end();
 	texture_cache_return_memory();
 	cached_map_file_set_modification_date(cache_file_globals.copying_to_map_file_index);
@@ -875,7 +875,7 @@ static void cached_map_file_read_header(
 	{
 		match_vhalt(
 			"c:\\halo\\SOURCE\\cache\\cache_files_windows.c",
-			1121,
+			MATCH_LINE_NTSC(1070, 1121),
 			csprintf(temporary, "couldn't read header from cache file (#%d)", GetLastError()));
 		cached_map_file_invalidate(map_file_index);
 	}
@@ -924,7 +924,7 @@ static short cached_map_files_find_free_map(
 		last_map_file_index = _last_medium_cached_map_file;
 		break;
 	default:
-		match_halt("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1172);
+		match_halt("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1121, 1172));
 	}
 
 	for (map_file_index = first_map_file_index; map_file_index <= last_map_file_index; map_file_index++)
@@ -946,7 +946,7 @@ static short cached_map_files_find_free_map(
 		}
 	}
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1200, cache_file_globals.open_map_file_index!=best_map_file_index);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1149, 1200), cache_file_globals.open_map_file_index!=best_map_file_index);
 
 	return best_map_file_index;
 }
@@ -954,7 +954,7 @@ static short cached_map_files_find_free_map(
 static struct cached_map_file *cached_map_file_get(
 	short map_file_index)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1208, map_file_index>=0 && map_file_index<NUMBER_OF_CACHED_MAP_FILES);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1157, 1208), map_file_index>=0 && map_file_index<NUMBER_OF_CACHED_MAP_FILES);
 
 	return &cache_file_globals.cached_map_files[map_file_index];
 }
@@ -978,7 +978,7 @@ static long cached_map_file_get_size(
 {
 	long size;
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1232, map_file_index>=0 && map_file_index<NUMBER_OF_CACHED_MAP_FILES);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1181, 1232), map_file_index>=0 && map_file_index<NUMBER_OF_CACHED_MAP_FILES);
 
 	if (map_file_index <= _last_large_cached_map_file)
 	{
@@ -1009,7 +1009,7 @@ static void cache_file_windows_thread_create(
 	void)
 {
 	cache_file_globals.sleep_event = CreateEvent(NULL, FALSE, FALSE, NULL);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1253, cache_file_globals.sleep_event);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1202, 1253), cache_file_globals.sleep_event);
 	cache_file_globals.thread = CreateThread(
 		NULL,
 		CACHE_FILE_WINDOWS_THREAD_STACK_SIZE,
@@ -1017,7 +1017,7 @@ static void cache_file_windows_thread_create(
 		NULL,
 		0,
 		NULL);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1257, cache_file_globals.thread);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1206, 1257), cache_file_globals.thread);
 }
 
 static void cache_file_windows_thread_wake(
@@ -1058,7 +1058,7 @@ static unsigned long __stdcall cache_file_windows_thread_proc(
 			{
 				HANDLE file = cached_map_file_get_handle(cache_file_globals.open_map_file_index);
 
-				match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1327, !best_request->running);
+				match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1276, 1327), !best_request->running);
 				best_request->running = TRUE;
 				cached_map_issue_async_read(
 					file,
@@ -1083,9 +1083,9 @@ static void __stdcall cache_file_read_io_completion_routine(
 {
 	struct cache_request *finished_request = (struct cache_request *)overlapped;
 
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1387, error_code==ERROR_SUCCESS);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1388, bytes_transferred==finished_request->size);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1389, finished_request->overlapped.hEvent);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1336, 1387), error_code==ERROR_SUCCESS);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1337, 1388), bytes_transferred==finished_request->size);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1338, 1389), finished_request->overlapped.hEvent);
 	*(boolean *)finished_request->overlapped.hEvent = TRUE;
 	finished_request->pending = FALSE;
 	finished_request->running = FALSE;
@@ -1098,8 +1098,8 @@ static void __stdcall cache_file_blocking_io_completion_routine(
 	unsigned long bytes_transferred,
 	OVERLAPPED *overlapped)
 {
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1405, error_code==ERROR_SUCCESS);
-	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", 1406, overlapped->hEvent);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1354, 1405), error_code==ERROR_SUCCESS);
+	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(1355, 1406), overlapped->hEvent);
 	*(boolean *)overlapped->hEvent = TRUE;
 
 	return;

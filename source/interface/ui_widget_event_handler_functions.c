@@ -1364,7 +1364,7 @@ static boolean multiplayer_profiles_list_initialize(
 
 
 
-	profile_indices = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1390));
+	profile_indices = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(1390, 1390));
 	list_widget->parameters.list_parameters.list_items = profile_indices;
 
 	if (profile_indices)
@@ -1611,7 +1611,7 @@ static boolean player_profiles_list_initialize(
 
 
 
-	list_widget->parameters.list_parameters.list_items = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(1693));
+	list_widget->parameters.list_parameters.list_items = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(1693, 1693));
 
 	if (list_widget->parameters.list_parameters.list_items)
 	{
@@ -2695,7 +2695,7 @@ static boolean playlist_profile_initialize_name(
 
 	if (variant)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(2774));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(2774, 2774));
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -3480,7 +3480,7 @@ static boolean player_profile_color_picker_menu_initialize(
 
 
 
-	widget->parameters.list_parameters.list_items = ui_widget_realloc(widget->parameters.list_parameters.list_items, number_of_colors, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE(3581));
+	widget->parameters.list_parameters.list_items = ui_widget_realloc(widget->parameters.list_parameters.list_items, number_of_colors, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(3581, 3581));
 
 	if (widget->parameters.list_parameters.list_items)
 	{
