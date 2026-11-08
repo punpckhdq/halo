@@ -299,7 +299,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         outputs=dsp_image_header,
         rule="dsp_image",
         inputs=sln.baserom,
-        implicit=[dsp_image_script, symbols_json],
+        implicit=[dsp_image_script, sln.tools_dir / "baserom.py", symbols_json],
         variables={"symbols": symbols_json},
     )
     monk_tone_script = sln.tools_dir / "monk_tone.py"
@@ -314,7 +314,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         outputs=monk_tone_header,
         rule="monk_tone",
         inputs=sln.baserom,
-        implicit=[monk_tone_script, symbols_json],
+        implicit=[monk_tone_script, sln.tools_dir / "baserom.py", symbols_json],
         variables={"symbols": symbols_json},
     )
     n.newline()

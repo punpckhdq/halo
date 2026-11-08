@@ -4,6 +4,8 @@ import json
 import sys
 from pathlib import Path
 
+import baserom as baserom_image
+
 HEADER = (
     "/*\n"
     "PROGRESS_BAR_MONK_TONE.H\n"
@@ -26,13 +28,11 @@ def main() -> None:
     output = Path(sys.argv[3])
 
     with open(symbols_path, "r", encoding="utf-8") as f:
-        offsets = [s["file_offset"] for s in json.load(f) if s["name"] == SYMBOL_NAME]
-    if len(offsets) != 1:
-        sys.exit(f"{symbols_path}: expected one {SYMBOL_NAME}, found {len(offsets)}")
+        addresses = [s["address"] for s in json.load(f) if s["name"] == SYMBOL_NAME]
+    if len(addresses) != 1:
+        sys.exit(f"{symbols_path}: expected one {SYMBOL_NAME}, found {len(addresses)}")
 
-    with open(baserom, "rb") as f:
-        f.seek(offsets[0])
-        data = f.read(MONK_TONE_SIZE)
+    data = baserom_image.read(baserom, addresses[0], MONK_TONE_SIZE)
     if len(data) != MONK_TONE_SIZE:
         sys.exit(f"{baserom}: couldn't read the monk tone")
 
