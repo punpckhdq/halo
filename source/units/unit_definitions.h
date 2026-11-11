@@ -111,7 +111,7 @@ struct unit_camera_track
 
 struct unit_hud_reference
 {
-	struct tag_reference unit_hud_interface;
+	struct tag_reference hud;
 	long unused[8];
 };
 
@@ -216,8 +216,8 @@ struct unit_definition
 
 /* ---------- prototypes/UNIT_DEFINITIONS.C */
 
-long unit_definition_get_active_hud_index(struct unit_definition const *definition, boolean multiplayer);
-long unit_definition_get_seat_active_hud_index(struct unit_definition const *definition, short seat_index, boolean multiplayer);
+long unit_definition_get_active_hud_index(struct unit_definition const *unit_definition, boolean in_multiplayer);
+long unit_definition_get_seat_active_hud_index(struct unit_definition const *unit_definition, short seat_index, boolean in_multiplayer);
 
 /* ---------- globals */
 

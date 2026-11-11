@@ -33,9 +33,14 @@ void unit_scripting_set_maximum_vitality(
 	real body_vitality,
 	real shield_vitality)
 {
-	if (unit_index != NONE && !TEST_FLAG(object_get(unit_index)->object.damage_flags, _object_dead_bit))
+	if (unit_index != NONE)
 	{
-		object_initialize_vitality(unit_index, &body_vitality, &shield_vitality);
+		struct object_datum *object = object_get(unit_index);
+
+		if (!TEST_FLAG(object->object.damage_flags, _object_dead_bit))
+		{
+			object_initialize_vitality(unit_index, &body_vitality, &shield_vitality);
+		}
 	}
 
 	return;
@@ -49,11 +54,12 @@ void units_scripting_set_maximum_vitality(
 	long object_list_reference_index;
 	long unit_index;
 
-	for (unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
-		unit_index != NONE;
-		unit_index = object_list_get_next(object_list_index, &object_list_reference_index))
+	unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
+	while (unit_index != NONE)
 	{
 		unit_scripting_set_maximum_vitality(unit_index, body_vitality, shield_vitality);
+
+		unit_index = object_list_get_next(object_list_index, &object_list_reference_index);
 	}
 
 	return;
@@ -124,11 +130,12 @@ void units_scripting_set_current_vitality(
 	long object_list_reference_index;
 	long unit_index;
 
-	for (unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
-		unit_index != NONE;
-		unit_index = object_list_get_next(object_list_index, &object_list_reference_index))
+	unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
+	while (unit_index != NONE)
 	{
 		unit_scripting_set_current_vitality(unit_index, body_vitality, shield_vitality);
+
+		unit_index = object_list_get_next(object_list_index, &object_list_reference_index);
 	}
 
 	return;
@@ -202,9 +209,8 @@ void unit_scripting_impervious(
 	long object_list_reference_index;
 	long unit_index;
 
-	for (unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
-		unit_index != NONE;
-		unit_index = object_list_get_next(object_list_index, &object_list_reference_index))
+	unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
+	while (unit_index != NONE)
 	{
 		struct unit_datum *unit = unit_try_and_get(unit_index);
 
@@ -212,6 +218,8 @@ void unit_scripting_impervious(
 		{
 			SET_FLAG(unit->unit.flags, _unit_impervious_bit, impervious);
 		}
+
+		unit_index = object_list_get_next(object_list_index, &object_list_reference_index);
 	}
 
 	return;
@@ -227,14 +235,17 @@ boolean unit_scripting_start_user_animation_list(
 	long unit_index;
 	boolean success = TRUE;
 
-	for (unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
-		unit_index != NONE;
-		unit_index = object_list_get_next(object_list_index, &object_list_reference_index))
+	unit_index = object_list_get_first(object_list_index, &object_list_reference_index);
+	while (unit_index != NONE)
 	{
-		if (unit_try_and_get(unit_index))
+		struct unit_datum *unit = unit_try_and_get(unit_index);
+
+		if (unit)
 		{
 			success = success && unit_start_user_animation(unit_index, animation_graph_index, animation_name, interpolate);
 		}
+
+		unit_index = object_list_get_next(object_list_index, &object_list_reference_index);
 	}
 
 	return success;
@@ -262,8 +273,7 @@ boolean unit_scripting_has_weapon_readied(
 
 	if (unit_index != NONE && weapon_definition_index != NONE)
 	{
-		struct unit_datum *unit = unit_get(unit_index);
-		long weapon_index = unit_inventory_get_weapon(unit_index, unit->unit.current_weapon_index);
+		long weapon_index = unit_inventory_get_weapon(unit_index, unit_get(unit_index)->unit.current_weapon_index);
 
 		if (weapon_index != NONE)
 		{

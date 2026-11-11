@@ -33,9 +33,9 @@ enum
 
 /* ---------- prototypes */
 
-static boolean biped_limp_noodle_valid_joint_rotation(long biped_index, long node_index, real_matrix4x3 *node_matrices, real_point3d *current_world_pos, real_point3d *new_world_pos, long *moved_nodes_flags);
+static boolean biped_limp_noodle_valid_joint_rotation(long biped_index, int node_index, real_matrix4x3 *node_matrices, real_point3d *current_world_pos, real_point3d *new_world_pos, long *moved_nodes_flags);
 static void biped_limp_noodle_move_relax_and_constrain_positions(long biped_index, real_matrix4x3 *node_matrices);
-static void biped_limp_noodle_adjust_orientations(long biped_index, real_matrix4x3 *node_matrices, long node_count, real_point3d *last_positions);
+static void biped_limp_noodle_adjust_orientations(long biped_index, real_matrix4x3 *node_matrices, int node_count, real_point3d *last_positions);
 
 /* ---------- globals */
 
@@ -73,7 +73,7 @@ boolean biped_limp_noodle_relax_nodes_onto_environment(
 	return finished;
 }
 
-long biped_limp_noodle_get_max_relaxation_iterations(
+int biped_limp_noodle_get_max_relaxation_iterations(
 	long biped_index)
 {
 	return MAXIMUM_LIMP_NOODLE_RELAXATION_ITERATIONS;
@@ -81,7 +81,7 @@ long biped_limp_noodle_get_max_relaxation_iterations(
 
 static boolean biped_limp_noodle_valid_joint_rotation(
 	long biped_index,
-	long node_index,
+	int node_index,
 	real_matrix4x3 *node_matrices,
 	real_point3d *current_world_pos,
 	real_point3d *new_world_pos,
@@ -120,8 +120,8 @@ static boolean biped_limp_noodle_valid_joint_rotation(
 			real angle = arccosine(cosine);
 			real_matrix4x3 parent_inverse;
 			real_matrix4x3 parent_parent_inverse;
-			real_vector3d local_space_rotation_axis;
 			real_vector3d local_forward;
+			real_vector3d local_space_rotation_axis;
 
 			matrix4x3_inverse(&node_matrices[node->parent_node_index], &parent_inverse);
 			matrix4x3_inverse(&node_matrices[parent_node->parent_node_index], &parent_parent_inverse);
@@ -222,7 +222,7 @@ static void biped_limp_noodle_move_relax_and_constrain_positions(
 					short node_stack[MAXIMUM_NODES_PER_ANIMATION];
 					short stack_bottom = 0;
 					short stack_top = 1;
-					struct collision_plane collisions[10];
+					struct collision_plane collision[10];
 					real_point3d *node_position;
 					real_point3d *parent_position;
 					real_vector3d to_node;
@@ -236,8 +236,6 @@ static void biped_limp_noodle_move_relax_and_constrain_positions(
 
 						if (node_index)
 						{
-							struct collision_result collision;
-							real_point3d parent_sphere_edge;
 							struct model *model;
 							real desired_distance;
 							real distance;
@@ -252,47 +250,38 @@ static void biped_limp_noodle_move_relax_and_constrain_positions(
 								real_point3d new_pos;
 								real_vector3d new_pos_vec;
 
-								collision_move_point(node_position, &vel, &features, &new_pos, &new_pos_vec, 3, collisions);
+								collision_move_point(node_position, &vel, &features, &new_pos, &new_pos_vec, 3, collision);
 								if (realcmp(new_pos_vec.i, 0.f) && realcmp(new_pos_vec.j, 0.f))
 								{
 									biped_limp_noodle_valid_joint_rotation(biped_index, node_index, node_matrices, node_position, &new_pos, moved_nodes_flags);
 								}
 							}
 
-							vector_from_points3d(parent_position, node_position, &to_node);
-							point_from_line3d(parent_position, &to_node, -0.015f, &parent_sphere_edge);
-							scale_vector3d(&to_node, 1.03f, &to_node);
-
-							if (collision_test_vector(LIMP_NOODLE_COLLISION_FLAGS, &parent_sphere_edge, &to_node, biped_index, &collision))
 							{
-								boolean outside_geometry[2];
-								long outside_count;
+								struct collision_result collision;
+								real_point3d parent_sphere_edge;
 
-								outside_geometry[0] = collision_test_sphere(node_position, 0.03f, biped_index);
-								outside_geometry[1] = collision_test_sphere(parent_position, 0.03f, biped_index);
-								outside_count = outside_geometry[0] + outside_geometry[1];
+								vector_from_points3d(parent_position, node_position, &to_node);
+								point_from_line3d(parent_position, &to_node, -0.015f, &parent_sphere_edge);
+								scale_vector3d(&to_node, 1.03f, &to_node);
 
-								if (outside_count)
+								if (collision_test_vector(LIMP_NOODLE_COLLISION_FLAGS, &parent_sphere_edge, &to_node, biped_index, &collision))
 								{
-									real movement[2];
-									long point_index;
+									boolean outside_geometry[2];
+									long outside_count;
 
-									if (outside_count == 2)
+									outside_geometry[0] = collision_test_sphere(node_position, 0.03f, biped_index);
+									outside_geometry[1] = collision_test_sphere(parent_position, 0.03f, biped_index);
+									outside_count = outside_geometry[0] + outside_geometry[1];
+
+									if (outside_count)
 									{
-										for (point_index = 0; point_index < 2; point_index++)
+										real movement[2];
+										long point_index;
+
+										if (outside_count == 2)
 										{
-											movement[point_index] = vector_intersect_plane3d(!point_index ? node_position : parent_position, &collision.plane.n, &collision.plane);
-											if (movement[point_index] != 0.f)
-											{
-												movement[point_index] = node_radius * 2.5f + movement[point_index];
-											}
-										}
-									}
-									else
-									{
-										for (point_index = 0; point_index < 2; point_index++)
-										{
-											if (outside_geometry[point_index])
+											for (point_index = 0; point_index < 2; point_index++)
 											{
 												movement[point_index] = vector_intersect_plane3d(!point_index ? node_position : parent_position, &collision.plane.n, &collision.plane);
 												if (movement[point_index] != 0.f)
@@ -300,18 +289,32 @@ static void biped_limp_noodle_move_relax_and_constrain_positions(
 													movement[point_index] = node_radius * 2.5f + movement[point_index];
 												}
 											}
-											else
+										}
+										else
+										{
+											for (point_index = 0; point_index < 2; point_index++)
 											{
-												movement[point_index] = 0.f;
+												if (outside_geometry[point_index])
+												{
+													movement[point_index] = vector_intersect_plane3d(!point_index ? node_position : parent_position, &collision.plane.n, &collision.plane);
+													if (movement[point_index] != 0.f)
+													{
+														movement[point_index] = node_radius * 2.5f + movement[point_index];
+													}
+												}
+												else
+												{
+													movement[point_index] = 0.f;
+												}
 											}
 										}
-									}
 
-									for (point_index = 0; point_index < 2; point_index++)
-									{
-										if (!realcmp(movement[point_index], 0.f))
+										for (point_index = 0; point_index < 2; point_index++)
 										{
-											point_from_line3d(!point_index ? node_position : parent_position, &collision.plane.n, movement[point_index] * relaxation_fraction, !point_index ? node_position : parent_position);
+											if (!realcmp(movement[point_index], 0.f))
+											{
+												point_from_line3d(!point_index ? node_position : parent_position, &collision.plane.n, movement[point_index] * relaxation_fraction, !point_index ? node_position : parent_position);
+											}
 										}
 									}
 								}
@@ -333,16 +336,16 @@ static void biped_limp_noodle_move_relax_and_constrain_positions(
 										real half_scale = scale / 2.f;
 
 										scale_vector3d(&to_node, -half_scale, &vel);
-										collision_move_point(parent_position, &vel, &features, parent_position, &vel, 3, collisions);
+										collision_move_point(parent_position, &vel, &features, parent_position, &vel, 3, collision);
 										scale_vector3d(&to_node, half_scale, &vel);
-										collision_move_point(node_position, &vel, &features, node_position, &vel, 3, collisions);
+										collision_move_point(node_position, &vel, &features, node_position, &vel, 3, collision);
 									}
 									else
 									{
 										scale_vector3d(&to_node, scale, &vel);
 										if (!collision_test_sphere(node_position, node_radius, biped_index))
 										{
-											collision_move_point(node_position, &vel, &features, node_position, &vel, 3, collisions);
+											collision_move_point(node_position, &vel, &features, node_position, &vel, 3, collision);
 										}
 									}
 								}
@@ -426,7 +429,7 @@ void validate_real_vector3d_axes3(
 static void biped_limp_noodle_adjust_orientations(
 	long biped_index,
 	real_matrix4x3 *node_matrices,
-	long node_count,
+	int node_count,
 	real_point3d *last_positions)
 {
 	struct biped_datum *biped = biped_get(biped_index);

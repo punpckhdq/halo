@@ -20569,7 +20569,7 @@
 { "address": 2837364, "flags": 0, "name": "__real@3d8f5c29" },
 { "address": 2837368, "flags": 0, "name": "__real@3f83d70a" },
 { "address": 2837372, "flags": 0, "name": "__real@bd036d41" },
-{ "address": 2837376, "flags": 0, "name": "?fudge_vectors@?5??biped_fix_position@@9@9" },
+{ "address": 2837376, "flags": 0, "name": "?fudge_vectors@?4??biped_fix_position@@9@9" },
 { "address": 2837700, "flags": 0, "name": "??_C@_0N@HOJCMADM@biped_update?$AA@" },
 { "address": 2837720, "flags": 0, "name": "??_C@_0ED@IAGIKAMA@WARNING?3?5biped?5?$CFs?5?$CI?$CFs?$CJ?5is?5in?5a?5b@" },
 { "address": 2837788, "flags": 0, "name": "__real@c4fa0000" },

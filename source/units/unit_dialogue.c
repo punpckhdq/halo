@@ -107,12 +107,14 @@ short unit_test_speech(
 		{
 			match_assert("c:\\halo\\SOURCE\\units\\unit_dialogue.c", 144, (vocalization_type >= 0) && (vocalization_type < NUMBER_OF_VOCALIZATION_TYPES));
 			sound_definition_index = dialogue->vocalizations[vocalization_type].index;
-			if (!allow_recursive_lookup || sound_definition_index != NONE || AI_BEHAVIOR(force_vocalizations))
+			if (allow_recursive_lookup && sound_definition_index == NONE && !AI_BEHAVIOR(force_vocalizations))
+			{
+				vocalization_type = dialogue_vocalization_lookup[vocalization_type];
+			}
+			else
 			{
 				break;
 			}
-
-			vocalization_type = dialogue_vocalization_lookup[vocalization_type];
 		}
 	}
 
@@ -165,35 +167,35 @@ short unit_test_speech(
 				}
 				else
 				{
-					queue = unit->unit.speech.post_delay_timer + unit->unit.speech.sound_timer < (short)(queue_time * TICKS_PER_SECOND);
+					short queue_ticks = (short)(queue_time * TICKS_PER_SECOND);
+
+					queue = unit->unit.speech.post_delay_timer + unit->unit.speech.sound_timer < queue_ticks;
 				}
 
 				if (queue)
 				{
-					if (priority <= blocking_priority)
+					if (priority > blocking_priority)
 					{
-						if (priority <= unit->unit.speech.queued.priority)
+						queue = TRUE;
+					}
+					else if (priority > unit->unit.speech.queued.priority)
+					{
+						switch (current_priority)
 						{
-							queue = FALSE;
+						case _unit_speech_pain:
+						case _unit_speech_involuntary:
+							queue = TRUE;
+							break;
 						}
-						else
+
+						if (priority == _unit_speech_scripted)
 						{
-							switch (current_priority)
-							{
-							case _unit_speech_pain:
-							case _unit_speech_involuntary:
-								queue = TRUE;
-								break;
-							}
-							if (priority == _unit_speech_scripted)
-							{
-								queue = TRUE;
-							}
+							queue = TRUE;
 						}
 					}
 					else
 					{
-						queue = TRUE;
+						queue = FALSE;
 					}
 				}
 
@@ -236,7 +238,7 @@ void unit_speak(
 			unit->unit.speech.current = *speech_item;
 			if (play_type == _unit_play_speech_immediate_dequeue && unit->unit.speech.queued.priority > _unit_speech_none)
 			{
-				if (speech_item != &unit->unit.speech.queued)
+				if (unit->unit.speech.queued.priority > _unit_speech_none && speech_item != &unit->unit.speech.queued)
 				{
 					unit_lose_speech(unit_index, _unit_play_speech_queue, &unit->unit.speech.queued);
 				}
@@ -253,7 +255,9 @@ void unit_speak(
 
 			if (unit->unit.speech.current.sound_definition_index != NONE)
 			{
-				unit->unit.speech.sound_timer = (TICKS_PER_SECOND * sound_definition_get(unit->unit.speech.current.sound_definition_index)->runtime_maximum_play_time) / 1000;
+				struct sound_definition *sound = sound_definition_get(unit->unit.speech.current.sound_definition_index);
+
+				unit->unit.speech.sound_timer = (TICKS_PER_SECOND * sound->runtime_maximum_play_time) / 1000;
 			}
 			else
 			{
@@ -305,7 +309,9 @@ void unit_notify_impulse_sound(
 boolean unit_is_speaking(
 	long unit_index)
 {
-	return unit_get(unit_index)->unit.speech.current.priority > _unit_speech_none;
+	struct unit_datum *unit = unit_get(unit_index);
+
+	return unit->unit.speech.current.priority > _unit_speech_none;
 }
 
 boolean unit_make_damage_sound(
@@ -519,7 +525,7 @@ boolean unit_scream(
 				speech.pause_time = 7;
 				ai_communication_packet_new(&speech.ai);
 				unit_speak(unit_index, play_type, &speech);
-				return TRUE;
+				result = TRUE;
 			}
 		}
 	}
@@ -549,7 +555,6 @@ void unit_dialogue_update(
 		unit->unit.speech.damage_minor_timer--;
 	}
 
-	// DECOMP NOTE: This is authentic code, but looks like a bug and they probably meant to do 'major' here instead of minor 2x
 	if (unit->unit.speech.damage_minor_timer > 0)
 	{
 		unit->unit.speech.damage_minor_timer--;
@@ -664,13 +669,15 @@ void unit_dialogue_determine_variant(
 
 			if (variant->variant_number < 100)
 			{
-				if (variant_count >= NUMBEROF(available_variants))
+				if (variant_count < NUMBEROF(available_variants))
+				{
+					available_variants[variant_count++] = variant->variant_number;
+				}
+				else
 				{
 					error(_error_silent, "unit_dialogue_determine_variant overflowed variant array");
 					break;
 				}
-
-				available_variants[variant_count++] = variant->variant_number;
 			}
 		}
 
@@ -784,7 +791,7 @@ static void unit_dialogue_setup(
 	struct unit_definition *definition = unit_definition_get(unit->definition_index);
 	long dialogue_index = NONE;
 
-	if (unit->object.variant_number > 0)
+	if (dialogue_index == NONE && unit->object.variant_number > 0)
 	{
 		dialogue_index = unit_find_dialogue_variant(definition, unit->object.variant_number);
 	}
@@ -825,6 +832,7 @@ static long unit_find_dialogue_variant(
 
 	if (available_count > 0)
 	{
+		struct dialogue_variant_definition *variant;
 		short chosen_index;
 
 		if (available_count == 1)
@@ -836,7 +844,8 @@ static long unit_find_dialogue_variant(
 			chosen_index = available_indices[random_range(0, available_count)];
 		}
 
-		dialogue_index = TAG_BLOCK_GET_ELEMENT(&unit_definition->unit.dialogue_variants, chosen_index, struct dialogue_variant_definition)->dialogue_variant.index;
+		variant = TAG_BLOCK_GET_ELEMENT(&unit_definition->unit.dialogue_variants, chosen_index, struct dialogue_variant_definition);
+		dialogue_index = variant->dialogue_variant.index;
 		match_assert("c:\\halo\\SOURCE\\units\\unit_dialogue.c", 1032, dialogue_definition_get(dialogue_index));
 	}
 

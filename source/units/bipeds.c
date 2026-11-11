@@ -75,21 +75,6 @@ enum
 
 /* ---------- macros */
 
-#define match_assert_valid_real_vector3d_axes3(file, line, forward, left, up)		\
-match_vassert(																		\
-	file,																			\
-	line,																			\
-	valid_real_vector3d_axes3(forward, left, up),									\
-	csprintf(																		\
-		temporary,																	\
-		"%s, %s, %s: assert_valid_real_vector3d_axes3(%f, %f, %f / %f, %f, %f / %f, %f, %f)",\
-		#forward, #left, #up,														\
-		(*forward).i, (*forward).j, (*forward).k,									\
-		(*up).i, (*up).j, (*up).k,													\
-		(*left).i, (*left).j, (*left).k												\
-	)																				\
-)
-
 /* ---------- structures */
 
 struct biped_physics
@@ -159,7 +144,12 @@ static void biped_snap_facing(long biped_index);
 
 boolean rider_ejection = TRUE;
 
-static struct profile_section biped_update_section = {"biped_update", NONE, TRUE};
+static struct profile_section biped_update_section = /* fake name */
+{
+	"biped_update",
+	NONE,
+	TRUE
+};
 
 boolean debug_biped_physics = FALSE;
 boolean debug_biped_skip_update = FALSE;
@@ -392,7 +382,7 @@ boolean biped_update(
 					{
 						short reduction;
 
-						unit_animation_start_action(biped_index, 7);
+						unit_animation_start_action(biped_index, _unit_action_melee);
 						weapon_stop_reload(weapon_index);
 						first_person_weapon_message_from_unit(biped_index, _first_person_weapon_message_melee);
 						biped->biped.player_melee_ticks = (char)weapon_get_first_person_animation_time(weapon_index, _first_person_animation_time_end, _first_person_weapon_animation_melee, NONE);
@@ -446,13 +436,15 @@ void biped_export_function_values(
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 	short function_index;
 
-	for (function_index = 0; function_index < NUMBEROF(definition->biped.function_modes); function_index++)
+	for (function_index = 0; function_index < NUMBER_OF_INCOMING_OBJECT_FUNCTIONS; function_index++)
 	{
-		if (definition->biped.function_modes[function_index] != _biped_function_none)
+		short function_mode = definition->biped.function_modes[function_index];
+
+		if (function_mode != _biped_function_none)
 		{
 			real value = 0.f;
 
-			switch (definition->biped.function_modes[function_index])
+			switch (function_mode)
 			{
 			case _biped_function_flying_speed:
 				value = magnitude3d(&biped->object.translational_velocity) / (definition->biped.flying_velocity / TICKS_PER_SECOND);
@@ -734,9 +726,6 @@ boolean biped_fix_position(
 		real height;
 		boolean swapped;
 		unsigned long collision_flags;
-		struct collision_model_instance instance;
-		real_vector3d right;
-		real_vector3d height_vector;
 		short fudge_vector_count;
 		short i;
 
@@ -760,8 +749,10 @@ boolean biped_fix_position(
 
 		if (new_position)
 		{
+			real_point3d dummy;
+
 			fixed_position = *new_position;
-			biped_get_physics_pill(biped_index, (real_point3d *)&height_vector, &height, &width);
+			biped_get_physics_pill(biped_index, &dummy, &height, &width);
 		}
 		else
 		{
@@ -775,72 +766,78 @@ boolean biped_fix_position(
 
 		fudge_vector_count = NUMBEROF(fudge_vectors) - (fix_below_new_position ? 0 : 9);
 
-		if (line_of_site_object_index != NONE)
 		{
-			collision_model_instance_new(&instance, line_of_site_object_index);
-		}
+			struct collision_model_instance instance;
+			real_vector3d right;
+			real_vector3d height_vector;
 
-		cross_product3d(&biped->object.forward, &biped->object.up, &right);
-		normalize3d(&right);
-		scale_vector3d(global_up3d, height, &height_vector);
-
-		if (use_radius_as_multiplier)
-		{
-			max_radius_fudge_factor *= width;
-		}
-
-		for (i = 0; !fixed && i < fudge_vector_count; i++)
-		{
-			real_point3d fudge_position;
-
-			if (fix_below_new_position)
+			if (line_of_site_object_index != NONE)
 			{
-				point_from_line3d(&fixed_position, &biped->object.forward, fudge_vectors[i].i * max_radius_fudge_factor, &fudge_position);
-				point_from_line3d(&fudge_position, &right, fudge_vectors[i].j * max_radius_fudge_factor, &fudge_position);
-				point_from_line3d(&fudge_position, &biped->object.up, fudge_vectors[i].k * max_radius_fudge_factor, &fudge_position);
-			}
-			else
-			{
-				point_from_line3d(&fixed_position, &fudge_vectors[i], max_radius_fudge_factor, &fudge_position);
+				collision_model_instance_new(&instance, line_of_site_object_index);
 			}
 
-			if ((scenario_leaf_index_from_point(&fudge_position) == NONE ? NONE : TAG_BLOCK_GET_ELEMENT(&global_structure_bsp_get()->leaves, scenario_leaf_index_from_point(&fudge_position) & LONG_MAX, struct structure_leaf)->cluster_index) != NONE)
-			{
-				struct collision_result result;
-				struct collision_model_test_pill_result model_pill_result;
-				struct collision_result collision;
+			cross_product3d(&biped->object.forward, &biped->object.up, &right);
+			normalize3d(&right);
+			scale_vector3d(global_up3d, height, &height_vector);
 
-				if (collision_fix_pill(collision_flags, &fudge_position, 2.f * width, height, width, biped_index, &fudge_position) &&
-					!collision_test_pill(collision_flags, &fudge_position, &height_vector, width, biped_index, &result) &&
-					(line_of_site_object_index == NONE ||
-					!collision_model_test_pill(&instance, &fudge_position, &height_vector, width, &model_pill_result) &&
-					(!collision_test_line(collision_flags, &fudge_position, &anchor_position, biped_index, &collision) || collision.object_index == line_of_site_object_index) &&
-					(!collision_test_line(collision_flags, &anchor_position, &fudge_position, line_of_site_object_index, &collision) || collision.object_index == biped_index)))
+			if (use_radius_as_multiplier)
+			{
+				max_radius_fudge_factor *= width;
+			}
+
+			for (i = 0; !fixed && i < fudge_vector_count; i++)
+			{
+				real_point3d fudge_position;
+
+				if (fix_below_new_position)
 				{
-					struct biped_definition *definition = biped_definition_get(biped->definition_index);
-					struct location fixed_location;
+					point_from_line3d(&fixed_position, &biped->object.forward, fudge_vectors[i].i * max_radius_fudge_factor, &fudge_position);
+					point_from_line3d(&fudge_position, &right, fudge_vectors[i].j * max_radius_fudge_factor, &fudge_position);
+					point_from_line3d(&fudge_position, &biped->object.up, fudge_vectors[i].k * max_radius_fudge_factor, &fudge_position);
+				}
+				else
+				{
+					point_from_line3d(&fixed_position, &fudge_vectors[i], max_radius_fudge_factor, &fudge_position);
+				}
 
-					scenario_location_from_point(&fixed_location, &fudge_position);
-					match_assert("c:\\halo\\SOURCE\\units\\bipeds.c", 1054, fixed_location.cluster_index!=NONE);
+				if ((scenario_leaf_index_from_point(&fudge_position) == NONE ? NONE : TAG_BLOCK_GET_ELEMENT(&global_structure_bsp_get()->leaves, scenario_leaf_index_from_point(&fudge_position) & LONG_MAX, struct structure_leaf)->cluster_index) != NONE)
+				{
+					struct collision_result result;
+					struct collision_model_test_pill_result model_pill_result;
+					struct collision_result collision;
 
-					if (!TEST_FLAG(definition->biped.flags, _biped_pill_centered_at_origin_bit))
+					if (collision_fix_pill(collision_flags, &fudge_position, 2.f * width, height, width, biped_index, &fudge_position) &&
+						!collision_test_pill(collision_flags, &fudge_position, &height_vector, width, biped_index, &result) &&
+						(line_of_site_object_index == NONE ||
+						!collision_model_test_pill(&instance, &fudge_position, &height_vector, width, &model_pill_result) &&
+						(!collision_test_line(collision_flags, &fudge_position, &anchor_position, biped_index, &collision) || collision.object_index == line_of_site_object_index) &&
+						(!collision_test_line(collision_flags, &anchor_position, &fudge_position, line_of_site_object_index, &collision) || collision.object_index == biped_index)))
 					{
-						fudge_position.z -= definition->biped.collision_radius;
-					}
+						struct biped_definition *definition = biped_definition_get(biped->definition_index);
+						struct location fixed_location;
 
-					if (biped_index != NONE && !dont_teleport)
-					{
-						biped->object.position = fudge_position;
-						object_compute_node_matrices_recursive(biped_index);
-						object_translate(biped_index, &fudge_position, &fixed_location);
-					}
+						scenario_location_from_point(&fixed_location, &fudge_position);
+						match_assert("c:\\halo\\SOURCE\\units\\bipeds.c", 1054, fixed_location.cluster_index!=NONE);
 
-					if (final_position)
-					{
-						*final_position = fudge_position;
-					}
+						if (!TEST_FLAG(definition->biped.flags, _biped_pill_centered_at_origin_bit))
+						{
+							fudge_position.z -= definition->biped.collision_radius;
+						}
 
-					fixed = TRUE;
+						if (biped_index != NONE && !dont_teleport)
+						{
+							biped->object.position = fudge_position;
+							object_compute_node_matrices_recursive(biped_index);
+							object_translate(biped_index, &fudge_position, &fixed_location);
+						}
+
+						if (final_position)
+						{
+							*final_position = fudge_position;
+						}
+
+						fixed = TRUE;
+					}
 				}
 			}
 		}
@@ -855,9 +852,9 @@ void biped_render_debug(
 	long biped_index)
 {
 	real_point3d base;
-	real_vector3d height_vector;
 	real height;
 	real width;
+	real_vector3d height_vector;
 
 	if (debug_objects_biped_physics_pills)
 	{
@@ -993,29 +990,6 @@ long biped_find_pathfinding_surface_index(
 	return biped->biped.pathfinding_surface_index;
 }
 
-static void biped_verify_object_vectors(
-	long biped_index,
-	char const *debug_string)
-{
-	struct biped_datum *biped = biped_get(biped_index);
-
-	if (!valid_real_vector3d_axes2(&biped->object.forward, &biped->object.up))
-	{
-		struct biped_definition *definition = biped_definition_get(biped->definition_index);
-
-		match_vhalt("c:\\halo\\SOURCE\\units\\bipeds.c", 1373, csprintf(temporary, "biped %s (%s%s%s): %s vector failure: (%f, %f, %f) / (%f, %f, %f)",
-			tag_name_strip_path(tag_get_name(biped->definition_index)),
-			TEST_FLAG(definition->biped.flags, _biped_flying_bit) ? "flying" : TEST_FLAG(definition->biped.flags, _biped_uses_player_physics_bit) ? "player-physics" : TEST_FLAG(definition->biped.flags, _biped_climbs_anything_bit) ? "climb" : "normal",
-			TEST_FLAG(biped->object.damage_flags, _object_dead_bit) ? "/dead" : "",
-			TEST_FLAG(biped->biped.flags, _biped_limp_body_physics_active_bit) ? "/limping" : "",
-			debug_string,
-			biped->object.forward.i, biped->object.forward.j, biped->object.forward.k,
-			biped->object.up.i, biped->object.up.j, biped->object.up.k));
-	}
-
-	return;
-}
-
 void biped_stop_melee_attack(
 	long biped_index)
 {
@@ -1033,10 +1007,15 @@ void biped_start_limp_body_physics(
 	long biped_index)
 {
 	struct biped_datum *biped = biped_get(biped_index);
-	boolean uses_limp_body_physics = TEST_FLAG(biped_definition_get(biped->definition_index)->biped.flags, _biped_uses_limp_body_physics_bit);
+	struct biped_definition *definition = biped_definition_get(biped->definition_index);
+	boolean uses_limp_body_physics = TEST_FLAG(definition->biped.flags, _biped_uses_limp_body_physics_bit);
 
-	if (!debug_biped_limp_body_disable &&
-		uses_limp_body_physics &&
+	if (debug_biped_limp_body_disable)
+	{
+		uses_limp_body_physics = FALSE;
+	}
+
+	if (uses_limp_body_physics &&
 		TEST_FLAG(biped->object.flags, _object_at_rest_bit) &&
 		!TEST_FLAG(biped->biped.flags, _biped_airborne_bit) &&
 		!TEST_FLAG(biped->biped.flags, _biped_limp_body_physics_active_bit))
@@ -1054,8 +1033,9 @@ void biped_stop_limp_body_physics(
 	long biped_index)
 {
 	struct biped_datum *biped = biped_get(biped_index);
+	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 
-	if (TEST_FLAG(biped_definition_get(biped->definition_index)->biped.flags, _biped_uses_limp_body_physics_bit) &&
+	if (TEST_FLAG(definition->biped.flags, _biped_uses_limp_body_physics_bit) &&
 		TEST_FLAG(biped->biped.flags, _biped_limp_body_physics_active_bit))
 	{
 		SET_FLAG(biped->object.flags, _object_do_not_recompute_node_matrices_bit, FALSE);
@@ -1090,6 +1070,29 @@ void biped_exit_seat_end(
 		{
 			error(_error_silent, "couldn't teleport the biped out far enough from the vehicle...");
 		}
+	}
+
+	return;
+}
+
+static void biped_verify_object_vectors(
+	long biped_index,
+	char const *debug_string)
+{
+	struct biped_datum *biped = biped_get(biped_index);
+
+	if (!valid_real_vector3d_axes2(&biped->object.forward, &biped->object.up))
+	{
+		struct biped_definition *definition = biped_definition_get(biped->definition_index);
+
+		match_vhalt("c:\\halo\\SOURCE\\units\\bipeds.c", 1373, csprintf(temporary, "biped %s (%s%s%s): %s vector failure: (%f, %f, %f) / (%f, %f, %f)",
+			tag_name_strip_path(tag_get_name(biped->definition_index)),
+			TEST_FLAG(definition->biped.flags, _biped_flying_bit) ? "flying" : TEST_FLAG(definition->biped.flags, _biped_uses_player_physics_bit) ? "player-physics" : TEST_FLAG(definition->biped.flags, _biped_climbs_anything_bit) ? "climb" : "normal",
+			TEST_FLAG(biped->object.damage_flags, _object_dead_bit) ? "/dead" : "",
+			TEST_FLAG(biped->biped.flags, _biped_limp_body_physics_active_bit) ? "/limping" : "",
+			debug_string,
+			biped->object.forward.i, biped->object.forward.j, biped->object.forward.k,
+			biped->object.up.i, biped->object.up.j, biped->object.up.k));
 	}
 
 	return;
@@ -1147,7 +1150,7 @@ static void biped_update_turning(
 
 			cross_product3d(&biped->object.forward, &biped->object.up, &right_vector);
 			bank_scale = dot_product3d(&right_vector, &biped->unit.desired_facing_vector) / 0.3f;
-			desired_bank = biped->unit.throttle.i * bank_scale - biped->unit.throttle.j;
+			desired_bank = -biped->unit.throttle.j + bank_scale * biped->unit.throttle.i;
 		}
 		desired_bank = MIN(desired_bank, 1.5f) * biped_definition->biped.flying_bank_amount;
 
@@ -1163,9 +1166,12 @@ static void biped_update_turning(
 		bank_time = bank_fraction * biped_definition->biped.flying_bank_apply_time + (1.f - bank_fraction) * biped_definition->biped.flying_bank_decay_time;
 		if (bank_time > 0.f)
 		{
-			desired_bank = (desired_bank - biped->biped.bank) / (TICKS_PER_SECOND * bank_time) + biped->biped.bank;
+			biped->biped.bank = (desired_bank - biped->biped.bank) / (TICKS_PER_SECOND * bank_time) + biped->biped.bank;
 		}
-		biped->biped.bank = desired_bank;
+		else
+		{
+			biped->biped.bank = desired_bank;
+		}
 
 		facing_bounds.x0 = -_pi;
 		facing_bounds.x1 = _pi;
@@ -1203,8 +1209,8 @@ static void biped_update_turning(
 
 			if (TEST_FLAG(biped_definition->biped.flags, _biped_climbs_anything_bit))
 			{
-				real_vector3d desired_left_vector;
 				real_vector3d cross_vector;
+				real_vector3d desired_left_vector;
 
 				cross_product3d(&biped->object.up, &biped->unit.desired_facing_vector, &desired_left_vector);
 				cross_product3d(&desired_left_vector, &biped->object.up, &desired_facing_vector);
@@ -1844,12 +1850,13 @@ static void biped_falling_danger(
 	struct biped_datum *biped = biped_get(biped_index);
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 
-	if (!TEST_FLAG(biped->object.damage_flags, _object_dead_bit) &&
-		!TEST_FLAG(definition->biped.flags, _biped_flying_bit) &&
-		!TEST_FLAG(definition->biped.flags, _biped_immune_to_falling_damage_bit) &&
-		!TEST_FLAG(biped->unit.flags, _unit_no_falling_damage_bit) &&
-		biped->unit.actor_index != NONE &&
-		biped->unit.animation.state != _unit_state_ai_impulse)
+	if (TEST_FLAG(biped->object.damage_flags, _object_dead_bit) ||
+		TEST_FLAG(definition->biped.flags, _biped_flying_bit) ||
+		TEST_FLAG(biped->unit.flags, _unit_no_falling_damage_bit) ||
+		TEST_FLAG(definition->biped.flags, _biped_immune_to_falling_damage_bit))
+	{
+	}
+	else if (biped->unit.actor_index != NONE && biped->unit.animation.state != _unit_state_ai_impulse)
 	{
 		long game_time = game_time_get();
 
@@ -1866,14 +1873,11 @@ static void biped_falling_danger(
 				if (biped_find_ground_surface(biped_index, 6.f, global_down3d, &ground_point, NULL) != NONE)
 				{
 					object_get_origin(biped_index, &biped_position);
-					if (!(biped->object.translational_velocity.k > 0.f))
+					if (biped->object.translational_velocity.k > 0.f)
 					{
-						if (biped->object.translational_velocity.k * biped->object.translational_velocity.k + 2.f * global_gravity * (biped_position.z - ground_point.z) < falling_damage->runtime_maximum_damage_velocity * falling_damage->runtime_maximum_damage_velocity)
-						{
-							scream = FALSE;
-						}
+						scream = FALSE;
 					}
-					else
+					else if (biped->object.translational_velocity.k * biped->object.translational_velocity.k + 2.f * global_gravity * (biped_position.z - ground_point.z) < falling_damage->runtime_maximum_damage_velocity * falling_damage->runtime_maximum_damage_velocity)
 					{
 						scream = FALSE;
 					}
@@ -1949,6 +1953,7 @@ static boolean biped_check_discard(
 	long biped_index)
 {
 	struct biped_datum *biped = biped_get(biped_index);
+	boolean result = FALSE;
 
 	if (!game_engine_running() &&
 		(TEST_FLAG(biped->object.flags, _object_outside_of_map_bit) || biped->object.location.cluster_index == NONE) &&
@@ -1959,11 +1964,11 @@ static boolean biped_check_discard(
 			biped->object.position.x,
 			biped->object.position.y,
 			biped->object.position.z,
-			ai_debug_describe_actor(biped->unit.swarm_actor_index == NONE ? biped->unit.actor_index : biped->unit.swarm_actor_index, biped_index, TRUE, temporary, 256));
+			ai_debug_describe_actor(biped->unit.swarm_actor_index != NONE ? biped->unit.swarm_actor_index : biped->unit.actor_index, biped_index, TRUE, temporary, 256));
 		object_delete(biped_index);
 	}
 
-	return FALSE;
+	return result;
 }
 
 static void biped_falling_damage(
@@ -1976,37 +1981,37 @@ static void biped_falling_damage(
 	boolean immune = TEST_FLAG(biped->unit.flags, _unit_no_falling_damage_bit) || TEST_FLAG(definition->biped.flags, _biped_immune_to_falling_damage_bit);
 	real vertical_velocity = biped->object.translational_velocity.k;
 
-	if (!cheat.jetpack || biped->unit.player_index == NONE)
+	if (cheat.jetpack && biped->unit.player_index != NONE)
 	{
-		if (collision_velocity > falling_damage->runtime_minimum_damage_velocity)
+	}
+	else if (collision_velocity > falling_damage->runtime_minimum_damage_velocity)
+	{
+		if (!immune)
 		{
-			if (!immune)
-			{
-				struct damage_data damage_data;
+			struct damage_data damage_data;
 
-				damage_data_new(&damage_data, falling_damage->falling_damage.index);
-				damage_data.scale = (collision_velocity - falling_damage->runtime_minimum_damage_velocity) / (falling_damage->runtime_maximum_damage_velocity - falling_damage->runtime_minimum_damage_velocity);
-				damage_data.scale = PIN(damage_data.scale, 0.f, 1.f);
-				object_cause_damage(&damage_data, biped_index, NONE, NONE, NONE, NULL);
-			}
+			damage_data_new(&damage_data, falling_damage->falling_damage.index);
+			damage_data.scale = (collision_velocity - falling_damage->runtime_minimum_damage_velocity) / (falling_damage->runtime_maximum_damage_velocity - falling_damage->runtime_minimum_damage_velocity);
+			damage_data.scale = PIN(damage_data.scale, 0.f, 1.f);
+			object_cause_damage(&damage_data, biped_index, NONE, NONE, NONE, NULL);
 		}
-		else if (!TEST_FLAG(definition->biped.flags, _biped_flying_bit) && -falling_damage->runtime_maximum_falling_velocity > vertical_velocity)
+	}
+	else if (!TEST_FLAG(definition->biped.flags, _biped_flying_bit) && -falling_damage->runtime_maximum_falling_velocity > vertical_velocity)
+	{
+		if (!immune && !TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 		{
-			if (!immune && !TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
-			{
-				struct damage_data damage_data;
+			struct damage_data damage_data;
 
-				damage_data_new(&damage_data, falling_damage->maximum_distance_damage.index);
-				object_cause_damage(&damage_data, biped_index, NONE, NONE, NONE, NULL);
-			}
+			damage_data_new(&damage_data, falling_damage->maximum_distance_damage.index);
+			object_cause_damage(&damage_data, biped_index, NONE, NONE, NONE, NULL);
+		}
 
-			if (!game_engine_running() && TEST_FLAG(biped->object.flags, _object_outside_of_map_bit) && player_index_from_unit_index(biped_index) == NONE)
-			{
-				error(_error_silent, "WARNING: biped %s (%s) fell outside world and was erased",
-					tag_name_strip_path(tag_get_name(biped->definition_index)),
-					ai_debug_describe_actor(biped->unit.swarm_actor_index == NONE ? biped->unit.actor_index : biped->unit.swarm_actor_index, biped_index, TRUE, temporary, 256));
-				object_delete(biped_index);
-			}
+		if (!game_engine_running() && TEST_FLAG(biped->object.flags, _object_outside_of_map_bit) && player_index_from_unit_index(biped_index) == NONE)
+		{
+			error(_error_silent, "WARNING: biped %s (%s) fell outside world and was erased",
+				tag_name_strip_path(tag_get_name(biped->definition_index)),
+				ai_debug_describe_actor(biped->unit.swarm_actor_index != NONE ? biped->unit.swarm_actor_index : biped->unit.actor_index, biped_index, TRUE, temporary, 256));
+			object_delete(biped_index);
 		}
 	}
 
@@ -2052,7 +2057,14 @@ static void biped_update_dead(
 	if (TEST_FLAG(biped->biped.flags, _biped_limp_body_physics_active_bit) &&
 		biped->biped.limp_body_current_relaxation_iterations < biped->biped.limp_body_max_relaxation_iterations)
 	{
-		if (!debug_biped_limp_body_disable)
+		boolean uses_limp_body_physics = TRUE;
+
+		if (debug_biped_limp_body_disable)
+		{
+			uses_limp_body_physics = FALSE;
+		}
+
+		if (uses_limp_body_physics)
 		{
 			biped_limp_noodle_relax_nodes_onto_environment(biped_index);
 		}
@@ -2113,8 +2125,12 @@ static void biped_update_airborne(
 				if (biped->object.up.k < 0.8f)
 				{
 					cross_product3d(&biped->object.up, global_up3d, &angular_acceleration_axis);
-					valid_axis = normalize3d(&angular_acceleration_axis) > 0.f;
+					if (normalize3d(&angular_acceleration_axis) > 0.f)
+					{
+						valid_axis = TRUE;
+					}
 				}
+
 				if (!valid_axis)
 				{
 					vector3d_from_angle(&angular_acceleration_axis, real_random_range(0.f, 2.f * _pi));
@@ -2151,7 +2167,10 @@ static void biped_start_landing(
 	real minimum_hard_landing_velocity = definition->biped.minimum_hard_landing_velocity / TICKS_PER_SECOND;
 	real maximum_hard_landing_velocity = definition->biped.maximum_hard_landing_velocity / TICKS_PER_SECOND;
 
-	if (!(landing_velocity < minimum_soft_landing_velocity))
+	if (landing_velocity < minimum_soft_landing_velocity)
+	{
+	}
+	else
 	{
 		short landing = NONE;
 		real velocity;
@@ -2219,10 +2238,26 @@ static void biped_update_slipping(
 	struct biped_datum *biped = biped_get(biped_index);
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 
-	if (biped->biped.slipping_ticks > 3 && magnitude_squared3d(&biped->object.translational_velocity) > (1.f / TICKS_PER_SECOND) * (1.f / TICKS_PER_SECOND))
+	if (biped->biped.slipping_ticks > 3)
 	{
-		biped_make_footstep(biped_index, _material_effect_biped_sliding, _contact_point_left_foot);
-		biped_make_footstep(biped_index, _material_effect_biped_sliding, _contact_point_right_foot);
+		real velocity_squared = biped->object.translational_velocity.i * biped->object.translational_velocity.i +
+			biped->object.translational_velocity.j * biped->object.translational_velocity.j +
+			biped->object.translational_velocity.k * biped->object.translational_velocity.k;
+
+		if (velocity_squared > (1.f / TICKS_PER_SECOND) * (1.f / TICKS_PER_SECOND))
+		{
+			real_vector2d velocity_relative_to_facing;
+			boolean sliding_left;
+			boolean sliding_forward;
+
+			velocity_relative_to_facing.i = biped->object.forward.i * biped->object.translational_velocity.i + biped->object.forward.j * biped->object.translational_velocity.j;
+			velocity_relative_to_facing.j = biped->object.forward.i * biped->object.translational_velocity.j - biped->object.forward.j * biped->object.translational_velocity.i;
+			sliding_left = velocity_relative_to_facing.j > -velocity_relative_to_facing.i;
+			sliding_forward = velocity_relative_to_facing.j > velocity_relative_to_facing.i;
+
+			biped_make_footstep(biped_index, _material_effect_biped_sliding, _contact_point_left_foot);
+			biped_make_footstep(biped_index, _material_effect_biped_sliding, _contact_point_right_foot);
+		}
 	}
 
 	biped_verify_object_vectors(biped_index, "post-slipping");
@@ -2262,7 +2297,7 @@ static void biped_update_jumping(
 		{
 			real speed = FLOOR(dot_product3d(&biped->object.translational_velocity, &biped->unit.aiming_vector), 0.f);
 			real thrust = PIN(speed / jetpack_maximum_speed, 0.f, 1.f);
-			real thrust_velocity = (jetpack_maximum_thrust - jetpack_minimum_thrust) * thrust - jetpack_maximum_thrust * thrust * thrust + jetpack_minimum_thrust;
+			real thrust_velocity = -jetpack_maximum_thrust * (thrust * thrust) + (jetpack_maximum_thrust - jetpack_minimum_thrust) * thrust + jetpack_minimum_thrust;
 			real_vector3d perpendicular_velocity;
 
 			vector_from_line3d(&biped->object.translational_velocity, &biped->unit.aiming_vector, -speed, &perpendicular_velocity);
@@ -3054,13 +3089,16 @@ static void biped_try_to_make_footsteps(
 
 			if (footstep)
 			{
-				biped_make_footstep(biped_index, biped->unit.animation.base_seat_index == _unit_base_seat_stand, right_foot != FALSE);
+				biped_make_footstep(biped_index, biped->unit.animation.base_seat_index == _unit_base_seat_stand ? _material_effect_biped_run : _material_effect_biped_walk, right_foot ? _contact_point_right_foot : _contact_point_left_foot);
 			}
 		}
 	}
 
 	switch (biped->biped.state)
 	{
+	case _biped_state_moving:
+		biped->biped.stop_ticks = 1;
+		break;
 	case _biped_state_idle:
 		if (biped->biped.stop_ticks > 0)
 		{
@@ -3072,9 +3110,6 @@ static void biped_try_to_make_footsteps(
 				biped->biped.stop_ticks = 0;
 			}
 		}
-		break;
-	case _biped_state_moving:
-		biped->biped.stop_ticks = 1;
 		break;
 	default:
 		biped->biped.stop_ticks = 0;
@@ -3167,7 +3202,7 @@ static void biped_snap_facing(
 	long biped_index)
 {
 	struct biped_datum *biped = biped_get(biped_index);
-	struct biped_definition *biped_definition = biped_definition_get(biped->definition_index);
+	struct biped_definition const *biped_definition = biped_definition_get(biped->definition_index);
 
 	if (TEST_FLAG(biped_definition->biped.flags, _biped_flying_bit) && !TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 	{
@@ -3197,8 +3232,6 @@ static void biped_snap_facing(
 		boolean use_new_up = FALSE;
 		real_vector3d rotation_axis;
 		real_vector3d new_up;
-		real_vector3d new_right;
-		real_vector3d new_forward;
 
 		if (biped->biped.support_surface_index == NONE)
 		{
@@ -3237,20 +3270,25 @@ static void biped_snap_facing(
 			}
 		}
 
-		cross_product3d(&biped->object.forward, &new_up, &new_right);
-		cross_product3d(&new_up, &new_right, &new_forward);
-		if (normalize3d(&new_forward) == 0.f)
 		{
-			cross_product3d(&new_up, &biped->object.up, &new_right);
+			real_vector3d new_right;
+			real_vector3d new_forward;
+
+			cross_product3d(&biped->object.forward, &new_up, &new_right);
 			cross_product3d(&new_up, &new_right, &new_forward);
 			if (normalize3d(&new_forward) == 0.f)
 			{
-				new_up = *global_up3d;
-				new_forward = *global_forward3d;
+				cross_product3d(&new_up, &biped->object.up, &new_right);
+				cross_product3d(&new_up, &new_right, &new_forward);
+				if (normalize3d(&new_forward) == 0.f)
+				{
+					new_up = *global_up3d;
+					new_forward = *global_forward3d;
+				}
 			}
+			biped->object.forward = new_forward;
+			biped->object.up = new_up;
 		}
-		biped->object.forward = new_forward;
-		biped->object.up = new_up;
 		biped_verify_object_vectors(biped_index, "post-climb-snapfacing");
 	}
 	else if (TEST_FLAG(biped->object.damage_flags, _object_dead_bit) && !TEST_FLAG(biped->biped.flags, _biped_airborne_bit))
