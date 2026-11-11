@@ -199,7 +199,7 @@ void _rasterizer_dynamic_screen_geometry_draw(
 static void submit_screen_vertex(
 	struct dynamic_screen_vertex const *vertex)
 {
-	IDirect3DDevice8_SetVertexDataColor(global_d3d_device, D3DVSDE_TEXCOORD0, vertex->color);
+	IDirect3DDevice8_SetVertexDataColor(global_d3d_device, 9, vertex->color);
 	IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, vertex->texcoord.x, vertex->texcoord.y);
 	IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, vertex->position.x, vertex->position.y);
 
@@ -244,7 +244,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 				parameters->offset ? parameters->offset->i*2.f/viewport_width : 0.f,
 				parameters->offset ? parameters->offset->j*-2.f/viewport_height : 0.f
 			};
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{2.f/viewport_width, 0.f, 0.f, geometry_offset.i - (1.f/viewport_width + 1.f)},
 				{0.f, -2.f/viewport_height, 0.f, 1.f/viewport_height + geometry_offset.j + 1.f},
@@ -252,7 +252,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 				{0.f, 0.f, 0.f, 1.f},
 				{parameters->map_texture_scale[0].i, parameters->map_texture_scale[0].j, 0.f, 1.f}
 			};
-			real vsh_constants__screenproj2[6][4] =
+			real vsh_constants__screenproj2[VSH_CONSTANTS__SCREENPROJ2_COUNT][4] =
 			{
 				{parameters->map_texture_scale[1].i, parameters->map_texture_scale[1].j, parameters->map_texture_scale[2].i, parameters->map_texture_scale[2].j},
 				{parameters->map_anchor_screen[0] ? 1.f : 0.f, parameters->map_anchor_screen[0] ? 0.f : 1.f, parameters->map_anchor_screen[1] ? 1.f : 0.f, parameters->map_anchor_screen[1] ? 0.f : 1.f},
@@ -287,7 +287,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 			SetTextureStageStateSmart(map_index, D3DTSS_MIPFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 		}
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 1);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 1);
 		meter = parameters->meter_parameters;
 
 		if (meter)
@@ -485,7 +485,7 @@ void _rasterizer_psuedo_dynamic_screen_quad_draw(
 
 		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 1);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 1);
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
 

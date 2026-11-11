@@ -36,7 +36,7 @@ void rasterizer_debug_drawing_begin(
 
 	if (rasterizer_debug_options.draw_debug_geometry)
 	{
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_debug,_rasterizer_vertex_type_debug, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_debug, _rasterizer_vertex_type_debug, 0);
 
 		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_NONE);
 		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
@@ -90,7 +90,7 @@ void _rasterizer_debug_immediate_begin(
 	SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
 	SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
 
-	rasterizer_set_vertex_shader_permutation(_vertex_shader_debug,_rasterizer_vertex_type_debug, 0);
+	rasterizer_set_vertex_shader_permutation(_vs_debug, _rasterizer_vertex_type_debug, 0);
 
 	memset(&pixel_shader, 0, sizeof(pixel_shader));
 	pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
@@ -111,12 +111,12 @@ void _rasterizer_debug_immediate_line(
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_debug.c", 117, global_d3d_device);
 
 	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_LINELIST);
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, color0->red, color0->green, color0->blue, 1.f);
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, color0->red, color0->green, color0->blue, 1.f);
 	IDirect3DDevice8_SetVertexData4f(global_d3d_device, VSDE_VERTEX, p0->x, p0->y, p0->z, 1.f);
 
 	if (color1)
 	{
-		IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, color1->red, color1->green, color1->blue, 1.f);
+		IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, color1->red, color1->green, color1->blue, 1.f);
 	}
 
 	IDirect3DDevice8_SetVertexData4f(global_d3d_device, VSDE_VERTEX, p1->x, p1->y, p1->z, 1.f);
@@ -137,19 +137,19 @@ void _rasterizer_debug_immediate_triangle(
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_debug.c", 140, global_d3d_device);
 
 	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLELIST);
-	IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, color0->red, color0->green, color0->blue, 1.f);
+	IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, color0->red, color0->green, color0->blue, 1.f);
 	IDirect3DDevice8_SetVertexData4f(global_d3d_device, VSDE_VERTEX, p0->x, p0->y, p0->z, 1.f);
 
 	if (color1)
 	{
-		IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, color1->red, color1->green, color1->blue, 1.f);
+		IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, color1->red, color1->green, color1->blue, 1.f);
 	}
 
 	IDirect3DDevice8_SetVertexData4f(global_d3d_device, VSDE_VERTEX, p1->x, p1->y, p1->z, 1.f);
 
 	if (color2)
 	{
-		IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, color2->red, color2->green, color2->blue, 1.f);
+		IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, color2->red, color2->green, color2->blue, 1.f);
 	}
 
 	IDirect3DDevice8_SetVertexData4f(global_d3d_device, VSDE_VERTEX, p2->x, p2->y, p2->z, 1.f);
@@ -175,12 +175,12 @@ void _rasterizer_debug_immediate_begin_screenspace(
 	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 	SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-	rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 0);
+	rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 0);
 
 	{
 		short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 		short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-		real vsh_constants__screenproj[5][4] =
+		real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 		{
 			{2.f/viewport_width, 0.f, 0.f, -1.f - 1.f/viewport_width},
 			{0.f, -2.f/viewport_height, 0.f, 1.f/viewport_height + 1.f},
@@ -224,12 +224,12 @@ void _rasterizer_debug_immediate_line_screenspace(
 	}
 
 	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_LINESTRIP);
-	IDirect3DDevice8_SetVertexDataColor(global_d3d_device, D3DVSDE_TEXCOORD0, pixel_color0);
+	IDirect3DDevice8_SetVertexDataColor(global_d3d_device, 9, pixel_color0);
 	IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, p0->x, p0->y);
 
 	if (color1)
 	{
-		IDirect3DDevice8_SetVertexDataColor(global_d3d_device, D3DVSDE_TEXCOORD0, pixel_color1);
+		IDirect3DDevice8_SetVertexDataColor(global_d3d_device, 9, pixel_color1);
 	}
 
 	IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, p1->x, p1->y);
@@ -252,7 +252,7 @@ void _rasterizer_debug_immediate_linestrip_screenspace(
 
 	pixel_color = real_rgb_color_to_pixel32(color);
 	IDirect3DDevice8_Begin(global_d3d_device, D3DPT_LINESTRIP);
-	IDirect3DDevice8_SetVertexDataColor(global_d3d_device, D3DVSDE_TEXCOORD0, pixel_color);
+	IDirect3DDevice8_SetVertexDataColor(global_d3d_device, 9, pixel_color);
 	success = TRUE;
 
 	for (point_index = 0; point_index < point_count; point_index++)

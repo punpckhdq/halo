@@ -22,8 +22,7 @@ RASTERIZER_XBOX_ENVIRONMENT_FOG.C
 
 enum
 {
-	MAXIMUM_FOG_SCREEN_LAYERS = 4, /* fake name */
-	MAXIMUM_FOG_SCREEN_OPAQUE_MODEL_GROUPS = 128 /* fake name */
+	MAXIMUM_FOG_SCREEN_LAYERS = 4 /* fake name */
 };
 
 /* ---------- structures */
@@ -183,7 +182,7 @@ boolean rasterizer_environment_fog_screen_initialize(
 {
 	boolean success = TRUE;
 
-	local_opaque_model_groups = match_malloc("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 248, MAXIMUM_FOG_SCREEN_OPAQUE_MODEL_GROUPS * sizeof(*local_opaque_model_groups));
+	local_opaque_model_groups = match_malloc("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 248, RASTERIZER_MAXIMUM_NEARBY_OPAQUE_MODEL_GEOMETRY_GROUPS_THAT_MIGHT_OBSCURE_THE_ENVIRONMENT_FOG_SCREEN_EFFECT * sizeof(*local_opaque_model_groups));
 	local_opaque_model_group_count = 0;
 
 	if (!local_opaque_model_groups)
@@ -317,7 +316,7 @@ void _rasterizer_environment_fog_draw(
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 435, vertex_buffer);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_fog,vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vs_environment_fog, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 		rasterizer_draw_dynamic_triangles_static_vertices(
 			dynamic_triangle_buffer_index,
 			first_triangle_index,
@@ -437,7 +436,7 @@ void _rasterizer_environment_fog_screen_begin(
 				short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
 				real aspect_ratio = (real)viewport_height / viewport_width;
 				real strafing_scale = screen->map_scale * 0.5f / (tangent(global_window_parameters.camera.vertical_field_of_view * 0.5f) * screen->far_distance * aspect_ratio);
-				real vsh_constants__screenproj[5][4] =
+				real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 				{
 					{2.f / viewport_width, 0.f, 0.f, -1.f - 1.f / viewport_width},
 					{0.f, -2.f / viewport_height, 0.f, 1.f / viewport_height + 1.f},
@@ -727,7 +726,7 @@ void _rasterizer_environment_fog_screen_begin(
 						SetTextureStageStateSmart(1, D3DTSS_ALPHAKILL, D3DTALPHAKILL_DISABLE);
 					}
 
-					rasterizer_set_vertex_shader_permutation(_vertex_shader_model_fog_screen,rasterizer_transparent_geometry_get_primary_vertex_type(group), 0);
+					rasterizer_set_vertex_shader_permutation(_vs_model_fog_screen, rasterizer_transparent_geometry_get_primary_vertex_type(group), 0);
 
 					node_matrices = group->node_matrices;
 
@@ -789,7 +788,7 @@ void _rasterizer_environment_fog_screen_draw(
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 996, global_window_parameters.fog.screen);
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 997, global_window_parameters.window_index>=0 && global_window_parameters.window_index<MAXIMUM_WINDOWS);
 
-			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_fog_screen,vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+			rasterizer_set_vertex_shader_permutation(_vs_environment_fog_screen, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 			rasterizer_draw_dynamic_triangles_static_vertices(
 				dynamic_triangle_buffer_index,
 				first_triangle_index,
@@ -845,7 +844,7 @@ void _rasterizer_environment_fog_screen_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, D3DZB_FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen_texture_animation,_rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen_texture_animation, _rasterizer_vertex_type_dynamic_screen, 0);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(
@@ -979,7 +978,7 @@ void rasterizer_environment_fog_screen_model_submit(
 
 	if (rasterizer_debug_options.draw_environment_fog_screen && rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_normal)
 	{
-		if (local_opaque_model_group_count < MAXIMUM_FOG_SCREEN_OPAQUE_MODEL_GROUPS)
+		if (local_opaque_model_group_count < RASTERIZER_MAXIMUM_NEARBY_OPAQUE_MODEL_GEOMETRY_GROUPS_THAT_MIGHT_OBSCURE_THE_ENVIRONMENT_FOG_SCREEN_EFFECT)
 		{
 			struct transparent_geometry_group *group = &local_opaque_model_groups[local_opaque_model_group_count++];
 
@@ -1007,7 +1006,7 @@ void rasterizer_environment_fog_screen_model_submit(
 		}
 		else if (!warned)
 		{
-			error(_error_silent, "### ERROR too many opaque model groups obscuring fog screen (max=#%d)", MAXIMUM_FOG_SCREEN_OPAQUE_MODEL_GROUPS);
+			error(_error_silent, "### ERROR too many opaque model groups obscuring fog screen (max=#%d)", RASTERIZER_MAXIMUM_NEARBY_OPAQUE_MODEL_GEOMETRY_GROUPS_THAT_MIGHT_OBSCURE_THE_ENVIRONMENT_FOG_SCREEN_EFFECT);
 			warned = TRUE;
 		}
 	}

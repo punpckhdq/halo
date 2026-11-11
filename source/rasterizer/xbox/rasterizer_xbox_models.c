@@ -280,7 +280,7 @@ void rasterizer_model_draw_environment_shader(
 			vertex_shader_permutation = 2;
 		}
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_model,vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
+		rasterizer_set_vertex_shader_permutation(_vs_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
 
 		if (rasterizer_debug_options.statistics_mode >= _rasterizer_statistics_mode_fps_only)
 		{
@@ -290,8 +290,8 @@ void rasterizer_model_draw_environment_shader(
 		{
 			real_argb_color reflection_view_perpendicular_color;
 			real_argb_color reflection_view_parallel_color;
-			real vsh_constants__texscale[3][4];
-			real vsh_constants__effect[2][4];
+			real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4];
+			real vsh_constants__effect[VSH_CONSTANTS__EFFECT_COUNT][4];
 
 			reflection_view_perpendicular_color.alpha = shader_environment->environment.reflection.view_perpendicular_brightness * local_parameters->lighting.reflection_tint_color.alpha;
 			reflection_view_perpendicular_color.red = shader_environment->environment.specular.view_perpendicular_color.red * local_parameters->lighting.reflection_tint_color.red;
@@ -737,7 +737,7 @@ void _rasterizer_model_draw(
 					vertex_shader_permutation = 2;
 				}
 
-				rasterizer_set_vertex_shader_permutation(_vertex_shader_model,vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vs_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
 
 				if (rasterizer_debug_options.statistics_mode >= _rasterizer_statistics_mode_fps_only)
 				{
@@ -748,8 +748,8 @@ void _rasterizer_model_draw(
 				{
 					real_argb_color reflection_view_perpendicular_color;
 					real_argb_color reflection_view_parallel_color;
-					real vsh_constants__texscale[3][4];
-					real vsh_constants__effect[2][4];
+					real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4];
+					real vsh_constants__effect[VSH_CONSTANTS__EFFECT_COUNT][4];
 
 					reflection_view_perpendicular_color.alpha = (reflection_scale * shader_model->model.reflection_view_perpendicular_color.alpha) * local_parameters->lighting.reflection_tint_color.alpha;
 					reflection_view_perpendicular_color.red = shader_model->model.reflection_view_perpendicular_color.red * local_parameters->lighting.reflection_tint_color.red;
@@ -902,7 +902,7 @@ void _rasterizer_model_draw(
 
 				if (TEST_FLAG(shader_model->model.flags, _shader_model_two_sided_bit))
 				{
-					real vsh_constants__texscale[3][4];
+					real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4];
 
 					vsh_constants__texscale[0][0] = shader_model->model.detail_map_scale;
 					vsh_constants__texscale[0][1] = shader_model->model.detail_map_scale * shader_model->model.detail_map_v_scale;

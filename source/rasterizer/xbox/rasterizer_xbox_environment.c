@@ -53,21 +53,21 @@ void _rasterizer_environment_lightmaps_begin(
 		rasterizer_debug_options.draw_environment_lightmaps)
 	{
 		rasterizer_set_texture_direct(3, global_rasterizer_data->vector_normalization.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 127);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALL);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ALPHAREF, 127);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 	}
 
 	return;
@@ -91,11 +91,11 @@ void _rasterizer_environment_lightmap_begin(
 		if (lightmap)
 		{
 			rasterizer_set_texture_bitmap_data(2, lightmap);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(2, D3DTSS_MINFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
 			local_lightmap_has_no_data = FALSE;
 		}
 		else
@@ -258,7 +258,7 @@ void _rasterizer_environment_lightmap_draw(
 				SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
 				SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-				rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_vectors_debug, vertex_buffer->type, vectors[vector_index].vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vs_environment_vectors_debug, vertex_buffer->type, vectors[vector_index].vertex_shader_permutation);
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(normal_map ? PS_TEXTUREMODES_PROJECT2D : PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP);
@@ -323,7 +323,7 @@ void _rasterizer_environment_lightmap_draw(
 
 		shader_environment = shader_environment_get(shader);
 		illumination = &shader_environment->environment.self_illumination;
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_lightmap,vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vs_environment_lightmap, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 
 		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TEST_FLAG(shader_environment->environment.flags, _shader_environment_alpha_tested_bit) && rasterizer_debug_options.environment_alpha_testing_enabled);
 
@@ -570,32 +570,32 @@ void _rasterizer_environment_diffuse_lights_begin(
 	if (rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_normal && rasterizer_debug_options.draw_environment_diffuse_lights)
 	{
 		rasterizer_set_texture_direct(2, global_rasterizer_data->distance_attenuation.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_BORDER);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSW, D3DTADDRESS_BORDER);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, D3DTEXF_POINT);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_BORDER);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSW, D3DTADDRESS_BORDER);
+		SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MINFILTER, D3DTEXF_POINT);
+		SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 		rasterizer_set_texture_direct(3, global_rasterizer_data->vector_normalization.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_POINT);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_POINT);
+		SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_ONE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_ONE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 0);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_EQUAL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ALPHAREF, 0);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_EQUAL);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_PROJECT3D, PS_TEXTUREMODES_CUBEMAP);
@@ -635,12 +635,12 @@ void _rasterizer_environment_diffuse_light_begin(
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 732, light->radius>0.0f);
 
 		rasterizer_set_texture(1, _bitmap_type_cube_map, _bitmap_usage_multiplicative, light->definition->gel.map.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		{
 			real yaw;
@@ -711,14 +711,14 @@ void _rasterizer_environment_diffuse_light_draw(
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 831, vertex_buffer);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_diffuse_light,vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vs_environment_diffuse_light, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 
 		rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, TEST_FLAG(shader_environment->environment.flags, _shader_environment_bump_map_is_specular_mask_bit) ? NONE : shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		{
 			real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -788,17 +788,17 @@ void _rasterizer_environment_diffuse_textures_begin(
 		rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_diffuse_texture_times_bump_edge) &&
 		rasterizer_debug_options.draw_environment_textures)
 	{
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, rasterizer_debug_options.environment_specular_mask_enabled ? D3DCOLORWRITEENABLE_ALL : D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_overdraw ? D3DBLEND_ONE : D3DBLEND_DESTCOLOR);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_overdraw ? D3DBLEND_ONE : D3DBLEND_ZERO);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, rasterizer_debug_options.drawing_mode != _rasterizer_drawing_mode_overdraw);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_EQUAL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, rasterizer_debug_options.environment_specular_mask_enabled ? D3DCOLORWRITEENABLE_ALL : D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_SRCBLEND, rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_overdraw ? D3DBLEND_ONE : D3DBLEND_DESTCOLOR);
+		SetRenderStateSmart(D3DRS_DESTBLEND, rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_overdraw ? D3DBLEND_ONE : D3DBLEND_ZERO);
+		SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZENABLE, rasterizer_debug_options.drawing_mode != _rasterizer_drawing_mode_overdraw);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_EQUAL);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_reject_alpha_tested_decal);
 	}
@@ -826,13 +826,13 @@ void _rasterizer_environment_diffuse_texture_draw(
 		rasterizer_debug_options.draw_environment_textures)
 	{
 		struct shader_environment const *shader_environment;
+		real_vector2d primary_detail_rescale;
+		real_vector2d secondary_detail_rescale;
+		real_vector2d micro_detail_rescale;
 		point2d base_map_dimensions;
 		point2d primary_detail_map_dimensions;
 		point2d secondary_detail_map_dimensions;
 		point2d micro_detail_map_dimensions;
-		real_vector2d primary_detail_rescale;
-		real_vector2d secondary_detail_rescale;
-		real_vector2d micro_detail_rescale;
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 981, shader);
 
@@ -840,32 +840,32 @@ void _rasterizer_environment_diffuse_texture_draw(
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 995, vertex_buffer);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_texture,vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vs_environment_texture, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 
 		base_map_dimensions = *rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_multiplicative, shader_environment->environment.diffuse.base_map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 		primary_detail_map_dimensions = *rasterizer_set_texture(1, _bitmap_type_2d, _bitmap_usage_detail, shader_environment->environment.diffuse.primary_detail_map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 		secondary_detail_map_dimensions = *rasterizer_set_texture(2, _bitmap_type_2d, _bitmap_usage_detail, shader_environment->environment.diffuse.secondary_detail_map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 		micro_detail_map_dimensions = *rasterizer_set_texture(3, _bitmap_type_2d, _bitmap_usage_detail, shader_environment->environment.diffuse.micro_detail_map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		if (TEST_FLAG(shader_environment->environment.diffuse.flags, _shader_environment_diffuse_rescale_detail_maps_bit))
 		{
@@ -1036,32 +1036,32 @@ void _rasterizer_environment_specular_lights_begin(
 	if (rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_normal && rasterizer_debug_options.draw_environment_specular_lights)
 	{
 		rasterizer_set_texture_direct(2, global_rasterizer_data->vector_normalization.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 		rasterizer_set_texture_direct(3, global_rasterizer_data->vector_normalization.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_ONE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 0);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_EQUAL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
+		SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ALPHAREF, 0);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_EQUAL);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 	}
 
 	return;
@@ -1124,12 +1124,12 @@ static void rasterizer_environment_specular_spot_light_begin(
 		}
 
 		rasterizer_set_texture(1, _bitmap_type_cube_map, _bitmap_usage_multiplicative, gel_map_index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP);
@@ -1206,12 +1206,12 @@ void _rasterizer_environment_specular_light_begin(
 			}
 
 			rasterizer_set_texture_direct(1, global_rasterizer_data->distance_attenuation.index, 0);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_BORDER);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSW, D3DTADDRESS_BORDER);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_BORDER);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSW, D3DTADDRESS_BORDER);
+			SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 			memset(&pixel_shader, 0, sizeof(pixel_shader));
 			pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT3D, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP);
@@ -1279,14 +1279,14 @@ void _rasterizer_environment_specular_light_draw(
 		{
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 1645, vertex_buffer);
 
-			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_specular_light,vertex_buffer->type, specular_light_vertex_shader_permutation_index);
+			rasterizer_set_vertex_shader_permutation(_vs_environment_specular_light, vertex_buffer->type, specular_light_vertex_shader_permutation_index);
 
 			rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -1392,32 +1392,32 @@ void _rasterizer_environment_specular_lightmaps_begin(
 		rasterizer_globals.lightmap_mode == 0)
 	{
 		rasterizer_set_texture_direct(2, global_rasterizer_data->vector_normalization.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 		rasterizer_set_texture_direct(3, global_rasterizer_data->vector_normalization.index, 0);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_ONE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 0);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_EQUAL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
+		SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ALPHAREF, 0);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_EQUAL);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP);
@@ -1467,11 +1467,11 @@ void _rasterizer_environment_specular_lightmap_begin(
 		if (lightmap)
 		{
 			rasterizer_set_texture_bitmap_data(1, lightmap);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(1, D3DTSS_MINFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
 			local_lightmap_has_no_data = FALSE;
 		}
 		else
@@ -1506,14 +1506,14 @@ void _rasterizer_environment_specular_lightmap_draw(
 
 		if (shader_environment->environment.specular.brightness > 0.f && TEST_FLAG(shader_environment->environment.specular.flags, _shader_environment_specular_lightmap_bit))
 		{
-			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_specular_light,vertex_buffer->type, 2);
+			rasterizer_set_vertex_shader_permutation(_vs_environment_specular_light, vertex_buffer->type, 2);
 
 			rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -1620,17 +1620,17 @@ void _rasterizer_environment_reflection_lightmap_masks_begin(
 		rasterizer_debug_options.draw_environment_reflections &&
 		rasterizer_globals.lightmap_mode == 0)
 	{
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_ZERO);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_EQUAL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
+		SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+		SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_EQUAL);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
@@ -1661,11 +1661,11 @@ void _rasterizer_environment_reflection_lightmap_mask_begin(
 		if (lightmap)
 		{
 			rasterizer_set_texture_bitmap_data(0, lightmap);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(0, D3DTSS_MINFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
+			SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, rasterizer_debug_options.lightmap_filtering_enabled ? D3DTEXF_LINEAR : D3DTEXF_POINT);
 			local_lightmap_has_no_data = FALSE;
 		}
 		else
@@ -1702,7 +1702,7 @@ void _rasterizer_environment_reflection_lightmap_mask_draw(
 		if ((shader_environment->environment.reflection.view_perpendicular_brightness > 0.f || shader_environment->environment.reflection.view_parallel_brightness > 0.f) &&
 			shader_environment->environment.reflection.lightmap_brightness_scale < 1.f)
 		{
-			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_reflection_lightmap_mask,vertex_buffer->type, 0);
+			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection_lightmap_mask, vertex_buffer->type, 0);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -1793,45 +1793,45 @@ void _rasterizer_environment_reflection_mirror_draw(
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 2287, vertex_buffer);
 
 			rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 			rasterizer_set_texture_direct(1, global_rasterizer_data->vector_normalization.index, 0);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(1, D3DTSS_MINFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 			rasterizer_set_texture_direct(2, global_rasterizer_data->vector_normalization.index, 0);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(2, D3DTSS_MINFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 			rasterizer_set_target_as_texture(3, _rasterizer_target_render_secondary, 0);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_ONE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_EQUAL);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+			SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+			SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+			SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
+			SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ONE);
+			SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_EQUAL);
+			SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_reflection_mirror,vertex_buffer->type, 0);
+			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection_mirror, vertex_buffer->type, 0);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -1962,46 +1962,46 @@ void _rasterizer_environment_reflection_draw(
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 2496, reflection_type>=0 && reflection_type<NUMBER_OF_SHADER_ENVIRONMENT_REFLECTION_TYPES);
 
 			rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+			SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 			rasterizer_set_texture_direct(1, global_rasterizer_data->vector_normalization.index, 0);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(1, D3DTSS_MINFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 			rasterizer_set_texture_direct(2, global_rasterizer_data->vector_normalization.index, 0);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, D3DTEXF_POINT);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(2, D3DTSS_MINFILTER, D3DTEXF_POINT);
+			SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 			rasterizer_set_texture(3, _bitmap_type_cube_map, _bitmap_usage_additive, shader_environment->environment.reflection.map.index, shader_permutation_index);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+			SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+			SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_ONE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_EQUAL);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+			SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
+			SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+			SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_DESTALPHA);
+			SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ONE);
+			SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_EQUAL);
+			SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_reflection,vertex_buffer->type, reflection_type);
+			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection, vertex_buffer->type, reflection_type);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -2126,7 +2126,6 @@ void _rasterizer_environment_transparent_geometry_submit(
 	unsigned long geometry_flags)
 {
 	static struct transparent_geometry_group local_group;
-	static boolean warned = FALSE;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 2699, global_d3d_device);
 
@@ -2135,6 +2134,7 @@ void _rasterizer_environment_transparent_geometry_submit(
 		struct transparent_geometry_group *group;
 		real_vector3d forward;
 		real_plane3d zero_plane;
+		static boolean warned = FALSE;
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 2706, shader);
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 2707, shader->base.type!=_shader_type_environment);

@@ -44,10 +44,10 @@ void rasterizer_error(
 	char const *format,
 	...)
 {
+	char const *error_name = "<unknown error>";
 	char error_line_string[1024];
 	char error_desc_string[1024];
 	va_list arglist;
-	char const *error_name = "<unknown error>";
 
 	va_start(arglist, format);
 	vsprintf(error_line_string, format, arglist);

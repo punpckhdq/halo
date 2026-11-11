@@ -20,7 +20,6 @@ RASTERIZER_XBOX_HARDWARE_GEOMETRY.C
 
 /* ---------- macros */
 
-// (These names are real)
 #define RASTERIZER_STATIC_BUFFER_USAGE D3DUSAGE_WRITEONLY
 #define RASTERIZER_STATIC_BUFFER_POOL D3DPOOL_MANAGED
 
@@ -130,7 +129,7 @@ boolean rasterizer_triangle_buffer_new(
 	struct triangle_buffer *triangle_buffer,
 	short type,
 	long count,
-	void *triangles)
+	void const *triangles)
 {
 	IDirect3DIndexBuffer8 *d3d_index_buffer;
 	byte *index_buffer_data;

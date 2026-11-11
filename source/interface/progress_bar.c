@@ -529,23 +529,23 @@ static void progress_bar_render(
 	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 	SetRenderStateSmart(D3DRS_LIGHTING, FALSE);
 
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_MIPFILTER, D3DTEXF_POINT);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_MIPFILTER, D3DTEXF_POINT);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
 
-	SetTextureStageStateSmart(_progress_bar_texture_stage_noise,D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_noise,D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_noise,D3DTSS_MIPFILTER, D3DTEXF_POINT);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_noise,D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_noise,D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_noise, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_noise, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_noise, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_noise, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_noise, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
 
 	IDirect3DDevice8_SetTexture(global_d3d_device, _progress_bar_texture_stage_image, (IDirect3DBaseTexture8 *)progress_bar_texture);
 
@@ -585,9 +585,9 @@ static void progress_bar_render(
 	// Setup and draw the map's `loading.tga`
 	IDirect3DDevice8_SetTexture(global_d3d_device, _progress_bar_texture_stage_image, (IDirect3DBaseTexture8 *)progress_bar_texture);
 	IDirect3DDevice8_SetTexture(global_d3d_device, _progress_bar_texture_stage_mask, (IDirect3DBaseTexture8 *)progress_bar_mask_texture);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_BORDERCOLOR, 0x05050505);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_mask,D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_BORDERCOLOR, 0x05050505);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_mask, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
 	IDirect3DDevice8_SetPixelShaderProgram(global_d3d_device, &regular_shader);
 
@@ -743,11 +743,11 @@ static void progress_bar_make_stuff_ready(
 	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 	SetRenderStateSmart(D3DRS_LIGHTING, FALSE);
 	IDirect3DDevice8_SetTexture(global_d3d_device, _progress_bar_texture_stage_image, (IDirect3DBaseTexture8 *)progress_bar_texture);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_MIPFILTER, D3DTEXF_POINT);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-	SetTextureStageStateSmart(_progress_bar_texture_stage_image,D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_MIPFILTER, D3DTEXF_POINT);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+	SetTextureStageStateSmart(_progress_bar_texture_stage_image, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
 	memset(&blur_shader, 0, sizeof(blur_shader));
 	blur_shader.PSTextureModes = PS_TEXTUREMODES(

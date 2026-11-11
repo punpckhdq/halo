@@ -317,7 +317,7 @@ void _rasterizer_detail_objects_draw(
 
 			if (collection_definition->collection_type != NONE)
 			{
-				rasterizer_set_vertex_shader_permutation(_vertex_shader_detail_object,_rasterizer_vertex_type_detail_object, collection_definition->collection_type);
+				rasterizer_set_vertex_shader_permutation(_vs_detail_object, _rasterizer_vertex_type_detail_object, collection_definition->collection_type);
 			}
 
 			frame_count = 0;

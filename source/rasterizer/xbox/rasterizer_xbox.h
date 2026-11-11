@@ -26,26 +26,26 @@ enum
 
 enum
 {
-	_vertex_shader_debug = 0, /* extremely fake name */
-	_vertex_shader_decal = 1, /* extremely fake name */
-	_vertex_shader_screen = 4, /* extremely fake name */
-	_vertex_shader_model_fog_screen = 5, /* extremely fake name */
-	_vertex_shader_environment_fog = 6, /* extremely fake name */
-	_vertex_shader_environment_fog_screen = 8, /* extremely fake name */
-	_vertex_shader_model = 10, /* extremely fake name */
-	_vertex_shader_model_zbuffer = 13, /* extremely fake name */
-	_vertex_shader_environment_lightmap = 16, /* extremely fake name */
-	_vertex_shader_environment_specular_light = 21, /* extremely fake name */
-	_vertex_shader_detail_object = 33, /* extremely fake name */
-	_vertex_shader_environment_vectors_debug = 37, /* extremely fake name */
-	_vertex_shader_screen_texture_animation = 38, /* extremely fake name */
-	_vertex_shader_environment_texture = 40, /* extremely fake name */
-	_vertex_shader_environment_reflection = 42, /* extremely fake name */
-	_vertex_shader_environment_diffuse_light = 49, /* extremely fake name */
-	_vertex_shader_environment_reflection_mirror = 51, /* extremely fake name */
-	_vertex_shader_sun_glow = 56, /* extremely fake name */
-	_vertex_shader_environment_reflection_lightmap_mask = 58, /* extremely fake name */
-	_vertex_shader_model_active_camouflage = 64 /* extremely fake name */
+	_vs_debug = 0, /* fake name */
+	_vs_decal = 1, /* fake name */
+	_vs_screen = 4, /* fake name */
+	_vs_model_fog_screen = 5, /* fake name */
+	_vs_environment_fog = 6, /* fake name */
+	_vs_environment_fog_screen = 8, /* fake name */
+	_vs_model = 10, /* fake name */
+	_vs_model_zbuffer = 13, /* fake name */
+	_vs_environment_lightmap = 16, /* fake name */
+	_vs_environment_specular_light = 21, /* fake name */
+	_vs_detail_object = 33, /* fake name */
+	_vs_environment_vectors_debug = 37, /* fake name */
+	_vs_screen_texture_animation = 38, /* fake name */
+	_vs_environment_texture = 40, /* fake name */
+	_vs_environment_reflection = 42, /* fake name */
+	_vs_environment_diffuse_light = 49, /* fake name */
+	_vs_environment_reflection_mirror = 51, /* fake name */
+	_vs_sun_glow = 56, /* fake name */
+	_vs_environment_reflection_lightmap_mask = 58, /* fake name */
+	_vs_model_active_camouflage = 64 /* fake name */
 };
 
 enum
@@ -81,8 +81,8 @@ enum
 
 #define VSDE_VERTEX 0
 
-#define RASTERIZER_DYNAMIC_BUFFER_USAGE (D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY) /* fake name */
-#define RASTERIZER_DYNAMIC_BUFFER_POOL D3DPOOL_DEFAULT /* fake name */
+#define RASTERIZER_DYNAMIC_BUFFER_USAGE (D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY)
+#define RASTERIZER_DYNAMIC_BUFFER_POOL D3DPOOL_DEFAULT
 
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH (RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 5) /* fake name */
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT (RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 5) /* fake name */
@@ -387,20 +387,20 @@ extern struct rasterizer_vertex_shader vertex_shader_table[NUMBER_OF_VERTEX_SHAD
 /* ---------- public code */
 
 __inline void SetRenderStateSmart(
-	D3DRENDERSTATETYPE state,
-	unsigned long value)
+	D3DRENDERSTATETYPE State,
+	unsigned long Value)
 {
-	IDirect3DDevice8_SetRenderState(global_d3d_device, state, value);
+	IDirect3DDevice8_SetRenderState(global_d3d_device, State, Value);
 
 	return;
 }
 
 __inline void SetTextureStageStateSmart(
 	unsigned long stage,
-	D3DTEXTURESTAGESTATETYPE type,
-	unsigned long value)
+	D3DTEXTURESTAGESTATETYPE State,
+	unsigned long Value)
 {
-	IDirect3DDevice8_SetTextureStageState(global_d3d_device, stage, type, value);
+	IDirect3DDevice8_SetTextureStageState(global_d3d_device, stage, State, Value);
 
 	return;
 }

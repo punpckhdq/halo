@@ -303,7 +303,7 @@ void _rasterizer_decals_begin(
 			}
 		}
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_decal,_rasterizer_vertex_type_decal, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_decal, _rasterizer_vertex_type_decal, 0);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
@@ -430,7 +430,7 @@ void _rasterizer_decals_draw(
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 510, intensity<=PIXEL32_COMPONENT_MASK);
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 511, vertex_data_offset%sizeof(struct decal_vertex)==0);
 
-			IDirect3DDevice8_SetVertexData4ub(global_d3d_device, D3DVSDE_TEXCOORD0, (byte)PIXEL32_RED(color), (byte)PIXEL32_GREEN(color), (byte)PIXEL32_BLUE(color), (byte)(PIXEL32_COMPONENT_MASK - intensity));
+			IDirect3DDevice8_SetVertexData4ub(global_d3d_device, 9, (byte)PIXEL32_RED(color), (byte)PIXEL32_GREEN(color), (byte)PIXEL32_BLUE(color), (byte)(PIXEL32_COMPONENT_MASK - intensity));
 			IDirect3DDevice8_DrawPrimitive(global_d3d_device, D3DPT_QUADLIST, vertex_data_offset/sizeof(struct decal_vertex), decal->quad_count);
 
 			if (rasterizer_debug_options.statistics_mode == _rasterizer_statistics_mode_full)

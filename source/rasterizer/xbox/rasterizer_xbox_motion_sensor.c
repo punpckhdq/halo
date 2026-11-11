@@ -67,10 +67,10 @@ void _rasterizer_hud_motion_sensor_blip_begin(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 0);
 
 		{
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{1.f, 0.f, 0.f, 0.f},
 				{0.f, 1.f, 0.f, 0.f},
@@ -119,7 +119,7 @@ void _rasterizer_hud_motion_sensor_blip_draw(
 		blip_draw_position.y = -blip_position->y / 32.f;
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
-		IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, fade * blip_color->red, fade * blip_color->green, fade * blip_color->blue, 1.f);
+		IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, fade * blip_color->red, fade * blip_color->green, fade * blip_color->blue, 1.f);
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 0, 0);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, blip_draw_position.x - blip_size, blip_draw_position.y + blip_size);
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 0);
@@ -173,10 +173,10 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 0);
 
 		{
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{1.f, 0.f, 0.f, 0.f},
 				{0.f, 1.f, 0.f, 0.f},
@@ -203,7 +203,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		rasterizer_set_pixel_shader(&pixel_shader);
 
 		D3DCALL(success, IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.4588f, 0.7294f, 1.f, 1.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, 0.4588f, 0.7294f, 1.f, 1.f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, theta*0.5f + 0.5f, 0.5f - theta*0.5f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, maximum));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 0.5f - theta*0.5f, 0.5f - theta*0.5f));
@@ -227,7 +227,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		rasterizer_set_pixel_shader(&pixel_shader);
 
 		D3DCALL(success, IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.4f, 0.8f, 0.4f, 1.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, 0.4f, 0.8f, 0.4f, 1.f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 1.f, 0.f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, maximum));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 0.f, 0.f));
@@ -257,12 +257,12 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen,_rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 0);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 			short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{2.f / viewport_width, 0.f, 0.f, -1.f - 1.f / viewport_width},
 				{0.f, -2.f / viewport_height, 0.f, 1.f / viewport_height + 1.f},

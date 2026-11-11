@@ -23068,7 +23068,7 @@
 { "address": 8805048, "flags": 0, "name": "_local_lightmap_ambient_color", "static": true },
 { "address": 8805060, "flags": 0, "name": "_local_lightmap_has_no_data", "static": true },
 { "address": 8805064, "flags": 0, "name": "_specular_light_brightness", "static": true },
-{ "address": 8805068, "flags": 0, "name": "?warned@?1??_rasterizer_environment_transparent_geometry_submit@@9@9" },
+{ "address": 8805068, "flags": 0, "name": "?warned@?3??_rasterizer_environment_transparent_geometry_submit@@9@9" },
 { "address": 8805072, "flags": 0, "name": "_local_model_node_matrix_count", "static": true },
 { "address": 8805076, "flags": 0, "name": "_local_model_node_matrices", "static": true },
 { "address": 8805080, "flags": 0, "name": "_local_world_to_view", "static": true },

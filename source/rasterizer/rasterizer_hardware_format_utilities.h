@@ -24,7 +24,7 @@ void rasterizer_bitmap_changed(struct bitmap_data *bitmap);
 
 boolean rasterizer_vertex_buffer_new(struct vertex_buffer *vertex_buffer, short type, long count, void *vertices, long buffer_size);
 void rasterizer_vertex_buffer_delete(struct vertex_buffer *vertex_buffer);
-boolean rasterizer_triangle_buffer_new(struct triangle_buffer *triangle_buffer, short type, long count, void *triangles);
+boolean rasterizer_triangle_buffer_new(struct triangle_buffer *triangle_buffer, short type, long count, void const *triangles);
 void rasterizer_triangle_buffer_delete(struct triangle_buffer *triangle_buffer);
 
 /* ---------- globals */

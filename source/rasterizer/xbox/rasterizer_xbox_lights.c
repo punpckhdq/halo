@@ -57,10 +57,10 @@ static void rasterizer_sun_glow_copy_source(
 	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 	SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-	rasterizer_set_vertex_shader_permutation(_vertex_shader_screen_texture_animation,_rasterizer_vertex_type_dynamic_screen, 0);
+	rasterizer_set_vertex_shader_permutation(_vs_screen_texture_animation, _rasterizer_vertex_type_dynamic_screen, 0);
 
 	{
-		real vsh_constants__texanim[8][4] =
+		real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
 		{
 			{bounds->x1 - bounds->x0, 0.f, 0.f, bounds->x0},
 			{0.f, bounds->y1 - bounds->y0, 0.f, bounds->y0},
@@ -179,10 +179,10 @@ static short rasterizer_sun_glow_convolve(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen_texture_animation,_rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen_texture_animation, _rasterizer_vertex_type_dynamic_screen, 0);
 
 		{
-			real vsh_constants__texanim[8][4] =
+			real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
 			{
 				{1.f, 0.f, 0.f, -1.f / 128.f},
 				{0.f, 1.f, 0.f, -1.f / 128.f},
@@ -283,7 +283,7 @@ void rasterizer_sun_glow_draw(
 	{
 		short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 		short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-		real vsh_constants__screenproj[5][4] =
+		real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 		{
 			{2.f / viewport_width, 0.f, 0.f, -1.f - 1.f / viewport_width},
 			{0.f, -2.f / viewport_height, 0.f, 1.f / viewport_height + 1.f},
@@ -330,7 +330,7 @@ void rasterizer_sun_glow_draw(
 				short target;
 				short pass;
 
-				rasterizer_set_vertex_shader_permutation(_vertex_shader_sun_glow,_rasterizer_vertex_type_dynamic_unlit, 0);
+				rasterizer_set_vertex_shader_permutation(_vs_sun_glow, _rasterizer_vertex_type_dynamic_unlit, 0);
 
 				SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 				SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA);
@@ -352,7 +352,7 @@ void rasterizer_sun_glow_draw(
 				D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, bounds.x0, bounds.y1));
 				D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 
-				rasterizer_set_vertex_shader_permutation(_vertex_shader_sun_glow,_rasterizer_vertex_type_dynamic_unlit, 0);
+				rasterizer_set_vertex_shader_permutation(_vs_sun_glow, _rasterizer_vertex_type_dynamic_unlit, 0);
 				rasterizer_set_texture_direct(0, global_rasterizer_data->glow.index, 0);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -392,7 +392,7 @@ void rasterizer_sun_glow_draw(
 				rasterizer_sun_glow_copy_source(_rasterizer_target_sun_glow_secondary, &screen_bounds);
 				target = rasterizer_sun_glow_convolve(_rasterizer_target_sun_glow_primary, _rasterizer_target_sun_glow_secondary, 4);
 
-				rasterizer_set_vertex_shader_permutation(_vertex_shader_sun_glow,_rasterizer_vertex_type_dynamic_unlit, 0);
+				rasterizer_set_vertex_shader_permutation(_vs_sun_glow, _rasterizer_vertex_type_dynamic_unlit, 0);
 				rasterizer_set_target_as_texture(0, target, 0);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
