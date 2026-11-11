@@ -1513,9 +1513,12 @@ static void biped_update_moving(
 			else if (TEST_FLAG(biped_definition->biped.flags, _biped_uses_player_physics_bit) && biped->unit.animation.state != _unit_state_user_animation)
 			{
 				struct game_globals_player_information *player_information = TAG_BLOCK_GET_ELEMENT(&scenario_get_game_globals()->player_information, 0, struct game_globals_player_information);
+#if CONFIG_VERSION >= 2342
 				struct game_globals_player_information player_information_block;
+#endif
 				real speed_scale = 1.f;
 
+#if CONFIG_VERSION >= 2342
 				if (cinematic_in_progress() || TEST_FLAG(biped_definition->biped.flags, _biped_uses_old_player_physics_bit))
 				{
 					player_information_block = *player_information;
@@ -1526,6 +1529,7 @@ static void biped_update_moving(
 					player_information_block.run_sideways_speed = 2.f;
 					player_information_block.run_acceleration = 0.32f;
 				}
+#endif
 
 				if (biped->unit.player_index != NONE)
 				{
@@ -1726,7 +1730,7 @@ static void biped_update_moving(
 			struct collision_model_test_vector_result vector_result;
 			struct collision_result collision;
 
-			match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\bipeds.c", 2170, _collision_user_melee);
+			match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(2157, 2170), _collision_user_melee);
 
 			vector_from_points3d(&physics.position, &physics.new_position, &movement_vector);
 			if (fast_vector_intersects_sphere(&physics.position, &movement_vector, &target->object.bounding_sphere_center, (real)(target->object.bounding_sphere_radius)) &&
@@ -1746,7 +1750,7 @@ static void biped_update_moving(
 				unit_impact_melee_damage(biped_index, biped->biped.impact_target_object_index, vector_result.node_index, vector_result.region_index, vector_result.bsp_result.material_index, &collision_point, &collision_plane.n, &collision.location);
 			}
 
-			match_collision_log_end_user("c:\\halo\\SOURCE\\units\\bipeds.c", 2213);
+			match_collision_log_end_user("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(2200, 2213));
 		}
 
 		biped_bumped_object(biped_index, physics.bumped_object_index, &physics.velocity);
@@ -1979,7 +1983,9 @@ static void biped_falling_damage(
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 	struct game_globals_falling_damage *falling_damage = TAG_BLOCK_GET_ELEMENT(&scenario_get_game_globals()->falling_damage, 0, struct game_globals_falling_damage);
 	boolean immune = TEST_FLAG(biped->unit.flags, _unit_no_falling_damage_bit) || TEST_FLAG(definition->biped.flags, _biped_immune_to_falling_damage_bit);
+#if CONFIG_VERSION >= 2342
 	real vertical_velocity = biped->object.translational_velocity.k;
+#endif
 
 	if (cheat.jetpack && biped->unit.player_index != NONE)
 	{
@@ -1996,7 +2002,11 @@ static void biped_falling_damage(
 			object_cause_damage(&damage_data, biped_index, NONE, NONE, NONE, NULL);
 		}
 	}
+#if CONFIG_VERSION >= 2342
 	else if (!TEST_FLAG(definition->biped.flags, _biped_flying_bit) && -falling_damage->runtime_maximum_falling_velocity > vertical_velocity)
+#else
+	else if (!TEST_FLAG(definition->biped.flags, _biped_flying_bit) && -falling_damage->runtime_maximum_falling_velocity > biped->object.translational_velocity.k)
+#endif
 	{
 		if (!immune && !TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 		{
@@ -2141,7 +2151,7 @@ static void biped_update_airborne(
 		}
 	}
 
-	match_assert("c:\\halo\\SOURCE\\units\\bipeds.c", 2687, TEST_FLAG(biped->biped.flags, _biped_airborne_bit));
+	match_assert("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(2657, 2687), TEST_FLAG(biped->biped.flags, _biped_airborne_bit));
 
 	if (biped->unit.animation.state == _unit_state_leap_start || biped->unit.animation.state == _unit_state_leap_airborne)
 	{
@@ -2387,7 +2397,7 @@ void biped_build_flying_axes(
 	real_vector3d *left_vector,
 	real_vector3d *up_vector)
 {
-	match_assert("c:\\halo\\SOURCE\\units\\bipeds.c", 2993, forward_vector && left_vector && up_vector);
+	match_assert("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(2963, 2993), forward_vector && left_vector && up_vector);
 
 	*up_vector = *global_up3d;
 	cross_product3d(up_vector, forward_vector, left_vector);
@@ -2400,7 +2410,7 @@ void biped_build_flying_axes(
 	cross_product3d(forward_vector, left_vector, up_vector);
 	normalize3d(up_vector);
 
-	match_assert_valid_real_vector3d_axes3("c:\\halo\\SOURCE\\units\\bipeds.c", 3008, forward_vector, left_vector, up_vector);
+	match_assert_valid_real_vector3d_axes3("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(2978, 3008), forward_vector, left_vector, up_vector);
 
 	return;
 }
@@ -2412,8 +2422,8 @@ static void biped_update_physics(
 	real forward_i = 0.f;
 	real forward_j = 0.f;
 
-	match_assert_valid_real_point3d("c:\\halo\\SOURCE\\units\\bipeds.c", 3020, &physics->position);
-	match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\bipeds.c", 3021, &physics->velocity);
+	match_assert_valid_real_point3d("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(2990, 3020), &physics->position);
+	match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(2991, 3021), &physics->velocity);
 
 	physics->out_flags = 0;
 	SET_FLAG(physics->out_flags, _biped_physics_out_cannot_stand_bit, FALSE);
@@ -3027,8 +3037,8 @@ static void biped_update_physics(
 		}
 	}
 
-	match_assert_valid_real_point3d("c:\\halo\\SOURCE\\units\\bipeds.c", 3856, &physics->new_position);
-	match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\bipeds.c", 3857, &physics->new_velocity);
+	match_assert_valid_real_point3d("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(3810, 3856), &physics->new_position);
+	match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(3811, 3857), &physics->new_velocity);
 
 	return;
 }
@@ -3127,7 +3137,7 @@ static void biped_make_footstep(
 	struct biped_datum *biped = biped_get(biped_index);
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 
-	match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\bipeds.c", 3965, _collision_user_bipeds);
+	match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(3919, 3965), _collision_user_bipeds);
 
 	if (contact_point_index < definition->biped.contact_points.count && definition->biped.material_effects.index != NONE)
 	{
@@ -3143,7 +3153,7 @@ static void biped_make_footstep(
 		}
 	}
 
-	match_collision_log_end_user("c:\\halo\\SOURCE\\units\\bipeds.c", 3982);
+	match_collision_log_end_user("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(3936, 3982));
 
 	return;
 }
@@ -3160,7 +3170,7 @@ static void biped_find_nearby_support_surface(
 
 	biped_get_physics_pill(biped_index, &center, &height, &width);
 
-	match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\bipeds.c", 3999, _collision_user_bipeds);
+	match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(3953, 3999), _collision_user_bipeds);
 
 	if (collision_bsp_test_sphere(bsp, 256, breakable_surface_flags_get(), &center, width + 0.05f, &sphere_test_result))
 	{
@@ -3193,7 +3203,7 @@ static void biped_find_nearby_support_surface(
 		}
 	}
 
-	match_collision_log_end_user("c:\\halo\\SOURCE\\units\\bipeds.c", 4034);
+	match_collision_log_end_user("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(3988, 4034));
 
 	return;
 }
@@ -3211,7 +3221,7 @@ static void biped_snap_facing(
 		real bank_cosine;
 		real bank_sine;
 
-		match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\bipeds.c", 4051, &biped->object.forward);
+		match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\bipeds.c", MATCH_LINE_NTSC(4005, 4051), &biped->object.forward);
 
 		cross_product3d(&biped->object.forward, global_up3d, &new_right);
 		cross_product3d(&new_right, &biped->object.forward, &new_up);
