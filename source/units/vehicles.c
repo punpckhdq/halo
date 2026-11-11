@@ -40,7 +40,7 @@ enum
 	_vehicle_function_turn_right,
 	_vehicle_function_crouch,
 	_vehicle_function_jump,
-	_vehicle_function_walk,
+	_vehicle_function_unused,
 	_vehicle_function_velocity_air,
 	_vehicle_function_velocity_water,
 	_vehicle_function_velocity_ground,
@@ -64,7 +64,7 @@ enum
 	_vehicle_function_thrust,
 	_vehicle_function_engine_hack,
 	_vehicle_function_wingtip_contrail_new,
-	NUMBER_OF_VEHICLE_FUNCTIONS
+	NUMBER_OF_VEHICLE_FUNCTION_MODES
 };
 
 /* ---------- macros */
@@ -96,7 +96,12 @@ static void compute_airborne_ticks(long vehicle_index, struct powered_mass_point
 
 /* ---------- globals */
 
-static struct profile_section vehicle_update_section = {"vehicle_update", NONE, TRUE}; /* fake name */
+static struct profile_section vehicle_update_section = /* fake name */
+{
+	"vehicle_update",
+	NONE,
+	TRUE
+};
 
 /* ---------- public code */
 
@@ -180,7 +185,7 @@ boolean vehicle_new(
 
 	if (definition->object.physics.index != NONE)
 	{
-		vehicle->object.position.z += definition->object.bounding_radius * 0.5f;
+		vehicle->object.position.z += 0.5f * definition->object.bounding_radius;
 	}
 
 	return TRUE;
@@ -249,10 +254,10 @@ boolean vehicle_update(
 
 			if (vehicle->vehicle.upending_type == _vehicle_upending_along_forward || vehicle->vehicle.upending_type == _vehicle_upending_along_back)
 			{
-				real_vector3d left;
+				real_vector3d object_right;
 
-				cross_product3d(&vehicle->object.forward, &vehicle->object.up, &left);
-				vector_from_line3d(&axis, &left, -vehicle->object.forward.k, &axis);
+				cross_product3d(&vehicle->object.forward, &vehicle->object.up, &object_right);
+				vector_from_line3d(&axis, &object_right, -vehicle->object.forward.k, &axis);
 			}
 
 			scale_vector3d(&axis, angular_velocity, &vehicle->object.angular_velocity);
@@ -328,8 +333,8 @@ boolean vehicle_update(
 		}
 		else
 		{
-			struct mass_point_datum mass_points[MAXIMUM_MASS_POINTS_PER_PHYSICS];
 			struct powered_mass_point_datum powered_mass_points[MAXIMUM_POWERED_MASS_POINTS_PER_PHYSICS];
+			struct mass_point_datum mass_points[MAXIMUM_MASS_POINTS_PER_PHYSICS];
 			real_vector3d old_velocity = vehicle->object.translational_velocity;
 
 			switch (definition->vehicle.type)
@@ -577,10 +582,9 @@ void vehicle_accelerate(
 
 	if (definition->object.physics.index != NONE)
 	{
+		struct physics_definition *physics = physics_definition_get(definition->object.physics.index);
 		real_vector3d axis;
 		real magnitude;
-
-		physics_definition_get(definition->object.physics.index);
 
 		add_vectors3d(&vehicle->object.translational_velocity, acceleration, &vehicle->object.translational_velocity);
 		cross_product3d(global_up3d, acceleration, &axis);
@@ -608,12 +612,9 @@ void vehicle_hover(
 		if (hover_flag)
 		{
 			object_get_origin(vehicle_index, &vehicle->vehicle.hover_position);
-			SET_FLAG(vehicle->vehicle.flags, _vehicle_hovering_bit, TRUE);
 		}
-		else
-		{
-			SET_FLAG(vehicle->vehicle.flags, _vehicle_hovering_bit, FALSE);
-		}
+
+		SET_FLAG(vehicle->vehicle.flags, _vehicle_hovering_bit, hover_flag);
 	}
 
 	return;
@@ -624,6 +625,36 @@ void vehicle_render_debug(
 {
 	struct vehicle_datum *vehicle = vehicle_get(vehicle_index);
 	struct vehicle_definition *definition = vehicle_definition_get(vehicle->definition_index);
+
+	if (FALSE)
+	{
+		real speed = magnitude3d(&vehicle->object.translational_velocity) / definition->vehicle.speed.maximum_forward_speed;
+		real angular_speed = magnitude3d(&vehicle->object.angular_velocity) / definition->vehicle.turn_rate;
+		real old_bank = speed * angular_speed;
+		real new_bank = speed * vehicle->vehicle.thrust;
+		real maximum_bank = 0.9f;
+		real minimum_bank = 0.05f;
+		real old_contrail = PIN((old_bank - minimum_bank) / (maximum_bank - minimum_bank), 0.f, 1.f);
+		real new_contrail = PIN((new_bank - minimum_bank) / (maximum_bank - minimum_bank), 0.f, 1.f);
+		real_point3d text_point;
+		char textbuf[512];
+
+		object_get_origin(vehicle_index, &text_point);
+		sprintf(textbuf, "speed %.2f angvel %.2f", speed, angular_speed);
+		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+
+		point_from_line3d(&text_point, global_up3d, 0.4f, &text_point);
+		sprintf(textbuf, "thrust %.2f", vehicle->vehicle.thrust);
+		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+
+		point_from_line3d(&text_point, global_up3d, 0.4f, &text_point);
+		sprintf(textbuf, "old-bank %.2f contrail %.2f", old_bank, old_contrail);
+		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+
+		point_from_line3d(&text_point, global_up3d, 0.4f, &text_point);
+		sprintf(textbuf, "new-bank %.2f contrail %.2f", new_bank, new_contrail);
+		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+	}
 
 	if (definition->object.physics.index != NONE)
 	{
@@ -1052,11 +1083,10 @@ static void update_alien_scout_physics(
 		if (vehicle->vehicle.hover < 1.f)
 		{
 			real const maximum_alpha = DEGREES_TO_RADIANS(80.f) / (TICKS_PER_SECOND * TICKS_PER_SECOND);
-			real_vector2d applied_alpha = *global_zero_vector2d;
 			real_vector3d vehicle_left;
 			real_vector2d vehicle_forward_horizontal;
 			real_vector2d vehicle_left_horizontal;
-			real_vector3d turning_torque;
+			real_vector2d applied_alpha = *global_zero_vector2d;
 
 			cross_product3d(&vehicle->object.up, &vehicle->object.forward, &vehicle_left);
 			vehicle_forward_horizontal = *(real_vector2d const *)&vehicle->object.forward;
@@ -1066,25 +1096,25 @@ static void update_alien_scout_physics(
 
 			if (vehicle->object.up.k > 0.f)
 			{
-				real_vector2d tilt;
-				real_vector2d tilt_velocity;
+				real_vector2d offset_from_vertical;
+				real_vector2d angular_velocity;
 				real_vector2d alpha_desire;
 				real const alpha_sign = 1.f;
-				real_vector2d alpha_scale;
+				real_vector2d alpha_bonus;
 
-				tilt.i = dot_product2d((real_vector2d const *)&vehicle->object.up, &vehicle_forward_horizontal);
-				tilt.j = dot_product2d((real_vector2d const *)&vehicle->object.up, &vehicle_left_horizontal);
-				tilt_velocity.i = dot_product2d((real_vector2d const *)&vehicle->object.angular_velocity, &vehicle_left_horizontal);
-				tilt_velocity.j = -dot_product2d((real_vector2d const *)&vehicle->object.angular_velocity, &vehicle_forward_horizontal);
+				offset_from_vertical.i = dot_product2d((real_vector2d const *)&vehicle->object.up, &vehicle_forward_horizontal);
+				offset_from_vertical.j = dot_product2d((real_vector2d const *)&vehicle->object.up, &vehicle_left_horizontal);
+				angular_velocity.i = dot_product2d((real_vector2d const *)&vehicle->object.angular_velocity, &vehicle_left_horizontal);
+				angular_velocity.j = -dot_product2d((real_vector2d const *)&vehicle->object.angular_velocity, &vehicle_forward_horizontal);
 
 				alpha_desire = *global_zero_vector2d;
-				point_from_line2d((real_point2d *)&alpha_desire, &tilt, -1.f, (real_point2d *)&alpha_desire);
-				point_from_line2d((real_point2d *)&alpha_desire, &tilt_velocity, -15.f, (real_point2d *)&alpha_desire);
+				point_from_line2d((real_point2d *)&alpha_desire, &offset_from_vertical, -1.f, (real_point2d *)&alpha_desire);
+				point_from_line2d((real_point2d *)&alpha_desire, &angular_velocity, -15.f, (real_point2d *)&alpha_desire);
 
-				alpha_scale.i = (alpha_desire.i * vehicle->unit.throttle.i != 0.f ? (alpha_desire.i * vehicle->unit.throttle.i < 0.f ? -1 : 1) : 0) * alpha_sign * fabs(alpha_desire.i);
-				alpha_scale.j = (alpha_desire.j * vehicle->unit.throttle.j != 0.f ? (alpha_desire.j * vehicle->unit.throttle.j < 0.f ? -1 : 1) : 0) * alpha_sign * fabs(alpha_desire.j);
-				applied_alpha.i += maximum_alpha * vehicle->unit.throttle.i * PIN(alpha_scale.i + 1.f, 0.3f, 2.5f);
-				applied_alpha.j += maximum_alpha * vehicle->unit.throttle.j * PIN(alpha_scale.j + 1.f, 0.3f, 2.5f);
+				alpha_bonus.i = (alpha_desire.i * vehicle->unit.throttle.i != 0.f ? (alpha_desire.i * vehicle->unit.throttle.i < 0.f ? -1 : 1) : 0) * alpha_sign * fabs(alpha_desire.i);
+				alpha_bonus.j = (alpha_desire.j * vehicle->unit.throttle.j != 0.f ? (alpha_desire.j * vehicle->unit.throttle.j < 0.f ? -1 : 1) : 0) * alpha_sign * fabs(alpha_desire.j);
+				applied_alpha.i += maximum_alpha * vehicle->unit.throttle.i * PIN(alpha_bonus.i + 1.f, 0.3f, 2.5f);
+				applied_alpha.j += maximum_alpha * vehicle->unit.throttle.j * PIN(alpha_bonus.j + 1.f, 0.3f, 2.5f);
 
 				{
 					real const leveling_alpha = DEGREES_TO_RADIANS(200.f) / (TICKS_PER_SECOND * TICKS_PER_SECOND);
@@ -1099,10 +1129,13 @@ static void update_alien_scout_physics(
 				applied_alpha.j += maximum_alpha * vehicle->unit.throttle.j;
 			}
 
-			turning_torque = *global_zero_vector3d;
-			point_from_line3d((real_point3d *)&turning_torque, &vehicle_left, applied_alpha.i * physics->yy_moment, (real_point3d *)&turning_torque);
-			point_from_line3d((real_point3d *)&turning_torque, &vehicle->object.forward, -applied_alpha.j * physics->xx_moment, (real_point3d *)&turning_torque);
-			point_from_line3d((real_point3d *)&magic_torque, &turning_torque, (real)(1.f - vehicle->vehicle.hover), (real_point3d *)&magic_torque);
+			{
+				real_vector3d turning_torque = *global_zero_vector3d;
+
+				point_from_line3d((real_point3d *)&turning_torque, &vehicle_left, applied_alpha.i * physics->yy_moment, (real_point3d *)&turning_torque);
+				point_from_line3d((real_point3d *)&turning_torque, &vehicle->object.forward, -applied_alpha.j * physics->xx_moment, (real_point3d *)&turning_torque);
+				point_from_line3d((real_point3d *)&magic_torque, &turning_torque, (real)(1.f - vehicle->vehicle.hover), (real_point3d *)&magic_torque);
+			}
 		}
 
 		if (TEST_FLAG(vehicle->vehicle.flags, _vehicle_control_jump_bit))
@@ -1206,8 +1239,9 @@ static void update_alien_fighter_physics(
 {
 	struct vehicle_datum *vehicle = vehicle_get(vehicle_index);
 	struct vehicle_definition *definition = vehicle_definition_get(vehicle->definition_index);
+	struct physics_definition *physics = physics_definition_get(definition->object.physics.index);
 
-	if (physics_definition_get(definition->object.physics.index)->radius > 0.f)
+	if (physics->radius > 0.f)
 	{
 		update_alien_fighter_physics_old(vehicle_index, powered_mass_points, mass_points);
 	}
@@ -1234,8 +1268,6 @@ static void update_alien_fighter_physics_new(
 	{
 		real_vector3d magic_force;
 		real_vector3d magic_torque;
-		real_vector3d desired_angular_velocity;
-		real_vector3d angular_acceleration;
 		real spin;
 		real thrust_delta;
 
@@ -1265,9 +1297,11 @@ static void update_alien_fighter_physics_new(
 			real_matrix3x3 desired_rotation;
 			real_matrix3x3 rotation;
 			real_quaternion rotation_quaternion;
-			real_vector3d axis;
-			real yaw;
 			real angle;
+			real_vector3d axis;
+			real_vector3d desired_angular_velocity;
+			real_vector3d angular_acceleration;
+			real yaw;
 
 			matrix3x3_from_forward_and_up(&current_rotation, &vehicle->object.forward, &vehicle->object.up);
 			desired_rotation.forward = vehicle->unit.desired_facing_vector;
@@ -1293,11 +1327,11 @@ static void update_alien_fighter_physics_new(
 			quaternion_to_angle_and_vector(&rotation_quaternion, &angle, &axis);
 			angle = -angle;
 			scale_vector3d(&axis, definition->vehicle.turn_rate * angle / _pi, &desired_angular_velocity);
-		}
 
-		subtract_vectors3d(&desired_angular_velocity, &vehicle->object.angular_velocity, &angular_acceleration);
-		scale_vector3d(&angular_acceleration, (physics->xx_moment + physics->yy_moment + physics->zz_moment) / 3.f, &magic_torque);
-		scale_vector3d(&magic_torque, vehicle->unit.seat_power[0], &magic_torque);
+			subtract_vectors3d(&desired_angular_velocity, &vehicle->object.angular_velocity, &angular_acceleration);
+			scale_vector3d(&angular_acceleration, (physics->xx_moment + physics->yy_moment + physics->zz_moment) / 3.f, &magic_torque);
+			scale_vector3d(&magic_torque, vehicle->unit.seat_power[0], &magic_torque);
+		}
 
 		spin = magnitude3d(&vehicle->object.angular_velocity) / definition->vehicle.turn_rate;
 		if (spin > vehicle->vehicle.thrust)
@@ -1444,9 +1478,7 @@ static void update_turret_physics(
 boolean vehicle_is_flipped(
 	long vehicle_index)
 {
-	struct vehicle_datum *vehicle = vehicle_get(vehicle_index);
-
-	return vehicle->object.up.k < 0.2f;
+	return vehicle_get(vehicle_index)->object.up.k < 0.2f;
 }
 
 static void slowly_stop_vehicle(
@@ -1457,7 +1489,6 @@ static void slowly_stop_vehicle(
 	real_point3d position;
 	real_vector3d forward;
 	real_vector3d up;
-	real_matrix4x3 rotation;
 
 	vehicle->vehicle.stop_time--;
 	scale_vector3d(&vehicle->object.translational_velocity, velocity_scale, &vehicle->object.translational_velocity);
@@ -1470,6 +1501,8 @@ static void slowly_stop_vehicle(
 
 		if (angle != 0.f)
 		{
+			real_matrix4x3 rotation;
+
 			matrix4x3_rotation_from_axis_and_angle(&rotation, &axis, sine(angle), cosine(angle));
 			matrix4x3_transform_vector(&rotation, &vehicle->object.forward, &forward);
 			matrix4x3_transform_vector(&rotation, &vehicle->object.up, &up);
@@ -1508,16 +1541,16 @@ static void create_pelican_effect(
 		for (thruster_index = 0; thruster_index < hover_thruster_count + jet_thruster_count; thruster_index++)
 		{
 			struct object_marker *thruster = &thrusters[thruster_index];
-			struct collision_result collision;
 			real_vector3d direction;
 			real_vector3d vector;
+			struct collision_result collision;
 
 			local_random_vector_in_cone3d(&thruster->matrix.forward, 0.f, _pi / 12.f, &direction);
 			scale_vector3d(&direction, (thruster_index < hover_thruster_count ? vehicle->vehicle.hover : vehicle->vehicle.thrust) * 6.f + 2.f, &vector);
 
 			if (collision_test_vector(_collision_test_environment_flags, &thruster->matrix.position, &vector, vehicle_index, &collision))
 			{
-				char const *fake_marker_names[3];
+				char *fake_marker_names[3];
 				real_point3d fake_marker_points[3];
 				real_vector3d fake_marker_forwards[3];
 
@@ -1558,9 +1591,9 @@ static void create_ghost_effect(
 		for (thruster_index = 0; thruster_index < hover_thruster_count + jet_thruster_count; thruster_index++)
 		{
 			struct object_marker *thruster = &thrusters[thruster_index];
-			struct collision_result collision;
 			real_vector3d direction;
 			real_vector3d vector;
+			struct collision_result collision;
 
 			local_random_vector_in_cone3d(&thruster->matrix.forward, 0.f, 15.f, &direction);
 			scale_vector3d(&direction, 1.f, &vector);
@@ -1633,8 +1666,8 @@ static void create_crashing_effects(
 			for (mass_point_index = 0; mass_point_index < physics->mass_points.count; mass_point_index++)
 			{
 				struct mass_point_datum *mass_point = &mass_points[mass_point_index];
+				struct mass_point_definition *mass_point_definition = TAG_BLOCK_GET_ELEMENT(&physics->mass_points, mass_point_index, struct mass_point_definition);
 
-				TAG_BLOCK_GET_ELEMENT(&physics->mass_points, mass_point_index, struct mass_point_definition);
 				if (TEST_FLAG(mass_point->flags, _point_on_ground_bit))
 				{
 					on_ground = TRUE;
@@ -1696,18 +1729,19 @@ static boolean update_suspension(
 
 				if (suspension->mass_point_index >= 0 && suspension->mass_point_index < physics->mass_points.count && suspension->animation_index != NONE)
 				{
+					struct animation *animation;
 					struct mass_point_definition *mass_point;
-					struct collision_result collision;
-					real_point3d point;
-					real_vector3d up;
 					real_point3d position;
+					real_vector3d up;
+					real_point3d point;
 					real_vector3d vector;
+					struct collision_result collision;
 					real old_compression;
 					real compression;
 					real offset;
 					real extension;
 
-					TAG_BLOCK_GET_ELEMENT(&animation_graph->animations, suspension->animation_index, struct animation);
+					animation = TAG_BLOCK_GET_ELEMENT(&animation_graph->animations, suspension->animation_index, struct animation);
 					mass_point = TAG_BLOCK_GET_ELEMENT(&physics->mass_points, suspension->mass_point_index, struct mass_point_definition);
 					old_compression = dequantize_byte_to_real(0.f, 1.f, vehicle->vehicle.suspension[suspension_index]);
 
@@ -1992,10 +2026,10 @@ boolean vehicle_moving_near_any_player(
 
 		if (unit_index != NONE && unit_get(unit_index)->object.parent_object_index == NONE)
 		{
-			real radius;
+			real dummy;
 
 			unit_indices[unit_count] = unit_index;
-			object_get_bounding_sphere(unit_index, &players_centers[unit_count], &radius);
+			object_get_bounding_sphere(unit_index, &players_centers[unit_count], &dummy);
 			unit_count++;
 		}
 	}
@@ -2053,8 +2087,8 @@ boolean vehicle_stuck(
 
 		if (stuck_count > 0)
 		{
-			real_point3d stuck_point;
 			real_point3d vehicle_origin;
+			real_point3d stuck_point;
 
 			scale_vector3d((real_vector3d *)&stuck_centroid, 1.f / stuck_count, (real_vector3d *)&stuck_centroid);
 			matrix4x3_transform_point(&instance.world_matrix, &stuck_centroid, &stuck_point);

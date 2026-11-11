@@ -343,6 +343,21 @@ enum
 
 enum
 {
+	_unit_action_none = 0,
+	_unit_action_disarm_weapon,
+	_unit_action_drop_weapon,
+	_unit_action_ready_weapon,
+	_unit_action_put_away_weapon,
+	_unit_action_primary_reload_weapon,
+	_unit_action_secondary_reload_weapon,
+	_unit_action_melee,
+	_unit_action_overheat,
+	_unit_action_throw_grenade,
+	NUMBER_OF_UNIT_ACTIONS,
+};
+
+enum
+{
 	_unit_animation_result_none = 0,
 	_unit_animation_result_jump,
 	NUMBER_OF_UNIT_ANIMATION_RESULTS,
