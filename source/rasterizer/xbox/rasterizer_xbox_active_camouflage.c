@@ -296,11 +296,11 @@ void rasterizer_active_camouflage_draw(
 		{
 			real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT*4];
 
-			distance_falloff = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_distance_falloff + global_rasterizer_data->active_camouflage_hyper_stealth_distance_falloff*group->effect.parameter;
-			tint_color.red = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_tint_color.red + global_rasterizer_data->active_camouflage_hyper_stealth_tint_color.red*group->effect.parameter;
-			tint_color.green = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_tint_color.green + global_rasterizer_data->active_camouflage_hyper_stealth_tint_color.green*group->effect.parameter;
-			tint_color.blue = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_tint_color.blue + global_rasterizer_data->active_camouflage_hyper_stealth_tint_color.blue*group->effect.parameter;
-			vsh_constants__texscale[0] = ((1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_refraction_amount + global_rasterizer_data->active_camouflage_hyper_stealth_refraction_amount*group->effect.parameter)*group->effect.intensity;
+			distance_falloff = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_distance_falloff + group->effect.parameter*global_rasterizer_data->active_camouflage_hyper_stealth_distance_falloff;
+			tint_color.red = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_tint_color.red + group->effect.parameter*global_rasterizer_data->active_camouflage_hyper_stealth_tint_color.red;
+			tint_color.green = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_tint_color.green + group->effect.parameter*global_rasterizer_data->active_camouflage_hyper_stealth_tint_color.green;
+			tint_color.blue = (1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_tint_color.blue + group->effect.parameter*global_rasterizer_data->active_camouflage_hyper_stealth_tint_color.blue;
+			vsh_constants__texscale[0] = ((1.f - group->effect.parameter)*global_rasterizer_data->active_camouflage_refraction_amount + group->effect.parameter*global_rasterizer_data->active_camouflage_hyper_stealth_refraction_amount)*group->effect.intensity;
 			vsh_constants__texscale[1] = distance_falloff;
 			vsh_constants__texscale[2] = RASTERIZER_TARGET_RENDER_SECONDARY_WIDTH;
 			vsh_constants__texscale[3] = RASTERIZER_TARGET_RENDER_SECONDARY_HEIGHT;
