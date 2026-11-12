@@ -680,6 +680,7 @@ void unit_delete_all_weapons(long unit_index);
 boolean unit_enter_seat(long unit_index, long parent_unit_index, short seat_index);
 void unit_add_grenade_type_to_inventory(long unit_index, short grenade_type, short grenade_count);
 short vehicle_scripting_find_available_seats(long unit_index, char const *seat_substring_name, short seat_desire_type, short *seat_indices, short seat_max_indices);
+boolean unit_start_user_animation(long unit_index, long animation_graph_index, char const *animation_name, boolean interpolate);
 
 /* ---------- prototypes/UNIT_DIALOGUE.C */
 

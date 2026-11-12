@@ -42,30 +42,6 @@ ENCOUNTERS.C
 
 enum
 {
-	_actor_definition_flags2_avoid_all_enemy_attack_vectors_bit = 0,
-	_actor_definition_flags2_must_stand_to_fire_bit,
-	_actor_definition_flags2_must_stop_to_fire_bit,
-	_actor_definition_flags2_disallow_vehicle_combat_bit,
-	_actor_definition_flags2_pathfinding_ignores_danger_bit,
-	_actor_definition_flags2_panic_in_groups_bit,
-	_actor_definition_flags2_no_corpse_shooting_bit,
-	NUMBER_OF_ACTOR_DEFINITION_FLAGS2
-};
-
-enum
-{
-	_firing_point_evaluation_mode_fight = 0,
-	_firing_point_evaluation_mode_panic,
-	_firing_point_evaluation_mode_cover,
-	_firing_point_evaluation_mode_uncover,
-	_firing_point_evaluation_mode_guard,
-	_firing_point_evaluation_mode_pursue,
-	_firing_point_evaluation_mode_avoid,
-	NUMBER_OF_FIRING_POINT_EVALUATION_MODES
-};
-
-enum
-{
 	_leader_normal = 0,
 	_leader_none,
 	_leader_random,

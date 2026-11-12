@@ -34,6 +34,16 @@ enum
 
 #define MAXIMUM_NUMBER_OF_PROPS 768 /* fake name */
 
+enum
+{
+	_prop_distance_melee = 0,
+	_prop_distance_near,
+	_prop_distance_middle,
+	_prop_distance_far,
+	_prop_distance_distant,
+	NUMBER_OF_PROP_DISTANCES,
+};
+
 /* ---------- macros */
 
 #define prop_get(index)			((struct prop_datum *)datum_get(prop_data, (index)))

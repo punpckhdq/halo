@@ -62,6 +62,20 @@ enum
 
 char const *actor_type_get_name(short actor_type);
 short actor_type_get_race(short actor_type);
+short actor_type_get_when_to_search_at_target(short actor_type);
+short actor_type_get_when_to_pursue(short actor_type);
+short actor_type_get_when_to_search_pursuit(short actor_type);
+boolean actor_type_get_pursuit_controller(short actor_type);
+boolean actor_type_get_swarm(short actor_type);
+void actor_type_initialize(long actor_index);
+void actor_type_decide_action(long actor_index);
+void actor_type_swarm_control(long actor_index);
+void actor_type_swarm_aim_jump(long actor_index, long unit_index, real jump_magnitude, real_vector3d *jump_velocity);
+void actor_types_initialize(void);
+
+/* ---------- prototypes/ACTOR_TYPE_FLOOD.C */
+
+boolean actor_type_flood_desire_shamble(long actor_index);
 
 /* ---------- globals */
 
