@@ -66,6 +66,7 @@ enum
 	_unit_nearby_seat_result_none = 0,
 	_unit_nearby_seat_result_occupied_by_friend,
 	_unit_nearby_seat_result_empty,
+	NUMBER_OF_UNIT_NEARBY_SEAT_RESULTS,
 };
 
 enum
@@ -417,7 +418,8 @@ enum
 {
 	_unit_add_weapon_normally = 0,
 	_unit_add_weapon_as_current_weapon,
-	_unit_add_weapon_as_only_weapon
+	_unit_add_weapon_as_only_weapon,
+	NUMBER_OF_UNIT_ADD_WEAPON_FLAGS,
 };
 
 /* ---------- macros */

@@ -69,7 +69,7 @@ enum
 #define prop_try_and_get(index)	((struct prop_datum *)datum_try_and_get(prop_data, (index)))
 
 #define prop_orphaned(prop)		((prop)->state>=_prop_state_uninspected_orphan && (prop)->state<=_prop_state_inspected_orphan)
-#define prop_acknowledged(prop)	((prop)->state>=_prop_state_becoming_unacknowledged && (prop)->state<=_prop_state_acknowledged)
+#define prop_acknowledged(prop) ((prop)->state >= _prop_state_becoming_unacknowledged && (prop)->state <= _prop_state_acknowledged)
 #define prop_unacknowledged(prop)	((prop)->state>=_prop_state_unacknowledged && (prop)->state<=_prop_state_becoming_acknowledged)
 
 /* ---------- structures */

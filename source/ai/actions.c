@@ -436,12 +436,12 @@ boolean actor_action_handle_surprise(
 
 		if (actor_variant_definition->ranged_combat.surprise_wildfire_time>0.f)
 		{
-			actor_combat_fire_wildly(actor_index, (short)(actor_variant_definition->ranged_combat.surprise_wildfire_time * TICKS_PER_SECOND));
+			actor_combat_fire_wildly(actor_index, (long)(actor_variant_definition->ranged_combat.surprise_wildfire_time * TICKS_PER_SECOND));
 		}
 
 		if (actor_variant_definition->ranged_combat.surprise_delay_time>0.f)
 		{
-			actor_combat_disable_bursts(actor_index, (short)(actor_variant_definition->ranged_combat.surprise_delay_time * TICKS_PER_SECOND));
+			actor_combat_disable_bursts(actor_index, (long)(actor_variant_definition->ranged_combat.surprise_delay_time * TICKS_PER_SECOND));
 		}
 
 		actor_stimulus_was_surprised(actor_index);
