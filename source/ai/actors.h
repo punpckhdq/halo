@@ -1190,6 +1190,8 @@ real actor_destination_tolerance(long actor_index);
 long actor_target_unit_index(long actor_index);
 void actor_find_pathfinding_location(long actor_index);
 boolean actor_has_ranged_weapon(long actor_index);
+void actor_died(long actor_index);
+short actors_spawn_from_unit(long unit_index, long actor_variant_definition_index, short count, real velocity);
 
 /* ---------- prototypes/ACTOR_COMBAT.C */
 

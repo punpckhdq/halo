@@ -91,6 +91,12 @@ enum
 	MAXIMUM_STARTING_EQUIPMENT_ITEM_COLLECTIONS = 5	/* fake name */
 };
 
+enum
+{
+	_scenario_unit_dead_bit = 0,
+	NUMBER_OF_SCENARIO_UNIT_FLAGS
+};
+
 /* ---------- macros */
 
 #define MAXIMUM_STARTING_WEAPONS_PER_PROFILE 2 /* fake name */

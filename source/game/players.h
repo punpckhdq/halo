@@ -143,6 +143,7 @@ void player_control_new_unit(short local_player_index, long unit_index);
 boolean player_control_update(real seconds_elapsed);
 
 void player_control_unzoom(long unit_index);
+void player_control_set_desired_weapon(long unit_index, short desired_weapon_index);
 long player_control_get_unit_index(short local_player_index);
 real_vector3d *player_control_get_facing_direction(short local_player_index, real_vector3d *direction);
 real player_control_get_field_of_view(short local_player_index);

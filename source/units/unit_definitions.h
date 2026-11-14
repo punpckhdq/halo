@@ -144,6 +144,12 @@ struct powered_seat_definition
 	long unused[14];
 };
 
+struct unit_initial_weapon
+{
+	struct tag_reference reference;
+	long unused[5];
+};
+
 struct dialogue_variant_definition
 {
 	short variant_number;
