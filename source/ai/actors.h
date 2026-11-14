@@ -50,9 +50,12 @@ enum
 enum
 {
 	_primary_priority_none = 0,
+	_primary_priority_face_360,
+	_primary_priority_opportunity_aiming,
 	_primary_priority_facing,
 	_primary_priority_exact_facing,
 	_primary_priority_aiming,
+	_primary_priority_locked_facing,
 	_primary_priority_locked_aiming,
 	NUMBER_OF_PRIMARY_LOOK_TYPES,
 };
@@ -74,6 +77,70 @@ enum
 	_secondary_look_dangerous_object,
 	_secondary_look_scripted,
 	NUMBER_OF_SECONDARY_LOOK_TYPES,
+};
+
+enum
+{
+	_actor_surprise_none = 0,
+	_actor_surprise_unprepared_enemy_shooting,
+	_actor_surprise_unprepared_weapon_impact_close,
+	_actor_surprise_unprepared_enemy_close,
+	_actor_surprise_unprepared_grenade,
+	_actor_surprise_unprepared_damage,
+	_actor_surprise_unexpected_enemy_close_shooting,
+	_actor_surprise_unexpected_enemy_close_flanked_shooting,
+	NUMBER_OF_ACTOR_SURPRISE_TYPES,
+};
+
+enum
+{
+	_actor_panic_none = 0,
+	_actor_panic_damage,
+	_actor_panic_friend_fleeing,
+	_actor_panic_friend_same_type_killed,
+	_actor_panic_no_cover_available,
+	_actor_panic_unopposable_enemy,
+	_actor_panic_platoon_retreating,
+	_actor_panic_surprise,
+	_actor_panic_friend_leader_type_killed,
+	_actor_panic_grenade_attached_to_us,
+	_actor_panic_delayed_projectile_attached_to_us,
+	_actor_panic_melee_attached_to_us,
+	_actor_panic_burning_to_death,
+	_actor_panic_scripted,
+	_actor_panic_never,
+	NUMBER_OF_ACTOR_PANIC_TYPES,
+};
+
+enum
+{
+	_actor_berserk_none = 0,
+	_actor_berserk_attacking,
+	_actor_berserk_proximity,
+	_actor_berserk_damage,
+	_actor_berserk_attached_projectiles,
+	_actor_berserk_never,
+	NUMBER_OF_ACTOR_BERSERK_TYPES,
+};
+
+enum
+{
+	_idle_look_none = 0,
+	_idle_look_noncombat,
+	_idle_look_guarding,
+	_idle_look_searching,
+	_idle_look_combat,
+	NUMBER_OF_IDLE_LOOK_TYPES,
+};
+
+enum
+{
+	_actor_vehicle_driver_none = 0,
+	_actor_vehicle_driver_unknown,
+	_actor_vehicle_driver_hovering_ground,
+	_actor_vehicle_driver_nondirectional_ground,
+	_actor_vehicle_driver_directional_flying,
+	NUMBER_OF_ACTOR_VEHICLE_DRIVER_TYPES,
 };
 
 enum
@@ -268,6 +335,18 @@ enum
 #define MAXIMUM_NUMBER_OF_UNITS_PER_SWARM 16
 
 #define MAXIMUM_NUMBER_OF_AVOIDANCE_OBJECTS 1024
+
+enum
+{
+	_firing_point_evaluation_mode_fight = 0,
+	_firing_point_evaluation_mode_panic,
+	_firing_point_evaluation_mode_cover,
+	_firing_point_evaluation_mode_uncover,
+	_firing_point_evaluation_mode_guard,
+	_firing_point_evaluation_mode_pursue,
+	_firing_point_evaluation_mode_avoid,
+	NUMBER_OF_FIRING_POINT_EVALUATION_MODES,
+};
 
 /* ---------- macros */
 
@@ -1107,16 +1186,25 @@ boolean actor_get_running_blind_vector(long actor_index, real_vector3d *run_vect
 void actor_set_active(long actor_index, boolean active);
 void actor_set_dormant(long actor_index, boolean dormant);
 void actor_verify_activation(long actor_index);
+real actor_destination_tolerance(long actor_index);
+long actor_target_unit_index(long actor_index);
+void actor_find_pathfinding_location(long actor_index);
+boolean actor_has_ranged_weapon(long actor_index);
 
 /* ---------- prototypes/ACTOR_COMBAT.C */
 
 boolean actor_firing_blindly(long actor_index);
 long actor_aim_projectile(long actor_index, real_point3d const *origin, real_vector3d *vector, real *error_reference);
 long actor_aim_grenade(long actor_index, real_point3d const *origin, real_vector3d *vector);
+struct actor_variant_definition *actor_combat_get_firing_variant_definition(long actor_index);
 
 /* ---------- prototypes/ACTOR_FIRING_POSITION.C */
 
 unsigned long actor_get_firing_position_group(long actor_index, short evaluation_mode, short group_selection_mode);
+short actor_active_select_firing_position(long actor_index, struct firing_position_evaluation_context *evaluation_context, struct firing_position *best_firing_position, long *current_owner, struct path_state *area_path_state, boolean *area_path_state_valid);
+boolean actor_nearby_firing_positions(long actor_index, real_point3d *test_point, long test_surface_index, short group_selection_mode);
+short actor_change_firing_position(long actor_index, short firing_position_index, struct firing_position *firing_position, long previous_owner, struct path_state *cached_path_state, boolean cached_path_available);
+void actor_discard_firing_position(long actor_index, short firing_position_index, boolean temporary);
 
 /* ---------- prototypes/ACTOR_LOOKING.C */
 
@@ -1135,6 +1223,9 @@ void actor_move_get_avoidance_direction(struct vector_avoidance_data *avoidance_
 
 boolean actor_path_has_path(long actor_index);
 boolean actor_path_at_destination(long actor_index);
+boolean actor_move_to_move_position(long actor_index, short move_position_index);
+boolean actor_move_to_firing_position(long actor_index, short firing_position_index, struct path_state *cached_path_state);
+boolean actor_move_to_prop(long actor_index, long prop_index, real accept_radius);
 
 /* ---------- prototypes/ACTOR_PERCEPTION.C */
 
@@ -1155,6 +1246,7 @@ void prop_status_refresh(long actor_index, long prop_index, struct actor_positio
 void actor_berserk(long actor_index, boolean berserk);
 boolean actor_compute_prop_unopposable(long actor_index, long prop_index);
 real actor_compute_prop_target_weight(long actor_index, long prop_index);
+void actor_perception_unreachable(long actor_index, long prop_index, boolean unreachable);
 
 /* ---------- prototypes/ACTOR_STIMULUS.C */
 

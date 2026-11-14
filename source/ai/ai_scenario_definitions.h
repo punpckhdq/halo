@@ -165,9 +165,15 @@ enum
 	_squad_major_upgrade_normal = 0,
 	_squad_major_upgrade_few,
 	_squad_major_upgrade_many,
+	SQUAD_RANDOM_MAJOR_UPGRADE_MAX_TYPE = _squad_major_upgrade_many,
 	_squad_major_upgrade_none,
 	_squad_major_upgrade_all,
 	NUMBER_OF_SQUAD_MAJOR_UPGRADE_TYPES,
+};
+
+enum
+{
+	MAXIMUM_MOVE_POSITIONS_PER_SQUAD = 32, /* fake name */
 };
 
 #define MAXIMUM_CONVERSATIONS_PER_MAP 128
@@ -276,6 +282,13 @@ struct encounter_definition
 	struct tag_block platoons;
 	struct tag_block firing_positions;
 	struct tag_block player_starting_locations;
+};
+
+struct ai_animation_reference_definition
+{
+	char animation_name[TAG_STRING_LENGTH+1];
+	struct tag_reference animation_graph;
+	unsigned long unused[3];
 };
 
 struct ai_command_definition

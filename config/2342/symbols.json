@@ -21914,7 +21914,7 @@
 { "address": 7040004, "flags": 0, "name": "_actor_type_marine" },
 { "address": 7040036, "flags": 0, "name": "_actor_type_mounted_weapon" },
 { "address": 7040068, "flags": 0, "name": "_actor_type_sentinel" },
-{ "address": 7040104, "flags": 0, "name": "_data_002b6c68" },
+{ "address": 7040104, "flags": 0, "name": "_actor_type_definitions", "static": true },
 { "address": 7040168, "flags": 0, "name": "_global_actor_type_names" },
 { "address": 7040232, "flags": 0, "name": "_global_updating_actor_index" },
 { "address": 7040240, "flags": 0, "name": "_ai_update_section", "static": true },
