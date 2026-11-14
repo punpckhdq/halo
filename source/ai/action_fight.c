@@ -13,14 +13,6 @@ ACTION_FIGHT.C
 #include "vehicle_definitions.h"
 #include "game.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
 /* ---------- public code */
 
 boolean action_fight_setup(
@@ -241,5 +233,3 @@ void action_fight_control(
 
 	return;
 }
-
-/* ---------- private code */
