@@ -41,6 +41,33 @@ symbols in this file:
 
 /* ---------- public code */
 
+boolean action_wait_setup(
+	long actor_index,
+	boolean actively_searching,
+	struct wait_state_data *state_data)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	boolean success = FALSE;
+
+	match_assert("c:\\halo\\SOURCE\\ai\\action_wait.c", 33, state_data);
+
+	memset(state_data, 0, sizeof(struct wait_state_data));
+
+	if (!actor->input.vehicle_passenger)
+	{
+		state_data->waiting_as_coordinator = actor->external_orders.pursuit_is_coordinator;
+		state_data->was_actively_searching = actively_searching;
+		state_data->entry_time = game_time_get();
+		state_data->exit_timer = 0;
+		state_data->look_timer = 120;
+		state_data->desire_move = TRUE;
+		state_data->query_timer = random_range(300, 600);
+		success = TRUE;
+	}
+
+	return success;
+}
+
 void action_wait_begin(
 	long actor_index)
 {
@@ -116,66 +143,6 @@ boolean action_wait_perform(
 	return state_data->wait_done;
 }
 
-void action_wait_control(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct wait_state_data *state_data = &actor->state.action_data.wait;
-
-	if (actor->control.moving)
-	{
-		actor->orders.look.primary_priority = _primary_priority_facing;
-		actor->orders.look.primary_direction.type = _direction_specification_movement;
-	}
-	else if (!actor->external_orders.pursuit_is_coordinator && actor->external_orders.pursuit_group_prop_index != NONE && state_data->look_timer > 0)
-	{
-		actor->orders.look.primary_priority = _primary_priority_aiming;
-		actor->orders.look.primary_direction.type = _direction_specification_prop;
-		actor->orders.look.primary_direction.prop_index = actor->external_orders.pursuit_group_prop_index;
-	}
-	else
-	{
-		actor->orders.look.primary_priority = _primary_priority_face_360;
-	}
-
-	actor->orders.look.idle_look_type = _idle_look_searching;
-	actor->orders.combat.shoot_at_target = FALSE;
-	actor->orders.move.stationary_crouch = FALSE;
-	actor->orders.move.moving_crouch = FALSE;
-	actor->orders.move.panicked = FALSE;
-	actor->orders.move.dive_into_cover = FALSE;
-	actor->orders.move.emerge_from_cover = FALSE;
-
-	return;
-}
-
-boolean action_wait_setup(
-	long actor_index,
-	boolean actively_searching,
-	struct wait_state_data *state_data)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	boolean success = FALSE;
-
-	match_assert("c:\\halo\\SOURCE\\ai\\action_wait.c", 33, state_data);
-
-	memset(state_data, 0, sizeof(struct wait_state_data));
-
-	if (!actor->input.vehicle_passenger)
-	{
-		state_data->waiting_as_coordinator = actor->external_orders.pursuit_is_coordinator;
-		state_data->was_actively_searching = actively_searching;
-		state_data->entry_time = game_time_get();
-		state_data->exit_timer = 0;
-		state_data->look_timer = 120;
-		state_data->desire_move = TRUE;
-		state_data->query_timer = random_range(300, 600);
-		success = TRUE;
-	}
-
-	return success;
-}
-
 void action_wait_update(
 	long actor_index)
 {
@@ -212,6 +179,39 @@ void action_wait_update(
 	{
 		state_data->look_timer--;
 	}
+
+	return;
+}
+
+void action_wait_control(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct wait_state_data *state_data = &actor->state.action_data.wait;
+
+	if (actor->control.moving)
+	{
+		actor->orders.look.primary_priority = _primary_priority_facing;
+		actor->orders.look.primary_direction.type = _direction_specification_movement;
+	}
+	else if (!actor->external_orders.pursuit_is_coordinator && actor->external_orders.pursuit_group_prop_index != NONE && state_data->look_timer > 0)
+	{
+		actor->orders.look.primary_priority = _primary_priority_aiming;
+		actor->orders.look.primary_direction.type = _direction_specification_prop;
+		actor->orders.look.primary_direction.prop_index = actor->external_orders.pursuit_group_prop_index;
+	}
+	else
+	{
+		actor->orders.look.primary_priority = _primary_priority_face_360;
+	}
+
+	actor->orders.look.idle_look_type = _idle_look_searching;
+	actor->orders.combat.shoot_at_target = FALSE;
+	actor->orders.move.stationary_crouch = FALSE;
+	actor->orders.move.moving_crouch = FALSE;
+	actor->orders.move.panicked = FALSE;
+	actor->orders.move.dive_into_cover = FALSE;
+	actor->orders.move.emerge_from_cover = FALSE;
 
 	return;
 }

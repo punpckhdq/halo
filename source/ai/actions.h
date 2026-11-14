@@ -436,9 +436,9 @@ boolean action_converse_perform(long actor_index);
 void action_converse_update(long actor_index);
 void action_converse_control(long actor_index);
 void action_converse_replace_prop(long actor_index, long invalid_prop_index, long replacement_prop_index);
+void action_converse_end(long actor_index);
 void actor_conversation_control(long actor_index);
 void actor_conversation_end(long actor_index);
-void action_converse_end(long actor_index);
 
 /* ---------- prototypes/ACTION_OBEY.C */
 
@@ -457,6 +457,8 @@ void action_alert_control(long actor_index);
 void action_alert_flush_position_indices(long actor_index);
 void action_alert_flush_structure_indices(long actor_index);
 
+/* ---------- prototypes/ACTION_FLEE.C */
+
 boolean action_flee_blind_panic(short panic_type);
 
 /* ---------- prototypes/ACTION_SEARCH.C */
@@ -464,24 +466,24 @@ boolean action_flee_blind_panic(short panic_type);
 boolean action_search_setup_target(long actor_index, boolean must_charge, struct search_state_data *state_data);
 boolean action_search_setup_pursuit(long actor_index, short firing_position_index, boolean tenacious, struct search_state_data *state_data);
 boolean action_search_setup_undirected(long actor_index, boolean tenacious, struct search_state_data *state_data);
+void action_search_begin(long actor_index);
+boolean action_search_perform(long actor_index);
 void action_search_update(long actor_index);
 void action_search_flush_position_indices(long actor_index);
 void action_search_flush_structure_indices(long actor_index);
 void action_search_control(long actor_index);
-void action_search_begin(long actor_index);
-boolean action_search_perform(long actor_index);
 
 /* ---------- prototypes/ACTION_UNCOVER.C */
 
 boolean action_uncover_setup_target(long actor_index, boolean able_to_search, struct uncover_state_data *state_data);
 boolean action_uncover_setup_pursuit(long actor_index, short firing_position_index, struct uncover_state_data *state_data);
+void action_uncover_begin(long actor_index);
 boolean action_uncover_perform(long actor_index);
+void action_uncover_update(long actor_index);
 void action_uncover_control(long actor_index);
 void action_uncover_flush_position_indices(long actor_index);
 void action_uncover_flush_structure_indices(long actor_index);
 void action_uncover_modify_color(long actor_index, real_argb_color *color);
-void action_uncover_begin(long actor_index);
-void action_uncover_update(long actor_index);
 
 /* ---------- prototypes/ACTION_AVOID.C */
 
@@ -512,6 +514,7 @@ void action_wait_begin(long actor_index);
 boolean action_wait_perform(long actor_index);
 void action_wait_update(long actor_index);
 void action_wait_control(long actor_index);
+
 /* ---------- globals */
 
 /* ---------- public code */

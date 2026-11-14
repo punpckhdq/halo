@@ -95,6 +95,54 @@ boolean action_uncover_setup_pursuit(
 	return result;
 }
 
+void action_uncover_begin(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
+	struct uncover_state_data *state_data = &actor->state.action_data.uncover;
+	real time_lower_bound = actor_definition->pursuit.uncover_delay_time_lower_bound;
+	real time_upper_bound = actor_definition->pursuit.uncover_delay_time_upper_bound;
+	real uncover_time;
+
+	if (!state_data->able_to_search)
+	{
+		time_lower_bound = MAX(time_lower_bound, actor_definition->pursuit.target_location_time_lower_bound);
+		time_upper_bound = MAX(time_upper_bound, actor_definition->pursuit.target_location_time_upper_bound);
+	}
+
+	uncover_time = real_random_range(time_lower_bound, time_upper_bound);
+	state_data->uncover_desired_time = (long)(uncover_time * TICKS_PER_SECOND);
+	state_data->uncover_remaining_time = state_data->uncover_desired_time;
+
+	if (ai_debug.print_uncovering)
+	{
+		char aibuf[256];
+
+		ai_debug_describe_actor(actor_index, NONE, TRUE, aibuf, sizeof(aibuf));
+		error(
+			_error_silent,
+			"%s: begin %s uncover for [%.1f-%.1f] = %.1f (%sable to search)",
+			aibuf,
+			(state_data->pursuit_location.type == _pursuit_location_target) ? "target" : "pursuit",
+			time_lower_bound,
+			time_upper_bound,
+			uncover_time,
+			state_data->able_to_search ? "" : "un");
+	}
+
+	if (state_data->pursuit_location.type == _pursuit_location_target &&
+		actor->target.target_prop_index != NONE &&
+		actor->state.combat_status < _actor_combat_status_definite)
+	{
+		struct prop_datum *prop = prop_get(actor->target.target_prop_index);
+
+		ai_communication_event(_ai_communication_uncover_start, actor->meta.unit_index, prop->unit_index, NONE, NONE, NONE, NULL);
+	}
+
+	return;
+}
+
 boolean action_uncover_perform(
 	long actor_index)
 {
@@ -142,10 +190,10 @@ boolean action_uncover_perform(
 				{
 					if (!state_data->no_target_sight_available && ai_debug.print_uncovering)
 					{
-						char actor_name[256];
+						char aibuf[256];
 
-						ai_debug_describe_actor(actor_index, NONE, TRUE, actor_name, sizeof(actor_name));
-						error(_error_silent, "%s: unable to see target's current location", actor_name);
+						ai_debug_describe_actor(actor_index, NONE, TRUE, aibuf, sizeof(aibuf));
+						error(_error_silent, "%s: unable to see target's current location", aibuf);
 					}
 
 					state_data->no_target_sight_available = TRUE;
@@ -156,10 +204,10 @@ boolean action_uncover_perform(
 			{
 				if (!state_data->pursuit_location_inspected && ai_debug.print_uncovering)
 				{
-					char actor_name[256];
+					char aibuf[256];
 
-					ai_debug_describe_actor(actor_index, NONE, TRUE, actor_name, sizeof(actor_name));
-					error(_error_silent, "%s: inspected pursuit location", actor_name);
+					ai_debug_describe_actor(actor_index, NONE, TRUE, aibuf, sizeof(aibuf));
+					error(_error_silent, "%s: inspected pursuit location", aibuf);
 				}
 
 				state_data->pursuit_location_inspected = TRUE;
@@ -180,6 +228,165 @@ boolean action_uncover_perform(
 	}
 
 	return FALSE;
+}
+
+void action_uncover_update(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct uncover_state_data *state_data = &actor->state.action_data.uncover;
+
+	if (!state_data->uncover_done)
+	{
+		struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
+		boolean reset_timer = TRUE;
+		boolean target_visible = FALSE;
+
+		state_data->sneaking = FALSE;
+		if (state_data->pursuit_location.type == _pursuit_location_target)
+		{
+			if (actor_definition->defensive.defensive_crouch_type == _defensive_crouch_any_target)
+			{
+				if (actor->target.target_type == _actor_target_definite_orphan)
+				{
+					state_data->sneaking = FALSE;
+				}
+				else
+				{
+					state_data->sneaking = TRUE;
+				}
+			}
+			else if (TEST_FLAG(actor_definition->flags, _actor_definition_sneak_uncovering_target_bit) &&
+				actor->target.target_type == _actor_target_uninspected_orphan)
+			{
+				struct prop_datum *prop = prop_get(actor->target.target_prop_index);
+
+				if (prop->quantized_distance <= _prop_distance_middle)
+				{
+					state_data->sneaking = TRUE;
+				}
+			}
+		}
+		else if (state_data->pursuit_location.type == _pursuit_location_position)
+		{
+			if (actor_definition->defensive.defensive_crouch_type == _defensive_crouch_any_target)
+			{
+				state_data->sneaking = TRUE;
+			}
+			else if (TEST_FLAG(actor_definition->flags, _actor_definition_sneak_uncovering_pursuit_position_bit))
+			{
+				real distance_squared = distance_squared3d(&actor->input.position.body_position, &state_data->pursuit_location.position);
+
+				if (distance_squared < 100.f)
+				{
+					state_data->sneaking = TRUE;
+				}
+			}
+		}
+
+		if (actor->control.moving)
+		{
+			state_data->current_position_hold_timer = 0;
+		}
+		else
+		{
+			state_data->current_position_hold_timer++;
+			if (state_data->pursuit_location.type == _pursuit_location_target &&
+				state_data->current_position_hold_timer >= UNCOVER_HOLD_POSITION_TICKS)
+			{
+				actor_discard_firing_position(actor_index, actor->firing_positions.current_position_index, FALSE);
+			}
+		}
+
+		if (state_data->pursuit_location.type == _pursuit_location_target)
+		{
+			if (actor->target.target_prop_index != NONE)
+			{
+				struct prop_datum *prop = prop_get(actor->target.target_prop_index);
+
+				target_visible = prop->visibility > _actor_perception_none;
+				reset_timer = !target_visible || actor->target.target_type >= _actor_target_uninspected_orphan;
+			}
+		}
+		else
+		{
+			reset_timer = !state_data->pursuit_location_inspected;
+		}
+
+		{
+			boolean making_progress = TRUE; /* fake name */
+			boolean done;
+
+			if (actor->firing_positions.current_position_index == NONE)
+			{
+				state_data->uncover_exit_failure = TRUE;
+				making_progress = FALSE;
+			}
+			else if (!reset_timer)
+			{
+				making_progress = FALSE;
+			}
+			else if (!actor->input.vehicle_gunner_bombardment && !target_visible && !actor->control.moving)
+			{
+				making_progress = FALSE;
+			}
+
+			if (making_progress)
+			{
+				state_data->uncover_remaining_time = state_data->uncover_desired_time;
+			}
+			else
+			{
+				if (state_data->uncover_remaining_time > 0)
+				{
+					state_data->uncover_remaining_time--;
+				}
+
+				state_data->uncover_exit_persistent_timer++;
+			}
+
+			done = state_data->uncover_remaining_time == 0 || state_data->uncover_exit_persistent_timer >= UNCOVER_PERSISTENT_TIMEOUT_TICKS;
+			if (state_data->pursuit_location.type == _pursuit_location_position && state_data->pursuit_location_inspected)
+			{
+				done = TRUE;
+			}
+
+			if (done && ai_debug.print_uncovering)
+			{
+				char aibuf[256];
+				char reasonbuf[256];
+
+				ai_debug_describe_actor(actor_index, NONE, TRUE, aibuf, sizeof(aibuf));
+				if (state_data->uncover_remaining_time == 0)
+				{
+					sprintf(reasonbuf, "timer %d finished", state_data->uncover_desired_time);
+				}
+				else if (state_data->uncover_exit_persistent_timer >= UNCOVER_PERSISTENT_TIMEOUT_TICKS)
+				{
+					sprintf(reasonbuf, "persistent timer %d", state_data->uncover_exit_persistent_timer);
+				}
+				else if (state_data->pursuit_location.type == _pursuit_location_position && state_data->pursuit_location_inspected)
+				{
+					strcpy(reasonbuf, "location inspected");
+				}
+				else
+				{
+					strcpy(reasonbuf, "<unknown reason>");
+				}
+
+				error(
+					_error_silent,
+					"%s: %s uncover done: %s",
+					aibuf,
+					(state_data->pursuit_location.type == _pursuit_location_target) ? "target" : "pursuit",
+					reasonbuf);
+			}
+
+			state_data->uncover_done = done;
+		}
+	}
+
+	return;
 }
 
 void action_uncover_control(
@@ -297,204 +504,6 @@ void action_uncover_modify_color(
 	else
 	{
 		*color = *global_real_argb_lightblue;
-	}
-
-	return;
-}
-
-void action_uncover_begin(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
-	struct uncover_state_data *state_data = &actor->state.action_data.uncover;
-	real time_lower_bound = actor_definition->pursuit.uncover_delay_time_lower_bound;
-	real time_upper_bound = actor_definition->pursuit.uncover_delay_time_upper_bound;
-	real uncover_time;
-
-	if (!state_data->able_to_search)
-	{
-		time_lower_bound = MAX(time_lower_bound, actor_definition->pursuit.target_location_time_lower_bound);
-		time_upper_bound = MAX(time_upper_bound, actor_definition->pursuit.target_location_time_upper_bound);
-	}
-
-	uncover_time = real_random_range(time_lower_bound, time_upper_bound);
-	state_data->uncover_desired_time = (long)(uncover_time * TICKS_PER_SECOND);
-	state_data->uncover_remaining_time = state_data->uncover_desired_time;
-
-	if (ai_debug.print_uncovering)
-	{
-		char actor_name[256];
-
-		ai_debug_describe_actor(actor_index, NONE, TRUE, actor_name, sizeof(actor_name));
-		error(
-			_error_silent,
-			"%s: begin %s uncover for [%.1f-%.1f] = %.1f (%sable to search)",
-			actor_name,
-			(state_data->pursuit_location.type == _pursuit_location_target) ? "target" : "pursuit",
-			time_lower_bound,
-			time_upper_bound,
-			uncover_time,
-			state_data->able_to_search ? "" : "un");
-	}
-
-	if (state_data->pursuit_location.type == _pursuit_location_target &&
-		actor->target.target_prop_index != NONE &&
-		actor->state.combat_status < _actor_combat_status_definite)
-	{
-		struct prop_datum *prop = prop_get(actor->target.target_prop_index);
-
-		ai_communication_event(_ai_communication_uncover_start, actor->meta.unit_index, prop->unit_index, NONE, NONE, NONE, NULL);
-	}
-
-	return;
-}
-
-void action_uncover_update(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct uncover_state_data *state_data = &actor->state.action_data.uncover;
-
-	if (!state_data->uncover_done)
-	{
-		struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
-		boolean reset_timer = TRUE;
-		boolean target_visible = FALSE;
-		boolean making_progress; /* fake name */
-		boolean done;
-
-		state_data->sneaking = FALSE;
-		if (state_data->pursuit_location.type == _pursuit_location_target)
-		{
-			if (actor_definition->defensive.defensive_crouch_type == _defensive_crouch_any_target)
-			{
-				state_data->sneaking = actor->target.target_type != _actor_target_definite_orphan;
-			}
-			else if (TEST_FLAG(actor_definition->flags, _actor_definition_sneak_uncovering_target_bit) &&
-				actor->target.target_type == _actor_target_uninspected_orphan)
-			{
-				struct prop_datum *prop = prop_get(actor->target.target_prop_index);
-
-				if (prop->quantized_distance <= _prop_distance_middle)
-				{
-					state_data->sneaking = TRUE;
-				}
-			}
-		}
-		else if (state_data->pursuit_location.type == _pursuit_location_position)
-		{
-			if (actor_definition->defensive.defensive_crouch_type == _defensive_crouch_any_target)
-			{
-				state_data->sneaking = TRUE;
-			}
-			else if (TEST_FLAG(actor_definition->flags, _actor_definition_sneak_uncovering_pursuit_position_bit))
-			{
-				real distance_squared = distance_squared3d(&actor->input.position.body_position, &state_data->pursuit_location.position);
-
-				if (distance_squared < 100.f)
-				{
-					state_data->sneaking = TRUE;
-				}
-			}
-		}
-
-		if (actor->control.moving)
-		{
-			state_data->current_position_hold_timer = 0;
-		}
-		else
-		{
-			state_data->current_position_hold_timer++;
-			if (state_data->pursuit_location.type == _pursuit_location_target &&
-				state_data->current_position_hold_timer >= UNCOVER_HOLD_POSITION_TICKS)
-			{
-				actor_discard_firing_position(actor_index, actor->firing_positions.current_position_index, FALSE);
-			}
-		}
-
-		if (state_data->pursuit_location.type == _pursuit_location_target)
-		{
-			if (actor->target.target_prop_index != NONE)
-			{
-				struct prop_datum *prop = prop_get(actor->target.target_prop_index);
-
-				target_visible = prop->visibility > _actor_perception_none;
-				reset_timer = !target_visible || actor->target.target_type >= _actor_target_uninspected_orphan;
-			}
-		}
-		else
-		{
-			reset_timer = !state_data->pursuit_location_inspected;
-		}
-
-		making_progress = TRUE;
-		if (actor->firing_positions.current_position_index == NONE)
-		{
-			state_data->uncover_exit_failure = TRUE;
-			making_progress = FALSE;
-		}
-		else if (!reset_timer)
-		{
-			making_progress = FALSE;
-		}
-		else if (!actor->input.vehicle_gunner_bombardment && !target_visible && !actor->control.moving)
-		{
-			making_progress = FALSE;
-		}
-
-		if (making_progress)
-		{
-			state_data->uncover_remaining_time = state_data->uncover_desired_time;
-		}
-		else
-		{
-			if (state_data->uncover_remaining_time > 0)
-			{
-				state_data->uncover_remaining_time--;
-			}
-
-			state_data->uncover_exit_persistent_timer++;
-		}
-
-		done = state_data->uncover_remaining_time == 0 || state_data->uncover_exit_persistent_timer >= UNCOVER_PERSISTENT_TIMEOUT_TICKS;
-		if (state_data->pursuit_location.type == _pursuit_location_position && state_data->pursuit_location_inspected)
-		{
-			done = TRUE;
-		}
-
-		if (done && ai_debug.print_uncovering)
-		{
-			char actor_name[256];
-			char reason[256];
-
-			ai_debug_describe_actor(actor_index, NONE, TRUE, actor_name, sizeof(actor_name));
-			if (state_data->uncover_remaining_time == 0)
-			{
-				sprintf(reason, "timer %d finished", state_data->uncover_desired_time);
-			}
-			else if (state_data->uncover_exit_persistent_timer >= UNCOVER_PERSISTENT_TIMEOUT_TICKS)
-			{
-				sprintf(reason, "persistent timer %d", state_data->uncover_exit_persistent_timer);
-			}
-			else if (state_data->pursuit_location.type == _pursuit_location_position && state_data->pursuit_location_inspected)
-			{
-				strcpy(reason, "location inspected");
-			}
-			else
-			{
-				strcpy(reason, "<unknown reason>");
-			}
-
-			error(
-				_error_silent,
-				"%s: %s uncover done: %s",
-				actor_name,
-				(state_data->pursuit_location.type == _pursuit_location_target) ? "target" : "pursuit",
-				reason);
-		}
-
-		state_data->uncover_done = done;
 	}
 
 	return;

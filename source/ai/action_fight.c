@@ -48,50 +48,6 @@ void action_fight_end(
 	return;
 }
 
-void action_fight_update(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct fight_state_data *state_data = &actor->state.action_data.fight;
-
-	if (state_data->firing_position_timer > 0 && actor->control.path.at_destination)
-	{
-		state_data->firing_position_timer--;
-		if (state_data->firing_position_timer == 0)
-		{
-			if (actor->firing_positions.current_position_index != NONE && !actor->firing_positions.current_position_found_outside_range)
-			{
-				actor_discard_firing_position(actor_index, actor->firing_positions.current_position_index, FALSE);
-			}
-		}
-	}
-
-	return;
-}
-
-void action_fight_control(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-
-	actor->orders.look.primary_priority = _primary_priority_aiming;
-	actor->orders.look.primary_direction.type = _direction_specification_target;
-	actor->orders.look.idle_look_type = _idle_look_combat;
-	actor->orders.move.stationary_crouch = actor->emotions.defensive_crouch;
-	actor->orders.move.moving_crouch = FALSE;
-	actor->orders.move.panicked = FALSE;
-	actor->orders.move.dive_into_cover = FALSE;
-	actor->orders.move.emerge_from_cover = FALSE;
-
-	if (actor->input.vehicle_driver_type != _actor_vehicle_driver_directional_flying && actor->state.combat_status >= _actor_combat_status_clear_los)
-	{
-		actor->orders.combat.shoot_at_target = TRUE;
-		actor->orders.look.primary_priority = _primary_priority_locked_aiming;
-	}
-
-	return;
-}
-
 boolean action_fight_perform(
 	long actor_index)
 {
@@ -236,6 +192,53 @@ boolean action_fight_perform(
 	}
 
 	return FALSE;
+}
+
+void action_fight_update(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct fight_state_data *state_data = &actor->state.action_data.fight;
+
+	if (state_data->firing_position_timer > 0 && actor->control.path.at_destination)
+	{
+		state_data->firing_position_timer--;
+		if (state_data->firing_position_timer == 0)
+		{
+			if (actor->firing_positions.current_position_index != NONE && !actor->firing_positions.current_position_found_outside_range)
+			{
+				actor_discard_firing_position(actor_index, actor->firing_positions.current_position_index, FALSE);
+			}
+		}
+	}
+
+	return;
+}
+
+void action_fight_control(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+
+	actor->orders.look.primary_priority = _primary_priority_aiming;
+	actor->orders.look.primary_direction.type = _direction_specification_target;
+	actor->orders.look.idle_look_type = _idle_look_combat;
+	actor->orders.move.stationary_crouch = actor->emotions.defensive_crouch;
+	actor->orders.move.moving_crouch = FALSE;
+	actor->orders.move.panicked = FALSE;
+	actor->orders.move.dive_into_cover = FALSE;
+	actor->orders.move.emerge_from_cover = FALSE;
+
+	if (actor->input.vehicle_driver_type == _actor_vehicle_driver_directional_flying)
+	{
+	}
+	else if (actor->state.combat_status >= _actor_combat_status_clear_los)
+	{
+		actor->orders.combat.shoot_at_target = TRUE;
+		actor->orders.look.primary_priority = _primary_priority_locked_aiming;
+	}
+
+	return;
 }
 
 /* ---------- private code */

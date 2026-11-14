@@ -9,7 +9,6 @@ ACTOR_TYPE_CARRIER.C
 #include "ai_debug.h"
 #include "props.h"
 #include "actor_types.h"
-#include "actor_type_definitions.h"
 #include "units.h"
 
 /* ---------- constants */
@@ -61,40 +60,40 @@ void carrier_decide_action(
 
 	switch (actor->state.action)
 	{
-		case _actor_action_fight:
-		case _actor_action_charge:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+	case _actor_action_fight:
+	case _actor_action_charge:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			if (!actor_action_handle_combat_failure(actor_index))
 			{
-				if (!actor_action_handle_combat_failure(actor_index))
-				{
-					actor_action_handle_evasion(actor_index);
-				}
+				actor_action_handle_evasion(actor_index);
 			}
-			break;
-		case _actor_action_guard:
-			actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
-			break;
-		case _actor_action_flee:
-			if (actor->state.action_data.flee.unable_to_flee)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			else
-			{
-				actor_action_handle_done_fleeing(actor_index);
-			}
-			break;
-		case _actor_action_uncover:
-		case _actor_action_search:
-		case _actor_action_wait:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
-			{
-				actor_action_handle_exit_pursuit(actor_index);
-			}
-			break;
-		case _actor_action_obey:
-			actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
-			break;
+		}
+		break;
+	case _actor_action_guard:
+		actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
+		break;
+	case _actor_action_flee:
+		if (actor->state.action_data.flee.unable_to_flee)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		else
+		{
+			actor_action_handle_done_fleeing(actor_index);
+		}
+		break;
+	case _actor_action_uncover:
+	case _actor_action_search:
+	case _actor_action_wait:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			actor_action_handle_exit_pursuit(actor_index);
+		}
+		break;
+	case _actor_action_obey:
+		actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
+		break;
 	}
 
 	return;

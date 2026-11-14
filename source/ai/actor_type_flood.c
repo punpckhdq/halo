@@ -9,7 +9,6 @@ ACTOR_TYPE_FLOOD.C
 #include "ai_debug.h"
 #include "props.h"
 #include "actor_types.h"
-#include "actor_type_definitions.h"
 #include "units.h"
 
 /* ---------- constants */
@@ -60,46 +59,46 @@ void flood_decide_action(
 
 	switch (actor->state.action)
 	{
-		case _actor_action_fight:
-		case _actor_action_charge:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+	case _actor_action_fight:
+	case _actor_action_charge:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			if (!actor_action_handle_combat_failure(actor_index))
 			{
-				if (!actor_action_handle_combat_failure(actor_index))
-				{
-					actor_action_handle_evasion(actor_index);
-				}
+				actor_action_handle_evasion(actor_index);
 			}
-			break;
-		case _actor_action_flee:
-			if (actor->state.action_data.flee.unable_to_flee)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			else
-			{
-				actor_action_handle_done_fleeing(actor_index);
-			}
-			break;
-		case _actor_action_guard:
-			actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
-			break;
-		case _actor_action_uncover:
-		case _actor_action_search:
-		case _actor_action_wait:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
-			{
-				actor_action_handle_exit_pursuit(actor_index);
-			}
-			break;
-		case _actor_action_obey:
-			actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
-			break;
-		case _actor_action_avoid:
-			if (actor->danger_zone.danger_type == _actor_danger_zone_none)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			break;
+		}
+		break;
+	case _actor_action_flee:
+		if (actor->state.action_data.flee.unable_to_flee)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		else
+		{
+			actor_action_handle_done_fleeing(actor_index);
+		}
+		break;
+	case _actor_action_guard:
+		actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
+		break;
+	case _actor_action_uncover:
+	case _actor_action_search:
+	case _actor_action_wait:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			actor_action_handle_exit_pursuit(actor_index);
+		}
+		break;
+	case _actor_action_obey:
+		actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
+		break;
+	case _actor_action_avoid:
+		if (actor->danger_zone.danger_type == _actor_danger_zone_none)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		break;
 	}
 
 	return;
@@ -200,7 +199,7 @@ boolean actor_type_flood_desire_shamble(
 				target_prop = prop_get(actor->target.target_prop_index);
 
 				prop_iterator_new(&iterator, actor_index);
-				while ((prop = prop_iterator_next(&iterator)) != NULL)
+				while (prop = prop_iterator_next(&iterator))
 				{
 					if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged &&
 						!prop->enemy && !prop->dead && prop->distance < 15.0f && prop->actor_index != NONE)
@@ -264,7 +263,6 @@ boolean actor_type_flood_desire_shamble(
 		else
 		{
 			real shamble_chance = actor_variant_definition->movement_switching.initial_crouch_chance;
-			real random_value;
 
 			if (actor->situation.area_friends > 0)
 			{
@@ -276,7 +274,7 @@ boolean actor_type_flood_desire_shamble(
 				shambling_friends = running_friends = 0;
 
 				prop_iterator_new(&iterator, actor_index);
-				while ((prop = prop_iterator_next(&iterator)) != NULL)
+				while (prop = prop_iterator_next(&iterator))
 				{
 					if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged &&
 						!prop->enemy && !prop->dead && prop->actor_index != NONE)
@@ -303,10 +301,13 @@ boolean actor_type_flood_desire_shamble(
 				shamble_chance -= 0.5f * adjustment;
 			}
 
-			random_value = real_random();
-			actor->emotions.crouch_switching_active = TRUE;
-			actor->emotions.crouch_switching_current_value = random_value < shamble_chance;
-			change = TRUE;
+			{
+				real random_value = real_random();
+
+				actor->emotions.crouch_switching_active = TRUE;
+				actor->emotions.crouch_switching_current_value = random_value < shamble_chance;
+				change = TRUE;
+			}
 		}
 
 		if (change)

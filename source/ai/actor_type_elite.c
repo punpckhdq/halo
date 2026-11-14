@@ -9,7 +9,6 @@ ACTOR_TYPE_ELITE.C
 #include "ai_debug.h"
 #include "props.h"
 #include "actor_types.h"
-#include "actor_type_definitions.h"
 #include "units.h"
 
 /* ---------- constants */
@@ -73,73 +72,73 @@ void elite_decide_action(
 
 	switch (actor->state.action)
 	{
-		case _actor_action_fight:
-		case _actor_action_charge:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+	case _actor_action_fight:
+	case _actor_action_charge:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			if (!actor_action_handle_combat_failure(actor_index))
 			{
-				if (!actor_action_handle_combat_failure(actor_index))
-				{
-					actor_action_handle_evasion(actor_index);
-				}
+				actor_action_handle_evasion(actor_index);
 			}
-			break;
-		case _actor_action_guard:
-			if (actor->state.action_data.guard.cower && !actor->state.action_data.guard.cower_panicked && !actor->state.action_data.guard.cower_from_retreat)
-			{
-				real shield_fraction = actor->state.combat_status >= _actor_combat_status_certain ?
-					actor_definition->defensive.shield_fraction_emerge_attack :
-					actor_definition->defensive.shield_fraction_emerge_pursue;
+		}
+		break;
+	case _actor_action_guard:
+		if (actor->state.action_data.guard.cower && !actor->state.action_data.guard.cower_panicked && !actor->state.action_data.guard.cower_from_retreat)
+		{
+			real shield_fraction = actor->state.combat_status >= _actor_combat_status_certain ?
+				actor_definition->defensive.shield_fraction_emerge_attack :
+				actor_definition->defensive.shield_fraction_emerge_pursue;
 
-				if (shield_fraction > actor->input.shield_vitality)
-				{
-					actor->state.action_data.guard.cower = TRUE;
-					actor->state.action_data.guard.cower_ticks = 30;
-				}
-				else
-				{
-					actor->state.action_data.guard.cower = FALSE;
-					actor->state.action_data.guard.cower_ticks = 0;
-				}
-			}
-			actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
-			break;
-		case _actor_action_flee:
-			if (actor->state.action_data.flee.unable_to_flee)
+			if (shield_fraction > actor->input.shield_vitality)
 			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+				actor->state.action_data.guard.cower = TRUE;
+				actor->state.action_data.guard.cower_ticks = 30;
 			}
 			else
 			{
-				actor_action_handle_done_fleeing(actor_index);
+				actor->state.action_data.guard.cower = FALSE;
+				actor->state.action_data.guard.cower_ticks = 0;
 			}
-			break;
-		case _actor_action_uncover:
-		case _actor_action_search:
-		case _actor_action_wait:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
-			{
-				actor_action_handle_exit_pursuit(actor_index);
-			}
-			break;
-		case _actor_action_vehicle:
-			if (actor->state.action_data.vehicle.vehicle_entry_done || actor->state.action_data.vehicle.vehicle_entry_failed)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			break;
-		case _actor_action_obey:
-			actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
-			break;
-		case _actor_action_converse:
-			actor_action_handle_combat_status(actor_index, actor_action_can_stop_conversing(actor_index),
-				actor->state.action_data.converse.failed || actor->external_orders.conversation_index == NONE);
-			break;
-		case _actor_action_avoid:
-			if (actor->danger_zone.danger_type == _actor_danger_zone_none)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			break;
+		}
+		actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
+		break;
+	case _actor_action_flee:
+		if (actor->state.action_data.flee.unable_to_flee)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		else
+		{
+			actor_action_handle_done_fleeing(actor_index);
+		}
+		break;
+	case _actor_action_uncover:
+	case _actor_action_search:
+	case _actor_action_wait:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			actor_action_handle_exit_pursuit(actor_index);
+		}
+		break;
+	case _actor_action_vehicle:
+		if (actor->state.action_data.vehicle.vehicle_entry_done || actor->state.action_data.vehicle.vehicle_entry_failed)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		break;
+	case _actor_action_obey:
+		actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
+		break;
+	case _actor_action_converse:
+		actor_action_handle_combat_status(actor_index, actor_action_can_stop_conversing(actor_index),
+			actor->state.action_data.converse.failed || actor->external_orders.conversation_index == NONE);
+		break;
+	case _actor_action_avoid:
+		if (actor->danger_zone.danger_type == _actor_danger_zone_none)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		break;
 	}
 
 	return;

@@ -10,7 +10,6 @@ ACTOR_TYPE_GRUNT.C
 #include "encounters.h"
 #include "props.h"
 #include "actor_types.h"
-#include "actor_type_definitions.h"
 #include "units.h"
 
 /* ---------- constants */
@@ -69,64 +68,64 @@ void grunt_decide_action(
 
 	switch (actor->state.action)
 	{
-		case _actor_action_fight:
-		case _actor_action_charge:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+	case _actor_action_fight:
+	case _actor_action_charge:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			if (!actor_action_handle_combat_failure(actor_index))
 			{
-				if (!actor_action_handle_combat_failure(actor_index))
-				{
-					actor_action_handle_evasion(actor_index);
-				}
+				actor_action_handle_evasion(actor_index);
 			}
-			break;
-		case _actor_action_guard:
-			actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
-			break;
-		case _actor_action_flee:
-			if (close_elite_friends && actor->state.action_data.flee.panic_type > _actor_panic_none && !action_flee_blind_panic(actor->state.action_data.flee.panic_type))
-			{
-				actor->state.action_data.flee.done_fleeing = TRUE;
-			}
+		}
+		break;
+	case _actor_action_guard:
+		actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
+		break;
+	case _actor_action_flee:
+		if (close_elite_friends && actor->state.action_data.flee.panic_type > _actor_panic_none && !action_flee_blind_panic(actor->state.action_data.flee.panic_type))
+		{
+			actor->state.action_data.flee.done_fleeing = TRUE;
+		}
 
-			if (actor->state.action_data.flee.unable_to_flee)
+		if (actor->state.action_data.flee.unable_to_flee)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		else if (!actor_action_handle_done_fleeing(actor_index))
+		{
+			if (actor->state.action_data.flee.panic_type == _actor_panic_none && actor->state.combat_status >= _actor_combat_status_clear_los)
 			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+				actor_action_consider_grenade(actor_index);
 			}
-			else if (!actor_action_handle_done_fleeing(actor_index))
-			{
-				if (actor->state.action_data.flee.panic_type == _actor_panic_none && actor->state.combat_status >= _actor_combat_status_clear_los)
-				{
-					actor_action_consider_grenade(actor_index);
-				}
-			}
-			break;
-		case _actor_action_uncover:
-		case _actor_action_search:
-		case _actor_action_wait:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
-			{
-				actor_action_handle_exit_pursuit(actor_index);
-			}
-			break;
-		case _actor_action_vehicle:
-			if (actor->state.action_data.vehicle.vehicle_entry_done || actor->state.action_data.vehicle.vehicle_entry_failed)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			break;
-		case _actor_action_obey:
-			actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
-			break;
-		case _actor_action_converse:
-			actor_action_handle_combat_status(actor_index, actor_action_can_stop_conversing(actor_index),
-				actor->state.action_data.converse.failed || actor->external_orders.conversation_index == NONE);
-			break;
-		case _actor_action_avoid:
-			if (actor->danger_zone.danger_type == _actor_danger_zone_none)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			break;
+		}
+		break;
+	case _actor_action_uncover:
+	case _actor_action_search:
+	case _actor_action_wait:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			actor_action_handle_exit_pursuit(actor_index);
+		}
+		break;
+	case _actor_action_vehicle:
+		if (actor->state.action_data.vehicle.vehicle_entry_done || actor->state.action_data.vehicle.vehicle_entry_failed)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		break;
+	case _actor_action_obey:
+		actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
+		break;
+	case _actor_action_converse:
+		actor_action_handle_combat_status(actor_index, actor_action_can_stop_conversing(actor_index),
+			actor->state.action_data.converse.failed || actor->external_orders.conversation_index == NONE);
+		break;
+	case _actor_action_avoid:
+		if (actor->danger_zone.danger_type == _actor_danger_zone_none)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		break;
 	}
 
 	return;

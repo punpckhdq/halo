@@ -56,6 +56,156 @@ void action_alert_begin(
 	return;
 }
 
+boolean action_alert_perform(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct alert_state_data *state_data = &actor->state.action_data.alert;
+
+	if (state_data->move_position_order != _move_position_order_none && state_data->pending_move_position_index == NONE)
+	{
+		boolean arrived = TRUE;
+
+		match_assert("c:\\halo\\SOURCE\\ai\\action_alert.c", 71, !actor->meta.swarm);
+		if (state_data->target_move_position_index != NONE && actor_path_has_path(actor_index))
+		{
+			real distance_squared = distance_squared3d(&actor->input.position.body_position, &state_data->target_position_definition.position);
+			real tolerance = actor_destination_tolerance(actor_index);
+
+			tolerance = MAX(tolerance, 0.5f);
+			if (distance_squared > tolerance * tolerance)
+			{
+				arrived = FALSE;
+			}
+		}
+
+		if (arrived)
+		{
+			if (state_data->wait_ticks > 0)
+			{
+				arrived = FALSE;
+			}
+			else if (state_data->must_play_animation)
+			{
+				arrived = FALSE;
+			}
+			else
+			{
+				struct unit_datum *unit = unit_get(actor->meta.unit_index);
+
+				if (unit->unit.animation.state == _unit_state_user_animation)
+				{
+					arrived = FALSE;
+				}
+			}
+		}
+
+		if (arrived)
+		{
+			state_data->pending_move_position_index = action_alert_next_position(
+				actor_index,
+				state_data->move_position_order,
+				state_data->target_move_position_index,
+				&state_data->move_position_increasing);
+		}
+	}
+
+	if (actor->meta.timeslice && !actor->meta.dormant && state_data->pending_move_position_index != NONE)
+	{
+		boolean success = FALSE;
+
+		match_assert("c:\\halo\\SOURCE\\ai\\action_alert.c", 120, !actor->meta.swarm);
+		if (actor->meta.encounter_index != NONE)
+		{
+			struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(
+				&global_scenario_get()->ai_encounters,
+				DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
+				struct encounter_definition);
+			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
+				&encounter_definition->squads,
+				actor->meta.squad_index,
+				struct squad_definition);
+
+			if (state_data->pending_move_position_index >= 0 &&
+				state_data->pending_move_position_index < squad_definition->move_positions.count)
+			{
+				struct move_position_definition *move_position = TAG_BLOCK_GET_ELEMENT(
+					&squad_definition->move_positions,
+					state_data->pending_move_position_index,
+					struct move_position_definition);
+				real wait_time = real_random_range(move_position->time_lower_bound, move_position->time_upper_bound);
+
+				state_data->target_move_position_index = state_data->pending_move_position_index;
+				state_data->pending_move_position_index = NONE;
+				state_data->target_position_definition = *move_position;
+				state_data->wait_ticks = (short)(wait_time * 30.f);
+				state_data->must_play_animation = TRUE;
+				if (actor_move_to_move_position(actor_index, state_data->target_move_position_index))
+				{
+					success = TRUE;
+				}
+			}
+		}
+
+		if (!success)
+		{
+			state_data->target_move_position_index = state_data->pending_move_position_index;
+			state_data->pending_move_position_index = NONE;
+			state_data->wait_ticks = 0;
+			state_data->must_play_animation = FALSE;
+		}
+	}
+
+	return FALSE;
+}
+
+void action_alert_update(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct alert_state_data *state_data = &actor->state.action_data.alert;
+
+	if (!actor->meta.dormant && state_data->target_move_position_index != NONE)
+	{
+		real distance_squared = distance_squared3d(&actor->input.position.body_position, &state_data->target_position_definition.position);
+
+		match_assert("c:\\halo\\SOURCE\\ai\\action_alert.c", 174, !actor->meta.swarm);
+		if (actor_path_at_destination(actor_index) || distance_squared < 0.25f)
+		{
+			if (state_data->wait_ticks > 0)
+			{
+				state_data->wait_ticks--;
+			}
+
+			if (state_data->must_play_animation)
+			{
+				if (state_data->target_position_definition.animation_reference_index != NONE)
+				{
+					struct ai_animation_reference_definition *animation_reference = TAG_BLOCK_GET_ELEMENT(
+						&global_scenario_get()->ai_animation_references,
+						state_data->target_position_definition.animation_reference_index,
+						struct ai_animation_reference_definition);
+					long animation_graph_index = animation_reference->animation_graph.index;
+
+					if (animation_graph_index == NONE)
+					{
+						struct unit_datum *unit = unit_get(actor->meta.unit_index);
+						struct unit_definition *unit_definition = unit_definition_get(unit->definition_index);
+
+						animation_graph_index = unit_definition->object.animation_graph.index;
+					}
+
+					unit_start_user_animation(actor->meta.unit_index, animation_graph_index, animation_reference->animation_name, TRUE);
+				}
+
+				state_data->must_play_animation = FALSE;
+			}
+		}
+	}
+
+	return;
+}
+
 void action_alert_control(
 	long actor_index)
 {
@@ -96,52 +246,6 @@ void action_alert_flush_structure_indices(
 	return;
 }
 
-void action_alert_update(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct alert_state_data *state_data = &actor->state.action_data.alert;
-
-	if (!actor->meta.dormant && state_data->target_move_position_index != NONE)
-	{
-		real distance_squared = distance_squared3d(&actor->input.position.body_position, &state_data->target_position_definition.position);
-
-		match_assert("c:\\halo\\SOURCE\\ai\\action_alert.c", 174, !actor->meta.swarm);
-		if (actor_path_at_destination(actor_index) || distance_squared < 0.25f)
-		{
-			if (state_data->wait_ticks > 0)
-			{
-				state_data->wait_ticks--;
-			}
-
-			if (state_data->must_play_animation)
-			{
-				if (state_data->target_position_definition.animation_reference_index != NONE)
-				{
-					struct ai_animation_reference_definition *animation_reference = TAG_BLOCK_GET_ELEMENT(
-						&global_scenario_get()->ai_animation_references,
-						state_data->target_position_definition.animation_reference_index,
-						struct ai_animation_reference_definition);
-					long animation_graph_index = animation_reference->animation_graph.index;
-
-					if (animation_graph_index == NONE)
-					{
-						struct unit_datum *unit = unit_get(actor->meta.unit_index);
-
-						animation_graph_index = unit_definition_get(unit->definition_index)->object.animation_graph.index;
-					}
-
-					unit_start_user_animation(actor->meta.unit_index, animation_graph_index, animation_reference->animation_name, TRUE);
-				}
-
-				state_data->must_play_animation = FALSE;
-			}
-		}
-	}
-
-	return;
-}
-
 static short action_alert_next_position(
 	long actor_index,
 	short move_position_order,
@@ -173,8 +277,8 @@ static short action_alert_next_position(
 		}
 		else
 		{
-			boolean valid_position_found = FALSE;
 			unsigned long invalid_move_positions[BIT_VECTOR_SIZE_IN_LONGS(MAXIMUM_MOVE_POSITIONS_PER_SQUAD)];
+			boolean valid_position_found = FALSE;
 			short move_position_index;
 
 			memset(invalid_move_positions, 0, sizeof(invalid_move_positions));
@@ -304,109 +408,6 @@ static short action_alert_next_position(
 	}
 
 	return result;
-}
-
-boolean action_alert_perform(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct alert_state_data *state_data = &actor->state.action_data.alert;
-
-	if (state_data->move_position_order != _move_position_order_none && state_data->pending_move_position_index == NONE)
-	{
-		boolean arrived = TRUE;
-
-		match_assert("c:\\halo\\SOURCE\\ai\\action_alert.c", 71, !actor->meta.swarm);
-		if (state_data->target_move_position_index != NONE && actor_path_has_path(actor_index))
-		{
-			real distance_squared = distance_squared3d(&actor->input.position.body_position, &state_data->target_position_definition.position);
-			real tolerance = actor_destination_tolerance(actor_index);
-
-			tolerance = MAX(tolerance, 0.5f);
-			if (distance_squared > tolerance * tolerance)
-			{
-				arrived = FALSE;
-			}
-		}
-
-		if (arrived)
-		{
-			if (state_data->wait_ticks > 0)
-			{
-				arrived = FALSE;
-			}
-			else if (state_data->must_play_animation)
-			{
-				arrived = FALSE;
-			}
-			else
-			{
-				struct unit_datum *unit = unit_get(actor->meta.unit_index);
-
-				if (unit->unit.animation.state == _unit_state_user_animation)
-				{
-					arrived = FALSE;
-				}
-			}
-		}
-
-		if (arrived)
-		{
-			state_data->pending_move_position_index = action_alert_next_position(
-				actor_index,
-				state_data->move_position_order,
-				state_data->target_move_position_index,
-				&state_data->move_position_increasing);
-		}
-	}
-
-	if (actor->meta.timeslice && !actor->meta.dormant && state_data->pending_move_position_index != NONE)
-	{
-		boolean success = FALSE;
-
-		match_assert("c:\\halo\\SOURCE\\ai\\action_alert.c", 120, !actor->meta.swarm);
-		if (actor->meta.encounter_index != NONE)
-		{
-			struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(
-				&global_scenario_get()->ai_encounters,
-				DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
-				struct encounter_definition);
-			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
-				&encounter_definition->squads,
-				actor->meta.squad_index,
-				struct squad_definition);
-
-			if (state_data->pending_move_position_index >= 0 &&
-				state_data->pending_move_position_index < squad_definition->move_positions.count)
-			{
-				struct move_position_definition *move_position = TAG_BLOCK_GET_ELEMENT(
-					&squad_definition->move_positions,
-					state_data->pending_move_position_index,
-					struct move_position_definition);
-				real wait_time = real_random_range(move_position->time_lower_bound, move_position->time_upper_bound);
-
-				state_data->target_move_position_index = state_data->pending_move_position_index;
-				state_data->pending_move_position_index = NONE;
-				state_data->target_position_definition = *move_position;
-				state_data->wait_ticks = (short)(wait_time * 30.f);
-				state_data->must_play_animation = TRUE;
-				if (actor_move_to_move_position(actor_index, state_data->target_move_position_index))
-				{
-					success = TRUE;
-				}
-			}
-		}
-
-		if (!success)
-		{
-			state_data->target_move_position_index = state_data->pending_move_position_index;
-			state_data->pending_move_position_index = NONE;
-			state_data->wait_ticks = 0;
-			state_data->must_play_animation = FALSE;
-		}
-	}
-
-	return FALSE;
 }
 
 /* ---------- private code */

@@ -54,9 +54,32 @@ enum
 	_race_all = MASK(NUMBER_OF_ACTOR_RACE_FLAGS),
 };
 
+enum
+{
+	_actor_pursuit_always = 0,
+	_actor_pursuit_not_when_group,
+	_actor_pursuit_never,
+	NUMBER_OF_ACTOR_PURSUIT_SETTINGS,
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
+
+struct actor_type_definition
+{
+	char const *name;
+	short race;
+	short when_to_search_at_target;
+	short when_to_pursue;
+	short when_to_search_pursuit;
+	boolean pursuit_controller;
+	boolean swarm;
+	void (*initialize)(long actor_index);
+	void (*decide_action)(long actor_index);
+	void (*swarm_control)(long actor_index);
+	void (*swarm_aim_jump)(long actor_index, long unit_index, real jump_magnitude, real_vector3d *jump_velocity);
+};
 
 /* ---------- prototypes/ACTOR_TYPES.C */
 

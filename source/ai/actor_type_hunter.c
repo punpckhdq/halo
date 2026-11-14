@@ -10,7 +10,6 @@ ACTOR_TYPE_HUNTER.C
 #include "encounters.h"
 #include "props.h"
 #include "actor_types.h"
-#include "actor_type_definitions.h"
 #include "units.h"
 
 /* ---------- constants */
@@ -60,36 +59,36 @@ void hunter_decide_action(
 
 	switch (actor->state.action)
 	{
-		case _actor_action_fight:
-		case _actor_action_flee:
-		case _actor_action_guard:
-		case _actor_action_charge:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
-			{
-				actor_action_handle_combat_failure(actor_index);
-			}
-			break;
-		case _actor_action_uncover:
-		case _actor_action_search:
-		case _actor_action_wait:
-			if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
-			{
-				actor_action_handle_exit_pursuit(actor_index);
-			}
-			break;
-		case _actor_action_obey:
-			actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
-			break;
-		case _actor_action_converse:
-			actor_action_handle_combat_status(actor_index, actor_action_can_stop_conversing(actor_index),
-				actor->state.action_data.converse.failed || actor->external_orders.conversation_index == NONE);
-			break;
-		case _actor_action_avoid:
-			if (actor->danger_zone.danger_type == _actor_danger_zone_none)
-			{
-				actor_action_handle_combat_status(actor_index, TRUE, TRUE);
-			}
-			break;
+	case _actor_action_fight:
+	case _actor_action_flee:
+	case _actor_action_guard:
+	case _actor_action_charge:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			actor_action_handle_combat_failure(actor_index);
+		}
+		break;
+	case _actor_action_uncover:
+	case _actor_action_search:
+	case _actor_action_wait:
+		if (!actor_action_handle_combat_status(actor_index, TRUE, FALSE))
+		{
+			actor_action_handle_exit_pursuit(actor_index);
+		}
+		break;
+	case _actor_action_obey:
+		actor_action_handle_combat_status(actor_index, actor->state.action_data.obey.initiative, actor->state.action_data.obey.finished);
+		break;
+	case _actor_action_converse:
+		actor_action_handle_combat_status(actor_index, actor_action_can_stop_conversing(actor_index),
+			actor->state.action_data.converse.failed || actor->external_orders.conversation_index == NONE);
+		break;
+	case _actor_action_avoid:
+		if (actor->danger_zone.danger_type == _actor_danger_zone_none)
+		{
+			actor_action_handle_combat_status(actor_index, TRUE, TRUE);
+		}
+		break;
 	}
 
 	return;

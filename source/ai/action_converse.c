@@ -157,6 +157,14 @@ void action_converse_replace_prop(
 	return;
 }
 
+void action_converse_end(
+	long actor_index)
+{
+	actor_conversation_end(actor_index);
+
+	return;
+}
+
 void actor_conversation_control(
 	long actor_index)
 {
@@ -193,14 +201,6 @@ void actor_conversation_end(
 	{
 		ai_conversation_finish(actor->external_orders.conversation_index, FALSE, FALSE);
 	}
-
-	return;
-}
-
-void action_converse_end(
-	long actor_index)
-{
-	actor_conversation_end(actor_index);
 
 	return;
 }

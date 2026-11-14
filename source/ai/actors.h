@@ -1145,8 +1145,6 @@ struct firing_position_evaluation_context
 	short skipped_count; /* fake name */
 };
 
-struct weapon_definition;
-
 /* ---------- prototypes/ACTORS.C */
 
 void actors_initialize(void);

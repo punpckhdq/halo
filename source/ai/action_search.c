@@ -117,6 +117,175 @@ boolean action_search_setup_undirected(
 	return result;
 }
 
+void action_search_begin(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
+	struct search_state_data *state_data = &actor->state.action_data.search;
+	real search_time;
+
+	if (state_data->pursuit_location.type == _pursuit_location_target)
+	{
+		search_time = real_random_range(
+			actor_definition->pursuit.target_location_time_lower_bound,
+			actor_definition->pursuit.target_location_time_upper_bound);
+	}
+	else
+	{
+		search_time = real_random_range(
+			actor_definition->pursuit.pursuit_position_time_lower_bound,
+			actor_definition->pursuit.pursuit_position_time_upper_bound);
+	}
+
+	state_data->search_desired_time = (long)(search_time * TICKS_PER_SECOND);
+	state_data->search_remaining_time = state_data->search_desired_time;
+
+	return;
+}
+
+boolean action_search_perform(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct search_state_data *state_data = &actor->state.action_data.search;
+
+	if (!actor->meta.swarm && actor->meta.timeslice && !state_data->search_done)
+	{
+		state_data->at_destination = TRUE;
+		if (state_data->pursuit_location.type == _pursuit_location_target && actor->target.target_prop_index != NONE)
+		{
+			struct prop_datum *prop = prop_get(actor->target.target_prop_index);
+			real range = (prop->line_of_sight == _ai_line_of_sight_clear) ? 1.7f : 0.7f;
+
+			state_data->at_destination = distance_squared3d(&prop->body_position, &actor->input.position.body_position) < range * range;
+		}
+		else if (state_data->pursuit_location.type == _pursuit_location_position &&
+			state_data->pursuit_location.firing_position_index != NONE)
+		{
+			real distance_squared = distance_squared3d(&state_data->pursuit_location.position, &actor->input.position.body_position);
+
+			if (distance_squared < 0.7f * 0.7f)
+			{
+				state_data->at_destination = TRUE;
+			}
+			else if (distance_squared > 2.5f * 2.5f)
+			{
+				state_data->at_destination = FALSE;
+			}
+			else
+			{
+				real_point3d calculated_head_position;
+				short line_of_sight;
+
+				unit_estimate_position(
+					actor->meta.unit_index,
+					_unit_estimate_head_standing,
+					&state_data->pursuit_location.position,
+					NULL,
+					NULL,
+					&calculated_head_position);
+				line_of_sight = ai_test_line_of_sight(
+					&actor->input.position.head_position,
+					actor->input.position.body_location.cluster_index,
+					&calculated_head_position,
+					state_data->pursuit_location.cluster_index,
+					0,
+					FALSE,
+					NONE,
+					actor->input.vehicle_index != NONE);
+				state_data->at_destination = line_of_sight == _ai_line_of_sight_clear;
+			}
+		}
+
+		if (!state_data->at_destination && !state_data->charging)
+		{
+			short searching_actor_count = 0;
+			short nearby_stationary_actor_count = 0;
+			short required_actor_count;
+			struct prop_iterator iterator;
+			struct prop_datum *prop;
+
+			prop_iterator_new(&iterator, actor_index);
+			while (prop = prop_iterator_next(&iterator))
+			{
+				if (prop->state >= _prop_state_becoming_unacknowledged &&
+					prop->state <= _prop_state_acknowledged &&
+					!prop->enemy &&
+					!prop->dead &&
+					prop->actor_index != NONE &&
+					actors_searching_same_position(actor_index, prop->actor_index))
+				{
+					struct actor_datum *friend_actor = actor_get(prop->actor_index);
+
+					searching_actor_count++;
+					if (!friend_actor->meta.swarm &&
+						!friend_actor->control.moving &&
+						distance_squared3d(&actor->input.position.body_position, &friend_actor->input.position.body_position) < 0.8f * 0.8f)
+					{
+						nearby_stationary_actor_count++;
+					}
+				}
+			}
+
+			required_actor_count = (state_data->pursuit_location.type == _pursuit_location_position) ? 2 : 4;
+			if (!state_data->tenacious && searching_actor_count >= required_actor_count)
+			{
+				long history_start_time = NONE;
+
+				state_data->search_done = TRUE;
+				if (actor->target.target_prop_index != NONE)
+				{
+					struct prop_datum *target_prop = prop_get(actor->target.target_prop_index);
+
+					history_start_time = target_prop->last_perceived_time;
+				}
+
+				if (actor->meta.encounter_index != NONE)
+				{
+					encounter_mark_examined_pursuit_position(
+						actor->meta.encounter_index,
+						actor_index,
+						state_data->pursuit_location.firing_position_index,
+						history_start_time);
+				}
+			}
+			else if (nearby_stationary_actor_count > 0)
+			{
+				state_data->at_destination = TRUE;
+			}
+		}
+
+		if (state_data->at_destination)
+		{
+			actor_move_halt(actor_index);
+		}
+		else if (state_data->pursuit_location.type == _pursuit_location_target)
+		{
+			if (!actor_move_to_prop(actor_index, actor->target.target_prop_index, 2.5f))
+			{
+				state_data->search_failed = TRUE;
+				state_data->search_done = TRUE;
+			}
+		}
+		else if (state_data->pursuit_location.type == _pursuit_location_position)
+		{
+			actor->firing_positions.current_position_index = NONE;
+			if (!actor_move_to_firing_position(actor_index, state_data->pursuit_location.firing_position_index, NULL))
+			{
+				state_data->search_failed = TRUE;
+				state_data->search_done = TRUE;
+			}
+		}
+		else
+		{
+			actor_move_halt(actor_index);
+		}
+	}
+
+	return state_data->search_done;
+}
+
 void action_search_update(
 	long actor_index)
 {
@@ -290,175 +459,6 @@ void action_search_control(
 	actor->orders.move.emerge_from_cover = TRUE;
 
 	return;
-}
-
-void action_search_begin(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
-	struct search_state_data *state_data = &actor->state.action_data.search;
-	real search_time;
-
-	if (state_data->pursuit_location.type == _pursuit_location_target)
-	{
-		search_time = real_random_range(
-			actor_definition->pursuit.target_location_time_lower_bound,
-			actor_definition->pursuit.target_location_time_upper_bound);
-	}
-	else
-	{
-		search_time = real_random_range(
-			actor_definition->pursuit.pursuit_position_time_lower_bound,
-			actor_definition->pursuit.pursuit_position_time_upper_bound);
-	}
-
-	state_data->search_desired_time = (long)(search_time * TICKS_PER_SECOND);
-	state_data->search_remaining_time = state_data->search_desired_time;
-
-	return;
-}
-
-boolean action_search_perform(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct search_state_data *state_data = &actor->state.action_data.search;
-
-	if (!actor->meta.swarm && actor->meta.timeslice && !state_data->search_done)
-	{
-		state_data->at_destination = TRUE;
-		if (state_data->pursuit_location.type == _pursuit_location_target && actor->target.target_prop_index != NONE)
-		{
-			struct prop_datum *prop = prop_get(actor->target.target_prop_index);
-			real range = (prop->line_of_sight == _ai_line_of_sight_clear) ? 1.7f : 0.7f;
-
-			state_data->at_destination = distance_squared3d(&prop->body_position, &actor->input.position.body_position) < range * range;
-		}
-		else if (state_data->pursuit_location.type == _pursuit_location_position &&
-			state_data->pursuit_location.firing_position_index != NONE)
-		{
-			real distance_squared = distance_squared3d(&state_data->pursuit_location.position, &actor->input.position.body_position);
-
-			if (distance_squared < 0.7f * 0.7f)
-			{
-				state_data->at_destination = TRUE;
-			}
-			else if (distance_squared > 2.5f * 2.5f)
-			{
-				state_data->at_destination = FALSE;
-			}
-			else
-			{
-				real_point3d calculated_head_position;
-				short line_of_sight;
-
-				unit_estimate_position(
-					actor->meta.unit_index,
-					_unit_estimate_head_standing,
-					&state_data->pursuit_location.position,
-					NULL,
-					NULL,
-					&calculated_head_position);
-				line_of_sight = ai_test_line_of_sight(
-					&actor->input.position.head_position,
-					actor->input.position.body_location.cluster_index,
-					&calculated_head_position,
-					state_data->pursuit_location.cluster_index,
-					0,
-					FALSE,
-					NONE,
-					actor->input.vehicle_index != NONE);
-				state_data->at_destination = line_of_sight == _ai_line_of_sight_clear;
-			}
-		}
-
-		if (!state_data->at_destination && !state_data->charging)
-		{
-			short searching_actor_count = 0;
-			short nearby_stationary_actor_count = 0;
-			short required_actor_count;
-			struct prop_iterator iterator;
-			struct prop_datum *prop;
-
-			prop_iterator_new(&iterator, actor_index);
-			while (prop = prop_iterator_next(&iterator))
-			{
-				if (prop->state >= _prop_state_becoming_unacknowledged &&
-					prop->state <= _prop_state_acknowledged &&
-					!prop->enemy &&
-					!prop->dead &&
-					prop->actor_index != NONE &&
-					actors_searching_same_position(actor_index, prop->actor_index))
-				{
-					struct actor_datum *friend_actor = actor_get(prop->actor_index);
-
-					searching_actor_count++;
-					if (!friend_actor->meta.swarm &&
-						!friend_actor->control.moving &&
-						distance_squared3d(&actor->input.position.body_position, &friend_actor->input.position.body_position) < 0.8f * 0.8f)
-					{
-						nearby_stationary_actor_count++;
-					}
-				}
-			}
-
-			required_actor_count = (state_data->pursuit_location.type == _pursuit_location_position) ? 2 : 4;
-			if (!state_data->tenacious && searching_actor_count >= required_actor_count)
-			{
-				long history_start_time = NONE;
-
-				state_data->search_done = TRUE;
-				if (actor->target.target_prop_index != NONE)
-				{
-					struct prop_datum *target_prop = prop_get(actor->target.target_prop_index);
-
-					history_start_time = target_prop->last_perceived_time;
-				}
-
-				if (actor->meta.encounter_index != NONE)
-				{
-					encounter_mark_examined_pursuit_position(
-						actor->meta.encounter_index,
-						actor_index,
-						state_data->pursuit_location.firing_position_index,
-						history_start_time);
-				}
-			}
-			else if (nearby_stationary_actor_count > 0)
-			{
-				state_data->at_destination = TRUE;
-			}
-		}
-
-		if (state_data->at_destination)
-		{
-			actor_move_halt(actor_index);
-		}
-		else if (state_data->pursuit_location.type == _pursuit_location_target)
-		{
-			if (!actor_move_to_prop(actor_index, actor->target.target_prop_index, 2.5f))
-			{
-				state_data->search_failed = TRUE;
-				state_data->search_done = TRUE;
-			}
-		}
-		else if (state_data->pursuit_location.type == _pursuit_location_position)
-		{
-			actor->firing_positions.current_position_index = NONE;
-			if (!actor_move_to_firing_position(actor_index, state_data->pursuit_location.firing_position_index, NULL))
-			{
-				state_data->search_failed = TRUE;
-				state_data->search_done = TRUE;
-			}
-		}
-		else
-		{
-			actor_move_halt(actor_index);
-		}
-	}
-
-	return state_data->search_done;
 }
 
 /* ---------- private code */
