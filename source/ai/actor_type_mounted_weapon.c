@@ -28,9 +28,9 @@ struct actor_type_definition actor_type_mounted_weapon =
 {
 	"mounted_weapon",
 	_race_none,
-	2,
-	2,
-	2,
+	_actor_pursuit_never,
+	_actor_pursuit_never,
+	_actor_pursuit_never,
 	FALSE,
 	FALSE,
 	NULL,
@@ -48,6 +48,7 @@ void mounted_weapon_decide_action(
 
 	actor_action_handle_initial_action(actor_index);
 	actor_action_handle_pending_command_list(actor_index);
+
 	if (!actor_action_deny_transition(actor_index))
 	{
 		actor_action_handle_combat_transition(actor_index);

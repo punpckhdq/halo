@@ -16,19 +16,6 @@ ACTION_SEARCH.C
 #include "scenario.h"
 #include "game.h"
 
-/* ---------- constants */
-
-enum
-{
-	SEARCH_FAILURE_TICKS = 120, /* fake name */
-	SEARCH_LOST_CONTACT_TICKS = 90, /* fake name */
-	SEARCH_MINIMUM_LOOK_TICKS = 90, /* fake name */
-};
-
-/* ---------- macros */
-
-/* ---------- structures */
-
 /* ---------- prototypes */
 
 /* ---------- globals */
@@ -69,26 +56,19 @@ boolean action_search_setup_pursuit(
 	match_assert("c:\\halo\\SOURCE\\ai\\action_search.c", 56, state_data);
 	memset(state_data, 0, sizeof(*state_data));
 
-	if (!actor->input.vehicle_passenger &&
-		!actor->meta.swarm &&
-		actor->meta.encounter_index != NONE &&
-		firing_position_index != NONE)
+	if (!actor->input.vehicle_passenger && !actor->meta.swarm && actor->meta.encounter_index != NONE && firing_position_index != NONE)
 	{
-		struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(
-			&global_scenario_get()->ai_encounters,
-			DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
-			struct encounter_definition);
-		struct firing_position_definition *firing_position = TAG_BLOCK_GET_ELEMENT(
-			&encounter_definition->firing_positions,
-			firing_position_index,
-			struct firing_position_definition);
+		struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->ai_encounters, DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index), struct encounter_definition);
+		struct firing_position_definition *firing_position = TAG_BLOCK_GET_ELEMENT(&encounter_definition->firing_positions, firing_position_index, struct firing_position_definition);
 
 		state_data->tenacious = tenacious;
+
 		state_data->pursuit_location.type = _pursuit_location_position;
 		state_data->pursuit_location.firing_position_index = firing_position_index;
 		state_data->pursuit_location.position = firing_position->position;
 		state_data->pursuit_location.surface_index = firing_position->surface_index;
 		state_data->pursuit_location.cluster_index = firing_position->cluster_index;
+
 		actor->state.searching = TRUE;
 		result = TRUE;
 	}
@@ -153,6 +133,7 @@ boolean action_search_perform(
 	if (!actor->meta.swarm && actor->meta.timeslice && !state_data->search_done)
 	{
 		state_data->at_destination = TRUE;
+
 		if (state_data->pursuit_location.type == _pursuit_location_target && actor->target.target_prop_index != NONE)
 		{
 			struct prop_datum *prop = prop_get(actor->target.target_prop_index);
@@ -219,6 +200,7 @@ boolean action_search_perform(
 					struct actor_datum *friend_actor = actor_get(prop->actor_index);
 
 					searching_actor_count++;
+
 					if (!friend_actor->meta.swarm &&
 						!friend_actor->control.moving &&
 						distance_squared3d(&actor->input.position.body_position, &friend_actor->input.position.body_position) < 0.8f * 0.8f)
@@ -229,11 +211,13 @@ boolean action_search_perform(
 			}
 
 			required_actor_count = (state_data->pursuit_location.type == _pursuit_location_position) ? 2 : 4;
+
 			if (!state_data->tenacious && searching_actor_count >= required_actor_count)
 			{
 				long history_start_time = NONE;
 
 				state_data->search_done = TRUE;
+
 				if (actor->target.target_prop_index != NONE)
 				{
 					struct prop_datum *target_prop = prop_get(actor->target.target_prop_index);
@@ -271,6 +255,7 @@ boolean action_search_perform(
 		else if (state_data->pursuit_location.type == _pursuit_location_position)
 		{
 			actor->firing_positions.current_position_index = NONE;
+
 			if (!actor_move_to_firing_position(actor_index, state_data->pursuit_location.firing_position_index, NULL))
 			{
 				state_data->search_failed = TRUE;
@@ -303,6 +288,7 @@ void action_search_update(
 		else
 		{
 			state_data->sneaking = FALSE;
+
 			if (TEST_FLAG(actor_definition->flags, _actor_definition_sneak_uncovering_target_bit) &&
 				state_data->pursuit_location.type == _pursuit_location_target &&
 				actor->target.target_type == _actor_target_uninspected_orphan)
@@ -333,7 +319,7 @@ void action_search_update(
 				if (state_data->pursuit_location.type == _pursuit_location_target)
 				{
 					if (!actor->firing_positions.pursuit_communicated_lost_contact &&
-						(state_data->search_done || state_data->search_remaining_time + SEARCH_LOST_CONTACT_TICKS < state_data->search_desired_time))
+						(state_data->search_done || state_data->search_remaining_time + 3 * TICKS_PER_SECOND < state_data->search_desired_time))
 					{
 						ai_communication_event(
 							_ai_communication_lost_contact,
@@ -361,7 +347,7 @@ void action_search_update(
 		}
 		else if (!actor->control.moving && !actor->meta.swarm)
 		{
-			if (++state_data->search_failure_timer > SEARCH_FAILURE_TICKS)
+			if (++state_data->search_failure_timer > 4 * TICKS_PER_SECOND)
 			{
 				state_data->search_failed = TRUE;
 				state_data->search_done = TRUE;
@@ -413,7 +399,7 @@ void action_search_control(
 	}
 	else
 	{
-		long look_ticks = MAX(state_data->search_desired_time / 3, SEARCH_MINIMUM_LOOK_TICKS);
+		long look_ticks = MAX(state_data->search_desired_time / 3, 3 * TICKS_PER_SECOND);
 		boolean looking = FALSE;
 
 		if (state_data->search_desired_time - state_data->search_remaining_time < look_ticks)
@@ -440,6 +426,7 @@ void action_search_control(
 	}
 
 	actor->orders.look.idle_look_type = _idle_look_searching;
+
 	if (state_data->pursuit_location.type == _pursuit_location_target)
 	{
 		if (TEST_FLAG(actor_definition->flags, _actor_definition_shoot_at_targets_last_location_bit))

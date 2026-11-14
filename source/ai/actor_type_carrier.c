@@ -27,9 +27,9 @@ struct actor_type_definition actor_type_carrier =
 {
 	"flood carrier",
 	_race_floodcarrier,
-	0,
-	2,
-	2,
+	_actor_pursuit_always,
+	_actor_pursuit_never,
+	_actor_pursuit_never,
 	TRUE,
 	FALSE,
 	NULL,
@@ -49,6 +49,7 @@ void carrier_decide_action(
 	actor_action_handle_initial_action(actor_index);
 	actor_action_handle_pending_command_list(actor_index);
 	actor_action_handle_surprise(actor_index, _actor_surprise_unprepared_grenade);
+
 	if (!actor_action_deny_transition(actor_index))
 	{
 		actor_action_handle_berserking_from_attacking_mode(actor_index);

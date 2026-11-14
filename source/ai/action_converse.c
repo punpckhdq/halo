@@ -15,10 +15,6 @@ ACTION_CONVERSE.C
 
 /* ---------- constants */
 
-/* ---------- macros */
-
-/* ---------- structures */
-
 /* ---------- prototypes */
 
 /* ---------- globals */
@@ -131,6 +127,7 @@ void action_converse_control(
 	}
 
 	actor->orders.look.idle_look_type = _idle_look_noncombat;
+
 	if (prop_index != NONE)
 	{
 		actor->orders.look.primary_priority = _primary_priority_facing;

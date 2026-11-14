@@ -8,13 +8,8 @@ ACTOR_TYPES.C
 #include "actor_types.h"
 #include "actors.h"
 #include "actor_type_definitions.h"
-#include "units.h"
 
 /* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
 
 /* ---------- prototypes */
 
@@ -160,6 +155,7 @@ void actor_type_swarm_aim_jump(
 	struct actor_type_definition *actor_type_definition = actor_type_definition_get(actor->meta.type);
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actor_types.c", 157, actor_type_definition->swarm);
+
 	if (actor_type_definition->swarm_aim_jump)
 	{
 		actor_type_definition->swarm_aim_jump(actor_index, unit_index, jump_magnitude, jump_velocity);

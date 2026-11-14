@@ -27,9 +27,9 @@ struct actor_type_definition actor_type_flood =
 {
 	"flood",
 	_race_floodcombat,
-	0,
-	0,
-	0,
+	_actor_pursuit_always,
+	_actor_pursuit_always,
+	_actor_pursuit_always,
 	TRUE,
 	FALSE,
 	NULL,
@@ -49,6 +49,7 @@ void flood_decide_action(
 	actor_action_handle_initial_action(actor_index);
 	actor_action_handle_pending_command_list(actor_index);
 	actor_action_handle_surprise(actor_index, _actor_surprise_unprepared_grenade);
+
 	if (!actor_action_deny_transition(actor_index))
 	{
 		actor_action_handle_berserking_from_damage(actor_index);
@@ -191,14 +192,18 @@ boolean actor_type_flood_desire_shamble(
 				struct prop_iterator iterator;
 				struct prop_datum *prop;
 				struct prop_datum *target_prop;
-				short friends_behind, friends_beside, friends_ahead;
+				short friends_behind;
+				short friends_beside;
+				short friends_ahead;
 
 				friends_behind = friends_beside = friends_ahead = 0;
 
 				match_assert("c:\\halo\\SOURCE\\ai\\actor_type_flood.c", 201, actor->target.target_prop_index != NONE);
+
 				target_prop = prop_get(actor->target.target_prop_index);
 
 				prop_iterator_new(&iterator, actor_index);
+
 				while (prop = prop_iterator_next(&iterator))
 				{
 					if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged &&
@@ -213,6 +218,7 @@ boolean actor_type_flood_desire_shamble(
 
 							vector_from_points3d(&actor->input.position.body_position, &friend_actor->input.position.body_position, &friend_vector);
 							distance = dot_product3d(&friend_vector, &target_prop->actor_to_prop);
+
 							if (distance > 1.4f)
 							{
 								friends_ahead++;
@@ -248,6 +254,7 @@ boolean actor_type_flood_desire_shamble(
 			if (!flip)
 			{
 				match_assert("c:\\halo\\SOURCE\\ai\\actor_type_flood.c", 256, actor->emotions.crouch_switching_change_timer > 0);
+
 				if (--actor->emotions.crouch_switching_change_timer == 0)
 				{
 					flip = TRUE;

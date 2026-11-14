@@ -1,31 +1,12 @@
 /*
 ACTION_WAIT.C
-
-symbols in this file:
-0000A4B0 0010:
-	_action_wait_begin (0000)
-0000A4C0 0180:
-	_action_wait_perform (0000)
-0000A640 00b0:
-	_action_wait_control (0000)
-0000A6F0 00b0:
-	_action_wait_setup (0000)
-0000A7A0 00e0:
-	_action_wait_update (0000)
-00243B18 0004:
-	__real@41000000 (0000)
-00243B1C 0020:
-	??_C@_0CA@JCBCAIHB@c?3?2halo?2SOURCE?2ai?2action_wait?4c?$AA@ (0000)
 */
 
 /* ---------- headers */
 
 #include "cseries.h"
 #include "actors.h"
-#include "encounters.h"
 #include "props.h"
-#include "actor_types.h"
-#include "units.h"
 #include "ai_communication.h"
 #include "game.h"
 
@@ -59,9 +40,9 @@ boolean action_wait_setup(
 		state_data->was_actively_searching = actively_searching;
 		state_data->entry_time = game_time_get();
 		state_data->exit_timer = 0;
-		state_data->look_timer = 120;
+		state_data->look_timer = 4 * TICKS_PER_SECOND;
 		state_data->desire_move = TRUE;
-		state_data->query_timer = random_range(300, 600);
+		state_data->query_timer = random_range(10 * TICKS_PER_SECOND, 20 * TICKS_PER_SECOND);
 		success = TRUE;
 	}
 
@@ -91,10 +72,10 @@ boolean action_wait_perform(
 			{
 				if (state_data->exit_timer == 0)
 				{
-					state_data->exit_timer = 150;
+					state_data->exit_timer = 5 * TICKS_PER_SECOND;
 				}
 			}
-			else if (game_time_get() >= state_data->entry_time + 2700)
+			else if (game_time_get() >= state_data->entry_time + 90 * TICKS_PER_SECOND)
 			{
 				state_data->wait_done = TRUE;
 			}
@@ -152,25 +133,29 @@ void action_wait_update(
 	if (state_data->query_timer > 0)
 	{
 		state_data->query_timer--;
+
 		if (state_data->query_timer == 0)
 		{
 			if (actor->meta.unit_index != NONE)
 			{
 				ai_communication_event(_ai_communication_search_query, actor->meta.unit_index, NONE, NONE, NONE, NONE, NULL);
 			}
-			state_data->query_timer = random_range(300, 600);
+
+			state_data->query_timer = random_range(10 * TICKS_PER_SECOND, 20 * TICKS_PER_SECOND);
 		}
 	}
 
 	if (state_data->exit_timer > 0)
 	{
 		state_data->exit_timer--;
+
 		if (state_data->exit_timer == 0)
 		{
 			if (state_data->waiting_as_coordinator && actor->meta.unit_index != NONE)
 			{
 				ai_communication_event(_ai_communication_search_group_abandon, actor->meta.unit_index, NONE, NONE, NONE, NONE, NULL);
 			}
+
 			state_data->wait_done = TRUE;
 		}
 	}

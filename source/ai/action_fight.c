@@ -21,8 +21,6 @@ ACTION_FIGHT.C
 
 /* ---------- prototypes */
 
-/* ---------- globals */
-
 /* ---------- public code */
 
 boolean action_fight_setup(
@@ -69,6 +67,7 @@ boolean action_fight_perform(
 		else if (actor->emotions.defensive_crouch && TEST_FLAG(actor_definition->flags, _actor_definition_crouch_try_not_to_move_bit))
 		{
 			actor_find_pathfinding_location(actor_index);
+
 			if (actor_nearby_firing_positions(actor_index, &actor->input.pathfinding_point, actor->input.pathfinding_surface_index, 0))
 			{
 				boolean at_firing_position = FALSE;
@@ -94,6 +93,7 @@ boolean action_fight_perform(
 				if (actor->control.moving && !actor->situation.cumulative_threats[_actor_threat_shooting_near_me])
 				{
 					at_firing_position = TRUE;
+
 					if (actor->target.target_prop_index != NONE)
 					{
 						struct prop_datum *prop = prop_get(actor->target.target_prop_index);
@@ -150,7 +150,7 @@ boolean action_fight_perform(
 					}
 				}
 
-				state_data->firing_position_timer = (short)(time * 30.f);
+				state_data->firing_position_timer = (short)(time * TICKS_PER_SECOND);
 			}
 		}
 
@@ -203,6 +203,7 @@ void action_fight_update(
 	if (state_data->firing_position_timer > 0 && actor->control.path.at_destination)
 	{
 		state_data->firing_position_timer--;
+
 		if (state_data->firing_position_timer == 0)
 		{
 			if (actor->firing_positions.current_position_index != NONE && !actor->firing_positions.current_position_found_outside_range)

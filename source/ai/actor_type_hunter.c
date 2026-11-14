@@ -28,9 +28,9 @@ struct actor_type_definition actor_type_hunter =
 {
 	"hunter",
 	_race_covenant,
-	0,
-	1,
-	1,
+	_actor_pursuit_always,
+	_actor_pursuit_not_when_group,
+	_actor_pursuit_not_when_group,
 	TRUE,
 	FALSE,
 	NULL,
@@ -48,6 +48,7 @@ void hunter_decide_action(
 
 	actor_action_handle_initial_action(actor_index);
 	actor_action_handle_pending_command_list(actor_index);
+
 	if (!actor_action_deny_transition(actor_index))
 	{
 		actor_action_handle_berserking_from_damage(actor_index);

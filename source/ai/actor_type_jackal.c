@@ -27,9 +27,9 @@ struct actor_type_definition actor_type_jackal =
 {
 	"jackal",
 	_race_covenant,
-	2,
-	0,
-	2,
+	_actor_pursuit_never,
+	_actor_pursuit_always,
+	_actor_pursuit_never,
 	FALSE,
 	FALSE,
 	NULL,
@@ -49,6 +49,7 @@ void jackal_decide_action(
 	actor_action_handle_initial_action(actor_index);
 	actor_action_handle_pending_command_list(actor_index);
 	actor_action_handle_surprise(actor_index, _actor_surprise_unprepared_enemy_shooting);
+
 	if (!actor_action_deny_transition(actor_index))
 	{
 		actor_action_handle_panic_from_surprise(actor_index);
@@ -86,7 +87,7 @@ void jackal_decide_action(
 			if (shield_fraction > actor->input.shield_vitality)
 			{
 				actor->state.action_data.guard.cower = TRUE;
-				actor->state.action_data.guard.cower_ticks = 30;
+				actor->state.action_data.guard.cower_ticks = TICKS_PER_SECOND;
 			}
 			else
 			{
@@ -94,6 +95,7 @@ void jackal_decide_action(
 				actor->state.action_data.guard.cower_ticks = 0;
 			}
 		}
+
 		actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
 		break;
 	case _actor_action_flee:

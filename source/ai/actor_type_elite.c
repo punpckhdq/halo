@@ -27,9 +27,9 @@ struct actor_type_definition actor_type_elite =
 {
 	"elite",
 	_race_covenant,
-	0,
-	1,
-	1,
+	_actor_pursuit_always,
+	_actor_pursuit_not_when_group,
+	_actor_pursuit_not_when_group,
 	TRUE,
 	FALSE,
 	NULL,
@@ -49,6 +49,7 @@ void elite_decide_action(
 	actor_action_handle_initial_action(actor_index);
 	actor_action_handle_pending_command_list(actor_index);
 	actor_action_handle_surprise(actor_index, _actor_surprise_unprepared_grenade);
+
 	if (!actor_action_deny_transition(actor_index))
 	{
 		actor_action_handle_berserking_from_attacking_mode(actor_index);
@@ -56,12 +57,14 @@ void elite_decide_action(
 		actor_action_handle_berserking_from_proximity(actor_index);
 		actor_action_handle_berserking_from_attached_projectiles(actor_index);
 		actor_action_handle_berserk_transition(actor_index, _actor_berserk_attacking);
+
 		if (!actor->emotions.berserk)
 		{
 			actor_action_handle_panic_from_attached_projectiles(actor_index);
 			actor_action_handle_panic_from_attached_melee_attackers(actor_index);
 			actor_action_handle_panic_transition(actor_index, _actor_panic_grenade_attached_to_us, FALSE, _actor_panic_melee_attached_to_us);
 		}
+
 		actor_action_handle_combat_transition(actor_index);
 		actor_action_handle_active_cover_seeking(actor_index, FALSE, FALSE);
 		actor_action_handle_vehicle_entry(actor_index);
@@ -92,7 +95,7 @@ void elite_decide_action(
 			if (shield_fraction > actor->input.shield_vitality)
 			{
 				actor->state.action_data.guard.cower = TRUE;
-				actor->state.action_data.guard.cower_ticks = 30;
+				actor->state.action_data.guard.cower_ticks = TICKS_PER_SECOND;
 			}
 			else
 			{
@@ -100,6 +103,7 @@ void elite_decide_action(
 				actor->state.action_data.guard.cower_ticks = 0;
 			}
 		}
+
 		actor_action_handle_combat_status(actor_index, actor_action_can_stop_guarding(actor_index, _actor_combat_status_definite, _actor_combat_status_dangerous), FALSE);
 		break;
 	case _actor_action_flee:

@@ -17,18 +17,6 @@ ACTION_UNCOVER.C
 #include "scenario.h"
 #include "game.h"
 
-/* ---------- constants */
-
-enum
-{
-	UNCOVER_HOLD_POSITION_TICKS = 30, /* fake name */
-	UNCOVER_PERSISTENT_TIMEOUT_TICKS = 360, /* fake name */
-};
-
-/* ---------- macros */
-
-/* ---------- structures */
-
 /* ---------- prototypes */
 
 /* ---------- globals */
@@ -46,7 +34,8 @@ boolean action_uncover_setup_target(
 	match_assert("c:\\halo\\SOURCE\\ai\\action_uncover.c", 34, state_data);
 	memset(state_data, 0, sizeof(*state_data));
 
-	if (!actor->input.vehicle_passenger && !actor->meta.swarm)
+	if (!actor->input.vehicle_passenger &&
+		!actor->meta.swarm)
 	{
 		state_data->pursuit_location.type = _pursuit_location_target;
 		state_data->able_to_search = able_to_search;
@@ -67,27 +56,20 @@ boolean action_uncover_setup_pursuit(
 	match_assert("c:\\halo\\SOURCE\\ai\\action_uncover.c", 56, state_data);
 	memset(state_data, 0, sizeof(*state_data));
 
-	if (!actor->input.vehicle_passenger &&
-		!actor->meta.swarm &&
-		actor->meta.encounter_index != NONE &&
-		firing_position_index != NONE)
+	if (!actor->input.vehicle_passenger && !actor->meta.swarm && actor->meta.encounter_index != NONE && firing_position_index != NONE)
 	{
-		struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(
-			&global_scenario_get()->ai_encounters,
-			DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
-			struct encounter_definition);
-		struct firing_position_definition *firing_position = TAG_BLOCK_GET_ELEMENT(
-			&encounter_definition->firing_positions,
-			firing_position_index,
-			struct firing_position_definition);
+		struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->ai_encounters, DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index), struct encounter_definition);
+		struct firing_position_definition *firing_position = TAG_BLOCK_GET_ELEMENT(&encounter_definition->firing_positions, firing_position_index, struct firing_position_definition);
 
 		state_data->pursuit_location.type = _pursuit_location_position;
 		state_data->pursuit_location.firing_position_index = firing_position_index;
 		state_data->pursuit_location.position = firing_position->position;
 		state_data->pursuit_location.surface_index = firing_position->surface_index;
 		state_data->pursuit_location.cluster_index = firing_position->cluster_index;
+
 		state_data->pursuit_location_inspected = FALSE;
 		state_data->able_to_search = TRUE;
+
 		actor->state.searching = TRUE;
 		result = TRUE;
 	}
@@ -131,9 +113,7 @@ void action_uncover_begin(
 			state_data->able_to_search ? "" : "un");
 	}
 
-	if (state_data->pursuit_location.type == _pursuit_location_target &&
-		actor->target.target_prop_index != NONE &&
-		actor->state.combat_status < _actor_combat_status_definite)
+	if (state_data->pursuit_location.type == _pursuit_location_target && actor->target.target_prop_index != NONE && actor->state.combat_status < _actor_combat_status_definite)
 	{
 		struct prop_datum *prop = prop_get(actor->target.target_prop_index);
 
@@ -162,6 +142,7 @@ boolean action_uncover_perform(
 
 		memset(&evaluation_context, 0, sizeof(evaluation_context));
 		evaluation_context.evaluation_mode = _firing_point_evaluation_mode_uncover;
+
 		if (state_data->pursuit_location.type == _pursuit_location_position)
 		{
 			evaluation_context.specific_target_enable = TRUE;
@@ -221,6 +202,7 @@ boolean action_uncover_perform(
 			previous_owner,
 			&path_state,
 			area_path_valid);
+
 		if (firing_position_index == NONE)
 		{
 			state_data->uncover_exit_failure = TRUE;
@@ -243,6 +225,7 @@ void action_uncover_update(
 		boolean target_visible = FALSE;
 
 		state_data->sneaking = FALSE;
+
 		if (state_data->pursuit_location.type == _pursuit_location_target)
 		{
 			if (actor_definition->defensive.defensive_crouch_type == _defensive_crouch_any_target)
@@ -291,8 +274,9 @@ void action_uncover_update(
 		else
 		{
 			state_data->current_position_hold_timer++;
+
 			if (state_data->pursuit_location.type == _pursuit_location_target &&
-				state_data->current_position_hold_timer >= UNCOVER_HOLD_POSITION_TICKS)
+				state_data->current_position_hold_timer >= TICKS_PER_SECOND)
 			{
 				actor_discard_firing_position(actor_index, actor->firing_positions.current_position_index, FALSE);
 			}
@@ -314,7 +298,7 @@ void action_uncover_update(
 		}
 
 		{
-			boolean making_progress = TRUE; /* fake name */
+			boolean making_progress = TRUE;
 			boolean done;
 
 			if (actor->firing_positions.current_position_index == NONE)
@@ -345,7 +329,8 @@ void action_uncover_update(
 				state_data->uncover_exit_persistent_timer++;
 			}
 
-			done = state_data->uncover_remaining_time == 0 || state_data->uncover_exit_persistent_timer >= UNCOVER_PERSISTENT_TIMEOUT_TICKS;
+			done = state_data->uncover_remaining_time == 0 || state_data->uncover_exit_persistent_timer >= 12 * TICKS_PER_SECOND;
+
 			if (state_data->pursuit_location.type == _pursuit_location_position && state_data->pursuit_location_inspected)
 			{
 				done = TRUE;
@@ -357,11 +342,12 @@ void action_uncover_update(
 				char reasonbuf[256];
 
 				ai_debug_describe_actor(actor_index, NONE, TRUE, aibuf, sizeof(aibuf));
+
 				if (state_data->uncover_remaining_time == 0)
 				{
 					sprintf(reasonbuf, "timer %d finished", state_data->uncover_desired_time);
 				}
-				else if (state_data->uncover_exit_persistent_timer >= UNCOVER_PERSISTENT_TIMEOUT_TICKS)
+				else if (state_data->uncover_exit_persistent_timer >= 12 * TICKS_PER_SECOND)
 				{
 					sprintf(reasonbuf, "persistent timer %d", state_data->uncover_exit_persistent_timer);
 				}
@@ -399,7 +385,7 @@ void action_uncover_control(
 	if (actor->target.target_prop_index != NONE)
 	{
 		struct prop_datum *prop = prop_get(actor->target.target_prop_index);
-		boolean shooting_at_target = FALSE; /* fake name */
+		boolean shooting_at_target = FALSE;
 
 		if (state_data->pursuit_location.type == _pursuit_location_target)
 		{

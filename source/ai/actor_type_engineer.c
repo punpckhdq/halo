@@ -28,9 +28,9 @@ struct actor_type_definition actor_type_engineer =
 {
 	"engineer",
 	_race_covenant,
-	0,
-	0,
-	0,
+	_actor_pursuit_always,
+	_actor_pursuit_always,
+	_actor_pursuit_always,
 	FALSE,
 	FALSE,
 	NULL,
@@ -49,6 +49,7 @@ void engineer_decide_action(
 	actor_action_handle_initial_action(actor_index);
 	actor_action_handle_pending_command_list(actor_index);
 	actor_action_handle_surprise(actor_index, _actor_surprise_unprepared_enemy_shooting);
+
 	if (!actor_action_deny_transition(actor_index))
 	{
 		actor_action_handle_panic_from_damage(actor_index);
