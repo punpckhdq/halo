@@ -245,7 +245,7 @@ static void profile_internal_step(
 
 void profile_rasterizer_stats(
 	real value,
-	unsigned long count)
+	__int64 count)
 {
 	profile_globals.current_frame.gpu_msec = value;
 	profile_globals.current_frame.pushbuffer_clocks = count;

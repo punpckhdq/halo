@@ -20,6 +20,12 @@ enum
 
 enum
 {
+	RASTERIZER_TARGET_WATER_SIZE = 128,
+	RASTERIZER_TARGET_WATER_MAX_MIPMAP_LEVELS = 4
+};
+
+enum
+{
 	RASTERIZER_MAXIMUM_TEXTURE_STAGES = 4,
 };
 
@@ -137,6 +143,8 @@ enum
 	VSH_CONSTANTS__TEXANIM_COUNT = 8,
 	VSH_CONSTANTS__POINTLIGHT_OFFSET = -81,
 	VSH_CONSTANTS__POINTLIGHT_COUNT = 5,
+	VSH_CONSTANTS__SHADOW_OFFSET = -81,
+	VSH_CONSTANTS__SHADOW_COUNT = 5,
 	VSH_CONSTANTS__DETAILOBJ_OFFSET = -81,
 	VSH_CONSTANTS__DETAILOBJ_COUNT = 6,
 	VSH_CONSTANTS__VERTEXLIGHT_OFFSET = -79,
@@ -146,8 +154,12 @@ enum
 	VSH_CONSTANTS__SCREENPROJ_COUNT = 5,
 	VSH_CONSTANTS__SCREENPROJ2_OFFSET = -63,
 	VSH_CONSTANTS__SCREENPROJ2_COUNT = 6,
+	VSH_CONSTANTS__ZSPRITE_OFFSET = -63,
+	VSH_CONSTANTS__ZSPRITE_COUNT = 2,
 	VSH_CONSTANTS__NODEMATRIX_OFFSET = -36,
-	VSH_CONSTANTS__DETAILOBJ_FRAMEDATA_OFFSET = -36
+	VSH_CONSTANTS__DETAILOBJ_FRAMEDATA_OFFSET = -36,
+	VSH_CONSTANTS__INVERSE_OFFSET = 88,
+	VSH_CONSTANTS__INVERSE_COUNT = 3
 };
 
 /* ---------- macros */
@@ -157,8 +169,15 @@ enum
 #define RASTERIZER_DYNAMIC_BUFFER_USAGE (D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY)
 #define RASTERIZER_DYNAMIC_BUFFER_POOL D3DPOOL_DEFAULT
 
+#define RASTERIZER_STATIC_BUFFER_USAGE D3DUSAGE_WRITEONLY
+#define RASTERIZER_STATIC_BUFFER_POOL D3DPOOL_MANAGED
+
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH (RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 5) /* fake name */
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT (RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 5) /* fake name */
+
+#define RASTERIZER_SPIN_OCCLUSION_TEST_RESULT 26 /* fake name */
+
+#define RASTERIZER_MAXIMUM_COMBINER_STAGES 8
 
 /* fake name */
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
@@ -179,7 +198,7 @@ boolean rasterizer_preinitialize__fill_you_up_with_the_devils_cock(void);
 void *rasterizer_get_bitmap_default_hardware_format(struct bitmap_data const *bitmap);
 boolean _rasterizer_initialize(void);
 void _rasterizer_reset_state(void);
-void rasterizer_spin_begin(void);
+void rasterizer_spin_begin(short spin_type);
 void rasterizer_spin_end(void);
 void _rasterizer_frame_begin(struct rasterizer_frame_begin_parameters const *parameters);
 boolean _rasterizer_windows_begin(void);
@@ -219,6 +238,7 @@ void rasterizer_error(HRESULT hr, char const *format, ...);
 
 /* ---------- prototypes/RASTERIZER_XBOX_PROFILE.C */
 
+boolean rasterizer_profile_enabled(void);
 boolean rasterizer_profile_initialize(void);
 void rasterizer_profile_dispose(void);
 void rasterizer_profile_frame_begin(void);
@@ -228,6 +248,9 @@ void rasterizer_profile_window_end(void);
 void _rasterizer_profile_enable(boolean enable);
 void rasterizer_profile_begin(short profile);
 void rasterizer_profile_end(short profile);
+char *rasterizer_profile_get_string(short profile);
+real rasterizer_profile_query(short profile);
+long rasterizer_profile_query_pushbuffer(short profile);
 
 /* ---------- prototypes/RASTERIZER_XBOX_VERTEX_SHADERS_INITIALIZE.C */
 
@@ -236,7 +259,7 @@ void rasterizer_vertex_shaders_dispose(void);
 
 /* ---------- prototypes/RASTERIZER_XBOX_VERTEX_SHADERS_RUNTIME.C */
 
-boolean rasterizer_set_vertex_shader_permutation(short vertex_shader_index, short vertex_type, short permutation_index);
+void rasterizer_set_vertex_shader_permutation(short vertex_shader_index, short vertex_type, short permutation_index);
 
 /* ---------- prototypes/RASTERIZER_XBOX_DECALS.C */
 
@@ -414,6 +437,14 @@ void rasterizer_transparent_geometry_groups_end(void);
 boolean rasterizer_transparent_geometry_initialize_aux_buffer(void);
 void rasterizer_transparent_geometry_dispose_aux_buffer(void);
 
+/* ---------- prototypes/SHADER_TRANSPARENT_CHICAGO_PREPROCESSOR.C */
+
+boolean shader_transparent_chicago_create(struct shader const *shader, D3DPIXELSHADERDEF *pixel_shader);
+
+/* ---------- prototypes/SHADER_TRANSPARENT_GENERIC_PREPROCESSOR.C */
+
+boolean shader_transparent_generic_create(struct shader const *shader, D3DPIXELSHADERDEF *pixel_shader);
+
 /* ---------- prototypes/RASTERIZER_XBOX_TEXT.C */
 
 void rasterizer_text_begin(struct rasterizer_dynamic_screen_geometry_parameters const *parameters);
@@ -425,6 +456,11 @@ void rasterizer_text_end(void);
 void rasterizer_water_set_visibility_for_frame(boolean visibility);
 void rasterizer_water_set_visibility_for_window(boolean visibility);
 boolean rasterizer_water_get_visibility_for_window(void);
+void rasterizer_water_draw(struct transparent_geometry_group const *group);
+
+/* ---------- prototypes/RASTERIZER_XBOX_PLASMA_ENERGY.C */
+
+void rasterizer_plasma_energy_draw(struct transparent_geometry_group const *group);
 
 /* ---------- prototypes/RASTERIZER_XBOX_WIDGETS.C */
 

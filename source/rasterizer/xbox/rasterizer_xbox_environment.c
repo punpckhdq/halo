@@ -687,7 +687,7 @@ void _rasterizer_environment_diffuse_light_begin(
 				VSH_CONSTANTS__POINTLIGHT_COUNT);
 		}
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_PSCONSTANT0_0, real_rgb_color_to_pixel32(&light->color));
+		SetRenderStateSmart(D3DRS_PSCONSTANT0_0, real_rgb_color_to_pixel32(&light->color));
 	}
 
 	return;
@@ -741,7 +741,7 @@ void _rasterizer_environment_diffuse_light_draw(
 				VSH_CONSTANTS__TEXSCALE_COUNT);
 		}
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_PSFINALCOMBINERCONSTANT0, real_rgb_color_to_pixel32(&shader_environment->environment.diffuse.material_color));
+		SetRenderStateSmart(D3DRS_PSFINALCOMBINERCONSTANT0, real_rgb_color_to_pixel32(&shader_environment->environment.diffuse.material_color));
 
 		rasterizer_draw_dynamic_triangles_static_vertices(
 			dynamic_triangle_buffer_index,

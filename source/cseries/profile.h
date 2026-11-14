@@ -73,7 +73,7 @@ struct profile_frame_iterator /* fake name */
 /* ---------- prototypes/PROFILE.C */
 
 void profile_initialize(void);
-void profile_rasterizer_stats(real value, unsigned long count);
+void profile_rasterizer_stats(real value, __int64 count);
 void profile_tick_start(void);
 void profile_tick_end(void);
 void profile_render_start(void);
