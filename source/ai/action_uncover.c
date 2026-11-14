@@ -276,7 +276,7 @@ void action_uncover_update(
 			state_data->current_position_hold_timer++;
 
 			if (state_data->pursuit_location.type == _pursuit_location_target &&
-				state_data->current_position_hold_timer >= TICKS_PER_SECOND)
+				state_data->current_position_hold_timer >= 1 * TICKS_PER_SECOND)
 			{
 				actor_discard_firing_position(actor_index, actor->firing_positions.current_position_index, FALSE);
 			}

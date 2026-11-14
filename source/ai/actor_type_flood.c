@@ -333,7 +333,7 @@ boolean actor_type_flood_desire_shamble(
 			}
 
 			actor->emotions.crouch_switching_change_timer = (short)MAX(ticks * TICKS_PER_SECOND, 31.0f);
-			actor->emotions.crouch_switching_stay_timer = TICKS_PER_SECOND;
+			actor->emotions.crouch_switching_stay_timer = 1 * TICKS_PER_SECOND;
 		}
 
 		result = actor->emotions.crouch_switching_current_value;

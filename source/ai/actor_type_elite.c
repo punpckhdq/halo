@@ -95,7 +95,7 @@ void elite_decide_action(
 			if (shield_fraction > actor->input.shield_vitality)
 			{
 				actor->state.action_data.guard.cower = TRUE;
-				actor->state.action_data.guard.cower_ticks = TICKS_PER_SECOND;
+				actor->state.action_data.guard.cower_ticks = 1 * TICKS_PER_SECOND;
 			}
 			else
 			{
