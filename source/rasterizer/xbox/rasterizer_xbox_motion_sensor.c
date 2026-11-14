@@ -19,14 +19,6 @@ RASTERIZER_XBOX_MOTION_SENSOR.C
 #include "rasterizer/common/rasterizer_common.h"
 #include "texture_cache.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
 /* ---------- globals */
 
 static boolean rasterizer_motion_sensor_begin_said_to_draw;
@@ -67,7 +59,7 @@ void _rasterizer_hud_motion_sensor_blip_begin(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
@@ -87,7 +79,7 @@ void _rasterizer_hud_motion_sensor_blip_begin(
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_T0, PS_REGISTER_V0, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 		rasterizer_set_pixel_shader(&pixel_shader);
 	}
@@ -119,14 +111,14 @@ void _rasterizer_hud_motion_sensor_blip_draw(
 		blip_draw_position.y = -blip_position->y / 32.f;
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
-		IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, fade * blip_color->red, fade * blip_color->green, fade * blip_color->blue, 1.f);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 0, 0);
+		IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, fade * blip_color->red, fade * blip_color->green, fade * blip_color->blue, 1.f);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 0, 0);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, blip_draw_position.x - blip_size, blip_draw_position.y + blip_size);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 0);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 0);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, blip_draw_position.x + blip_size, blip_draw_position.y + blip_size);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 1);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, blip_draw_position.x + blip_size, blip_draw_position.y - blip_size);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 0, 1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 0, 1);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, blip_draw_position.x - blip_size, blip_draw_position.y - blip_size);
 		IDirect3DDevice8_End(global_d3d_device);
 	}
@@ -173,7 +165,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
@@ -193,24 +185,24 @@ void _rasterizer_hud_motion_sensor_blip_end(
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 		pixel_shader.PSRGBInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T0, PS_REGISTER_V0, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
-		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T0 | PS_CHANNEL_ALPHA, PS_REGISTER_V0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
-		pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0);
-		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, 0);
+		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
 		D3DCALL(success, IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, 0.4588f, 0.7294f, 1.f, 1.f));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, theta*0.5f + 0.5f, 0.5f - theta*0.5f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.4588f, 0.7294f, 1.f, 1.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, theta*0.5f + 0.5f, 0.5f - theta*0.5f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, maximum));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 0.5f - theta*0.5f, 0.5f - theta*0.5f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, 0.5f - theta*0.5f, 0.5f - theta*0.5f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, maximum, maximum));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 0.5f - theta*0.5f, theta*0.5f + 0.5f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, 0.5f - theta*0.5f, theta*0.5f + 0.5f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, maximum, minimum));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, theta*0.5f + 0.5f, theta*0.5f + 0.5f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, theta*0.5f + 0.5f, theta*0.5f + 0.5f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, minimum));
 		D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 
@@ -221,20 +213,20 @@ void _rasterizer_hud_motion_sensor_blip_end(
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0);
-		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0 | PS_CHANNEL_ALPHA, 0);
+		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
 		D3DCALL(success, IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, 9, 0.4f, 0.8f, 0.4f, 1.f));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 1.f, 0.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData4f(global_d3d_device, D3DVSDE_TEXCOORD0, 0.4f, 0.8f, 0.4f, 1.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, 1.f, 0.f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, maximum));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 0.f, 0.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, 0.f, 0.f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, maximum, maximum));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 0.f, 1.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, 0.f, 1.f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, maximum, minimum));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, 4, 1.f, 1.f));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, D3DVSDE_SPECULAR, 1.f, 1.f));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, minimum));
 		D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 
@@ -257,7 +249,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
@@ -279,21 +271,21 @@ void _rasterizer_hud_motion_sensor_blip_end(
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0);
-		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0 | PS_CHANNEL_ALPHA, 0);
+		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
 		size = (local_player_count() > 1) ? 32.f : 42.f;
 
 		D3DCALL(success, IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 0, 0));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 0, 0));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, center_point->x - size, center_point->y - size));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 0));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 0));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, center_point->x + size, center_point->y - size));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 1));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 1));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, center_point->x + size, center_point->y + size));
-		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 0, 1));
+		D3DCALL(success, IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 0, 1));
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, center_point->x - size, center_point->y + size));
 		D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 	}
@@ -304,5 +296,3 @@ void _rasterizer_hud_motion_sensor_blip_end(
 
 	return;
 }
-
-/* ---------- private code */

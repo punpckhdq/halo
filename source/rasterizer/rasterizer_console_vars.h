@@ -10,6 +10,15 @@ header included in hcex build.
 
 /* ---------- constants */
 
+enum
+{
+	_rasterizer_lightmap_mode_normal = 0, /* fake name */
+	_rasterizer_lightmap_mode_no_lightmap, /* fake name */
+	_rasterizer_lightmap_mode_ambient, /* fake name */
+	_rasterizer_lightmap_mode_random_color, /* fake name */
+	NUMBER_OF_RASTERIZER_LIGHTMAP_MODES, /* fake name */
+};
+
 /* ---------- macros */
 
 /* ---------- structures */

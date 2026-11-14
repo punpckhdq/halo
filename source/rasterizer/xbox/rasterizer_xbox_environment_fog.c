@@ -281,17 +281,17 @@ void _rasterizer_environment_fog_begin(
 		pixel_shader.PSConstant0[0] = real_alpha_intensity_to_pixel32(global_window_parameters.fog.atmospheric_maximum_density * atmospheric_density, global_window_parameters.fog.atmospheric_maximum_density);
 		pixel_shader.PSConstant1[0] = real_alpha_intensity_to_pixel32(global_window_parameters.fog.planar_maximum_density * planar_density, (1.f - planar_density) * global_window_parameters.fog.planar_maximum_density);
 		pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_C1, PS_REGISTER_T1 | PS_CHANNEL_ALPHA, PS_REGISTER_C1 | PS_CHANNEL_ALPHA, PS_REGISTER_T1);
-		pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+		pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSRGBInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_C0 | PS_CHANNEL_ALPHA, PS_REGISTER_T0 | PS_CHANNEL_ALPHA, PS_REGISTER_C0, PS_REGISTER_T0 | PS_CHANNEL_ALPHA);
-		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_V0, PS_REGISTER_T0, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_V0, PS_REGISTER_T0, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSConstant0[1] = real_a_rgb_color_to_pixel32(atmospheric_density, &global_window_parameters.fog.atmospheric_color);
 		pixel_shader.PSConstant1[1] = real_rgb_color_to_pixel32(&global_window_parameters.fog.planar_color);
 		pixel_shader.PSAlphaInputs[1] = PS_COMBINERINPUTS(PS_REGISTER_T0 | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_R0 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_C0 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_R0 | PS_CHANNEL_ALPHA);
-		pixel_shader.PSAlphaOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_R1, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSAlphaOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_R1, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSRGBInputs[1] = PS_COMBINERINPUTS(PS_REGISTER_C0, PS_REGISTER_T0, PS_REGISTER_C1, PS_REGISTER_R0 | PS_CHANNEL_ALPHA);
-		pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_R1, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_R1, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_R0, PS_REGISTER_R1 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_ZERO, PS_REGISTER_EF_PROD);
-		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_R1, PS_REGISTER_V0 | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_R0 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, 0);
+		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_R1, PS_REGISTER_V0 | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_R0 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_ZERO);
 		rasterizer_set_pixel_shader(&pixel_shader);
 	}
 
@@ -652,8 +652,8 @@ void _rasterizer_environment_fog_screen_begin(
 
 			if (TEST_FLAG(global_window_parameters.fog.screen->flags, _fog_screen_no_texture_based_falloff_bit))
 			{
-				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
-				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_FOG | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, 0);
+				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
+				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_FOG | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_ZERO);
 			}
 			else
 			{
@@ -667,11 +667,11 @@ void _rasterizer_environment_fog_screen_begin(
 				match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 856, screen->far_density!=0.0f);
 
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 				pixel_shader.PSConstant0[0] = real_alpha_to_pixel32(screen->near_density / screen->far_density);
 				pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T0 | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_C0 | PS_CHANNEL_ALPHA, PS_REGISTER_T0, PS_REGISTER_ONE);
-				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
-				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, 0);
+				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
+				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_ZERO);
 			}
 
 			rasterizer_set_pixel_shader(&pixel_shader);
@@ -726,7 +726,7 @@ void _rasterizer_environment_fog_screen_begin(
 						SetTextureStageStateSmart(1, D3DTSS_ALPHAKILL, D3DTALPHAKILL_DISABLE);
 					}
 
-					rasterizer_set_vertex_shader_permutation(_vs_model_fog_screen, rasterizer_transparent_geometry_get_primary_vertex_type(group), 0);
+					rasterizer_set_vertex_shader_permutation(_vs_model_fog_screen, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
 
 					node_matrices = group->node_matrices;
 
@@ -844,7 +844,7 @@ void _rasterizer_environment_fog_screen_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, D3DZB_FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen_texture_animation, _rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(
@@ -860,17 +860,17 @@ void _rasterizer_environment_fog_screen_end(
 		pixel_shader.PSConstant0[1] = real_rgb_color_to_pixel32(&local_layer_colors[2]);
 		pixel_shader.PSConstant1[1] = real_rgb_color_to_pixel32(&local_layer_colors[3]);
 		pixel_shader.PSAlphaInputs[1] = PS_COMBINERINPUTS(PS_REGISTER_T0 | PS_INPUTMAPPING_UNSIGNED_INVERT, screen->layer_count > 1 ? PS_REGISTER_T1 | PS_INPUTMAPPING_UNSIGNED_INVERT : PS_REGISTER_ONE, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
-		pixel_shader.PSAlphaOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSAlphaOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSRGBInputs[1] = PS_COMBINERINPUTS(PS_REGISTER_T2, PS_REGISTER_C0, PS_REGISTER_T3, PS_REGISTER_C1);
 		pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_T2, PS_REGISTER_T3, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_AB_DOT_PRODUCT | PS_COMBINEROUTPUT_CD_DOT_PRODUCT);
 		pixel_shader.PSAlphaInputs[2] = PS_COMBINERINPUTS(screen->layer_count > 2 ? PS_REGISTER_T2 | PS_INPUTMAPPING_UNSIGNED_INVERT : PS_REGISTER_ONE, screen->layer_count > 3 ? PS_REGISTER_T3 | PS_INPUTMAPPING_UNSIGNED_INVERT : PS_REGISTER_ONE, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
-		pixel_shader.PSAlphaOutputs[2] = PS_COMBINEROUTPUTS(PS_REGISTER_R1, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSAlphaOutputs[2] = PS_COMBINEROUTPUTS(PS_REGISTER_R1, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSRGBInputs[2] = PS_COMBINERINPUTS(screen->layer_count > 2 ? PS_REGISTER_T2 | PS_INPUTMAPPING_UNSIGNED_INVERT : PS_REGISTER_ONE, screen->layer_count > 3 ? PS_REGISTER_T3 : PS_REGISTER_ZERO, screen->layer_count > 2 ? PS_REGISTER_T2 : PS_REGISTER_ZERO, PS_REGISTER_ONE);
-		pixel_shader.PSRGBOutputs[2] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+		pixel_shader.PSRGBOutputs[2] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSAlphaInputs[3] = PS_COMBINERINPUTS(PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_R1 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
-		pixel_shader.PSAlphaOutputs[3] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, 0);
+		pixel_shader.PSAlphaOutputs[3] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSRGBInputs[3] = PS_COMBINERINPUTS(screen->layer_count > 1 ? PS_REGISTER_T1 | PS_INPUTMAPPING_UNSIGNED_INVERT : PS_REGISTER_ONE, PS_REGISTER_R0, screen->layer_count > 1 ? PS_REGISTER_T1 : PS_REGISTER_ZERO, PS_REGISTER_ONE);
-		pixel_shader.PSRGBOutputs[3] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+		pixel_shader.PSRGBOutputs[3] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 
 		if (screen->color)
 		{
@@ -882,17 +882,17 @@ void _rasterizer_environment_fog_screen_end(
 		}
 
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_T0, PS_REGISTER_C0, PS_REGISTER_EF_PROD, PS_REGISTER_ZERO);
-		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_R0, PS_REGISTER_C0, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, 0);
+		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_R0, PS_REGISTER_C0, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, -1, 1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, -1, 1);
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, -1, 1);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 1);
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, 1, 1);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, -1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, -1);
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, 1, -1);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, -1, -1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, -1, -1);
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, -1, -1);
 		IDirect3DDevice8_End(global_d3d_device);
 
@@ -903,17 +903,17 @@ void _rasterizer_environment_fog_screen_end(
 			SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 			memset(&pixel_shader, 0, sizeof(pixel_shader));
-			pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+			pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 			rasterizer_set_pixel_shader(&pixel_shader);
 
 			IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
-			IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, -1, 1);
+			IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, -1, 1);
 			IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, -1, 1);
-			IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 1);
+			IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 1);
 			IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, 1, 1);
-			IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, -1);
+			IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, -1);
 			IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, 1, -1);
-			IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, -1, -1);
+			IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, -1, -1);
 			IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, -1, -1);
 			IDirect3DDevice8_End(global_d3d_device);
 		}

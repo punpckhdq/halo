@@ -17,16 +17,6 @@ RASTERIZER_XBOX_LIGHTS.C
 #include "rasterizer/common/rasterizer_common.h"
 #include "strings/resource.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
-/* ---------- globals */
-
 /* ---------- public code */
 
 static void rasterizer_sun_glow_copy_source(
@@ -57,7 +47,7 @@ static void rasterizer_sun_glow_copy_source(
 	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 	SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-	rasterizer_set_vertex_shader_permutation(_vs_screen_texture_animation, _rasterizer_vertex_type_dynamic_screen, 0);
+	rasterizer_set_vertex_shader_permutation(_vs_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 	{
 		real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
@@ -80,12 +70,12 @@ static void rasterizer_sun_glow_copy_source(
 
 	memset(&pixel_shader, 0, sizeof(pixel_shader));
 	pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 	pixel_shader.PSConstant0[0] = D3DCOLOR_ARGB(192, 0, 0, 0);
 	pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T1 | PS_CHANNEL_ALPHA, PS_REGISTER_C0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 	pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_SHIFTLEFT_1);
 	pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0 | PS_CHANNEL_ALPHA);
-	pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, 0);
+	pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 	rasterizer_set_pixel_shader(&pixel_shader);
 
 	rasterizer_set_target(target, 0, 0, FALSE, FALSE);
@@ -95,13 +85,13 @@ static void rasterizer_sun_glow_copy_source(
 		real const mysterious_horizontal_offset = -2.f * scale;
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 0, 0);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 0, 0);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, scale - 1.0f + mysterious_horizontal_offset, scale + 1.0f);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 0);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 0);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, scale + 1.0f + mysterious_horizontal_offset, scale + 1.0f);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 1, 1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 1, 1);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, scale + 1.0f + mysterious_horizontal_offset, scale - 1.0f);
-		IDirect3DDevice8_SetVertexData2s(global_d3d_device, 4, 0, 1);
+		IDirect3DDevice8_SetVertexData2s(global_d3d_device, D3DVSDE_SPECULAR, 0, 1);
 		IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, scale - 1.0f + mysterious_horizontal_offset, scale - 1.0f);
 		IDirect3DDevice8_End(global_d3d_device);
 	}
@@ -179,7 +169,7 @@ static short rasterizer_sun_glow_convolve(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen_texture_animation, _rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		{
 			real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
@@ -203,14 +193,14 @@ static short rasterizer_sun_glow_convolve(
 		success = TRUE;
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT2D);
-		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(2, 0);
+		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(2, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 		pixel_shader.PSConstant0[0] = D3DCOLOR_ARGB(255, 0, 0, 0);
 		pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T0, PS_REGISTER_ONE_HALF, PS_REGISTER_T1, PS_REGISTER_ONE_HALF);
-		pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+		pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSRGBInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T2, PS_REGISTER_ONE_HALF, PS_REGISTER_T3, PS_REGISTER_ONE_HALF);
-		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSRGBInputs[1] = PS_COMBINERINPUTS(PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_C0 | PS_CHANNEL_ALPHA, PS_REGISTER_R0, PS_REGISTER_C0 | PS_CHANNEL_ALPHA);
-		pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+		pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
@@ -330,7 +320,7 @@ void rasterizer_sun_glow_draw(
 				short target;
 				short pass;
 
-				rasterizer_set_vertex_shader_permutation(_vs_sun_glow, _rasterizer_vertex_type_dynamic_unlit, 0);
+				rasterizer_set_vertex_shader_permutation(_vs_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 
 				SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 				SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA);
@@ -340,9 +330,9 @@ void rasterizer_sun_glow_draw(
 				SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
-				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 				pixel_shader.PSFinalCombinerConstant0 = D3DCOLOR_ARGB(0, 0, 0, 0);
-				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_C0 | PS_CHANNEL_ALPHA, 0);
+				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_C0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 				rasterizer_set_pixel_shader(&pixel_shader);
 
 				D3DCALL(success, IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN));
@@ -352,7 +342,7 @@ void rasterizer_sun_glow_draw(
 				D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, bounds.x0, bounds.y1));
 				D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 
-				rasterizer_set_vertex_shader_permutation(_vs_sun_glow, _rasterizer_vertex_type_dynamic_unlit, 0);
+				rasterizer_set_vertex_shader_permutation(_vs_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 				rasterizer_set_texture_direct(0, global_rasterizer_data->glow.index, 0);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -371,10 +361,10 @@ void rasterizer_sun_glow_draw(
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 				pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T0 | PS_CHANNEL_ALPHA, PS_REGISTER_ONE, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_SHIFTLEFT_2);
-				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, 0);
+				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 				rasterizer_set_pixel_shader(&pixel_shader);
 
 				D3DCALL(success, IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN));
@@ -392,7 +382,7 @@ void rasterizer_sun_glow_draw(
 				rasterizer_sun_glow_copy_source(_rasterizer_target_sun_glow_secondary, &screen_bounds);
 				target = rasterizer_sun_glow_convolve(_rasterizer_target_sun_glow_primary, _rasterizer_target_sun_glow_secondary, 4);
 
-				rasterizer_set_vertex_shader_permutation(_vs_sun_glow, _rasterizer_vertex_type_dynamic_unlit, 0);
+				rasterizer_set_vertex_shader_permutation(_vs_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 				rasterizer_set_target_as_texture(0, target, 0);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -412,15 +402,15 @@ void rasterizer_sun_glow_draw(
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(2, 0);
+				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(2, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 				pixel_shader.PSConstant0[0] = D3DCOLOR_ARGB(0, 176, 176, 128);
 				pixel_shader.PSConstant1[0] = D3DCOLOR_ARGB(0, 255, 255, 255);
 				pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T0 | PS_INPUTMAPPING_EXPAND_NORMAL, PS_REGISTER_ONE, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
-				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, 0);
+				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_R0, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 				pixel_shader.PSRGBInputs[1] = PS_COMBINERINPUTS(PS_REGISTER_R0 | PS_CHANNEL_ALPHA | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_C0, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_C1);
-				pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+				pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 				pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_R0, PS_REGISTER_T0, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
-				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0 | PS_CHANNEL_ALPHA, 0);
+				pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 				rasterizer_set_pixel_shader(&pixel_shader);
 
 				for (pass = 0; pass < 16; pass++)
@@ -450,5 +440,3 @@ void rasterizer_sun_glow_draw(
 
 	return;
 }
-
-/* ---------- private code */

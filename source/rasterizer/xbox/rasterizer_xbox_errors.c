@@ -27,16 +27,6 @@ RASTERIZER_XBOX_ERRORS.C
 #include "rasterizer_cinematics.h"
 #include "shell_windows.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
-/* ---------- globals */
-
 /* ---------- public code */
 
 void rasterizer_error(
@@ -141,5 +131,3 @@ void rasterizer_error(
 
 	return;
 }
-
-/* ---------- private code */

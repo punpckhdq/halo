@@ -16,18 +16,10 @@ RASTERIZER_XBOX_HARDWARE_GEOMETRY.C
 #include "shaders.h"
 #include "rasterizer/common/rasterizer_common.h"
 
-/* ---------- constants */
-
 /* ---------- macros */
 
 #define RASTERIZER_STATIC_BUFFER_USAGE D3DUSAGE_WRITEONLY
 #define RASTERIZER_STATIC_BUFFER_POOL D3DPOOL_MANAGED
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
-/* ---------- globals */
 
 /* ---------- public code */
 
@@ -225,5 +217,3 @@ void rasterizer_triangle_buffer_delete(
 
 	return;
 }
-
-/* ---------- private code */

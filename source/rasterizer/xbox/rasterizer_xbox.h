@@ -21,31 +21,104 @@ enum
 enum
 {
 	RASTERIZER_MAXIMUM_TEXTURE_STAGES = 4,
-	NUMBER_OF_VERTEX_SHADERS = 67
 };
 
 enum
 {
-	_vs_debug = 0, /* fake name */
-	_vs_decal = 1, /* fake name */
-	_vs_screen = 4, /* fake name */
-	_vs_model_fog_screen = 5, /* fake name */
-	_vs_environment_fog = 6, /* fake name */
-	_vs_environment_fog_screen = 8, /* fake name */
-	_vs_model = 10, /* fake name */
-	_vs_model_zbuffer = 13, /* fake name */
-	_vs_environment_lightmap = 16, /* fake name */
-	_vs_environment_specular_light = 21, /* fake name */
-	_vs_detail_object = 33, /* fake name */
-	_vs_environment_vectors_debug = 37, /* fake name */
-	_vs_screen_texture_animation = 38, /* fake name */
-	_vs_environment_texture = 40, /* fake name */
-	_vs_environment_reflection = 42, /* fake name */
-	_vs_environment_diffuse_light = 49, /* fake name */
-	_vs_environment_reflection_mirror = 51, /* fake name */
-	_vs_sun_glow = 56, /* fake name */
-	_vs_environment_reflection_lightmap_mask = 58, /* fake name */
-	_vs_model_active_camouflage = 64 /* fake name */
+	_vs_debug = 0,
+	_vs_decal,
+	_vs_effect_multitexture,
+	_vs_screen2,
+	_vs_screen,
+	_vs_model_fog_screen,
+	_vs_environment_fog,
+	_vs_environment_vectors_debug1, /* fake name */
+	_vs_environment_fog_screen,
+	_vs_model_fast,
+	_vs_model,
+	_vs_detail_object_type1,
+	_vs_effect_multitexture_screenspace,
+	_vs_model_zbuffer,
+	_vs_transparent_water_reflection_m,
+	_vs_transparent_plasma_m,
+	_vs_environment_lightmap,
+	_vs_model_fogged,
+	_vs_transparent_water_opacity_m,
+	_vs_transparent_generic_object_centered,
+	_vs_transparent_water_opacity,
+	_vs_environment_specular_light,
+	_vs_transparent_meter,
+	_vs_transparent_water_reflection,
+	_vs_transparent_generic,
+	_vs_transparent_glass_diffuse_light,
+	_vs_environment_reflection_bumped,
+	_vs_model_scenery,
+	_vs_transparent_glass_reflection_bumped,
+	_vs_environment_shadow,
+	_vs_transparent_glass_tint_m,
+	_vs_transparent_generic_lit_m,
+	_vs_transparent_meter_m,
+	_vs_detail_object_type0,
+	_vs_transparent_generic_reflection,
+	_vs_transparent_generic_viewer_centered,
+	_vs_transparent_glass_reflection_flat_m,
+	_vs_environment_vectors_debug0, /* fake name */
+	_vs_convolution,
+	_vs_model_shadow,
+	_vs_environment_texture,
+	_vs_environment_specular_spot_light,
+	_vs_environment_reflection_flat,
+	_vs_transparent_glass_reflection_flat,
+	_vs_environment_reflection_radiosity,
+	_vs_transparent_generic_object_centered_m,
+	_vs_transparent_glass_tint,
+	_vs_transparent_generic_m,
+	_vs_transparent_generic_screenspace,
+	_vs_environment_diffuse_light,
+	_vs_transparent_glass_diffuse_light_m,
+	_vs_environment_reflection_mirror,
+	_vs_environment_vectors_debug5, /* fake name */
+	_vs_environment_vectors_debug4, /* fake name */
+	_vs_environment_vectors_debug2, /* fake name */
+	_vs_environment_vectors_debug3, /* fake name */
+	_vs_lens_flare,
+	_vs_transparent_generic_reflection_m,
+	_vs_environment_reflection_lightmap_mask,
+	_vs_environment_specular_lightmap,
+	_vs_transparent_generic_screenspace_m,
+	_vs_transparent_glass_reflection_mirror,
+	_vs_transparent_generic_viewer_centered_m,
+	_vs_transparent_glass_reflection_bumped_m,
+	_vs_model_active_camouflage,
+	_vs_effect,
+	_vs_effect_zsprite,
+	NUMBER_OF_VERTEX_SHADERS
+};
+
+enum
+{
+	_vertex_shader_permutation_default = 0, /* fake name */
+};
+
+enum
+{
+	_screen_vertex_shader_permutation_screen = 0, /* fake name */
+	_screen_vertex_shader_permutation_screen2, /* fake name */
+};
+
+enum
+{
+	_model_vertex_shader_permutation_fogged = 0, /* fake name */
+	_model_vertex_shader_permutation_normal, /* fake name */
+	_model_vertex_shader_permutation_fast, /* fake name */
+	_model_vertex_shader_permutation_scenery, /* fake name */
+};
+
+enum
+{
+	_environment_specular_light_vertex_shader_permutation_point_light = 0, /* fake name */
+	_environment_specular_light_vertex_shader_permutation_spot_light, /* fake name */
+	_environment_specular_light_vertex_shader_permutation_lightmap, /* fake name */
 };
 
 enum
