@@ -1327,6 +1327,21 @@ __inline real_quaternion *set_real_quaternion(
 	return q;
 }
 
+__inline real_vector4d *set_real_vector4d(
+	real_vector4d *v,
+	real i,
+	real j,
+	real k,
+	real l)
+{
+	v->i = i;
+	v->j = j;
+	v->k = k;
+	v->l = l;
+
+	return v;
+}
+
 __inline real_euler_angles2d *set_real_euler_angles2d(
 	real_euler_angles2d *angles,
 	real pitch, real yaw)
@@ -1402,6 +1417,12 @@ __inline short local_random_range(
 	short result = seed_random_range(get_global_local_random_seed_address(), lower_bound, upper_bound);
 
 	return result;
+}
+
+__inline boolean local_random_boolean(
+	void)
+{
+	return local_random() > 0x8000;
 }
 
 __inline real real_local_random(

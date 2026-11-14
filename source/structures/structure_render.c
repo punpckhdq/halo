@@ -33,12 +33,6 @@ enum
 	NUMBER_OF_STRUCTURE_MATERIAL_FLAGS
 };
 
-enum
-{
-	_rasterizer_lightmap_mode_normal = 0, /* fake name */
-	_rasterizer_lightmap_mode_no_lightmap, /* fake name */
-};
-
 /* ---------- macros */
 
 /* ---------- structures */

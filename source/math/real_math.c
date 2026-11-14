@@ -386,7 +386,7 @@ void scalars_interpolate(
 	real t,
 	real *result)
 {
-	*result = (1-t) * a+b * t;
+	*result = (1-t) * a+t * b;
 	return;
 }
 

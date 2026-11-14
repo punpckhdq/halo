@@ -1,59 +1,5 @@
 /*
 RASTERIZER_XBOX_ERRORS.C
-
-symbols in this file:
-00157840 0240:
-	_rasterizer_error (0000)
-002906D8 001d:
-	??_C@_0BN@KOIBLHPA@?$CFs?5in?5?$CFs?5?$CIcode?$DN?$CFd?0?5error?$DN?$CFs?$CJ?$AA@ (0000)
-002906F8 0013:
-	??_C@_0BD@NKNFKHMN@D3DERR_INVALIDCALL?$AA@ (0000)
-0029070C 0015:
-	??_C@_0BF@IKIMMOMN@D3DERR_INVALIDDEVICE?$AA@ (0000)
-00290724 0014:
-	??_C@_0BE@EMOOFEGA@D3DERR_NOTAVAILABLE?$AA@ (0000)
-00290738 0016:
-	??_C@_0BG@ODHIPO@D3DERR_DEVICENOTRESET?$AA@ (0000)
-00290750 0012:
-	??_C@_0BC@EMHBBGDJ@D3DERR_DEVICELOST?$AA@ (0000)
-00290764 0010:
-	??_C@_0BA@EMFIIMDH@D3DERR_MOREDATA?$AA@ (0000)
-00290774 0010:
-	??_C@_0BA@FEPMNEFM@D3DERR_NOTFOUND?$AA@ (0000)
-00290784 001b:
-	??_C@_0BL@NGLDGHAB@D3DERR_DRIVERINTERNALERROR?$AA@ (0000)
-002907A0 0021:
-	??_C@_0CB@FNAABFGA@D3DERR_CONFLICTINGTEXTUREPALETTE@ (0000)
-002907C4 0020:
-	??_C@_0CA@FJBFGLDN@D3DERR_UNSUPPORTEDTEXTUREFILTER?$AA@ (0000)
-002907E4 001e:
-	??_C@_0BO@EMDMGLEF@D3DERR_CONFLICTINGRENDERSTATE?$AA@ (0000)
-00290804 001e:
-	??_C@_0BO@MOJGBOAN@D3DERR_UNSUPPORTEDFACTORVALUE?$AA@ (0000)
-00290824 0020:
-	??_C@_0CA@CFPOKCEH@D3DERR_CONFLICTINGTEXTUREFILTER?$AA@ (0000)
-00290844 0019:
-	??_C@_0BJ@INFNOJNF@D3DERR_TOOMANYOPERATIONS?$AA@ (0000)
-00290860 001b:
-	??_C@_0BL@BJOJBFEN@D3DERR_UNSUPPORTEDALPHAARG?$AA@ (0000)
-0029087C 0021:
-	??_C@_0CB@JPKBHPNI@D3DERR_UNSUPPORTEDALPHAOPERATION@ (0000)
-002908A0 001b:
-	??_C@_0BL@CDKLBBHI@D3DERR_UNSUPPORTEDCOLORARG?$AA@ (0000)
-002908BC 0021:
-	??_C@_0CB@CGHHLPPG@D3DERR_UNSUPPORTEDCOLOROPERATION@ (0000)
-002908E0 0018:
-	??_C@_0BI@GJDGNNKD@D3DERR_OUTOFVIDEOMEMORY?$AA@ (0000)
-002908F8 001a:
-	??_C@_0BK@BPHFHCLE@D3DERR_WRONGTEXTUREFORMAT?$AA@ (0000)
-00290914 000d:
-	??_C@_0N@CCOIBCCK@E_INVALIDARG?$AA@ (0000)
-00290924 0007:
-	??_C@_06FOOEOEIK@E_FAIL?$AA@ (0000)
-0029092C 000e:
-	??_C@_0O@MNIAMCLP@E_OUTOFMEMORY?$AA@ (0000)
-0029093C 0018:
-	??_C@_0BI@COEEDFFO@?$DMcan?8t?5get?5description?$DO?$AA@ (0000)
 */
 
 /* ---------- headers */
@@ -81,16 +27,107 @@ symbols in this file:
 #include "rasterizer_cinematics.h"
 #include "shell_windows.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
-/* ---------- globals */
-
 /* ---------- public code */
 
-/* ---------- private code */
+void rasterizer_error(
+	HRESULT hr,
+	char const *format,
+	...)
+{
+	char const *error_name = "<unknown error>";
+	char error_line_string[1024];
+	char error_desc_string[1024];
+	va_list arglist;
+
+	va_start(arglist, format);
+	vsprintf(error_line_string, format, arglist);
+	va_end(arglist);
+
+	if (FAILED(D3DXGetErrorStringA(hr, error_desc_string, sizeof(error_desc_string) - 1)))
+	{
+		strcpy(error_desc_string, "<can't get description>");
+	}
+
+	switch (hr)
+	{
+	case D3DERR_WRONGTEXTUREFORMAT:
+		error_name = "D3DERR_WRONGTEXTUREFORMAT";
+		break;
+	case D3DERR_UNSUPPORTEDCOLOROPERATION:
+		error_name = "D3DERR_UNSUPPORTEDCOLOROPERATION";
+		break;
+	case D3DERR_UNSUPPORTEDCOLORARG:
+		error_name = "D3DERR_UNSUPPORTEDCOLORARG";
+		break;
+	case D3DERR_UNSUPPORTEDALPHAOPERATION:
+		error_name = "D3DERR_UNSUPPORTEDALPHAOPERATION";
+		break;
+	case D3DERR_UNSUPPORTEDALPHAARG:
+		error_name = "D3DERR_UNSUPPORTEDALPHAARG";
+		break;
+	case D3DERR_TOOMANYOPERATIONS:
+		error_name = "D3DERR_TOOMANYOPERATIONS";
+		break;
+	case D3DERR_CONFLICTINGTEXTUREFILTER:
+		error_name = "D3DERR_CONFLICTINGTEXTUREFILTER";
+		break;
+	case D3DERR_UNSUPPORTEDFACTORVALUE:
+		error_name = "D3DERR_UNSUPPORTEDFACTORVALUE";
+		break;
+	case D3DERR_CONFLICTINGRENDERSTATE:
+		error_name = "D3DERR_CONFLICTINGRENDERSTATE";
+		break;
+	case D3DERR_UNSUPPORTEDTEXTUREFILTER:
+		error_name = "D3DERR_UNSUPPORTEDTEXTUREFILTER";
+		break;
+	case D3DERR_CONFLICTINGTEXTUREPALETTE:
+		error_name = "D3DERR_CONFLICTINGTEXTUREPALETTE";
+		break;
+	case D3DERR_DRIVERINTERNALERROR:
+		error_name = "D3DERR_DRIVERINTERNALERROR";
+		break;
+	case D3DERR_NOTFOUND:
+		error_name = "D3DERR_NOTFOUND";
+		break;
+	case D3DERR_MOREDATA:
+		error_name = "D3DERR_MOREDATA";
+		break;
+	case D3DERR_DEVICELOST:
+		error_name = "D3DERR_DEVICELOST";
+		break;
+	case D3DERR_DEVICENOTRESET:
+		error_name = "D3DERR_DEVICENOTRESET";
+		break;
+	case D3DERR_NOTAVAILABLE:
+		error_name = "D3DERR_NOTAVAILABLE";
+		break;
+	case D3DERR_OUTOFVIDEOMEMORY:
+		error_name = "D3DERR_OUTOFVIDEOMEMORY";
+		break;
+	case D3DERR_INVALIDDEVICE:
+		error_name = "D3DERR_INVALIDDEVICE";
+		break;
+	case D3DERR_INVALIDCALL:
+		error_name = "D3DERR_INVALIDCALL";
+		break;
+	case E_FAIL:
+		error_name = "E_FAIL";
+		break;
+	case E_INVALIDARG:
+		error_name = "E_INVALIDARG";
+		break;
+	case E_OUTOFMEMORY:
+		error_name = "E_OUTOFMEMORY";
+		break;
+	}
+
+	error(
+		_error_silent,
+		"%s in %s (code=%d, error=%s)",
+		error_name,
+		error_line_string,
+		hr,
+		error_desc_string);
+
+	return;
+}

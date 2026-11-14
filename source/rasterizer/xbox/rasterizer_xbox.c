@@ -116,25 +116,6 @@ static short previous_stencil_mode = NONE;
 
 /* ---------- public code */
 
-__inline void SetRenderStateSmart(
-	D3DRENDERSTATETYPE state,
-	unsigned long value)
-{
-	IDirect3DDevice8_SetRenderState(global_d3d_device, state, value);
-
-	return;
-}
-
-__inline void SetTextureStageStateSmart(
-	unsigned long stage,
-	D3DTEXTURESTAGESTATETYPE type,
-	unsigned long value)
-{
-	IDirect3DDevice8_SetTextureStageState(global_d3d_device, stage, type, value);
-
-	return;
-}
-
 boolean rasterizer_preinitialize__fill_you_up_with_the_devils_cock(
 	void)
 {
@@ -1605,12 +1586,12 @@ void rasterizer_secondary_render_target_debug(
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, D3DZB_FALSE);
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
-		rasterizer_set_vertex_shader_permutation(4, _rasterizer_vertex_type_dynamic_screen, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 			short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{2.f/viewport_width, 0.f, 0.f, -1.f - 1.f/viewport_width},
 				{0.f, -2.f/viewport_height, 0.f, 1.f/viewport_height + 1.f},

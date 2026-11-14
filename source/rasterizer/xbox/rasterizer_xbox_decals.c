@@ -18,8 +18,6 @@ RASTERIZER_XBOX_DECALS.C
 #include "collisions.h"
 #include "decals.h"
 
-/* ---------- prototypes */
-
 /* ---------- globals */
 
 static short local_layer = 0;
@@ -261,26 +259,26 @@ void _rasterizer_decals_begin(
 
 		rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_multiplicative, NONE, 0);
 
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+		SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+		SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
 
 		if (layer == _decal_layer_alpha_tested)
 		{
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 127);
+			SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_ALPHAREF, 127);
 
 			rasterizer_set_stencil_mode(_rasterizer_stencil_mode_write_alpha_tested_decal);
 		}
@@ -294,37 +292,37 @@ void _rasterizer_decals_begin(
 
 			if (local_filthy_decal_fog_hack_enabled)
 			{
-				IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, TRUE);
-				IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 0);
+				SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
+				SetRenderStateSmart(D3DRS_ALPHAREF, 0);
 			}
 			else
 			{
-				IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
+				SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
 			}
 		}
 
-		rasterizer_set_vertex_shader_permutation(1, _rasterizer_vertex_type_decal, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_decal, _rasterizer_vertex_type_decal, _vertex_shader_permutation_default);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
-		pixel_shader.PSAlphaOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
-		pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+		pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
+		pixel_shader.PSAlphaOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
+		pixel_shader.PSRGBOutputs[1] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 
 		if (local_filthy_decal_fog_hack_enabled)
 		{
-			pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(3, 0);
+			pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(3, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 			pixel_shader.PSConstant0[0] = D3DCOLOR_ARGB(1, 0, 0, 0);
 			pixel_shader.PSAlphaInputs[2] = PS_COMBINERINPUTS(PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_V1 | PS_CHANNEL_ALPHA, PS_REGISTER_C0 | PS_CHANNEL_ALPHA, PS_REGISTER_V1 | PS_CHANNEL_ALPHA);
-			pixel_shader.PSAlphaOutputs[2] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, 0);
+			pixel_shader.PSAlphaOutputs[2] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R0, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 		}
 		else
 		{
-			pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(2, 0);
+			pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(2, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 		}
 
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0);
-		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, 0);
+		pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 
 		IDirect3DDevice8_SetStreamSource(global_d3d_device, 0, local_d3d_vertex_buffer, sizeof(struct decal_vertex));
 	}
@@ -360,11 +358,11 @@ void _rasterizer_decals_draw(
 
 				if (local_framebuffer_blend_function == _shader_framebuffer_blend_function_multiply || local_framebuffer_blend_function == _shader_framebuffer_blend_function_double_multiply)
 				{
-					IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALL);
+					SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALL);
 				}
 				else
 				{
-					IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+					SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 				}
 
 				switch (local_framebuffer_blend_function)

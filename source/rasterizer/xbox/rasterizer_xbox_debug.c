@@ -16,16 +16,6 @@ RASTERIZER_XBOX_DEBUG.C
 #include "shaders.h"
 #include "rasterizer/common/rasterizer_common.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
-/* ---------- prototypes */
-
-/* ---------- globals */
-
 /* ---------- public code */
 
 void rasterizer_debug_drawing_begin(
@@ -36,33 +26,33 @@ void rasterizer_debug_drawing_begin(
 
 	if (rasterizer_debug_options.draw_debug_geometry)
 	{
-		rasterizer_set_vertex_shader_permutation(0, _rasterizer_vertex_type_debug, 0);
+		rasterizer_set_vertex_shader_permutation(_vs_debug, _rasterizer_vertex_type_debug, _vertex_shader_permutation_default);
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_NONE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_NONE);
+		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+		SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+		pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0);
 
 		if (opaque)
 		{
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, FALSE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
 		}
 		else
 		{
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, FALSE);
-			pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0 | PS_CHANNEL_ALPHA, 0);
+			SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+			SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
+			pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 		}
 
 		rasterizer_set_pixel_shader(&pixel_shader);
@@ -82,19 +72,19 @@ void _rasterizer_debug_immediate_begin(
 {
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_debug.c", 81, global_d3d_device);
 
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_NONE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, FALSE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, TRUE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+	SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_NONE);
+	SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, FALSE);
+	SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+	SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+	SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
+	SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
 
-	rasterizer_set_vertex_shader_permutation(0, _rasterizer_vertex_type_debug, 0);
+	rasterizer_set_vertex_shader_permutation(_vs_debug, _rasterizer_vertex_type_debug, _vertex_shader_permutation_default);
 
 	memset(&pixel_shader, 0, sizeof(pixel_shader));
 	pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 	pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0);
 	rasterizer_set_pixel_shader(&pixel_shader);
 
@@ -169,18 +159,18 @@ void _rasterizer_debug_immediate_begin_screenspace(
 {
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_debug.c", 167, global_d3d_device);
 
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_NONE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, FALSE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, FALSE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, FALSE);
-	IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, 0);
+	SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_NONE);
+	SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, FALSE);
+	SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
+	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
+	SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-	rasterizer_set_vertex_shader_permutation(4, _rasterizer_vertex_type_dynamic_screen, 0);
+	rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 	{
 		short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 		short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-		real vsh_constants__screenproj[5][4] =
+		real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 		{
 			{2.f/viewport_width, 0.f, 0.f, -1.f - 1.f/viewport_width},
 			{0.f, -2.f/viewport_height, 0.f, 1.f/viewport_height + 1.f},
@@ -197,7 +187,7 @@ void _rasterizer_debug_immediate_begin_screenspace(
 
 	memset(&pixel_shader, 0, sizeof(pixel_shader));
 	pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
-	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, 0);
+	pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 	pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0);
 	rasterizer_set_pixel_shader(&pixel_shader);
 
@@ -270,5 +260,3 @@ void _rasterizer_debug_immediate_end_screenspace(
 {
 	return;
 }
-
-/* ---------- private code */
