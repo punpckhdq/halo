@@ -12,6 +12,10 @@ header included in hcex build.
 
 /* ---------- macros */
 
+#define radiosity_hack_start()
+#define radiosity_hack_save()
+#define radiosity_hack_find_point()
+
 /* ---------- structures */
 
 /* ---------- prototypes/EXAMPLE.C */

@@ -25,6 +25,10 @@ void object_list_delete(long list_index);
 void object_list_add(long object_list_index, long object_index);
 long object_list_get_first(long object_list_index, long *reference_index);
 long object_list_get_next(long object_list_index, long *reference_index);
+void object_list_add_reference(long object_list_index);
+void object_list_remove_reference(long object_list_index);
+void object_list_gc(void);
+short object_list_count(long object_list_index);
 
 
 /* ---------- globals */

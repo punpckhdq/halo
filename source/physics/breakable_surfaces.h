@@ -79,6 +79,8 @@ void breakable_surface_damage_area_of_effect(const struct damage_data *damage_da
 
 /* ---------- globals */
 
+extern boolean breakable_surface_effect_enabled;
+
 /* ---------- public code */
 
 #endif // __BREAKABLE_SURFACES_H

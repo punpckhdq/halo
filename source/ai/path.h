@@ -312,6 +312,13 @@ void render_debug_obstacle_path(void);
 
 /* ---------- globals */
 
+extern boolean debug_obstacle_path_on_failure;
+extern boolean debug_obstacle_path;
+extern real_point3d debug_obstacle_path_start_point;
+extern long debug_obstacle_path_start_surface_index;
+extern real_point3d debug_obstacle_path_goal_point;
+extern long debug_obstacle_path_goal_surface_index;
+
 /* ---------- public code */
 
 __inline struct disc const *obstacles_get_disc(

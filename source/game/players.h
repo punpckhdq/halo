@@ -157,6 +157,22 @@ void player_control_permanent_impulse(short local_player_index, real_euler_angle
 short unit_get_local_player_index(long unit_index);
 void player_control_set_facing(short local_player_index, real_vector3d const *facing);
 void player_control_inhibit_buttons(short local_player_index, word button_flags, boolean uninhibit_when_released);
+boolean scripted_player_control_set_camera_control(boolean enabled);
+void players_unzoom_all(void);
+void player_control_action_test_reset(void);
+boolean player_control_action_test_accept(void);
+boolean player_control_action_test_back(void);
+boolean player_control_action_test_action(void);
+boolean player_control_action_test_jump(void);
+boolean player_control_action_test_primary_trigger(void);
+boolean player_control_action_test_grenade_trigger(void);
+boolean player_control_action_test_zoom(void);
+boolean player_control_action_test_move_relative_all_directions(void);
+boolean player_control_action_test_look_relative_all_directions(void);
+boolean player_control_action_test_look_relative_left(void);
+boolean player_control_action_test_look_relative_right(void);
+boolean player_control_action_test_look_relative_up(void);
+boolean player_control_action_test_look_relative_down(void);
 
 /* ---------- prototypes/PLAYERS.C */
 
@@ -260,9 +276,17 @@ void rumble_player_continuous(short local_player_index, real left, real right);
 /* ---------- globals */
 
 extern struct data_array *player_data;
+extern boolean debug_render_player_teleport;
 
+extern boolean player_autoaim_flag;
+extern boolean player_magnetism_flag;
+extern boolean controls_swapped;
+extern short debug_input_target;
 extern real player_look_yaw_rate[];
 extern real player_look_pitch_rate[];
+extern boolean controls_enable_crouch;
+extern boolean controls_enable_doubled_spin;
+extern boolean controls_swap_doubled_spin_state;
 
 /* ---------- public code */
 

@@ -1,61 +1,5 @@
 /*
 HS_SCENARIO_DEFINITIONS.C
-
-symbols in this file:
-000BD310 00e0:
-	_byte_swap_script_syntax_data (0000)
-0026F0D0 001a:
-	??_C@_0BK@HCHIMFOO@hs_string_data_definition?$AA@ (0000)
-0026F0EC 001a:
-	??_C@_0BK@DBIJMIDJ@hs_syntax_data_definition?$AA@ (0000)
-0026F108 000c:
-	??_C@_0M@BMPNPGNE@syntax_node?$AA@ (0000)
-0026F114 0012:
-	??_C@_0BC@PBNDBBAC@data_array_header?$AA@ (0000)
-0026F128 0007:
-	??_C@_06OEKOLKIL@source?$AA@ (0000)
-0026F130 0016:
-	??_C@_0BG@FBLJNDKH@hs_source_files_block?$AA@ (0000)
-0026F148 001a:
-	??_C@_0BK@NCBIEJFG@hs_source_data_definition?$AA@ (0000)
-0026F164 000c:
-	??_C@_0M@GBFIIOJI@reference?$CK?$FO?$AA@ (0000)
-0026F170 0014:
-	??_C@_0BE@GFKIJMCD@hs_references_block?$AA@ (0000)
-0026F184 0021:
-	??_C@_0CB@CJODAJDG@initialization?5expression?5index?$CK@ (0000)
-0026F1A8 0006:
-	??_C@_05GAAEPGEK@type?$CK?$AA@ (0000)
-0026F1B0 0011:
-	??_C@_0BB@GFGOKKNE@hs_globals_block?$AA@ (0000)
-0026F1C4 0017:
-	??_C@_0BH@MDEEMKLE@root?5expression?5index?$CK?$AA@ (0000)
-0026F1DC 000d:
-	??_C@_0N@DOPJMMFH@return?5type?$CK?$AA@ (0000)
-0026F1EC 000d:
-	??_C@_0N@BKPIBOHC@script?5type?$CK?$AA@ (0000)
-0026F1FC 0006:
-	??_C@_05DAKKIELG@name?$CK?$AA@ (0000)
-0026F204 0011:
-	??_C@_0BB@FDOCKNHP@hs_scripts_block?$AA@ (0000)
-0026F218 003d:
-	??_C@_0DN@NFFJFPKM@data_size?$DO?$DN0?5?$CG?$CG?5?$CIdata_size?$CFsizeo@ (0000)
-0026F258 000d:
-	??_C@_0N@LFDKIDJD@csirtpn?5?$AAedo?$AA@ (0000)
-0026F268 0020:
-	??_C@_0CA@JPLDHLPF@size?$DO?$DNsizeof?$CIstruct?5data_array?$CJ?$AA@ (0000)
-0026F288 002c:
-	??_C@_0CM@EMEIFNAD@c?3?2halo?2SOURCE?2hs?2hs_scenario_de@ (0000)
-002E49C0 0274:
-	_hs_script_types_enum (0000)
-	_hs_types_enum (000c)
-	_hs_scripts_block (0060)
-	_hs_globals_block (00e4)
-	_hs_references_block (0140)
-	_hs_source_data_definition (016c)
-	_hs_source_files_block (01a0)
-	_hs_syntax_data_definition (0254)
-	_hs_string_data_definition (0264)
 */
 
 /* ---------- headers */
@@ -63,16 +7,165 @@ symbols in this file:
 #include "cseries.h"
 #include "hs_scenario_definitions.h"
 
-/* ---------- constants */
-
-/* ---------- macros */
-
-/* ---------- structures */
-
 /* ---------- prototypes */
+
+static void byte_swap_script_syntax_data(void *scenario, void *data, long size);
 
 /* ---------- globals */
 
-/* ---------- public code */
+struct enum_definition hs_script_types_enum =
+{
+	NUMBER_OF_HS_SCRIPT_TYPES,
+	(char **)hs_script_type_names
+};
+
+struct enum_definition hs_types_enum =
+{
+	NUMBER_OF_HS_NODE_TYPES,
+	(char **)hs_type_names
+};
+
+TAG_BLOCK(hs_scripts_block, MAXIMUM_HS_SCRIPTS_PER_SCENARIO, sizeof(struct hs_script), NULL, NULL, NULL, NULL)
+{
+	{_field_string, "name*"},
+	{_field_enum, "script type*", &hs_script_types_enum},
+	{_field_enum, "return type*", &hs_types_enum},
+	{_field_long_integer, "root expression index*"},
+	FIELD_PAD(13*sizeof(long)),
+	{_field_terminator}
+};
+
+TAG_BLOCK(hs_globals_block, MAXIMUM_HS_GLOBALS_PER_SCENARIO, sizeof(struct hs_global_internal), NULL, NULL, NULL, NULL)
+{
+	{_field_string, "name*"},
+	{_field_enum, "type*", &hs_types_enum},
+	FIELD_PAD(sizeof(word)),
+	FIELD_PAD(sizeof(long)),
+	{_field_long_integer, "initialization expression index*"},
+	FIELD_PAD(12*sizeof(long)),
+	{_field_terminator}
+};
+
+static struct tag_reference_definition hs_reference_definition = {0, NONE}; /* fake name */
+
+TAG_BLOCK(hs_references_block, MAXIMUM_HS_REFERENCES_PER_SCENARIO, sizeof(struct hs_tag_reference), NULL, NULL, NULL, NULL)
+{
+	FIELD_PAD(6*sizeof(long)),
+	{_field_tag_reference, "reference*^", &hs_reference_definition},
+	{_field_terminator}
+};
+
+struct tag_data_definition hs_source_data_definition =
+{
+	"hs_source_data_definition",
+	0,
+	MAXIMUM_HS_SOURCE_DATA_PER_FILE,
+	NULL
+};
+
+TAG_BLOCK(hs_source_files_block, MAXIMUM_HS_SOURCE_FILES_PER_SCENARIO, sizeof(struct hs_source_file), NULL, NULL, NULL, NULL)
+{
+	{_field_string, "name*"},
+	{_field_data, "source", &hs_source_data_definition},
+	{_field_terminator}
+};
+
+static byte_swap_code data_array_header_bs_codes[] = /* fake name */
+{
+	_begin_bs_array, 1,
+		TAG_STRING_LENGTH+1,
+		_2byte,
+		_2byte,
+		_1byte,
+		3,
+		_4byte,
+		_2byte,
+		_2byte,
+		_2byte,
+		_2byte,
+		_4byte,
+	_end_bs_array
+};
+
+static struct byte_swap_definition data_array_header_bs_definition = /* fake name */
+{
+	"data_array_header",
+	sizeof(struct data_array),
+	data_array_header_bs_codes,
+	BYTE_SWAP_DEFINITION_SIGNATURE,
+	FALSE
+};
+
+static byte_swap_code syntax_node_bs_codes[] = /* fake name */
+{
+	_begin_bs_array, 1,
+		_2byte,
+		_2byte,
+		_2byte,
+		_2byte,
+		_4byte,
+		_4byte,
+		_4byte,
+	_end_bs_array
+};
+
+static struct byte_swap_definition syntax_node_bs_definition = /* fake name */
+{
+	"syntax_node",
+	sizeof(struct hs_syntax_node),
+	syntax_node_bs_codes,
+	BYTE_SWAP_DEFINITION_SIGNATURE,
+	FALSE
+};
+
+struct tag_data_definition hs_syntax_data_definition =
+{
+	"hs_syntax_data_definition",
+	0,
+	SIZEOF_HS_SYNTAX_DATA,
+	byte_swap_script_syntax_data
+};
+
+struct tag_data_definition hs_string_data_definition =
+{
+	"hs_string_data_definition",
+	0,
+	MAXIMUM_HS_STRING_DATA_PER_SCENARIO,
+	NULL
+};
 
 /* ---------- private code */
+
+static void byte_swap_script_syntax_data(
+	void *scenario,
+	void *data,
+	long size)
+{
+	if (size)
+	{
+		match_assert("c:\\halo\\SOURCE\\hs\\hs_scenario_definitions.c", 109, size>=sizeof(struct data_array));
+
+		if (!memcmp(data, "csirtpn \0edo", 12))
+		{
+			byte_swap_data(&data_array_header_bs_definition, data, 1);
+			byte_swap_data(&syntax_node_bs_definition, data, 0x4000);
+		}
+		else
+		{
+			long data_size = size - sizeof(struct data_array);
+
+			match_assert("c:\\halo\\SOURCE\\hs\\hs_scenario_definitions.c", 121, data_size>=0 && (data_size%sizeof(struct hs_syntax_node))==0);
+
+			if (data_size>=0 && (data_size % sizeof(struct hs_syntax_node))==0)
+			{
+				byte_swap_data(&data_array_header_bs_definition, data, 1);
+				byte_swap_data(
+					&syntax_node_bs_definition,
+					(byte *)data + sizeof(struct data_array),
+					data_size / sizeof(struct hs_syntax_node));
+			}
+		}
+	}
+
+	return;
+}

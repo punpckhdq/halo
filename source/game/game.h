@@ -210,6 +210,7 @@ short game_connection(void);
 
 /* ---------- globals */
 
+extern char const *global_game_difficulty_level_names[NUMBER_OF_GAME_DIFFICULTY_LEVELS];
 extern char const *global_game_team_names[NUMBER_OF_SOLO_CAMPAIGN_TEAMS];
 
 /* ---------- public code */

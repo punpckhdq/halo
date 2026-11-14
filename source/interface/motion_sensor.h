@@ -25,6 +25,8 @@ void motion_sensor_tick(void);
 
 /* ---------- globals */
 
+extern boolean debug_motion_sensor_draw_all_units;
+
 /* ---------- public code */
 
 #endif // __MOTION_SENSOR_H

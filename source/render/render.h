@@ -235,6 +235,12 @@ extern boolean render_particles_enabled;
 extern boolean render_particle_systems_enabled;
 extern boolean render_weather_particle_systems_enabled;
 
+extern boolean render_shadows;
+extern boolean debug_objects;
+extern boolean debug_inactive_objects;
+
+extern boolean debug_sprites;
+
 /* ---------- public code */
 
 #endif // __RENDER_H

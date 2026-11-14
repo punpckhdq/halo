@@ -137,6 +137,8 @@ extern short global_structure_bsp_index;
 extern struct scenario *global_scenario;
 extern struct bsp3d *global_bsp3d;
 
+extern boolean debug_sound_environment;
+
 /* ---------- public code */
 
 #endif // __SCENARIO_H
