@@ -260,7 +260,7 @@ void _rasterizer_environment_lightmap_draw(
 				SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
 				SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-				rasterizer_set_vertex_shader_permutation(_vs_environment_vectors_debug0,vertex_buffer->type, vectors[vector_index].vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vs_environment_vectors_debug0, vertex_buffer->type, vectors[vector_index].vertex_shader_permutation);
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(normal_map ? PS_TEXTUREMODES_PROJECT2D : PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP);
@@ -494,9 +494,9 @@ void _rasterizer_environment_lightmap_draw(
 			case _rasterizer_drawing_mode_specular_mask_times_bump_color:
 			case _rasterizer_drawing_mode_diffuse_texture_times_bump_color:
 				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
-				pixel_shader.PSAlphaInputs[0] = 0;
+				pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
-				pixel_shader.PSRGBInputs[0] = 0;
+				pixel_shader.PSRGBInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 				pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0);
 				break;
@@ -506,15 +506,15 @@ void _rasterizer_environment_lightmap_draw(
 				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
 				pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_T0 | PS_INPUTMAPPING_EXPAND_NORMAL, PS_REGISTER_NEGATIVE_ONE, PS_REGISTER_ONE, PS_REGISTER_ONE);
 				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_R1, PS_COMBINEROUTPUT_SHIFTLEFT_2);
-				pixel_shader.PSRGBInputs[0] = 0;
+				pixel_shader.PSRGBInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 				pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R1 | PS_CHANNEL_ALPHA);
 				break;
 			case _rasterizer_drawing_mode_specular_mask:
 				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
-				pixel_shader.PSAlphaInputs[0] = 0;
+				pixel_shader.PSAlphaInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSAlphaOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
-				pixel_shader.PSRGBInputs[0] = 0;
+				pixel_shader.PSRGBInputs[0] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSRGBOutputs[0] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 				pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ONE);
 				break;
@@ -1342,9 +1342,9 @@ void _rasterizer_environment_specular_light_draw(
 			else
 			{
 				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(6, PS_COMBINERCOUNT_UNIQUE_C0 | PS_COMBINERCOUNT_UNIQUE_C1);
-				pixel_shader.PSAlphaInputs[6] = 0;
+				pixel_shader.PSAlphaInputs[6] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSAlphaOutputs[6] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
-				pixel_shader.PSAlphaInputs[7] = 0;
+				pixel_shader.PSAlphaInputs[7] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSAlphaOutputs[7] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 			}
 
@@ -1569,9 +1569,9 @@ void _rasterizer_environment_specular_lightmap_draw(
 			else
 			{
 				pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(6, PS_COMBINERCOUNT_UNIQUE_C0 | PS_COMBINERCOUNT_UNIQUE_C1);
-				pixel_shader.PSAlphaInputs[6] = 0;
+				pixel_shader.PSAlphaInputs[6] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSAlphaOutputs[6] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
-				pixel_shader.PSAlphaInputs[7] = 0;
+				pixel_shader.PSAlphaInputs[7] = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO);
 				pixel_shader.PSAlphaOutputs[7] = PS_COMBINEROUTPUTS(PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 			}
 
@@ -2003,7 +2003,7 @@ void _rasterizer_environment_reflection_draw(
 			SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
 			SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection_flat,vertex_buffer->type, reflection_type);
+			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection_flat, vertex_buffer->type, reflection_type);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
