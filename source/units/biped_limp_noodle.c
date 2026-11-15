@@ -391,9 +391,7 @@ void validate_real_vector3d_axes3(
 	real_vector3d *left,
 	real_vector3d *up)
 {
-	match_assert("c:\\halo\\SOURCE\\units\\biped_limp_noodle.c", 535, forward);
-	match_assert("c:\\halo\\SOURCE\\units\\biped_limp_noodle.c", 535, left);
-	match_assert("c:\\halo\\SOURCE\\units\\biped_limp_noodle.c", 535, up);
+	match_assert("c:\\halo\\SOURCE\\units\\biped_limp_noodle.c", 535, forward); match_assert("c:\\halo\\SOURCE\\units\\biped_limp_noodle.c", 535, left); match_assert("c:\\halo\\SOURCE\\units\\biped_limp_noodle.c", 535, up);
 
 	if (normalize3d(forward) == 0.f)
 	{

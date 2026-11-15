@@ -215,7 +215,7 @@ boolean biped_new(
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 
 	biped->biped.ground_plane = depths_of_hell;
-	biped->biped.jump_recovery_timer = 127;
+	biped->biped.jump_recovery_timer = CHAR_MAX;
 	biped->biped.support_surface_index = NONE;
 	biped->biped.pathfinding_surface_index = NONE;
 	object_get_origin(biped_index, &biped->biped.pathfinding_point);
@@ -684,6 +684,7 @@ boolean biped_fix_position(
 	boolean fixed = FALSE;
 
 	match_assert("c:\\halo\\SOURCE\\units\\bipeds.c", 893, final_position || !dont_teleport);
+
 	match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\bipeds.c", 895, _collision_user_bipeds);
 
 	if (biped_index != NONE || line_of_site_object_index != NONE)
@@ -1625,43 +1626,43 @@ static void biped_update_moving(
 
 		if (biped->biped.crouch != 0.f)
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_crouched_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_crouched_bit, TRUE);
 			if (!animation->crouching)
 			{
-				physics.in_flags |= FLAG(_biped_physics_in_trying_to_stand_bit);
+				SET_FLAG(physics.in_flags, _biped_physics_in_trying_to_stand_bit, TRUE);
 			}
 		}
 		if (TEST_FLAG(biped->biped.flags, _biped_airborne_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_airborne_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_airborne_bit, TRUE);
 		}
 		if (TEST_FLAG(biped->biped.flags, _biped_slipping_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_slipping_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_slipping_bit, TRUE);
 		}
 		if (TEST_FLAG(biped->biped.flags, _biped_absolute_movement_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_absolute_movement_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_absolute_movement_bit, TRUE);
 		}
 		if (TEST_FLAG(biped->biped.flags, _biped_no_collision_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_no_collision_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_no_collision_bit, TRUE);
 		}
 		if (TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_dead_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_dead_bit, TRUE);
 		}
 		if (TEST_FLAG(biped_definition->biped.flags, _biped_flying_bit) && !TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_flying_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_flying_bit, TRUE);
 		}
 		if (TEST_FLAG(biped_definition->biped.flags, _biped_passes_through_bipeds_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_pass_through_bipeds_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_pass_through_bipeds_bit, TRUE);
 		}
 		if (TEST_FLAG(biped_definition->biped.flags, _biped_climbs_anything_bit) && !TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 		{
-			physics.in_flags |= FLAG(_biped_physics_in_climb_anything_bit);
+			SET_FLAG(physics.in_flags, _biped_physics_in_climb_anything_bit, TRUE);
 		}
 
 		biped_update_physics(&physics);
@@ -1685,7 +1686,7 @@ static void biped_update_moving(
 			physics.new_velocity = *global_zero_vector3d;
 			physics.velocity = physics.new_velocity;
 			physics.new_position = physics.position;
-			physics.out_flags &= ~FLAG(_biped_physics_out_airborne_bit);
+			SET_FLAG(physics.out_flags, _biped_physics_out_airborne_bit, FALSE);
 		}
 
 		{
@@ -2816,8 +2817,8 @@ static void biped_update_physics(
 			short ground_index = NONE;
 			boolean ground_is_ground = FALSE;
 			boolean ground_is_stick = FALSE;
-			real ground_k = -REAL_MAX;
-			real ground_velocity = -REAL_MAX;
+			real ground_k = REAL_MIN;
+			real ground_velocity = REAL_MIN;
 
 			if (!TEST_FLAG(physics->in_flags, _biped_physics_in_flying_bit))
 			{

@@ -1340,7 +1340,7 @@ boolean unit_update(
 				effect_new_from_object(effect_index, unit_index, unit_index, NONE, 0.f, 0.f, NULL, NULL);
 			}
 
-			unit->unit.flags ^= FLAG(_unit_integrated_night_vision_on_bit);
+			SWAP_FLAG(unit->unit.flags, _unit_integrated_night_vision_on_bit);
 		}
 
 		if (!(active && TEST_FLAG(unit->unit.control_flags, _unit_control_integrated_light_bit)) &&
@@ -1356,7 +1356,7 @@ boolean unit_update(
 				0.f,
 				NULL,
 				NULL);
-			unit->unit.flags ^= FLAG(_unit_integrated_light_on_bit);
+			SWAP_FLAG(unit->unit.flags, _unit_integrated_light_on_bit);
 		}
 	}
 
@@ -4270,15 +4270,15 @@ void unit_damage_aftermath(
 		}
 
 		unit_ping_animation(
-		unit_index,
-		died,
-		feigned,
-		died_flying,
-		ignore_hard_pings,
-		force_hard_pings,
-		angle,
-		body_part,
-		direction_valid ? &direction : NULL);
+			unit_index,
+			died,
+			feigned,
+			died_flying,
+			ignore_hard_pings,
+			force_hard_pings,
+			angle,
+			body_part,
+			direction_valid ? &direction : NULL);
 	}
 
 	{
@@ -5909,12 +5909,18 @@ boolean unit_overcharged(
 {
 	long weapon_index = unit_get_current_weapon_index(unit_index);
 
+	boolean overcharged;
+
 	if (weapon_index != NONE)
 	{
-		return weapon_overcharged(weapon_index);
+		overcharged = weapon_overcharged(weapon_index);
+	}
+	else
+	{
+		overcharged = FALSE;
 	}
 
-	return FALSE;
+	return overcharged;
 }
 
 long units_debug_get_next_unit(
@@ -7579,7 +7585,7 @@ static void unit_drop_item(
 	item->object.angular_velocity = *global_zero_vector3d;
 
 	random_vector_in_cone3d(&unit->unit.aiming_vector, 0.f, DEGREES_TO_RADIANS(22.5f), &item_velocity);
-	speed = real_random_range(0.026666667f, 0.040000003f);
+	speed = real_random_range(0.8f / TICKS_PER_SECOND, 1.2f / TICKS_PER_SECOND);
 	scale_vector3d(&item_velocity, speed, &item_velocity);
 
 	{

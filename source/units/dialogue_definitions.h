@@ -244,6 +244,7 @@ enum
 enum
 {
 	DIALOGUE_DEFINITION_TAG = 'udlg',
+	DIALOGUE_DEFINITION_VERSION = 1,
 };
 
 /* ---------- macros */

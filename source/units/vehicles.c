@@ -67,6 +67,11 @@ enum
 	NUMBER_OF_VEHICLE_FUNCTION_MODES
 };
 
+enum
+{
+	MAXIMUM_THRUSTERS_PER_VEHICLE = 16 /* fake name */
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -1533,9 +1538,9 @@ static void create_pelican_effect(
 
 	if (definition->vehicle.effect.index != NONE)
 	{
-		struct object_marker thrusters[16];
-		short hover_thruster_count = object_get_marker_by_name(vehicle_index, "hover thrusters", thrusters, 15);
-		short jet_thruster_count = object_get_marker_by_name(vehicle_index, "jet thrusters", &thrusters[hover_thruster_count], (short)(16 - hover_thruster_count));
+		struct object_marker thrusters[MAXIMUM_THRUSTERS_PER_VEHICLE];
+		short hover_thruster_count = object_get_marker_by_name(vehicle_index, "hover thrusters", thrusters, MAXIMUM_THRUSTERS_PER_VEHICLE - 1);
+		short jet_thruster_count = object_get_marker_by_name(vehicle_index, "jet thrusters", &thrusters[hover_thruster_count], (short)(MAXIMUM_THRUSTERS_PER_VEHICLE - hover_thruster_count));
 		short thruster_index;
 
 		for (thruster_index = 0; thruster_index < hover_thruster_count + jet_thruster_count; thruster_index++)
@@ -1583,8 +1588,8 @@ static void create_ghost_effect(
 
 	if (definition->vehicle.effect.index != NONE && vehicle->unit.seat_power[0] > 0.f)
 	{
-		struct object_marker thrusters[16];
-		short hover_thruster_count = object_get_marker_by_name(vehicle_index, "hover thrusters", thrusters, 15);
+		struct object_marker thrusters[MAXIMUM_THRUSTERS_PER_VEHICLE];
+		short hover_thruster_count = object_get_marker_by_name(vehicle_index, "hover thrusters", thrusters, MAXIMUM_THRUSTERS_PER_VEHICLE - 1);
 		short jet_thruster_count = 0;
 		short thruster_index;
 
