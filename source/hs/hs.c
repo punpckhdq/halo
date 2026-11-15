@@ -24,6 +24,55 @@ HS.C
 #include "ai_scenario_definitions.h"
 #include "actor_definitions.h"
 #include "model_animation_definitions.h"
+#include "hs_library_external.h"
+#include "hs_glue.h"
+#include "collision_bsp.h"
+#include "render.h"
+#include "network_game_globals.h"
+#include "rasterizer.h"
+#include "players.h"
+#include "game_state.h"
+#include "bungie_net/network/transport.h"
+#include "shaders.h"
+#include "actors.h"
+#include "sound_manager.h"
+#include "text_group.h"
+#include "vehicles.h"
+#include "ai_debug.h"
+#include "encounters.h"
+#include "main.h"
+#include "player_profile.h"
+#include "saved_game_files.h"
+#include "actor_types.h"
+#include "director.h"
+#include "ui_widget.h"
+#include "game_sound.h"
+#include "texture_cache.h"
+#include "hud.h"
+#include "object_lights.h"
+#include "terminal.h"
+#include "player_ui.h"
+#include "cinematics.h"
+#include "devices.h"
+#include "player_effects.h"
+#include "hud_messaging.h"
+#include "ai_profile.h"
+#include "ai_script.h"
+#include "sound_cache.h"
+#include "scenery.h"
+#include "recorded_animations.h"
+#include "ai_globals.h"
+#include "rasterizer_cinematics.h"
+#include "sound_classes.h"
+#include "camera_scripting.h"
+#include "attract_mode.h"
+#include "input_device_defaults.h"
+#include "structures.h"
+#include "units.h"
+#include "cheats.h"
+#include "game.h"
+#include "structures/radiosity/radiosity.h"
+#include "rasterizer/xbox/rasterizer_xbox.h"
 
 /* ---------- constants */
 
@@ -590,7 +639,7 @@ char const *hs_global_get_name(
 
 	if (designator & FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 	{
-		name =hs_global_external_get((short)(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)))->name;
+		name = hs_global_external_get((short)(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)))->name;
 	}
 	else
 	{

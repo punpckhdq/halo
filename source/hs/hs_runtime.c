@@ -1035,7 +1035,10 @@ static long hs_real_to_short(
 static long hs_real_to_long(
 	long r)
 {
-	return (long)*(real *)&r;
+	long result;
+
+	result = (long)*(real *)&r;
+	return result;
 }
 
 static long hs_long_to_short(

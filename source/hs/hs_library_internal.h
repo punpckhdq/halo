@@ -49,8 +49,12 @@ enum
 
 /* ---------- macros */
 
-// release builds compile out the parse functions
-#define HS_FUNCTION_PARSE(parse) parse /* fake name */
+// the parse member of hs_function_definition and its initializer (with the trailing comma)
+#ifdef HS_COMPILER_ENABLED
+#define HS_FUNCTION_PARSE(parse) parse, /* fake name */
+#else
+#define HS_FUNCTION_PARSE(parse)
+#endif
 
 /* ---------- structures */
 
@@ -58,7 +62,9 @@ struct hs_function_definition
 {
 	short return_type;
 	char *name;
+#ifdef HS_COMPILER_ENABLED
 	boolean (*parse)(short function_index, long expression_index);
+#endif
 	void (*evaluate)(short function_index, long thread_index, boolean initialize);
 	char const *documentation;
 	char const *parameters;
@@ -74,6 +80,8 @@ struct hs_enum_definition
 
 /* ---------- prototypes/HS_LIBRARY_INTERNAL_COMPILE.H */
 
+#ifdef HS_COMPILER_ENABLED
+
 boolean hs_parse_begin(short function_index, long expression_index);
 boolean hs_parse_if(short function_index, long expression_index);
 boolean hs_parse_cond(short function_index, long expression_index);
@@ -88,6 +96,8 @@ boolean hs_parse_wake(short function_index, long expression_index);
 boolean hs_parse_inspect(short function_index, long expression_index);
 boolean hs_parse_object_cast_up(short function_index, long expression_index);
 boolean hs_parse_debug_string(short function_index, long expression_index);
+
+#endif // HS_COMPILER_ENABLED
 
 /* ---------- prototypes/HS_LIBRARY_INTERNAL_RUNTIME.H */
 

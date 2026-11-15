@@ -141,8 +141,11 @@ enum
 
 #define hs_syntax_get(index) ((struct hs_syntax_node *)datum_get(hs_syntax_data, (index)))
 
-// release builds compile out the name
+#ifdef HS_COMPILER_ENABLED
 #define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {#name, type, pointer} /* fake name */
+#else
+#define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {NULL, type, pointer}
+#endif
 
 /* ---------- structures */
 
@@ -197,6 +200,8 @@ void hs_hack(void);
 
 /* ---------- prototypes/HS_COMPILE.C */
 
+#ifdef HS_COMPILER_ENABLED
+
 void hs_compile_initialize(boolean permanent);
 void hs_compile_dispose(void);
 long hs_compile_expression(long source_size, char const *source_data, char const **error_message_pointer, char const **error_source_pointer);
@@ -205,6 +210,8 @@ boolean hs_verify_source_offset(long source_offset);
 boolean hs_compile_postprocess(char const **error_message_pointer, char const **error_source_pointer);
 boolean hs_parse(long expression_index, short expected_type);
 boolean hs_macro_function_parse(short function_index, long expression_index);
+
+#endif // HS_COMPILER_ENABLED
 
 /* ---------- prototypes/HS_RUNTIME.C */
 

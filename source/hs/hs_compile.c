@@ -1180,6 +1180,7 @@ boolean hs_parse(
 
 	match_assert("c:\\halo\\SOURCE\\hs\\hs_compile.c", 1166, !hs_compile_globals.error);
 
+
 	match_assert("c:\\halo\\SOURCE\\hs\\hs_compile.c", 1169, hs_type_valid(expected_type) || expected_type==_hs_special_form || expected_type==_hs_unparsed);
 
 	if (expression->type==_hs_unparsed)

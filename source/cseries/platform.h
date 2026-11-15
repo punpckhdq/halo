@@ -10,6 +10,12 @@ header included in hcex build.
 
 /* ---------- constants */
 
+
+#if defined(DEBUG) && (defined(pc) || defined(xbox))
+// the script compiler is only built into debug builds
+#define HS_COMPILER_ENABLED
+#endif
+
 /* ---------- macros */
 
 /* ---------- structures */
