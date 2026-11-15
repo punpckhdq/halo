@@ -422,6 +422,13 @@ struct actor_unit_properties
 	unsigned long unused[4];
 };
 
+struct actor_variant_change_colors
+{
+	real_rgb_color color_lower_bound;
+	real_rgb_color color_upper_bound;
+	unsigned long unused[2];
+};
+
 struct actor_variant_definition
 {
 	unsigned long flags;

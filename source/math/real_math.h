@@ -67,6 +67,18 @@ match_vassert(												\
 	)														\
 )
 
+#define match_assert_valid_realcmp(file, line, a, b)	\
+match_vassert(											\
+	file,												\
+	line,												\
+	valid_realcmp(a, b),								\
+	csprintf(											\
+		temporary,										\
+		"%s, %s: assert_valid_realcmp(%f, %f)",			\
+		#a, #b, a, b									\
+	)													\
+)
+
 #define match_assert_valid_real_vector2d(file, line, vector)	\
 match_vassert(													\
 	file,														\
@@ -239,6 +251,7 @@ if (!valid_real_matrix4x3(matrix))															\
 }
 
 #define assert_valid_real(v) match_assert_valid_real(__FILE__, __LINE__, v)
+#define assert_valid_realcmp(a, b) match_assert_valid_realcmp(__FILE__, __LINE__, a, b)
 #define assert_valid_real_point2d(point) match_assert_valid_real_point2d(__FILE__, __LINE__, point)
 #define assert_valid_real_point3d(point) match_assert_valid_real_point3d(__FILE__, __LINE__, point)
 #define assert_valid_real_vector2d(vector) match_assert_valid_real_vector2d(__FILE__, __LINE__, vector)

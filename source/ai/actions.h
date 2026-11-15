@@ -46,6 +46,16 @@ enum
 
 enum
 {
+	_obey_simple_directmovement_bit = 0,
+	_obey_simple_directmovement_update_continuously_bit,
+	_obey_simple_jump_bit,
+	_obey_simple_jump_jumped_bit,
+	_obey_simple_jump_targeted_bit,
+	NUMBER_OF_OBEY_SIMPLE_FLAGS,
+};
+
+enum
+{
 	_pursuit_location_target = 0,
 	_pursuit_location_position,
 	_pursuit_location_undirected,
@@ -126,7 +136,7 @@ struct fight_state_data
 	word pad;
 };
 
-struct __declspec(align(4)) guard_state_data
+struct guard_state_data
 {
 	short wait_ticks;
 	short look_ticks;
@@ -427,6 +437,24 @@ boolean actor_action_handle_combat_status(long actor_index, boolean allow_initia
 boolean actor_action_handle_combat_failure(long actor_index);
 boolean actor_action_handle_exit_pursuit(long actor_index);
 boolean actor_action_consider_grenade(long actor_index);
+boolean actor_action_perform(long actor_index);
+void actor_action_update(long actor_index);
+void actor_action_control(long actor_index);
+void actor_action_replace_prop(long actor_index, long invalid_prop_index, long replacement_prop_index);
+void actor_action_flush_position_indices(long actor_index);
+void actor_action_flush_structure_indices(long actor_index);
+boolean actor_action_allow_cover_seeking(long actor_index, boolean unopposable);
+boolean actor_action_handle_combat_selection(long actor_index);
+boolean actor_action_handle_lost_contact(long actor_index);
+boolean actor_action_test_grenade(long actor_index);
+boolean actor_action_try_to_throw_grenade(long actor_index, boolean known_trajectory);
+boolean actor_action_try_to_seek_cover(long actor_index, boolean cover_from_last_visible_location, boolean allow_occluded_points);
+boolean actor_action_try_to_panic(long actor_index, short panic_type, long panic_prop_index, boolean force_flee_transition);
+boolean actor_action_try_to_evade(long actor_index);
+boolean actor_action_try_to_dive(long actor_index, short escape_direction, real dive_distance, real_vector2d *alignment_vector, real maximum_ledge_height);
+char const *actor_action_name(short actor_action_index);
+char const *actor_mode_name(short actor_mode_index);
+short actor_action_get_default_state(short initial_state);
 
 /* ---------- prototypes/ACTION_CONVERSE.C */
 
@@ -446,6 +474,12 @@ void action_obey_describe_command(struct scenario *scenario, struct ai_command_d
 boolean action_obey_command_list_setup(long actor_index, short command_list_index, struct obey_state_data *state_data);
 void action_obey_advance_command_list(long actor_index);
 void action_obey_flush_command_indices(long actor_index);
+void action_obey_flush_structure_indices(long actor_index);
+void action_obey_begin(long actor_index);
+void action_obey_end(long actor_index);
+void action_obey_update(long actor_index);
+boolean action_obey_perform(long actor_index);
+void action_obey_control(long actor_index);
 
 /* ---------- prototypes/ACTION_ALERT.C */
 
@@ -460,6 +494,50 @@ void action_alert_flush_structure_indices(long actor_index);
 /* ---------- prototypes/ACTION_FLEE.C */
 
 boolean action_flee_blind_panic(short panic_type);
+boolean action_flee_setup(long actor_index, short panic_type, long panic_prop_index, boolean force_state_entry, boolean flee_from_last_visible_location, boolean allow_occluded_points, struct flee_state_data *state_data);
+void action_flee_begin(long actor_index);
+void action_flee_end(long actor_index);
+boolean action_flee_perform(long actor_index);
+void action_flee_update(long actor_index);
+void action_flee_control(long actor_index);
+void action_flee_modify_color(long actor_index, real_argb_color *color);
+void action_flee_replace_prop(long actor_index, long invalid_prop_index, long replacement_prop_index);
+void action_flee_flush_position_indices(long actor_index);
+
+/* ---------- prototypes/ACTION_GUARD.C */
+
+boolean action_guard_setup_current_position(long actor_index, struct guard_state_data *state_data);
+boolean action_guard_setup_find_position(long actor_index, long delay_timer, struct guard_state_data *state_data);
+boolean action_guard_setup_from_combat_transition(long actor_index, struct guard_state_data *state_data);
+boolean action_guard_setup_from_fleeing(long actor_index, struct flee_state_data *flee_state_data, struct guard_state_data *state_data);
+boolean action_guard_setup_postcombat(long actor_index, struct guard_state_data *state_data);
+void action_guard_begin(long actor_index);
+void action_guard_end(long actor_index);
+boolean action_guard_perform(long actor_index);
+void action_guard_update(long actor_index);
+void action_guard_control(long actor_index);
+void action_guard_modify_color(long actor_index, real_argb_color *color);
+void action_guard_replace_prop(long actor_index, long invalid_prop_index, long replacement_prop_index);
+void action_guard_flush_position_indices(long actor_index);
+void action_guard_flush_structure_indices(long actor_index);
+
+/* ---------- prototypes/ACTION_VEHICLE.C */
+
+boolean action_vehicle_setup_specific(long actor_index, long vehicle_index, short seat_index, struct vehicle_state_data *state_data);
+boolean action_vehicle_setup_impromptu(long actor_index, long vehicle_index, real attempt_distance, real continue_distance, struct vehicle_state_data *state_data);
+void action_vehicle_begin(long actor_index);
+boolean action_vehicle_perform(long actor_index);
+void action_vehicle_update(long actor_index);
+void action_vehicle_control(long actor_index);
+
+/* ---------- prototypes/ACTION_CHARGE.C */
+
+boolean action_charge_setup(long actor_index, short goal, struct charge_state_data *state_data);
+void action_charge_begin(long actor_index);
+boolean action_charge_perform(long actor_index);
+void action_charge_update(long actor_index);
+void action_charge_control(long actor_index);
+boolean action_charge_is_leaping(long actor_index);
 
 /* ---------- prototypes/ACTION_SEARCH.C */
 
