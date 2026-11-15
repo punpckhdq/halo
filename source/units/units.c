@@ -73,8 +73,8 @@ enum
 
 /* ---------- macros */
 
-#define unit_get_current_weapon_index(unit_index) unit_inventory_get_weapon((unit_index), unit_get((unit_index))->unit.current_weapon_index)
-#define unit_get_desired_weapon_index(unit_index) unit_inventory_get_weapon((unit_index), unit_get((unit_index))->unit.desired_weapon_index)
+#define unit_get_current_weapon_index(unit_index) unit_inventory_get_weapon((unit_index), unit_get((unit_index))->unit.current_weapon_index) /* fake name */
+#define unit_get_desired_weapon_index(unit_index) unit_inventory_get_weapon((unit_index), unit_get((unit_index))->unit.desired_weapon_index) /* fake name */
 
 /* ---------- structures */
 
@@ -452,13 +452,14 @@ static boolean unit_vectors_are_valid(
 	long unit_index)
 {
 	struct unit_datum *unit = unit_get(unit_index);
+	boolean result = TRUE;
 
-	boolean result = valid_real_normal3d(&unit->unit.desired_facing_vector) &&
-		valid_real_normal3d(&unit->unit.desired_aiming_vector) &&
-		valid_real_normal3d(&unit->unit.desired_looking_vector) &&
-		valid_real_vector3d_axes2(&unit->object.forward, &unit->object.up) &&
-		valid_real_normal3d(&unit->unit.aiming_vector) &&
-		valid_real_normal3d(&unit->unit.looking_vector);
+	result = result && valid_real_normal3d(&unit->unit.desired_facing_vector);
+	result = result && valid_real_normal3d(&unit->unit.desired_aiming_vector);
+	result = result && valid_real_normal3d(&unit->unit.desired_looking_vector);
+	result = result && valid_real_vector3d_axes2(&unit->object.forward, &unit->object.up);
+	result = result && valid_real_normal3d(&unit->unit.aiming_vector);
+	result = result && valid_real_normal3d(&unit->unit.looking_vector);
 
 	return result;
 }
@@ -467,7 +468,7 @@ static void unit_verify_vectors(
 	long unit_index,
 	char const *debugstring)
 {
-	char buffer[512];
+	char actorbuf[512];
 
 	if (!unit_vectors_are_valid(unit_index))
 	{
@@ -477,10 +478,10 @@ static void unit_verify_vectors(
 			unit->unit.actor_index == NONE ? unit->unit.swarm_actor_index : unit->unit.actor_index,
 			unit_index,
 			1,
-			buffer,
-			NUMBEROF(buffer)
+			actorbuf,
+			NUMBEROF(actorbuf)
 		);
-		error(_error_silent, "**** unit_verify_vectors: problems with %s at location %s", buffer, debugstring);
+		error(_error_silent, "**** unit_verify_vectors: problems with %s at location %s", actorbuf, debugstring);
 		error(
 			_error_silent,
 			"  object: pos %f %f %f, fwd %f %f %f, up %f %f %f",
@@ -1698,8 +1699,8 @@ void unit_preprocess_node_orientations(
 				if (unit->unit.animation.looking_screen_index != NONE)
 				{
 					real_matrix4x3 matrix;
-					real_vector3d relative_looking_vector;
 					real_euler_angles2d relative_looking_angles;
+					real_vector3d relative_looking_vector;
 
 					matrix.scale = 1.f;
 					object_get_orientation(object_index, &matrix.forward, &matrix.up);
@@ -2273,8 +2274,8 @@ void unit_euler_aiming_update(
 
 		if (angular_speed != 0.f)
 		{
-			real_euler_angles2d rotated_aiming_angles;
 			real_vector3d rotated_aiming_vector = relative_aiming_vector;
+			real_euler_angles2d rotated_aiming_angles;
 
 			rotate_vector_about_axis(&rotated_aiming_vector, &velocity_axis, sine(angular_speed), cosine(angular_speed));
 			euler_angles2d_from_vector3d(&rotated_aiming_angles, &rotated_aiming_vector);
@@ -2647,8 +2648,8 @@ short unit_update_animation(
 			}
 			case _unit_state_exiting_seat:
 			{
-				real_matrix4x3 old_world_matrix;
 				real_vector3d exit_velocity;
+				real_matrix4x3 old_world_matrix;
 				struct model *model = model_definition_get(unit_definition->object.model.index);
 				struct animation_graph *animation_graph = animation_graph_definition_get(unit->object.animation.animation_graph_index);
 				struct animation *animation = TAG_BLOCK_GET_ELEMENT(&animation_graph->animations, unit->object.animation.state.index, struct animation);
@@ -2850,8 +2851,9 @@ static boolean unit_integrated_night_vision_is_active(
 	long unit_index)
 {
 	boolean active = FALSE;
+	struct unit_datum *unit = unit_get(unit_index);
 
-	if (unit_get(unit_index)->unit.current_zoom_level != NONE)
+	if (unit->unit.current_zoom_level != NONE)
 	{
 		long current_weapon_index = unit_get_current_weapon_index(unit_index);
 
@@ -3726,7 +3728,6 @@ boolean unit_can_enter_seat(
 	long *occupant_unit_index_reference)
 {
 	long child_object_index;
-	struct object_datum *child_object;
 
 	struct unit_datum *unit = unit_get(unit_index);
 	struct unit_datum *parent_unit = unit_get(parent_unit_index);
@@ -3738,22 +3739,26 @@ boolean unit_can_enter_seat(
 		result = FALSE;
 	}
 
-	for (child_object_index = parent_unit->object.first_child_object_index; child_object_index != NONE; child_object_index = child_object->object.next_object_index)
+	child_object_index = parent_unit->object.first_child_object_index;
+
+	while (child_object_index != NONE)
 	{
-		child_object = object_get(child_object_index);
+		struct object_datum *child_object = object_get(child_object_index);
 
 		if (TEST_FLAG(_object_mask_unit, child_object->object.type))
 		{
 			if (unit_get(child_object_index)->unit.parent_seat_index == seat_index)
 			{
-				occupant_unit_index = child_object_index;
 				result = FALSE;
+				occupant_unit_index = child_object_index;
 			}
 			else if (unit->unit.player_index != NONE && game_team_is_enemy(unit->object.owner_team_index, child_object->object.owner_team_index))
 			{
 				result = FALSE;
 			}
 		}
+
+		child_object_index = child_object->object.next_object_index;
 	}
 
 	if (occupant_unit_index_reference)
@@ -4680,51 +4685,52 @@ void unit_get_camera_position(
 	long unit_index,
 	real_point3d *camera_position)
 {
-	struct object_marker marker;
-
 	struct unit_datum *unit = unit_get(unit_index);
 	struct unit_definition *unit_definition = unit_definition_get(unit->definition_index);
 
-	if (unit->object.parent_object_index != NONE || TEST_FLAG(unit->object.damage_flags, _object_dead_bit) || unit->object.type != _object_type_biped)
+	if (unit->object.parent_object_index == NONE && !TEST_FLAG(unit->object.damage_flags, _object_dead_bit) && unit->object.type == _object_type_biped)
 	{
-		if (unit->object.parent_object_index == NONE)
+		biped_get_sight_position(unit_index, 0.f, NULL, NULL, NULL, camera_position);
+	}
+	else if (unit->object.parent_object_index == NONE)
+	{
+		if (unit->unit.gunner_object_index == NONE)
 		{
-			if (unit->unit.gunner_object_index == NONE)
-			{
-				object_get_marker_by_name(unit_index, "head", &marker, 1);
-				*camera_position = marker.matrix.position;
-			}
-			else
-			{
-				struct unit_datum *gunner_unit = unit_get(unit->unit.gunner_object_index);
-				struct unit_seat *parent_seat = TAG_BLOCK_GET_ELEMENT(&unit_definition->unit.seats, gunner_unit->unit.parent_seat_index, struct unit_seat);
+			struct object_marker head_marker;
 
-				object_get_marker_by_name(unit_index, parent_seat->marker_name, &marker, 1);
-				*camera_position = marker.matrix.position;
-			}
+			object_get_marker_by_name(unit_index, "head", &head_marker, 1);
+			*camera_position = head_marker.matrix.position;
 		}
 		else
 		{
-			struct object_datum *object = object_get(unit->object.parent_object_index);
+			struct object_marker camera_marker;
+			struct unit_datum *gunner_unit = unit_get(unit->unit.gunner_object_index);
+			struct unit_seat *parent_seat = TAG_BLOCK_GET_ELEMENT(&unit_definition->unit.seats, gunner_unit->unit.parent_seat_index, struct unit_seat);
 
-			*camera_position = object->object.position;
-
-			if (TEST_FLAG(_object_mask_unit, object->object.type) && unit->unit.parent_seat_index != NONE)
-			{
-				struct unit_definition *parent_unit_definition = unit_definition_get(object->definition_index);
-				struct unit_seat *parent_seat = TAG_BLOCK_GET_ELEMENT(&parent_unit_definition->unit.seats, unit->unit.parent_seat_index, struct unit_seat);
-
-				if (object->object.type != _object_type_vehicle || parent_seat->camera.marker_name[0])
-				{
-					object_get_marker_by_name(unit->object.parent_object_index, parent_seat->camera.marker_name, &marker, 1);
-					*camera_position = marker.matrix.position;
-				}
-			}
+			object_get_marker_by_name(unit_index, parent_seat->marker_name, &camera_marker, 1);
+			*camera_position = camera_marker.matrix.position;
 		}
 	}
 	else
 	{
-		biped_get_sight_position(unit_index, 0.f, NULL, NULL, NULL, camera_position);
+		struct object_datum *parent_object = object_get(unit->object.parent_object_index);
+
+		*camera_position = parent_object->object.position;
+
+		if (TEST_FLAG(_object_mask_unit, parent_object->object.type) && unit->unit.parent_seat_index != NONE)
+		{
+			struct unit_datum *parent_unit = (struct unit_datum *)parent_object;
+			struct unit_definition *parent_unit_definition = unit_definition_get(parent_unit->definition_index);
+			struct unit_seat *parent_seat = TAG_BLOCK_GET_ELEMENT(&parent_unit_definition->unit.seats, unit->unit.parent_seat_index, struct unit_seat);
+
+			if (parent_unit->object.type != _object_type_vehicle || parent_seat->camera.marker_name[0])
+			{
+				struct object_marker camera_marker;
+
+				object_get_marker_by_name(unit->object.parent_object_index, parent_seat->camera.marker_name, &camera_marker, 1);
+				*camera_position = camera_marker.matrix.position;
+			}
+		}
 	}
 
 	return;
@@ -4753,13 +4759,27 @@ void unit_estimate_position(
 	{
 		real_point3d current_body_position;
 		real_vector3d offset_vector;
+		boolean found_position = FALSE;
 
-		if (unit->object.type != _object_type_biped ||
-			unit->object.parent_object_index == NONE ||
-			object_get(unit->object.parent_object_index)->object.type != _object_type_vehicle ||
-			vehicle_find_pathfinding_surface_index(unit->object.parent_object_index, &current_body_position) == NONE)
+		if (unit->object.type == _object_type_biped && unit->object.parent_object_index != NONE)
+		{
+			struct object_datum *parent_object = object_get(unit->object.parent_object_index);
+
+			if (parent_object->object.type == _object_type_vehicle)
+			{
+				long surface_index = vehicle_find_pathfinding_surface_index(unit->object.parent_object_index, &current_body_position);
+
+				if (surface_index != NONE)
+				{
+					found_position = TRUE;
+				}
+			}
+		}
+
+		if (!found_position)
 		{
 			object_get_origin(unit_index, &current_body_position);
+			found_position = TRUE;
 		}
 
 		unit_get_camera_position(unit_index, estimated_position);
@@ -5010,9 +5030,7 @@ void unit_get_aiming_vector(
 	long unit_index,
 	real_vector3d *aiming_vector)
 {
-	struct unit_datum *unit = unit_get(unit_index);
-
-	*aiming_vector = unit->unit.aiming_vector;
+	*aiming_vector = unit_get(unit_index)->unit.aiming_vector;
 
 	return;
 }
@@ -5021,9 +5039,7 @@ void unit_get_looking_vector(
 	long unit_index,
 	real_vector3d *looking_vector)
 {
-	struct unit_datum *unit = unit_get(unit_index);
-
-	*looking_vector = unit->unit.looking_vector;
+	*looking_vector = unit_get(unit_index)->unit.looking_vector;
 
 	return;
 }
@@ -5042,23 +5058,10 @@ boolean unit_clip_to_aiming_bounds(
 	real_vector3d *vector,
 	boolean use_aiming_screen)
 {
-
-	boolean aiming;
-	real_rectangle2d *bounds;
-
 	struct unit_datum *unit = unit_get(unit_index);
 	boolean result = FALSE;
-
-	if (use_aiming_screen)
-	{
-		aiming = unit->unit.animation.aiming_with_euler_screen;
-		bounds = &unit->unit.animation.aiming_screen_bounds;
-	}
-	else
-	{
-		aiming = unit->unit.animation.looking_with_euler_screen;
-		bounds = &unit->unit.animation.looking_screen_bounds;
-	}
+	boolean aiming = use_aiming_screen ? unit->unit.animation.aiming_with_euler_screen : unit->unit.animation.looking_with_euler_screen;
+	real_rectangle2d *bounds = use_aiming_screen ? &unit->unit.animation.aiming_screen_bounds : &unit->unit.animation.looking_screen_bounds;
 
 	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\units.c", 5608, vector);
 
@@ -5066,16 +5069,20 @@ boolean unit_clip_to_aiming_bounds(
 	{
 		real_matrix4x3 matrix;
 		real_euler_angles2d relative_aiming_angles;
-		real_vector3d relative_vector;
 
 		matrix.scale = 1.f;
 		object_get_orientation(unit_index, &matrix.forward, &matrix.up);
 		cross_product3d(&matrix.up, &matrix.forward, &matrix.left);
 		matrix.position = *global_origin3d;
-		matrix4x3_inverse_transform_normal(&matrix, vector, &relative_vector);
 
-		match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\units.c", 5626, &relative_vector);
-		euler_angles2d_from_vector3d(&relative_aiming_angles, &relative_vector);
+		{
+			real_vector3d relative_vector;
+
+			matrix4x3_inverse_transform_normal(&matrix, vector, &relative_vector);
+
+			match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\units.c", 5626, &relative_vector);
+			euler_angles2d_from_vector3d(&relative_aiming_angles, &relative_vector);
+		}
 
 		match_assert_valid_real("c:\\halo\\SOURCE\\units\\units.c", 5629, relative_aiming_angles.pitch);
 		match_assert_valid_real("c:\\halo\\SOURCE\\units\\units.c", 5630, relative_aiming_angles.yaw);
@@ -5110,6 +5117,8 @@ boolean unit_clip_to_aiming_bounds(
 
 		if (result)
 		{
+			real_vector3d relative_vector;
+
 			match_assert_valid_real("c:\\halo\\SOURCE\\units\\units.c", 5661, relative_aiming_angles.pitch);
 			match_assert_valid_real("c:\\halo\\SOURCE\\units\\units.c", 5662, relative_aiming_angles.yaw);
 			vector3d_from_euler_angles2d(&relative_vector, &relative_aiming_angles);
@@ -5774,17 +5783,23 @@ long unit_scripting_unit_riders(
 
 		if (object_list_index != NONE)
 		{
-			long object_index;
-			struct unit_datum *object;
+			long child_object_index = unit->object.first_child_object_index;
 
-			for (object_index = unit->object.first_child_object_index; object_index != NONE; object_index = object->object.next_object_index)
+			while (child_object_index != NONE)
 			{
-				object = (struct unit_datum *)object_get(object_index);
+				struct object_datum *child_object = object_get(child_object_index);
 
-				if (TEST_FLAG(_object_mask_unit, object->object.type) && object->unit.parent_seat_index != NONE)
+				if (TEST_FLAG(_object_mask_unit, child_object->object.type))
 				{
-					object_list_add(object_list_index, object_index);
+					struct unit_datum *child_unit = (struct unit_datum *)child_object;
+
+					if (child_unit->unit.parent_seat_index != NONE)
+					{
+						object_list_add(object_list_index, child_object_index);
+					}
 				}
+
+				child_object_index = child_object->object.next_object_index;
 			}
 		}
 	}
@@ -6097,12 +6112,12 @@ boolean unit_can_see_point(
 
 	if (unit_index != NONE)
 	{
-		struct object_marker marker;
+		real_point3d head_position;
 		real_vector3d unit_to_point;
 		struct unit_datum *unit = unit_get(unit_index);
 
-		object_get_marker_by_name(unit_index, "head", &marker, 1);
-		vector_from_points3d(&marker.matrix.position, point, &unit_to_point);
+		unit_get_head_position(unit_index, &head_position);
+		vector_from_points3d(&head_position, point, &unit_to_point);
 		normalize3d(&unit_to_point);
 
 		if (dot_product3d(&unit_to_point, &unit->unit.looking_vector) > cosine(theta))
@@ -6186,7 +6201,9 @@ boolean unit_get_current_flashlight_state(
 
 	if (unit_index != NONE)
 	{
-		result = TEST_FLAG(unit_get(unit_index)->unit.flags, _unit_integrated_light_on_bit);
+		struct unit_datum *unit = unit_get(unit_index);
+
+		result = TEST_FLAG(unit->unit.flags, _unit_integrated_light_on_bit);
 	}
 
 	return result;
@@ -6201,9 +6218,7 @@ static char const *unit_get_seat_label(
 
 	if (unit->object.parent_object_index == NONE || unit->unit.parent_seat_index == NONE)
 	{
-		short base_seat_index = unit->unit.animation.base_seat_index;
-		match_assert("c:\\halo\\SOURCE\\units\\units.c", MATCH_LINE_NTSC(8207, 8214), base_seat_index>=0 && base_seat_index<NUMBER_OF_UNIT_BASE_SEATS);
-		result = base_seat_labels[base_seat_index];
+		result = base_seat_label_get(unit->unit.animation.base_seat_index);
 	}
 	else
 	{
@@ -6432,7 +6447,9 @@ boolean unit_seat_is_driver(
 
 	if (seat_index >= 0 && seat_index < vehicle_definition->unit.seats.count)
 	{
-		result = TEST_FLAG(TAG_BLOCK_GET_ELEMENT(&vehicle_definition->unit.seats, seat_index, struct unit_seat)->flags, _unit_seat_is_driver_bit);
+		struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&vehicle_definition->unit.seats, seat_index, struct unit_seat);
+
+		result = TEST_FLAG(seat->flags, _unit_seat_is_driver_bit);
 	}
 
 	return result;
@@ -6448,7 +6465,9 @@ boolean unit_seat_is_gunner(
 
 	if (seat_index >= 0 && seat_index < vehicle_definition->unit.seats.count)
 	{
-		result = TEST_FLAG(TAG_BLOCK_GET_ELEMENT(&vehicle_definition->unit.seats, seat_index, struct unit_seat)->flags, _unit_seat_is_gunner_bit);
+		struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&vehicle_definition->unit.seats, seat_index, struct unit_seat);
+
+		result = TEST_FLAG(seat->flags, _unit_seat_is_gunner_bit);
 	}
 
 	return result;
@@ -6464,7 +6483,9 @@ boolean unit_seat_allow_noncombatants(
 
 	if (seat_index >= 0 && seat_index < vehicle_definition->unit.seats.count)
 	{
-		result = TEST_FLAG(TAG_BLOCK_GET_ELEMENT(&vehicle_definition->unit.seats, seat_index, struct unit_seat)->flags, _unit_seat_allow_noncombatants_bit);
+		struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&vehicle_definition->unit.seats, seat_index, struct unit_seat);
+
+		result = TEST_FLAG(seat->flags, _unit_seat_allow_noncombatants_bit);
 	}
 
 	return result;
@@ -6473,37 +6494,42 @@ boolean unit_seat_allow_noncombatants(
 static void unit_update_driver_and_gunner(
 	long parent_object_index)
 {
-	long object_index;
-	struct unit_datum *object;
-
 	struct unit_datum *parent_unit = unit_get(parent_object_index);
 	struct unit_definition *parent_unit_definition = unit_definition_get(parent_unit->definition_index);
+	long child_object_index = parent_unit->object.first_child_object_index;
 
-	for (object_index = parent_unit->object.first_child_object_index; object_index != NONE; object_index = object->object.next_object_index)
+	while (child_object_index != NONE)
 	{
-		object = (struct unit_datum *)object_get(object_index);
+		struct object_datum *child_object = object_get(child_object_index);
 
-		if (TEST_FLAG(_object_mask_unit, object->object.type) && object->unit.parent_seat_index != NONE)
+		if (TEST_FLAG(_object_mask_unit, child_object->object.type))
 		{
-			struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&parent_unit_definition->unit.seats, object->unit.parent_seat_index, struct unit_seat);
+			struct unit_datum *child_unit = (struct unit_datum *)child_object;
 
-			if (TEST_FLAG(seat->flags, _unit_seat_is_driver_bit) &&
-				!TEST_FLAG(parent_unit->unit.flags, _unit_actively_controlled_bit) &&
-				parent_unit->unit.driver_object_index == NONE)
+			if (child_unit->unit.parent_seat_index != NONE)
 			{
-				parent_unit->unit.driver_object_index = object_index;
+				struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&parent_unit_definition->unit.seats, child_unit->unit.parent_seat_index, struct unit_seat);
 
-				if (TEST_FLAG(seat->flags, _unit_seat_is_gunner_bit) && parent_unit->unit.gunner_object_index == NONE)
+				if (TEST_FLAG(seat->flags, _unit_seat_is_driver_bit) &&
+					!TEST_FLAG(parent_unit->unit.flags, _unit_actively_controlled_bit) &&
+					parent_unit->unit.driver_object_index == NONE)
 				{
-					parent_unit->unit.gunner_object_index = object_index;
+					parent_unit->unit.driver_object_index = child_object_index;
+
+					if (TEST_FLAG(seat->flags, _unit_seat_is_gunner_bit) && parent_unit->unit.gunner_object_index == NONE)
+					{
+						parent_unit->unit.gunner_object_index = child_object_index;
+					}
+				}
+				else if (TEST_FLAG(seat->flags, _unit_seat_is_gunner_bit) &&
+					(parent_unit->unit.gunner_object_index == NONE || parent_unit->unit.gunner_object_index == parent_unit->unit.driver_object_index))
+				{
+					parent_unit->unit.gunner_object_index = child_object_index;
 				}
 			}
-			else if (TEST_FLAG(seat->flags, _unit_seat_is_gunner_bit) &&
-				(parent_unit->unit.gunner_object_index == NONE || parent_unit->unit.gunner_object_index == parent_unit->unit.driver_object_index))
-			{
-				parent_unit->unit.gunner_object_index = object_index;
-			}
 		}
+
+		child_object_index = child_object->object.next_object_index;
 	}
 
 	return;
@@ -6513,7 +6539,8 @@ static void unit_add_initial_weapons(
 	long unit_index)
 {
 	short index;
-	struct unit_definition *unit_definition = unit_definition_get(unit_get(unit_index)->definition_index);
+	struct unit_datum *unit = unit_get(unit_index);
+	struct unit_definition *unit_definition = unit_definition_get(unit->definition_index);
 
 	for (index = 0; index < unit_definition->unit.initial_weapons.count; index++)
 	{
@@ -6531,8 +6558,14 @@ static void unit_add_initial_weapons(
 			{
 				struct weapon_datum *weapon = weapon_get(weapon_index);
 
-				if (game_engine_running() && unit_has_weapon_definition_index(unit_index, weapon->definition_index) ||
-					!unit_add_weapon_to_inventory(unit_index, weapon_index, _unit_add_weapon_normally))
+				if (game_engine_running() && unit_has_weapon_definition_index(unit_index, weapon->definition_index))
+				{
+					object_delete(weapon_index);
+				}
+				else if (unit_add_weapon_to_inventory(unit_index, weapon_index, _unit_add_weapon_normally))
+				{
+				}
+				else
 				{
 					object_delete(weapon_index);
 				}
@@ -6546,7 +6579,9 @@ static void unit_add_initial_weapons(
 long unit_get_current_equipment(
 	long unit_index)
 {
-	return unit_get(unit_index)->unit.equipment_object_index;
+	struct unit_datum *unit = unit_get(unit_index);
+
+	return unit->unit.equipment_object_index;
 }
 
 boolean unit_add_grenade_to_inventory(
@@ -6567,13 +6602,13 @@ boolean unit_add_grenade_to_inventory(
 
 		unit->unit.grenade_counts[equipment_definition->equipment.grenade_type]++;
 
-		if (player_index_from_unit_index(unit_index) != NONE)
+		if (player_index_from_unit_index(unit_index) == NONE)
 		{
-			local_player_index = player_get(player_index_from_unit_index(unit_index))->local_player_index;
+			local_player_index = NONE;
 		}
 		else
 		{
-			local_player_index = NONE;
+			local_player_index = player_get(player_index_from_unit_index(unit_index))->local_player_index;
 		}
 
 		if (local_player_index != NONE)
@@ -6631,13 +6666,13 @@ boolean unit_add_equipment_to_inventory(
 		object_disconnect_from_map(equipment_index);
 		object_set_visibility(equipment_index, FALSE);
 
-		if (player_index_from_unit_index(unit_index) != NONE)
+		if (player_index_from_unit_index(unit_index) == NONE)
 		{
-			local_player_index = player_get(player_index_from_unit_index(unit_index))->local_player_index;
+			local_player_index = NONE;
 		}
 		else
 		{
-			local_player_index = NONE;
+			local_player_index = player_get(player_index_from_unit_index(unit_index))->local_player_index;
 		}
 
 		if (local_player_index != NONE)
@@ -6689,9 +6724,11 @@ void unit_delete_all_weapons(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		if (unit->unit.weapon_object_indices[index] != NONE && index != unit->unit.current_weapon_index)
+		long weapon_index = unit->unit.weapon_object_indices[index];
+
+		if (weapon_index != NONE && index != unit->unit.current_weapon_index)
 		{
-			object_delete(unit->unit.weapon_object_indices[index]);
+			object_delete(weapon_index);
 			unit->unit.weapon_object_indices[index] = NONE;
 
 			if (index == unit->unit.desired_weapon_index)
@@ -6772,7 +6809,9 @@ boolean unit_has_weapon_definition_index(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		if (unit->unit.weapon_object_indices[index] != NONE && weapon_get(unit->unit.weapon_object_indices[index])->definition_index == weapon_definition_index)
+		long weapon_index = unit->unit.weapon_object_indices[index];
+
+		if (weapon_index != NONE && weapon_get(weapon_index)->definition_index == weapon_definition_index)
 		{
 			result = TRUE;
 			break;
@@ -6791,7 +6830,9 @@ static short unit_first_free_weapon_index(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		if (unit->unit.weapon_object_indices[index] == NONE)
+		long weapon_index = unit->unit.weapon_object_indices[index];
+
+		if (weapon_index == NONE)
 		{
 			result = index;
 			break;
@@ -6885,11 +6926,15 @@ short unit_get_weapon_count(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		long weapon_index = unit->unit.weapon_object_indices[index];
-
-		if (weapon_index != NONE && !TEST_FLAG(weapon_definition_get(weapon_get(weapon_index)->definition_index)->weapon.flags, _weapon_doesnt_count_toward_maximum_bit))
+		if (unit->unit.weapon_object_indices[index] != NONE)
 		{
-			count++;
+			struct weapon_datum *weapon = weapon_get(unit->unit.weapon_object_indices[index]);
+			struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
+
+			if (!TEST_FLAG(weapon_definition->weapon.flags, _weapon_doesnt_count_toward_maximum_bit))
+			{
+				count++;
+			}
 		}
 	}
 
@@ -6926,11 +6971,14 @@ boolean unit_approve_weapon_pickup(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		long weapon_index = unit->unit.weapon_object_indices[index];
-
-		if (weapon_index != NONE && new_weapon->definition_index == weapon_get(weapon_index)->definition_index)
+		if (unit->unit.weapon_object_indices[index] != NONE)
 		{
-			result = FALSE;
+			struct weapon_datum *weapon = weapon_get(unit->unit.weapon_object_indices[index]);
+
+			if (new_weapon->definition_index == weapon->definition_index)
+			{
+				result = FALSE;
+			}
 		}
 	}
 
@@ -6944,19 +6992,18 @@ boolean unit_approve_weapon_swap(
 	struct unit_datum *unit = unit_get(unit_index);
 	struct weapon_datum *new_weapon = weapon_get(new_weapon_index);
 	struct weapon_definition *new_weapon_definition = weapon_definition_get(new_weapon->definition_index);
+	long current_weapon_index = unit_get_current_weapon_index(unit_index);
 	boolean result = TRUE;
 
-	if (unit_get_current_weapon_index(unit_index) != NONE)
+	if (current_weapon_index != NONE)
 	{
 		short index;
 
 		for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 		{
-			long weapon_index = unit->unit.weapon_object_indices[index];
-
-			if (weapon_index != NONE)
+			if (unit->unit.weapon_object_indices[index] != NONE)
 			{
-				struct weapon_datum *weapon = weapon_get(weapon_index);
+				struct weapon_datum *weapon = weapon_get(unit->unit.weapon_object_indices[index]);
 
 				if (new_weapon->definition_index == weapon->definition_index &&
 					!(index == unit->unit.current_weapon_index && weapon->weapon.age > 0.f && new_weapon->weapon.age < weapon->weapon.age))
@@ -7001,7 +7048,12 @@ static short unit_weapon_next_index(
 				selected_index = index;
 			}
 
-			if (weapon_must_be_readied(unit->unit.weapon_object_indices[index]) || index != current_index)
+			if (weapon_must_be_readied(unit->unit.weapon_object_indices[index]))
+			{
+				break;
+			}
+
+			if (index != current_index)
 			{
 				break;
 			}
@@ -7062,7 +7114,7 @@ static char const *unit_get_current_weapon_label(
 
 	if (weapon_index == NONE)
 	{
-		result = "unarmed";
+		result = base_weapon_label_get(_unit_base_weapon_none);
 	}
 	else
 	{
@@ -7078,14 +7130,16 @@ short unit_get_grenade_count(
 {
 	struct unit_datum *unit = unit_get(unit_index);
 
+	match_assert("c:\\halo\\SOURCE\\units\\units.c", 7847, grenade_type==NONE || (grenade_type>=0 && grenade_type<NUMBER_OF_UNIT_GRENADE_TYPES));
+
 	if (grenade_type != NONE)
 	{
-		match_assert("c:\\halo\\SOURCE\\units\\units.c", 7847, grenade_type==NONE || (grenade_type>=0 && grenade_type<NUMBER_OF_UNIT_GRENADE_TYPES));
-
 		return unit->unit.grenade_counts[grenade_type];
 	}
-
-	return 0;
+	else
+	{
+		return 0;
+	}
 }
 
 short unit_get_current_grenade_type(
@@ -7194,7 +7248,7 @@ static void unit_throw_grenade_move_to_hand(
 	object_get_marker_by_name(unit_index, "left hand", &marker, 1);
 	object_placement_data_new(&placement_data, grenades->projectile.index, unit_index);
 	SET_FLAG(placement_data.flags, 1, TRUE);
-	placement_data.forward = unit_get(unit_index)->unit.aiming_vector;
+	unit_get_aiming_vector(unit_index, &placement_data.forward);
 	normalize3d(perpendicular3d(&placement_data.forward, &placement_data.up));
 
 	placement_data.position = marker.matrix.position;
@@ -7334,15 +7388,17 @@ static void unit_seat_update(
 	long object_index)
 {
 	real_vector3d *acceleration_scale;
-	real_vector3d new_velocity;
 	struct object_marker seat_marker;
+	real_vector3d left;
+	real_vector3d new_velocity;
 
 	struct unit_datum *unit = unit_get(object_index);
 	boolean found = FALSE;
 
 	if (unit->object.parent_object_index != NONE && unit->unit.parent_seat_index != NONE)
 	{
-		struct unit_definition *parent_unit_definition = unit_definition_get(unit_get(unit->object.parent_object_index)->definition_index);
+		struct unit_datum *parent_unit = unit_get(unit->object.parent_object_index);
+		struct unit_definition *parent_unit_definition = unit_definition_get(parent_unit->definition_index);
 		struct unit_seat *seat = TAG_BLOCK_GET_ELEMENT(&parent_unit_definition->unit.seats, unit->unit.parent_seat_index, struct unit_seat);
 
 		if (object_get_marker_by_name(unit->object.parent_object_index, seat->marker_name, &seat_marker, 1))
@@ -7355,7 +7411,7 @@ static void unit_seat_update(
 	else
 	{
 		struct unit_definition *unit_definition = unit_definition_get(unit->definition_index);
-		
+
 		seat_marker.matrix.position = unit->object.position;
 		seat_marker.matrix.forward = unit->object.forward;
 		seat_marker.matrix.up = unit->object.up;
@@ -7365,28 +7421,28 @@ static void unit_seat_update(
 
 	if (found)
 	{
-		real_vector3d vp;
-		real_vector3d last_velocity;
-		last_velocity.i = seat_marker.matrix.position.x-unit->unit.seat_last_position.x;
-		last_velocity.j = seat_marker.matrix.position.y-unit->unit.seat_last_position.y;
-		last_velocity.k = seat_marker.matrix.position.z-unit->unit.seat_last_position.z;
+		real_vector3d acceleration;
 
-		new_velocity.i = last_velocity.i - unit->unit.seat_last_velocity.i;
-		new_velocity.j = last_velocity.j - unit->unit.seat_last_velocity.j;
-		new_velocity.k = last_velocity.k - unit->unit.seat_last_velocity.k;
-		
-		cross_product3d(&seat_marker.matrix.up, &seat_marker.matrix.forward, &vp);
-		
-		unit->unit.seat_desired_acceleration.i = (dot_product3d(&new_velocity, &seat_marker.matrix.forward) * acceleration_scale->i) + 0.5f;
-		unit->unit.seat_desired_acceleration.j = (dot_product3d(&new_velocity, &vp) * acceleration_scale->j) + 0.5f;
-		unit->unit.seat_desired_acceleration.k = (dot_product3d(&new_velocity, &seat_marker.matrix.up) * acceleration_scale->k) + 0.5f;
+		new_velocity.i = seat_marker.matrix.position.x-unit->unit.seat_last_position.x;
+		new_velocity.j = seat_marker.matrix.position.y-unit->unit.seat_last_position.y;
+		new_velocity.k = seat_marker.matrix.position.z-unit->unit.seat_last_position.z;
+
+		acceleration.i = new_velocity.i - unit->unit.seat_last_velocity.i;
+		acceleration.j = new_velocity.j - unit->unit.seat_last_velocity.j;
+		acceleration.k = new_velocity.k - unit->unit.seat_last_velocity.k;
+
+		cross_product3d(&seat_marker.matrix.up, &seat_marker.matrix.forward, &left);
+
+		unit->unit.seat_desired_acceleration.i = (dot_product3d(&acceleration, &seat_marker.matrix.forward) * acceleration_scale->i) + 0.5f;
+		unit->unit.seat_desired_acceleration.j = (dot_product3d(&acceleration, &left) * acceleration_scale->j) + 0.5f;
+		unit->unit.seat_desired_acceleration.k = (dot_product3d(&acceleration, &seat_marker.matrix.up) * acceleration_scale->k) + 0.5f;
 
 		unit->unit.seat_desired_acceleration.i = PIN(unit->unit.seat_desired_acceleration.i, 0.f, 1.f);
 		unit->unit.seat_desired_acceleration.j = PIN(unit->unit.seat_desired_acceleration.j, 0.f, 1.f);
 		unit->unit.seat_desired_acceleration.k = PIN(unit->unit.seat_desired_acceleration.k, 0.f, 1.f);
 
 		unit->unit.seat_last_position = seat_marker.matrix.position;
-		unit->unit.seat_last_velocity = last_velocity;
+		unit->unit.seat_last_velocity = new_velocity;
 	}
 	else
 	{
@@ -7522,9 +7578,10 @@ static void unit_refresh_illumination(
 
 	if (parent_unit == NULL)
 	{
-		real_rgb_color color;
-		lights_illumination_at_point(&unit->object.position, &unit->object.location, &color);
-		unit->unit.ambient_illumination = real_rgb_color_brightness(&color);
+		real_rgb_color illumination_color;
+
+		lights_illumination_at_point(&unit->object.position, &unit->object.location, &illumination_color);
+		unit->unit.ambient_illumination = real_rgb_color_brightness(&illumination_color);
 		unit->unit.self_illumination = object_get_self_illumination(unit_index);
 	}
 	else
@@ -7599,7 +7656,10 @@ static void unit_drop_item(
 
 		unit_get_camera_position(unit_index, &camera_position);
 
-		if (!object_force_inside_bsp(item_index, &camera_position) && !game_engine_running())
+		if (object_force_inside_bsp(item_index, &camera_position))
+		{
+		}
+		else if (!game_engine_running())
 		{
 			object_delete(item_index);
 		}
@@ -7795,7 +7855,7 @@ void unit_cause_melee_damage(
 
 	if (unit_definition->unit.melee_damage.index != NONE)
 	{
-		real_point3d melee_position;
+		real_point3d melee_origin;
 		long damage_definition_index;
 		long weapon_index;
 
@@ -7806,20 +7866,20 @@ void unit_cause_melee_damage(
 			{
 				struct collision_result collision;
 
-				melee_position = marker.matrix.position;
+				melee_origin = marker.matrix.position;
 
 				match_collision_log_begin_user("c:\\halo\\SOURCE\\units\\units.c", 8640, _collision_user_bipeds);
 
-				if (collision_test_line(_collision_test_for_projectiles_flags, &unit->object.bounding_sphere_center, &melee_position, NONE, &collision))
+				if (collision_test_line(_collision_test_for_projectiles_flags, &unit->object.bounding_sphere_center, &melee_origin, NONE, &collision))
 				{
-					melee_position = unit->object.bounding_sphere_center;
+					melee_origin = unit->object.bounding_sphere_center;
 				}
 
 				match_collision_log_end_user("c:\\halo\\SOURCE\\units\\units.c", 8648);
 			}
 			else
 			{
-				melee_position = unit->object.bounding_sphere_center;
+				melee_origin = unit->object.bounding_sphere_center;
 			}
 		}
 
@@ -7828,7 +7888,8 @@ void unit_cause_melee_damage(
 
 		if (weapon_index != NONE)
 		{
-			struct weapon_definition *weapon_definition = weapon_definition_get(weapon_get(weapon_index)->definition_index);
+			struct weapon_datum *weapon = weapon_get(weapon_index);
+			struct weapon_definition *weapon_definition = weapon_definition_get(weapon->definition_index);
 
 			if (TEST_FLAG(weapon_definition->weapon.flags, _weapon_non_players_use_melee_damage_bit))
 			{
@@ -7844,7 +7905,7 @@ void unit_cause_melee_damage(
 			damage_data.owner_object_index = unit_index;
 			damage_data.owner_team_index = unit->object.owner_team_index;
 			damage_data.owner_player_index = unit->unit.player_index;
-			damage_data.origin = melee_position;
+			damage_data.origin = melee_origin;
 			damage_data.epicenter = unit->object.bounding_sphere_center;
 
 			if (target_object_index == NONE)
@@ -7854,12 +7915,12 @@ void unit_cause_melee_damage(
 			else
 			{
 				object_cause_damage(
-				&damage_data,
-				target_object_index,
-				target_node_index,
-				target_region_index,
-				target_material_index,
-				target_object_normal);
+					&damage_data,
+					target_object_index,
+					target_node_index,
+					target_region_index,
+					target_material_index,
+					target_object_normal);
 			}
 
 			if (!silent && damage_data.material_type != NONE)
@@ -7905,8 +7966,8 @@ void unit_cause_player_melee_damage(
 	{
 		for (j = -2; j <= 2; j++)
 		{
-			real_vector3d vector;
 			struct collision_result collision;
+			real_vector3d vector;
 
 			vector.i = (i*x_axis.i + j*y_axis.i)*0.1f + unit->unit.aiming_vector.i*0.8f;
 			vector.j = (i*x_axis.j + j*y_axis.j)*0.1f + unit->unit.aiming_vector.j*0.8f;
@@ -8453,8 +8514,9 @@ short unit_inventory_get_must_be_readied_weapon(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		if (unit->unit.weapon_object_indices[index] != NONE &&
-			weapon_must_be_readied(unit->unit.weapon_object_indices[index]))
+		long weapon_index = unit->unit.weapon_object_indices[index];
+
+		if (weapon_index != NONE && weapon_must_be_readied(weapon_index))
 		{
 			result = index;
 			break;
@@ -8492,7 +8554,9 @@ boolean unit_has_weapon(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		if (unit->unit.weapon_object_indices[index] == weapon_index)
+		long current_weapon_index = unit->unit.weapon_object_indices[index];
+
+		if (current_weapon_index == weapon_index)
 		{
 			result = TRUE;
 			break;
@@ -8512,9 +8576,11 @@ boolean unit_has_weapon_with_flag(
 
 	for (index = 0; index < MAXIMUM_WEAPONS_PER_UNIT; index++)
 	{
-		if (unit->unit.weapon_object_indices[index] != NONE)
+		long weapon_index = unit->unit.weapon_object_indices[index];
+
+		if (weapon_index != NONE)
 		{
-			struct weapon_datum *weapon = weapon_get(unit->unit.weapon_object_indices[index]);
+			struct weapon_datum *weapon = weapon_get(weapon_index);
 
 			if (TEST_FLAG(weapon->weapon.flags, flag))
 			{
@@ -8557,12 +8623,12 @@ void unit_start_running_blindly(
 
 	if (!TEST_FLAG(unit->unit.flags, _unit_running_blindly_bit))
 	{
-		real_vector3d run_vector;
+		real_vector3d initial_run_vector;
 		real angle_range;
 
 		SET_FLAG(unit->unit.flags, _unit_running_blindly_bit, TRUE);
 
-		if (unit->unit.actor_index != NONE && actor_get_running_blind_vector(unit->unit.actor_index, &run_vector))
+		if (unit->unit.actor_index != NONE && actor_get_running_blind_vector(unit->unit.actor_index, &initial_run_vector))
 		{
 			unit->unit.run_blindly_angle = 0.f;
 			angle_range = DEGREES_TO_RADIANS(25.f);
@@ -8610,28 +8676,28 @@ static void unit_flame_to_death(
 
 	if (falling_damage && falling_damage->flaming_death_damage.index != NONE)
 	{
-		struct damage_data damage_data;
+		struct damage_data damage;
 		struct object_datum *attacker_object = object_try_and_get(unit->unit.flaming_death_attacker_object_index);
 
-		damage_data_new(&damage_data, falling_damage->flaming_death_damage.index);
+		damage_data_new(&damage, falling_damage->flaming_death_damage.index);
 
 		if (attacker_object)
 		{
-			damage_data.owner_player_index = attacker_object->object.owner_player_index;
+			damage.owner_player_index = attacker_object->object.owner_player_index;
 
 			if (attacker_object->object.owner_object_index == NONE)
 			{
-				damage_data.owner_object_index = unit->unit.flaming_death_attacker_object_index;
+				damage.owner_object_index = unit->unit.flaming_death_attacker_object_index;
 			}
 			else
 			{
-				damage_data.owner_object_index = attacker_object->object.owner_object_index;
+				damage.owner_object_index = attacker_object->object.owner_object_index;
 			}
 
-			damage_data.owner_team_index = attacker_object->object.owner_team_index;
+			damage.owner_team_index = attacker_object->object.owner_team_index;
 		}
 
-		object_cause_damage(&damage_data, unit_index, NONE, NONE, NONE, NULL);
+		object_cause_damage(&damage, unit_index, NONE, NONE, NONE, NULL);
 	}
 
 	if (!TEST_FLAG(unit->object.damage_flags, _object_dead_bit))
