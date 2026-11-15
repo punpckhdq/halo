@@ -77,6 +77,9 @@ enum
 #define script_assert(thread_index, expr, message) match_script_assert(__FILE__, __LINE__, thread_index, expr, message) /* fake name */
 #define script_demand(thread_index, expr, message) ((expr) || script_error((thread_index), (message), #expr)) /* fake name */
 
+#define HS_GLOBAL_RECONCILE_READ(type, c_type) case type: *(c_type *)&global->value = external->pointer ? *(c_type *)external->pointer : type##_default; break; /* fake name */
+#define HS_GLOBAL_RECONCILE_WRITE(type, c_type) case type: if (external->pointer) *(c_type *)external->pointer = (c_type)(*(c_type *)&global->value); break; /* fake name */
+
 /* ---------- structures */
 
 struct hs_stack_frame
@@ -990,7 +993,7 @@ static long hs_string_to_boolean(
 static long hs_data_to_void(
 	long n)
 {
-	return 0;
+	return (long)NULL;
 }
 
 static long hs_short_to_real(
@@ -1376,9 +1379,6 @@ long *hs_macro_function_evaluate(
 		function->formal_parameters,
 		initialize);
 }
-
-#define HS_GLOBAL_RECONCILE_READ(type, c_type) case type: *(c_type *)&global->value = external->pointer ? *(c_type *)external->pointer : type##_default; break; /* fake name */
-#define HS_GLOBAL_RECONCILE_WRITE(type, c_type) case type: if (external->pointer) *(c_type *)external->pointer = (c_type)(*(c_type *)&global->value); break; /* fake name */
 
 static void hs_global_reconcile_read(
 	short global_designator)

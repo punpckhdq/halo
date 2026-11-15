@@ -47,6 +47,11 @@ enum
 	_hs_function_debug_string__last = _hs_function_debug_string__ai_debug_communication_focus
 };
 
+/* ---------- macros */
+
+// release builds compile out the parse functions
+#define HS_FUNCTION_PARSE(parse) parse /* fake name */
+
 /* ---------- structures */
 
 struct hs_function_definition

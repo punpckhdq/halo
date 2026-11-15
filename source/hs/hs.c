@@ -35,10 +35,7 @@ enum
 	NUMBER_OF_HS_FAKERY_TYPES
 };
 
-/* ---------- macros */
-
-// tag_groups.h is in the precompiled header; the xbox build compiles this out
-#define tag_groups_dump_memory()
+#define HS_GLOBAL_SCRIPTS_FILE_PATH "data\\global_scripts.hsc" /* fake name */
 
 /* ---------- prototypes */
 
@@ -48,7 +45,7 @@ static void hs_get_function_documentation_string(short function_index, char *buf
 
 /* ---------- globals */
 
-char const *hs_type_names[NUMBER_OF_HS_NODE_TYPES] =
+char *hs_type_names[NUMBER_OF_HS_NODE_TYPES] =
 {
 	"unparsed",
 	"special form",
@@ -101,7 +98,7 @@ char const *hs_type_names[NUMBER_OF_HS_NODE_TYPES] =
 	"scenery_name"
 };
 
-char const *hs_script_type_names[NUMBER_OF_HS_SCRIPT_TYPES] =
+char *hs_script_type_names[NUMBER_OF_HS_SCRIPT_TYPES] =
 {
 	"startup",
 	"dormant",
@@ -112,7 +109,7 @@ char const *hs_script_type_names[NUMBER_OF_HS_SCRIPT_TYPES] =
 
 short const hs_object_type_masks[NUMBER_OF_HS_OBJECT_TYPES] =
 {
-	(short)_object_mask_all,	// _hs_type_object
+	_object_mask_all,			// _hs_type_object
 	_object_mask_unit,			// _hs_type_unit
 	_object_mask_vehicle,		// _hs_type_vehicle
 	_object_mask_weapon,		// _hs_type_weapon
@@ -232,6 +229,13 @@ struct data_array *hs_syntax_data;
 
 static boolean hs_syntax_data_allocated;
 static boolean recompile;
+
+static struct profile_section hs_update_section = {"hs_update", NONE, TRUE}; /* fake name */
+
+static char const *enumeration_substring; /* fake name */
+static char const **enumeration_results;
+static short enumeration_maximum_count;
+static short enumeration_count; /* fake name */
 
 /* ---------- public code */
 
@@ -473,8 +477,6 @@ void hs_recompile(
 	return;
 }
 
-static struct profile_section hs_update_section = {"hs_update", NONE, TRUE}; /* fake name */
-
 void hs_update(
 	void)
 {
@@ -588,7 +590,7 @@ char const *hs_global_get_name(
 
 	if (designator & FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 	{
-		name = hs_global_external_get((short)(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)))->name;
+		name =hs_global_external_get((short)(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)))->name;
 	}
 	else
 	{
@@ -649,11 +651,6 @@ static int alphabetize(
 {
 	return _stricmp(*(char const **)string1, *(char const **)string2);
 }
-
-static char const *enumeration_substring; /* fake name */
-static char const **enumeration_results;
-static short enumeration_maximum_count;
-static short enumeration_count; /* fake name */
 
 static void hs_tokens_enumerate_add_string(
 	char const *string)
@@ -1061,7 +1058,7 @@ static boolean hs_rebuild_source(
 	tag_block_resize(&global_scenario_get()->hs_source_files, 0);
 	sprintf(script_directory_name, "data\\%s", tag_get_name(global_scenario_index));
 	sprintf(strrchr(script_directory_name, '\\') + 1, "scripts");
-	file_reference_create_from_path(&global_scripts_file, "data\\global_scripts.hsc", FALSE);
+	file_reference_create_from_path(&global_scripts_file, HS_GLOBAL_SCRIPTS_FILE_PATH, FALSE);
 
 	if (file_exists(&global_scripts_file))
 	{

@@ -24,6 +24,26 @@ HS_COMPILE.C
 #include "ai_scenario_definitions.h"
 #include "interface.h"
 
+/* ---------- constants */
+
+enum
+{
+	_begin_delimiter = '(',
+	_end_delimiter = ')',
+	_string_delimiter = '"',
+	_comment_delimiter = ';',
+	_block_comment_delimiter = '*'
+};
+
+enum
+{
+	_skip_whitespace_state_no_comment = 0,
+	_skip_whitespace_state_comment,
+	_skip_whitespace_state_block_comment,
+	_skip_whitespace_state_done,
+	NUMBER_OF_SKIP_WHITESPACE_STATES
+};
+
 /* ---------- structures */
 
 struct hs_tokenizer
@@ -47,6 +67,28 @@ static boolean hs_parse_primitive(long expression_index);
 static boolean hs_parse_variable(long expression_index);
 static boolean hs_parse_nonprimitive(long expression_index);
 static short string_list_find(char const *string, short list_count, char const **string_list);
+static boolean hs_parse_boolean(long expression_index);
+static boolean hs_parse_real(long expression_index);
+static boolean hs_parse_integer(long expression_index);
+static boolean hs_parse_string(long expression_index);
+static boolean hs_parse_script(long expression_index);
+static boolean hs_parse_tag_reference(long expression_index);
+static boolean hs_parse_enum(long expression_index);
+static boolean hs_parse_trigger_volume(long expression_index);
+static boolean hs_parse_cutscene_flag(long expression_index);
+static boolean hs_parse_cutscene_camera_point(long expression_index);
+static boolean hs_parse_cutscene_title(long expression_index);
+static boolean hs_parse_cutscene_recording(long expression_index);
+static boolean hs_parse_device_group(long expression_index);
+static boolean hs_parse_ai(long expression_index);
+static boolean hs_parse_ai_command_list(long expression_index);
+static boolean hs_parse_starting_profile(long expression_index);
+static boolean hs_parse_conversation(long expression_index);
+static boolean hs_parse_object_name(long expression_index);
+static boolean hs_parse_object(long expression_index);
+static boolean hs_parse_navpoint(long expression_index);
+static boolean hs_parse_hud_message(long expression_index);
+static boolean hs_parse_object_list(long expression_index);
 
 /* ---------- globals */
 
@@ -68,6 +110,62 @@ static struct
 	boolean disallow_sets;
 	boolean variables_predetermined;
 } hs_compile_globals;
+
+char const whitespace_characters[] = {' ', '\t'};
+char const eol_characters[] = {'\n', '\r'};
+
+boolean (*const hs_type_primitive_parsers[NUMBER_OF_HS_NODE_TYPES])(long expression_index) =
+{
+	NULL,							// _hs_unparsed
+	NULL,							// _hs_special_form
+	NULL,							// _hs_function_name
+	NULL,							// _hs_passthrough
+	NULL,							// _hs_type_void
+	hs_parse_boolean,				// _hs_type_boolean
+	hs_parse_real,					// _hs_type_real
+	hs_parse_integer,				// _hs_type_short_integer
+	hs_parse_integer,				// _hs_type_long_integer
+	hs_parse_string,				// _hs_type_string
+	hs_parse_script,				// _hs_type_script
+	hs_parse_trigger_volume,		// _hs_type_trigger_volume
+	hs_parse_cutscene_flag,			// _hs_type_cutscene_flag
+	hs_parse_cutscene_camera_point,	// _hs_type_cutscene_camera_point
+	hs_parse_cutscene_title,		// _hs_type_cutscene_title
+	hs_parse_cutscene_recording,	// _hs_type_cutscene_recording
+	hs_parse_device_group,			// _hs_type_device_group
+	hs_parse_ai,					// _hs_type_ai
+	hs_parse_ai_command_list,		// _hs_type_ai_command_list
+	hs_parse_starting_profile,		// _hs_type_starting_profile
+	hs_parse_conversation,			// _hs_type_conversation
+	hs_parse_navpoint,				// _hs_type_navpoint
+	hs_parse_hud_message,			// _hs_type_hud_message
+	hs_parse_object_list,			// _hs_type_object_list
+	hs_parse_tag_reference,			// _hs_type_sound
+	hs_parse_tag_reference,			// _hs_type_effect
+	hs_parse_tag_reference,			// _hs_type_damage
+	hs_parse_tag_reference,			// _hs_type_looping_sound
+	hs_parse_tag_reference,			// _hs_type_animation_graph
+	hs_parse_tag_reference,			// _hs_type_actor_variant
+	hs_parse_tag_reference,			// _hs_type_damage_effect
+	hs_parse_tag_reference,			// _hs_type_object_definition
+	hs_parse_enum,					// _hs_type_enum_game_difficulty
+	hs_parse_enum,					// _hs_type_enum_team
+	hs_parse_enum,					// _hs_type_enum_ai_default_state
+	hs_parse_enum,					// _hs_type_enum_actor_type
+	hs_parse_enum,					// _hs_type_enum_hud_corner
+	hs_parse_object,				// _hs_type_object
+	hs_parse_object,				// _hs_type_unit
+	hs_parse_object,				// _hs_type_vehicle
+	hs_parse_object,				// _hs_type_weapon
+	hs_parse_object,				// _hs_type_device
+	hs_parse_object,				// _hs_type_scenery
+	hs_parse_object_name,			// _hs_type_object_name
+	hs_parse_object_name,			// _hs_type_unit_name
+	hs_parse_object_name,			// _hs_type_vehicle_name
+	hs_parse_object_name,			// _hs_type_weapon_name
+	hs_parse_object_name,			// _hs_type_device_name
+	hs_parse_object_name			// _hs_type_scenery_name
+};
 
 /* ---------- public code */
 
@@ -162,6 +260,7 @@ long hs_compile_expression(
 			source_offset = 0;
 			hs_compile_globals.compiled_source = match_malloc("c:\\halo\\SOURCE\\hs\\hs_compile.c", 175, source_size + 1);
 			hs_compile_globals.malloced = TRUE;
+
 			match_assert("c:\\halo\\SOURCE\\hs\\hs_compile.c", 178, hs_compile_globals.compiled_source);
 		}
 
@@ -854,18 +953,6 @@ static boolean hs_add_script(
 	return success;
 }
 
-enum
-{
-	_begin_delimiter = '(',
-	_end_delimiter = ')',
-	_string_delimiter = '"',
-	_comment_delimiter = ';',
-	_block_comment_delimiter = '*'
-};
-
-char const whitespace_characters[] = {' ', '\t'};
-char const eol_characters[] = {'\n', '\r'};
-
 static long hs_tokenize(
 	struct hs_tokenizer *state)
 {
@@ -996,15 +1083,6 @@ static void hs_tokenize_nonprimitive(
 	return;
 }
 
-enum
-{
-	_skip_whitespace_state_no_comment = 0,
-	_skip_whitespace_state_comment,
-	_skip_whitespace_state_block_comment,
-	_skip_whitespace_state_done,
-	NUMBER_OF_SKIP_WHITESPACE_STATES
-};
-
 static void skip_whitespace(
 	char **c)
 {
@@ -1101,6 +1179,7 @@ boolean hs_parse(
 	struct hs_syntax_node *expression = hs_syntax_get(expression_index);
 
 	match_assert("c:\\halo\\SOURCE\\hs\\hs_compile.c", 1166, !hs_compile_globals.error);
+
 	match_assert("c:\\halo\\SOURCE\\hs\\hs_compile.c", 1169, hs_type_valid(expected_type) || expected_type==_hs_special_form || expected_type==_hs_unparsed);
 
 	if (expression->type==_hs_unparsed)
@@ -1911,59 +1990,6 @@ static boolean hs_parse_object_list(
 
 	return success;
 }
-
-boolean (*const hs_type_primitive_parsers[NUMBER_OF_HS_NODE_TYPES])(long expression_index) =
-{
-	NULL,							// _hs_unparsed
-	NULL,							// _hs_special_form
-	NULL,							// _hs_function_name
-	NULL,							// _hs_passthrough
-	NULL,							// _hs_type_void
-	hs_parse_boolean,				// _hs_type_boolean
-	hs_parse_real,					// _hs_type_real
-	hs_parse_integer,				// _hs_type_short_integer
-	hs_parse_integer,				// _hs_type_long_integer
-	hs_parse_string,				// _hs_type_string
-	hs_parse_script,				// _hs_type_script
-	hs_parse_trigger_volume,		// _hs_type_trigger_volume
-	hs_parse_cutscene_flag,			// _hs_type_cutscene_flag
-	hs_parse_cutscene_camera_point,	// _hs_type_cutscene_camera_point
-	hs_parse_cutscene_title,		// _hs_type_cutscene_title
-	hs_parse_cutscene_recording,	// _hs_type_cutscene_recording
-	hs_parse_device_group,			// _hs_type_device_group
-	hs_parse_ai,					// _hs_type_ai
-	hs_parse_ai_command_list,		// _hs_type_ai_command_list
-	hs_parse_starting_profile,		// _hs_type_starting_profile
-	hs_parse_conversation,			// _hs_type_conversation
-	hs_parse_navpoint,				// _hs_type_navpoint
-	hs_parse_hud_message,			// _hs_type_hud_message
-	hs_parse_object_list,			// _hs_type_object_list
-	hs_parse_tag_reference,			// _hs_type_sound
-	hs_parse_tag_reference,			// _hs_type_effect
-	hs_parse_tag_reference,			// _hs_type_damage
-	hs_parse_tag_reference,			// _hs_type_looping_sound
-	hs_parse_tag_reference,			// _hs_type_animation_graph
-	hs_parse_tag_reference,			// _hs_type_actor_variant
-	hs_parse_tag_reference,			// _hs_type_damage_effect
-	hs_parse_tag_reference,			// _hs_type_object_definition
-	hs_parse_enum,					// _hs_type_enum_game_difficulty
-	hs_parse_enum,					// _hs_type_enum_team
-	hs_parse_enum,					// _hs_type_enum_ai_default_state
-	hs_parse_enum,					// _hs_type_enum_actor_type
-	hs_parse_enum,					// _hs_type_enum_hud_corner
-	hs_parse_object,				// _hs_type_object
-	hs_parse_object,				// _hs_type_unit
-	hs_parse_object,				// _hs_type_vehicle
-	hs_parse_object,				// _hs_type_weapon
-	hs_parse_object,				// _hs_type_device
-	hs_parse_object,				// _hs_type_scenery
-	hs_parse_object_name,			// _hs_type_object_name
-	hs_parse_object_name,			// _hs_type_unit_name
-	hs_parse_object_name,			// _hs_type_vehicle_name
-	hs_parse_object_name,			// _hs_type_weapon_name
-	hs_parse_object_name,			// _hs_type_device_name
-	hs_parse_object_name			// _hs_type_scenery_name
-};
 
 boolean hs_macro_function_parse(
 	short function_index,

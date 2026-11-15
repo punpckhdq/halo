@@ -16,13 +16,13 @@ static void byte_swap_script_syntax_data(void *scenario, void *data, long size);
 struct enum_definition hs_script_types_enum =
 {
 	NUMBER_OF_HS_SCRIPT_TYPES,
-	(char **)hs_script_type_names
+	hs_script_type_names
 };
 
 struct enum_definition hs_types_enum =
 {
 	NUMBER_OF_HS_NODE_TYPES,
-	(char **)hs_type_names
+	hs_type_names
 };
 
 TAG_BLOCK(hs_scripts_block, MAXIMUM_HS_SCRIPTS_PER_SCENARIO, sizeof(struct hs_script), NULL, NULL, NULL, NULL)

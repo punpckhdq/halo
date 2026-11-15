@@ -141,6 +141,9 @@ enum
 
 #define hs_syntax_get(index) ((struct hs_syntax_node *)datum_get(hs_syntax_data, (index)))
 
+// release builds compile out the name
+#define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {#name, type, pointer} /* fake name */
+
 /* ---------- structures */
 
 struct hs_syntax_node
@@ -222,8 +225,8 @@ long *hs_macro_function_evaluate(short function_index, long thread_index, boolea
 
 /* ---------- globals */
 
-extern char const *hs_type_names[];
-extern char const *hs_script_type_names[];
+extern char *hs_type_names[];
+extern char *hs_script_type_names[];
 extern short const hs_type_sizes[];
 extern short const hs_object_type_masks[];
 extern long const hs_tag_reference_type_group_tags[];
