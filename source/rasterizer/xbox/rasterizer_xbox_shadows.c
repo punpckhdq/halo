@@ -58,7 +58,7 @@ static void rasterizer_shadow_convolve(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		{
 			real vsh_constants__texanim[8][4] =
@@ -260,7 +260,7 @@ void _rasterizer_environment_shadow_model_draw(
 				SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 			}
 
-			rasterizer_set_vertex_shader_permutation(_vs_model_shadow, vertex_buffer->type, _vertex_shader_permutation_default);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_model_shadow, vertex_buffer->type, _vertex_shader_permutation_default);
 
 			if (TEST_FLAG(shader_model->model.flags, _shader_model_not_alpha_tested_bit))
 			{
@@ -403,7 +403,7 @@ void _rasterizer_environment_shadow_draw(
 
 			rasterizer_set_pixel_shader(&pixel_shader);
 
-			rasterizer_set_vertex_shader_permutation(_vs_environment_shadow,vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_shadow,vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 
 			{
 				real one_over_radius = 1.f / local_object_bounding_radius;

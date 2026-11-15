@@ -94,7 +94,7 @@ void rasterizer_text_begin(
 			SetTextureStageStateSmart(map_index, D3DTSS_MIPFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 		}
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen2);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen2);
 
 		if (parameters->map[0])
 		{
@@ -134,7 +134,7 @@ void rasterizer_text_begin(
 
 		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 		SetTextureStageStateSmart(0, D3DTSS_ALPHAKILL, D3DTALPHAKILL_DISABLE);
 	}
 

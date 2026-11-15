@@ -114,7 +114,7 @@ void rasterizer_water_build_bumpmap(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		for (ripple_index = 0; ripple_index<MAXIMUM_WATER_RIPPLES; ripple_index++)
 		{
@@ -231,7 +231,7 @@ void rasterizer_water_draw(
 			SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 			SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
 
-			rasterizer_set_vertex_shader_permutation(_vs_transparent_water_opacity, primary_vertex_type, vertex_shader_permutation);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_water_opacity, primary_vertex_type, vertex_shader_permutation);
 
 			memset(&pixel_shader, 0, sizeof(pixel_shader));
 			pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(1, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
@@ -274,7 +274,7 @@ void rasterizer_water_draw(
 				SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 				SetRenderStateSmart(D3DRS_ZWRITEENABLE, zbuffer_write);
 
-				rasterizer_set_vertex_shader_permutation(_vs_transparent_water_opacity, primary_vertex_type, vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_water_opacity, primary_vertex_type, vertex_shader_permutation);
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
@@ -312,7 +312,7 @@ void rasterizer_water_draw(
 				SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 				SetRenderStateSmart(D3DRS_ZWRITEENABLE, zbuffer_write);
 
-				rasterizer_set_vertex_shader_permutation(_vs_transparent_water_opacity, primary_vertex_type, vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_water_opacity, primary_vertex_type, vertex_shader_permutation);
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
@@ -349,7 +349,7 @@ void rasterizer_water_draw(
 			SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 			SetRenderStateSmart(D3DRS_ZWRITEENABLE, zbuffer_write);
 
-			rasterizer_set_vertex_shader_permutation(_vs_transparent_water_reflection, primary_vertex_type, vertex_shader_permutation);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_water_reflection, primary_vertex_type, vertex_shader_permutation);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4];

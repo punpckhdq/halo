@@ -148,7 +148,7 @@ void _rasterizer_widget_begin(
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
 		rasterizer_widget_set_tint_factor(1.f);
-		rasterizer_set_vertex_shader_permutation(_vs_lens_flare, _rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_lens_flare, _rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
@@ -191,7 +191,7 @@ void _rasterizer_widget_begin(
 		SetRenderStateSmart(D3DRS_ZWRITEENABLE, rasterizer_debug_options.lens_flare_occlusion_debug);
 		SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
 
-		rasterizer_set_vertex_shader_permutation(_vs_lens_flare, _rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_lens_flare, _rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;

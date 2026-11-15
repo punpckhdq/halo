@@ -232,7 +232,7 @@ void _rasterizer_screen_effect(
 
 		match_vassert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_screen_effect.c", 286, parameters->convolution_type != _rasterizer_screen_effect_convolution_type_blur || !parameters->convolution_mask, "blur effect cannot specify convolution mask");
 
-		rasterizer_set_vertex_shader_permutation(_vs_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		for (pass = 0; pass<pass_count; pass++)
 		{
@@ -770,7 +770,7 @@ void _rasterizer_screen_flash(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;

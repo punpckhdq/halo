@@ -86,7 +86,7 @@ void rasterizer_plasma_energy_draw(
 		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_transparent_plasma_m, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_plasma_m, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_plasma_energy.c", 105, plasma->primary_noise_map_animation_period!=0.0f);
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_plasma_energy.c", 106, plasma->secondary_noise_map_animation_period!=0.0f);

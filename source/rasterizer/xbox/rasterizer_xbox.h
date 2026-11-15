@@ -6,6 +6,10 @@ RASTERIZER_XBOX.H
 #define __RASTERIZER_XBOX_H
 #pragma once
 
+/* ---------- headers */
+
+#include "rasterizer/xbox/rasterizer_xbox_vertex_shaders.h"
+
 /* ---------- constants */
 
 enum
@@ -27,78 +31,6 @@ enum
 enum
 {
 	RASTERIZER_MAXIMUM_TEXTURE_STAGES = 4,
-};
-
-enum
-{
-	_vs_debug = 0,
-	_vs_decal,
-	_vs_effect_multitexture,
-	_vs_screen2,
-	_vs_screen,
-	_vs_model_fog_screen,
-	_vs_environment_fog,
-	_vs_environment_vectors_debug1, /* fake name */
-	_vs_environment_fog_screen,
-	_vs_model_fast,
-	_vs_model,
-	_vs_detail_object_type1,
-	_vs_effect_multitexture_screenspace,
-	_vs_model_zbuffer,
-	_vs_transparent_water_reflection_m,
-	_vs_transparent_plasma_m,
-	_vs_environment_lightmap,
-	_vs_model_fogged,
-	_vs_transparent_water_opacity_m,
-	_vs_transparent_generic_object_centered,
-	_vs_transparent_water_opacity,
-	_vs_environment_specular_light,
-	_vs_transparent_meter,
-	_vs_transparent_water_reflection,
-	_vs_transparent_generic,
-	_vs_transparent_glass_diffuse_light,
-	_vs_environment_reflection_bumped,
-	_vs_model_scenery,
-	_vs_transparent_glass_reflection_bumped,
-	_vs_environment_shadow,
-	_vs_transparent_glass_tint_m,
-	_vs_transparent_generic_lit_m,
-	_vs_transparent_meter_m,
-	_vs_detail_object_type0,
-	_vs_transparent_generic_reflection,
-	_vs_transparent_generic_viewer_centered,
-	_vs_transparent_glass_reflection_flat_m,
-	_vs_environment_vectors_debug0, /* fake name */
-	_vs_convolution,
-	_vs_model_shadow,
-	_vs_environment_texture,
-	_vs_environment_specular_spot_light,
-	_vs_environment_reflection_flat,
-	_vs_transparent_glass_reflection_flat,
-	_vs_environment_reflection_radiosity,
-	_vs_transparent_generic_object_centered_m,
-	_vs_transparent_glass_tint,
-	_vs_transparent_generic_m,
-	_vs_transparent_generic_screenspace,
-	_vs_environment_diffuse_light,
-	_vs_transparent_glass_diffuse_light_m,
-	_vs_environment_reflection_mirror,
-	_vs_environment_vectors_debug5, /* fake name */
-	_vs_environment_vectors_debug4, /* fake name */
-	_vs_environment_vectors_debug2, /* fake name */
-	_vs_environment_vectors_debug3, /* fake name */
-	_vs_lens_flare,
-	_vs_transparent_generic_reflection_m,
-	_vs_environment_reflection_lightmap_mask,
-	_vs_environment_specular_lightmap,
-	_vs_transparent_generic_screenspace_m,
-	_vs_transparent_glass_reflection_mirror,
-	_vs_transparent_generic_viewer_centered_m,
-	_vs_transparent_glass_reflection_bumped_m,
-	_vs_model_active_camouflage,
-	_vs_effect,
-	_vs_effect_zsprite,
-	NUMBER_OF_VERTEX_SHADERS
 };
 
 enum
@@ -181,16 +113,6 @@ enum
 
 /* fake name */
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
-
-/* ---------- structures */
-
-struct rasterizer_vertex_shader /* fake name */
-{
-	unsigned long *declaration;
-	unsigned long *code;
-	unsigned long handle;
-	long size; /* fake name */
-};
 
 /* ---------- prototypes/RASTERIZER_XBOX.C */
 
@@ -491,7 +413,6 @@ extern D3DPIXELSHADERDEF pixel_shader;
 extern unsigned long renderstate_table[D3DRS_MAX];
 extern unsigned long texturestagestate_table[D3DTSS_MAXSTAGES][D3DTSS_MAX];
 extern IDirect3DBaseTexture8 *texture_table[D3DTSS_MAXSTAGES];
-extern struct rasterizer_vertex_shader vertex_shader_table[NUMBER_OF_VERTEX_SHADERS];
 
 /* ---------- public code */
 

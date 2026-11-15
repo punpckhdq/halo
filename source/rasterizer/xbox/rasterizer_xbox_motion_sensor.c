@@ -59,7 +59,7 @@ void _rasterizer_hud_motion_sensor_blip_begin(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
@@ -165,7 +165,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
@@ -249,7 +249,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;

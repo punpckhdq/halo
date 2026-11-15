@@ -260,7 +260,7 @@ void _rasterizer_environment_lightmap_draw(
 				SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
 				SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-				rasterizer_set_vertex_shader_permutation(_vs_environment_vectors_debug0, vertex_buffer->type, vectors[vector_index].vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_vectors_debug0, vertex_buffer->type, vectors[vector_index].vertex_shader_permutation);
 
 				memset(&pixel_shader, 0, sizeof(pixel_shader));
 				pixel_shader.PSTextureModes = PS_TEXTUREMODES(normal_map ? PS_TEXTUREMODES_PROJECT2D : PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP, PS_TEXTUREMODES_CUBEMAP);
@@ -325,7 +325,7 @@ void _rasterizer_environment_lightmap_draw(
 
 		shader_environment = shader_environment_get(shader);
 		illumination = &shader_environment->environment.self_illumination;
-		rasterizer_set_vertex_shader_permutation(_vs_environment_lightmap, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_lightmap, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 
 		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TEST_FLAG(shader_environment->environment.flags, _shader_environment_alpha_tested_bit) && rasterizer_debug_options.environment_alpha_testing_enabled);
 
@@ -713,7 +713,7 @@ void _rasterizer_environment_diffuse_light_draw(
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 831, vertex_buffer);
 
-		rasterizer_set_vertex_shader_permutation(_vs_environment_diffuse_light, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_diffuse_light, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 
 		rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, TEST_FLAG(shader_environment->environment.flags, _shader_environment_bump_map_is_specular_mask_bit) ? NONE : shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
@@ -842,7 +842,7 @@ void _rasterizer_environment_diffuse_texture_draw(
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 995, vertex_buffer);
 
-		rasterizer_set_vertex_shader_permutation(_vs_environment_texture, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_texture, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 
 		base_map_dimensions = *rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_multiplicative, shader_environment->environment.diffuse.base_map.index, shader_permutation_index);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
@@ -1281,7 +1281,7 @@ void _rasterizer_environment_specular_light_draw(
 		{
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment.c", 1645, vertex_buffer);
 
-			rasterizer_set_vertex_shader_permutation(_vs_environment_specular_light, vertex_buffer->type, specular_light_vertex_shader_permutation_index);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_specular_light, vertex_buffer->type, specular_light_vertex_shader_permutation_index);
 
 			rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
 			SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
@@ -1508,7 +1508,7 @@ void _rasterizer_environment_specular_lightmap_draw(
 
 		if (shader_environment->environment.specular.brightness > 0.f && TEST_FLAG(shader_environment->environment.specular.flags, _shader_environment_specular_lightmap_bit))
 		{
-			rasterizer_set_vertex_shader_permutation(_vs_environment_specular_light, vertex_buffer->type, _environment_specular_light_vertex_shader_permutation_lightmap);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_specular_light, vertex_buffer->type, _environment_specular_light_vertex_shader_permutation_lightmap);
 
 			rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_vector, shader_environment->environment.diffuse.bump_map.index, shader_permutation_index);
 			SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
@@ -1704,7 +1704,7 @@ void _rasterizer_environment_reflection_lightmap_mask_draw(
 		if ((shader_environment->environment.reflection.view_perpendicular_brightness > 0.f || shader_environment->environment.reflection.view_parallel_brightness > 0.f) &&
 			shader_environment->environment.reflection.lightmap_brightness_scale < 1.f)
 		{
-			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection_lightmap_mask, vertex_buffer->type, _vertex_shader_permutation_default);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_reflection_lightmap_mask, vertex_buffer->type, _vertex_shader_permutation_default);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -1833,7 +1833,7 @@ void _rasterizer_environment_reflection_mirror_draw(
 			SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
 			SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection_mirror, vertex_buffer->type, _vertex_shader_permutation_default);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_reflection_mirror, vertex_buffer->type, _vertex_shader_permutation_default);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
@@ -2003,7 +2003,7 @@ void _rasterizer_environment_reflection_draw(
 			SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
 			SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-			rasterizer_set_vertex_shader_permutation(_vs_environment_reflection_flat, vertex_buffer->type, reflection_type);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_reflection_flat, vertex_buffer->type, reflection_type);
 
 			{
 				real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =

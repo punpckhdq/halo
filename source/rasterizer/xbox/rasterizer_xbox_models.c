@@ -276,7 +276,7 @@ void rasterizer_model_draw_environment_shader(
 			vertex_shader_permutation = _model_vertex_shader_permutation_scenery;
 		}
 
-		rasterizer_set_vertex_shader_permutation(_vs_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
 
 		if (rasterizer_debug_options.statistics_mode >= _rasterizer_statistics_mode_fps_only)
 		{
@@ -741,7 +741,7 @@ void _rasterizer_model_draw(
 					vertex_shader_permutation = _model_vertex_shader_permutation_fast;
 				}
 
-				rasterizer_set_vertex_shader_permutation(_vs_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
 
 				if (rasterizer_debug_options.statistics_mode >= _rasterizer_statistics_mode_fps_only)
 				{

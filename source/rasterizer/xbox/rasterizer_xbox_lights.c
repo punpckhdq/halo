@@ -47,7 +47,7 @@ static void rasterizer_sun_glow_copy_source(
 	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 	SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-	rasterizer_set_vertex_shader_permutation(_vs_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
+	rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 	{
 		real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
@@ -169,7 +169,7 @@ static short rasterizer_sun_glow_convolve(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		{
 			real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
@@ -320,7 +320,7 @@ void rasterizer_sun_glow_draw(
 				short target;
 				short pass;
 
-				rasterizer_set_vertex_shader_permutation(_vs_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 
 				SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
 				SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA);
@@ -342,7 +342,7 @@ void rasterizer_sun_glow_draw(
 				D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, bounds.x0, bounds.y1));
 				D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 
-				rasterizer_set_vertex_shader_permutation(_vs_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 				rasterizer_set_texture_direct(0, global_rasterizer_data->glow.index, 0);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -382,7 +382,7 @@ void rasterizer_sun_glow_draw(
 				rasterizer_sun_glow_copy_source(_rasterizer_target_sun_glow_secondary, &screen_bounds);
 				target = rasterizer_sun_glow_convolve(_rasterizer_target_sun_glow_primary, _rasterizer_target_sun_glow_secondary, 4);
 
-				rasterizer_set_vertex_shader_permutation(_vs_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_lens_flare,_rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 				rasterizer_set_target_as_texture(0, target, 0);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 				SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);

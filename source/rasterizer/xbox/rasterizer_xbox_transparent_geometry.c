@@ -141,7 +141,7 @@ void rasterizer_transparent_geometry_group_draw(
 				real maximum;
 				real scale;
 				long component_index;
-				short vertex_shader_table[NUMBER_OF_RASTERIZER_VERTEX_TYPES] = { _vs_environment_fog, _vs_environment_fog, _vs_environment_fog, _vs_environment_fog, _vs_model_zbuffer, _vs_model_zbuffer, _vs_effect, _vs_effect, NONE, NONE, NONE, NONE };
+				short vertex_shader_table[NUMBER_OF_RASTERIZER_VERTEX_TYPES] = { _vertex_shader_environment_fog, _vertex_shader_environment_fog, _vertex_shader_environment_fog, _vertex_shader_environment_fog, _vertex_shader_model_zbuffer, _vertex_shader_model_zbuffer, _vertex_shader_effect, _vertex_shader_effect, NONE, NONE, NONE, NONE };
 				short vertex_type = rasterizer_transparent_geometry_get_primary_vertex_type(group);
 				boolean accumulate = rasterizer_debug_options.pad3>=1000 || rasterizer_debug_options.pad3<0;
 
@@ -274,7 +274,7 @@ void rasterizer_transparent_geometry_group_draw(
 				{
 					struct transparent_geometry_group const *source_group = group;
 
-					rasterizer_set_vertex_shader_permutation(_vs_model_zbuffer, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
+					rasterizer_set_vertex_shader_permutation(_vertex_shader_model_zbuffer, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
 
 					SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_NONE);
 					SetRenderStateSmart(D3DRS_COLORWRITEENABLE, 0);
@@ -476,7 +476,7 @@ void rasterizer_transparent_geometry_group_draw(
 						SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, TRUE);
 						SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
 						rasterizer_set_framebuffer_blend_function(shader_effect->effect.framebuffer_blend_function);
-						rasterizer_set_vertex_shader_permutation(_vs_effect, vertex_type, shader_permutation_index);
+						rasterizer_set_vertex_shader_permutation(_vertex_shader_effect, vertex_type, shader_permutation_index);
 
 						{
 							real vsh_constants__inverse[VSH_CONSTANTS__INVERSE_COUNT][4] =
@@ -647,7 +647,7 @@ void rasterizer_transparent_geometry_group_draw(
 							rasterizer_transparent_geometry_group_draw(&layer_group, dirty);
 						}
 
-						rasterizer_set_vertex_shader_permutation(_vs_transparent_generic, vertex_type, shader_permutation_index);
+						rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_generic, vertex_type, shader_permutation_index);
 
 						SetRenderStateSmart(D3DRS_CULLMODE, TEST_FLAG(shader_transparent_generic->generic.flags, _shader_transparent_generic_two_sided_bit) ? D3DCULL_NONE : D3DCULL_CCW);
 						SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
@@ -930,7 +930,7 @@ void rasterizer_transparent_geometry_group_draw(
 							rasterizer_transparent_geometry_group_draw(&layer_group, dirty);
 						}
 
-						rasterizer_set_vertex_shader_permutation(_vs_transparent_generic, vertex_type, shader_permutation_index);
+						rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_generic, vertex_type, shader_permutation_index);
 
 						SetRenderStateSmart(D3DRS_CULLMODE, TEST_FLAG(shader_transparent_chicago->chicago.flags, _shader_transparent_chicago_two_sided_bit) ? D3DCULL_NONE : D3DCULL_CCW);
 						SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
@@ -1189,7 +1189,7 @@ void rasterizer_transparent_geometry_group_draw(
 							SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 							SetRenderStateSmart(D3DRS_ALPHATESTENABLE, TRUE);
 							SetRenderStateSmart(D3DRS_ALPHAREF, 0);
-							rasterizer_set_vertex_shader_permutation(_vs_transparent_glass_tint, vertex_type, shader_permutation_index);
+							rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_glass_tint, vertex_type, shader_permutation_index);
 
 							vsh_constants__texscale[0][0] = group->model_base_map_scale.i * shader_transparent_glass->glass.tint_map_scale;
 							vsh_constants__texscale[0][1] = group->model_base_map_scale.j * shader_transparent_glass->glass.tint_map_scale;
@@ -1280,7 +1280,7 @@ void rasterizer_transparent_geometry_group_draw(
 							SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_ONE);
 							SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 							SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
-							rasterizer_set_vertex_shader_permutation(_vs_transparent_glass_reflection_flat, vertex_type, reflection_type);
+							rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_glass_reflection_flat, vertex_type, reflection_type);
 
 							vsh_constants__texscale[0][0] = group->model_base_map_scale.i * shader_transparent_glass->glass.reflection_bump_map_scale;
 							vsh_constants__texscale[0][1] = group->model_base_map_scale.j * shader_transparent_glass->glass.reflection_bump_map_scale;
@@ -1404,7 +1404,7 @@ void rasterizer_transparent_geometry_group_draw(
 								SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 							}
 
-							rasterizer_set_vertex_shader_permutation(_vs_transparent_glass_diffuse_light, vertex_type, shader_permutation_index);
+							rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_glass_diffuse_light, vertex_type, shader_permutation_index);
 
 							vsh_constants__texscale[0][0] = shader_transparent_glass->glass.diffuse_map_scale * group->model_base_map_scale.i;
 							vsh_constants__texscale[0][1] = shader_transparent_glass->glass.diffuse_map_scale * group->model_base_map_scale.j;
@@ -1541,7 +1541,7 @@ void rasterizer_transparent_geometry_group_draw(
 						SetRenderStateSmart(D3DRS_BLENDCOLOR, tint_pixel);
 						SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 						SetRenderStateSmart(D3DRS_ALPHATESTENABLE, FALSE);
-						rasterizer_set_vertex_shader_permutation(_vs_transparent_meter, vertex_type, shader_permutation_index);
+						rasterizer_set_vertex_shader_permutation(_vertex_shader_transparent_meter, vertex_type, shader_permutation_index);
 
 						vsh_constants__texscale[0][0] = 1.f;
 						vsh_constants__texscale[0][1] = 1.f;

@@ -301,7 +301,7 @@ void _rasterizer_decals_begin(
 			}
 		}
 
-		rasterizer_set_vertex_shader_permutation(_vs_decal, _rasterizer_vertex_type_decal, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_decal, _rasterizer_vertex_type_decal, _vertex_shader_permutation_default);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);

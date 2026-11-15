@@ -304,6 +304,7 @@
 					"source/physics/point_physics.h",
 					"source/physics/terrain_definitions.h",
 					"source/rasterizer/xbox/rasterizer_xbox.h",
+					"source/rasterizer/xbox/rasterizer_xbox_vertex_shaders.h",
 					"source/rasterizer/common/rasterizer_common.h",
 					"source/rasterizer/rasterizer.h",
 					"source/rasterizer/rasterizer_cinematics.h",
