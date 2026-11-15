@@ -6,6 +6,10 @@ RASTERIZER_XBOX.H
 #define __RASTERIZER_XBOX_H
 #pragma once
 
+/* ---------- headers */
+
+#include "rasterizer/xbox/rasterizer_xbox_vertex_shaders.h"
+
 /* ---------- constants */
 
 enum
@@ -20,79 +24,13 @@ enum
 
 enum
 {
-	RASTERIZER_MAXIMUM_TEXTURE_STAGES = 4,
+	RASTERIZER_TARGET_WATER_SIZE = 128,
+	RASTERIZER_TARGET_WATER_MAX_MIPMAP_LEVELS = 4
 };
 
 enum
 {
-	_vs_debug = 0,
-	_vs_decal,
-	_vs_effect_multitexture,
-	_vs_screen2,
-	_vs_screen,
-	_vs_model_fog_screen,
-	_vs_environment_fog,
-	_vs_environment_vectors_debug1, /* fake name */
-	_vs_environment_fog_screen,
-	_vs_model_fast,
-	_vs_model,
-	_vs_detail_object_type1,
-	_vs_effect_multitexture_screenspace,
-	_vs_model_zbuffer,
-	_vs_transparent_water_reflection_m,
-	_vs_transparent_plasma_m,
-	_vs_environment_lightmap,
-	_vs_model_fogged,
-	_vs_transparent_water_opacity_m,
-	_vs_transparent_generic_object_centered,
-	_vs_transparent_water_opacity,
-	_vs_environment_specular_light,
-	_vs_transparent_meter,
-	_vs_transparent_water_reflection,
-	_vs_transparent_generic,
-	_vs_transparent_glass_diffuse_light,
-	_vs_environment_reflection_bumped,
-	_vs_model_scenery,
-	_vs_transparent_glass_reflection_bumped,
-	_vs_environment_shadow,
-	_vs_transparent_glass_tint_m,
-	_vs_transparent_generic_lit_m,
-	_vs_transparent_meter_m,
-	_vs_detail_object_type0,
-	_vs_transparent_generic_reflection,
-	_vs_transparent_generic_viewer_centered,
-	_vs_transparent_glass_reflection_flat_m,
-	_vs_environment_vectors_debug0, /* fake name */
-	_vs_convolution,
-	_vs_model_shadow,
-	_vs_environment_texture,
-	_vs_environment_specular_spot_light,
-	_vs_environment_reflection_flat,
-	_vs_transparent_glass_reflection_flat,
-	_vs_environment_reflection_radiosity,
-	_vs_transparent_generic_object_centered_m,
-	_vs_transparent_glass_tint,
-	_vs_transparent_generic_m,
-	_vs_transparent_generic_screenspace,
-	_vs_environment_diffuse_light,
-	_vs_transparent_glass_diffuse_light_m,
-	_vs_environment_reflection_mirror,
-	_vs_environment_vectors_debug5, /* fake name */
-	_vs_environment_vectors_debug4, /* fake name */
-	_vs_environment_vectors_debug2, /* fake name */
-	_vs_environment_vectors_debug3, /* fake name */
-	_vs_lens_flare,
-	_vs_transparent_generic_reflection_m,
-	_vs_environment_reflection_lightmap_mask,
-	_vs_environment_specular_lightmap,
-	_vs_transparent_generic_screenspace_m,
-	_vs_transparent_glass_reflection_mirror,
-	_vs_transparent_generic_viewer_centered_m,
-	_vs_transparent_glass_reflection_bumped_m,
-	_vs_model_active_camouflage,
-	_vs_effect,
-	_vs_effect_zsprite,
-	NUMBER_OF_VERTEX_SHADERS
+	RASTERIZER_MAXIMUM_TEXTURE_STAGES = 4,
 };
 
 enum
@@ -137,6 +75,8 @@ enum
 	VSH_CONSTANTS__TEXANIM_COUNT = 8,
 	VSH_CONSTANTS__POINTLIGHT_OFFSET = -81,
 	VSH_CONSTANTS__POINTLIGHT_COUNT = 5,
+	VSH_CONSTANTS__SHADOW_OFFSET = -81,
+	VSH_CONSTANTS__SHADOW_COUNT = 5,
 	VSH_CONSTANTS__DETAILOBJ_OFFSET = -81,
 	VSH_CONSTANTS__DETAILOBJ_COUNT = 6,
 	VSH_CONSTANTS__VERTEXLIGHT_OFFSET = -79,
@@ -146,8 +86,12 @@ enum
 	VSH_CONSTANTS__SCREENPROJ_COUNT = 5,
 	VSH_CONSTANTS__SCREENPROJ2_OFFSET = -63,
 	VSH_CONSTANTS__SCREENPROJ2_COUNT = 6,
+	VSH_CONSTANTS__ZSPRITE_OFFSET = -63,
+	VSH_CONSTANTS__ZSPRITE_COUNT = 2,
 	VSH_CONSTANTS__NODEMATRIX_OFFSET = -36,
-	VSH_CONSTANTS__DETAILOBJ_FRAMEDATA_OFFSET = -36
+	VSH_CONSTANTS__DETAILOBJ_FRAMEDATA_OFFSET = -36,
+	VSH_CONSTANTS__INVERSE_OFFSET = 88,
+	VSH_CONSTANTS__INVERSE_COUNT = 3
 };
 
 /* ---------- macros */
@@ -157,21 +101,16 @@ enum
 #define RASTERIZER_DYNAMIC_BUFFER_USAGE (D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY)
 #define RASTERIZER_DYNAMIC_BUFFER_POOL D3DPOOL_DEFAULT
 
+#define RASTERIZER_STATIC_BUFFER_USAGE D3DUSAGE_WRITEONLY
+#define RASTERIZER_STATIC_BUFFER_POOL D3DPOOL_MANAGED
+
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH (RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH / 5) /* fake name */
 #define RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_HEIGHT (RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT / 5) /* fake name */
 
+#define RASTERIZER_MAXIMUM_COMBINER_STAGES 8
+
 /* fake name */
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
-
-/* ---------- structures */
-
-struct rasterizer_vertex_shader /* fake name */
-{
-	unsigned long *declaration;
-	unsigned long *code;
-	unsigned long handle;
-	long size; /* fake name */
-};
 
 /* ---------- prototypes/RASTERIZER_XBOX.C */
 
@@ -179,7 +118,7 @@ boolean rasterizer_preinitialize__fill_you_up_with_the_devils_cock(void);
 void *rasterizer_get_bitmap_default_hardware_format(struct bitmap_data const *bitmap);
 boolean _rasterizer_initialize(void);
 void _rasterizer_reset_state(void);
-void rasterizer_spin_begin(void);
+void rasterizer_spin_begin(short spin_type);
 void rasterizer_spin_end(void);
 void _rasterizer_frame_begin(struct rasterizer_frame_begin_parameters const *parameters);
 boolean _rasterizer_windows_begin(void);
@@ -219,6 +158,7 @@ void rasterizer_error(HRESULT hr, char const *format, ...);
 
 /* ---------- prototypes/RASTERIZER_XBOX_PROFILE.C */
 
+boolean rasterizer_profile_enabled(void);
 boolean rasterizer_profile_initialize(void);
 void rasterizer_profile_dispose(void);
 void rasterizer_profile_frame_begin(void);
@@ -228,6 +168,9 @@ void rasterizer_profile_window_end(void);
 void _rasterizer_profile_enable(boolean enable);
 void rasterizer_profile_begin(short profile);
 void rasterizer_profile_end(short profile);
+char *rasterizer_profile_get_string(short profile);
+real rasterizer_profile_query(short profile);
+long rasterizer_profile_query_pushbuffer(short profile);
 
 /* ---------- prototypes/RASTERIZER_XBOX_VERTEX_SHADERS_INITIALIZE.C */
 
@@ -236,7 +179,7 @@ void rasterizer_vertex_shaders_dispose(void);
 
 /* ---------- prototypes/RASTERIZER_XBOX_VERTEX_SHADERS_RUNTIME.C */
 
-boolean rasterizer_set_vertex_shader_permutation(short vertex_shader_index, short vertex_type, short permutation_index);
+void rasterizer_set_vertex_shader_permutation(short vertex_shader_index, short vertex_type, short permutation_index);
 
 /* ---------- prototypes/RASTERIZER_XBOX_DECALS.C */
 
@@ -414,6 +357,14 @@ void rasterizer_transparent_geometry_groups_end(void);
 boolean rasterizer_transparent_geometry_initialize_aux_buffer(void);
 void rasterizer_transparent_geometry_dispose_aux_buffer(void);
 
+/* ---------- prototypes/SHADER_TRANSPARENT_CHICAGO_PREPROCESSOR.C */
+
+boolean shader_transparent_chicago_create(struct shader const *shader, D3DPIXELSHADERDEF *pixel_shader);
+
+/* ---------- prototypes/SHADER_TRANSPARENT_GENERIC_PREPROCESSOR.C */
+
+boolean shader_transparent_generic_create(struct shader const *shader, D3DPIXELSHADERDEF *pixel_shader);
+
 /* ---------- prototypes/RASTERIZER_XBOX_TEXT.C */
 
 void rasterizer_text_begin(struct rasterizer_dynamic_screen_geometry_parameters const *parameters);
@@ -425,6 +376,11 @@ void rasterizer_text_end(void);
 void rasterizer_water_set_visibility_for_frame(boolean visibility);
 void rasterizer_water_set_visibility_for_window(boolean visibility);
 boolean rasterizer_water_get_visibility_for_window(void);
+void rasterizer_water_draw(struct transparent_geometry_group const *group);
+
+/* ---------- prototypes/RASTERIZER_XBOX_PLASMA_ENERGY.C */
+
+void rasterizer_plasma_energy_draw(struct transparent_geometry_group const *group);
 
 /* ---------- prototypes/RASTERIZER_XBOX_WIDGETS.C */
 
@@ -455,7 +411,6 @@ extern D3DPIXELSHADERDEF pixel_shader;
 extern unsigned long renderstate_table[D3DRS_MAX];
 extern unsigned long texturestagestate_table[D3DTSS_MAXSTAGES][D3DTSS_MAX];
 extern IDirect3DBaseTexture8 *texture_table[D3DTSS_MAXSTAGES];
-extern struct rasterizer_vertex_shader vertex_shader_table[NUMBER_OF_VERTEX_SHADERS];
 
 /* ---------- public code */
 

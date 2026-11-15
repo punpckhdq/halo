@@ -316,7 +316,7 @@ void _rasterizer_environment_fog_draw(
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 435, vertex_buffer);
 
-		rasterizer_set_vertex_shader_permutation(_vs_environment_fog, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_fog, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 		rasterizer_draw_dynamic_triangles_static_vertices(
 			dynamic_triangle_buffer_index,
 			first_triangle_index,
@@ -726,7 +726,7 @@ void _rasterizer_environment_fog_screen_begin(
 						SetTextureStageStateSmart(1, D3DTSS_ALPHAKILL, D3DTALPHAKILL_DISABLE);
 					}
 
-					rasterizer_set_vertex_shader_permutation(_vs_model_fog_screen, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
+					rasterizer_set_vertex_shader_permutation(_vertex_shader_model_fog_screen, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
 
 					node_matrices = group->node_matrices;
 
@@ -788,7 +788,7 @@ void _rasterizer_environment_fog_screen_draw(
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 996, global_window_parameters.fog.screen);
 			match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_environment_fog.c", 997, global_window_parameters.window_index>=0 && global_window_parameters.window_index<MAXIMUM_WINDOWS);
 
-			rasterizer_set_vertex_shader_permutation(_vs_environment_fog_screen, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_environment_fog_screen, vertex_buffer->type, shader_get_vertex_shader_permutation(shader));
 			rasterizer_draw_dynamic_triangles_static_vertices(
 				dynamic_triangle_buffer_index,
 				first_triangle_index,
@@ -844,7 +844,7 @@ void _rasterizer_environment_fog_screen_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, D3DZB_FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution,_rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		memset(&pixel_shader, 0, sizeof(pixel_shader));
 		pixel_shader.PSTextureModes = PS_TEXTUREMODES(

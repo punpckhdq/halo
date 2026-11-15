@@ -26,7 +26,7 @@ void rasterizer_debug_drawing_begin(
 
 	if (rasterizer_debug_options.draw_debug_geometry)
 	{
-		rasterizer_set_vertex_shader_permutation(_vs_debug, _rasterizer_vertex_type_debug, _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_debug, _rasterizer_vertex_type_debug, _vertex_shader_permutation_default);
 
 		SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_NONE);
 		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
@@ -80,7 +80,7 @@ void _rasterizer_debug_immediate_begin(
 	SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
 	SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
 
-	rasterizer_set_vertex_shader_permutation(_vs_debug, _rasterizer_vertex_type_debug, _vertex_shader_permutation_default);
+	rasterizer_set_vertex_shader_permutation(_vertex_shader_debug, _rasterizer_vertex_type_debug, _vertex_shader_permutation_default);
 
 	memset(&pixel_shader, 0, sizeof(pixel_shader));
 	pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE, PS_TEXTUREMODES_NONE);
@@ -165,7 +165,7 @@ void _rasterizer_debug_immediate_begin_screenspace(
 	SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 	SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-	rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+	rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 	{
 		short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;

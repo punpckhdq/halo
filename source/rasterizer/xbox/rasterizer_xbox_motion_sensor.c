@@ -41,7 +41,7 @@ void _rasterizer_hud_motion_sensor_blip_begin(
 	{
 		rasterizer_motion_sensor_begin_said_to_draw = TRUE;
 
-		rasterizer_set_target(_rasterizer_target_sun_glow_primary, 0, 0, TRUE, FALSE);
+		rasterizer_set_target(_rasterizer_target_sun_glow_primary, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), TRUE, FALSE);
 		rasterizer_set_texture_bitmap_data(0, blip_bitmap);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_BORDER);
@@ -59,7 +59,7 @@ void _rasterizer_hud_motion_sensor_blip_begin(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
@@ -165,7 +165,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
@@ -230,7 +230,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, minimum));
 		D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 		rasterizer_set_target_as_texture(0, _rasterizer_target_sun_glow_primary, 0);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -249,7 +249,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
@@ -291,7 +291,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 	}
 	else if (rasterizer_debug_options.draw_hud_motion_sensor && rasterizer_motion_sensor_begin_said_to_draw)
 	{
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 	}
 
 	return;

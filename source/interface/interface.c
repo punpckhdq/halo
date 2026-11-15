@@ -53,38 +53,6 @@ enum
 	PROFILE_DISPLAY_BUFFER_SIZE = 8192				/* fake name */
 };
 
-enum
-{
-	_rasterizer_stall_unknown = 0,			/* fake name */
-	_rasterizer_stall_pushbuffer,			/* fake name */
-	_rasterizer_stall_object_lock0,		/* fake name */
-	_rasterizer_stall_object_lock1,		/* fake name */
-	_rasterizer_stall_object_lock2,		/* fake name */
-	_rasterizer_stall_object_lock3,		/* fake name */
-	_rasterizer_stall_object_lock4,		/* fake name */
-	_rasterizer_stall_object_lock5,		/* fake name */
-	_rasterizer_stall_object_lock6,		/* fake name */
-	_rasterizer_stall_object_lock7,		/* fake name */
-	_rasterizer_stall_object_lock8,		/* fake name */
-	_rasterizer_stall_object_lock9,		/* fake name */
-	_rasterizer_stall_object_lock10,		/* fake name */
-	_rasterizer_stall_object_lock11,		/* fake name */
-	_rasterizer_stall_object_lock12,		/* fake name */
-	_rasterizer_stall_object_lock13,		/* fake name */
-	_rasterizer_stall_object_lock14,		/* fake name */
-	_rasterizer_stall_object_lock15,		/* fake name */
-	_rasterizer_stall_object_lock16,		/* fake name */
-	_rasterizer_stall_object_lock17,		/* fake name */
-	_rasterizer_stall_unknown20,			/* fake name */
-	_rasterizer_stall_present,				/* fake name */
-	_rasterizer_stall_block_until_idle,		/* fake name */
-	_rasterizer_stall_block_until_vblank,	/* fake name */
-	_rasterizer_stall_block_on_fence,		/* fake name */
-	_rasterizer_stall_cpu,					/* fake name */
-	_rasterizer_stall_occlusion_test,		/* fake name */
-	NUMBER_OF_RASTERIZER_STALL_TYPES		/* fake name */
-};
-
 /* ---------- macros */
 
 #define PROFILE_GRAPH_SECONDS 10.f	/* fake name */

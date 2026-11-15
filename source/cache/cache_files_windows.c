@@ -297,7 +297,7 @@ static void cached_map_issue_async_write(
 }
 
 static void cached_map_issue_async_request(
-	BOOL (__stdcall *async_request_function)(HANDLE, LPVOID, DWORD, LPOVERLAPPED, LPOVERLAPPED_COMPLETION_ROUTINE),
+	BOOL (__stdcall *async_request_function)(HANDLE, LPCVOID, DWORD, LPOVERLAPPED, LPOVERLAPPED_COMPLETION_ROUTINE),
 	HANDLE file,
 	OVERLAPPED *overlapped,
 	void *buffer,

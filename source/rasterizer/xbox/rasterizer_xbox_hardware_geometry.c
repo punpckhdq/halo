@@ -16,11 +16,6 @@ RASTERIZER_XBOX_HARDWARE_GEOMETRY.C
 #include "shaders.h"
 #include "rasterizer/common/rasterizer_common.h"
 
-/* ---------- macros */
-
-#define RASTERIZER_STATIC_BUFFER_USAGE D3DUSAGE_WRITEONLY
-#define RASTERIZER_STATIC_BUFFER_POOL D3DPOOL_MANAGED
-
 /* ---------- public code */
 
 boolean rasterizer_vertex_buffer_new(

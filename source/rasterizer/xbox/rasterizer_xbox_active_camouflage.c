@@ -63,7 +63,7 @@ void rasterizer_active_camouflage_cache_primary_render_target(
 		SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-		rasterizer_set_vertex_shader_permutation(_vs_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_screen, _rasterizer_vertex_type_dynamic_screen, _screen_vertex_shader_permutation_screen);
 
 		{
 			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
@@ -87,7 +87,7 @@ void rasterizer_active_camouflage_cache_primary_render_target(
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
-		rasterizer_set_target(_rasterizer_target_render_secondary, 0, 0, FALSE, FALSE);
+		rasterizer_set_target(_rasterizer_target_render_secondary, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, FALSE);
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_none);
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
@@ -101,7 +101,7 @@ void rasterizer_active_camouflage_cache_primary_render_target(
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, 0, RASTERIZER_TARGET_RENDER_SECONDARY_HEIGHT);
 		IDirect3DDevice8_End(global_d3d_device);
 
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_reject);
 
 		bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH;
@@ -169,7 +169,7 @@ void rasterizer_active_camouflage_draw(
 			SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 			SetRenderStateSmart(D3DRS_ZBIAS, 0);
 
-			rasterizer_set_vertex_shader_permutation(_vs_model_zbuffer, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
+			rasterizer_set_vertex_shader_permutation(_vertex_shader_model_zbuffer, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
 
 			vsh_constants__texscale[0] = shader_model->model.detail_map_scale;
 			vsh_constants__texscale[1] = shader_model->model.detail_map_scale*shader_model->model.detail_map_v_scale;
@@ -283,7 +283,7 @@ void rasterizer_active_camouflage_draw(
 			SetRenderStateSmart(D3DRS_ALPHABLENDENABLE, FALSE);
 		}
 
-		rasterizer_set_vertex_shader_permutation(_vs_model_active_camouflage, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_model_active_camouflage, rasterizer_transparent_geometry_get_primary_vertex_type(group), _vertex_shader_permutation_default);
 
 		{
 			real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT*4];

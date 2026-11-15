@@ -159,6 +159,37 @@ enum
 	NUMBER_OF_RENDER_PLANAR_FOG_MODES,
 };
 
+enum
+{
+	_rasterizer_stall_unknown = 0,			/* fake name */
+	_rasterizer_stall_pushbuffer,			/* fake name */
+	_rasterizer_stall_object_lock0,		/* fake name */
+	_rasterizer_stall_object_lock1,		/* fake name */
+	_rasterizer_stall_object_lock2,		/* fake name */
+	_rasterizer_stall_object_lock3,		/* fake name */
+	_rasterizer_stall_object_lock4,		/* fake name */
+	_rasterizer_stall_object_lock5,		/* fake name */
+	_rasterizer_stall_object_lock6,		/* fake name */
+	_rasterizer_stall_object_lock7,		/* fake name */
+	_rasterizer_stall_object_lock8,		/* fake name */
+	_rasterizer_stall_object_lock9,		/* fake name */
+	_rasterizer_stall_object_lock10,		/* fake name */
+	_rasterizer_stall_object_lock11,		/* fake name */
+	_rasterizer_stall_object_lock12,		/* fake name */
+	_rasterizer_stall_object_lock13,		/* fake name */
+	_rasterizer_stall_object_lock14,		/* fake name */
+	_rasterizer_stall_object_lock15,		/* fake name */
+	_rasterizer_stall_object_lock16,		/* fake name */
+	_rasterizer_stall_object_lock17,		/* fake name */
+	_rasterizer_stall_unknown20,			/* fake name */
+	_rasterizer_stall_present,				/* fake name */
+	_rasterizer_stall_block_until_idle,		/* fake name */
+	_rasterizer_stall_block_until_vblank,	/* fake name */
+	_rasterizer_stall_block_on_fence,		/* fake name */
+	_rasterizer_stall_cpu,					/* fake name */
+	_rasterizer_stall_occlusion_test,		/* fake name */
+	NUMBER_OF_RASTERIZER_STALL_TYPES		/* fake name */
+};
 
 /* ---------- macros */
 
@@ -376,7 +407,10 @@ struct rasterizer_frame_statistics_s
 	long model_transparent_triangle_count; /* fake name */
 	long model_transparent_maximum_primitive_triangle_count; /* fake name */
 	long model_transparent_primitive_count; /* fake name */
-	long __unknownF4[4];
+	long model_shadow_count; /* fake name */
+	long model_shadow_vertex_count; /* fake name */
+	long model_shadow_triangle_count; /* fake name */
+	long model_shadow_primitive_count; /* fake name */
 	long dynamic_unlit_primitive_count; /* fake name */
 	long dynamic_unlit_triangle_count; /* fake name */
 	long dynamic_unlit_maximum_primitive_triangle_count; /* fake name */
@@ -641,6 +675,7 @@ void rasterizer_debug_draw(void);
 boolean rasterizer_frame_statistics_initialize(void);
 void rasterizer_frame_statistics_begin(void);
 void rasterizer_frame_statistics_get_fps(struct rasterizer_frame_statistics_s *frame_statistics);
+void rasterizer_fps_accumulate(void);
 long rasterizer_frame_statistics_count_static_vertices(struct triangle_buffer const *triangle_buffer, struct vertex_buffer const *vertex_buffer);
 long rasterizer_frame_statistics_count_dynamic_vertices(long dynamic_triangle_buffer_index, long first_triangle_index, long triangle_count);
 void rasterizer_frame_statistics_end(void);

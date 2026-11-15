@@ -190,68 +190,70 @@ void rasterizer_model_draw_environment_shader(
 	if (rasterizer_debug_options.draw_models)
 	{
 		struct shader_environment const *shader_environment;
-		real_vector3d forward;
 		short vertex_shader_permutation;
 		pixel32 cc0_pixel;
 		pixel32 cc0_error_pixel;
 		pixel32 cc1_pixel;
-		boolean alpha_blended_decal = FALSE;
+		boolean alpha_blended_decal;
+		real_vector3d forward;
 
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_models.c", 251, local_parameters);
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_models.c", 252, shader);
 
 		shader_environment = shader_environment_get(shader);
+		alpha_blended_decal = FALSE;
 		vector_from_points3d(&global_window_parameters.camera.position, &local_parameters->centroid, &forward);
 
 		if (TEST_FLAG(local_parameters->geometry_flags, _rasterizer_geometry_no_zbuffer_bit))
 		{
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ZENABLE, FALSE);
+			SetRenderStateSmart(D3DRS_ZBIAS, 0);
 		}
 		else
 		{
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZENABLE, TRUE);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZWRITEENABLE, !alpha_blended_decal);
-			IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+			SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
+			SetRenderStateSmart(D3DRS_ZWRITEENABLE, !alpha_blended_decal);
+			SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+			SetRenderStateSmart(D3DRS_ZBIAS, alpha_blended_decal ? rasterizer_debug_options.zbias : 0);
 		}
 
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ZBIAS, alpha_blended_decal ? rasterizer_debug_options.zbias : 0);
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+		SetRenderStateSmart(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHABLENDENABLE, alpha_blended_decal);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHATESTENABLE, !alpha_blended_decal && TEST_FLAG(shader_environment->environment.flags, _shader_environment_alpha_tested_bit));
+		SetRenderStateSmart(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		SetRenderStateSmart(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		SetRenderStateSmart(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		SetRenderStateSmart(D3DRS_ALPHATESTENABLE, !alpha_blended_decal && TEST_FLAG(shader_environment->environment.flags, _shader_environment_alpha_tested_bit));
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_ALPHAREF, 127);
 
 		rasterizer_set_texture(0, _bitmap_type_2d, _bitmap_usage_multiplicative, shader_environment->environment.diffuse.base_map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		rasterizer_set_texture(1, _bitmap_type_2d, _bitmap_usage_detail, shader_environment->environment.diffuse.primary_detail_map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(1, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		rasterizer_set_texture(2, _bitmap_type_2d, _bitmap_usage_multiplicative, TEST_FLAG(shader_environment->environment.flags, _shader_environment_alpha_tested_bit) ? shader_environment->environment.diffuse.bump_map.index : NONE, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(2, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		SetTextureStageStateSmart(2, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(2, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		rasterizer_set_texture(3, _bitmap_type_cube_map, _bitmap_usage_additive, shader_environment->environment.reflection.map.index, shader_permutation_index);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice8_SetTextureStageState(global_d3d_device, 3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_ADDRESSW, D3DTADDRESS_CLAMP);
+		SetTextureStageStateSmart(3, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
+		SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 		if (TEST_FLAG(shader_environment->environment.flags, _shader_environment_true_atmospheric_fog_bit))
 		{
@@ -265,16 +267,16 @@ void rasterizer_model_draw_environment_shader(
 		{
 			vertex_shader_permutation = _model_vertex_shader_permutation_normal;
 		}
-		else if (shader_environment->environment.reflection.map.index == NONE && local_parameters->skinning.node_matrix_count <= 1)
-		{
-			vertex_shader_permutation = _model_vertex_shader_permutation_scenery;
-		}
-		else
+		else if (shader_environment->environment.reflection.map.index != NONE || local_parameters->skinning.node_matrix_count > 1)
 		{
 			vertex_shader_permutation = _model_vertex_shader_permutation_fast;
 		}
+		else
+		{
+			vertex_shader_permutation = _model_vertex_shader_permutation_scenery;
+		}
 
-		rasterizer_set_vertex_shader_permutation(_vs_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
+		rasterizer_set_vertex_shader_permutation(_vertex_shader_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
 
 		if (rasterizer_debug_options.statistics_mode >= _rasterizer_statistics_mode_fps_only)
 		{
@@ -282,41 +284,41 @@ void rasterizer_model_draw_environment_shader(
 		}
 
 		{
-			real_argb_color reflection_view_perpendicular_color;
-			real_argb_color reflection_view_parallel_color;
-			real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4];
-			real vsh_constants__effect[VSH_CONSTANTS__EFFECT_COUNT][4];
-
-			reflection_view_perpendicular_color.alpha = shader_environment->environment.reflection.view_perpendicular_brightness * local_parameters->lighting.reflection_tint_color.alpha;
-			reflection_view_perpendicular_color.red = shader_environment->environment.specular.view_perpendicular_color.red * local_parameters->lighting.reflection_tint_color.red;
-			reflection_view_perpendicular_color.green = shader_environment->environment.specular.view_perpendicular_color.green * local_parameters->lighting.reflection_tint_color.green;
-			reflection_view_perpendicular_color.blue = shader_environment->environment.specular.view_perpendicular_color.blue * local_parameters->lighting.reflection_tint_color.blue;
-			reflection_view_parallel_color.alpha = shader_environment->environment.reflection.view_parallel_brightness * local_parameters->lighting.reflection_tint_color.alpha;
-			reflection_view_parallel_color.red = shader_environment->environment.specular.view_parallel_color.red * local_parameters->lighting.reflection_tint_color.red;
-			reflection_view_parallel_color.green = shader_environment->environment.specular.view_parallel_color.green * local_parameters->lighting.reflection_tint_color.green;
-			reflection_view_parallel_color.blue = shader_environment->environment.specular.view_parallel_color.blue * local_parameters->lighting.reflection_tint_color.blue;
-
-			vsh_constants__texscale[0][0] = shader_environment->environment.diffuse.primary_detail_map_scale;
-			vsh_constants__texscale[0][1] = shader_environment->environment.diffuse.primary_detail_map_scale;
-			vsh_constants__texscale[0][2] = 1.f;
-			vsh_constants__texscale[0][3] = 1.f;
-			vsh_constants__texscale[1][0] = local_parameters->base_map_scale.i;
-			vsh_constants__texscale[1][1] = 0.f;
-			vsh_constants__texscale[1][2] = 0.f;
-			vsh_constants__texscale[1][3] = 0.f;
-			vsh_constants__texscale[2][0] = 0.f;
-			vsh_constants__texscale[2][1] = local_parameters->base_map_scale.j;
-			vsh_constants__texscale[2][2] = 0.f;
-			vsh_constants__texscale[2][3] = 0.f;
-
-			vsh_constants__effect[0][0] = reflection_view_perpendicular_color.red - reflection_view_parallel_color.red;
-			vsh_constants__effect[0][1] = reflection_view_perpendicular_color.green - reflection_view_parallel_color.green;
-			vsh_constants__effect[0][2] = reflection_view_perpendicular_color.blue - reflection_view_parallel_color.blue;
-			vsh_constants__effect[0][3] = reflection_view_perpendicular_color.alpha - reflection_view_parallel_color.alpha;
-			vsh_constants__effect[1][0] = reflection_view_parallel_color.red;
-			vsh_constants__effect[1][1] = reflection_view_parallel_color.green;
-			vsh_constants__effect[1][2] = reflection_view_parallel_color.blue;
-			vsh_constants__effect[1][3] = reflection_view_parallel_color.alpha;
+			real_argb_color reflection_view_perpendicular_color =
+			{
+				shader_environment->environment.reflection.view_perpendicular_brightness * local_parameters->lighting.reflection_tint_color.alpha,
+				shader_environment->environment.specular.view_perpendicular_color.red * local_parameters->lighting.reflection_tint_color.red,
+				shader_environment->environment.specular.view_perpendicular_color.green * local_parameters->lighting.reflection_tint_color.green,
+				shader_environment->environment.specular.view_perpendicular_color.blue * local_parameters->lighting.reflection_tint_color.blue
+			};
+			real_argb_color reflection_view_parallel_color =
+			{
+				shader_environment->environment.reflection.view_parallel_brightness * local_parameters->lighting.reflection_tint_color.alpha,
+				shader_environment->environment.specular.view_parallel_color.red * local_parameters->lighting.reflection_tint_color.red,
+				shader_environment->environment.specular.view_parallel_color.green * local_parameters->lighting.reflection_tint_color.green,
+				shader_environment->environment.specular.view_parallel_color.blue * local_parameters->lighting.reflection_tint_color.blue
+			};
+			real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
+			{
+				{ shader_environment->environment.diffuse.primary_detail_map_scale, shader_environment->environment.diffuse.primary_detail_map_scale, 1.f, 1.f },
+				{ local_parameters->base_map_scale.i, 0.f, 0.f, 0.f },
+				{ 0.f, local_parameters->base_map_scale.j, 0.f, 0.f }
+			};
+			real vsh_constants__effect[VSH_CONSTANTS__EFFECT_COUNT][4] =
+			{
+				{
+					reflection_view_perpendicular_color.red - reflection_view_parallel_color.red,
+					reflection_view_perpendicular_color.green - reflection_view_parallel_color.green,
+					reflection_view_perpendicular_color.blue - reflection_view_parallel_color.blue,
+					reflection_view_perpendicular_color.alpha - reflection_view_parallel_color.alpha
+				},
+				{
+					reflection_view_parallel_color.red,
+					reflection_view_parallel_color.green,
+					reflection_view_parallel_color.blue,
+					reflection_view_parallel_color.alpha
+				}
+			};
 
 			D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device,
 				VSH_CONSTANTS__TEXSCALE_OFFSET,
@@ -601,7 +603,15 @@ void _rasterizer_model_draw(
 
 				vector_from_points3d(&global_window_parameters.camera.position, &local_parameters->centroid, &forward);
 				distance = dot_product3d(&global_window_parameters.camera.forward, &forward);
-				reflection_scale = shader_model->model.reflection_cutoff_distance != 0.f ? PIN((distance - shader_model->model.reflection_cutoff_distance) / (shader_model->model.reflection_falloff_distance - shader_model->model.reflection_cutoff_distance), 0.f, 1.f) : 1.f;
+
+				if (shader_model->model.reflection_cutoff_distance != 0.f)
+				{
+					reflection_scale = PIN((distance - shader_model->model.reflection_cutoff_distance) / (shader_model->model.reflection_falloff_distance - shader_model->model.reflection_cutoff_distance), 0.f, 1.f);
+				}
+				else
+				{
+					reflection_scale = 1.f;
+				}
 
 				if (TEST_FLAG(local_parameters->geometry_flags, _rasterizer_geometry_no_zbuffer_bit))
 				{
@@ -655,17 +665,17 @@ void _rasterizer_model_draw(
 				SetTextureStageStateSmart(3, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 
 				{
-					real_vector3d color_delta;
+					real_vector3d gradient_color;
 					unsigned long seed = local_parameters->unique_id;
 					real animation_phase = TEST_FLAG(shader_model->model.self_illumination_flags, _shader_model_self_illumination_no_random_phase_bit) ? 0.f : real_seed_random(&seed);
 
 					match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_models.c", 864, shader_model->model.self_illumination_animation_period!=0.0f);
 
-					subtract_vectors3d((real_vector3d *)&shader_model->model.self_illumination_animation_color_upper_bound, (real_vector3d *)&shader_model->model.self_illumination_animation_color_lower_bound, &color_delta);
+					subtract_vectors3d((real_vector3d *)&shader_model->model.self_illumination_animation_color_upper_bound, (real_vector3d *)&shader_model->model.self_illumination_animation_color_lower_bound, &gradient_color);
 					vector_from_line3d(
 						&shader_model->model.self_illumination_animation_color_lower_bound,
-						&color_delta,
-						periodic_function_evaluate(shader_model->model.self_illumination_animation_function, global_frame_parameters.game_time_sec / shader_model->model.self_illumination_animation_period + animation_phase),
+						&gradient_color,
+						periodic_function_evaluate(shader_model->model.self_illumination_animation_function, (global_frame_parameters.game_time_sec / shader_model->model.self_illumination_animation_period) + animation_phase),
 						&self_illumination_color);
 				}
 
@@ -731,7 +741,7 @@ void _rasterizer_model_draw(
 					vertex_shader_permutation = _model_vertex_shader_permutation_fast;
 				}
 
-				rasterizer_set_vertex_shader_permutation(_vs_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
+				rasterizer_set_vertex_shader_permutation(_vertex_shader_model, vertex_buffer ? vertex_buffer->type : rasterizer_dynamic_vertices_get_type(dynamic_vertex_buffer_index), vertex_shader_permutation);
 
 				if (rasterizer_debug_options.statistics_mode >= _rasterizer_statistics_mode_fps_only)
 				{
@@ -740,32 +750,27 @@ void _rasterizer_model_draw(
 				}
 
 				{
-					real_argb_color reflection_view_perpendicular_color;
-					real_argb_color reflection_view_parallel_color;
-					real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4];
+					real_argb_color reflection_view_perpendicular_color =
+					{
+						reflection_scale * shader_model->model.reflection_view_perpendicular_color.alpha * local_parameters->lighting.reflection_tint_color.alpha,
+						shader_model->model.reflection_view_perpendicular_color.red * local_parameters->lighting.reflection_tint_color.red,
+						shader_model->model.reflection_view_perpendicular_color.green * local_parameters->lighting.reflection_tint_color.green,
+						shader_model->model.reflection_view_perpendicular_color.blue * local_parameters->lighting.reflection_tint_color.blue
+					};
+					real_argb_color reflection_view_parallel_color =
+					{
+						reflection_scale * shader_model->model.reflection_view_parallel_color.alpha * local_parameters->lighting.reflection_tint_color.alpha,
+						shader_model->model.reflection_view_parallel_color.red * local_parameters->lighting.reflection_tint_color.red,
+						shader_model->model.reflection_view_parallel_color.green * local_parameters->lighting.reflection_tint_color.green,
+						shader_model->model.reflection_view_parallel_color.blue * local_parameters->lighting.reflection_tint_color.blue
+					};
+					real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
+					{
+						{ shader_model->model.detail_map_scale, shader_model->model.detail_map_scale * shader_model->model.detail_map_v_scale, 1.f, 1.f },
+						{ 1.f, 0.f, 0.f, 0.f },
+						{ 0.f, 1.f, 0.f, 0.f }
+					};
 					real vsh_constants__effect[VSH_CONSTANTS__EFFECT_COUNT][4];
-
-					reflection_view_perpendicular_color.alpha = (reflection_scale * shader_model->model.reflection_view_perpendicular_color.alpha) * local_parameters->lighting.reflection_tint_color.alpha;
-					reflection_view_perpendicular_color.red = shader_model->model.reflection_view_perpendicular_color.red * local_parameters->lighting.reflection_tint_color.red;
-					reflection_view_perpendicular_color.green = shader_model->model.reflection_view_perpendicular_color.green * local_parameters->lighting.reflection_tint_color.green;
-					reflection_view_perpendicular_color.blue = shader_model->model.reflection_view_perpendicular_color.blue * local_parameters->lighting.reflection_tint_color.blue;
-					reflection_view_parallel_color.alpha = (reflection_scale * shader_model->model.reflection_view_parallel_color.alpha) * local_parameters->lighting.reflection_tint_color.alpha;
-					reflection_view_parallel_color.red = shader_model->model.reflection_view_parallel_color.red * local_parameters->lighting.reflection_tint_color.red;
-					reflection_view_parallel_color.green = shader_model->model.reflection_view_parallel_color.green * local_parameters->lighting.reflection_tint_color.green;
-					reflection_view_parallel_color.blue = shader_model->model.reflection_view_parallel_color.blue * local_parameters->lighting.reflection_tint_color.blue;
-
-					vsh_constants__texscale[0][0] = shader_model->model.detail_map_scale;
-					vsh_constants__texscale[0][1] = shader_model->model.detail_map_scale * shader_model->model.detail_map_v_scale;
-					vsh_constants__texscale[0][2] = 1.f;
-					vsh_constants__texscale[0][3] = 1.f;
-					vsh_constants__texscale[1][0] = 1.f;
-					vsh_constants__texscale[1][1] = 0.f;
-					vsh_constants__texscale[1][2] = 0.f;
-					vsh_constants__texscale[1][3] = 0.f;
-					vsh_constants__texscale[2][0] = 0.f;
-					vsh_constants__texscale[2][1] = 1.f;
-					vsh_constants__texscale[2][2] = 0.f;
-					vsh_constants__texscale[2][3] = 0.f;
 
 					vsh_constants__effect[0][0] = reflection_view_perpendicular_color.red - reflection_view_parallel_color.red;
 					vsh_constants__effect[0][1] = reflection_view_perpendicular_color.green - reflection_view_parallel_color.green;
@@ -797,27 +802,29 @@ void _rasterizer_model_draw(
 						VSH_CONSTANTS__EFFECT_OFFSET,
 						vsh_constants__effect,
 						VSH_CONSTANTS__EFFECT_COUNT));
+				}
 
-					if (global_rasterizer_model_ambient_reflection_tint &&
-						(global_rasterizer_model_ambient_reflection_tint->alpha > 0.f ||
-						global_rasterizer_model_ambient_reflection_tint->red > 0.f ||
-						global_rasterizer_model_ambient_reflection_tint->green > 0.f ||
-						global_rasterizer_model_ambient_reflection_tint->blue > 0.f))
+				if (global_rasterizer_model_ambient_reflection_tint &&
+					(global_rasterizer_model_ambient_reflection_tint->alpha > 0.f ||
+					global_rasterizer_model_ambient_reflection_tint->red > 0.f ||
+					global_rasterizer_model_ambient_reflection_tint->green > 0.f ||
+					global_rasterizer_model_ambient_reflection_tint->blue > 0.f))
+				{
+					real vsh_constants__effect[VSH_CONSTANTS__EFFECT_COUNT][4] =
 					{
-						vsh_constants__effect[0][0] = 0.f;
-						vsh_constants__effect[0][1] = 0.f;
-						vsh_constants__effect[0][2] = 0.f;
-						vsh_constants__effect[0][3] = 0.f;
-						vsh_constants__effect[1][0] = global_rasterizer_model_ambient_reflection_tint->alpha;
-						vsh_constants__effect[1][1] = global_rasterizer_model_ambient_reflection_tint->red;
-						vsh_constants__effect[1][2] = global_rasterizer_model_ambient_reflection_tint->green;
-						vsh_constants__effect[1][3] = global_rasterizer_model_ambient_reflection_tint->blue;
+						{ 0.f, 0.f, 0.f, 0.f },
+						{
+							global_rasterizer_model_ambient_reflection_tint->alpha,
+							global_rasterizer_model_ambient_reflection_tint->red,
+							global_rasterizer_model_ambient_reflection_tint->green,
+							global_rasterizer_model_ambient_reflection_tint->blue
+						}
+					};
 
-						D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device,
-							VSH_CONSTANTS__EFFECT_OFFSET,
-							vsh_constants__effect,
-							VSH_CONSTANTS__EFFECT_COUNT));
-					}
+					D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device,
+						VSH_CONSTANTS__EFFECT_OFFSET,
+						vsh_constants__effect,
+						VSH_CONSTANTS__EFFECT_COUNT));
 				}
 
 				match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_models.c", 1074, global_window_parameters.fog.atmospheric_maximum_distance>global_window_parameters.fog.atmospheric_minimum_distance);
@@ -896,20 +903,12 @@ void _rasterizer_model_draw(
 
 				if (TEST_FLAG(shader_model->model.flags, _shader_model_two_sided_bit))
 				{
-					real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4];
-
-					vsh_constants__texscale[0][0] = shader_model->model.detail_map_scale;
-					vsh_constants__texscale[0][1] = shader_model->model.detail_map_scale * shader_model->model.detail_map_v_scale;
-					vsh_constants__texscale[0][2] = 1.f;
-					vsh_constants__texscale[0][3] = -1.f;
-					vsh_constants__texscale[1][0] = 1.f;
-					vsh_constants__texscale[1][1] = 0.f;
-					vsh_constants__texscale[1][2] = 0.f;
-					vsh_constants__texscale[1][3] = 0.f;
-					vsh_constants__texscale[2][0] = 0.f;
-					vsh_constants__texscale[2][1] = 1.f;
-					vsh_constants__texscale[2][2] = 0.f;
-					vsh_constants__texscale[2][3] = 0.f;
+					real vsh_constants__texscale[VSH_CONSTANTS__TEXSCALE_COUNT][4] =
+					{
+						{ shader_model->model.detail_map_scale, shader_model->model.detail_map_scale * shader_model->model.detail_map_v_scale, 1.f, -1.f },
+						{ 1.f, 0.f, 0.f, 0.f },
+						{ 0.f, 1.f, 0.f, 0.f }
+					};
 
 					shader_texture_animation_evaluate(
 						&shader_model->model.animation,
