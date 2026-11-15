@@ -228,7 +228,7 @@ static struct hs_function_definition const name##_definition =						\
 
 
 #define HS_FUNCTION_6(return_type, name, function, documentation, type0, type1, type2, type3, type4, type5) \
-HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4), HS_ARGUMENT(type4, 5))) \
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4), HS_ARGUMENT(type5, 5))) \
 static struct hs_function_definition const name##_definition =						\
 {																					\
 	return_type,																	\
@@ -293,7 +293,7 @@ static struct hs_function_definition const name##_definition =						\
 }
 
 
-#define HS_FUNCTION_5(return_type, name, function, documentationm, type0, type1, type2, type3, type4) \
+#define HS_FUNCTION_5(return_type, name, function, documentation, type0, type1, type2, type3, type4) \
 HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4))) \
 static struct hs_function_definition const name##_definition =						\
 {																					\
@@ -305,7 +305,7 @@ static struct hs_function_definition const name##_definition =						\
 
 
 #define HS_FUNCTION_6(return_type, name, function, documentation, type0, type1, type2, type3, type4, type5) \
-HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4), HS_ARGUMENT(type4, 5))) \
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4), HS_ARGUMENT(type5, 5))) \
 static struct hs_function_definition const name##_definition =						\
 {																					\
 	return_type,																	\
