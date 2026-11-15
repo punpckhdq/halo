@@ -283,10 +283,10 @@ static boolean recompile;
 
 static struct profile_section hs_update_section = {"hs_update", NONE, TRUE}; /* fake name */
 
-static char const *enumeration_substring; /* fake name */
+static char const *enumeration_substring;
 static char const **enumeration_results;
 static short enumeration_maximum_count;
-static short enumeration_count; /* fake name */
+static short enumeration_count;
 
 /* ---------- public code */
 
@@ -628,35 +628,27 @@ struct hs_global_external *hs_global_external_get(
 short hs_global_get_type(
 	short designator)
 {
-	short type;
-
 	if (designator & FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 	{
-		type = hs_global_external_get((short)(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)))->type;
+		return hs_global_external_get(HS_GLOBAL_INDEX(designator))->type;
 	}
 	else
 	{
-		type = hs_global_internal_get(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))->type;
+		return HS_GLOBAL_INTERNAL_GET(HS_GLOBAL_INDEX(designator))->type;
 	}
-
-	return type;
 }
 
 char const *hs_global_get_name(
 	short designator)
 {
-	char const *name;
-
 	if (designator & FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 	{
-		name = hs_global_external_get((short)(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)))->name;
+		return hs_global_external_get(HS_GLOBAL_INDEX(designator))->name;
 	}
 	else
 	{
-		name = hs_global_internal_get(designator & MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))->name;
+		return HS_GLOBAL_INTERNAL_GET(HS_GLOBAL_INDEX(designator))->name;
 	}
-
-	return name;
 }
 
 short hs_find_global_by_name(
@@ -678,7 +670,7 @@ short hs_find_global_by_name(
 
 		for (global_index = 0; global_index<scenario->hs_globals.count; global_index++)
 		{
-			if (!_stricmp(name, hs_global_internal_get(global_index)->name))
+			if (!_stricmp(name, HS_GLOBAL_INTERNAL_GET(global_index)->name))
 			{
 				return global_index & ~FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT);
 			}
@@ -1019,15 +1011,10 @@ short hs_tokens_enumerate(
 
 	match_assert("c:\\halo\\SOURCE\\hs\\hs.c", 920, !enumeration_results);
 
-	enumeration_maximum_count = maximum_count;
 	enumeration_count = 0;
+	enumeration_maximum_count = maximum_count;
 	enumeration_results = results;
-	enumeration_substring = substring;
-
-	if (!substring)
-	{
-		enumeration_substring = "";
-	}
+	enumeration_substring = substring ? substring : "";
 
 	for (type_index = 0; type_index<NUMBEROF(hs_token_enumerators); type_index++)
 	{
@@ -1168,16 +1155,14 @@ static void hs_compile_source_error(
 
 	if (file_name && end_of_line)
 	{
-		short line_number = 1;
+		short line_number;
 
-		while (end_of_line>source)
+		for (line_number = 1; end_of_line>source; end_of_line--)
 		{
 			if (*end_of_line=='\n')
 			{
 				line_number++;
 			}
-
-			end_of_line--;
 		}
 
 		error(_error_silent, "[%s line %d] %s: %s", file_name, line_number, error_message, error_source);
@@ -1306,7 +1291,9 @@ static void hs_get_function_documentation_string(
 	short function_index,
 	char *buffer)
 {
-	strcpy(buffer, hs_function_get(function_index)->documentation);
+	struct hs_function_definition const *function = hs_function_get(function_index);
+
+	strcpy(buffer, function->documentation);
 
 	return;
 }
@@ -1317,16 +1304,19 @@ boolean hs_compile_and_evaluate(
 	char expressionbuf[HS_MAXIMUM_DYNAMIC_SOURCE_DATA_BYTES];
 	char fakery_buffer[HS_MAXIMUM_DYNAMIC_SOURCE_DATA_BYTES];
 	char *c;
+	boolean empty;
 	boolean success = FALSE;
-	boolean empty = TRUE;
 
 	strncpy(expressionbuf, expression, HS_MAXIMUM_DYNAMIC_SOURCE_DATA_BYTES);
 	expressionbuf[HS_MAXIMUM_DYNAMIC_SOURCE_DATA_BYTES - 1] = '\0';
+	c = strchr(expressionbuf, ';');
 
-	if (strchr(expressionbuf, ';'))
+	if (c)
 	{
 		expressionbuf[0] = '\0';
 	}
+
+	empty = TRUE;
 
 	for (c = expressionbuf; *c; c++)
 	{
@@ -1422,7 +1412,9 @@ boolean hs_evaluate_by_name(
 
 	if (script_index!=NONE)
 	{
-		hs_runtime_evaluate(hs_script_get(script_index)->root_expression_index);
+		struct hs_script *script = hs_script_get(script_index);
+
+		hs_runtime_evaluate(script->root_expression_index);
 		success = TRUE;
 	}
 	else

@@ -67,8 +67,7 @@ enum
 /* ---------- macros */
 
 #define hs_thread_get(index) ((struct hs_thread *)datum_get(hs_thread_data, (index)))
-#define hs_global_designator_index(designator) ((short)(designator)&MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)) /* fake name */
-#define hs_global_runtime_index(designator) (((designator)&FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)) ? hs_global_designator_index(designator) : hs_global_designator_index(designator)+hs_external_global_count) /* fake name */
+#define hs_global_runtime_index(designator) (((designator)&FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)) ? HS_GLOBAL_INDEX(designator) : HS_GLOBAL_INDEX(designator)+hs_external_global_count) /* fake name */
 #define hs_global_runtime_get(designator) ((struct hs_global_runtime *)datum_get(hs_global_data, hs_global_runtime_index(designator))) /* fake name */
 
 #define valid_thread(thread) ((byte *)(thread)>=(byte *)hs_thread_data->data && (byte *)(thread)<(byte *)hs_thread_data->data+hs_thread_data->count*hs_thread_data->size && (byte *)(thread)->stack>=(thread)->stack_data && (byte *)(thread)->stack<(thread)->stack_data+HS_THREAD_STACK_SIZE && (thread)->stack->data+(thread)->stack->size<=(thread)->stack_data+HS_THREAD_STACK_SIZE)
@@ -213,7 +212,7 @@ void hs_runtime_initialize_for_new_map(
 		for (global_index = 0; global_index<scenario->hs_globals.count; global_index++)
 		{
 			struct hs_global_runtime *global_runtime;
-			struct hs_global_internal *global = hs_global_internal_get(global_index);
+			struct hs_global_internal *global = HS_GLOBAL_INTERNAL_GET(global_index);
 
 			datum_new_at_index(
 				hs_global_data,
@@ -401,22 +400,22 @@ static char const *expression_get_function_name(
 	{
 		return hs_script_get(expression->script_index)->name;
 	}
-	else if (expression->function_index!=_hs_function_begin || expression_index!=thread->stack->expression_index)
-	{
-		return hs_function_get(expression->function_index)->name;
-	}
-	else
+	else if (expression->function_index==_hs_function_begin && expression_index==thread->stack->expression_index)
 	{
 		long next_expression_index = *(long *)thread->stack->data;
 
-		if (next_expression_index==NONE)
-		{
-			return "(end of script)";
-		}
-		else
+		if (next_expression_index!=NONE)
 		{
 			return expression_get_function_name(thread_index, next_expression_index);
 		}
+		else
+		{
+			return "(end of script)";
+		}
+	}
+	else
+	{
+		return hs_function_get(expression->function_index)->name;
 	}
 }
 #endif
@@ -635,8 +634,9 @@ static char const *hs_thread_format(
 	long thread_index)
 {
 	char const *result = NULL;
+	struct hs_thread *thread = hs_thread_get(thread_index);
 
-	switch (hs_thread_get(thread_index)->type)
+	switch (thread->type)
 	{
 	case _hs_thread_type_script:
 		result = hs_script_get(hs_thread_get(thread_index)->script_index)->name;
@@ -858,7 +858,10 @@ static void hs_wake(
 {
 	struct hs_thread *thread = hs_thread_get(thread_index);
 
-	if (thread->sleep_until!=HS_SLEEP_FINISHED)
+	if (thread->sleep_until==HS_SLEEP_FINISHED)
+	{
+	}
+	else
 	{
 		thread->sleep_until = 0;
 
@@ -1393,7 +1396,7 @@ static void hs_global_reconcile_read(
 	if (global_designator & FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 	{
 		struct hs_global_runtime *global = hs_global_runtime_get(global_designator);
-		struct hs_global_external *external = hs_global_external_get(hs_global_designator_index(global_designator));
+		struct hs_global_external *external = hs_global_external_get(HS_GLOBAL_INDEX(global_designator));
 
 		switch (hs_global_get_type(global_designator))
 		{
@@ -1450,7 +1453,7 @@ static void hs_global_reconcile_write(
 	if (global_designator & FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 	{
 		struct hs_global_runtime *global = hs_global_runtime_get(global_designator);
-		struct hs_global_external *external = hs_global_external_get(hs_global_designator_index(global_designator));
+		struct hs_global_external *external = hs_global_external_get(HS_GLOBAL_INDEX(global_designator));
 
 		switch (hs_global_get_type(global_designator))
 		{

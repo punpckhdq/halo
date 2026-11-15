@@ -30,7 +30,7 @@ enum
 #define SIZEOF_HS_SYNTAX_DATA (sizeof(struct data_array) + MAXIMUM_HS_SYNTAX_NODES_PER_SCENARIO * sizeof(struct hs_syntax_node)) /* fake name? */
 
 #define hs_script_get(index) TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->hs_scripts, (index), struct hs_script) /* fake name? */
-#define hs_global_internal_get(index) TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->hs_globals, (index), struct hs_global_internal) /* fake name? */
+#define HS_GLOBAL_INTERNAL_GET(index) TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->hs_globals, (index), struct hs_global_internal)
 
 /* ---------- structures */
 

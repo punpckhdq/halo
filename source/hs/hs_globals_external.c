@@ -72,14 +72,14 @@ HS_GLOBAL_EXTERNAL(display_framerate, _hs_type_boolean, &display_framerate);
 HS_GLOBAL_EXTERNAL(display_vblank_deltas, _hs_type_boolean, &display_vblank_deltas);
 HS_GLOBAL_EXTERNAL(display_precache_progress, _hs_type_boolean, &display_precache_progress);
 HS_GLOBAL_EXTERNAL(debug_game_save, _hs_type_boolean, &debug_game_save);
-HS_GLOBAL_EXTERNAL(terminal_render, _hs_type_boolean, &terminal_render_enable); /* fake name? */
+HS_GLOBAL_EXTERNAL(terminal_render, _hs_type_boolean, &terminal_render_enable);
 HS_GLOBAL_EXTERNAL(console_dump_to_file, _hs_type_boolean, &console_dump_to_file);
 HS_GLOBAL_EXTERNAL(rasterizer_near_clip_distance, _hs_type_real, &rasterizer_globals.z_near);
 HS_GLOBAL_EXTERNAL(rasterizer_far_clip_distance, _hs_type_real, &rasterizer_globals.z_far);
 HS_GLOBAL_EXTERNAL(rasterizer_first_person_weapon_near_clip_distance, _hs_type_real, &rasterizer_globals.z_near_first_person);
 HS_GLOBAL_EXTERNAL(rasterizer_first_person_weapon_far_clip_distance, _hs_type_real, &rasterizer_globals.z_far_first_person);
-HS_GLOBAL_EXTERNAL(rasterizer_pushbuffer_size, _hs_type_short_integer, &rasterizer_globals.pushbuffer_size); /* fake name? */
-HS_GLOBAL_EXTERNAL(rasterizer_pushbuffer_kickoff_size, _hs_type_short_integer, &rasterizer_globals.pushbuffer_kickoff_size); /* fake name? */
+HS_GLOBAL_EXTERNAL(rasterizer_pushbuffer_size, _hs_type_short_integer, &rasterizer_globals.pushbuffer_size);
+HS_GLOBAL_EXTERNAL(rasterizer_pushbuffer_kickoff_size, _hs_type_short_integer, &rasterizer_globals.pushbuffer_kickoff_size);
 HS_GLOBAL_EXTERNAL(rasterizer_floating_point_zbuffer, _hs_type_boolean, &rasterizer_globals.use_floating_point_zbuffer);
 HS_GLOBAL_EXTERNAL(rasterizer_framerate_throttle, _hs_type_boolean, &rasterizer_globals.use_rasterizer_frame_rate_throttle);
 HS_GLOBAL_EXTERNAL(rasterizer_framerate_stabilization, _hs_type_boolean, &rasterizer_globals.use_rasterizer_frame_rate_stabilization);
@@ -172,10 +172,10 @@ HS_GLOBAL_EXTERNAL(debug_no_frustum_clip, _hs_type_boolean, &debug_no_frustum_cl
 HS_GLOBAL_EXTERNAL(debug_frustum, _hs_type_boolean, &render_camera_debug_this_fucking_frustum);
 HS_GLOBAL_EXTERNAL(debug_bink, _hs_type_boolean, &debug_bink);
 HS_GLOBAL_EXTERNAL(recover_saved_games_hack, _hs_type_boolean, &recover_saved_games_hack);
-HS_GLOBAL_EXTERNAL(radiosity_quality, _hs_type_short_integer, NULL); /* fake name? */
-HS_GLOBAL_EXTERNAL(radiosity_step_count, _hs_type_short_integer, NULL); /* fake name? */
-HS_GLOBAL_EXTERNAL(radiosity_lines, _hs_type_boolean, NULL); /* fake name? */
-HS_GLOBAL_EXTERNAL(radiosity_normals, _hs_type_boolean, NULL); /* fake name? */
+HS_GLOBAL_EXTERNAL(radiosity_quality, _hs_type_short_integer, NULL);
+HS_GLOBAL_EXTERNAL(radiosity_step_count, _hs_type_short_integer, NULL);
+HS_GLOBAL_EXTERNAL(radiosity_lines, _hs_type_boolean, NULL);
+HS_GLOBAL_EXTERNAL(radiosity_normals, _hs_type_boolean, NULL);
 HS_GLOBAL_EXTERNAL(structures_use_pvs_for_vs, _hs_type_boolean, &structures_use_pvs_for_vs);
 HS_GLOBAL_EXTERNAL(debug_detail_objects, _hs_type_boolean, &debug_detail_objects);
 HS_GLOBAL_EXTERNAL(debug_texture_cache, _hs_type_boolean, &debug_texture_cache);

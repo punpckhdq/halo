@@ -10,7 +10,7 @@ header included in hcex build.
 
 /* ---------- macros */
 
-
+/* fake name */
 #ifdef HS_COMPILER_ENABLED
 #define HS_FUNCTION_DEFINITION_CREATE(global_name, return_type, name, parse, evaluate, documentation, parameters, formal_parameter_count) \
 static struct hs_function_definition const (global_name) = \

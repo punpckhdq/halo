@@ -134,17 +134,18 @@ enum
 /* ---------- macros */
 
 #define hs_type_valid(type) ((type)>=FIRST_HS_TYPE && (type)<NUMBER_OF_HS_NODE_TYPES)
-#define HS_TYPE_IS_TAG_REFERENCE(type) ((type)>=FIRST_HS_TAG_REFERENCE_TYPE && (type)<=LAST_HS_TAG_REFERENCE_TYPE) /* fake name? */
+#define HS_TYPE_IS_TAG_REFERENCE(type) ((type)>=FIRST_HS_TAG_REFERENCE_TYPE && (type)<=LAST_HS_TAG_REFERENCE_TYPE)
 #define HS_TYPE_IS_ENUM(type) ((type)>=FIRST_HS_ENUM_TYPE && (type)<=LAST_HS_ENUM_TYPE)
 #define HS_TYPE_IS_OBJECT(type) ((type)>=FIRST_HS_OBJECT_TYPE && (type)<=LAST_HS_OBJECT_TYPE)
-#define HS_TYPE_IS_OBJECT_NAME(type) ((type)>=FIRST_HS_OBJECT_NAME_TYPE && (type)<=LAST_HS_OBJECT_NAME_TYPE) /* fake name? */
+#define HS_TYPE_IS_OBJECT_NAME(type) ((type)>=FIRST_HS_OBJECT_NAME_TYPE && (type)<=LAST_HS_OBJECT_NAME_TYPE)
 
 #define hs_syntax_get(index) ((struct hs_syntax_node *)datum_get(hs_syntax_data, (index)))
+#define HS_GLOBAL_INDEX(designator) ((short)(designator)&MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 
 #ifdef HS_COMPILER_ENABLED
 #define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {#name, type, pointer} /* fake name */
 #else
-#define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {NULL, type, pointer}
+#define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {NULL, type, pointer} /* fake name */
 #endif
 
 /* ---------- structures */

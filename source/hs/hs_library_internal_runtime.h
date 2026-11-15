@@ -159,7 +159,8 @@ void hs_evaluate_set(
 	long thread_index,
 	boolean initialize)
 {
-	long variable_index = hs_syntax_get(hs_syntax_get(hs_thread_get(thread_index)->stack->expression_index)->data)->next_node_index;
+	struct hs_thread *thread = hs_thread_get(thread_index);
+	long variable_index = hs_syntax_get(hs_syntax_get(thread->stack->expression_index)->data)->next_node_index;
 	struct hs_syntax_node *variable = hs_syntax_get(variable_index);
 	long *result = hs_stack_allocate(thread_index, sizeof(long));
 	short type = hs_global_get_type((short)variable->data);
@@ -340,15 +341,15 @@ void hs_evaluate_equality(
 
 #define match_hs_inequality(file, line, operand0, operand1) /* fake name */ \
 { \
-	real value0 = (operand0); \
-	real value1 = (operand1); \
+	real arg0 = (operand0); \
+	real arg1 = (operand1); \
 	\
 	switch (function_index) \
 	{ \
-	case _hs_function_gt: result = value0>value1; break; \
-	case _hs_function_lt: result = value0<value1; break; \
-	case _hs_function_gte: result = value0>=value1; break; \
-	case _hs_function_lte: result = value0<=value1; break; \
+	case _hs_function_gt: result = arg0>arg1; break; \
+	case _hs_function_lt: result = arg0<arg1; break; \
+	case _hs_function_gte: result = arg0>=arg1; break; \
+	case _hs_function_lte: result = arg0<=arg1; break; \
 	default: result = FALSE; match_halt(file, line); \
 	} \
 }

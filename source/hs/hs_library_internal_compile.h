@@ -151,13 +151,7 @@ static long hs_parse_cond_recursive(
 				long begin_index = datum_new(hs_syntax_data);
 				long begin_name_index = datum_new(hs_syntax_data);
 
-				if (begin_index==NONE || begin_name_index==NONE)
-				{
-					hs_compile_globals.error = "i couldn't allocate a syntax node.";
-					hs_compile_globals.error_offset = hs_syntax_get(root_expression_index)->source_offset;
-					if_index = NONE;
-				}
-				else
+				if (begin_index!=NONE && begin_name_index!=NONE)
 				{
 					struct hs_syntax_node *begin = hs_syntax_get(begin_index);
 					struct hs_syntax_node *begin_name = hs_syntax_get(begin_name_index);
@@ -167,11 +161,7 @@ static long hs_parse_cond_recursive(
 						root_expression_index,
 						hs_syntax_get(expression_index)->next_node_index);
 
-					if (begin->next_node_index==NONE)
-					{
-						if_index = NONE;
-					}
-					else
+					if (begin->next_node_index!=NONE)
 					{
 						if_expression->function_index = _hs_function_if;
 						if_expression->data = expression_index;
@@ -192,6 +182,16 @@ static long hs_parse_cond_recursive(
 						begin_name->type = _hs_function_name;
 						condition->next_node_index = begin_index;
 					}
+					else
+					{
+						if_index = NONE;
+					}
+				}
+				else
+				{
+					hs_compile_globals.error = "i couldn't allocate a syntax node.";
+					hs_compile_globals.error_offset = hs_syntax_get(root_expression_index)->source_offset;
+					if_index = NONE;
 				}
 			}
 			else
@@ -268,7 +268,9 @@ boolean hs_parse_set(
 
 					if (!expression->type || hs_can_cast(variable->type, expression->type))
 					{
-						match_vassert("c:\\halo\\source\\hs\\hs_library_internal_compile.h", 294, hs_parse_variable(variable_index), "asserted");
+						boolean asserted = hs_parse_variable(variable_index);
+
+						match_assert("c:\\halo\\source\\hs\\hs_library_internal_compile.h", 294, asserted);
 
 						if (!expression->type)
 						{
