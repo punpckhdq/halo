@@ -2321,7 +2321,7 @@ void main_movie_start(
 		directory_create_or_delete_contents("movie");
 		main_globals.recording_frame_index = 0;
 
-		main_globals.recording_dt = frames_per_second>0.0001f ? 1.f/frames_per_second : SECONDS_PER_TICK;
+		main_globals.recording_dt = frames_per_second>_real_epsilon ? 1.f/frames_per_second : SECONDS_PER_TICK;
 		game_time_set_speed(1.f);
 	}
 

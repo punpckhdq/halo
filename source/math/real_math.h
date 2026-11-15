@@ -103,6 +103,18 @@ match_vassert(													\
 	)															\
 )
 
+#define match_assert_valid_real_normal2d(file, line, vector)	\
+match_vassert(													\
+	file,														\
+	line,														\
+	valid_real_normal2d(vector),								\
+	csprintf(													\
+		temporary,												\
+		"%s: assert_valid_real_normal2d(%f, %f)",				\
+		#vector, (*vector).i, (*vector).j						\
+	)															\
+)
+
 #define match_assert_valid_real_normal3d(file, line, vector)	\
 match_vassert(													\
 	file,														\
@@ -150,6 +162,21 @@ match_vassert(																\
 		#forward, #up,														\
 		(*forward).i, (*forward).j, (*forward).k, (*up).i, (*up).j, (*up).k	\
 	)																		\
+)
+
+#define match_assert_valid_real_vector3d_axes3(file, line, forward, left, up)		\
+match_vassert(																		\
+	file,																			\
+	line,																			\
+	valid_real_vector3d_axes3(forward, left, up),									\
+	csprintf(																		\
+		temporary,																	\
+		"%s, %s, %s: assert_valid_real_vector3d_axes3(%f, %f, %f / %f, %f, %f / %f, %f, %f)",\
+		#forward, #left, #up,														\
+		(*forward).i, (*forward).j, (*forward).k,									\
+		(*up).i, (*up).j, (*up).k,													\
+		(*left).i, (*left).j, (*left).k												\
+	)																				\
 )
 
 #define match_assert_valid_real_sine_cosine(file, line, sine, cosine)	\
@@ -217,10 +244,12 @@ if (!valid_real_matrix4x3(matrix))															\
 #define assert_valid_real_vector2d(vector) match_assert_valid_real_vector2d(__FILE__, __LINE__, vector)
 #define assert_valid_real_vector3d(vector) match_assert_valid_real_vector3d(__FILE__, __LINE__, vector)
 #define assert_valid_real_plane3d(plane) match_assert_valid_real_plane3d(__FILE__, __LINE__, plane)
+#define assert_valid_real_normal2d(vector) match_assert_valid_real_normal2d(__FILE__, __LINE__, vector)
 #define assert_valid_real_normal3d(vector) match_assert_valid_real_normal3d(__FILE__, __LINE__, vector)
 #define assert_valid_real_rgb_color(color) match_assert_valid_real_rgb_color(__FILE__, __LINE__, color)
 #define assert_valid_real_argb_color(color) match_assert_valid_real_argb_color(__FILE__, __LINE__, color)
 #define assert_valid_real_vector3d_axes2(forward, up) match_assert_valid_real_vector3d_axes2(__FILE__, __LINE__, forward, up)
+#define assert_valid_real_vector3d_axes3(forward, left, up) match_assert_valid_real_vector3d_axes3(__FILE__, __LINE__, forward, left, up)
 #define assert_valid_real_sine_cosine(sine, cosine) match_assert_valid_real_sine_cosine(__FILE__, __LINE__, sine, cosine)
 #define assert_valid_real_matrix4x3(matrix) match_assert_valid_real_matrix4x3(__FILE__, __LINE__, matrix)
 #define assert_valid_real_matrix4x3_custom_string(matrix, custom_string) match_assert_valid_real_matrix4x3_custom_string(__FILE__, __LINE__, matrix, custom_string)
@@ -1583,6 +1612,12 @@ __inline boolean valid_real_sine_cosine(
 	real cosine)
 {
 	return valid_realcmp(sine * sine + cosine * cosine, 1.0f);
+}
+
+__inline boolean valid_real_normal2d(
+	real_vector2d const *n)
+{
+	return valid_realcmp(magnitude_squared2d(n), 1.f);
 }
 
 __inline boolean valid_real_normal3d(

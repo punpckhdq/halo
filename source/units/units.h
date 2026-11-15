@@ -169,6 +169,34 @@ enum
 	NUMBER_OF_UNIT_ANIMATION_FLAGS,
 };
 
+enum
+{
+	_unit_action_none = 0,
+	_unit_action_disarm_weapon,
+	_unit_action_drop_weapon,
+	_unit_action_ready_weapon,
+	_unit_action_put_away_weapon,
+	_unit_action_primary_reload_weapon,
+	_unit_action_secondary_reload_weapon,
+	_unit_action_melee,
+	_unit_action_throw_grenade,
+	_unit_action_overheat,
+	NUMBER_OF_UNIT_ACTIONS,
+};
+
+enum
+{
+	_unit_overlay_action_none = 0,
+	_unit_overlay_action_weapon_fire_primary,
+	_unit_overlay_action_weapon_fire_secondary,
+	_unit_overlay_action_weapon_primary_charged,
+	_unit_overlay_action_weapon_secondary_charged,
+	_unit_overlay_action_weapon_primary_chamber,
+	_unit_overlay_action_weapon_secondary_chamber,
+	_unit_overlay_action_user_animation,
+	NUMBER_OF_UNIT_OVERLAY_ACTIONS,
+};
+
 
 enum
 {
@@ -343,6 +371,13 @@ enum
 
 enum
 {
+	_unit_animation_result_none = 0,
+	_unit_animation_result_jump,
+	NUMBER_OF_UNIT_ANIMATION_RESULTS,
+};
+
+enum
+{
 	_unit_base_seat_asleep = 0,
 	_unit_base_seat_alert,
 	_unit_base_seat_stand,
@@ -432,6 +467,12 @@ struct unit_animation
 	real_rectangle2d looking_screen_bounds;
 	long external_animation_graph_index;
 	struct animation_state external_animation;
+};
+
+struct unit_animation_update_data
+{
+	char state_desired;
+	boolean crouching;
 };
 
 struct unit_speech_item
@@ -572,35 +613,26 @@ struct unit_datum
 
 /* ---------- prototypes/UNITS.C */
 
-boolean any_unit_is_dangerous(void);
-boolean unit_has_weapon_definition_index(long unit_index, long definition_index);
-boolean unit_add_weapon_to_inventory(long unit_index, long weapon_index, short mode);
-boolean unit_has_weapon(long unit_index, long weapon_index);
-boolean unit_has_weapon_with_flag(long unit_index, long flag);
 void units_initialize(void);
-void units_dispose(void);
 void units_initialize_for_new_map(void);
 void units_dispose_from_old_map(void);
-
+void units_dispose(void);
+void unit_place(long unit_index, struct scenario_unit_datum *scenario_unit);
 boolean unit_new(long unit_index);
-void unit_delete(long unit_index);
-void unit_export_function_values(long unit_index);
-void unit_handle_deleted_object(long unit_index, long deleted_object_index);
-void unit_handle_region_destroyed(long unit_index, short region_index, unsigned long region_damage_flags);
-void unit_preprocess_node_orientations(long object_index, struct real_orientation *node_orientations);
-void unit_postprocess_node_matrices(long object_index, struct real_matrix4x3 *node_matrices);
-void unit_render_debug(long unit_index);
-
-void units_update(void);
-
-void unit_set_mouth_aperture(long unit_index, real aperture);
-
-boolean unit_update(long unit_index);
 void unit_kill(long unit_index);
+void unit_kill_silent(long unit_index);
 void unit_kill_no_statistics(long unit_index);
-boolean unit_unsuspecting(long unit_index, real_point3d const *attacker);
-void unit_damage_aftermath(long unit_index, struct damage_data *damage_data, unsigned long being_damaged_flags, real shield_damage, real body_damage, real body_damage_multiplier, short body_part);
-
+void unit_delete(long unit_index);
+void units_update(void);
+boolean unit_update(long unit_index);
+void unit_export_function_values(long unit_index);
+void unit_control(long unit_index, struct unit_control_data *control);
+void unit_persistent_control(long unit_index, long persistent_control_timer, unsigned long persistent_control_flags);
+void unit_preprocess_node_orientations(long object_index, struct real_orientation *node_orientations);
+boolean unit_get_seat_entrance_point(long unit_index, long parent_unit_index, short seat_index, real_point3d *entrance_point, real_point3d *seat_point, real_point3d *hint_point);
+boolean unit_get_melee_range_and_ticks(long unit_index, boolean airborne, short *start_tick_count, real *start_range, short *end_tick_count, real *end_range);
+short unit_get_animation_frames_remaining(long unit_index, short *animation_state);
+void unit_postprocess_node_matrices(long object_index, struct real_matrix4x3 *node_matrices);
 void unit_euler_aiming_update(
 	real_matrix4x3 const *orientation,
 	real_vector3d *aiming_vector,
@@ -609,30 +641,24 @@ void unit_euler_aiming_update(
 	real_rectangle2d const *aiming_bounds,
 	real angular_velocity_limit,
 	real angular_acceleration_limit);
-
+boolean unit_has_animation_to_enter_seat(long unit_index, long vehicle_index, short seat_index);
+short unit_update_animation(long unit_index, struct unit_animation_update_data *data);
 void unit_adjust_projectile_ray(long unit_index, real_point3d *origin, real_vector3d *forward, real *inherited_velocity, boolean offset_origin, boolean offset_aim);
 void unit_unzoom(long unit_index);
 short unit_get_zoom_level(long unit_index);
 real unit_get_zoom_magnification(long unit_index, short zoom_level);
-long units_debug_get_next_unit(long unit_index);
-long units_debug_get_closest_unit(long unit_index);
-void unit_debug_ninja_rope(long unit_index);
-short unit_inventory_get_must_be_readied_weapon(long unit_index);
-void unit_handle_weapon_state_change(long unit_index, short new_weapon_state);
-long unit_get_current_equipment(long unit_index);
-short unit_get_weapon_count(long unit_index);
-boolean unit_approve_weapon_pickup(long unit_index, long weapon_index);
-boolean unit_approve_weapon_swap(long unit_index, long new_weapon_index);
-boolean unit_overcharged(long unit_index);
+boolean unit_solo_player_integrated_night_vision_is_active(void);
+void unit_render_debug(long unit_index);
+void unit_animation_start_action(long unit_index, short action);
+void unit_abort_animation(long unit_index);
 short unit_find_nearby_seat(long unit_index, long parent_unit_index, short *parent_seat_index);
 boolean unit_can_enter_seat(long unit_index, long parent_unit_index, short seat_index, long *occupant_unit_index_reference);
-boolean unit_add_grenade_to_inventory(long unit_index, long equipment_index);
-boolean unit_add_equipment_to_inventory(long unit_index, long equipment_index, short mode);
-void unit_drop_current_equipment(long unit_index);
-void unit_delete_current_equipment(long unit_index);
-short unit_get_grenade_count(long unit_index, short grenade_type);
-short unit_get_current_grenade_type(long unit_index);
-
+boolean unit_enter_seat(long unit_index, long parent_unit_index, short seat_index);
+void unit_ping_animation(long unit_index, boolean died, boolean feign_death, boolean died_flying, boolean ignore_hard_pings, boolean force_hard_pings, real angle, short damage_part, real_vector2d *alignment_vector);
+void unit_impulse(long unit_index, real_point3d const *origin, real_vector3d const *velocity, real mass);
+void unit_handle_weapon_state_change(long unit_index, short new_weapon_state);
+void unit_damage_aftermath(long unit_index, struct damage_data *damage_data, unsigned long being_damaged_flags, real shield_damage, real body_damage, real body_damage_multiplier, short body_part);
+void unit_record_damage(long unit_index, real damage, short damage_category, boolean died, long owner_player_index, short owner_team_index, long owner_object_index);
 void unit_destroy(long unit_index);
 void unit_died(long unit_index, boolean feigned);
 void unit_get_head_position(long unit_index, union real_point3d *head_position);
@@ -651,36 +677,110 @@ long unit_get_aiming_unit_index(long unit_index);
 void unit_get_aiming_vector(long unit_index, real_vector3d *aiming_vector);
 void unit_get_looking_vector(long unit_index, real_vector3d *looking_vector);
 void unit_get_facing_vector(long unit_index, real_vector3d *facing_vector);
-boolean unit_can_see_point(long unit_index, real_point3d const *point, real theta);
 boolean unit_clip_to_aiming_bounds(long unit_index, real_vector3d *vector, boolean use_aiming_screen);
 long unit_inventory_get_weapon(long unit_index, short index);
-short unit_inventory_next_weapon(long unit_index, short current_index, short delta);
 short unit_inventory_next_grenade(long unit_index, short current_index, short delta);
-
-void unit_ready_desired_weapon(long unit_index, boolean immediate);
-
-boolean unit_can_use_weapon(long unit_index, long weapon_index);
-
-void unit_set_possessed(long unit_index, boolean possessed);
-void unit_set_actively_controlled(long unit_index, boolean actively_controlled);
+short unit_inventory_next_weapon(long unit_index, short current_index, short delta);
+boolean unit_melee_attack_begin(long unit_index, boolean continuous, real_vector2d const *alignment_vector);
+boolean unit_leap_begin(long unit_index, real_vector2d const *alignment_vector);
 boolean unit_controllable(long unit_index);
 void unit_set_controllable(long unit_index, boolean controllable);
-void unit_control(long unit_index, struct unit_control_data *control);
+void unit_set_possessed(long unit_index, boolean possessed);
+void unit_set_actively_controlled(long unit_index, boolean actively_controlled);
 boolean unit_is_busy(long object_index);
 void unit_scripting_set_emotion_animation(long unit_index, char const *animation_name);
-
+void unit_scripting_enter_vehicle(long unit_index, long parent_unit_index, char const *seat_name);
+void unit_scripting_suspended(long unit_index, boolean suspend);
+void unit_scripting_can_blink(long unit_index, boolean can_blink);
+short vehicle_scripting_find_available_seats(long unit_index, char const *seat_substring_name, short seat_desire_type, short *seat_indices, short seat_max_indices);
+short vehicle_scripting_load_magic(long unit_index, char const *seat_substring_name, long object_list_index);
+void unit_open(long unit_index);
+void unit_close(long unit_index);
+short vehicle_scripting_unload(long unit_index, char const *seat_substring_name);
+void unit_scripting_doesnt_drop_items(long object_list_index);
+boolean unit_scripting_vehicle_test_seat_list(long unit_index, char const *seat_name, long object_list_index);
+boolean unit_scripting_vehicle_test_seat(long unit_index, char const *seat_name, long child_index);
+void unit_scripting_exit_vehicle(long unit_index);
+long unit_scripting_unit_riders(long unit_index);
+long unit_scripting_unit_driver(long unit_index);
+long unit_scripting_unit_gunner(long unit_index);
+boolean unit_unsuspecting(long unit_index, real_point3d const *attacker);
+void unit_shield_sapping_update(long unit_index);
+boolean unit_overcharged(long unit_index);
+long units_debug_get_next_unit(long unit_index);
+long units_debug_get_closest_unit(long unit_index);
+void unit_debug_ninja_rope(long unit_index);
+boolean unit_set_seat(long unit_index, char const *name);
+boolean unit_set_user_animation(long unit_index, char const *name, short index);
+boolean any_unit_is_dangerous(void);
+boolean unit_can_see_point(long unit_index, real_point3d const *point, real theta);
+boolean unit_driven_by_ai(long unit_index);
+boolean unit_gunned_by_ai(long unit_index);
+void units_set_desired_flashlight_state(long object_list_index, boolean state);
+void unit_set_desired_flashlight_state(long unit_index, boolean state);
+boolean unit_get_current_flashlight_state(long unit_index);
+boolean unit_try_and_exit_seat(long object_index);
+void unit_exit_seat_end(long object_index);
+void unit_detach_from_parent(long object_index);
+boolean unit_seat_filled(long parent_object_index, short seat_index);
+boolean unit_seat_is_driver(long vehicle_index, short seat_index);
+boolean unit_seat_is_gunner(long vehicle_index, short seat_index);
+boolean unit_seat_allow_noncombatants(long vehicle_index, short seat_index);
+long unit_get_current_equipment(long unit_index);
+boolean unit_add_grenade_to_inventory(long unit_index, long equipment_index);
+short unit_add_grenade_type_to_inventory(long unit_index, short grenade_type, short grenade_count);
+boolean unit_add_equipment_to_inventory(long unit_index, long equipment_index, short mode);
+void unit_drop_current_equipment(long unit_index);
+void unit_delete_current_equipment(long unit_index);
+void unit_delete_all_weapons(long unit_index);
+boolean unit_add_weapon_to_inventory(long unit_index, long weapon_index, short mode);
+boolean unit_has_weapon_definition_index(long unit_index, long definition_index);
+short unit_get_weapon_count(long unit_index);
+boolean unit_can_use_weapon(long unit_index, long weapon_index);
+boolean unit_approve_weapon_pickup(long unit_index, long weapon_index);
+boolean unit_approve_weapon_swap(long unit_index, long new_weapon_index);
 boolean unit_drop_current_weapon(long unit_index, boolean immediate);
-
+short unit_get_grenade_count(long unit_index, short grenade_type);
+short unit_get_current_grenade_type(long unit_index);
 boolean unit_throw_grenade_begin(long unit_index, real_vector2d const *alignment_vector);
+void scripting_magic_melee_attack(void);
+void scripting_set_magic_base_seat(char const *string);
+void unit_scripting_set_seat(long unit_index, char const *string);
+void unit_handle_deleted_object(long unit_index, long deleted_object_index);
+void unit_handle_region_destroyed(long unit_index, short region_index, unsigned long region_damage_flags);
+void unit_cause_melee_damage(long unit_index, boolean silent, long target_object_index, short target_node_index, short target_region_index, short target_material_index, real_vector3d const *target_object_normal);
+void unit_cause_player_melee_damage(long unit_index);
+void unit_impact_melee_damage(long unit_index, long impact_object_index, short impact_node_index, short impact_region_index, short impact_material_index, real_point3d const *impact_point, real_vector3d const *impact_normal, struct location const *impact_location);
+void unit_set_enterable_by_player(long unit_index, boolean enterable_by_player);
+void unit_set_emotion(long unit_index, short emotion_index);
+void unit_aim_without_turning(long unit_index, boolean aim_without_turning);
+short unit_get_custom_animation_time(long unit_index);
+void unit_stop_custom_animation(long unit_index);
+boolean unit_is_playing_custom_animation(long unit_index);
+boolean unit_custom_animation_at_frame(long unit_index, long animation_graph_index, char const *animation_name, boolean interpolate, short frame_index);
+boolean unit_start_user_animation(long unit_index, long animation_graph_index, char const *animation_name, boolean interpolate);
+void unit_set_mouth_aperture(long unit_index, real aperture);
+short unit_inventory_get_must_be_readied_weapon(long unit_index);
+boolean unit_has_weapon(long unit_index, long weapon_index);
+boolean unit_has_weapon_with_flag(long unit_index, long flag);
+void unit_start_flaming_to_death(long unit_index, long attacker_object_index);
+void unit_start_running_blindly(long unit_index);
+void unit_stop_running_blindly(long unit_index);
 boolean unit_flying_through_air(long unit_index);
 
-void unit_try_and_exit_seat(long object_index);
-void unit_exit_seat_end(long unit_index);
-void unit_delete_all_weapons(long unit_index);
-boolean unit_enter_seat(long unit_index, long parent_unit_index, short seat_index);
-void unit_add_grenade_type_to_inventory(long unit_index, short grenade_type, short grenade_count);
-short vehicle_scripting_find_available_seats(long unit_index, char const *seat_substring_name, short seat_desire_type, short *seat_indices, short seat_max_indices);
-boolean unit_start_user_animation(long unit_index, long animation_graph_index, char const *animation_name, boolean interpolate);
+/* ---------- prototypes/UNIT_SCRIPTING_COMMANDS.C */
+
+void unit_scripting_set_maximum_vitality(long unit_index, real body_vitality, real shield_vitality);
+void units_scripting_set_maximum_vitality(long object_list_index, real body_vitality, real shield_vitality);
+void unit_scripting_set_current_vitality(long unit_index, real body_vitality, real shield_vitality);
+void units_scripting_set_current_vitality(long object_list_index, real body_vitality, real shield_vitality);
+real unit_scripting_get_health(long unit_index);
+real unit_scripting_get_shield(long unit_index);
+short unit_scripting_get_grenade_count(long unit_index);
+void unit_scripting_impervious(long object_list_index, boolean impervious);
+boolean unit_scripting_start_user_animation_list(long object_list_index, long animation_graph_index, char const *animation_name, boolean interpolate);
+boolean unit_scripting_has_weapon(long unit_index, long weapon_definition_index);
+boolean unit_scripting_has_weapon_readied(long unit_index, long weapon_definition_index);
 
 /* ---------- prototypes/UNIT_DIALOGUE.C */
 
@@ -690,6 +790,8 @@ void unit_notify_impulse_sound(long unit_index, long sound_definition_index, lon
 boolean unit_is_speaking(long unit_index);
 boolean unit_make_damage_sound(long unit_index, struct damage_data *damage_data, boolean died, boolean died_instantly, real body_damage, real shield_damage);
 boolean unit_scream(long unit_index, short scream_type);
+void unit_dialogue_update(long unit_index);
+void unit_dialogue_determine_variant(long unit_index);
 
 char const *unit_get_speech_priority_name(short priority);
 short unit_get_speech_priority_by_name(char const *name);

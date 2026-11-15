@@ -1190,6 +1190,8 @@ real actor_destination_tolerance(long actor_index);
 long actor_target_unit_index(long actor_index);
 void actor_find_pathfinding_location(long actor_index);
 boolean actor_has_ranged_weapon(long actor_index);
+void actor_died(long actor_index);
+short actors_spawn_from_unit(long unit_index, long actor_variant_definition_index, short count, real velocity);
 
 /* ---------- prototypes/ACTOR_COMBAT.C */
 
@@ -1226,6 +1228,8 @@ boolean actor_path_at_destination(long actor_index);
 boolean actor_move_to_move_position(long actor_index, short move_position_index);
 boolean actor_move_to_firing_position(long actor_index, short firing_position_index, struct path_state *cached_path_state);
 boolean actor_move_to_prop(long actor_index, long prop_index, real accept_radius);
+boolean actor_aim_jump(long actor_index, long unit_index, boolean leap, real jump_magnitude, real_vector3d *jump_velocity);
+boolean actor_is_leaping(long actor_index);
 
 /* ---------- prototypes/ACTOR_PERCEPTION.C */
 
