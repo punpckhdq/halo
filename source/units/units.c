@@ -1674,6 +1674,7 @@ void unit_preprocess_node_orientations(
 				matrix4x3_inverse_transform_normal(&matrix, &unit->unit.aiming_vector, &relative_aiming_vector);
 				match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\units.c", 1661, &relative_aiming_vector);
 				euler_angles2d_from_vector3d(&relative_aiming_angles, &relative_aiming_vector);
+
 				match_assert_valid_real("c:\\halo\\SOURCE\\units\\units.c", 1664, relative_aiming_angles.pitch);
 				match_assert_valid_real("c:\\halo\\SOURCE\\units\\units.c", 1665, relative_aiming_angles.yaw);
 
@@ -5074,7 +5075,6 @@ boolean unit_clip_to_aiming_bounds(
 		matrix4x3_inverse_transform_normal(&matrix, vector, &relative_vector);
 
 		match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\units\\units.c", 5626, &relative_vector);
-
 		euler_angles2d_from_vector3d(&relative_aiming_angles, &relative_vector);
 
 		match_assert_valid_real("c:\\halo\\SOURCE\\units\\units.c", 5629, relative_aiming_angles.pitch);
@@ -5909,18 +5909,12 @@ boolean unit_overcharged(
 {
 	long weapon_index = unit_get_current_weapon_index(unit_index);
 
-	boolean overcharged;
-
 	if (weapon_index != NONE)
 	{
-		overcharged = weapon_overcharged(weapon_index);
-	}
-	else
-	{
-		overcharged = FALSE;
+		return weapon_overcharged(weapon_index);
 	}
 
-	return overcharged;
+	return FALSE;
 }
 
 long units_debug_get_next_unit(
@@ -8336,7 +8330,9 @@ boolean unit_is_playing_custom_animation(
 {
 	if (unit_index != NONE)
 	{
-		return unit_get(unit_index)->unit.animation.state == _unit_state_user_animation;
+		struct unit_datum *unit = unit_get(unit_index);
+
+		return unit->unit.animation.state == _unit_state_user_animation;
 	}
 
 	return FALSE;
@@ -8479,6 +8475,7 @@ static void unit_align_facing(
 		match_assert_valid_real_normal2d("c:\\halo\\SOURCE\\units\\units.c", 9353, alignment_vector);
 		set_real_vector3d(&unit->object.forward, alignment_vector->i, alignment_vector->j, 0.f);
 		unit->object.up = *global_up3d;
+
 		match_assert_valid_real_vector3d_axes2("c:\\halo\\SOURCE\\units\\units.c", 9357, &unit->object.forward, &unit->object.up);
 	}
 
