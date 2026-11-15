@@ -153,7 +153,7 @@ void _rasterizer_widget_begin(
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 			short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{2.f / viewport_width, 0.f, 0.f, -1.f - 1.f / viewport_width},
 				{0.f, -2.f / viewport_height, 0.f, 1.f / viewport_height + 1.f},
@@ -196,7 +196,7 @@ void _rasterizer_widget_begin(
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 			short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{2.f / viewport_width, 0.f, 0.f, -1.f - 1.f / viewport_width},
 				{0.f, -2.f / viewport_height, 0.f, 1.f / viewport_height + 1.f},
@@ -480,7 +480,7 @@ long _rasterizer_widget_get_occlusion_test_result(
 
 		if (hr==D3DERR_TESTINCOMPLETE)
 		{
-			rasterizer_spin_begin(RASTERIZER_SPIN_OCCLUSION_TEST_RESULT);
+			rasterizer_spin_begin(_rasterizer_stall_occlusion_test);
 
 			do
 			{

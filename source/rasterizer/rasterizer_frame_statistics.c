@@ -46,16 +46,10 @@ static boolean eat_my_shorts(short a, short b);
 
 char *profile_log_path = "d:\\r-prof.txt";
 
-static real profile_log_samples[NUMBER_OF_RASTERIZER_PROFILES][NUMBER_OF_PROFILE_LOG_FRAMES] = {0}; /* fake name */
 static word *rasterizer_frame_statistics_temp_buffer = NULL;
 static __int64 rasterizer_fps_accumulation_time = 0;
 static __int64 rasterizer_fps_accumulation_frame_index = 0;
 static FILE *local_profile_log = NULL;
-static unsigned long time_samples[RASTERIZER_FRAME_STATISTICS_FPS_SAMPLE_COUNT] = {0};
-static short fps_sample_count = 0;
-static short profile_log_frame_index = 0; /* fake name */
-static real profile_log_total_time = 0.f; /* fake name */
-static long profile_log_total_pushbuffer = 0; /* fake name */
 
 /* ---------- public code */
 
@@ -86,6 +80,9 @@ void rasterizer_frame_statistics_begin(
 void rasterizer_frame_statistics_get_fps(
 	struct rasterizer_frame_statistics_s *frame_statistics)
 {
+	static unsigned long time_samples[RASTERIZER_FRAME_STATISTICS_FPS_SAMPLE_COUNT] = {0};
+	static short fps_sample_count = 0;
+
 	if (rasterizer_debug_options.statistics_mode && frame_statistics)
 	{
 		unsigned long time = system_milliseconds();
@@ -261,10 +258,10 @@ void rasterizer_frame_statistics_draw(
 	if (rasterizer_debug_options.statistics_mode!=_rasterizer_statistics_mode_none)
 	{
 		char frame_statistics_string[0x3000];
-		rectangle2d bounds;
 		short tab_stops[] = { 100, 200, 300, 400, 500, 600 };
 		short tab_stop_count = NUMBEROF(tab_stops);
 		point2d cursor = { 0, 0 };
+		rectangle2d bounds;
 		real_argb_color statistics_color_plain = { 1.f, 0.66f, 1.f, 0.66f };
 		real_argb_color statistics_color_bold = { 1.f, 1.f, 1.f, 1.f };
 		real_argb_color white = { 1.f, 1.f, 1.f, 1.f };
@@ -330,15 +327,15 @@ void rasterizer_frame_statistics_draw(
 
 		if (rasterizer_debug_options.fps_accumulation)
 		{
-			__int64 frame_count = rasterizer_globals.frame_index - rasterizer_fps_accumulation_frame_index;
-			__int64 milliseconds = system_milliseconds() - rasterizer_fps_accumulation_time;
+			__int64 delta_frames = rasterizer_globals.frame_index - rasterizer_fps_accumulation_frame_index;
+			__int64 delta_time = system_milliseconds() - rasterizer_fps_accumulation_time;
 
 			sprintf(
 				frame_statistics_string,
 				"|t%.0f|t%.0f/%.0f|t%.0f|t%.0f|n",
 				rasterizer_frame_statistics.fps,
 				rasterizer_frame_statistics.fps_average,
-				(real)frame_count * 1000.f / (real)milliseconds,
+				(real)delta_frames * 1000.f / (real)delta_time,
 				rasterizer_frame_statistics.fps_min,
 				rasterizer_frame_statistics.fps_max);
 		}
@@ -574,8 +571,6 @@ void rasterizer_frame_statistics_draw(
 			long total_used_size = 0;
 			struct rasterizer_memory_statistic statistics[] =
 			{
-				// TODO: figure out why constants differ here and in rasterizer_geometry.h
-
 				{ "memory pool", RASTERIZER_MEMORY_POOL_SIZE, 0 },
 				{ "dynamic vertices (unlit)", 196608, 0 },
 				{ "dynamic vertices (lit*)", 72, 307200 },
@@ -635,6 +630,11 @@ void rasterizer_frame_statistics_draw(
 
 	if (rasterizer_debug_options.profile_log_enabled)
 	{
+		static real profile_log_samples[NUMBER_OF_RASTERIZER_PROFILES][NUMBER_OF_PROFILE_LOG_FRAMES];
+		static short profile_log_frame_index = 0;
+		static real profile_log_total_time = 0.f;
+		static long profile_log_total_pushbuffer = 0;
+
 		if (!local_profile_log)
 		{
 			local_profile_log = fopen(profile_log_path, "w");

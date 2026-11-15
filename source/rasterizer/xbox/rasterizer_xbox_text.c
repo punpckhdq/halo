@@ -51,7 +51,7 @@ void rasterizer_text_begin(
 				parameters->offset ? parameters->offset->i*2.f/viewport_width : 0.f,
 				parameters->offset ? parameters->offset->j*-2.f/viewport_height : 0.f
 			};
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{2.f/viewport_width, 0.f, 0.f, geometry_offset.i - (1.f/viewport_width + 1.f)},
 				{0.f, -2.f/viewport_height, 0.f, 1.f/viewport_height + geometry_offset.j + 1.f},
@@ -59,7 +59,7 @@ void rasterizer_text_begin(
 				{0.f, 0.f, 0.f, 1.f},
 				{parameters->map_texture_scale[0].i, parameters->map_texture_scale[0].j, 0.f, 1.f}
 			};
-			real vsh_constants__screenproj2[6][4] =
+			real vsh_constants__screenproj2[VSH_CONSTANTS__SCREENPROJ2_COUNT][4] =
 			{
 				{parameters->map_texture_scale[1].i, parameters->map_texture_scale[1].j, parameters->map_texture_scale[2].i, parameters->map_texture_scale[2].j},
 				{parameters->map_anchor_screen[0] ? 1.f : 0.f, parameters->map_anchor_screen[0] ? 0.f : 1.f, parameters->map_anchor_screen[1] ? 1.f : 0.f, parameters->map_anchor_screen[1] ? 0.f : 1.f},

@@ -260,14 +260,24 @@ enum
 enum
 {
 	_shader_effect_map_point_sampled_bit = 0,
-	_shader_effect_map_u_clamp_bit,
-	_shader_effect_map_v_clamp_bit
+	NUMBER_OF_SHADER_EFFECT_MAP_USER_FLAGS,
+	_shader_effect_map_u_clamp_bit = NUMBER_OF_SHADER_EFFECT_MAP_USER_FLAGS,
+	_shader_effect_map_v_clamp_bit,
+	NUMBER_OF_SHADER_EFFECT_MAP_FLAGS
 };
 
 enum
 {
 	_shader_transparent_chicago_dont_fade_active_camouflage_bit = 0,
-	_shader_transparent_chicago_numeric_countdown_timer_bit
+	_shader_transparent_chicago_numeric_countdown_timer_bit,
+	NUMBER_OF_SHADER_TRANSPARENT_CHICAGO_EXTRA_FLAGS
+};
+
+enum
+{
+	MAXIMUM_MAPS_PER_SHADER_TRANSPARENT_CHICAGO = 4,
+	MAXIMUM_MAPS_PER_SHADER_TRANSPARENT_GENERIC = 4,
+	MAXIMUM_RIPPLES_PER_SHADER_TRANSPARENT_WATER = 4
 };
 
 enum
@@ -275,7 +285,8 @@ enum
 	_shader_transparent_chicago_map_point_sampled_bit = 0,
 	_shader_transparent_chicago_map_alpha_replicate_bit,
 	_shader_transparent_chicago_map_u_clamped_bit,
-	_shader_transparent_chicago_map_v_clamped_bit
+	_shader_transparent_chicago_map_v_clamped_bit,
+	NUMBER_OF_SHADER_TRANSPARENT_CHICAGO_MAP_FLAGS
 };
 
 enum
@@ -623,51 +634,51 @@ struct shader_transparent_chicago_map
 
 struct shader_transparent_generic_map
 {
-	word flags;
+	word flags; /* fake name */
 	word pad;
-	real_vector2d scale;
-	real_vector2d offset;
-	real rotation;
-	real mipmap_bias;
-	struct tag_reference map;
-	struct shader_texture_animation animation;
+	real_vector2d scale; /* fake name */
+	real_vector2d offset; /* fake name */
+	real rotation; /* fake name */
+	real mipmap_bias; /* fake name */
+	struct tag_reference map; /* fake name */
+	struct shader_texture_animation animation; /* fake name */
 };
 
 struct shader_transparent_generic_stage
 {
-	word flags;
+	word flags; /* fake name */
 	word pad;
-	short constant_color0_source;
-	short constant_color0_animation_function;
+	short constant_color0_source; /* fake name */
+	short constant_color0_animation_function; /* fake name */
 	real constant_color0_animation_period;
-	real_argb_color constant_color0_animation_lower_bound;
-	real_argb_color constant_color0_animation_upper_bound;
-	real_argb_color constant_color1;
-	short color_input_A;
-	short color_input_A_mapping;
-	short color_input_B;
-	short color_input_B_mapping;
-	short color_input_C;
-	short color_input_C_mapping;
-	short color_input_D;
-	short color_input_D_mapping;
-	short color_output_AB;
+	real_argb_color constant_color0_animation_lower_bound; /* fake name */
+	real_argb_color constant_color0_animation_upper_bound; /* fake name */
+	real_argb_color constant_color1; /* fake name */
+	short color_input_A; /* fake name */
+	short color_input_A_mapping; /* fake name */
+	short color_input_B; /* fake name */
+	short color_input_B_mapping; /* fake name */
+	short color_input_C; /* fake name */
+	short color_input_C_mapping; /* fake name */
+	short color_input_D; /* fake name */
+	short color_input_D_mapping; /* fake name */
+	short color_output_AB; /* fake name */
 	short color_output_AB_function;
-	short color_output_CD;
+	short color_output_CD; /* fake name */
 	short color_output_CD_function;
-	short color_output_AB_CD_mux_sum;
+	short color_output_AB_CD_mux_sum; /* fake name */
 	short color_output_mapping;
-	short alpha_input_A;
-	short alpha_input_A_mapping;
-	short alpha_input_B;
-	short alpha_input_B_mapping;
-	short alpha_input_C;
-	short alpha_input_C_mapping;
-	short alpha_input_D;
-	short alpha_input_D_mapping;
-	short alpha_output_AB;
-	short alpha_output_CD;
-	short alpha_output_AB_CD_mux_sum;
+	short alpha_input_A; /* fake name */
+	short alpha_input_A_mapping; /* fake name */
+	short alpha_input_B; /* fake name */
+	short alpha_input_B_mapping; /* fake name */
+	short alpha_input_C; /* fake name */
+	short alpha_input_C_mapping; /* fake name */
+	short alpha_input_D; /* fake name */
+	short alpha_input_D_mapping; /* fake name */
+	short alpha_output_AB; /* fake name */
+	short alpha_output_CD; /* fake name */
+	short alpha_output_AB_CD_mux_sum; /* fake name */
 	short alpha_output_mapping;
 };
 

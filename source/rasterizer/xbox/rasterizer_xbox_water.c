@@ -16,13 +16,6 @@ RASTERIZER_XBOX_WATER.C
 #include "shaders.h"
 #include "rasterizer/common/rasterizer_common.h"
 
-/* ---------- constants */
-
-enum
-{
-	MAXIMUM_WATER_RIPPLES = 4 /* fake name */
-};
-
 /* ---------- prototypes */
 
 void rasterizer_water_build_bumpmap(struct shader const *shader);
@@ -67,14 +60,14 @@ void rasterizer_water_build_bumpmap(
 
 	if (rasterizer_debug_options.draw_water)
 	{
-		struct shader_transparent_water_ripple ripples[MAXIMUM_WATER_RIPPLES];
+		struct shader_transparent_water_ripple ripples[MAXIMUM_RIPPLES_PER_SHADER_TRANSPARENT_WATER];
 		real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4];
 		short ripple_index;
 		short mipmap_index;
 		struct shader_transparent_water const *water = shader_transparent_water_get(shader);
 		short mipmap_levels = MIN(water->water.ripple_mipmap_levels, RASTERIZER_TARGET_WATER_MAX_MIPMAP_LEVELS);
 
-		for (ripple_index = 0; ripple_index<MAXIMUM_WATER_RIPPLES; ripple_index++)
+		for (ripple_index = 0; ripple_index<MAXIMUM_RIPPLES_PER_SHADER_TRANSPARENT_WATER; ripple_index++)
 		{
 			if (ripple_index<water->water.ripples.count)
 			{
@@ -97,7 +90,7 @@ void rasterizer_water_build_bumpmap(
 			ripples[3].contibution_factor = 1.f;
 		}
 
-		for (ripple_index = 0; ripple_index<MAXIMUM_WATER_RIPPLES; ripple_index++)
+		for (ripple_index = 0; ripple_index<MAXIMUM_RIPPLES_PER_SHADER_TRANSPARENT_WATER; ripple_index++)
 		{
 			rasterizer_set_texture(ripple_index, _bitmap_type_2d, _bitmap_usage_vector, ripple_index<water->water.ripples.count ? water->water.ripple_maps.index : NONE, ripples[ripple_index].map_index);
 			SetTextureStageStateSmart(ripple_index, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
@@ -116,7 +109,7 @@ void rasterizer_water_build_bumpmap(
 
 		rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
-		for (ripple_index = 0; ripple_index<MAXIMUM_WATER_RIPPLES; ripple_index++)
+		for (ripple_index = 0; ripple_index<MAXIMUM_RIPPLES_PER_SHADER_TRANSPARENT_WATER; ripple_index++)
 		{
 			real cosine_angle = cosine(ripples[ripple_index].animation_angle);
 			real sine_angle = sine(ripples[ripple_index].animation_angle);

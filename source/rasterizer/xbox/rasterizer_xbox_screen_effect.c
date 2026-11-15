@@ -54,11 +54,11 @@ static void rasterizer_screen_effect_set_texture_transforms(
 		real_vector2d stage1_size;
 		real_vector2d stage2_size;
 		real_vector2d stage3_size;
+		real_vector2d default_scale;
 		real_vector2d stage0_scale;
 		real_vector2d stage1_scale;
 		real_vector2d stage2_scale;
 		real_vector2d stage3_scale;
-		real_vector2d unit_scale;
 		short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 		short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
 		struct bitmap_data screen_bitmap = {BITMAP_SIGNATURE, viewport_width, viewport_height, 1, _bitmap_type_2d, NONE, FLAG(_bitmap_linear_bit)};
@@ -84,13 +84,13 @@ static void rasterizer_screen_effect_set_texture_transforms(
 		stage2_size.j = (real)stage2_bitmap->height;
 		stage3_size.i = (real)stage3_bitmap->width;
 		stage3_size.j = (real)stage3_bitmap->height;
-		unit_scale.i = 1.f;
-		unit_scale.j = 1.f;
+		default_scale.i = 1.f;
+		default_scale.j = 1.f;
 
-		stage0_scale = TEST_FLAG(stage0_bitmap->flags, _bitmap_linear_bit) ? unit_scale : __reciprocal_vector2d(&stage0_size);
-		stage1_scale = TEST_FLAG(stage1_bitmap->flags, _bitmap_linear_bit) ? unit_scale : __reciprocal_vector2d(&stage1_size);
-		stage2_scale = TEST_FLAG(stage2_bitmap->flags, _bitmap_linear_bit) ? unit_scale : __reciprocal_vector2d(&stage2_size);
-		stage3_scale = TEST_FLAG(stage3_bitmap->flags, _bitmap_linear_bit) ? unit_scale : __reciprocal_vector2d(&stage3_size);
+		stage0_scale = TEST_FLAG(stage0_bitmap->flags, _bitmap_linear_bit) ? default_scale : __reciprocal_vector2d(&stage0_size);
+		stage1_scale = TEST_FLAG(stage1_bitmap->flags, _bitmap_linear_bit) ? default_scale : __reciprocal_vector2d(&stage1_size);
+		stage2_scale = TEST_FLAG(stage2_bitmap->flags, _bitmap_linear_bit) ? default_scale : __reciprocal_vector2d(&stage2_size);
+		stage3_scale = TEST_FLAG(stage3_bitmap->flags, _bitmap_linear_bit) ? default_scale : __reciprocal_vector2d(&stage3_size);
 
 		{
 			real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
@@ -433,7 +433,7 @@ void _rasterizer_screen_effect(
 				else if (pass==1)
 				{
 					real noise_intensity;
-					long overbright_shifts[NUMBER_OF_RASTERIZER_SCREEN_EFFECT_VIDEO_OVERBRIGHT_MODES] = {PS_COMBINEROUTPUT_IDENTITY, PS_COMBINEROUTPUT_SHIFTLEFT_1, PS_COMBINEROUTPUT_SHIFTLEFT_2};
+					long video_overbright_table[NUMBER_OF_RASTERIZER_SCREEN_EFFECT_VIDEO_OVERBRIGHT_MODES] = {PS_COMBINEROUTPUT_IDENTITY, PS_COMBINEROUTPUT_SHIFTLEFT_1, PS_COMBINEROUTPUT_SHIFTLEFT_2};
 
 					pixel_shader.PSTextureModes = PS_TEXTUREMODES(PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_PROJECT2D, PS_TEXTUREMODES_NONE);
 					pixel_shader.PSCombinerCount = PS_COMBINERCOUNT(4, PS_COMBINERCOUNT_MUX_LSB | PS_COMBINERCOUNT_SAME_C0 | PS_COMBINERCOUNT_SAME_C1);
@@ -449,7 +449,7 @@ void _rasterizer_screen_effect(
 					pixel_shader.PSRGBOutputs[2] = PS_COMBINEROUTPUTS(PS_REGISTER_R1, PS_REGISTER_DISCARD, PS_REGISTER_DISCARD, PS_COMBINEROUTPUT_IDENTITY | PS_COMBINEROUTPUT_AB_MULTIPLY | PS_COMBINEROUTPUT_AB_CD_SUM);
 					match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_screen_effect.c", 497, parameters->video_overbright_mode>=0 && parameters->video_overbright_mode<NUMBER_OF_RASTERIZER_SCREEN_EFFECT_VIDEO_OVERBRIGHT_MODES);
 					pixel_shader.PSRGBInputs[3] = PS_COMBINERINPUTS(PS_REGISTER_R1, PS_REGISTER_R1, PS_REGISTER_T0, PS_REGISTER_ONE);
-					pixel_shader.PSRGBOutputs[3] = PS_COMBINEROUTPUTS(PS_REGISTER_R1, PS_REGISTER_T0, PS_REGISTER_DISCARD, overbright_shifts[parameters->video_overbright_mode]);
+					pixel_shader.PSRGBOutputs[3] = PS_COMBINEROUTPUTS(PS_REGISTER_R1, PS_REGISTER_T0, PS_REGISTER_DISCARD, video_overbright_table[parameters->video_overbright_mode]);
 					pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_R0 | PS_INPUTMAPPING_UNSIGNED_INVERT, PS_REGISTER_R1, PS_REGISTER_T0, PS_REGISTER_ZERO);
 					pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_V0, PS_REGISTER_ZERO);
 
@@ -775,7 +775,7 @@ void _rasterizer_screen_flash(
 		{
 			short viewport_width = global_window_parameters.camera.viewport_bounds.x1 - global_window_parameters.camera.viewport_bounds.x0;
 			short viewport_height = global_window_parameters.camera.viewport_bounds.y1 - global_window_parameters.camera.viewport_bounds.y0;
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{2.f / viewport_width, 0.f, 0.f, -1.f - 1.f / viewport_width},
 				{0.f, -2.f / viewport_height, 0.f, 1.f / viewport_height + 1.f},

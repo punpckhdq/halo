@@ -101,8 +101,8 @@ boolean shader_transparent_chicago_create(
 	struct shader const *shader,
 	D3DPIXELSHADERDEF *pixel_shader)
 {
-	struct shader_transparent_chicago const *shader_transparent_chicago;
 	boolean success = TRUE;
+	struct shader_transparent_chicago const *shader_transparent_chicago = NULL;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_chicago_preprocessor.c", 100, shader);
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_chicago_preprocessor.c", 101, pixel_shader);
@@ -128,8 +128,8 @@ boolean shader_transparent_chicago_create(
 
 			if (map_index!=shader_transparent_chicago->chicago.maps.count - 1)
 			{
-				pixel_shader->PSAlphaInputs[map_index + 1] = alpha_function_inputs[map->alpha_function] + (map_index + 1) * function_input_texture_offsets[map->alpha_function];
-				pixel_shader->PSRGBInputs[map_index + 1] = color_function_inputs[TEST_FLAG(map->flags, _shader_transparent_chicago_map_alpha_replicate_bit)][map->color_function] + (map_index + 1) * function_input_texture_offsets[map->color_function];
+				pixel_shader->PSAlphaInputs[map_index + 1] = (map_index + 1) * function_input_texture_offsets[map->alpha_function] + alpha_function_inputs[map->alpha_function];
+				pixel_shader->PSRGBInputs[map_index + 1] = (map_index + 1) * function_input_texture_offsets[map->color_function] + color_function_inputs[TEST_FLAG(map->flags, _shader_transparent_chicago_map_alpha_replicate_bit)][map->color_function];
 			}
 			else
 			{

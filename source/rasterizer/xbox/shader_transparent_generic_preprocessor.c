@@ -161,7 +161,7 @@ static long shader_stage_color_input(
 	short register_index,
 	short mapping_index)
 {
-	long result;
+	long result = 0;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 212, register_index>=0 && register_index<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_INPUTS);
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 213, mapping_index>=0 && mapping_index<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_MAPPINGS);
@@ -181,15 +181,19 @@ static long shader_stage_color_input(
 static long shader_stage_color_output(
 	short register_index)
 {
+	long result = 0;
+
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 233, register_index>=0 && register_index<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUTS);
 
-	return color_output_registers[register_index];
+	result = color_output_registers[register_index];
+
+	return result;
 }
 
 static long shader_stage_color_output_flags(
 	struct shader_transparent_generic_stage const *stage)
 {
-	long flags;
+	long flags = 0;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 246, stage);
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 247, stage->color_output_mapping>=0 && stage->color_output_mapping<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_MAPPINGS);
@@ -220,7 +224,7 @@ static long shader_stage_alpha_input(
 	short register_index,
 	short mapping_index)
 {
-	long result;
+	long result = 0;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 266, register_index>=0 && register_index<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_INPUTS);
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 267, mapping_index>=0 && mapping_index<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_MAPPINGS);
@@ -240,15 +244,19 @@ static long shader_stage_alpha_input(
 static long shader_stage_alpha_output(
 	short register_index)
 {
+	long result = 0;
+
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 287, register_index>=0 && register_index<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUTS);
 
-	return alpha_output_registers[register_index];
+	result = alpha_output_registers[register_index];
+
+	return result;
 }
 
 static long shader_stage_alpha_output_flags(
 	struct shader_transparent_generic_stage const *stage)
 {
-	long flags;
+	long flags = 0;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 300, stage);
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 301, stage->alpha_output_mapping>=0 && stage->alpha_output_mapping<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_MAPPINGS);
@@ -332,9 +340,9 @@ boolean shader_transparent_generic_create(
 	struct shader const *shader,
 	D3DPIXELSHADERDEF *pixel_shader)
 {
-	struct shader_transparent_generic const *shader_transparent_generic;
 	short stage_index;
 	boolean success = TRUE;
+	struct shader_transparent_generic const *shader_transparent_generic = NULL;
 
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 388, shader);
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\shader_transparent_generic_preprocessor.c", 389, pixel_shader);
@@ -342,12 +350,7 @@ boolean shader_transparent_generic_create(
 	shader_transparent_generic = shader_transparent_generic_get(shader);
 	memset(pixel_shader, 0, sizeof(*pixel_shader));
 
-	if (shader_transparent_generic->generic.maps.count<=0 && shader_transparent_generic->generic.stages.count<=0)
-	{
-		error(_error_silent, "### ERROR generic shader has no maps or stages");
-		success = FALSE;
-	}
-	else
+	if (shader_transparent_generic->generic.maps.count>0 || shader_transparent_generic->generic.stages.count>0)
 	{
 		short map_index;
 
@@ -366,6 +369,11 @@ boolean shader_transparent_generic_create(
 				success = shader_map_verify(map_index, map);
 			}
 		}
+	}
+	else
+	{
+		error(_error_silent, "### ERROR generic shader has no maps or stages");
+		success = FALSE;
 	}
 
 	pixel_shader->PSCombinerCount = PS_COMBINERCOUNT(MAX(1, shader_transparent_generic->generic.stages.count) + 1, PS_COMBINERCOUNT_MUX_MSB | PS_COMBINERCOUNT_UNIQUE_C0 | PS_COMBINERCOUNT_UNIQUE_C1);

@@ -23,12 +23,12 @@ static void rasterizer_shadow_convolve(void);
 /* ---------- globals */
 
 static struct rasterizer_model_begin_parameters const *local_parameters = NULL;
-static boolean local_shadow_draw_initialized = FALSE; /* fake name */
-static boolean local_shadow_cast = FALSE; /* fake name */
 static real_matrix4x3 local_shadow_matrix; /* fake name */
 static real local_object_bounding_radius; /* fake name */
-static real_rgb_color local_shadow_color; /* fake name */
-static boolean window_target_restored = TRUE; /* fake name */
+static real_rgb_color local_shadow_color;
+static boolean shadow_setup = FALSE;
+static boolean shadow_used = FALSE;
+static boolean shadow_restored = TRUE;
 
 /* ---------- private code */
 
@@ -156,7 +156,7 @@ boolean _rasterizer_environment_shadow_begin(
 		rasterizer_set_pixel_shader(&pixel_shader);
 
 		{
-			real vsh_constants__screenproj[5][4] =
+			real vsh_constants__screenproj[VSH_CONSTANTS__SCREENPROJ_COUNT][4] =
 			{
 				{
 					(1.f / object_bounding_radius) * shadow_matrix->forward.i,
@@ -196,9 +196,9 @@ boolean _rasterizer_environment_shadow_begin(
 		}
 
 		local_parameters = NULL;
-		local_shadow_draw_initialized = FALSE;
-		local_shadow_cast = FALSE;
-		window_target_restored = FALSE;
+		shadow_setup = FALSE;
+		shadow_used = FALSE;
+		shadow_restored = FALSE;
 
 		if (rasterizer_debug_options.statistics_mode==_rasterizer_statistics_mode_full)
 		{
@@ -225,7 +225,7 @@ void _rasterizer_environment_shadow_model_begin(
 
 		rasterizer_set_model_skinning(&parameters->skinning);
 		local_parameters = parameters;
-		local_shadow_cast = TRUE;
+		shadow_used = TRUE;
 
 		if (rasterizer_debug_options.statistics_mode==_rasterizer_statistics_mode_full)
 		{
@@ -342,7 +342,7 @@ void _rasterizer_environment_shadow_draw(
 
 	if (global_window_parameters.rasterizer_target==_rasterizer_target_render_primary && rasterizer_debug_options.draw_environment_shadows)
 	{
-		if (!local_shadow_draw_initialized)
+		if (!shadow_setup)
 		{
 			if (rasterizer_debug_options.shadow_convolution_enabled)
 			{
@@ -451,13 +451,13 @@ void _rasterizer_environment_shadow_draw(
 				D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, VSH_CONSTANTS__SHADOW_OFFSET, vsh_constants__shadow, VSH_CONSTANTS__SHADOW_COUNT));
 			}
 
-			if (!window_target_restored)
+			if (!shadow_restored)
 			{
 				rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
-				window_target_restored = TRUE;
+				shadow_restored = TRUE;
 			}
 
-			local_shadow_draw_initialized = TRUE;
+			shadow_setup = TRUE;
 		}
 
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_reject);
@@ -486,15 +486,15 @@ void _rasterizer_environment_shadow_end(
 
 	if (global_window_parameters.rasterizer_target==_rasterizer_target_render_primary && rasterizer_debug_options.draw_environment_shadows)
 	{
-		if (!local_shadow_cast)
+		if (!shadow_used)
 		{
 			error(_error_silent, "### WARNING empty shadow has been cast");
 		}
 
-		if (!window_target_restored)
+		if (!shadow_restored)
 		{
 			rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
-			window_target_restored = TRUE;
+			shadow_restored = TRUE;
 		}
 	}
 

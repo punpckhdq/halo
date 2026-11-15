@@ -25,15 +25,14 @@ RASTERIZER_XBOX_TRANSPARENT_GEOMETRY.C
 enum
 {
 	RASTERIZER_TRANSPARENT_GEOMETRY_TEXCOORD_STREAM_SIZE = 8192,
-	NUMBER_OF_SHADER_TRANSPARENT_MAPS = 4, /* fake name */
 	PAD3_ACCUM_RANGE_END = 1000, /* fake name */
 };
 
 /* ---------- globals */
 
-static long rasterizer_xbox_transparent_geometry_last_source_object_index = 0; /* fake name */
+static long local_last_source_object_index = 0;
 static IDirect3DVertexBuffer8 *rasterizer_xbox_transparent_geometry_texcoord_stream = NULL;
-static boolean rasterizer_xbox_transparent_geometry_no_more_active_camouflage = FALSE; /* fake name */
+static boolean __test_no_more_active_camo = FALSE;
 static unsigned long rasterizer_xbox_transparent_geometry_pixel_count = 0; /* fake name */
 
 /* ---------- public code */
@@ -41,8 +40,8 @@ static unsigned long rasterizer_xbox_transparent_geometry_pixel_count = 0; /* fa
 void rasterizer_transparent_geometry_groups_begin(
 	void)
 {
-	rasterizer_xbox_transparent_geometry_last_source_object_index = 0;
-	rasterizer_xbox_transparent_geometry_no_more_active_camouflage = FALSE;
+	local_last_source_object_index = 0;
+	__test_no_more_active_camo = FALSE;
 
 	if (rasterizer_debug_options.__unknown88 && rasterizer_debug_options.transparent_pixel_counter_enabled && global_window_parameters.window_index!=NONE)
 	{
@@ -271,7 +270,7 @@ void rasterizer_transparent_geometry_group_draw(
 			{
 				long source_object_index = group->source_object_index;
 
-				if (source_object_index!=rasterizer_xbox_transparent_geometry_last_source_object_index && !dirty)
+				if (source_object_index!=local_last_source_object_index && !dirty)
 				{
 					struct transparent_geometry_group const *source_group = group;
 
@@ -329,7 +328,7 @@ void rasterizer_transparent_geometry_group_draw(
 			if (!TEST_FLAG(group->geometry_flags, _rasterizer_geometry_no_queue_bit) && global_window_parameters.rasterizer_target==_rasterizer_target_render_primary && !dirty)
 			{
 				if (rasterizer_debug_options.active_camouflage_multipass_enabled ?
-					(group->shader && group->shader->base.type==_shader_type_model && group->effect.type==_render_model_effect_type_active_camouflage && group->source_object_index!=rasterizer_xbox_transparent_geometry_last_source_object_index) :
+					(group->shader && group->shader->base.type==_shader_type_model && group->effect.type==_render_model_effect_type_active_camouflage && group->source_object_index!=local_last_source_object_index) :
 					(!group->shader || (group->shader->base.type!=_shader_type_transparent_water && !shader_is_water_decal(group->shader))))
 				{
 					rasterizer_active_camouflage_cache_primary_render_target();
@@ -436,7 +435,7 @@ void rasterizer_transparent_geometry_group_draw(
 						switch (group->effect.type)
 						{
 						case _render_model_effect_type_active_camouflage:
-							if (rasterizer_xbox_transparent_geometry_no_more_active_camouflage)
+							if (__test_no_more_active_camo)
 							{
 								return;
 							}
@@ -675,7 +674,7 @@ void rasterizer_transparent_geometry_group_draw(
 
 						if (shader_transparent_generic->generic.maps.count>0)
 						{
-							for (map_index = 0; map_index<NUMBER_OF_SHADER_TRANSPARENT_MAPS; map_index++)
+							for (map_index = 0; map_index<MAXIMUM_MAPS_PER_SHADER_TRANSPARENT_GENERIC; map_index++)
 							{
 								if (map_index<shader_transparent_generic->generic.maps.count)
 								{
@@ -866,7 +865,7 @@ void rasterizer_transparent_geometry_group_draw(
 						for (stage_index = 0; stage_index<shader_transparent_generic->generic.stages.count; stage_index++)
 						{
 							real_argb_color constant_color0;
-							real_argb_color color_delta;
+							real_argb_color gradient_color;
 							real function_value;
 							long component_index;
 							struct shader_transparent_generic_stage const *stage = TAG_BLOCK_GET_ELEMENT(&shader_transparent_generic->generic.stages, stage_index, struct shader_transparent_generic_stage);
@@ -882,14 +881,14 @@ void rasterizer_transparent_geometry_group_draw(
 								function_value = periodic_function_evaluate(stage->constant_color0_animation_function, global_frame_parameters.game_time_sec / stage->constant_color0_animation_period);
 							}
 
-							for (component_index = 0; component_index<NUMBEROF(color_delta.n); component_index++)
+							for (component_index = 0; component_index<NUMBEROF(gradient_color.n); component_index++)
 							{
-								color_delta.n[component_index] = stage->constant_color0_animation_upper_bound.n[component_index] - stage->constant_color0_animation_lower_bound.n[component_index];
+								gradient_color.n[component_index] = stage->constant_color0_animation_upper_bound.n[component_index] - stage->constant_color0_animation_lower_bound.n[component_index];
 							}
 
 							for (component_index = 0; component_index<NUMBEROF(constant_color0.n); component_index++)
 							{
-								constant_color0.n[component_index] = function_value * color_delta.n[component_index] + stage->constant_color0_animation_lower_bound.n[component_index];
+								constant_color0.n[component_index] = function_value * gradient_color.n[component_index] + stage->constant_color0_animation_lower_bound.n[component_index];
 							}
 
 							match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_geometry.c", 1256, constant_color0.red >=0.0f && constant_color0.red <=1.0f);
@@ -964,7 +963,7 @@ void rasterizer_transparent_geometry_group_draw(
 							}
 						}
 
-						for (map_index = 0; map_index<NUMBER_OF_SHADER_TRANSPARENT_MAPS; map_index++)
+						for (map_index = 0; map_index<MAXIMUM_MAPS_PER_SHADER_TRANSPARENT_CHICAGO; map_index++)
 						{
 							if (map_index<shader_transparent_chicago->chicago.maps.count)
 							{
@@ -1445,7 +1444,7 @@ void rasterizer_transparent_geometry_group_draw(
 					}
 					case _shader_type_transparent_meter:
 					{
-						real_rgb_color flash_color;
+						real_rgb_color flash_color__adjusted;
 						real flash_alpha;
 						pixel32 gradient_min_pixel;
 						pixel32 gradient_max_pixel;
@@ -1499,9 +1498,9 @@ void rasterizer_transparent_geometry_group_draw(
 							flash_extension = rasterizer_debug_options.f[4]>=0.f ? rasterizer_debug_options.f[4] : debug_value;
 						}
 
-						flash_color.red = flash_brightness * shader_transparent_meter->meter.flash_color.red;
-						flash_color.green = flash_brightness * shader_transparent_meter->meter.flash_color.green;
-						flash_color.blue = flash_brightness * shader_transparent_meter->meter.flash_color.blue;
+						flash_color__adjusted.red = flash_brightness * shader_transparent_meter->meter.flash_color.red;
+						flash_color__adjusted.green = flash_brightness * shader_transparent_meter->meter.flash_color.green;
+						flash_color__adjusted.blue = flash_brightness * shader_transparent_meter->meter.flash_color.blue;
 						flash_alpha = 1.f / MAX(gradient_value * 8.f, 1.f);
 
 						if (TEST_FLAG(shader_transparent_meter->meter.flags, _shader_transparent_meter_tint_mode_2_bit))
@@ -1516,7 +1515,7 @@ void rasterizer_transparent_geometry_group_draw(
 							gradient_min_pixel = real_a_rgb_color_to_pixel32(meter_value, &shader_transparent_meter->meter.gradient_min_color);
 							gradient_max_pixel = real_a_rgb_color_to_pixel32(flash_alpha, &shader_transparent_meter->meter.gradient_max_color);
 							background_pixel = real_a_rgb_color_to_pixel32(background_alpha, &shader_transparent_meter->meter.background_color);
-							flash_pixel = real_a_rgb_color_to_pixel32(flash_extension, &flash_color);
+							flash_pixel = real_a_rgb_color_to_pixel32(flash_extension, &flash_color__adjusted);
 							tint_pixel = real_a_rgb_color_to_pixel32(tint_alpha, &tint_color);
 						}
 						else
@@ -1524,7 +1523,7 @@ void rasterizer_transparent_geometry_group_draw(
 							gradient_min_pixel = real_a_rgb_color_to_pixel32(meter_value, &shader_transparent_meter->meter.gradient_min_color);
 							gradient_max_pixel = real_a_rgb_color_to_pixel32(flash_alpha, &shader_transparent_meter->meter.gradient_max_color);
 							background_pixel = real_a_rgb_color_to_pixel32(0.f, &shader_transparent_meter->meter.background_color);
-							flash_pixel = real_a_rgb_color_to_pixel32(flash_extension, &flash_color);
+							flash_pixel = real_a_rgb_color_to_pixel32(flash_extension, &flash_color__adjusted);
 							tint_pixel = real_a_rgb_color_to_pixel32(meter_brightness, &shader_transparent_meter->meter.tint_color);
 						}
 
@@ -1632,7 +1631,7 @@ void rasterizer_transparent_geometry_group_draw(
 
 		if (!dirty)
 		{
-			rasterizer_xbox_transparent_geometry_last_source_object_index = group->source_object_index;
+			local_last_source_object_index = group->source_object_index;
 		}
 
 		if (group->next_group_presorted_index!=NONE)
@@ -1656,7 +1655,7 @@ void rasterizer_transparent_geometry_group_draw(
 
 					if (rasterizer_debug_options.pad3)
 					{
-						rasterizer_xbox_transparent_geometry_no_more_active_camouflage = TRUE;
+						__test_no_more_active_camo = TRUE;
 					}
 				}
 			}
