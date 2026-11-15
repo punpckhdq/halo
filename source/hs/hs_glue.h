@@ -102,11 +102,11 @@ static void function##_evaluate(										\
 {																		\
 	call;																\
 	hs_return(thread_index, 0);											\
-																	\
+																		\
 	return;																\
 }
 
-#define HS_EVALUATE_VALUE_0(return_type, function, call) /* fake name */	\
+#define HS_EVALUATE_VALUE_0(return_type, function, call) /* fake name */\
 static void function##_evaluate(										\
 	short function_index,												\
 	long thread_index,													\
@@ -116,7 +116,7 @@ static void function##_evaluate(										\
 																		\
 	*(HS_C_TYPE(return_type) *)&result = (call);						\
 	hs_return(thread_index, result);									\
-																	\
+																		\
 	return;																\
 }
 
@@ -140,32 +140,182 @@ static void function##_evaluate(										\
 #define HS_EVALUATE_0__hs_type_object HS_EVALUATE_VALUE_0 /* fake name */
 #define HS_EVALUATE_0__hs_type_unit HS_EVALUATE_VALUE_0 /* fake name */
 
-#define HS_FUNCTION_0(return_type, name, function, documentation) /* fake name */	\
-HS_EVALUATE_0_##return_type(return_type, function, function())				\
-static struct hs_function_definition const name##_definition = {return_type, #name, HS_FUNCTION_PARSE(hs_macro_function_parse) function##_evaluate, documentation, NULL, 0}
+/* fake name */
+#ifdef HS_COMPILER_ENABLED
+#define HS_FUNCTION_0(return_type, name, function, documentation)					\
+HS_EVALUATE_0_##return_type(return_type, function, function())						\
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	#name,																			\
+	hs_macro_function_parse,														\
+	function##_evaluate,															\
+	documentation,																	\
+	NULL,																			\
+	0																				\
+}
 
-#define HS_FUNCTION_1(return_type, name, function, documentation, type0) /* fake name */	\
+#define HS_FUNCTION_1(return_type, name, function, documentation, type0)			\
 HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0)))	\
-static struct hs_function_definition const name##_definition = {return_type, #name, HS_FUNCTION_PARSE(hs_macro_function_parse) function##_evaluate, documentation, NULL, 1, {type0}}
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	#name,																			\
+	hs_macro_function_parse,														\
+	function##_evaluate,															\
+	documentation,																	\
+	NULL,																			\
+	1,																				\
+	{type0}																			\
+}
 
-#define HS_FUNCTION_2(return_type, name, function, documentation, type0, type1) /* fake name */	\
-HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1)))	\
-static struct hs_function_definition const name##_definition = {return_type, #name, HS_FUNCTION_PARSE(hs_macro_function_parse) function##_evaluate, documentation, NULL, 2, {type0, type1}}
+#define HS_FUNCTION_2(return_type, name, function, documentation, type0, type1)		\
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	#name,																			\
+	hs_macro_function_parse,														\
+	function##_evaluate,															\
+	documentation,																	\
+	NULL,																			\
+	2,																				\
+	{type0, type1}																	\
+}
 
-#define HS_FUNCTION_3(return_type, name, function, documentation, type0, type1, type2) /* fake name */	\
-HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2)))	\
-static struct hs_function_definition const name##_definition = {return_type, #name, HS_FUNCTION_PARSE(hs_macro_function_parse) function##_evaluate, documentation, NULL, 3, {type0, type1, type2}}
+#define HS_FUNCTION_3(return_type, name, function, documentation, type0, type1, type2)	\
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	#name,																			\
+	hs_macro_function_parse,														\
+	function##_evaluate,															\
+	documentation,																	\
+	NULL,																			\
+	3,																				\
+	{type0, type1, type2}															\
+}
 
-#define HS_FUNCTION_4(return_type, name, function, documentation, type0, type1, type2, type3) /* fake name */	\
-HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3)))	\
-static struct hs_function_definition const name##_definition = {return_type, #name, HS_FUNCTION_PARSE(hs_macro_function_parse) function##_evaluate, documentation, NULL, 4, {type0, type1, type2, type3}}
+#define HS_FUNCTION_4(return_type, name, function, documentation, type0, type1, type2, type3)	\
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	#name,																			\
+	hs_macro_function_parse,														\
+	function##_evaluate,															\
+	documentation,																	\
+	NULL,																			\
+	4,																				\
+	{type0, type1, type2, type3}													\
+}
 
-#define HS_FUNCTION_5(return_type, name, function, documentation, type0, type1, type2, type3, type4) /* fake name */	\
-HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4)))	\
-static struct hs_function_definition const name##_definition = {return_type, #name, HS_FUNCTION_PARSE(hs_macro_function_parse) function##_evaluate, documentation, NULL, 5, {type0, type1, type2, type3, type4}}
 
-#define HS_FUNCTION_6(return_type, name, function, documentation, type0, type1, type2, type3, type4, type5) /* fake name */	\
-HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4), HS_ARGUMENT(type5, 5)))	\
-static struct hs_function_definition const name##_definition = {return_type, #name, HS_FUNCTION_PARSE(hs_macro_function_parse) function##_evaluate, documentation, NULL, 6, {type0, type1, type2, type3, type4, type5}}
+#define HS_FUNCTION_5(return_type, name, function, documentation, type0, type1, type2, type3, type4) \
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	#name,																			\
+	hs_macro_function_parse,														\
+	function##_evaluate,															\
+	documentation,																	\
+	NULL,																			\
+	5,																				\
+	{type0, type1, type2, type3, type4}												\
+}
+
+
+#define HS_FUNCTION_6(return_type, name, function, documentation, type0, type1, type2, type3, type4, type5) \
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4), HS_ARGUMENT(type4, 5))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	#name,																			\
+	hs_macro_function_parse,														\
+	function##_evaluate,															\
+	documentation,																	\
+	NULL,																			\
+	6,																				\
+	{type0, type1, type2, type3, type4, type5}										\
+}
+
+#else
+
+#define HS_FUNCTION_0(return_type, name, function, documentation)					\
+HS_EVALUATE_0_##return_type(return_type, function, function())						\
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	function##_evaluate,															\
+	0																				\
+}
+
+#define HS_FUNCTION_1(return_type, name, function, documentation, type0)			\
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0)))	\
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	function##_evaluate,															\
+	1,																				\
+	{type0}																			\
+}
+
+#define HS_FUNCTION_2(return_type, name, function, documentation, type0, type1)		\
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	function##_evaluate,															\
+	2,																				\
+	{type0, type1}																	\
+}
+
+#define HS_FUNCTION_3(return_type, name, function, documentation, type0, type1, type2)	\
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	function##_evaluate,															\
+	3,																				\
+	{type0, type1, type2}															\
+}
+
+#define HS_FUNCTION_4(return_type, name, function, documentation, type0, type1, type2, type3)	\
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	function##_evaluate,															\
+	4,																				\
+	{type0, type1, type2, type3}													\
+}
+
+
+#define HS_FUNCTION_5(return_type, name, function, documentationm, type0, type1, type2, type3, type4) \
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	function##_evaluate,															\
+	5,																				\
+	{type0, type1, type2, type3, type4}												\
+}
+
+
+#define HS_FUNCTION_6(return_type, name, function, documentation, type0, type1, type2, type3, type4, type5) \
+HS_EVALUATE_##return_type(return_type, function, function(HS_ARGUMENT(type0, 0), HS_ARGUMENT(type1, 1), HS_ARGUMENT(type2, 2), HS_ARGUMENT(type3, 3), HS_ARGUMENT(type4, 4), HS_ARGUMENT(type4, 5))) \
+static struct hs_function_definition const name##_definition =						\
+{																					\
+	return_type,																	\
+	function##_evaluate,															\
+	6,																				\
+	{type0, type1, type2, type3, type4, type5}										\
+}
+
+#endif
+
+
 
 #endif // __HS_GLUE_H

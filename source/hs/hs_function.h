@@ -8,35 +8,58 @@ header included in hcex build.
 #define __HS_FUNCTION_H
 #pragma once
 
+/* ---------- macros */
+
+
+#ifdef HS_COMPILER_ENABLED
+#define HS_FUNCTION_DEFINITION_CREATE(global_name, return_type, name, parse, evaluate, documentation, parameters, formal_parameter_count) \
+static struct hs_function_definition const (global_name) = \
+{													\
+	return_type,									\
+	name,											\
+	parse,											\
+	evaluate,										\
+	documentation,									\
+	parameters										\
+}
+#else
+#define HS_FUNCTION_DEFINITION_CREATE(global_name, return_type, name, parse, evaluate, documentation, parameters, formal_parameter_count) \
+static struct hs_function_definition const (global_name) = \
+{													\
+	return_type,									\
+	evaluate										\
+}
+#endif
+
 /* ---------- globals */
 
-static struct hs_function_definition const begin_definition = {_hs_passthrough, "begin", HS_FUNCTION_PARSE(hs_parse_begin) hs_evaluate_begin, "returns the last expression in a sequence after evaluating the sequence in order.", "<expression(s)>", 0};
-static struct hs_function_definition const begin_random_definition = {_hs_passthrough, "begin_random", HS_FUNCTION_PARSE(hs_parse_begin) hs_evaluate_begin_random, "evaluates the sequence of expressions in random order and returns the last value evaluated.", "<expression(s)>", 0};
-static struct hs_function_definition const if_definition = {_hs_passthrough, "if", HS_FUNCTION_PARSE(hs_parse_if) hs_evaluate_if, "returns one of two values based on the value of a condition.", "<boolean> <then> [<else>]", 0};
-static struct hs_function_definition const cond_definition = {_hs_passthrough, "cond", HS_FUNCTION_PARSE(hs_parse_cond) NULL, "returns the value associated with the first true condition.", "(<boolean1> <result1>) [(<boolean2> <result2>) [...]]", 0};
-static struct hs_function_definition const set_definition = {_hs_passthrough, "set", HS_FUNCTION_PARSE(hs_parse_set) hs_evaluate_set, "set the value of a global variable.", "<variable name> <expression>", 0};
-static struct hs_function_definition const and_definition = {_hs_type_boolean, "and", HS_FUNCTION_PARSE(hs_parse_logical) hs_evaluate_logical, "returns true if all specified expressions are true.", "<boolean(s)>", 0};
-static struct hs_function_definition const or_definition = {_hs_type_boolean, "or", HS_FUNCTION_PARSE(hs_parse_logical) hs_evaluate_logical, "returns true if any specified expressions are true.", "<boolean(s)>", 0};
-static struct hs_function_definition const add_definition = {_hs_type_real, "+", HS_FUNCTION_PARSE(hs_parse_arithmetic) hs_evaluate_arithmetic, "returns the sum of all specified expressions.", "<number(s)>", 0};
-static struct hs_function_definition const subtract_definition = {_hs_type_real, "-", HS_FUNCTION_PARSE(hs_parse_arithmetic) hs_evaluate_arithmetic, "returns the difference of two expressions.", "<number> <number>", 0};
-static struct hs_function_definition const multiply_definition = {_hs_type_real, "*", HS_FUNCTION_PARSE(hs_parse_arithmetic) hs_evaluate_arithmetic, "returns the product of all specified expressions.", "<number(s)>", 0};
-static struct hs_function_definition const divide_definition = {_hs_type_real, "/", HS_FUNCTION_PARSE(hs_parse_arithmetic) hs_evaluate_arithmetic, "returns the quotient of two expressions.", "<number> <number>", 0};
-static struct hs_function_definition const min_definition = {_hs_type_real, "min", HS_FUNCTION_PARSE(hs_parse_arithmetic) hs_evaluate_arithmetic, "returns the minimum of all specified expressions.", "<number(s)>", 0};
-static struct hs_function_definition const max_definition = {_hs_type_real, "max", HS_FUNCTION_PARSE(hs_parse_arithmetic) hs_evaluate_arithmetic, "returns the maximum of all specified expressions.", "<number(s)>", 0};
-static struct hs_function_definition const equal_definition = {_hs_type_boolean, "=", HS_FUNCTION_PARSE(hs_parse_equality) hs_evaluate_equality, "returns true if two expressions are equal", "<expression> <expression>", 0};
-static struct hs_function_definition const not_equal_definition = {_hs_type_boolean, "!=", HS_FUNCTION_PARSE(hs_parse_equality) hs_evaluate_equality, "returns true if two expressions are not equal", "<expression> <expression>", 0};
-static struct hs_function_definition const gt_definition = {_hs_type_boolean, ">", HS_FUNCTION_PARSE(hs_parse_inequality) hs_evaluate_inequality, "returns true if the first number is larger than the second.", "<number> <number>", 0};
-static struct hs_function_definition const lt_definition = {_hs_type_boolean, "<", HS_FUNCTION_PARSE(hs_parse_inequality) hs_evaluate_inequality, "returns true if the first number is smaller than the second.", "<number> <number>", 0};
-static struct hs_function_definition const gte_definition = {_hs_type_boolean, ">=", HS_FUNCTION_PARSE(hs_parse_inequality) hs_evaluate_inequality, "returns true if the first number is larger than or equal to the second.", "<number> <number>", 0};
-static struct hs_function_definition const lte_definition = {_hs_type_boolean, "<=", HS_FUNCTION_PARSE(hs_parse_inequality) hs_evaluate_inequality, "returns true if the first number is smaller than or equal to the second.", "<number> <number>", 0};
-static struct hs_function_definition const sleep_definition = {_hs_type_void, "sleep", HS_FUNCTION_PARSE(hs_parse_sleep) hs_evaluate_sleep, "pauses execution of this script (or, optionally, another script) for the specified number of ticks.", "<short> [<script>]", 0};
-static struct hs_function_definition const sleep_until_definition = {_hs_type_void, "sleep_until", HS_FUNCTION_PARSE(hs_parse_sleep_until) hs_evaluate_sleep_until, "pauses execution of this script until the specified condition is true, checking once per second unless a different number of ticks is specified.", "<boolean> [<short>]", 0};
-static struct hs_function_definition const wake_definition = {_hs_type_void, "wake", HS_FUNCTION_PARSE(hs_parse_wake) hs_evaluate_wake, "wakes a sleeping script in the next update.", "<script name>", 0};
-static struct hs_function_definition const inspect_definition = {_hs_type_void, "inspect", HS_FUNCTION_PARSE(hs_parse_inspect) hs_evaluate_inspect, "prints the value of an expression to the screen for debugging purposes.", "<expression>", 0};
-static struct hs_function_definition const object_to_unit_definition = {_hs_type_unit, "unit", HS_FUNCTION_PARSE(hs_parse_object_cast_up) hs_evaluate_object_cast_up, "converts an object to a unit.", "<object>", 0};
-static struct hs_function_definition const ai_debug_communication_suppress_definition = {_hs_type_void, "ai_debug_communication_suppress", HS_FUNCTION_PARSE(hs_parse_debug_string) hs_evaluate_debug_string, "suppresses (or stops suppressing) a set of AI communication types.", "<string(s)>", 0};
-static struct hs_function_definition const ai_debug_communication_ignore_definition = {_hs_type_void, "ai_debug_communication_ignore", HS_FUNCTION_PARSE(hs_parse_debug_string) hs_evaluate_debug_string, "ignores (or stops ignoring) a set of AI communication types when printing out communications.", "<string(s)>", 0};
-static struct hs_function_definition const ai_debug_communication_focus_definition = {_hs_type_void, "ai_debug_communication_focus", HS_FUNCTION_PARSE(hs_parse_debug_string) hs_evaluate_debug_string, "focuses (or stops focusing) a set of unit vocalization types.", "<string(s)>", 0};
+HS_FUNCTION_DEFINITION_CREATE(begin_definition, _hs_passthrough, "begin", hs_parse_begin, hs_evaluate_begin, "returns the last expression in a sequence after evaluating the sequence in order.", "<expression(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(begin_random_definition, _hs_passthrough, "begin_random", hs_parse_begin, hs_evaluate_begin_random, "evaluates the sequence of expressions in random order and returns the last value evaluated.", "<expression(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(if_definition, _hs_passthrough, "if", hs_parse_if, hs_evaluate_if, "returns one of two values based on the value of a condition.", "<boolean> <then> [<else>]", 0);
+HS_FUNCTION_DEFINITION_CREATE(cond_definition, _hs_passthrough, "cond", hs_parse_cond, NULL, "returns the value associated with the first true condition.", "(<boolean1> <result1>, [(<boolean2> <result2>, [...]]", 0);
+HS_FUNCTION_DEFINITION_CREATE(set_definition, _hs_passthrough, "set", hs_parse_set, hs_evaluate_set, "set the value of a global variable.", "<variable name> <expression>", 0);
+HS_FUNCTION_DEFINITION_CREATE(and_definition, _hs_type_boolean, "and", hs_parse_logical, hs_evaluate_logical, "returns true if all specified expressions are true.", "<boolean(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(or_definition, _hs_type_boolean, "or", hs_parse_logical, hs_evaluate_logical, "returns true if any specified expressions are true.", "<boolean(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(add_definition, _hs_type_real, "+", hs_parse_arithmetic, hs_evaluate_arithmetic, "returns the sum of all specified expressions.", "<number(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(subtract_definition, _hs_type_real, "-", hs_parse_arithmetic, hs_evaluate_arithmetic, "returns the difference of two expressions.", "<number> <number>", 0);
+HS_FUNCTION_DEFINITION_CREATE(multiply_definition, _hs_type_real, "*", hs_parse_arithmetic, hs_evaluate_arithmetic, "returns the product of all specified expressions.", "<number(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(divide_definition, _hs_type_real, "/", hs_parse_arithmetic, hs_evaluate_arithmetic, "returns the quotient of two expressions.", "<number> <number>", 0);
+HS_FUNCTION_DEFINITION_CREATE(min_definition, _hs_type_real, "min", hs_parse_arithmetic, hs_evaluate_arithmetic, "returns the minimum of all specified expressions.", "<number(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(max_definition, _hs_type_real, "max", hs_parse_arithmetic, hs_evaluate_arithmetic, "returns the maximum of all specified expressions.", "<number(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(equal_definition, _hs_type_boolean, "=", hs_parse_equality, hs_evaluate_equality, "returns true if two expressions are equal", "<expression> <expression>", 0);
+HS_FUNCTION_DEFINITION_CREATE(not_equal_definition, _hs_type_boolean, "!=", hs_parse_equality, hs_evaluate_equality, "returns true if two expressions are not equal", "<expression> <expression>", 0);
+HS_FUNCTION_DEFINITION_CREATE(gt_definition, _hs_type_boolean, ">", hs_parse_inequality, hs_evaluate_inequality, "returns true if the first number is larger than the second.", "<number> <number>", 0);
+HS_FUNCTION_DEFINITION_CREATE(lt_definition, _hs_type_boolean, "<", hs_parse_inequality, hs_evaluate_inequality, "returns true if the first number is smaller than the second.", "<number> <number>", 0);
+HS_FUNCTION_DEFINITION_CREATE(gte_definition, _hs_type_boolean, ">=", hs_parse_inequality, hs_evaluate_inequality, "returns true if the first number is larger than or equal to the second.", "<number> <number>", 0);
+HS_FUNCTION_DEFINITION_CREATE(lte_definition, _hs_type_boolean, "<=", hs_parse_inequality, hs_evaluate_inequality, "returns true if the first number is smaller than or equal to the second.", "<number> <number>", 0);
+HS_FUNCTION_DEFINITION_CREATE(sleep_definition, _hs_type_void, "sleep", hs_parse_sleep, hs_evaluate_sleep, "pauses execution of this script or, optionally, another script, for the specified number of ticks.", "<short> [<script>]", 0);
+HS_FUNCTION_DEFINITION_CREATE(sleep_until_definition, _hs_type_void, "sleep_until", hs_parse_sleep_until, hs_evaluate_sleep_until, "pauses execution of this script until the specified condition is true, checking once per second unless a different number of ticks is specified.", "<boolean> [<short>]", 0);
+HS_FUNCTION_DEFINITION_CREATE(wake_definition, _hs_type_void, "wake", hs_parse_wake, hs_evaluate_wake, "wakes a sleeping script in the next update.", "<script name>", 0);
+HS_FUNCTION_DEFINITION_CREATE(inspect_definition, _hs_type_void, "inspect", hs_parse_inspect, hs_evaluate_inspect, "prints the value of an expression to the screen for debugging purposes.", "<expression>", 0);
+HS_FUNCTION_DEFINITION_CREATE(object_to_unit_definition, _hs_type_unit, "unit", hs_parse_object_cast_up, hs_evaluate_object_cast_up, "converts an object to a unit.", "<object>", 0);
+HS_FUNCTION_DEFINITION_CREATE(ai_debug_communication_suppress_definition, _hs_type_void, "ai_debug_communication_suppress", hs_parse_debug_string, hs_evaluate_debug_string, "suppresses (or stops suppressing, a set of AI communication types.", "<string(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(ai_debug_communication_ignore_definition, _hs_type_void, "ai_debug_communication_ignore", hs_parse_debug_string, hs_evaluate_debug_string, "ignores (or stops ignoring, a set of AI communication types when printing out communications.", "<string(s)>", 0);
+HS_FUNCTION_DEFINITION_CREATE(ai_debug_communication_focus_definition, _hs_type_void, "ai_debug_communication_focus", hs_parse_debug_string, hs_evaluate_debug_string, "focuses (or stops focusing, a set of unit vocalization types.", "<string(s)>", 0);
 
 HS_FUNCTION_1(_hs_type_boolean, not, hs_not, "returns the opposite of the expression.", _hs_type_boolean);
 HS_FUNCTION_1(_hs_type_void, print, hs_print, "prints a string to the console.", _hs_type_string);

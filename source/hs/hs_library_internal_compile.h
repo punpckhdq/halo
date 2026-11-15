@@ -10,6 +10,8 @@ file has inline function assertions.
 
 /* ---------- public code */
 
+#ifdef HS_COMPILER_ENABLED
+
 boolean hs_parse_begin(
 	short function_index,
 	long expression_index)
@@ -661,5 +663,7 @@ boolean hs_parse_debug_string(
 
 	return success;
 }
+
+#endif // HS_COMPILER_ENABLED
 
 #endif // __HS_LIBRARY_INTERNAL_COMPILE_H

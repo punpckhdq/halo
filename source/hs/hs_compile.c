@@ -24,6 +24,8 @@ HS_COMPILE.C
 #include "ai_scenario_definitions.h"
 #include "interface.h"
 
+#ifdef HS_COMPILER_ENABLED
+
 /* ---------- constants */
 
 enum
@@ -2051,3 +2053,5 @@ static short string_list_find(
 
 	return NONE;
 }
+
+#endif // HS_COMPILER_ENABLED

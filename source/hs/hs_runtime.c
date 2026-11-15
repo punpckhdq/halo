@@ -389,6 +389,7 @@ boolean hs_wake_by_name(
 	return result;
 }
 
+#ifdef HS_COMPILER_ENABLED
 static char const *expression_get_function_name(
 	long thread_index,
 	long expression_index)
@@ -418,6 +419,7 @@ static char const *expression_get_function_name(
 		}
 	}
 }
+#endif
 
 void render_debug_scripting(
 	void)
@@ -445,7 +447,9 @@ void render_debug_scripting(
 				if (thread->stack!=(struct hs_stack_frame *)thread->stack_data
 					&& thread->sleep_until!=HS_SLEEP_INDEFINITE)
 				{
+#ifdef HS_COMPILER_ENABLED
 					strcat(buffer, expression_get_function_name(thread_index, thread->stack->expression_index));
+#endif
 				}
 			}
 		}
@@ -671,7 +675,7 @@ static void hs_thread_main(
 	{
 		match_assert("c:\\halo\\SOURCE\\hs\\hs_runtime.c", 707, script);
 		thread->stack->size = 0;
-		hs_evaluate(thread_index, script->root_expression_index, hs_stack_allocate(thread_index, sizeof(long)));
+		hs_evaluate(thread_index, script->root_expression_index, (long *)hs_stack_allocate(thread_index, sizeof(long)));
 	}
 
 	while (thread->stack!=(struct hs_stack_frame *)thread->stack_data &&
@@ -794,7 +798,7 @@ static void hs_script_evaluate(
 {
 	struct hs_script *script = hs_script_get(script_index);
 	struct hs_thread *thread = hs_thread_get(thread_index);
-	long *result = hs_stack_allocate(thread_index, sizeof(long));
+	long *result = (long *)hs_stack_allocate(thread_index, sizeof(long));
 
 	if (initialize)
 	{
@@ -888,9 +892,9 @@ static long *hs_arguments_evaluate(
 	boolean initialize)
 {
 	struct hs_thread *thread = hs_thread_get(thread_index);
-	long *result = hs_stack_allocate(thread_index, formal_parameter_count * sizeof(long));
-	short *argument_index = hs_stack_allocate(thread_index, sizeof(short));
-	long *expression_index = hs_stack_allocate(thread_index, sizeof(long));
+	long *result = (long *)hs_stack_allocate(thread_index, formal_parameter_count * sizeof(long));
+	short *argument_index = (short *)hs_stack_allocate(thread_index, sizeof(short));
+	long *expression_index = (long *)hs_stack_allocate(thread_index, sizeof(long));
 
 	if (initialize)
 	{

@@ -190,13 +190,17 @@ struct hs_global_external *hs_global_external_get(short global_index);
 short hs_global_get_type(short designator);
 char const *hs_global_get_name(short designator);
 short hs_find_global_by_name(char const *name);
+#ifdef HS_COMPILER_ENABLED
 short hs_find_function_by_name(char const *name);
+#endif
 short hs_tokens_enumerate(char const *substring, long type_flags, char const **results, short maximum_count);
 void hs_help(char const *function_name);
 void hs_doc(void);
 boolean hs_compile_and_evaluate(char const *expression);
 boolean hs_evaluate_by_name(char const *script_name);
+#ifdef HS_COMPILER_ENABLED
 void hs_hack(void);
+#endif
 
 /* ---------- prototypes/HS_COMPILE.C */
 

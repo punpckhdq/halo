@@ -88,9 +88,11 @@ enum
 
 /* ---------- prototypes */
 
+#ifdef HS_COMPILER_ENABLED
 static boolean hs_compile_source(void);
 static void hs_get_function_parameters_string(short function_index, char *buffer);
 static void hs_get_function_documentation_string(short function_index, char *buffer);
+#endif
 
 /* ---------- globals */
 
@@ -410,10 +412,14 @@ boolean hs_scenario_postprocess(
 
 	hs_allocate();
 	recompile_scripts = !scenario->hs_scripts.count && scenario->hs_source_files.count>0;
-	hs_syntax_data = scenario->hs_syntax_data.address;
+	hs_syntax_data = (struct data_array *)scenario->hs_syntax_data.address;
 	hs_syntax_data->data = hs_syntax_data + 1;
 
-	if (!recompile_scripts && hs_compile_postprocess(&error_message, &error_source))
+	if (!recompile_scripts
+#ifdef HS_COMPILER_ENABLED
+		&& hs_compile_postprocess(&error_message, &error_source)
+#endif
+	)
 	{
 		if (scenario->hs_string_constants.size<HS_MAXIMUM_DYNAMIC_SOURCE_DATA_BYTES)
 		{
@@ -424,6 +430,7 @@ boolean hs_scenario_postprocess(
 	}
 	else
 	{
+#ifdef HS_COMPILER_ENABLED
 		if (recompile_scripts)
 		{
 			error(_error_immediate, "recompiling scripts after scenarios were merged.");
@@ -446,7 +453,9 @@ boolean hs_scenario_postprocess(
 			success = TRUE;
 		}
 		else
+#endif
 		{
+#ifdef HS_COMPILER_ENABLED
 			data_delete_all(hs_syntax_data);
 
 			if (!tag_block_resize(&scenario->hs_globals, 0) ||
@@ -455,6 +464,7 @@ boolean hs_scenario_postprocess(
 			{
 				error(_error_immediate, "couldn't reset scripts.");
 			}
+#endif
 
 			success = FALSE;
 		}
@@ -678,6 +688,7 @@ short hs_find_global_by_name(
 	return NONE;
 }
 
+#ifdef HS_COMPILER_ENABLED
 short hs_find_function_by_name(
 	char const *name)
 {
@@ -693,6 +704,7 @@ short hs_find_function_by_name(
 
 	return NONE;
 }
+#endif
 
 static int alphabetize(
 	void const *string1,
@@ -738,7 +750,7 @@ static void hs_enumerate_block_data(
 
 	for (element_index = 0; element_index<block->count; element_index++)
 	{
-		char *element = tag_block_get_element_with_size(block, element_index, size);
+		char *element = (char *)tag_block_get_element_with_size(block, element_index, size);
 
 		hs_tokens_enumerate_add_string(element + element_offset);
 	}
@@ -789,12 +801,16 @@ static void hs_enumerate_type_names(
 static void hs_enumerate_function_names(
 	void)
 {
+	#ifdef HS_COMPILER_ENABLED
+	
 	short function_index;
 
 	for (function_index = 0; function_index<hs_function_table_count; function_index++)
 	{
 		hs_tokens_enumerate_add_string(hs_function_get(function_index)->name);
 	}
+
+	#endif
 
 	return;
 }
@@ -1086,12 +1102,13 @@ static int alphabetize_file_references(
 	char n1[256];
 	char n2[256];
 
-	file_reference_get_name(ref1, FLAG(_name_filename_bit), n1);
-	file_reference_get_name(ref2, FLAG(_name_filename_bit), n2);
+	file_reference_get_name((struct file_reference const *)ref1, FLAG(_name_filename_bit), n1);
+	file_reference_get_name((struct file_reference const *)ref2, FLAG(_name_filename_bit), n2);
 
 	return _stricmp(n1, n2);
 }
 
+#ifdef HS_COMPILER_ENABLED
 static boolean hs_rebuild_source(
 	void)
 {
@@ -1395,6 +1412,7 @@ boolean hs_compile_and_evaluate(
 
 	return success;
 }
+#endif
 
 boolean hs_evaluate_by_name(
 	char const *script_name)
@@ -1415,6 +1433,7 @@ boolean hs_evaluate_by_name(
 	return success;
 }
 
+#ifdef HS_COMPILER_ENABLED
 void hs_hack(
 	void)
 {
@@ -1427,3 +1446,4 @@ void hs_hack(
 
 	return;
 }
+#endif

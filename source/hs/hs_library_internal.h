@@ -47,27 +47,21 @@ enum
 	_hs_function_debug_string__last = _hs_function_debug_string__ai_debug_communication_focus
 };
 
-/* ---------- macros */
-
-// the parse member of hs_function_definition and its initializer (with the trailing comma)
-#ifdef HS_COMPILER_ENABLED
-#define HS_FUNCTION_PARSE(parse) parse, /* fake name */
-#else
-#define HS_FUNCTION_PARSE(parse)
-#endif
-
 /* ---------- structures */
 
 struct hs_function_definition
 {
 	short return_type;
-	char *name;
 #ifdef HS_COMPILER_ENABLED
+	char *name;
 	boolean (*parse)(short function_index, long expression_index);
 #endif
 	void (*evaluate)(short function_index, long thread_index, boolean initialize);
+
+#ifdef HS_COMPILER_ENABLED
 	char const *documentation;
 	char const *parameters;
+#endif
 	short formal_parameter_count;
 	short formal_parameters[];
 };
