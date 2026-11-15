@@ -25,7 +25,8 @@ RASTERIZER_XBOX_TRANSPARENT_GEOMETRY.C
 enum
 {
 	RASTERIZER_TRANSPARENT_GEOMETRY_TEXCOORD_STREAM_SIZE = 8192,
-	NUMBER_OF_SHADER_TRANSPARENT_MAPS = 4 /* fake name */
+	NUMBER_OF_SHADER_TRANSPARENT_MAPS = 4, /* fake name */
+	PAD3_ACCUM_RANGE_END = 1000, /* fake name */
 };
 
 /* ---------- globals */
@@ -143,7 +144,7 @@ void rasterizer_transparent_geometry_group_draw(
 				long component_index;
 				short vertex_shader_table[NUMBER_OF_RASTERIZER_VERTEX_TYPES] = { _vertex_shader_environment_fog, _vertex_shader_environment_fog, _vertex_shader_environment_fog, _vertex_shader_environment_fog, _vertex_shader_model_zbuffer, _vertex_shader_model_zbuffer, _vertex_shader_effect, _vertex_shader_effect, NONE, NONE, NONE, NONE };
 				short vertex_type = rasterizer_transparent_geometry_get_primary_vertex_type(group);
-				boolean accumulate = rasterizer_debug_options.pad3>=1000 || rasterizer_debug_options.pad3<0;
+				boolean accumulate = rasterizer_debug_options.pad3>=PAD3_ACCUM_RANGE_END || rasterizer_debug_options.pad3<0;
 
 				match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_geometry.c", 280, vertex_type>=0 && vertex_type<NUMBER_OF_RASTERIZER_VERTEX_TYPES);
 				match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_geometry.c", 281, vertex_shader_table[vertex_type]!=NONE);
@@ -187,7 +188,7 @@ void rasterizer_transparent_geometry_group_draw(
 						intensity = 1.f / 32.f;
 					}
 
-					if (rasterizer_debug_options.pad3>=1000)
+					if (rasterizer_debug_options.pad3>=PAD3_ACCUM_RANGE_END)
 					{
 						color.red *= intensity;
 						color.green *= intensity;
@@ -1678,7 +1679,7 @@ void rasterizer_transparent_geometry_groups_end(
 		ULONGLONG timestamp;
 		HRESULT hr;
 		long index = 0xFFF;
-		unsigned long pixel_count = NONE;
+		UINT pixel_count = NONE;
 		boolean success = TRUE;
 
 		if (global_window_parameters.window_index==0)

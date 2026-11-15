@@ -176,7 +176,7 @@ void rasterizer_water_build_bumpmap(
 			}
 
 			rasterizer_set_pixel_shader(&pixel_shader);
-			rasterizer_set_target(_rasterizer_target_water, mipmap_index, 0, FALSE, FALSE);
+			rasterizer_set_target(_rasterizer_target_water, mipmap_index, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, FALSE);
 
 			{
 				real scale = 1.f / (real)(RASTERIZER_TARGET_WATER_SIZE >> mipmap_index);
@@ -195,7 +195,7 @@ void rasterizer_water_build_bumpmap(
 			}
 		}
 
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_reject);
 
 		if (!success)

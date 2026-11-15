@@ -159,7 +159,6 @@ enum
 	NUMBER_OF_RENDER_PLANAR_FOG_MODES,
 };
 
-
 /* ---------- macros */
 
 #define RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH 640

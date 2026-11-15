@@ -64,7 +64,7 @@ boolean rasterizer_frame_statistics_initialize(
 {
 	boolean success = TRUE;
 
-	rasterizer_frame_statistics_temp_buffer = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_frame_statistics.c", 41, RASTERIZER_MAXIMUM_TRIANGLES_PER_TRIANGLE_BUFFER*sizeof(struct rasterizer_triangle));
+	rasterizer_frame_statistics_temp_buffer = (word *)match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_frame_statistics.c", 41, RASTERIZER_MAXIMUM_TRIANGLES_PER_TRIANGLE_BUFFER*sizeof(struct rasterizer_triangle));
 
 	if (!rasterizer_frame_statistics_temp_buffer)
 	{
@@ -574,7 +574,9 @@ void rasterizer_frame_statistics_draw(
 			long total_used_size = 0;
 			struct rasterizer_memory_statistic statistics[] =
 			{
-				{ "memory pool", 98304, 0 },
+				// TODO: figure out why constants differ here and in rasterizer_geometry.h
+
+				{ "memory pool", RASTERIZER_MEMORY_POOL_SIZE, 0 },
 				{ "dynamic vertices (unlit)", 196608, 0 },
 				{ "dynamic vertices (lit*)", 72, 307200 },
 				{ "dynamic vertices (screen)", 327680, 0 },

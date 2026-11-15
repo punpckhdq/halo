@@ -87,7 +87,7 @@ void rasterizer_active_camouflage_cache_primary_render_target(
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_T0);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
-		rasterizer_set_target(_rasterizer_target_render_secondary, 0, 0, FALSE, FALSE);
+		rasterizer_set_target(_rasterizer_target_render_secondary, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, FALSE);
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_none);
 
 		IDirect3DDevice8_Begin(global_d3d_device, D3DPT_TRIANGLEFAN);
@@ -101,7 +101,7 @@ void rasterizer_active_camouflage_cache_primary_render_target(
 		IDirect3DDevice8_SetVertexData2s(global_d3d_device, VSDE_VERTEX, 0, RASTERIZER_TARGET_RENDER_SECONDARY_HEIGHT);
 		IDirect3DDevice8_End(global_d3d_device);
 
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_reject);
 
 		bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - RASTERIZER_SECONDARY_RENDER_TARGET_DEBUG_WIDTH;

@@ -61,7 +61,7 @@ static void rasterizer_shadow_convolve(
 		rasterizer_set_vertex_shader_permutation(_vertex_shader_convolution, _rasterizer_vertex_type_dynamic_screen, _vertex_shader_permutation_default);
 
 		{
-			real vsh_constants__texanim[8][4] =
+			real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
 			{
 				{1.f, 0.f, 0.f, -1.f / 256.f},
 				{0.f, 1.f, 0.f, -1.f / 256.f},
@@ -89,7 +89,7 @@ static void rasterizer_shadow_convolve(
 		pixel_shader.PSFinalCombinerInputsABCD = PS_COMBINERINPUTS(PS_REGISTER_R0, PS_REGISTER_ONE, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA);
 		rasterizer_set_pixel_shader(&pixel_shader);
 
-		rasterizer_set_target(_rasterizer_target_shadow_secondary, 0, 0, FALSE, FALSE);
+		rasterizer_set_target(_rasterizer_target_shadow_secondary, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, FALSE);
 
 		{
 			real const offset = 1.f / 128.f;
@@ -178,7 +178,12 @@ boolean _rasterizer_environment_shadow_begin(
 			D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, VSH_CONSTANTS__SCREENPROJ_OFFSET, vsh_constants__screenproj, VSH_CONSTANTS__SCREENPROJ_COUNT));
 		}
 
-		rasterizer_set_target(_rasterizer_target_shadow_primary, 0, rasterizer_debug_options.shadow_debug_enabled ? 0x88888888 : 0, TRUE, FALSE);
+		rasterizer_set_target(
+			_rasterizer_target_shadow_primary,
+			0,
+			rasterizer_debug_options.shadow_debug_enabled ? PIXEL32_FROM_ARGB(136, 136, 136, 136) : PIXEL32_FROM_ARGB(0, 0, 0, 0),
+			TRUE,
+			FALSE);
 		rasterizer_set_stencil_mode(_rasterizer_stencil_mode_none);
 
 		local_shadow_matrix = *shadow_matrix;
@@ -448,7 +453,7 @@ void _rasterizer_environment_shadow_draw(
 
 			if (!window_target_restored)
 			{
-				rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+				rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 				window_target_restored = TRUE;
 			}
 
@@ -488,7 +493,7 @@ void _rasterizer_environment_shadow_end(
 
 		if (!window_target_restored)
 		{
-			rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+			rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 			window_target_restored = TRUE;
 		}
 	}

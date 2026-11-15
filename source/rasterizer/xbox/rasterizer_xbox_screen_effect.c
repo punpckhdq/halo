@@ -93,7 +93,7 @@ static void rasterizer_screen_effect_set_texture_transforms(
 		stage3_scale = TEST_FLAG(stage3_bitmap->flags, _bitmap_linear_bit) ? unit_scale : __reciprocal_vector2d(&stage3_size);
 
 		{
-			real vsh_constants__texanim[8][4] =
+			real vsh_constants__texanim[VSH_CONSTANTS__TEXANIM_COUNT][4] =
 			{
 				{stage0_scale.i, 0.f, 0.f, (stage0_size.i + 1.f - (real)screen_bitmap.width) * stage0_scale.i * 0.5f},
 				{0.f, stage0_scale.j, 0.f, (stage0_size.j + 1.f - (real)screen_bitmap.height) * stage0_scale.j * 0.5f},
@@ -417,7 +417,7 @@ void _rasterizer_screen_effect(
 
 			if (destination_target!=NONE)
 			{
-				rasterizer_set_target(destination_target, 0, 0, FALSE, FALSE);
+				rasterizer_set_target(destination_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, FALSE);
 			}
 
 			if (parameters->video_on)
@@ -659,7 +659,7 @@ void _rasterizer_screen_effect(
 			}
 		}
 
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 	}
 
 	rasterizer_profile_end(_rasterizer_profile_screen_effect);

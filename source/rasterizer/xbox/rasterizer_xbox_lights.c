@@ -78,7 +78,7 @@ static void rasterizer_sun_glow_copy_source(
 	pixel_shader.PSFinalCombinerInputsEFG = PS_COMBINERINPUTS(PS_REGISTER_ZERO, PS_REGISTER_ZERO, PS_REGISTER_R0 | PS_CHANNEL_ALPHA, PS_REGISTER_ZERO);
 	rasterizer_set_pixel_shader(&pixel_shader);
 
-	rasterizer_set_target(target, 0, 0, FALSE, FALSE);
+	rasterizer_set_target(target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, FALSE);
 
 	{
 		real const scale = 1.f / 64.f;
@@ -96,7 +96,7 @@ static void rasterizer_sun_glow_copy_source(
 		IDirect3DDevice8_End(global_d3d_device);
 	}
 
-	rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+	rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 
 	return;
 }
@@ -220,7 +220,7 @@ static short rasterizer_sun_glow_convolve(
 				SetTextureStageStateSmart(stage, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 			}
 
-			rasterizer_set_target(destination_target, 0, 0, FALSE, FALSE);
+			rasterizer_set_target(destination_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, FALSE);
 
 			pixel_shader.PSConstant0[0] = D3DCOLOR_ARGB(pass > 0 ? 127 : 255, 0, 0, 0);
 			rasterizer_set_pixel_shader(&pixel_shader);
@@ -242,7 +242,7 @@ static short rasterizer_sun_glow_convolve(
 			}
 		}
 
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 
 		if (!success)
 		{

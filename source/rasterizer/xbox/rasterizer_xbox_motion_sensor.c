@@ -41,7 +41,7 @@ void _rasterizer_hud_motion_sensor_blip_begin(
 	{
 		rasterizer_motion_sensor_begin_said_to_draw = TRUE;
 
-		rasterizer_set_target(_rasterizer_target_sun_glow_primary, 0, 0, TRUE, FALSE);
+		rasterizer_set_target(_rasterizer_target_sun_glow_primary, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), TRUE, FALSE);
 		rasterizer_set_texture_bitmap_data(0, blip_bitmap);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_BORDER);
@@ -230,7 +230,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 		D3DCALL(success, IDirect3DDevice8_SetVertexData2f(global_d3d_device, VSDE_VERTEX, minimum, minimum));
 		D3DCALL(success, IDirect3DDevice8_End(global_d3d_device));
 
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 		rasterizer_set_target_as_texture(0, _rasterizer_target_sun_glow_primary, 0);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 		SetTextureStageStateSmart(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -291,7 +291,7 @@ void _rasterizer_hud_motion_sensor_blip_end(
 	}
 	else if (rasterizer_debug_options.draw_hud_motion_sensor && rasterizer_motion_sensor_begin_said_to_draw)
 	{
-		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, 0, FALSE, TRUE);
+		rasterizer_set_target(global_window_parameters.rasterizer_target, 0, PIXEL32_FROM_ARGB(0, 0, 0, 0), FALSE, TRUE);
 	}
 
 	return;
