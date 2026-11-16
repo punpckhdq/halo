@@ -4283,7 +4283,7 @@ short actor_perception_aiming_vector_test_blockage(
 		planar_distance = magnitude2d((real_vector2d *)&source_to_friend);
 		planar_projection = dot_product2d((real_vector2d *)&source_to_friend, &source_planar_direction);
 
-		if (planar_projection>0.8660254f * planar_distance)
+		if (planar_projection>_cosine30 * planar_distance)
 		{
 			real_point3d offset;
 
@@ -4722,7 +4722,7 @@ void actor_emotion_update(
 		actor->emotions.instantaneous_danger = 0.f;
 	}
 
-	actor->emotions.perceived_danger += (1.f - (real)exp((real)(-0.69314718f / 15))) * (actor->emotions.instantaneous_danger - actor->emotions.perceived_danger);
+	actor->emotions.perceived_danger += (1.f - (real)exp((real)(-M_LN2 / (TICKS_PER_SECOND / 2)))) * (actor->emotions.instantaneous_danger - actor->emotions.perceived_danger);
 
 	if (actor->external_orders.stand_down)
 	{

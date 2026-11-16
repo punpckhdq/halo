@@ -2856,7 +2856,7 @@ boolean actor_action_try_to_throw_grenade(
 				&grenade_target_direction);
 
 			if (normalize2d(&grenade_target_direction)>0.f &&
-				!(dot_product2d(&grenade_target_direction, (real_vector2d *)&actor->input.facing_vector)<0.8660254f))
+				!(dot_product2d(&grenade_target_direction, (real_vector2d *)&actor->input.facing_vector)<_cosine30))
 			{
 				actor->orders.combat.throw_grenade = TRUE;
 				actor->control.grenade_trying_to_throw = FALSE;

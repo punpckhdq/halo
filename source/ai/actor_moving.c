@@ -1301,7 +1301,7 @@ static void actor_move_calculate_movement(
 	real maximum_stopping_distance;
 	struct actor_datum *actor = actor_get(actor_index);
 	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
-	real begin_movement_angle_cosine = 0.8660254f; // cosine of 30 degrees
+	real begin_movement_angle_cosine = _cosine30;
 	short facing_direction = NONE;
 
 	if (actor->orders.move.move_face_exactly)
@@ -1812,7 +1812,7 @@ static void actor_move_calculate_free(
 static void actor_move_avoidance_setup(
 	struct vector_avoidance_data *avoidance_data)
 {
-	long object_indices[2048];
+	long object_indices[MAXIMUM_OBJECTS_PER_MAP];
 	short object_index_index;
 	struct object_datum *object = object_get(avoidance_data->object_index);
 	short object_count = objects_in_sphere(

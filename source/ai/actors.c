@@ -2236,7 +2236,7 @@ static void actor_randomly_control_unit(
 	control_data.grenade_index = NONE;
 	control_data.zoom_level = NONE;
 	unit_get_facing_vector(unit_index, &control_data.facing_vector);
-	rotate_vector_about_axis(&control_data.facing_vector, global_up3d, 0.5f, 0.8660254f);
+	rotate_vector_about_axis(&control_data.facing_vector, global_up3d, _sine30, _cosine30);
 	control_data.aiming_vector = control_data.facing_vector;
 	control_data.looking_vector = control_data.facing_vector;
 
@@ -3409,7 +3409,6 @@ static void actor_unit_control(
 	{
 		match_assert_valid_real_normal2d("c:\\halo\\SOURCE\\ai\\actors.c", 3846, (real_vector2d *) &control_data.facing_vector);
 	}
-
 	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actors.c", 3848, &control_data.facing_vector);
 	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actors.c", 3849, &control_data.aiming_vector);
 	match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actors.c", 3850, &control_data.looking_vector);
