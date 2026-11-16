@@ -364,6 +364,12 @@ void interpolate_node_orientations(
 /* ---------- globals */
 
 extern boolean hs_model_animation_compression_enabled;
+extern long hs_model_animation_data_compressed_size;
+extern long hs_model_animation_data_uncompressed_size;
+extern long hs_model_animation_data_compression_savings_in_bytes;
+extern long hs_model_animation_data_compression_savings_in_bytes_at_import;
+extern long hs_model_animation_data_compression_savings_in_percent;
+extern char hs_model_animation_bullshit[];
 
 extern struct animation_list weapon_type_animation_list;
 extern struct animation_list weapon_class_animation_list;

@@ -22,6 +22,8 @@ void material_effect_new_from_point(long effects_definition_index, short effect_
 
 /* ---------- globals */
 
+extern boolean debug_material_effects;
+
 /* ---------- public code */
 
 #endif // __MATERIAL_EFFECTS_H

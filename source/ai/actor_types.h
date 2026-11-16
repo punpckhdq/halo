@@ -102,6 +102,8 @@ boolean actor_type_flood_desire_shamble(long actor_index);
 
 /* ---------- globals */
 
+extern char const *global_actor_type_names[NUMBER_OF_ACTOR_TYPES];
+
 /* ---------- public code */
 
 #endif // __ACTOR_TYPES_H

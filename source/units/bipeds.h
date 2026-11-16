@@ -137,11 +137,11 @@ void biped_build_flying_axes(real_vector3d const *forward_vector, real_vector3d 
 
 /* ---------- globals */
 
-extern boolean rider_ejection;
 extern boolean debug_biped_physics;
 extern boolean debug_biped_skip_update;
 extern boolean debug_biped_skip_collision;
 extern boolean debug_biped_limp_body_disable;
+extern boolean rider_ejection;
 
 extern boolean debug_objects_biped_autoaim_pills;
 extern boolean debug_objects_biped_physics_pills;

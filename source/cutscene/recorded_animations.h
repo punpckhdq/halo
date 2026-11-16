@@ -51,6 +51,9 @@ void render_debug_recording(void);
 
 /* ---------- globals */
 
+extern boolean debug_recording;
+extern short debug_recording_newlines;
+
 /* ---------- public code */
 
 #endif // __RECORDED_ANIMATIONS_H

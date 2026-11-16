@@ -41,6 +41,8 @@ void bink_playback_update(void);
 
 /* ---------- globals */
 
+extern boolean debug_bink;
+
 /* ---------- public code */
 
 #endif // __BINK_PLAYBACK_H

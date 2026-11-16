@@ -89,4 +89,10 @@ void collision_log_end_period(void);
 extern short global_current_collision_user_depth;
 extern short global_current_collision_users[MAXIMUM_COLLISION_USER_STACK_DEPTH];
 
+extern boolean collision_log_render_enable;
+extern boolean collision_log_detailed;
+extern boolean collision_log_extended;
+extern boolean collision_log_totals_only;
+extern boolean collision_log_time;
+
 #endif // __COLLISION_USAGE_H
