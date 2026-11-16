@@ -962,12 +962,12 @@ static boolean action_obey_command_perform(
 
 				if (!finished && complex_control->destination_keep_moving && complex_control->destination_valid)
 				{
-					real_vector3d direction_to_point;
+					real_vector3d vector_to_destination;
 					real distance_squared;
 					real tolerance = actor_destination_tolerance(actor_index);
 
-					vector_from_points3d(&actor->input.position.body_position, &complex_control->destination_point, &direction_to_point);
-					distance_squared = magnitude_squared3d(&direction_to_point);
+					vector_from_points3d(&actor->input.position.body_position, &complex_control->destination_point, &vector_to_destination);
+					distance_squared = magnitude_squared3d(&vector_to_destination);
 
 					if (distance_squared<tolerance * tolerance)
 					{
@@ -977,7 +977,7 @@ static boolean action_obey_command_perform(
 					{
 						struct unit_datum *unit = unit_get(actor->meta.unit_index);
 
-						if (dot_product3d(&unit->object.translational_velocity, &direction_to_point)<0.f)
+						if (dot_product3d(&unit->object.translational_velocity, &vector_to_destination)<0.f)
 						{
 							finished = TRUE;
 						}
@@ -1051,7 +1051,7 @@ static boolean action_obey_command_perform(
 		case _ai_atom_move_direction:
 		{
 			real_point3d current_position;
-			real_vector3d direction_to_point;
+			real_vector3d vector_moved;
 
 			if (unit_index==actor->meta.unit_index)
 			{
@@ -1062,8 +1062,8 @@ static boolean action_obey_command_perform(
 				object_get_origin(unit_index, &current_position);
 			}
 
-			vector_from_points3d(&simple_control->directmovement.start_position, &current_position, &direction_to_point);
-			finished = dot_product3d(&simple_control->directmovement.vector, &direction_to_point)>current_command->parameter1;
+			vector_from_points3d(&simple_control->directmovement.start_position, &current_position, &vector_moved);
+			finished = dot_product3d(&simple_control->directmovement.vector, &vector_moved)>current_command->parameter1;
 			break;
 		}
 
@@ -1072,7 +1072,11 @@ static boolean action_obey_command_perform(
 			break;
 
 		case _ai_atom_shoot:
-			if (unit_index==actor->meta.unit_index && complex_control)
+			if (unit_index!=actor->meta.unit_index || !complex_control)
+			{
+				finished = TRUE;
+			}
+			else
 			{
 				if (!(actor->control.current_fire_target_type==_actor_fire_target_manual_point &&
 					distance_squared3d(&complex_control->shoot_target, &actor->control.current_fire_target_manual_point)<0.25f))
@@ -1084,10 +1088,6 @@ static boolean action_obey_command_perform(
 				}
 
 				finished = simple_control->pause_timer==0;
-			}
-			else
-			{
-				finished = TRUE;
 			}
 
 			break;
@@ -1296,25 +1296,25 @@ static void action_obey_command_end(
 			{
 				if (current_command->command_index==simple_control->current_command_index)
 				{
-					char actor_description[512];
+					char actorbuf[512];
 
-					ai_debug_describe_actor(actor_index, NONE, TRUE, actor_description, sizeof(actor_description));
+					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
 					error(
 						_error_silent,
 						"%s: command list %s entry #%d tried to loop to itself",
-						actor_description,
+						actorbuf,
 						command_list->name,
 						simple_control->current_command_index);
 				}
 				else if (simple_control->loop_counter>=MAXIMUM_COMMAND_LIST_LOOPS)
 				{
-					char actor_description[512];
+					char actorbuf[512];
 
-					ai_debug_describe_actor(actor_index, NONE, TRUE, actor_description, sizeof(actor_description));
+					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
 					error(
 						_error_silent,
 						"%s: command list %s is stuck looping (aborting on loop #%d)",
-						actor_description,
+						actorbuf,
 						command_list->name,
 						simple_control->current_command_index);
 				}
@@ -1619,25 +1619,25 @@ boolean action_obey_command_list_setup(
 		{
 			if (actor->meta.active)
 			{
-				char actor_description[256];
+				char tempbuf[256];
 
-				ai_debug_describe_actor(actor_index, NONE, TRUE, actor_description, sizeof(actor_description));
-				error(_error_silent, "swarm actor %s cannot execute command list, ran out of swarm caches", actor_description);
+				ai_debug_describe_actor(actor_index, NONE, TRUE, tempbuf, sizeof(tempbuf));
+				error(_error_silent, "swarm actor %s cannot execute command list, ran out of swarm caches", tempbuf);
 			}
 			else
 			{
 				actor->state.command_list_index = command_list_index;
 			}
 		}
-		else if (command_list->runtime_structure_bsp_reference_index==NONE ||
-			command_list->runtime_structure_bsp_reference_index==global_structure_bsp_index)
+		else if (command_list->runtime_structure_bsp_reference_index!=NONE &&
+			command_list->runtime_structure_bsp_reference_index!=global_structure_bsp_index)
 		{
-			state_data->command_list_index = command_list_index;
-			success = TRUE;
+			error(_error_silent, "wrong structure bsp, cannot execute command list %s", command_list->name);
 		}
 		else
 		{
-			error(_error_silent, "wrong structure bsp, cannot execute command list %s", command_list->name);
+			state_data->command_list_index = command_list_index;
+			success = TRUE;
 		}
 
 		if (success)
@@ -1669,15 +1669,15 @@ void action_obey_flush_command_indices(
 	struct obey_state_data *state_data = &actor->state.action_data.obey;
 	struct scenario *scenario = global_scenario_get();
 
-	if (state_data->command_list_index>=0 && state_data->command_list_index<scenario->ai_command_lists.count)
-	{
-		action_obey_individuals_iterate(actor_index, FALSE, state_data, action_obey_individual_flush_command_indices, NULL);
-	}
-	else
+	if (state_data->command_list_index<0 || state_data->command_list_index>=scenario->ai_command_lists.count)
 	{
 		state_data->command_list_index = NONE;
 		state_data->finished = TRUE;
 		actor_action_change(actor_index, _actor_action_none, NULL);
+	}
+	else
+	{
+		action_obey_individuals_iterate(actor_index, FALSE, state_data, action_obey_individual_flush_command_indices, NULL);
 	}
 
 	return;
@@ -2257,16 +2257,16 @@ void action_obey_describe_command(
 
 	case _ai_atom_teleport:
 	{
-		char facing_string[256];
+		char tempbuf[256];
 
-		strcpy(facing_string, "");
+		strcpy(tempbuf, "");
 
 		if (command->point2_index!=NONE)
 		{
-			sprintf(facing_string, " and face at (p%d)", command->point2_index);
+			sprintf(tempbuf, " and face at (p%d)", command->point2_index);
 		}
 
-		_snprintf(string, string_size, "teleport to (p%d)%s", command->point1_index, facing_string);
+		_snprintf(string, string_size, "teleport to (p%d)%s", command->point1_index, tempbuf);
 		break;
 	}
 

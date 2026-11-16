@@ -224,7 +224,7 @@ void actor_perception_update(
 		boolean refresh_position = FALSE;
 		boolean refresh_status = FALSE;
 		boolean became_acknowledged = FALSE;
-		boolean expected = FALSE;
+		boolean became_acknowledged_from_orphan = FALSE;
 
 		if (prop->unit_effect_decay_ticks>0 && !--prop->unit_effect_decay_ticks)
 		{
@@ -381,10 +381,10 @@ void actor_perception_update(
 
 					if (prop->player && ai_debug.print_acknowledgement)
 					{
-						char buffer[256];
+						char aibuf[256];
 
-						ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, buffer, sizeof(buffer));
-						error(_error_silent, "%s: start to become aware", buffer);
+						ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
+						error(_error_silent, "%s: start to become aware", aibuf);
 					}
 				}
 				else
@@ -407,10 +407,10 @@ void actor_perception_update(
 
 						if (ai_debug.print_acknowledgement)
 						{
-							char buffer[256];
+							char aibuf[256];
 
-							ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, buffer, sizeof(buffer));
-							error(_error_silent, "%s: stop becoming aware", buffer);
+							ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
+							error(_error_silent, "%s: stop becoming aware", aibuf);
 						}
 					}
 				}
@@ -458,18 +458,18 @@ void actor_perception_update(
 
 						if (ai_debug.print_acknowledgement)
 						{
-							char buffer[256];
 							char const *acknowledgement_speed_names[NUMBER_OF_ACTOR_ACKNOWLEDGEMENT_SPEEDS] = { "never", "noncombat", "guard", "combat", "instant" };
-							char const *knowledge_type_names[NUMBER_OF_ACTOR_KNOWLEDGE_TYPES] = { "noncombat", "guard", "searching", "definite" };
-							char const *perception_type_names[NUMBER_OF_ACTOR_PERCEPTION_TYPES] = { "none", "partial", "full", "unmistakable" };
+							char const *knowledge_names[NUMBER_OF_ACTOR_KNOWLEDGE_TYPES] = { "noncombat", "guard", "searching", "definite" };
+							char const *perception_names[NUMBER_OF_ACTOR_PERCEPTION_TYPES] = { "none", "partial", "full", "unmistakable" };
+							char aibuf[256];
 
-							ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, buffer, sizeof(buffer));
+							ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
 							error(
 								_error_silent,
 								"%s: knowledge %s percep %s -> awareness %s",
-								buffer,
-								knowledge_type_names[knowledge_type],
-								perception_type_names[prop->perception],
+								aibuf,
+								knowledge_names[knowledge_type],
+								perception_names[prop->perception],
 								acknowledgement_speed_names[acknowledgement_speed]);
 
 							if (awareness_delta>0.f && awareness_delta<1.f)
@@ -496,10 +496,10 @@ void actor_perception_update(
 
 							if (ai_debug.print_acknowledgement)
 							{
-								char buffer[256];
+								char aibuf[256];
 
-								ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, buffer, sizeof(buffer));
-								error(_error_silent, "%s: become aware!", buffer);
+								ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
+								error(_error_silent, "%s: become aware!", aibuf);
 							}
 						}
 					}
@@ -650,7 +650,7 @@ void actor_perception_update(
 					break;
 
 				case _prop_state_acknowledged:
-					became_acknowledged = actor_perception_become_acknowledged(actor_index, iterator.index, &expected);
+					became_acknowledged = actor_perception_become_acknowledged(actor_index, iterator.index, &became_acknowledged_from_orphan);
 					iterator.next_index = prop->next_prop_index;
 					break;
 
@@ -691,7 +691,7 @@ void actor_perception_update(
 
 			if (prop->just_became_visible || (became_acknowledged && prop->visibility>_actor_perception_none))
 			{
-				boolean new_enemy = became_acknowledged && !expected;
+				boolean new_enemy = became_acknowledged && !became_acknowledged_from_orphan;
 
 				actor_stimulus_prop_sighted(actor_index, iterator.index, new_enemy);
 				prop->just_became_visible = FALSE;
@@ -960,7 +960,7 @@ short actor_visibility_at_point(
 
 	if (line_of_sight==_ai_line_of_sight_clear || line_of_sight==_ai_line_of_sight_occluded)
 	{
-		real_vector3d offset;
+		real_vector3d relative_position;
 		real distance_squared;
 		real knowledge_factor;
 		struct actor_datum *actor = actor_get(actor_index);
@@ -999,8 +999,8 @@ short actor_visibility_at_point(
 		}
 
 		maximum_vision_distance *= knowledge_factor;
-		vector_from_points3d(&sense_position->head_position, position, &offset);
-		distance_squared = magnitude_squared3d(&offset);
+		vector_from_points3d(&sense_position->head_position, position, &relative_position);
+		distance_squared = magnitude_squared3d(&relative_position);
 
 		if (distance_squared<maximum_vision_distance * maximum_vision_distance)
 		{
@@ -1055,15 +1055,15 @@ short actor_visibility_at_point(
 				}
 				else
 				{
-					real_vector3d local_offset;
+					real_vector3d head_relative_vector;
 					real vertical_angle;
 					real planar_distance;
 
-					local_offset.i = dot_product3d(&offset, &actor->input.looking_vector);
-					local_offset.j = dot_product3d(&offset, &actor->input.looking_left_vector);
-					local_offset.k = dot_product3d(&offset, &actor->input.looking_up_vector);
-					planar_distance = magnitude2d((real_vector2d *)&local_offset);
-					vertical_angle = arctangent(local_offset.k, planar_distance);
+					head_relative_vector.i = dot_product3d(&relative_position, &actor->input.looking_vector);
+					head_relative_vector.j = dot_product3d(&relative_position, &actor->input.looking_left_vector);
+					head_relative_vector.k = dot_product3d(&relative_position, &actor->input.looking_up_vector);
+					planar_distance = magnitude2d((real_vector2d *)&head_relative_vector);
+					vertical_angle = arctangent(head_relative_vector.k, planar_distance);
 
 					if (vertical_angle>_pi / 6.f || vertical_angle<-_pi / 4.f)
 					{
@@ -1072,7 +1072,7 @@ short actor_visibility_at_point(
 					}
 					else
 					{
-						real horizontal_angle = arctangent(local_offset.j, local_offset.i);
+						real horizontal_angle = arctangent(head_relative_vector.j, head_relative_vector.i);
 
 						actor_get_vision_distances(
 							actor_index,
@@ -1234,17 +1234,17 @@ short actor_audibility_at_point(
 
 	if (sound_volume!=_ai_sound_volume_silent && sense_position->body_location.cluster_index!=NONE && location->cluster_index!=NONE)
 	{
-		real_vector3d offset;
+		real_vector3d actor_to_position;
 		real distance_squared;
 		struct actor_debug_info *actor_debug_info;
 		real hearing_distance = actor_definition->perception.hearing_distance;
 		real propagation_distance = -1.f;
 		real final_distance = -1.f;
 
-		vector_from_points3d(&sense_position->head_position, position, &offset);
-		distance_squared = magnitude_squared3d(&offset);
+		vector_from_points3d(&sense_position->head_position, position, &actor_to_position);
+		distance_squared = magnitude_squared3d(&actor_to_position);
 
-		if (dot_product3d(&offset, &sense_position->body_facing)<0.f)
+		if (dot_product3d(&actor_to_position, &sense_position->body_facing)<0.f)
 		{
 			hearing_distance *= 0.8f;
 		}
@@ -1641,7 +1641,7 @@ void prop_status_refresh(
 
 		{
 			real_vector3d velocity;
-			real_vector3d relative_velocity;
+			real_vector3d closing_velocity;
 			real speed;
 			real closing_speed;
 			short old_speed = prop->quantized_speed;
@@ -1666,8 +1666,8 @@ void prop_status_refresh(
 				prop->quantized_speed = _prop_speed_driving;
 			}
 
-			subtract_vectors3d(&velocity, &sense_position->velocity, &relative_velocity);
-			closing_speed = -dot_product3d(&relative_velocity, &prop->actor_to_prop);
+			subtract_vectors3d(&velocity, &sense_position->velocity, &closing_velocity);
+			closing_speed = -dot_product3d(&closing_velocity, &prop->actor_to_prop);
 
 			if (closing_speed<-1.f / TICKS_PER_SECOND)
 			{
@@ -2559,7 +2559,13 @@ static void actor_perception_refresh_test_object(
 					unit_actor_index = unit->unit.actor_index;
 				}
 
-				if (unit_index!=NONE && unit_actor_index!=actor_index)
+				if (unit_index==NONE)
+				{
+				}
+				else if (unit_actor_index==actor_index)
+				{
+				}
+				else
 				{
 					struct unit_definition *unit_definition = unit_definition_get(unit->definition_index);
 					boolean player = unit->unit.player_index!=NONE;
@@ -4275,30 +4281,30 @@ short actor_perception_aiming_vector_test_blockage(
 
 	if (normalize2d(&source_planar_direction)>0.f)
 	{
-		real_vector3d source_to_friend;
+		real_vector3d friend_vector;
 		real planar_distance;
 		real planar_projection;
 
-		vector_from_points3d(source_position, friend_position, &source_to_friend);
-		planar_distance = magnitude2d((real_vector2d *)&source_to_friend);
-		planar_projection = dot_product2d((real_vector2d *)&source_to_friend, &source_planar_direction);
+		vector_from_points3d(source_position, friend_position, &friend_vector);
+		planar_distance = magnitude2d((real_vector2d *)&friend_vector);
+		planar_projection = dot_product2d((real_vector2d *)&friend_vector, &source_planar_direction);
 
 		if (planar_projection>_cosine30 * planar_distance)
 		{
-			real_point3d offset;
+			real_point3d friend_perpendicular_vector;
 
-			point_from_line3d((real_point3d *)&source_to_friend, source_vector, -planar_projection, &offset);
+			point_from_line3d((real_point3d *)&friend_vector, source_vector, -planar_projection, &friend_perpendicular_vector);
 
 			if (friend_direction_to_aiming_vector)
 			{
-				negate_vector3d((real_vector3d *)&offset, friend_direction_to_aiming_vector);
+				negate_vector3d((real_vector3d *)&friend_perpendicular_vector, friend_direction_to_aiming_vector);
 			}
 
-			if (offset.z>-0.5f && offset.z<0.9f)
+			if (friend_perpendicular_vector.z>-0.5f && friend_perpendicular_vector.z<0.9f)
 			{
 				result = _actor_aiming_blocked;
 			}
-			else if (offset.z>-0.8f && offset.z<1.2f)
+			else if (friend_perpendicular_vector.z>-0.8f && friend_perpendicular_vector.z<1.2f)
 			{
 				result = _actor_aiming_occluded;
 			}
@@ -4309,7 +4315,7 @@ short actor_perception_aiming_vector_test_blockage(
 
 			if (result>_actor_aiming_clear)
 			{
-				real distance_squared = magnitude_squared2d((real_vector2d *)&offset);
+				real distance_squared = magnitude_squared2d((real_vector2d *)&friend_perpendicular_vector);
 
 				if (distance_squared<0.36f)
 				{
@@ -4735,8 +4741,8 @@ void actor_emotion_update(
 		if (actor->input.vehicle_index==NONE && actor->state.combat_status>=_actor_combat_status_definite)
 		{
 			boolean has_target;
-			real_vector3d attack_vector;
 			struct prop_iterator iterator;
+			real_vector3d attack_vector;
 			struct prop_datum *prop;
 
 			actor->emotions.crouch_blocking_line_of_fire = FALSE;

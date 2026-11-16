@@ -1374,8 +1374,8 @@ boolean actor_move_animation_impulse(long actor_index, short animation_impulse, 
 boolean actor_move_force_stop(long actor_index);
 void actor_destination_update(long actor_index);
 void actor_move_update(long actor_index);
-boolean actor_move_try_evasion_vector(long actor_index, real_vector2d const *evasion_vector, real evade_distance, real maximum_ledge_height, boolean *evasion_is_ledge_reference, struct path_collision_result *result);
-boolean actor_move_try_evasion_direction(long actor_index, real_vector2d const *alignment_vector, real evade_distance, short *evade_direction_reference, real maximum_ledge_height, boolean *evasion_is_ledge_reference, struct path_collision_result *result);
+boolean actor_move_try_evasion_vector(long actor_index, real_vector2d *evasion_vector, real evade_distance, real maximum_ledge_height, boolean *evasion_is_ledge_reference, struct path_collision_result *result);
+boolean actor_move_try_evasion_direction(long actor_index, real_vector2d *alignment_vector, real evade_distance, short *evade_direction_reference, real maximum_ledge_height, boolean *evasion_is_ledge, struct path_collision_result *result);
 boolean actor_test_destination(long actor_index);
 void actor_get_stopping_distances(long actor_index, real *current_stopping_distance_reference, real *maximum_stopping_distance_reference);
 boolean actor_move_halt_at_firing_position(long actor_index);

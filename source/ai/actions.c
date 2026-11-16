@@ -829,11 +829,6 @@ static boolean actor_action_allowed_to_enter_vehicle(
 boolean actor_action_handle_vehicle_entry(
 	long actor_index)
 {
-	real best_distance_squared;
-	real attempt_distance;
-	real continue_distance;
-	long vehicle_index;
-	struct action_state_data new_state_data;
 	struct actor_datum *actor = actor_get(actor_index);
 	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
 	long current_time = game_time_get();
@@ -845,10 +840,11 @@ boolean actor_action_handle_vehicle_entry(
 	}
 	else if (actor->emotions.last_vehicle_check_time==NONE || actor->emotions.last_vehicle_check_time + 45<current_time)
 	{
-		best_distance_squared = REAL_MAX;
-		attempt_distance = REAL_MAX;
-		continue_distance = REAL_MAX;
-		vehicle_index = NONE;
+		real best_distance_squared = REAL_MAX;
+		real attempt_distance = REAL_MAX;
+		real continue_distance = REAL_MAX;
+		long vehicle_index = NONE;
+
 		actor->emotions.last_vehicle_check_time = current_time;
 
 		if (TEST_FLAG(actor_definition->flags, _actor_definition_helps_players_in_vehicles_bit))
@@ -906,19 +902,28 @@ boolean actor_action_handle_vehicle_entry(
 					object_get_origin(enterable->vehicle_index, &position);
 					distance_squared = distance_squared3d(&position, &actor->input.position.body_position);
 
-					if (distance_squared<best_distance_squared &&
-						(enterable->radius==REAL_MAX || !(distance_squared>enterable->radius * enterable->radius)) &&
-						(enterable->team_bitmask<=0 ||
-						(actor->meta.team_index!=NONE && TEST_FLAG(enterable->team_bitmask, actor->meta.team_index))) &&
-						(enterable->actor_type_bitmask<=0 || TEST_FLAG(enterable->actor_type_bitmask, actor->meta.type)))
+					if (distance_squared<best_distance_squared)
 					{
-						boolean valid;
+						if (enterable->radius!=REAL_MAX && distance_squared>enterable->radius * enterable->radius)
+						{
+							continue;
+						}
+
+						if (enterable->team_bitmask>0 &&
+							(actor->meta.team_index==NONE || !TEST_FLAG(enterable->team_bitmask, actor->meta.team_index)))
+						{
+							continue;
+						}
+
+						if (enterable->actor_type_bitmask>0 && !TEST_FLAG(enterable->actor_type_bitmask, actor->meta.type))
+						{
+							continue;
+						}
 
 						if (enterable->ai_indices_count>0)
 						{
+							boolean valid = FALSE;
 							short ai_index_index;
-
-							valid = FALSE;
 
 							for (ai_index_index = 0; ai_index_index<enterable->ai_indices_count; ai_index_index++)
 							{
@@ -948,29 +953,31 @@ boolean actor_action_handle_vehicle_entry(
 									}
 								}
 							}
-						}
-						else
-						{
-							valid = TRUE;
+
+							if (!valid)
+							{
+								continue;
+							}
 						}
 
-						if (valid)
-						{
-							vehicle_index = enterable->vehicle_index;
-							best_distance_squared = distance_squared;
-							attempt_distance = enterable->radius + 3.f;
-							continue_distance = enterable->radius + 6.f;
-						}
+						vehicle_index = enterable->vehicle_index;
+						best_distance_squared = distance_squared;
+						attempt_distance = enterable->radius + 3.f;
+						continue_distance = enterable->radius + 6.f;
 					}
 				}
 			}
 		}
 
-		if (vehicle_index!=NONE &&
-			action_vehicle_setup_impromptu(actor_index, vehicle_index, attempt_distance, continue_distance, &new_state_data.vehicle))
+		if (vehicle_index!=NONE)
 		{
-			actor_action_change(actor_index, _actor_action_vehicle, &new_state_data);
-			result = TRUE;
+			struct action_state_data new_state_data;
+
+			if (action_vehicle_setup_impromptu(actor_index, vehicle_index, attempt_distance, continue_distance, &new_state_data.vehicle))
+			{
+				actor_action_change(actor_index, _actor_action_vehicle, &new_state_data);
+				result = TRUE;
+			}
 		}
 	}
 
@@ -2839,7 +2846,10 @@ boolean actor_action_try_to_throw_grenade(
 	struct unit_datum *unit = unit_get(actor->meta.unit_index);
 	boolean result = FALSE;
 
-	if (!unit_is_busy(actor->meta.unit_index) && !(unit->object.current_body_damage>0.f))
+	if (unit_is_busy(actor->meta.unit_index) || unit->object.current_body_damage>0.f)
+	{
+	}
+	else
 	{
 		if (!known_trajectory && !actor_action_test_grenade(actor_index))
 		{
@@ -2991,11 +3001,12 @@ boolean actor_action_try_to_evade(
 
 			if (facing_dot_product>0.4f)
 			{
-				boolean evasion_is_ledge;
 				struct path_collision_result collision_result;
+				real_vector2d alignment_vector;
 				short evade_direction = _actor_evade_random_side;
-				real_vector2d alignment_vector = *(real_vector2d *)&prop->actor_to_prop;
+				boolean evasion_is_ledge;
 
+				alignment_vector = *(real_vector2d *)&prop->actor_to_prop;
 				normalize2d(&alignment_vector);
 
 				if (actor_move_try_evasion_direction(

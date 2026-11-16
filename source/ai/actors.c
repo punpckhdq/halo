@@ -540,18 +540,18 @@ long actor_place(
 
 	if (unit_index==NONE)
 	{
-		char encounter_name[256];
+		char aibuf[256];
 
 		if (encounter_index==NONE)
 		{
-			strcpy(encounter_name, "<encounterless>");
+			strcpy(aibuf, "<encounterless>");
 		}
 		else
 		{
-			ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), encounter_name, sizeof(encounter_name));
+			ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), aibuf, sizeof(aibuf));
 		}
 
-		error(_error_silent, "WARNING: cannot create unit for actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), encounter_name);
+		error(_error_silent, "WARNING: cannot create unit for actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
 	}
 
 	if (unit_index!=NONE)
@@ -606,18 +606,18 @@ long actor_place(
 
 		if (actor_index==NONE)
 		{
-			char encounter_name[256];
+			char aibuf[256];
 
 			if (encounter_index==NONE)
 			{
-				strcpy(encounter_name, "<encounterless>");
+				strcpy(aibuf, "<encounterless>");
 			}
 			else
 			{
-				ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), encounter_name, sizeof(encounter_name));
+				ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), aibuf, sizeof(aibuf));
 			}
 
-			error(_error_silent, "WARNING: cannot create actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), encounter_name);
+			error(_error_silent, "WARNING: cannot create actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
 		}
 	}
 
@@ -761,7 +761,10 @@ void actor_attach_unit(
 	struct actor_datum *actor = actor_get(actor_index);
 	struct unit_datum *unit = unit_get(unit_index);
 
-	if (unit->unit.actor_index!=actor_index)
+	if (unit->unit.actor_index==actor_index)
+	{
+	}
+	else
 	{
 		if (unit->unit.swarm_actor_index!=NONE)
 		{
@@ -1068,15 +1071,15 @@ static void actor_verify_unit_activation(
 	struct unit_datum *unit = unit_get(unit_index);
 	struct actor_datum *actor = actor_get(actor_index);
 
-	if (unit->object.parent_object_index==NONE)
+	if (unit->object.parent_object_index!=NONE)
 	{
-		if (unit->unit.last_vehicle_index + TICKS_PER_SECOND<game_time_get())
-		{
-			if (actor->meta.dormant!=!TEST_FLAG(header->flags, _object_header_active_bit))
-			{
-				error(_error_silent, "%s unit activation logic error", description);
-			}
-		}
+	}
+	else if (unit->unit.last_vehicle_index + TICKS_PER_SECOND>=game_time_get())
+	{
+	}
+	else if (actor->meta.dormant!=!TEST_FLAG(header->flags, _object_header_active_bit))
+	{
+		error(_error_silent, "%s unit activation logic error", description);
 	}
 
 	return;
@@ -1156,7 +1159,10 @@ boolean actor_swarm_attach_unit(
 	struct unit_datum *unit = unit_get(unit_index);
 	boolean success = TRUE;
 
-	if (unit->unit.swarm_actor_index!=actor_index)
+	if (unit->unit.swarm_actor_index==actor_index)
+	{
+	}
+	else
 	{
 		long swarm_component_index = NONE;
 
@@ -1832,7 +1838,10 @@ boolean actor_get_running_blind_vector(
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actors.c", 1966, run_vector);
 
-	if (!actor->meta.swarm)
+	if (actor->meta.swarm)
+	{
+	}
+	else
 	{
 		if (actor->control.moving)
 		{
@@ -2595,7 +2604,10 @@ void actor_find_pathfinding_location(
 	{
 		actor->input.pathfinding_point = actor->input.position.body_position;
 
-		if (!actor->state.flying)
+		if (actor->state.flying)
+		{
+		}
+		else
 		{
 			if (actor->input.vehicle_index!=NONE)
 			{
@@ -2977,22 +2989,20 @@ static void actor_clear_orders(
 static void actor_decision_loop(
 	long actor_index)
 {
-	short action_history[ACTOR_DECISION_HISTORY_COUNT];
-	char error_string[1024];
-	char encounter_string[256];
-	boolean error_condition;
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean performed = FALSE;
 	long iteration_count = 0;
 	long history_index = 0;
+	short update_history[ACTOR_DECISION_HISTORY_COUNT];
+	boolean error_condition;
 
-	memset(action_history, NONE, sizeof(action_history));
+	memset(update_history, NONE, sizeof(update_history));
 
 	while (TRUE)
 	{
 		error_condition = FALSE;
 		++iteration_count;
-		action_history[history_index] = actor->state.action;
+		update_history[history_index] = actor->state.action;
 		history_index = (history_index + 1) % ACTOR_DECISION_HISTORY_COUNT;
 		actor->state.action_changed = FALSE;
 
@@ -3023,45 +3033,48 @@ static void actor_decision_loop(
 
 	if (error_condition)
 	{
+		char errbuf[1024];
+		char encounterbuf[256];
+
 		if (actor->meta.encounter_index==NONE)
 		{
-			strcpy(encounter_string, "<no encounter>");
+			strcpy(encounterbuf, "<no encounter>");
 		}
 		else
 		{
 			struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->ai_encounters, DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index), struct encounter_definition);
 			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(&encounter_definition->squads, actor->meta.squad_index, struct squad_definition);
 
-			sprintf(encounter_string, "%s/%s", encounter_definition->name, squad_definition->name);
+			sprintf(encounterbuf, "%s/%s", encounter_definition->name, squad_definition->name);
 		}
 
 		if (iteration_count>=MAXIMUM_ACTOR_DECISION_ITERATIONS)
 		{
 			long i;
 
-			sprintf(error_string, "actor-type %s ", actor_type_get_name(actor->meta.type));
+			sprintf(errbuf, "actor-type %s ", actor_type_get_name(actor->meta.type));
 			i = history_index;
 
 			do
 			{
-				if (action_history[i]!=NONE)
+				if (update_history[i]!=NONE)
 				{
-					strcat(error_string, actor_action_name(action_history[i]));
-					strcat(error_string, "/");
+					strcat(errbuf, actor_action_name(update_history[i]));
+					strcat(errbuf, "/");
 				}
 
 				i = (i + 1) % ACTOR_DECISION_HISTORY_COUNT;
 			} while (i!=history_index);
 
-			sprintf(temporary, " infinite decision loop (%s)", encounter_string);
-			strcat(error_string, temporary);
+			sprintf(temporary, " infinite decision loop (%s)", encounterbuf);
+			strcat(errbuf, temporary);
 		}
 		else
 		{
-			sprintf(error_string, "actor-type %s %s internal logic error (%s)", actor_type_get_name(actor->meta.type), actor_action_name(actor->state.action), encounter_string);
+			sprintf(errbuf, "actor-type %s %s internal logic error (%s)", actor_type_get_name(actor->meta.type), actor_action_name(actor->state.action), encounterbuf);
 		}
 
-		match_vwarn("c:\\halo\\SOURCE\\ai\\actors.c", 3436, FALSE, error_string);
+		match_vwarn("c:\\halo\\SOURCE\\ai\\actors.c", 3436, FALSE, errbuf);
 		error(_error_silent, "AI error condition detected, attempting to recover (please tell butcher)...");
 		actor_action_change(actor_index, _actor_action_none, NULL);
 	}
@@ -3076,8 +3089,8 @@ void actors_handle_spatial_effect(
 	short volume,
 	short count)
 {
-	struct location location;
 	struct actor_iterator iterator;
+	struct location location;
 	struct actor_datum *actor;
 
 	scenario_location_from_point(&location, position);
@@ -3125,8 +3138,8 @@ void actors_handle_unit_effect(
 {
 	struct structure_bsp *structure_bsp;
 	unsigned long potentially_audible_clusters[BIT_VECTOR_SIZE_IN_LONGS(MAXIMUM_CLUSTERS_PER_STRUCTURE)];
-	real_point3d sound_position;
 	struct actor_iterator iterator;
+	real_point3d sound_position;
 	struct actor_datum *actor;
 	struct unit_datum *unit = unit_get(owner_unit_index);
 	struct location *location = &unit->object.location;

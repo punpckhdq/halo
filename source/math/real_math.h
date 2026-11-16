@@ -16,8 +16,8 @@ file has inline function assertions.
 #define _pi 3.14159265359f
 #define _pi2 1.57079632679f	/* fake name */
 #define _sqrt2 1.41421356f	/* fake name */
-#define _cosine30 0.8660254f
-#define _sine30 0.5f
+#define _cosine30 0.8660254f	/* fake name */
+#define _sine30 0.5f	/* fake name */
 
 #define REAL_MIN -3.4028235e38f
 #define REAL_MAX 3.4028235e38f

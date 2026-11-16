@@ -118,8 +118,8 @@ void actor_destination_update(
 
 		do
 		{
-			real_vector2d step_offset;
-			real_vector2d step_direction;
+			real_vector2d actor_to_point;
+			real_vector2d next_step;
 
 			if (path->step_index + 1>=path->step_count)
 			{
@@ -130,11 +130,11 @@ void actor_destination_update(
 			vector_from_points2d(
 				(real_point2d *)&actor->input.position.body_position,
 				(real_point2d *)&path->steps[path->step_index].point,
-				&step_offset);
+				&actor_to_point);
 			vector_from_points2d(
 				(real_point2d *)&path->steps[path->step_index].point,
 				(real_point2d *)&path->steps[path->step_index + 1].point,
-				&step_direction);
+				&next_step);
 			advance = FALSE;
 
 			if (actor->control.movement_complete)
@@ -143,20 +143,20 @@ void actor_destination_update(
 			}
 			else if (actor->control.moving && actor->control.movement_thwarted)
 			{
-				real facing_dot = dot_product2d((real_vector2d *)&actor->input.facing_vector, &step_direction);
-				real offset_dot = dot_product2d(&step_offset, &step_direction);
+				real facing_dot = dot_product2d((real_vector2d *)&actor->input.facing_vector, &next_step);
+				real offset_dot = dot_product2d(&actor_to_point, &next_step);
 
 				if (facing_dot>0.f && offset_dot<0.f)
 				{
-					point_from_line2d((real_point2d *)&step_offset, &step_direction, -offset_dot, (real_point2d *)&step_offset);
+					point_from_line2d((real_point2d *)&actor_to_point, &next_step, -offset_dot, (real_point2d *)&actor_to_point);
 
-					if (magnitude_squared2d(&step_offset)<0.0625f)
+					if (magnitude_squared2d(&actor_to_point)<0.0625f)
 					{
 						advance = TRUE;
 					}
 				}
 			}
-			else if (magnitude_squared2d(&step_offset)<0.0225f)
+			else if (magnitude_squared2d(&actor_to_point)<0.0225f)
 			{
 				advance = TRUE;
 			}
@@ -178,10 +178,10 @@ void actor_destination_update(
 			}
 			else if (ai_debug.print_unfinished_paths)
 			{
-				char actor_description[512];
+				char actorbuf[512];
 
-				ai_debug_describe_actor(actor_index, NONE, TRUE, actor_description, sizeof(actor_description));
-				error(_error_silent, "%s: fell off end of unfinished path %d/%d", actor_description, actor->control.path.path.step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
+				ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
+				error(_error_silent, "%s: fell off end of unfinished path %d/%d", actorbuf, actor->control.path.path.step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
 			}
 		}
 	}
@@ -244,8 +244,6 @@ boolean actor_test_destination(
 void actor_move_update(
 	long actor_index)
 {
-	short override_facing;
-	boolean busy;
 	struct actor_datum *actor = actor_get(actor_index);
 	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
 	boolean crouch = FALSE;
@@ -255,6 +253,7 @@ void actor_move_update(
 	boolean normal_movement = FALSE;
 	boolean face_current_direction = FALSE;
 	boolean jump = FALSE;
+	short override_facing;
 	real free_movement_dist_sq = 0.f;
 	real steering_maximum_angle = 0.f;
 	real oversteer_maximum_angle = 0.f;
@@ -280,8 +279,8 @@ void actor_move_update(
 	}
 	else if (actor->input.vehicle_driver_type==_actor_vehicle_driver_directional_flying)
 	{
-		real_vector3d fake_movement_vector;
 		real_vector3d const *movement_vector;
+		real_vector3d fake_movement_vector;
 		real_vector3d instantaneous_rotation_vector;
 		real instantaneous_rotation_emergency;
 		real blend;
@@ -645,84 +644,86 @@ void actor_move_update(
 	actor->control.crouching = crouch;
 	actor_unit_control_crouch(actor_index, crouch);
 
-	busy = actor_move_animation_busy(actor_index) || actor->input.vehicle_index!=NONE || actor->input.in_midair;
-
-	if (!busy && actor->emotions.berserk && !actor->emotions.played_berserk_sound)
 	{
-		long target_unit_index = NONE;
-		real_vector2d alignment_vector = *(real_vector2d *)&actor->input.facing_vector;
+		boolean busy = actor_move_animation_busy(actor_index) || actor->input.vehicle_index!=NONE || actor->input.in_midair;
 
-		if (actor->target.target_prop_index!=NONE)
+		if (!busy && actor->emotions.berserk && !actor->emotions.played_berserk_sound)
 		{
-			struct prop_datum *prop = prop_get(actor->target.target_prop_index);
+			real_vector2d alignment_vector = *(real_vector2d *)&actor->input.facing_vector;
+			long target_unit_index = NONE;
 
-			target_unit_index = prop->unit_index;
-			alignment_vector = *(real_vector2d *)&prop->actor_to_prop;
-
-			if (normalize2d(&alignment_vector)==0.f)
+			if (actor->target.target_prop_index!=NONE)
 			{
-				alignment_vector = *(real_vector2d *)&actor->input.facing_vector;
-			}
-		}
+				struct prop_datum *prop = prop_get(actor->target.target_prop_index);
 
-		actor_move_animation_impulse(actor_index, _unit_animation_impulse_berserk, &alignment_vector);
-		ai_communication_event(_ai_communication_berserk, actor->meta.unit_index, target_unit_index, _comm_hostility_enemy, NONE, NONE, NULL);
-		actor->emotions.played_berserk_sound = TRUE;
-		busy = TRUE;
+				target_unit_index = prop->unit_index;
+				alignment_vector = *(real_vector2d *)&prop->actor_to_prop;
+
+				if (normalize2d(&alignment_vector)==0.f)
+				{
+					alignment_vector = *(real_vector2d *)&actor->input.facing_vector;
+				}
+			}
+
+			actor_move_animation_impulse(actor_index, _unit_animation_impulse_berserk, &alignment_vector);
+			ai_communication_event(_ai_communication_berserk, actor->meta.unit_index, target_unit_index, _comm_hostility_enemy, NONE, NONE, NULL);
+			actor->emotions.played_berserk_sound = TRUE;
+			busy = TRUE;
+		}
 	}
 
 	if (jump)
 	{
 		actor_unit_control_jump(actor_index);
 	}
-	else if (!actor->input.in_midair && actor->input.vehicle_index==NONE)
+	else if (actor->input.in_midair || actor->input.vehicle_index!=NONE)
 	{
-		if (!actor_move_animation_busy(actor_index) && actor->orders.move.jump)
+		actor->control.jumping_targeted = FALSE;
+	}
+	else if (actor_move_animation_busy(actor_index))
+	{
+	}
+	else if (actor->orders.move.jump)
+	{
+		boolean leaping = FALSE;
+
+		if (actor->orders.move.jump_leap)
 		{
-			boolean leaping = FALSE;
-
-			if (actor->orders.move.jump_leap)
-			{
-				real_vector2d alignment_vector;
-
-				if (actor->orders.move.jump_targeted)
-				{
-					alignment_vector = actor->orders.move.jump_alignment_vector;
-				}
-				else
-				{
-					alignment_vector = *(real_vector2d *)&actor->input.facing_vector;
-
-					if (normalize2d(&alignment_vector)==0.f)
-					{
-						alignment_vector = *global_forward2d;
-					}
-				}
-
-				leaping = unit_leap_begin(actor->meta.unit_index, &alignment_vector);
-			}
-
-			if (leaping)
-			{
-				ai_communication_event(_ai_communication_leap, actor->meta.unit_index, NONE, NONE, NONE, NONE, NULL);
-			}
-			else
-			{
-				actor_unit_control_jump(actor_index);
-			}
+			real_vector2d alignment_vector;
 
 			if (actor->orders.move.jump_targeted)
 			{
-				actor->control.jumping_targeted = TRUE;
-				actor->control.jump_alignment_vector = actor->orders.move.jump_alignment_vector;
-				actor->control.jump_target_horizontal_vel = actor->orders.move.jump_target_horizontal_vel;
-				actor->control.jump_target_vertical_vel = actor->orders.move.jump_target_vertical_vel;
+				alignment_vector = actor->orders.move.jump_alignment_vector;
 			}
+			else
+			{
+				alignment_vector = *(real_vector2d *)&actor->input.facing_vector;
+
+				if (normalize2d(&alignment_vector)==0.f)
+				{
+					alignment_vector = *global_forward2d;
+				}
+			}
+
+			leaping = unit_leap_begin(actor->meta.unit_index, &alignment_vector);
 		}
-	}
-	else
-	{
-		actor->control.jumping_targeted = FALSE;
+
+		if (leaping)
+		{
+			ai_communication_event(_ai_communication_leap, actor->meta.unit_index, NONE, NONE, NONE, NONE, NULL);
+		}
+		else
+		{
+			actor_unit_control_jump(actor_index);
+		}
+
+		if (actor->orders.move.jump_targeted)
+		{
+			actor->control.jumping_targeted = TRUE;
+			actor->control.jump_alignment_vector = actor->orders.move.jump_alignment_vector;
+			actor->control.jump_target_horizontal_vel = actor->orders.move.jump_target_horizontal_vel;
+			actor->control.jump_target_vertical_vel = actor->orders.move.jump_target_vertical_vel;
+		}
 	}
 
 	actor->output.animation = actor->orders.move.animation;
@@ -872,16 +873,9 @@ boolean actor_move_to_point(
 	actor->firing_positions.current_position_index = NONE;
 	actor_set_dormant(actor_index, FALSE);
 
-	if (actor->control.path.destination_orders.destination_type==_destination_raw_location &&
-		actor->control.path.destination_orders.raw.surface_index==surface_index &&
-		!(distance_squared3d(destination, &actor->control.path.destination_orders.raw.point)>0.1f * 0.1f))
-	{
-		if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
-		{
-			result = actor_path_refresh(actor_index, FALSE, NULL);
-		}
-	}
-	else
+	if (actor->control.path.destination_orders.destination_type!=_destination_raw_location ||
+		actor->control.path.destination_orders.raw.surface_index!=surface_index ||
+		distance_squared3d(destination, &actor->control.path.destination_orders.raw.point)>0.1f * 0.1f)
 	{
 		actor->orders.move.destination.destination_type = _destination_raw_location;
 		actor->orders.move.destination.keep_moving = FALSE;
@@ -890,6 +884,10 @@ boolean actor_move_to_point(
 		actor->orders.move.destination.ignore_target_object_index = ignore_target_object_index;
 		actor->control.path.destination_orders = actor->orders.move.destination;
 		result = actor_path_refresh(actor_index, TRUE, NULL);
+	}
+	else if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
+	{
+		result = actor_path_refresh(actor_index, FALSE, NULL);
 	}
 
 	return result;
@@ -905,15 +903,8 @@ boolean actor_move_to_move_position(
 	actor->firing_positions.current_position_index = NONE;
 	actor_set_dormant(actor_index, FALSE);
 
-	if (actor->control.path.destination_orders.destination_type==_destination_move_position &&
-		actor->control.path.destination_orders.move_position_index==move_position_index)
-	{
-		if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
-		{
-			result = actor_path_refresh(actor_index, FALSE, NULL);
-		}
-	}
-	else
+	if (actor->control.path.destination_orders.destination_type!=_destination_move_position ||
+		actor->control.path.destination_orders.move_position_index!=move_position_index)
 	{
 		actor->orders.move.destination.destination_type = _destination_move_position;
 		actor->orders.move.destination.keep_moving = FALSE;
@@ -921,6 +912,10 @@ boolean actor_move_to_move_position(
 		actor->orders.move.destination.ignore_target_object_index = NONE;
 		actor->control.path.destination_orders = actor->orders.move.destination;
 		result = actor_path_refresh(actor_index, TRUE, NULL);
+	}
+	else if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
+	{
+		result = actor_path_refresh(actor_index, FALSE, NULL);
 	}
 
 	return result;
@@ -936,15 +931,8 @@ boolean actor_move_to_firing_position(
 
 	actor_set_dormant(actor_index, FALSE);
 
-	if (actor->control.path.destination_orders.destination_type==_destination_firing_position &&
-		actor->control.path.destination_orders.firing_position_index==firing_position_index)
-	{
-		if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
-		{
-			result = actor_path_refresh(actor_index, FALSE, cached_path_state);
-		}
-	}
-	else
+	if (actor->control.path.destination_orders.destination_type!=_destination_firing_position ||
+		actor->control.path.destination_orders.firing_position_index!=firing_position_index)
 	{
 		actor->orders.move.destination.destination_type = _destination_firing_position;
 		actor->orders.move.destination.keep_moving = FALSE;
@@ -953,6 +941,10 @@ boolean actor_move_to_firing_position(
 		actor->firing_positions.moved_away_from_firing_position = FALSE;
 		actor->control.path.destination_orders = actor->orders.move.destination;
 		result = actor_path_refresh(actor_index, TRUE, cached_path_state);
+	}
+	else if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
+	{
+		result = actor_path_refresh(actor_index, FALSE, cached_path_state);
 	}
 
 	return result;
@@ -969,16 +961,9 @@ boolean actor_move_to_prop(
 	actor->firing_positions.current_position_index = NONE;
 	actor_set_dormant(actor_index, FALSE);
 
-	if (actor->control.path.destination_orders.destination_type==_destination_prop &&
-		actor->control.path.destination_orders.prop.prop_index==prop_index &&
-		actor->control.path.destination_orders.prop.accept_radius==accept_radius)
-	{
-		if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
-		{
-			result = actor_path_refresh(actor_index, FALSE, NULL);
-		}
-	}
-	else
+	if (actor->control.path.destination_orders.destination_type!=_destination_prop ||
+		actor->control.path.destination_orders.prop.prop_index!=prop_index ||
+		actor->control.path.destination_orders.prop.accept_radius!=accept_radius)
 	{
 		struct prop_datum *prop = prop_get(prop_index);
 
@@ -989,6 +974,10 @@ boolean actor_move_to_prop(
 		actor->orders.move.destination.ignore_target_object_index = prop->vehicle_index==NONE ? prop->unit_index : prop->vehicle_index;
 		actor->control.path.destination_orders = actor->orders.move.destination;
 		result = actor_path_refresh(actor_index, TRUE, NULL);
+	}
+	else if (actor->meta.timeslice && !actor->control.path.refreshed_this_tick)
+	{
+		result = actor_path_refresh(actor_index, FALSE, NULL);
 	}
 
 	return result;
@@ -1052,7 +1041,7 @@ boolean actor_move_animation_busy(
 
 boolean actor_move_try_evasion_vector(
 	long actor_index,
-	real_vector2d const *evasion_vector,
+	real_vector2d *evasion_vector,
 	real evade_distance,
 	real maximum_ledge_height,
 	boolean *evasion_is_ledge_reference,
@@ -1065,7 +1054,10 @@ boolean actor_move_try_evasion_vector(
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actor_moving.c", 1156, evasion_vector && result);
 
-	if (!actor->state.flying)
+	if (actor->state.flying)
+	{
+	}
+	else
 	{
 		real_point2d evasion_point;
 
@@ -1100,7 +1092,7 @@ boolean actor_move_try_evasion_vector(
 		if (!success && maximum_ledge_height>0.f)
 		{
 			real_point3d actor_midpoint;
-			struct collision_bsp_test_vector_result collision_result;
+			struct collision_bsp_test_vector_result result;
 			real_vector3d collision_vector;
 			struct collision_bsp *collision_bsp = global_collision_bsp_get();
 
@@ -1116,7 +1108,7 @@ boolean actor_move_try_evasion_vector(
 				&actor_midpoint,
 				&collision_vector,
 				REAL_MAX,
-				&collision_result))
+				&result))
 			{
 				success = TRUE;
 				evasion_is_ledge = TRUE;
@@ -1137,7 +1129,7 @@ boolean actor_move_try_evasion_vector(
 						&down_ray_start,
 						&down_ray_vector,
 						REAL_MAX,
-						&collision_result))
+						&result))
 					{
 						success = FALSE;
 					}
@@ -1156,11 +1148,11 @@ boolean actor_move_try_evasion_vector(
 
 boolean actor_move_try_evasion_direction(
 	long actor_index,
-	real_vector2d const *alignment_vector,
+	real_vector2d *alignment_vector,
 	real evade_distance,
 	short *evade_direction_reference,
 	real maximum_ledge_height,
-	boolean *evasion_is_ledge_reference,
+	boolean *evasion_is_ledge,
 	struct path_collision_result *result)
 {
 	short evade_direction;
@@ -1214,7 +1206,7 @@ boolean actor_move_try_evasion_direction(
 
 	for (attempt_index = 0; attempt_index<attempt_count; attempt_index++, evade_direction ^= 1)
 	{
-		if (actor_move_try_evasion_vector(actor_index, &evasion_vector, evade_distance, maximum_ledge_height, evasion_is_ledge_reference, result))
+		if (actor_move_try_evasion_vector(actor_index, &evasion_vector, evade_distance, maximum_ledge_height, evasion_is_ledge, result))
 		{
 			success = TRUE;
 			break;
@@ -1237,7 +1229,10 @@ boolean actor_aim_jump(
 {
 	struct actor_datum *actor = actor_get(actor_index);
 
-	if (actor->input.vehicle_index==NONE)
+	if (actor->input.vehicle_index!=NONE)
+	{
+	}
+	else
 	{
 		if (actor->meta.swarm)
 		{
@@ -1290,18 +1285,18 @@ static void actor_move_calculate_movement(
 	boolean *movement_thwarted,
 	boolean *movement_complete)
 {
-	real_vector3d free_throttle;
-	real_vector3d facing_vector;
-	real_vector3d throttle;
 	real facing_projection;
 	boolean begin_movement;
 	real tolerance;
 	real distance_squared;
-	real current_stopping_distance;
 	real maximum_stopping_distance;
+	real current_stopping_distance;
 	struct actor_datum *actor = actor_get(actor_index);
 	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
 	real begin_movement_angle_cosine = _cosine30;
+	real_vector3d facing_vector;
+	real_vector3d free_throttle;
+	real_vector3d throttle;
 	short facing_direction = NONE;
 
 	if (actor->orders.move.move_face_exactly)
@@ -1493,8 +1488,8 @@ static void actor_move_calculate_movement(
 				{
 					if (normalize2d((real_vector2d *)&current_movement_vector)>0.f)
 					{
-						real_point3d movement_lookahead_point;
 						struct path_collision_result result;
+						real_point3d movement_lookahead_point;
 
 						current_movement_vector.k = 0.f;
 						point_from_line3d(&actor->input.position.body_position, &current_movement_vector, 0.4f, &movement_lookahead_point);
@@ -1838,9 +1833,9 @@ static void actor_move_avoidance_setup(
 
 			if (collision_model->pathfinding_spheres.count>0)
 			{
+				real_matrix4x3 world_matrix;
 				real_point3d bounding_sphere_center;
 				real bounding_sphere_radius;
-				real_matrix4x3 world_matrix;
 				short sphere_index;
 				real maximum_radius = 0.f;
 
@@ -1966,9 +1961,9 @@ static short actor_move_test_avoidance_vector(
 
 	for (object_index = 0; object_index<avoidance_data->avoidance_object_count; object_index++)
 	{
-		real intersect_t;
-		real_vector3d dummy_normal;
 		struct vehicle_avoidance_cylinder *avoidance_object = &avoidance_data->avoidance_objects[object_index];
+		real_vector3d dummy_normal;
+		real intersect_t;
 
 		if (pill_test_vector3d(&avoidance_object->base, avoidance_object->height, avoidance_object->width, ray_origin, ray_direction, &intersect_t, &dummy_normal))
 		{
@@ -2003,21 +1998,21 @@ static boolean actor_move_vector_avoidance_find_direction(
 	real *approximate_direction_reference,
 	real *approximate_weight_reference)
 {
-	real_vector3d cross;
+	real_vector3d temp_vector;
 	real previous_cross;
 	short direction_index;
 	boolean found = FALSE;
 	short previous_index = direction_count - 1;
 
-	cross_product3d(&avoidance_directions[previous_index], direction_vector, &cross);
-	previous_cross = cross.i;
+	cross_product3d(&avoidance_directions[previous_index], direction_vector, &temp_vector);
+	previous_cross = temp_vector.i;
 
 	for (direction_index = 0; direction_index<direction_count; direction_index++)
 	{
 		real current_cross;
 
-		cross_product3d(&avoidance_directions[direction_index], direction_vector, &cross);
-		current_cross = cross.i;
+		cross_product3d(&avoidance_directions[direction_index], direction_vector, &temp_vector);
+		current_cross = temp_vector.i;
 
 		if (current_cross * previous_cross<=0.f)
 		{
@@ -2114,9 +2109,9 @@ static void actor_move_vector_avoidance(
 
 		for (sense_ray_index = 0; sense_ray_index<VECTOR_AVOIDANCE_NUMBER_OF_SENSE_RAYS; sense_ray_index++)
 		{
+			real sense_ray_t;
 			real_point3d ray_origin;
 			real_vector3d ray_direction;
-			real sense_ray_t;
 			short sense_ray_result = actor_move_test_avoidance_vector(&avoidance_data, &sense_rays[sense_ray_index], &ray_origin, &ray_direction, &sense_ray_t, NULL);
 
 			actor_debug_info->ray_origin[sense_ray_index] = ray_origin;
@@ -2140,8 +2135,8 @@ static void actor_move_vector_avoidance(
 
 		for (direction_index = 0; direction_index<VECTOR_AVOIDANCE_NUMBER_OF_DIRECTIONS; direction_index++)
 		{
-			real avoid_ray_t[VECTOR_AVOIDANCE_NUMBER_OF_AVOID_RAYS];
 			short avoid_ray_result[VECTOR_AVOIDANCE_NUMBER_OF_AVOID_RAYS];
+			real avoid_ray_t[VECTOR_AVOIDANCE_NUMBER_OF_AVOID_RAYS];
 			short avoid_ray_index;
 			boolean obstructed;
 			real direction_weight;
@@ -2219,9 +2214,9 @@ static void actor_move_vector_avoidance(
 
 		if (turn_speed>0.02f)
 		{
-			real turn_avoidance_weight_approximation;
 			real_vector3d turn_direction_in_vector_space;
 			real turn_direction_approximation;
+			real turn_avoidance_weight_approximation;
 			real turn_weight = (turn_speed - 0.02f) / 0.08f;
 			boolean found = FALSE;
 
@@ -2400,15 +2395,15 @@ static void actor_move_vector_avoidance(
 				if (cosangle>0.5f)
 				{
 					real rotation_angle;
-					real_vector3d cross;
+					real_vector3d cross_vector;
 
 					rotation_emergency = avoidance_weight_difference / 1.3f - 0.5f;
 					rotation_emergency = PIN(rotation_emergency, 0.f, 1.f);
 					rotation_emergency = MAX(rotation_emergency, obstruction_emergency);
 					rotation_angle = (_pi / 3.f) * rotation_emergency;
-					cross_product3d(&avoidance_directions[best_avoidance_direction], &movement_in_vector_space, &cross);
+					cross_product3d(&avoidance_directions[best_avoidance_direction], &movement_in_vector_space, &cross_vector);
 
-					if (cross.i>0.f)
+					if (cross_vector.i>0.f)
 					{
 						rotation_angle = -rotation_angle;
 					}
@@ -2495,7 +2490,7 @@ void actor_move_get_avoidance_direction(
 	real_vector3d *direction_vector)
 {
 	short direction_index;
-	real_vector3d avoidance_vector;
+	real_vector3d vectorspace_direction;
 	real angle = REAL_MAX;
 
 	if (direction<0.f || direction>=(real)VECTOR_AVOIDANCE_NUMBER_OF_DIRECTIONS)
@@ -2524,8 +2519,8 @@ void actor_move_get_avoidance_direction(
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actor_moving.c", 2743, (angle >= 0.0f) && (angle < _full_circle));
 
-	set_real_vector3d(&avoidance_vector, 0.f, cosine(angle), sine(angle));
-	actor_move_transform_avoidance_vector(avoidance_data, &avoidance_vector, direction_vector);
+	set_real_vector3d(&vectorspace_direction, 0.f, cosine(angle), sine(angle));
+	actor_move_transform_avoidance_vector(avoidance_data, &vectorspace_direction, direction_vector);
 
 	return;
 }
