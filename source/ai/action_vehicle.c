@@ -40,6 +40,83 @@ static short action_vehicle_find_impromptu_seat(long actor_index, long vehicle_i
 
 /* ---------- public code */
 
+boolean action_vehicle_setup_impromptu(
+	long actor_index,
+	long vehicle_index,
+	real attempt_distance,
+	real continue_distance,
+	struct vehicle_state_data *state_data)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	boolean result = FALSE;
+	real_point3d entry_point;
+	real_vector3d entry_facing;
+	real_point3d hint_point;
+
+	match_assert("c:\\halo\\SOURCE\\ai\\action_vehicle.c", 56, state_data);
+	memset(state_data, 0, sizeof(*state_data));
+
+	state_data->attempt_distance = attempt_distance;
+	state_data->continue_distance = continue_distance;
+
+	if (actor->input.vehicle_index == NONE &&
+		!actor->meta.swarm &&
+		actor->state.action != _actor_action_vehicle &&
+		action_vehicle_desirable(actor_index, vehicle_index, FALSE, state_data->attempt_distance, state_data->continue_distance, FALSE, FALSE))
+	{
+		state_data->vehicle_index = vehicle_index;
+		state_data->seat_index = action_vehicle_find_impromptu_seat(actor_index, vehicle_index, &entry_point, &entry_facing, &hint_point);
+		if (state_data->seat_index != NONE)
+		{
+			state_data->impromptu = TRUE;
+
+			if (unit_has_animation_to_enter_seat(actor->meta.unit_index, vehicle_index, state_data->seat_index) &&
+				action_vehicle_find_destination(actor_index, vehicle_index, &entry_point, &entry_facing, &hint_point, NULL, &state_data->destination_point, &state_data->destination_surface_index) &&
+				actor_move_to_point(actor_index, &state_data->destination_point, state_data->destination_surface_index, vehicle_index))
+			{
+				result = TRUE;
+			}
+		}
+	}
+
+	return result;
+}
+
+boolean action_vehicle_setup_specific(
+	long actor_index,
+	long vehicle_index,
+	short seat_index,
+	struct vehicle_state_data *state_data)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	boolean result = FALSE;
+	real_point3d entry_point;
+	real_vector3d entry_facing;
+	real_point3d hint_point;
+
+	match_assert("c:\\halo\\SOURCE\\ai\\action_vehicle.c", 104, state_data);
+	memset(state_data, 0, sizeof(*state_data));
+
+	if (actor->input.vehicle_index == NONE &&
+		!actor->meta.swarm &&
+		action_vehicle_desirable(actor_index, vehicle_index, TRUE, 0.0f, 0.0f, FALSE, FALSE))
+	{
+		state_data->vehicle_index = vehicle_index;
+		state_data->seat_index = seat_index;
+		state_data->impromptu = FALSE;
+
+		if (unit_has_animation_to_enter_seat(actor->meta.unit_index, vehicle_index, seat_index) &&
+			action_vehicle_evaluate_seat(actor_index, vehicle_index, seat_index, TRUE, &entry_point, &entry_facing, &hint_point, NULL, NULL, NULL, NULL) &&
+			action_vehicle_find_destination(actor_index, vehicle_index, &entry_point, &entry_facing, &hint_point, NULL, &state_data->destination_point, &state_data->destination_surface_index) &&
+			actor_move_to_point(actor_index, &state_data->destination_point, state_data->destination_surface_index, vehicle_index))
+		{
+			result = TRUE;
+		}
+	}
+
+	return result;
+}
+
 void action_vehicle_begin(
 	long actor_index)
 {
@@ -51,6 +128,123 @@ void action_vehicle_begin(
 	state_data->stuck_detection_point = actor->input.position.body_position;
 
 	return;
+}
+
+boolean action_vehicle_perform(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct vehicle_state_data *state_data = &actor->state.action_data.vehicle;
+	struct vehicle_datum *vehicle = vehicle_try_and_get(state_data->vehicle_index);
+
+	match_assert("c:\\halo\\SOURCE\\ai\\action_vehicle.c", 161, !actor->meta.swarm);
+
+	if (actor->input.vehicle_index != NONE)
+	{
+		state_data->vehicle_entry_done = TRUE;
+	}
+	else if (state_data->started_entry)
+	{
+		// waiting for the entry animation to finish
+	}
+	else if (!vehicle)
+	{
+		state_data->vehicle_entry_failed = TRUE;
+		state_data->vehicle_index = NONE;
+	}
+	else if (!action_vehicle_desirable(actor_index, state_data->vehicle_index, !state_data->impromptu, state_data->attempt_distance, state_data->continue_distance, FALSE, TRUE))
+	{
+		state_data->vehicle_entry_failed = TRUE;
+	}
+	else
+	{
+		long time = game_time_get();
+		real_point3d entry_point;
+		real_vector3d entry_facing;
+		real_point3d hint_point;
+		boolean within_range;
+		boolean correct_facing;
+		boolean could_fake;
+
+		if (time >= state_data->stuck_detection_time + VEHICLE_STUCK_DETECTION_TICKS)
+		{
+			state_data->stuck_detection_time = time;
+			if (distance_squared3d(&state_data->stuck_detection_point, &actor->input.position.body_position) < 25.0f)
+			{
+				state_data->stuck_detection_counter++;
+			}
+			else
+			{
+				state_data->stuck_detection_counter = 0;
+				state_data->stuck_detection_point = actor->input.position.body_position;
+			}
+		}
+
+		if (state_data->stuck_detection_counter >= VEHICLE_STUCK_DETECTION_MAXIMUM_COUNT)
+		{
+			state_data->vehicle_entry_failed = TRUE;
+		}
+		else if (action_vehicle_evaluate_seat(actor_index, state_data->vehicle_index, state_data->seat_index, !state_data->impromptu, &entry_point, &entry_facing, &hint_point, NULL, &within_range, &correct_facing, &could_fake))
+		{
+			if (could_fake)
+			{
+				if (++state_data->fake_entry_potential_timer >= VEHICLE_FAKE_ENTRY_TICKS)
+				{
+					correct_facing = TRUE;
+					within_range = TRUE;
+				}
+			}
+			else
+			{
+				state_data->fake_entry_potential_timer = 0;
+			}
+
+			if (within_range && correct_facing)
+			{
+				unit_enter_seat(actor->meta.unit_index, state_data->vehicle_index, state_data->seat_index);
+				state_data->started_entry = TRUE;
+			}
+			else if (within_range)
+			{
+				actor_move_halt(actor_index);
+			}
+			else if (actor->meta.timeslice)
+			{
+				boolean path_found = FALSE;
+
+				if (action_vehicle_find_destination(actor_index, state_data->vehicle_index, &entry_point, &entry_facing, &hint_point, &state_data->ignore_hint, &state_data->destination_point, &state_data->destination_surface_index) &&
+					actor_move_to_point(actor_index, &state_data->destination_point, state_data->destination_surface_index, state_data->vehicle_index))
+				{
+					path_found = TRUE;
+				}
+
+				if (path_found)
+				{
+					state_data->pathfinding_failures = 0;
+				}
+				else
+				{
+					short maximum_pathfinding_failures = state_data->impromptu ? 5 : 50;
+
+					if (++state_data->pathfinding_failures > maximum_pathfinding_failures)
+					{
+						state_data->vehicle_entry_failed = TRUE;
+					}
+				}
+			}
+
+			state_data->lock_facing = distance_squared3d(&actor->input.position.body_position, &entry_point) < 1.0f;
+			state_data->destination_facing = entry_facing;
+			state_data->currently_correct_facing = correct_facing;
+			state_data->currently_within_range = within_range;
+		}
+		else
+		{
+			state_data->vehicle_entry_failed = TRUE;
+		}
+	}
+
+	return state_data->vehicle_entry_done || state_data->vehicle_entry_failed;
 }
 
 void action_vehicle_update(
@@ -146,6 +340,56 @@ static boolean action_vehicle_desirable(
 	}
 
 	return desirable;
+}
+
+static short action_vehicle_find_impromptu_seat(
+	long actor_index,
+	long vehicle_index,
+	real_point3d *entry_point,
+	real_vector3d *entry_facing,
+	real_point3d *hint_point)
+{
+	struct unit_datum *vehicle = unit_get(vehicle_index);
+	struct unit_definition *vehicle_definition = unit_definition_get(vehicle->definition_index);
+	short best_seat_index = NONE;
+	real best_weight = 0.0f;
+	real_point3d seat_entry_point;
+	real_vector3d seat_entry_facing;
+	real_point3d seat_hint_point;
+	short seat_index;
+
+	for (seat_index = 0; seat_index < vehicle_definition->unit.seats.count; seat_index++)
+	{
+		real weight;
+		real_point3d entry_point;
+		real_vector3d entry_facing;
+		real_point3d hint_point;
+
+		if (action_vehicle_evaluate_seat(actor_index, vehicle_index, seat_index, FALSE, &entry_point, &entry_facing, &hint_point, &weight, NULL, NULL, NULL) &&
+			weight > best_weight)
+		{
+			best_seat_index = seat_index;
+			best_weight = weight;
+			seat_entry_point = entry_point;
+			seat_entry_facing = entry_facing;
+			seat_hint_point = hint_point;
+		}
+	}
+
+	if (entry_point)
+	{
+		*entry_point = seat_entry_point;
+	}
+	if (entry_facing)
+	{
+		*entry_facing = seat_entry_facing;
+	}
+	if (hint_point)
+	{
+		*hint_point = seat_hint_point;
+	}
+
+	return best_seat_index;
 }
 
 static boolean action_vehicle_evaluate_seat(
@@ -464,250 +708,6 @@ static boolean action_vehicle_find_destination(
 	}
 
 	return success;
-}
-
-boolean action_vehicle_setup_specific(
-	long actor_index,
-	long vehicle_index,
-	short seat_index,
-	struct vehicle_state_data *state_data)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	boolean result = FALSE;
-	real_point3d entry_point;
-	real_vector3d entry_facing;
-	real_point3d hint_point;
-
-	match_assert("c:\\halo\\SOURCE\\ai\\action_vehicle.c", 104, state_data);
-	memset(state_data, 0, sizeof(*state_data));
-
-	if (actor->input.vehicle_index == NONE &&
-		!actor->meta.swarm &&
-		action_vehicle_desirable(actor_index, vehicle_index, TRUE, 0.0f, 0.0f, FALSE, FALSE))
-	{
-		state_data->vehicle_index = vehicle_index;
-		state_data->seat_index = seat_index;
-		state_data->impromptu = FALSE;
-
-		if (unit_has_animation_to_enter_seat(actor->meta.unit_index, vehicle_index, seat_index) &&
-			action_vehicle_evaluate_seat(actor_index, vehicle_index, seat_index, TRUE, &entry_point, &entry_facing, &hint_point, NULL, NULL, NULL, NULL) &&
-			action_vehicle_find_destination(actor_index, vehicle_index, &entry_point, &entry_facing, &hint_point, NULL, &state_data->destination_point, &state_data->destination_surface_index) &&
-			actor_move_to_point(actor_index, &state_data->destination_point, state_data->destination_surface_index, vehicle_index))
-		{
-			result = TRUE;
-		}
-	}
-
-	return result;
-}
-
-boolean action_vehicle_perform(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct vehicle_state_data *state_data = &actor->state.action_data.vehicle;
-	struct vehicle_datum *vehicle = vehicle_try_and_get(state_data->vehicle_index);
-
-	match_assert("c:\\halo\\SOURCE\\ai\\action_vehicle.c", 161, !actor->meta.swarm);
-
-	if (actor->input.vehicle_index != NONE)
-	{
-		state_data->vehicle_entry_done = TRUE;
-	}
-	else if (state_data->started_entry)
-	{
-		// waiting for the entry animation to finish
-	}
-	else if (!vehicle)
-	{
-		state_data->vehicle_entry_failed = TRUE;
-		state_data->vehicle_index = NONE;
-	}
-	else if (!action_vehicle_desirable(actor_index, state_data->vehicle_index, !state_data->impromptu, state_data->attempt_distance, state_data->continue_distance, FALSE, TRUE))
-	{
-		state_data->vehicle_entry_failed = TRUE;
-	}
-	else
-	{
-		long time = game_time_get();
-		real_point3d entry_point;
-		real_vector3d entry_facing;
-		real_point3d hint_point;
-		boolean within_range;
-		boolean correct_facing;
-		boolean could_fake;
-
-		if (time >= state_data->stuck_detection_time + VEHICLE_STUCK_DETECTION_TICKS)
-		{
-			state_data->stuck_detection_time = time;
-			if (distance_squared3d(&state_data->stuck_detection_point, &actor->input.position.body_position) < 25.0f)
-			{
-				state_data->stuck_detection_counter++;
-			}
-			else
-			{
-				state_data->stuck_detection_counter = 0;
-				state_data->stuck_detection_point = actor->input.position.body_position;
-			}
-		}
-
-		if (state_data->stuck_detection_counter >= VEHICLE_STUCK_DETECTION_MAXIMUM_COUNT)
-		{
-			state_data->vehicle_entry_failed = TRUE;
-		}
-		else if (action_vehicle_evaluate_seat(actor_index, state_data->vehicle_index, state_data->seat_index, !state_data->impromptu, &entry_point, &entry_facing, &hint_point, NULL, &within_range, &correct_facing, &could_fake))
-		{
-			if (could_fake)
-			{
-				if (++state_data->fake_entry_potential_timer >= VEHICLE_FAKE_ENTRY_TICKS)
-				{
-					correct_facing = TRUE;
-					within_range = TRUE;
-				}
-			}
-			else
-			{
-				state_data->fake_entry_potential_timer = 0;
-			}
-
-			if (within_range && correct_facing)
-			{
-				unit_enter_seat(actor->meta.unit_index, state_data->vehicle_index, state_data->seat_index);
-				state_data->started_entry = TRUE;
-			}
-			else if (within_range)
-			{
-				actor_move_halt(actor_index);
-			}
-			else if (actor->meta.timeslice)
-			{
-				boolean path_found = FALSE;
-
-				if (action_vehicle_find_destination(actor_index, state_data->vehicle_index, &entry_point, &entry_facing, &hint_point, &state_data->ignore_hint, &state_data->destination_point, &state_data->destination_surface_index) &&
-					actor_move_to_point(actor_index, &state_data->destination_point, state_data->destination_surface_index, state_data->vehicle_index))
-				{
-					path_found = TRUE;
-				}
-
-				if (path_found)
-				{
-					state_data->pathfinding_failures = 0;
-				}
-				else
-				{
-					short maximum_pathfinding_failures = state_data->impromptu ? 5 : 50;
-
-					if (++state_data->pathfinding_failures > maximum_pathfinding_failures)
-					{
-						state_data->vehicle_entry_failed = TRUE;
-					}
-				}
-			}
-
-			state_data->lock_facing = distance_squared3d(&actor->input.position.body_position, &entry_point) < 1.0f;
-			state_data->destination_facing = entry_facing;
-			state_data->currently_correct_facing = correct_facing;
-			state_data->currently_within_range = within_range;
-		}
-		else
-		{
-			state_data->vehicle_entry_failed = TRUE;
-		}
-	}
-
-	return state_data->vehicle_entry_done || state_data->vehicle_entry_failed;
-}
-
-static short action_vehicle_find_impromptu_seat(
-	long actor_index,
-	long vehicle_index,
-	real_point3d *entry_point,
-	real_vector3d *entry_facing,
-	real_point3d *hint_point)
-{
-	struct unit_datum *vehicle = unit_get(vehicle_index);
-	struct unit_definition *vehicle_definition = unit_definition_get(vehicle->definition_index);
-	short best_seat_index = NONE;
-	real best_weight = 0.0f;
-	real_point3d seat_entry_point;
-	real_vector3d seat_entry_facing;
-	real_point3d seat_hint_point;
-	short seat_index;
-
-	for (seat_index = 0; seat_index < vehicle_definition->unit.seats.count; seat_index++)
-	{
-		real weight;
-		real_point3d entry_point;
-		real_vector3d entry_facing;
-		real_point3d hint_point;
-
-		if (action_vehicle_evaluate_seat(actor_index, vehicle_index, seat_index, FALSE, &entry_point, &entry_facing, &hint_point, &weight, NULL, NULL, NULL) &&
-			weight > best_weight)
-		{
-			best_seat_index = seat_index;
-			best_weight = weight;
-			seat_entry_point = entry_point;
-			seat_entry_facing = entry_facing;
-			seat_hint_point = hint_point;
-		}
-	}
-
-	if (entry_point)
-	{
-		*entry_point = seat_entry_point;
-	}
-	if (entry_facing)
-	{
-		*entry_facing = seat_entry_facing;
-	}
-	if (hint_point)
-	{
-		*hint_point = seat_hint_point;
-	}
-
-	return best_seat_index;
-}
-
-boolean action_vehicle_setup_impromptu(
-	long actor_index,
-	long vehicle_index,
-	real attempt_distance,
-	real continue_distance,
-	struct vehicle_state_data *state_data)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	boolean result = FALSE;
-	real_point3d entry_point;
-	real_vector3d entry_facing;
-	real_point3d hint_point;
-
-	match_assert("c:\\halo\\SOURCE\\ai\\action_vehicle.c", 56, state_data);
-	memset(state_data, 0, sizeof(*state_data));
-
-	state_data->attempt_distance = attempt_distance;
-	state_data->continue_distance = continue_distance;
-
-	if (actor->input.vehicle_index == NONE &&
-		!actor->meta.swarm &&
-		actor->state.action != _actor_action_vehicle &&
-		action_vehicle_desirable(actor_index, vehicle_index, FALSE, state_data->attempt_distance, state_data->continue_distance, FALSE, FALSE))
-	{
-		state_data->vehicle_index = vehicle_index;
-		state_data->seat_index = action_vehicle_find_impromptu_seat(actor_index, vehicle_index, &entry_point, &entry_facing, &hint_point);
-		if (state_data->seat_index != NONE)
-		{
-			state_data->impromptu = TRUE;
-
-			if (unit_has_animation_to_enter_seat(actor->meta.unit_index, vehicle_index, state_data->seat_index) &&
-				action_vehicle_find_destination(actor_index, vehicle_index, &entry_point, &entry_facing, &hint_point, NULL, &state_data->destination_point, &state_data->destination_surface_index) &&
-				actor_move_to_point(actor_index, &state_data->destination_point, state_data->destination_surface_index, vehicle_index))
-			{
-				result = TRUE;
-			}
-		}
-	}
-
-	return result;
 }
 
 /* ---------- private code */

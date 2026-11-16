@@ -113,6 +113,124 @@ void actor_stimulus_surprise(
 	return;
 }
 
+void actor_stimulus_prop_acknowledged(
+	long actor_index,
+	long prop_index,
+	boolean reappearance,
+	boolean expected)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
+	struct prop_datum *prop = prop_get(prop_index);
+
+	if (!prop->dead)
+	{
+		{
+			struct direction_specification direction;
+
+			direction.type = _direction_specification_prop;
+			direction.prop_index = prop_index;
+			actor_look_secondary(actor_index, _secondary_look_newly_acknowledged_prop, _secondary_look_priority_default, &direction);
+		}
+
+		if (prop->enemy)
+		{
+			short surprise_level = _actor_surprise_none;
+			boolean flanked = dot_product3d(&prop->actor_to_prop, &actor->input.facing_vector) < 0.5f;
+
+			if (actor->state.combat_status == _actor_combat_status_none)
+			{
+				expected = FALSE;
+				if (actor->state.mode < _actor_mode_combat)
+				{
+					if (prop->shooting)
+					{
+						surprise_level = MAX(surprise_level, _actor_surprise_unprepared_enemy_shooting);
+					}
+
+					if (prop->distance < actor_definition->panic.surprise_distance)
+					{
+						surprise_level = MAX(surprise_level, _actor_surprise_unprepared_enemy_close);
+					}
+				}
+			}
+			else if (actor->state.combat_status >= _actor_combat_status_clear_los && !flanked)
+			{
+				expected = TRUE;
+			}
+
+			if (!expected && prop->shooting && prop->distance < actor_definition->panic.surprise_distance)
+			{
+				if (flanked)
+				{
+					surprise_level = MAX(surprise_level, _actor_surprise_unexpected_enemy_close_flanked_shooting);
+				}
+				else
+				{
+					surprise_level = MAX(surprise_level, _actor_surprise_unexpected_enemy_close_shooting);
+				}
+			}
+
+			if (ai_debug.print_surprise && prop->player)
+			{
+				char const *surprise_names[NUMBER_OF_ACTOR_SURPRISE_TYPES] =
+				{
+					"none",
+					"enemy-shoot",
+					"impact",
+					"enemy-close",
+					"grenade",
+					"damage",
+					"unexp-close-shoot",
+					"unexp-behind-shoot"
+				};
+
+				console_printf(
+					FALSE,
+					"%s %d: surprise %s: %s %sexp %s %sshoot %s (%.1f%c%.1f)",
+					actor_type_get_name(actor->meta.type),
+					DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index),
+					surprise_names[surprise_level],
+					actor->state.combat_status == _actor_combat_status_none ? "noncom" : "combat",
+					expected ? "" : "un",
+					flanked ? "flank" : "front",
+					prop->shooting ? "" : "not",
+					prop->distance < actor_definition->panic.surprise_distance ? "close" : "far",
+					prop->distance,
+					prop->distance < actor_definition->panic.surprise_distance ? '<' : '>',
+					actor_definition->panic.surprise_distance);
+			}
+
+			if (surprise_level > _actor_surprise_none)
+			{
+				actor_stimulus_surprise(actor_index, surprise_level, prop_index, &prop->actor_to_prop);
+			}
+
+			if (actor->state.combat_status < _actor_combat_status_definite &&
+				!expected &&
+				prop->visibility < 2 &&
+				actor->meta.unit_index != NONE)
+			{
+				ai_communication_event(
+					_ai_communication_unexpected_enemy,
+					actor->meta.unit_index,
+					prop->unit_index,
+					_comm_hostility_enemy,
+					NONE,
+					NONE,
+					NULL);
+			}
+		}
+	}
+
+	if (prop->player && prop->enemy && !prop->dead && actor->meta.type != _actor_mounted_weapon && cheat.medusa)
+	{
+		actor_kill(actor_index, FALSE, TRUE);
+	}
+
+	return;
+}
+
 void actor_stimulus_suspicion(
 	long actor_index,
 	short suspicion_combat_status,
@@ -232,281 +350,6 @@ void actor_stimulus_enter_combat_friend_in_combat(
 	return;
 }
 
-void actor_stimulus_bumped(
-	long actor_index,
-	long prop_index)
-{
-	struct direction_specification direction;
-
-	direction.type = _direction_specification_prop;
-	direction.prop_index = prop_index;
-	actor_look_secondary(actor_index, _secondary_look_bumped_prop, _secondary_look_priority_default, &direction);
-
-	return;
-}
-
-void actor_stimulus_environmental_noise(
-	long actor_index,
-	long object_index,
-	real_point3d const *position,
-	short count)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-
-	if (actor->state.mode != _actor_mode_asleep)
-	{
-		struct direction_specification direction;
-
-		direction.type = _direction_specification_point;
-		direction.point = *position;
-		actor_look_secondary(actor_index, _secondary_look_environmental_noise, _secondary_look_priority_default, &direction);
-	}
-
-	return;
-}
-
-void actor_stimulus_heard_shooting(
-	long actor_index,
-	long prop_index)
-{
-	struct prop_datum *prop = prop_get(prop_index);
-
-	if (prop->enemy)
-	{
-		actor_stimulus_enter_combat_perceived_enemy(actor_index, prop_index);
-	}
-	else
-	{
-		struct unit_datum *unit = unit_get(prop->unit_index);
-
-		actor_stimulus_enter_combat_friend_in_combat(actor_index, prop_index);
-		if (unit->unit.player_index != NONE)
-		{
-			struct player_datum *player = player_get(unit->unit.player_index);
-
-			if (player->aim_assist_unit_index != NONE && player->aim_assist_timestamp + 3 * TICKS_PER_SECOND >= game_time_get())
-			{
-				struct actor_datum *actor = actor_get(actor_index);
-				struct unit_datum *target_unit = unit_get(player->aim_assist_unit_index);
-
-				if (game_team_is_enemy(actor->meta.team_index, target_unit->object.owner_team_index))
-				{
-					actor_perception_create_orphan_from_friend(actor_index, player->aim_assist_unit_index, NONE, NONE);
-				}
-			}
-		}
-		else if (unit->unit.actor_index != NONE)
-		{
-			struct actor_datum *friend_actor = actor_get(unit->unit.actor_index);
-
-			if (friend_actor->state.combat_status >= _actor_combat_status_certain)
-			{
-				actor_derive_target_information(actor_index, unit->unit.actor_index);
-			}
-		}
-	}
-
-	{
-		struct direction_specification direction;
-
-		direction.type = _direction_specification_prop;
-		direction.prop_index = prop_index;
-		actor_look_secondary(actor_index, _secondary_look_shooting_prop, _secondary_look_priority_default, &direction);
-	}
-
-	return;
-}
-
-void actor_stimulus_was_surprised(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-
-	actor->stimuli.was_surprised = TRUE;
-
-	return;
-}
-
-void actor_stimulus_maneuvering(
-	long actor_index,
-	boolean advancing,
-	boolean flee)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-
-	if (actor->meta.unit_index != NONE)
-	{
-		ai_communication_event(
-			advancing ? _ai_communication_advance : _ai_communication_retreat,
-			actor->meta.unit_index,
-			NONE,
-			NONE,
-			NONE,
-			NONE,
-			NULL);
-	}
-
-	if (flee && actor->stimuli.panic_type < _actor_panic_platoon_retreating)
-	{
-		actor->stimuli.panic_type = _actor_panic_platoon_retreating;
-		actor->stimuli.panic_prop_index = NONE;
-	}
-
-	return;
-}
-
-void actor_stimulus_vehicle_eviction(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-
-	actor->stimuli.vehicle_eviction = TRUE;
-
-	return;
-}
-
-void actor_stimulus_abandon_stationary_facing(
-	long actor_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
-
-	if (actor->emotions.defensive_crouch && actor_definition->defensive.change_facing_stand_time > 0.f)
-	{
-		actor->emotions.defensive_crouch = FALSE;
-		actor->emotions.defensive_crouch_timer = (short)(actor_definition->defensive.change_facing_stand_time * TICKS_PER_SECOND);
-		if (actor->target.target_prop_index != NONE)
-		{
-			struct prop_datum *target_prop = prop_get(actor->target.target_prop_index);
-
-			if (target_prop->distance < 4.f)
-			{
-				actor->emotions.perceived_danger = MAX(actor->emotions.perceived_danger, 1.8f);
-			}
-		}
-	}
-
-	return;
-}
-
-void actor_stimulus_prop_acknowledged(
-	long actor_index,
-	long prop_index,
-	boolean reappearance,
-	boolean expected)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
-	struct prop_datum *prop = prop_get(prop_index);
-
-	if (!prop->dead)
-	{
-		{
-			struct direction_specification direction;
-
-			direction.type = _direction_specification_prop;
-			direction.prop_index = prop_index;
-			actor_look_secondary(actor_index, _secondary_look_newly_acknowledged_prop, _secondary_look_priority_default, &direction);
-		}
-
-		if (prop->enemy)
-		{
-			short surprise_level = _actor_surprise_none;
-			boolean flanked = dot_product3d(&prop->actor_to_prop, &actor->input.facing_vector) < 0.5f;
-
-			if (actor->state.combat_status == _actor_combat_status_none)
-			{
-				expected = FALSE;
-				if (actor->state.mode < _actor_mode_combat)
-				{
-					if (prop->shooting)
-					{
-						surprise_level = MAX(surprise_level, _actor_surprise_unprepared_enemy_shooting);
-					}
-
-					if (prop->distance < actor_definition->panic.surprise_distance)
-					{
-						surprise_level = MAX(surprise_level, _actor_surprise_unprepared_enemy_close);
-					}
-				}
-			}
-			else if (actor->state.combat_status >= _actor_combat_status_clear_los && !flanked)
-			{
-				expected = TRUE;
-			}
-
-			if (!expected && prop->shooting && prop->distance < actor_definition->panic.surprise_distance)
-			{
-				if (flanked)
-				{
-					surprise_level = MAX(surprise_level, _actor_surprise_unexpected_enemy_close_flanked_shooting);
-				}
-				else
-				{
-					surprise_level = MAX(surprise_level, _actor_surprise_unexpected_enemy_close_shooting);
-				}
-			}
-
-			if (ai_debug.print_surprise && prop->player)
-			{
-				char const *surprise_names[NUMBER_OF_ACTOR_SURPRISE_TYPES] =
-				{
-					"none",
-					"enemy-shoot",
-					"impact",
-					"enemy-close",
-					"grenade",
-					"damage",
-					"unexp-close-shoot",
-					"unexp-behind-shoot"
-				};
-
-				console_printf(
-					FALSE,
-					"%s %d: surprise %s: %s %sexp %s %sshoot %s (%.1f%c%.1f)",
-					actor_type_get_name(actor->meta.type),
-					DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index),
-					surprise_names[surprise_level],
-					actor->state.combat_status == _actor_combat_status_none ? "noncom" : "combat",
-					expected ? "" : "un",
-					flanked ? "flank" : "front",
-					prop->shooting ? "" : "not",
-					prop->distance < actor_definition->panic.surprise_distance ? "close" : "far",
-					prop->distance,
-					prop->distance < actor_definition->panic.surprise_distance ? '<' : '>',
-					actor_definition->panic.surprise_distance);
-			}
-
-			if (surprise_level > _actor_surprise_none)
-			{
-				actor_stimulus_surprise(actor_index, surprise_level, prop_index, &prop->actor_to_prop);
-			}
-
-			if (actor->state.combat_status < _actor_combat_status_definite &&
-				!expected &&
-				prop->visibility < 2 &&
-				actor->meta.unit_index != NONE)
-			{
-				ai_communication_event(
-					_ai_communication_unexpected_enemy,
-					actor->meta.unit_index,
-					prop->unit_index,
-					_comm_hostility_enemy,
-					NONE,
-					NONE,
-					NULL);
-			}
-		}
-	}
-
-	if (prop->player && prop->enemy && !prop->dead && actor->meta.type != _actor_mounted_weapon && cheat.medusa)
-	{
-		actor_kill(actor_index, FALSE, TRUE);
-	}
-
-	return;
-}
-
 void actor_stimulus_damage(
 	long actor_index,
 	long prop_index,
@@ -581,6 +424,39 @@ void actor_stimulus_damage(
 		{
 			actor_look_secondary(actor_index, _secondary_look_damage, _secondary_look_priority_default, &direction);
 		}
+	}
+
+	return;
+}
+
+void actor_stimulus_bumped(
+	long actor_index,
+	long prop_index)
+{
+	struct direction_specification direction;
+
+	direction.type = _direction_specification_prop;
+	direction.prop_index = prop_index;
+	actor_look_secondary(actor_index, _secondary_look_bumped_prop, _secondary_look_priority_default, &direction);
+
+	return;
+}
+
+void actor_stimulus_environmental_noise(
+	long actor_index,
+	long object_index,
+	real_point3d const *position,
+	short count)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+
+	if (actor->state.mode != _actor_mode_asleep)
+	{
+		struct direction_specification direction;
+
+		direction.type = _direction_specification_point;
+		direction.point = *position;
+		actor_look_secondary(actor_index, _secondary_look_environmental_noise, _secondary_look_priority_default, &direction);
 	}
 
 	return;
@@ -695,6 +571,68 @@ void actor_stimulus_weapon_detonation(
 		direction.point = *position;
 		actor_look_secondary(actor_index, _secondary_look_detonation, _secondary_look_priority_default, &direction);
 	}
+
+	return;
+}
+
+void actor_stimulus_heard_shooting(
+	long actor_index,
+	long prop_index)
+{
+	struct prop_datum *prop = prop_get(prop_index);
+
+	if (prop->enemy)
+	{
+		actor_stimulus_enter_combat_perceived_enemy(actor_index, prop_index);
+	}
+	else
+	{
+		struct unit_datum *unit = unit_get(prop->unit_index);
+
+		actor_stimulus_enter_combat_friend_in_combat(actor_index, prop_index);
+		if (unit->unit.player_index != NONE)
+		{
+			struct player_datum *player = player_get(unit->unit.player_index);
+
+			if (player->aim_assist_unit_index != NONE && player->aim_assist_timestamp + 3 * TICKS_PER_SECOND >= game_time_get())
+			{
+				struct actor_datum *actor = actor_get(actor_index);
+				struct unit_datum *target_unit = unit_get(player->aim_assist_unit_index);
+
+				if (game_team_is_enemy(actor->meta.team_index, target_unit->object.owner_team_index))
+				{
+					actor_perception_create_orphan_from_friend(actor_index, player->aim_assist_unit_index, NONE, NONE);
+				}
+			}
+		}
+		else if (unit->unit.actor_index != NONE)
+		{
+			struct actor_datum *friend_actor = actor_get(unit->unit.actor_index);
+
+			if (friend_actor->state.combat_status >= _actor_combat_status_certain)
+			{
+				actor_derive_target_information(actor_index, unit->unit.actor_index);
+			}
+		}
+	}
+
+	{
+		struct direction_specification direction;
+
+		direction.type = _direction_specification_prop;
+		direction.prop_index = prop_index;
+		actor_look_secondary(actor_index, _secondary_look_shooting_prop, _secondary_look_priority_default, &direction);
+	}
+
+	return;
+}
+
+void actor_stimulus_was_surprised(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+
+	actor->stimuli.was_surprised = TRUE;
 
 	return;
 }
@@ -856,6 +794,68 @@ void actor_stimulus_noticed_danger_zone(
 			NONE,
 			0,
 			FALSE);
+	}
+
+	return;
+}
+
+void actor_stimulus_maneuvering(
+	long actor_index,
+	boolean advancing,
+	boolean flee)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+
+	if (actor->meta.unit_index != NONE)
+	{
+		ai_communication_event(
+			advancing ? _ai_communication_advance : _ai_communication_retreat,
+			actor->meta.unit_index,
+			NONE,
+			NONE,
+			NONE,
+			NONE,
+			NULL);
+	}
+
+	if (flee && actor->stimuli.panic_type < _actor_panic_platoon_retreating)
+	{
+		actor->stimuli.panic_type = _actor_panic_platoon_retreating;
+		actor->stimuli.panic_prop_index = NONE;
+	}
+
+	return;
+}
+
+void actor_stimulus_vehicle_eviction(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+
+	actor->stimuli.vehicle_eviction = TRUE;
+
+	return;
+}
+
+void actor_stimulus_abandon_stationary_facing(
+	long actor_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
+
+	if (actor->emotions.defensive_crouch && actor_definition->defensive.change_facing_stand_time > 0.f)
+	{
+		actor->emotions.defensive_crouch = FALSE;
+		actor->emotions.defensive_crouch_timer = (short)(actor_definition->defensive.change_facing_stand_time * TICKS_PER_SECOND);
+		if (actor->target.target_prop_index != NONE)
+		{
+			struct prop_datum *target_prop = prop_get(actor->target.target_prop_index);
+
+			if (target_prop->distance < 4.f)
+			{
+				actor->emotions.perceived_danger = MAX(actor->emotions.perceived_danger, 1.8f);
+			}
+		}
 	}
 
 	return;

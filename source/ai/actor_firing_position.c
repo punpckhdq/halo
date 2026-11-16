@@ -35,6 +35,37 @@ enum
 	NUMBER_OF_FIRING_POSITION_ATTACK_VECTOR_TYPES,
 };
 
+enum
+{
+	_firing_position_evaluation_discarded = 0, /* fake name */
+	_firing_position_evaluation_pursuit_distance_from_actor, /* fake name */
+	_firing_position_evaluation_pursuit_distance_to_target, /* fake name */
+	_firing_position_evaluation_pursuit_hint_direction, /* fake name */
+	_firing_position_evaluation_pursuit_examined_by_self, /* fake name */
+	_firing_position_evaluation_pursuit_examined, /* fake name */
+	_firing_position_evaluation_pursuit_actor_count, /* fake name */
+	_firing_position_evaluation_pursuit_unexamined, /* fake name */
+	_firing_position_evaluation_panic_distance_from_actor, /* fake name */
+	_firing_position_evaluation_panic_distance_to_target, /* fake name */
+	_firing_position_evaluation_panic_approach_to_target, /* fake name */
+	_firing_position_evaluation_vehicle_direction, /* fake name */
+	_firing_position_evaluation_attack_firing_range, /* fake name */
+	_firing_position_evaluation_attack_combat_range, /* fake name */
+	_firing_position_evaluation_attack_line_of_sight, /* fake name */
+	_firing_position_evaluation_attack_no_line_of_sight, /* fake name */
+	_firing_position_evaluation_hide_occluded, /* fake name */
+	_firing_position_evaluation_hide_clear, /* fake name */
+	_firing_position_evaluation_hide_line_of_sight, /* fake name */
+	_firing_position_evaluation_uncover_too_far, /* fake name */
+	_firing_position_evaluation_uncover_line_of_sight, /* fake name */
+	_firing_position_evaluation_danger_zone_crossed, /* fake name */
+	_firing_position_evaluation_danger_zone_inside, /* fake name */
+	_firing_position_evaluation_danger_zone_distance, /* fake name */
+	_firing_position_evaluation_no_path_available, /* fake name */
+	_firing_position_evaluation_path_available, /* fake name */
+	NUMBER_OF_FIRING_POSITION_EVALUATIONS, /* fake name */
+};
+
 /* ---------- macros */
 
 /* ---------- structures */
@@ -80,7 +111,7 @@ static void pre_evaluator_attack(long actor_index, struct firing_position_evalua
 
 struct pre_evaluator_table_entry const global_pre_evaluator_table[] =
 {
-	{ (short)0xFFFF, pre_evaluator_global },
+	{ NONE, pre_evaluator_global },
 	{ FLAG(_firing_point_evaluation_mode_fight) | FLAG(_firing_point_evaluation_mode_uncover), pre_evaluator_attack },
 	{ FLAG(_firing_point_evaluation_mode_fight) | FLAG(_firing_point_evaluation_mode_cover) | FLAG(_firing_point_evaluation_mode_uncover) | FLAG(_firing_point_evaluation_mode_avoid), pre_evaluator_combatmove },
 	{ FLAG(_firing_point_evaluation_mode_guard), pre_evaluator_guard },
@@ -91,7 +122,7 @@ struct pre_evaluator_table_entry const global_pre_evaluator_table[] =
 
 struct post_evaluator_table_entry const global_post_evaluator_table[] =
 {
-	{ (short)0xFFFF, post_evaluator_global },
+	{ NONE, post_evaluator_global },
 	{ FLAG(_firing_point_evaluation_mode_fight) | FLAG(_firing_point_evaluation_mode_guard) | FLAG(_firing_point_evaluation_mode_avoid), post_evaluator_attack },
 	{ FLAG(_firing_point_evaluation_mode_uncover), post_evaluator_uncover },
 	{ FLAG(_firing_point_evaluation_mode_panic) | FLAG(_firing_point_evaluation_mode_cover), post_evaluator_hide },
@@ -126,6 +157,329 @@ static boolean firing_position_reject_debug(
 	return !evaluation_context->allow_rejected_positions;
 }
 
+static void pre_evaluator_global(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	short firing_position_count,
+	struct firing_position *firing_positions)
+{
+	short index;
+	struct actor_datum *actor = actor_get(actor_index);
+	struct firing_position *firing_position;
+
+	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+	{
+		if (firing_position->valid)
+		{
+			if (actor_firing_position_discarded(actor_index, firing_position->original_index))
+			{
+				if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_discarded))
+				{
+					firing_position->valid = FALSE;
+					continue;
+				}
+			}
+
+			if (evaluation_context->find_path_direction_from_actor)
+			{
+				real_vector3d danger_vector;
+
+				match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 186, (actor->danger_zone.danger_type > _actor_danger_zone_none) && actor->danger_zone.noticed_danger);
+
+				vector_from_points3d(&actor->danger_zone.position, &actor->danger_zone.predict_danger_position, &danger_vector);
+
+				if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &firing_position->definition->position) <
+					(actor->danger_zone.bounding_sphere_radius + 2.5f) * (actor->danger_zone.bounding_sphere_radius + 2.5f))
+				{
+					real distance_squared = point_to_line_distance_squared3d(&firing_position->definition->position, &actor->danger_zone.position, &danger_vector);
+					real evaluation = 0.0f;
+
+					if (distance_squared < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
+					{
+						if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_danger_zone_inside))
+						{
+							firing_position->valid = FALSE;
+							continue;
+						}
+					}
+					else if (distance_squared < (actor->danger_zone.danger_radius + 2.5f) * (actor->danger_zone.danger_radius + 2.5f))
+					{
+						real distance = square_root(distance_squared);
+
+						evaluation = (distance - actor->danger_zone.danger_radius) * 8.0f;
+					}
+					else
+					{
+						evaluation = 20.0f;
+					}
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_danger_zone_distance);
+				}
+
+				if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &actor->input.position.body_position) <
+					(actor->danger_zone.bounding_sphere_radius + 3.0f) * (actor->danger_zone.bounding_sphere_radius + 3.0f) &&
+					actor->danger_zone.current_distance_from_actor > actor->danger_zone.danger_radius)
+				{
+					real distance_squared = point_to_line_distance_squared3d(&actor->input.position.body_position, &actor->danger_zone.position, &danger_vector);
+
+					if (distance_squared > actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
+					{
+						real_vector3d actor_predicted_movement;
+
+						scale_vector3d(&firing_position->path_direction_from_actor, 3.0f, &actor_predicted_movement);
+						if (magnitude_squared3d(&actor_predicted_movement) > 0.0001f)
+						{
+							if (vector_to_line_distance_squared3d(&actor->input.position.body_position, &actor_predicted_movement, &actor->danger_zone.position, &danger_vector) < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
+							{
+								if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_danger_zone_crossed))
+								{
+									firing_position->valid = FALSE;
+									continue;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (TEST_FLAG(evaluation_context->preferred_groups, firing_position->definition->group_index))
+			{
+				real evaluation = evaluation_context->preferred_weight;
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_distance_to_target);
+			}
+
+			if (evaluation_context->avoid_point_count > 0)
+			{
+				real closest_fraction = 1.0f;
+				short point_index;
+				real evaluation;
+
+				for (point_index = 0; point_index < evaluation_context->avoid_point_count; point_index++)
+				{
+					real distance_squared = distance_squared3d(&firing_position->definition->position, &evaluation_context->avoid_point[point_index].point);
+					real fraction = distance_squared / (evaluation_context->avoid_point[point_index].radius * evaluation_context->avoid_point[point_index].radius);
+
+					if (fraction < closest_fraction)
+					{
+						closest_fraction = fraction;
+					}
+				}
+
+				evaluation = 10.0f;
+				if (closest_fraction < 1.0f)
+				{
+					evaluation = square_root(closest_fraction) * 10.0f;
+				}
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_hide_occluded);
+			}
+		}
+	}
+
+	if (evaluation_context->directional_driving && actor->input.vehicle_index != NONE)
+	{
+		struct vehicle_datum *vehicle = vehicle_get(actor->input.vehicle_index);
+		real_point3d vehicle_position;
+
+		object_get_origin(actor->input.vehicle_index, &vehicle_position);
+
+		for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+		{
+			if (firing_position->valid)
+			{
+				real_vector3d vector;
+				real distance_squared;
+
+				vector_from_points3d(&vehicle_position, &firing_position->definition->position, &vector);
+				distance_squared = magnitude_squared3d(&vector);
+
+				if (!realcmp(distance_squared, 0.0f) && distance_squared < 900.0f)
+				{
+					real dot = dot_product3d(&vector, &vehicle->object.forward) / square_root(distance_squared);
+					real evaluation;
+
+					if ((evaluation_context->directional_driving_cannot_stop || magnitude_squared3d(&vehicle->object.translational_velocity) > (1.0f / 144.0f)) &&
+						distance_squared < 64.0f &&
+						dot < _sqrt2 / 2.f)
+					{
+						if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_panic_approach_to_target))
+						{
+							firing_position->valid = FALSE;
+							continue;
+						}
+					}
+
+					evaluation = 15.0f;
+					if (dot < 0.0f)
+					{
+						evaluation = 15.0f - dot * -15.0f;
+					}
+					else if (dot > _cosine30)
+					{
+						evaluation = (dot - _cosine30) * (15.0f / (1.0f - _cosine30)) + 15.0f;
+					}
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_vehicle_direction);
+				}
+			}
+		}
+	}
+
+	return;
+}
+
+static void pre_evaluator_pursuit(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	short firing_position_count,
+	struct firing_position *firing_positions)
+{
+	short index;
+	struct firing_position *firing_position;
+
+	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+	{
+		if (firing_position->valid)
+		{
+			real evaluation = 0.0f;
+
+			if (firing_position->path_distance_from_actor < evaluation_context->maximum_allowable_range / 2.0f)
+			{
+				evaluation = 5.0f;
+			}
+			else if (firing_position->path_distance_from_actor < evaluation_context->maximum_allowable_range)
+			{
+				evaluation = (evaluation_context->maximum_allowable_range - firing_position->path_distance_from_actor) * (1.0f / (evaluation_context->maximum_allowable_range / 2.0f)) * 5.0f;
+			}
+
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_distance_from_actor);
+
+			if (evaluation_context->has_target)
+			{
+				if (firing_position->path_distance_to_target < 20.0f)
+				{
+					real evaluation = (20.0f - firing_position->path_distance_to_target) * 0.5f;
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_distance_to_target);
+				}
+
+				if (evaluation_context->find_path_direction_from_target && evaluation_context->target_has_hint_vector)
+				{
+					real dot = dot_product3d(&firing_position->path_direction_from_target, &evaluation_context->target_hint_vector);
+					real hint_evaluation;
+
+					if (dot > _sqrt2 / 2.f)
+					{
+						hint_evaluation = 10.0f;
+					}
+					else
+					{
+						hint_evaluation = MAX(0.0f, dot * _sqrt2) * 10.0f;
+					}
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, hint_evaluation, _firing_position_evaluation_pursuit_hint_direction);
+				}
+			}
+		}
+	}
+
+	return;
+}
+
+static void pre_evaluator_panic(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	short firing_position_count,
+	struct firing_position *firing_positions)
+{
+	short index;
+	struct firing_position *firing_position;
+
+	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+	{
+		if (firing_position->valid)
+		{
+			if (firing_position->path_distance_from_actor < 4.0f)
+			{
+				if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_pursuit_unexamined))
+				{
+					firing_position->valid = FALSE;
+					continue;
+				}
+			}
+			else
+			{
+				real evaluation = 0.0f;
+
+				if (firing_position->path_distance_from_actor < 8.0f)
+				{
+					evaluation = (firing_position->path_distance_from_actor - 4.0f) * 2.0f;
+				}
+				else if (firing_position->path_distance_from_actor < evaluation_context->maximum_allowable_range)
+				{
+					evaluation = (evaluation_context->maximum_allowable_range - firing_position->path_distance_from_actor) * 8.0f / (evaluation_context->maximum_allowable_range - 8.0f);
+				}
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_panic_distance_from_actor);
+			}
+
+			if (evaluation_context->has_target)
+			{
+				real evaluation;
+
+				if (firing_position->linear_distance_squared_to_target < 16.0f)
+				{
+					if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_panic_distance_to_target))
+					{
+						firing_position->valid = FALSE;
+						continue;
+					}
+				}
+
+				if (firing_position->linear_distance_squared_to_target < 16.0f)
+				{
+					evaluation = 0.0f;
+				}
+				else if (firing_position->linear_distance_squared_to_target < 49.0f)
+				{
+					real distance = square_root(firing_position->linear_distance_squared_to_target);
+
+					evaluation = (distance - 4.0f) * (10.0f / 3.0f);
+				}
+				else
+				{
+					evaluation = 10.0f;
+				}
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_panic_distance_to_target);
+
+				if (firing_position->path_closest_approach_to_target < REAL_MAX &&
+					evaluation_context->target_current_distance > 0.0f &&
+					evaluation_context->target_current_distance < REAL_MAX)
+				{
+					real fraction = 1.0f - firing_position->path_closest_approach_to_target / (evaluation_context->target_current_distance * 0.8f);
+					real evaluation;
+
+					if (fraction > 0.5f)
+					{
+						if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_panic_approach_to_target))
+						{
+							firing_position->valid = FALSE;
+							continue;
+						}
+					}
+
+					evaluation = (1.0f - PIN(fraction, 0.0f, 1.0f)) * 8.0f;
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_panic_approach_to_target);
+				}
+			}
+		}
+	}
+
+	return;
+}
+
 static void pre_evaluator_guard(
 	long actor_index,
 	struct firing_position_evaluation_context *evaluation_context,
@@ -150,7 +504,137 @@ static void pre_evaluator_guard(
 				evaluation = (evaluation_context->maximum_allowable_range - firing_position->path_distance_from_actor) * (1.0f / (evaluation_context->maximum_allowable_range / 2.0f)) * 8.0f;
 			}
 
-			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 1);
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_distance_from_actor);
+		}
+	}
+
+	return;
+}
+
+static void pre_evaluator_attack(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	short firing_position_count,
+	struct firing_position *firing_positions)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct actor_variant_definition *actor_variant_definition = actor_combat_get_firing_variant_definition(actor_index);
+	short index;
+	struct firing_position *firing_position;
+
+	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+	{
+		if (firing_position->valid)
+		{
+			if (evaluation_context->has_target)
+			{
+				real distance = square_root(firing_position->linear_distance_squared_to_target);
+
+				if (actor_variant_definition->ranged_combat.maximum_firing_range > 0.0f)
+				{
+					real evaluation;
+
+					if (distance < 0.8f * actor_variant_definition->ranged_combat.maximum_firing_range)
+					{
+						evaluation = 10.0f;
+					}
+					else
+					{
+						evaluation = 0.8f * actor_variant_definition->ranged_combat.maximum_firing_range / distance * 10.0f;
+					}
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_attack_firing_range);
+				}
+
+				if (actor_variant_definition->ranged_combat.combat_range_upper_bound > 0.0f &&
+					distance < actor_variant_definition->ranged_combat.combat_range_upper_bound)
+				{
+					real distance_inside_range;
+					real range_lower_bound;
+					real range_upper_bound;
+					struct weapon_definition *weapon_definition;
+					real evaluation;
+
+					if (actor->emotions.berserk)
+					{
+						range_lower_bound = actor_variant_definition->ranged_combat.berserk_firing_range_lower_bound;
+						range_upper_bound = actor_variant_definition->ranged_combat.berserk_firing_range_upper_bound;
+					}
+					else
+					{
+						range_lower_bound = actor_variant_definition->ranged_combat.combat_range_lower_bound;
+						range_upper_bound = actor_variant_definition->ranged_combat.combat_range_upper_bound;
+					}
+
+					range_lower_bound = MAX(range_lower_bound, evaluation_context->target_danger_radius);
+
+					weapon_definition = actor_get_weapon_definition(actor_index);
+					if (weapon_definition && weapon_definition->weapon.ai_minimum_target_range > 0.0f)
+					{
+						range_lower_bound = MAX(range_lower_bound, weapon_definition->weapon.ai_minimum_target_range);
+					}
+
+					distance_inside_range = range_upper_bound - distance;
+					if (range_lower_bound > 0.0f)
+					{
+						distance_inside_range = MIN(distance_inside_range, distance - range_lower_bound);
+					}
+
+					evaluation = 0.0f;
+					if (distance_inside_range > 2.0f)
+					{
+						evaluation = 20.0f;
+					}
+					else if (distance_inside_range > 0.0f)
+					{
+						evaluation = 20.0f * (distance_inside_range * 0.5f);
+					}
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_attack_combat_range);
+				}
+			}
+
+			if (evaluation_context->dangerous_enemy_attack_vector_count > 0)
+			{
+				real closest_distance_squared = REAL_MAX;
+				short vector_index;
+				real evaluation;
+
+				for (vector_index = 0; vector_index < evaluation_context->attack_vector_count; vector_index++)
+				{
+					if (evaluation_context->attack_vectors[vector_index].type == _firing_position_attack_vector_dangerous_enemy)
+					{
+						real_vector3d vector;
+						real dot;
+
+						match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 657, &evaluation_context->attack_vectors[vector_index].vector);
+
+						vector_from_points3d(&evaluation_context->attack_vectors[vector_index].point, &firing_position->definition->position, &vector);
+						dot = dot_product3d(&vector, &evaluation_context->attack_vectors[vector_index].vector);
+						if (dot > 0.0f)
+						{
+							real distance_squared;
+
+							vector_from_line3d(&vector, &evaluation_context->attack_vectors[vector_index].vector, -dot, &vector);
+							distance_squared = magnitude_squared3d(&vector);
+							if (distance_squared < closest_distance_squared)
+							{
+								closest_distance_squared = distance_squared;
+							}
+						}
+					}
+				}
+
+				evaluation = 6.0f;
+				if (closest_distance_squared < 12.25f)
+				{
+					real distance = square_root(closest_distance_squared);
+
+					evaluation = distance * 0.25f;
+				}
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_attack_no_line_of_sight);
+			}
 		}
 	}
 
@@ -191,7 +675,7 @@ static void pre_evaluator_combatmove(
 				real fraction = firing_position->path_distance_from_actor / evaluation_context->maximum_allowable_range;
 				real evaluation = weight * MAX(0.0f, 1.0f - fraction);
 
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 8);
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_panic_distance_from_actor);
 			}
 		}
 	}
@@ -249,809 +733,7 @@ static void pre_evaluator_combatmove(
 					evaluation = 10.0f;
 				}
 
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 9);
-			}
-		}
-	}
-
-	return;
-}
-
-static boolean post_evaluator_global(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	struct firing_position *firing_position)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
-
-	if (evaluation_context->flying)
-	{
-		if (!firing_position)
-		{
-			evaluation_context->post_evaluation_bound += 15.0f;
-		}
-		else
-		{
-			real avoidance_distance = 0.0f;
-
-			boolean path_available = actor_path_3d_available(actor_index, &firing_position->definition->position, &avoidance_distance);
-
-			if (path_available)
-			{
-				path_available = path_3d_available(global_structure_bsp_get(), &actor->input.position.body_position, avoidance_distance, &firing_position->definition->position, NULL, NULL);
-			}
-
-			if (path_available)
-			{
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, 15.0f, 25);
-			}
-			else if (firing_position_reject_debug(evaluation_context, firing_position, 24))
-			{
-				firing_position->valid = FALSE;
-			}
-		}
-	}
-
-	return !firing_position ? TRUE : firing_position->valid;
-}
-
-static boolean post_evaluator_pursuit(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	struct firing_position *firing_position)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	long current_time = game_time_get();
-	long position_last_examined_time = NONE;
-	short actor_count = 0;
-
-	if (firing_position)
-	{
-		boolean unexamined = TRUE;
-		short rejection_type = NONE;
-
-		if (firing_position->line_of_sight == _ai_line_of_sight_clear && firing_position->path_distance_from_actor < 6.0f)
-		{
-			encounter_mark_examined_pursuit_position(actor->meta.encounter_index, actor_index, firing_position->original_index, evaluation_context->evaluation_data.pursue.last_perceived_time);
-			position_last_examined_time = current_time;
-			actor_count = 7;
-			unexamined = FALSE;
-			rejection_type = 4;
-		}
-		else if (encounter_pursuit_position_already_examined(actor->meta.encounter_index, actor_index, firing_position->original_index, evaluation_context->evaluation_data.pursue.last_perceived_time, &actor_count, &position_last_examined_time))
-		{
-			unexamined = FALSE;
-			rejection_type = 5;
-		}
-
-		if (evaluation_context->evaluation_data.pursue.tenacious)
-		{
-			if (unexamined)
-			{
-				real evaluation = 15.0f;
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 7);
-			}
-		}
-		else if (!unexamined)
-		{
-			if (firing_position_reject_debug(evaluation_context, firing_position, rejection_type))
-			{
-				firing_position->valid = FALSE;
-			}
-		}
-
-		if (firing_position->valid)
-		{
-			real evaluation = 0.0f;
-			real actor_evaluation; /* fake name */
-
-			if (position_last_examined_time == NONE || position_last_examined_time + 300 < current_time)
-			{
-				evaluation = 10.0f;
-			}
-			else if (position_last_examined_time < current_time)
-			{
-				evaluation = (current_time - position_last_examined_time) * (10.0f / 300.0f);
-			}
-			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 5);
-
-			actor_evaluation = 0.0f;
-			if (actor_count < 4)
-			{
-				actor_evaluation = (4 - actor_count) * 5.0f;
-			}
-			firing_position_store_evaluation_debug(evaluation_context, firing_position, actor_evaluation, 6);
-		}
-	}
-
-	return !firing_position ? FALSE : firing_position->valid;
-}
-
-static boolean post_evaluator_hide(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	struct firing_position *firing_position)
-{
-	if (evaluation_context->has_target)
-	{
-		if (!firing_position)
-		{
-			evaluation_context->post_evaluation_bound += 12.0f;
-		}
-		else
-		{
-			real evaluation = 0.0f;
-
-			switch (firing_position->line_of_sight)
-			{
-			case _ai_line_of_sight_from_cover:
-				evaluation = 12.0f;
-				break;
-			case _ai_line_of_sight_obstructed:
-				evaluation = 10.0f;
-				break;
-			case _ai_line_of_sight_occluded:
-				if (evaluation_context->evaluation_data.cover.allow_occluded_points)
-				{
-					evaluation = 6.0f;
-				}
-				else if (firing_position_reject_debug(evaluation_context, firing_position, 16))
-				{
-					firing_position->valid = FALSE;
-				}
-				break;
-			case _ai_line_of_sight_to_cover:
-				evaluation = 4.0f;
-				break;
-			case _ai_line_of_sight_clear:
-				if (firing_position_reject_debug(evaluation_context, firing_position, 17))
-				{
-					firing_position->valid = FALSE;
-				}
-				break;
-			default:
-				match_halt("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1117);
-				break;
-			}
-
-			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 18);
-		}
-	}
-
-	return !firing_position ? TRUE : firing_position->valid;
-}
-
-static boolean post_evaluator_uncover(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	struct firing_position *firing_position)
-{
-	if (evaluation_context->has_target)
-	{
-		if (!firing_position)
-		{
-			evaluation_context->post_evaluation_bound += 20.0f;
-		}
-		else
-		{
-			real evaluation = 0.0f;
-
-			switch (firing_position->line_of_sight)
-			{
-			case _ai_line_of_sight_clear:
-				evaluation = 20.0f;
-				break;
-			case _ai_line_of_sight_occluded:
-				evaluation = 10.0f;
-				break;
-			default:
-				{
-					real distance = evaluation_context->target_current_distance - 7.5f;
-
-					if (distance < 0.0f || firing_position->linear_distance_squared_to_target > distance * distance)
-					{
-						if (firing_position_reject_debug(evaluation_context, firing_position, 19))
-						{
-							firing_position->valid = FALSE;
-						}
-					}
-				}
-				break;
-			}
-
-			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 20);
-		}
-	}
-
-	return !firing_position ? TRUE : firing_position->valid;
-}
-
-static boolean post_evaluator_attack(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	struct firing_position *firing_position)
-{
-	if (evaluation_context->has_target)
-	{
-		if (!firing_position)
-		{
-			evaluation_context->post_evaluation_bound += evaluation_context->target_line_of_sight_optional ? 6.0f : 15.0f;
-		}
-		else
-		{
-			real evaluation = 0.0f;
-
-			switch (firing_position->line_of_sight)
-			{
-			case _ai_line_of_sight_clear:
-				evaluation = evaluation_context->target_line_of_sight_optional ? 6.0f : 15.0f;
-				break;
-			case _ai_line_of_sight_occluded:
-				evaluation = evaluation_context->target_line_of_sight_optional ? 2.5f : 5.0f;
-				break;
-			default:
-				if (!evaluation_context->target_line_of_sight_optional)
-				{
-					if (firing_position_reject_debug(evaluation_context, firing_position, 15))
-					{
-						firing_position->valid = FALSE;
-					}
-				}
-				break;
-			}
-
-			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 14);
-		}
-	}
-
-	return !firing_position ? TRUE : firing_position->valid;
-}
-
-static void firing_position_pre_evaluate(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	short firing_position_count,
-	struct firing_position *firing_positions)
-{
-	struct pre_evaluator_table_entry const *entry;
-
-	for (entry = global_pre_evaluator_table; entry->evaluator; entry++)
-	{
-		if (TEST_FLAG(entry->evaluation_mode_flags, evaluation_context->evaluation_mode))
-		{
-			entry->evaluator(actor_index, evaluation_context, firing_position_count, firing_positions);
-		}
-	}
-
-	return;
-}
-
-static boolean firing_position_post_evaluate(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	struct firing_position *firing_position)
-{
-	struct post_evaluator_table_entry const *entry;
-	boolean valid = TRUE;
-
-	for (entry = global_post_evaluator_table; valid && entry->evaluator; entry++)
-	{
-		if (TEST_FLAG(entry->evaluation_mode_flags, evaluation_context->evaluation_mode))
-		{
-			valid = entry->evaluator(actor_index, evaluation_context, firing_position);
-		}
-	}
-
-	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1262, firing_position->valid == valid);
-
-	return valid;
-}
-
-static boolean firing_positions_get_post_evaluation_bound(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context)
-{
-	struct post_evaluator_table_entry const *entry;
-	boolean valid = TRUE;
-
-	evaluation_context->post_evaluation_bound = 0.0f;
-	for (entry = global_post_evaluator_table; valid && entry->evaluator; entry++)
-	{
-		if (TEST_FLAG(entry->evaluation_mode_flags, evaluation_context->evaluation_mode))
-		{
-			valid = entry->evaluator(actor_index, evaluation_context, NULL);
-		}
-	}
-
-	return valid;
-}
-
-static boolean firing_position_compare(
-	long index1,
-	long index2)
-{
-	struct firing_position const *firing_position1 = &global_temporary_sort_firing_position_array[index1];
-	struct firing_position const *firing_position2 = &global_temporary_sort_firing_position_array[index2];
-
-	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1295, global_temporary_sort_firing_position_array);
-	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1296, (index1 >= 0) && (index1 < global_temporary_sort_firing_position_count));
-	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1297, (index2 >= 0) && (index2 < global_temporary_sort_firing_position_count));
-
-	if (firing_position1->valid != firing_position2->valid)
-	{
-		return (firing_position1->valid ? -1 : 1) > 0;
-	}
-	else if (firing_position1->rejected != firing_position2->rejected)
-	{
-		return (firing_position1->rejected ? 1 : -1) > 0;
-	}
-	else if (firing_position1->evaluation > firing_position2->evaluation)
-	{
-		return FALSE;
-	}
-	else if (firing_position1->evaluation < firing_position2->evaluation)
-	{
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-unsigned long actor_get_firing_position_group(
-	long actor_index,
-	short evaluation_mode,
-	short group_selection_mode)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	unsigned long result = 0;
-
-	if (actor->meta.encounter_index != NONE)
-	{
-		struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(
-			&global_scenario_get()->ai_encounters,
-			DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
-			struct encounter_definition);
-		struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
-			&encounter_definition->squads,
-			actor->meta.squad_index,
-			struct squad_definition);
-		boolean searching = actor->state.searching;
-		short index;
-
-		switch (group_selection_mode)
-		{
-		case _firing_position_group_when_searching:
-			searching = TRUE;
-			break;
-		case _firing_position_group_when_not_searching:
-			searching = FALSE;
-			break;
-		}
-
-		if (evaluation_mode == _firing_point_evaluation_mode_panic)
-		{
-			index = _firing_position_group_defending_guard;
-		}
-		else if (evaluation_mode == _firing_point_evaluation_mode_guard)
-		{
-			index = actor->emotions.currently_defending ? _firing_position_group_defending_guard : _firing_position_group_attacking_guard;
-		}
-		else if (evaluation_mode == _firing_point_evaluation_mode_pursue)
-		{
-			index = _firing_position_group_pursuing;
-		}
-		else if (actor->emotions.currently_defending)
-		{
-			index = searching ? _firing_position_group_defending_search : _firing_position_group_defending;
-		}
-		else
-		{
-			index = searching ? _firing_position_group_attacking_search : _firing_position_group_attacking;
-		}
-
-		match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1412, (index >= 0) && (index < NUMBER_OF_FIRING_POSITION_GROUPS));
-		result = squad_definition->firing_position_groups[index];
-	}
-
-	return result;
-}
-
-void actor_clear_discarded_firing_positions(
-	long actor_index,
-	boolean clear_temporary_only)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	short index;
-
-	actor->firing_positions.next_discarded_firing_positions_entry = 0;
-	for (index = 0; index < NUMBER_OF_DISCARDED_FIRING_POSITIONS_PER_ACTOR; index++)
-	{
-		actor->firing_positions.discarded_firing_positions[index].index = NONE;
-	}
-
-	if (actor->firing_positions.last_discarded_firing_position_valid &&
-		(!clear_temporary_only || actor->firing_positions.last_discarded_firing_position_temporary))
-	{
-		actor->firing_positions.last_discarded_firing_position_valid = FALSE;
-	}
-
-	return;
-}
-
-void actor_discard_firing_position(
-	long actor_index,
-	short firing_position_index,
-	boolean temporary)
-{
-	if (firing_position_index != NONE)
-	{
-		struct actor_datum *actor = actor_get(actor_index);
-		struct encounter_definition *encounter_definition;
-		struct firing_position_definition *firing_position_definition;
-
-		actor->firing_positions.discarded_firing_positions[actor->firing_positions.next_discarded_firing_positions_entry].temporary = temporary;
-		actor->firing_positions.discarded_firing_positions[actor->firing_positions.next_discarded_firing_positions_entry].index = firing_position_index;
-		actor->firing_positions.next_discarded_firing_positions_entry = (actor->firing_positions.next_discarded_firing_positions_entry + 1) % NUMBER_OF_DISCARDED_FIRING_POSITIONS_PER_ACTOR;
-
-		encounter_definition = TAG_BLOCK_GET_ELEMENT(
-			&global_scenario_get()->ai_encounters,
-			DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
-			struct encounter_definition);
-		firing_position_definition = TAG_BLOCK_GET_ELEMENT(
-			&encounter_definition->firing_positions,
-			firing_position_index,
-			struct firing_position_definition);
-
-		actor->firing_positions.last_discarded_firing_position_valid = TRUE;
-		actor->firing_positions.last_discarded_firing_position_temporary = temporary;
-		actor->firing_positions.last_discarded_firing_position = firing_position_definition->position;
-	}
-
-	return;
-}
-
-boolean actor_firing_position_discarded(
-	long actor_index,
-	short firing_position_index)
-{
-	struct actor_datum *actor = actor_get(actor_index);
-	boolean result = FALSE;
-
-	if (firing_position_index != NONE)
-	{
-		short index;
-
-		for (index = 0; index < NUMBER_OF_DISCARDED_FIRING_POSITIONS_PER_ACTOR; index++)
-		{
-			if (firing_position_index == actor->firing_positions.discarded_firing_positions[index].index)
-			{
-				result = TRUE;
-				break;
-			}
-		}
-	}
-
-	return result;
-}
-
-static void pre_evaluator_global(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	short firing_position_count,
-	struct firing_position *firing_positions)
-{
-	short index;
-	struct actor_datum *actor = actor_get(actor_index);
-	struct firing_position *firing_position;
-
-	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
-	{
-		if (firing_position->valid)
-		{
-			if (actor_firing_position_discarded(actor_index, firing_position->original_index))
-			{
-				if (firing_position_reject_debug(evaluation_context, firing_position, 0))
-				{
-					firing_position->valid = FALSE;
-					continue;
-				}
-			}
-
-			if (evaluation_context->find_path_direction_from_actor)
-			{
-				real_vector3d danger_vector;
-
-				match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 186, (actor->danger_zone.danger_type > _actor_danger_zone_none) && actor->danger_zone.noticed_danger);
-
-				vector_from_points3d(&actor->danger_zone.position, &actor->danger_zone.predict_danger_position, &danger_vector);
-
-				if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &firing_position->definition->position) <
-					(actor->danger_zone.bounding_sphere_radius + 2.5f) * (actor->danger_zone.bounding_sphere_radius + 2.5f))
-				{
-					real distance_squared = point_to_line_distance_squared3d(&firing_position->definition->position, &actor->danger_zone.position, &danger_vector);
-					real evaluation = 0.0f;
-
-					if (distance_squared < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
-					{
-						if (firing_position_reject_debug(evaluation_context, firing_position, 22))
-						{
-							firing_position->valid = FALSE;
-							continue;
-						}
-					}
-					else if (distance_squared < (actor->danger_zone.danger_radius + 2.5f) * (actor->danger_zone.danger_radius + 2.5f))
-					{
-						real distance = square_root(distance_squared);
-
-						evaluation = (distance - actor->danger_zone.danger_radius) * 8.0f;
-					}
-					else
-					{
-						evaluation = 20.0f;
-					}
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 23);
-				}
-
-				if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &actor->input.position.body_position) <
-					(actor->danger_zone.bounding_sphere_radius + 3.0f) * (actor->danger_zone.bounding_sphere_radius + 3.0f) &&
-					actor->danger_zone.current_distance_from_actor > actor->danger_zone.danger_radius)
-				{
-					real distance_squared = point_to_line_distance_squared3d(&actor->input.position.body_position, &actor->danger_zone.position, &danger_vector);
-
-					if (distance_squared > actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
-					{
-						real_vector3d actor_predicted_movement;
-
-						scale_vector3d(&firing_position->path_direction_from_actor, 3.0f, &actor_predicted_movement);
-						if (magnitude_squared3d(&actor_predicted_movement) > 0.0001f)
-						{
-							if (vector_to_line_distance_squared3d(&actor->input.position.body_position, &actor_predicted_movement, &actor->danger_zone.position, &danger_vector) < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
-							{
-								if (firing_position_reject_debug(evaluation_context, firing_position, 21))
-								{
-									firing_position->valid = FALSE;
-									continue;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			if (TEST_FLAG(evaluation_context->preferred_groups, firing_position->definition->group_index))
-			{
-				real evaluation = evaluation_context->preferred_weight;
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 2);
-			}
-
-			if (evaluation_context->avoid_point_count > 0)
-			{
-				real closest_fraction = 1.0f;
-				short point_index;
-				real evaluation;
-
-				for (point_index = 0; point_index < evaluation_context->avoid_point_count; point_index++)
-				{
-					real distance_squared = distance_squared3d(&firing_position->definition->position, &evaluation_context->avoid_point[point_index].point);
-					real fraction = distance_squared / (evaluation_context->avoid_point[point_index].radius * evaluation_context->avoid_point[point_index].radius);
-
-					if (fraction < closest_fraction)
-					{
-						closest_fraction = fraction;
-					}
-				}
-
-				evaluation = 10.0f;
-				if (closest_fraction < 1.0f)
-				{
-					evaluation = square_root(closest_fraction) * 10.0f;
-				}
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 16);
-			}
-		}
-	}
-
-	if (evaluation_context->directional_driving && actor->input.vehicle_index != NONE)
-	{
-		struct vehicle_datum *vehicle = vehicle_get(actor->input.vehicle_index);
-		real_point3d vehicle_position;
-
-		object_get_origin(actor->input.vehicle_index, &vehicle_position);
-
-		for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
-		{
-			if (firing_position->valid)
-			{
-				real_vector3d vector;
-				real distance_squared;
-
-				vector_from_points3d(&vehicle_position, &firing_position->definition->position, &vector);
-				distance_squared = magnitude_squared3d(&vector);
-
-				if (!realcmp(distance_squared, 0.0f) && distance_squared < 900.0f)
-				{
-					real dot = dot_product3d(&vector, &vehicle->object.forward) / square_root(distance_squared);
-					real evaluation;
-
-					if ((evaluation_context->directional_driving_cannot_stop || magnitude_squared3d(&vehicle->object.translational_velocity) > (1.0f / 144.0f)) &&
-						distance_squared < 64.0f &&
-						dot < 0.70710677f)
-					{
-						if (firing_position_reject_debug(evaluation_context, firing_position, 10))
-						{
-							firing_position->valid = FALSE;
-							continue;
-						}
-					}
-
-					evaluation = 15.0f;
-					if (dot < 0.0f)
-					{
-						evaluation = 15.0f - dot * -15.0f;
-					}
-					else if (dot > 0.8660254f)
-					{
-						evaluation = (dot - 0.8660254f) * (15.0f / (1.0f - 0.8660254f)) + 15.0f;
-					}
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 11);
-				}
-			}
-		}
-	}
-
-	return;
-}
-
-static void pre_evaluator_pursuit(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	short firing_position_count,
-	struct firing_position *firing_positions)
-{
-	short index;
-	struct firing_position *firing_position;
-
-	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
-	{
-		if (firing_position->valid)
-		{
-			real evaluation = 0.0f;
-
-			if (firing_position->path_distance_from_actor < evaluation_context->maximum_allowable_range / 2.0f)
-			{
-				evaluation = 5.0f;
-			}
-			else if (firing_position->path_distance_from_actor < evaluation_context->maximum_allowable_range)
-			{
-				evaluation = (evaluation_context->maximum_allowable_range - firing_position->path_distance_from_actor) * (1.0f / (evaluation_context->maximum_allowable_range / 2.0f)) * 5.0f;
-			}
-
-			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 1);
-
-			if (evaluation_context->has_target)
-			{
-				if (firing_position->path_distance_to_target < 20.0f)
-				{
-					real evaluation = (20.0f - firing_position->path_distance_to_target) * 0.5f;
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 2);
-				}
-
-				if (evaluation_context->find_path_direction_from_target && evaluation_context->target_has_hint_vector)
-				{
-					real dot = dot_product3d(&firing_position->path_direction_from_target, &evaluation_context->target_hint_vector);
-					real hint_evaluation;
-
-					if (dot > 0.70710677f)
-					{
-						hint_evaluation = 10.0f;
-					}
-					else
-					{
-						hint_evaluation = MAX(0.0f, dot * 1.4142135f) * 10.0f;
-					}
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, hint_evaluation, 3);
-				}
-			}
-		}
-	}
-
-	return;
-}
-
-static void pre_evaluator_panic(
-	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	short firing_position_count,
-	struct firing_position *firing_positions)
-{
-	short index;
-	struct firing_position *firing_position;
-
-	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
-	{
-		if (firing_position->valid)
-		{
-			if (firing_position->path_distance_from_actor < 4.0f)
-			{
-				if (firing_position_reject_debug(evaluation_context, firing_position, 7))
-				{
-					firing_position->valid = FALSE;
-					continue;
-				}
-			}
-			else
-			{
-				real evaluation = 0.0f;
-
-				if (firing_position->path_distance_from_actor < 8.0f)
-				{
-					evaluation = (firing_position->path_distance_from_actor - 4.0f) * 2.0f;
-				}
-				else if (firing_position->path_distance_from_actor < evaluation_context->maximum_allowable_range)
-				{
-					evaluation = (evaluation_context->maximum_allowable_range - firing_position->path_distance_from_actor) * 8.0f / (evaluation_context->maximum_allowable_range - 8.0f);
-				}
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 8);
-			}
-
-			if (evaluation_context->has_target)
-			{
-				real evaluation;
-
-				if (firing_position->linear_distance_squared_to_target < 16.0f)
-				{
-					if (firing_position_reject_debug(evaluation_context, firing_position, 9))
-					{
-						firing_position->valid = FALSE;
-						continue;
-					}
-				}
-
-				if (firing_position->linear_distance_squared_to_target < 16.0f)
-				{
-					evaluation = 0.0f;
-				}
-				else if (firing_position->linear_distance_squared_to_target < 49.0f)
-				{
-					real distance = square_root(firing_position->linear_distance_squared_to_target);
-
-					evaluation = (distance - 4.0f) * (10.0f / 3.0f);
-				}
-				else
-				{
-					evaluation = 10.0f;
-				}
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 9);
-
-				if (firing_position->path_closest_approach_to_target < REAL_MAX &&
-					evaluation_context->target_current_distance > 0.0f &&
-					evaluation_context->target_current_distance < REAL_MAX)
-				{
-					real fraction = 1.0f - firing_position->path_closest_approach_to_target / (evaluation_context->target_current_distance * 0.8f);
-					real evaluation;
-
-					if (fraction > 0.5f)
-					{
-						if (firing_position_reject_debug(evaluation_context, firing_position, 10))
-						{
-							firing_position->valid = FALSE;
-							continue;
-						}
-					}
-
-					evaluation = (1.0f - PIN(fraction, 0.0f, 1.0f)) * 8.0f;
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 10);
-				}
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_panic_distance_to_target);
 			}
 		}
 	}
@@ -1154,6 +836,348 @@ static void firing_position_compute_line_of_sight(
 	return;
 }
 
+static boolean post_evaluator_global(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	struct firing_position *firing_position)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
+
+	if (evaluation_context->flying)
+	{
+		if (!firing_position)
+		{
+			evaluation_context->post_evaluation_bound += 15.0f;
+		}
+		else
+		{
+			real avoidance_distance = 0.0f;
+
+			boolean path_available = actor_path_3d_available(actor_index, &firing_position->definition->position, &avoidance_distance);
+
+			if (path_available)
+			{
+				path_available = path_3d_available(global_structure_bsp_get(), &actor->input.position.body_position, avoidance_distance, &firing_position->definition->position, NULL, NULL);
+			}
+
+			if (path_available)
+			{
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, 15.0f, _firing_position_evaluation_path_available);
+			}
+			else if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_no_path_available))
+			{
+				firing_position->valid = FALSE;
+			}
+		}
+	}
+
+	return !firing_position ? TRUE : firing_position->valid;
+}
+
+static boolean post_evaluator_pursuit(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	struct firing_position *firing_position)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	long current_time = game_time_get();
+	long position_last_examined_time = NONE;
+	short actor_count = 0;
+
+	if (firing_position)
+	{
+		boolean unexamined = TRUE;
+		short rejection_type = NONE;
+
+		if (firing_position->line_of_sight == _ai_line_of_sight_clear && firing_position->path_distance_from_actor < 6.0f)
+		{
+			encounter_mark_examined_pursuit_position(actor->meta.encounter_index, actor_index, firing_position->original_index, evaluation_context->evaluation_data.pursue.last_perceived_time);
+			position_last_examined_time = current_time;
+			actor_count = 7;
+			unexamined = FALSE;
+			rejection_type = _firing_position_evaluation_pursuit_examined_by_self;
+		}
+		else if (encounter_pursuit_position_already_examined(actor->meta.encounter_index, actor_index, firing_position->original_index, evaluation_context->evaluation_data.pursue.last_perceived_time, &actor_count, &position_last_examined_time))
+		{
+			unexamined = FALSE;
+			rejection_type = _firing_position_evaluation_pursuit_examined;
+		}
+
+		if (evaluation_context->evaluation_data.pursue.tenacious)
+		{
+			if (unexamined)
+			{
+				real evaluation = 15.0f;
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_unexamined);
+			}
+		}
+		else if (!unexamined)
+		{
+			if (firing_position_reject_debug(evaluation_context, firing_position, rejection_type))
+			{
+				firing_position->valid = FALSE;
+			}
+		}
+
+		if (firing_position->valid)
+		{
+			real evaluation = 0.0f;
+			real actor_evaluation;
+
+			if (position_last_examined_time == NONE || position_last_examined_time + 300 < current_time)
+			{
+				evaluation = 10.0f;
+			}
+			else if (position_last_examined_time < current_time)
+			{
+				evaluation = (current_time - position_last_examined_time) * (10.0f / 300.0f);
+			}
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_examined);
+
+			actor_evaluation = 0.0f;
+			if (actor_count < 4)
+			{
+				actor_evaluation = (4 - actor_count) * 5.0f;
+			}
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, actor_evaluation, _firing_position_evaluation_pursuit_actor_count);
+		}
+	}
+
+	return !firing_position ? FALSE : firing_position->valid;
+}
+
+static boolean post_evaluator_hide(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	struct firing_position *firing_position)
+{
+	if (evaluation_context->has_target)
+	{
+		if (!firing_position)
+		{
+			evaluation_context->post_evaluation_bound += 12.0f;
+		}
+		else
+		{
+			real evaluation = 0.0f;
+
+			switch (firing_position->line_of_sight)
+			{
+			case _ai_line_of_sight_from_cover:
+				evaluation = 12.0f;
+				break;
+			case _ai_line_of_sight_obstructed:
+				evaluation = 10.0f;
+				break;
+			case _ai_line_of_sight_occluded:
+				if (evaluation_context->evaluation_data.cover.allow_occluded_points)
+				{
+					evaluation = 6.0f;
+				}
+				else if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_hide_occluded))
+				{
+					firing_position->valid = FALSE;
+				}
+				break;
+			case _ai_line_of_sight_to_cover:
+				evaluation = 4.0f;
+				break;
+			case _ai_line_of_sight_clear:
+				if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_hide_clear))
+				{
+					firing_position->valid = FALSE;
+				}
+				break;
+			default:
+				match_halt("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1117);
+				break;
+			}
+
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_hide_line_of_sight);
+		}
+	}
+
+	return !firing_position ? TRUE : firing_position->valid;
+}
+
+static boolean post_evaluator_uncover(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	struct firing_position *firing_position)
+{
+	if (evaluation_context->has_target)
+	{
+		if (!firing_position)
+		{
+			evaluation_context->post_evaluation_bound += 20.0f;
+		}
+		else
+		{
+			real evaluation = 0.0f;
+
+			switch (firing_position->line_of_sight)
+			{
+			case _ai_line_of_sight_clear:
+				evaluation = 20.0f;
+				break;
+			case _ai_line_of_sight_occluded:
+				evaluation = 10.0f;
+				break;
+			default:
+				{
+					real distance = evaluation_context->target_current_distance - 7.5f;
+
+					if (distance < 0.0f || firing_position->linear_distance_squared_to_target > distance * distance)
+					{
+						if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_uncover_too_far))
+						{
+							firing_position->valid = FALSE;
+						}
+					}
+				}
+				break;
+			}
+
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_uncover_line_of_sight);
+		}
+	}
+
+	return !firing_position ? TRUE : firing_position->valid;
+}
+
+static boolean post_evaluator_attack(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	struct firing_position *firing_position)
+{
+	if (evaluation_context->has_target)
+	{
+		if (!firing_position)
+		{
+			evaluation_context->post_evaluation_bound += evaluation_context->target_line_of_sight_optional ? 6.0f : 15.0f;
+		}
+		else
+		{
+			real evaluation = 0.0f;
+
+			switch (firing_position->line_of_sight)
+			{
+			case _ai_line_of_sight_clear:
+				evaluation = evaluation_context->target_line_of_sight_optional ? 6.0f : 15.0f;
+				break;
+			case _ai_line_of_sight_occluded:
+				evaluation = evaluation_context->target_line_of_sight_optional ? 2.5f : 5.0f;
+				break;
+			default:
+				if (!evaluation_context->target_line_of_sight_optional)
+				{
+					if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_attack_no_line_of_sight))
+					{
+						firing_position->valid = FALSE;
+					}
+				}
+				break;
+			}
+
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_attack_line_of_sight);
+		}
+	}
+
+	return !firing_position ? TRUE : firing_position->valid;
+}
+
+static void firing_position_pre_evaluate(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	short firing_position_count,
+	struct firing_position *firing_positions)
+{
+	struct pre_evaluator_table_entry const *entry;
+
+	for (entry = global_pre_evaluator_table; entry->evaluator; entry++)
+	{
+		if (TEST_FLAG(entry->evaluation_mode_flags, evaluation_context->evaluation_mode))
+		{
+			entry->evaluator(actor_index, evaluation_context, firing_position_count, firing_positions);
+		}
+	}
+
+	return;
+}
+
+static boolean firing_position_post_evaluate(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context,
+	struct firing_position *firing_position)
+{
+	struct post_evaluator_table_entry const *entry;
+	boolean valid = TRUE;
+
+	for (entry = global_post_evaluator_table; valid && entry->evaluator; entry++)
+	{
+		if (TEST_FLAG(entry->evaluation_mode_flags, evaluation_context->evaluation_mode))
+		{
+			valid = entry->evaluator(actor_index, evaluation_context, firing_position);
+		}
+	}
+
+	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1262, firing_position->valid == valid);
+
+	return valid;
+}
+
+static boolean firing_positions_get_post_evaluation_bound(
+	long actor_index,
+	struct firing_position_evaluation_context *evaluation_context)
+{
+	struct post_evaluator_table_entry const *entry;
+	boolean valid = TRUE;
+
+	evaluation_context->post_evaluation_bound = 0.0f;
+	for (entry = global_post_evaluator_table; valid && entry->evaluator; entry++)
+	{
+		if (TEST_FLAG(entry->evaluation_mode_flags, evaluation_context->evaluation_mode))
+		{
+			valid = entry->evaluator(actor_index, evaluation_context, NULL);
+		}
+	}
+
+	return valid;
+}
+
+static boolean firing_position_compare(
+	long index1,
+	long index2)
+{
+	struct firing_position const *firing_position1 = &global_temporary_sort_firing_position_array[index1];
+	struct firing_position const *firing_position2 = &global_temporary_sort_firing_position_array[index2];
+
+	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1295, global_temporary_sort_firing_position_array);
+	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1296, (index1 >= 0) && (index1 < global_temporary_sort_firing_position_count));
+	match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1297, (index2 >= 0) && (index2 < global_temporary_sort_firing_position_count));
+
+	if (firing_position1->valid != firing_position2->valid)
+	{
+		return (firing_position1->valid ? -1 : 1) > 0;
+	}
+	else if (firing_position1->rejected != firing_position2->rejected)
+	{
+		return (firing_position1->rejected ? 1 : -1) > 0;
+	}
+	else if (firing_position1->evaluation > firing_position2->evaluation)
+	{
+		return FALSE;
+	}
+	else if (firing_position1->evaluation < firing_position2->evaluation)
+	{
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 static boolean firing_position_forced_evaluation(
 	long actor_index,
 	struct firing_position_evaluation_context *evaluation_context,
@@ -1188,6 +1212,65 @@ static boolean firing_position_forced_evaluation(
 	}
 
 	return firing_position->valid;
+}
+
+unsigned long actor_get_firing_position_group(
+	long actor_index,
+	short evaluation_mode,
+	short group_selection_mode)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	unsigned long result = 0;
+
+	if (actor->meta.encounter_index != NONE)
+	{
+		struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(
+			&global_scenario_get()->ai_encounters,
+			DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
+			struct encounter_definition);
+		struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
+			&encounter_definition->squads,
+			actor->meta.squad_index,
+			struct squad_definition);
+		boolean searching = actor->state.searching;
+		short index;
+
+		switch (group_selection_mode)
+		{
+		case _firing_position_group_when_searching:
+			searching = TRUE;
+			break;
+		case _firing_position_group_when_not_searching:
+			searching = FALSE;
+			break;
+		}
+
+		if (evaluation_mode == _firing_point_evaluation_mode_panic)
+		{
+			index = _firing_position_group_defending_guard;
+		}
+		else if (evaluation_mode == _firing_point_evaluation_mode_guard)
+		{
+			index = actor->emotions.currently_defending ? _firing_position_group_defending_guard : _firing_position_group_attacking_guard;
+		}
+		else if (evaluation_mode == _firing_point_evaluation_mode_pursue)
+		{
+			index = _firing_position_group_pursuing;
+		}
+		else if (actor->emotions.currently_defending)
+		{
+			index = searching ? _firing_position_group_defending_search : _firing_position_group_defending;
+		}
+		else
+		{
+			index = searching ? _firing_position_group_attacking_search : _firing_position_group_attacking;
+		}
+
+		match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1412, (index >= 0) && (index < NUMBER_OF_FIRING_POSITION_GROUPS));
+		result = squad_definition->firing_position_groups[index];
+	}
+
+	return result;
 }
 
 boolean actor_nearby_firing_positions(
@@ -1518,7 +1601,7 @@ short actor_select_firing_position(
 
 						if (prop->enemy)
 						{
-							boolean avoid_enemy_attack_vector = TEST_FLAG(actor_definition->flags2, _actor_definition_flags2_avoid_all_enemy_attack_vectors_bit); /* fake name */
+							boolean avoid_enemy_attack_vector = TEST_FLAG(actor_definition->flags2, _actor_definition_flags2_avoid_all_enemy_attack_vectors_bit);
 
 							if (prop->unopposable_enemy)
 							{
@@ -2084,134 +2167,82 @@ short actor_change_firing_position(
 	return actor->firing_positions.current_position_index;
 }
 
-static void pre_evaluator_attack(
+void actor_clear_discarded_firing_positions(
 	long actor_index,
-	struct firing_position_evaluation_context *evaluation_context,
-	short firing_position_count,
-	struct firing_position *firing_positions)
+	boolean clear_temporary_only)
 {
 	struct actor_datum *actor = actor_get(actor_index);
-	struct actor_variant_definition *actor_variant_definition = actor_combat_get_firing_variant_definition(actor_index);
 	short index;
-	struct firing_position *firing_position;
 
-	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+	actor->firing_positions.next_discarded_firing_positions_entry = 0;
+	for (index = 0; index < NUMBER_OF_DISCARDED_FIRING_POSITIONS_PER_ACTOR; index++)
 	{
-		if (firing_position->valid)
+		actor->firing_positions.discarded_firing_positions[index].index = NONE;
+	}
+
+	if (actor->firing_positions.last_discarded_firing_position_valid &&
+		(!clear_temporary_only || actor->firing_positions.last_discarded_firing_position_temporary))
+	{
+		actor->firing_positions.last_discarded_firing_position_valid = FALSE;
+	}
+
+	return;
+}
+
+void actor_discard_firing_position(
+	long actor_index,
+	short firing_position_index,
+	boolean temporary)
+{
+	if (firing_position_index != NONE)
+	{
+		struct actor_datum *actor = actor_get(actor_index);
+		struct encounter_definition *encounter_definition;
+		struct firing_position_definition *firing_position_definition;
+
+		actor->firing_positions.discarded_firing_positions[actor->firing_positions.next_discarded_firing_positions_entry].temporary = temporary;
+		actor->firing_positions.discarded_firing_positions[actor->firing_positions.next_discarded_firing_positions_entry].index = firing_position_index;
+		actor->firing_positions.next_discarded_firing_positions_entry = (actor->firing_positions.next_discarded_firing_positions_entry + 1) % NUMBER_OF_DISCARDED_FIRING_POSITIONS_PER_ACTOR;
+
+		encounter_definition = TAG_BLOCK_GET_ELEMENT(
+			&global_scenario_get()->ai_encounters,
+			DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index),
+			struct encounter_definition);
+		firing_position_definition = TAG_BLOCK_GET_ELEMENT(
+			&encounter_definition->firing_positions,
+			firing_position_index,
+			struct firing_position_definition);
+
+		actor->firing_positions.last_discarded_firing_position_valid = TRUE;
+		actor->firing_positions.last_discarded_firing_position_temporary = temporary;
+		actor->firing_positions.last_discarded_firing_position = firing_position_definition->position;
+	}
+
+	return;
+}
+
+boolean actor_firing_position_discarded(
+	long actor_index,
+	short firing_position_index)
+{
+	struct actor_datum *actor = actor_get(actor_index);
+	boolean result = FALSE;
+
+	if (firing_position_index != NONE)
+	{
+		short index;
+
+		for (index = 0; index < NUMBER_OF_DISCARDED_FIRING_POSITIONS_PER_ACTOR; index++)
 		{
-			if (evaluation_context->has_target)
+			if (firing_position_index == actor->firing_positions.discarded_firing_positions[index].index)
 			{
-				real distance = square_root(firing_position->linear_distance_squared_to_target);
-
-				if (actor_variant_definition->ranged_combat.maximum_firing_range > 0.0f)
-				{
-					real evaluation;
-
-					if (distance < 0.8f * actor_variant_definition->ranged_combat.maximum_firing_range)
-					{
-						evaluation = 10.0f;
-					}
-					else
-					{
-						evaluation = 0.8f * actor_variant_definition->ranged_combat.maximum_firing_range / distance * 10.0f;
-					}
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 12);
-				}
-
-				if (actor_variant_definition->ranged_combat.combat_range_upper_bound > 0.0f &&
-					distance < actor_variant_definition->ranged_combat.combat_range_upper_bound)
-				{
-					real distance_inside_range;
-					real range_lower_bound;
-					real range_upper_bound;
-					struct weapon_definition *weapon_definition;
-					real evaluation;
-
-					if (actor->emotions.berserk)
-					{
-						range_lower_bound = actor_variant_definition->ranged_combat.berserk_firing_range_lower_bound;
-						range_upper_bound = actor_variant_definition->ranged_combat.berserk_firing_range_upper_bound;
-					}
-					else
-					{
-						range_lower_bound = actor_variant_definition->ranged_combat.combat_range_lower_bound;
-						range_upper_bound = actor_variant_definition->ranged_combat.combat_range_upper_bound;
-					}
-
-					range_lower_bound = MAX(range_lower_bound, evaluation_context->target_danger_radius);
-
-					weapon_definition = actor_get_weapon_definition(actor_index);
-					if (weapon_definition && weapon_definition->weapon.ai_minimum_target_range > 0.0f)
-					{
-						range_lower_bound = MAX(range_lower_bound, weapon_definition->weapon.ai_minimum_target_range);
-					}
-
-					distance_inside_range = range_upper_bound - distance;
-					if (range_lower_bound > 0.0f)
-					{
-						distance_inside_range = MIN(distance_inside_range, distance - range_lower_bound);
-					}
-
-					evaluation = 0.0f;
-					if (distance_inside_range > 2.0f)
-					{
-						evaluation = 20.0f;
-					}
-					else if (distance_inside_range > 0.0f)
-					{
-						evaluation = 20.0f * (distance_inside_range * 0.5f);
-					}
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 13);
-				}
-			}
-
-			if (evaluation_context->dangerous_enemy_attack_vector_count > 0)
-			{
-				real closest_distance_squared = REAL_MAX;
-				short vector_index;
-				real evaluation;
-
-				for (vector_index = 0; vector_index < evaluation_context->attack_vector_count; vector_index++)
-				{
-					if (evaluation_context->attack_vectors[vector_index].type == _firing_position_attack_vector_dangerous_enemy)
-					{
-						real_vector3d vector;
-						real dot;
-
-						match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 657, &evaluation_context->attack_vectors[vector_index].vector);
-
-						vector_from_points3d(&evaluation_context->attack_vectors[vector_index].point, &firing_position->definition->position, &vector);
-						dot = dot_product3d(&vector, &evaluation_context->attack_vectors[vector_index].vector);
-						if (dot > 0.0f)
-						{
-							real distance_squared;
-
-							vector_from_line3d(&vector, &evaluation_context->attack_vectors[vector_index].vector, -dot, &vector);
-							distance_squared = magnitude_squared3d(&vector);
-							if (distance_squared < closest_distance_squared)
-							{
-								closest_distance_squared = distance_squared;
-							}
-						}
-					}
-				}
-
-				evaluation = 6.0f;
-				if (closest_distance_squared < 12.25f)
-				{
-					real distance = square_root(closest_distance_squared);
-
-					evaluation = distance * 0.25f;
-				}
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, 15);
+				result = TRUE;
+				break;
 			}
 		}
 	}
 
-	return;
+	return result;
 }
 
 /* ---------- private code */

@@ -440,7 +440,7 @@ static void infection_swarm_control(
 							else
 							{
 								real restoring_angle = -swarm_component->wander.angle / 15.0f;
-								real maximum_angle_change = 0.020943951f; /* fake name */
+								real maximum_angle_change = DEGREES_TO_RADIANS(36.f) / TICKS_PER_SECOND;
 
 								swarm_component->wander.angle += real_random_range(-maximum_angle_change, maximum_angle_change) + restoring_angle;
 								rotate_vector_about_axis(&swarm_component->wander.vector, &up_vector, sine(swarm_component->wander.angle), cosine(swarm_component->wander.angle));

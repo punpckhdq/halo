@@ -423,8 +423,13 @@ __inline void object_get_bounding_sphere(
 {
 	struct object_datum *object = object_get(object_index);
 
+#ifdef MATCH_RELATIVE_OBJECTS_H /* fake name */
+	match_assert("..\\objects\\objects.h", 535, center);
+	match_assert("..\\objects\\objects.h", 536, radius);
+#else
 	match_assert("c:\\halo\\source\\objects\\objects.h", 535, center);
 	match_assert("c:\\halo\\source\\objects\\objects.h", 536, radius);
+#endif
 
 	*center = object->object.bounding_sphere_center;
 	*radius = object->object.bounding_sphere_radius;
