@@ -4,6 +4,8 @@ ACTION_VEHICLE.C
 
 /* ---------- headers */
 
+#define MATCH_RELATIVE_OBJECTS_H /* fake name */
+
 #include "cseries.h"
 #include "actors.h"
 #include "ai_debug.h"
@@ -26,8 +28,6 @@ enum
 /* ---------- macros */
 
 #define VEHICLE_STUCK_DETECTION_TICKS (5*TICKS_PER_SECOND) /* fake name */
-
-/* ---------- structures */
 
 /* ---------- prototypes */
 

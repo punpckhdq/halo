@@ -836,7 +836,7 @@
 				{ "name": "source/ai/actor_combat.c", "index": 458, "status": "Matching" },
 				{ "name": "source/ai/actions.c", "index": 459, "status": { "MatchingFor": ["2342"] } },
 				{ "name": "source/ai/action_wait.c", "index": 460, "status": "Matching" },
-				{ "name": "source/ai/action_vehicle.c", "index": 461, "status": "Matching", "options": { "pch": false, "cflags": [ "/nologo", "/c", "/MT", "/FIheaders.h", "/DMATCH_RELATIVE_OBJECTS_H" ] } },
+				{ "name": "source/ai/action_vehicle.c", "index": 461, "status": "Matching" },
 				{ "name": "source/ai/action_uncover.c", "index": 462, "status": "Matching" },
 				{ "name": "source/ai/action_sleep.c", "index": 463, "status": "Matching" },
 				{ "name": "source/ai/action_search.c", "index": 464, "status": "Matching" },
