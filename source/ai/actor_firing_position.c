@@ -278,52 +278,52 @@ static void pre_evaluator_global(
 			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_hide_occluded);
 		}
 	}
-}
 
-if (evaluation_context->directional_driving && actor->input.vehicle_index != NONE)
-{
-	struct vehicle_datum *vehicle = vehicle_get(actor->input.vehicle_index);
-	real_point3d vehicle_position;
-
-	object_get_origin(actor->input.vehicle_index, &vehicle_position);
-
-	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+	if (evaluation_context->directional_driving && actor->input.vehicle_index != NONE)
 	{
-		if (firing_position->valid)
+		struct vehicle_datum *vehicle = vehicle_get(actor->input.vehicle_index);
+		real_point3d vehicle_position;
+
+		object_get_origin(actor->input.vehicle_index, &vehicle_position);
+
+		for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
 		{
-			real_vector3d vector_to_point;
-			real distance_squared;
-
-			vector_from_points3d(&vehicle_position, &firing_position->definition->position, &vector_to_point);
-			distance_squared = magnitude_squared3d(&vector_to_point);
-
-			if (!realcmp(distance_squared, 0.0f) && distance_squared < 900.0f)
+			if (firing_position->valid)
 			{
-				real dot = dot_product3d(&vector_to_point, &vehicle->object.forward) / square_root(distance_squared);
-				real evaluation;
+				real_vector3d vector_to_point;
+				real distance_squared;
 
-				if ((evaluation_context->directional_driving_cannot_stop || magnitude_squared3d(&vehicle->object.translational_velocity) > (1.0f / 144.0f)) &&
-					distance_squared < 64.0f &&
-					dot < _sqrt2 / 2.f)
+				vector_from_points3d(&vehicle_position, &firing_position->definition->position, &vector_to_point);
+				distance_squared = magnitude_squared3d(&vector_to_point);
+
+				if (!realcmp(distance_squared, 0.0f) && distance_squared < 900.0f)
 				{
-					if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_panic_approach_to_target))
+					real dot = dot_product3d(&vector_to_point, &vehicle->object.forward) / square_root(distance_squared);
+					real evaluation;
+
+					if ((evaluation_context->directional_driving_cannot_stop || magnitude_squared3d(&vehicle->object.translational_velocity) > (1.0f / 144.0f)) &&
+						distance_squared < 64.0f &&
+						dot < _sqrt2 / 2.f)
 					{
-						firing_position->valid = FALSE;
-						continue;
+						if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_panic_approach_to_target))
+						{
+							firing_position->valid = FALSE;
+							continue;
+						}
 					}
-				}
 
-				evaluation = 15.0f;
-				if (dot < 0.0f)
-				{
-					evaluation = 15.0f - dot * -15.0f;
-				}
-				else if (dot > _cosine30)
-				{
-					evaluation = (dot - _cosine30) * (15.0f / (1.0f - _cosine30)) + 15.0f;
-				}
+					evaluation = 15.0f;
+					if (dot < 0.0f)
+					{
+						evaluation = 15.0f - dot * -15.0f;
+					}
+					else if (dot > _cosine30)
+					{
+						evaluation = (dot - _cosine30) * (15.0f / (1.0f - _cosine30)) + 15.0f;
+					}
 
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_vehicle_direction);
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_vehicle_direction);
+				}
 			}
 		}
 	}
