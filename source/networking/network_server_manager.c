@@ -1721,6 +1721,36 @@ void network_game_generate_join_game_token(
 	memset(join_token, 0, sizeof(join_token));
 	memcpy(join_token, join_token_seed, MIN(NETWORK_JOIN_GAME_TOKEN_SIZE, sizeof(join_token_seed)));
 
+#ifndef DEBUG
+	{
+		char const *date_string = "Oct 12 2001" "16:11:19";
+		long date_string_length = strlen(date_string);
+		unsigned long checksum = tag_groups_checksum();
+		long token_index;
+		long checksum_index;
+		long date_string_index;
+
+		for (token_index = 0; token_index<sizeof(checksum); token_index++)
+		{
+			for (date_string_index = 0; date_string_index<date_string_length; date_string_index++)
+			{
+				join_token[token_index] ^= date_string[date_string_index];
+			}
+		}
+
+		checksum_index = 0;
+		token_index = 0;
+		do
+		{
+			join_token[token_index] ^= ((byte *)&checksum)[checksum_index];
+			if (++checksum_index==sizeof(checksum))
+			{
+				checksum_index = 0;
+			}
+		} while (++token_index<sizeof(checksum));
+	}
+#endif
+
 	return;
 }
 

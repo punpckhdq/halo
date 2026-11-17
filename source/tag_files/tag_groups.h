@@ -303,6 +303,7 @@ void tag_reference_set(struct tag_reference *reference, unsigned long group_tag,
 
 void tag_iterator_new(struct tag_iterator *iterator, unsigned long key_group_tag);
 long tag_iterator_next(struct tag_iterator *iterator);
+unsigned long tag_groups_checksum(void);
 
 /* ---------- globals */
 
