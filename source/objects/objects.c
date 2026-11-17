@@ -2814,6 +2814,7 @@ void objects_scripting_detach(
 void object_render_debug(
 	long object_index)
 {
+#ifdef DEBUG
 	struct object_datum *object = object_get(object_index);
 	struct object_definition *object_definition = object_definition_get(object->definition_index);
 
@@ -3030,6 +3031,7 @@ void object_render_debug(
 	}
 
 	return;
+#endif
 }
 
 static void attachments_new(
@@ -3835,10 +3837,12 @@ void objects_garbage_collection(
 				if (TEST_FLAG(_object_mask_unit, garbage_object->object.type) &&
 					!TEST_FLAG(garbage_object->object.damage_flags, _object_dead_bit))
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"WARNING: garbage collecting a living unit (%s)",
 						ai_debug_describe_actor(NONE, object_index, TRUE, temporary, NUMBEROF(temporary)));
+#endif
 				}
 
 				if (TEST_FLAG(header->flags, _object_header_active_bit))

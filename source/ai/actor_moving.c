@@ -176,6 +176,7 @@ void actor_destination_update(
 			{
 				actor_path_clear(actor_index);
 			}
+#ifdef DEBUG
 			else if (ai_debug.print_unfinished_paths)
 			{
 				char actorbuf[512];
@@ -183,6 +184,7 @@ void actor_destination_update(
 				ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
 				error(_error_silent, "%s: fell off end of unfinished path %d/%d", actorbuf, actor->control.path.path.step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
 			}
+#endif
 		}
 	}
 
@@ -629,7 +631,7 @@ void actor_move_update(
 		crouch = FALSE;
 	}
 
-	if (game_connection()==_game_connection_local && ai_debug.force_crouch)
+	if (AI_BEHAVIOR(force_crouch))
 	{
 		crouch = TRUE;
 	}
@@ -1576,7 +1578,7 @@ static void actor_move_calculate_movement(
 		*movement_thwarted = TRUE;
 	}
 
-	if (game_connection()==_game_connection_local && ai_debug.oversteer_disable)
+	if (AI_BEHAVIOR(oversteer_disable))
 	{
 		oversteer_maximum_angle = 0.f;
 		oversteer_minimum_angle = 0.f;
@@ -1623,33 +1625,41 @@ static void actor_move_calculate_movement(
 			{
 				actor->control.face_exactly_oversteer_angle = MIN(steer_angle, oversteer_maximum_angle);
 
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "steer %.4f (set oversteer %.4f)", steer_angle, actor->control.face_exactly_oversteer_angle);
 				}
+#endif
 			}
+#ifdef DEBUG
 			else if (ai_debug.print_oversteer)
 			{
 				console_printf(FALSE, "steer %.4f", steer_angle);
 			}
+#endif
 		}
 		else if (actor->control.face_exactly_oversteer_angle>0.f)
 		{
 			if (steer_angle<oversteer_minimum_angle)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "steer %.4f < %.4f - clear oversteer %.4f", steer_angle, oversteer_minimum_angle, actor->control.face_exactly_oversteer_angle);
 				}
+#endif
 
 				actor->control.face_exactly_oversteer_angle = 0.f;
 			}
 			else
 			{
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "steer %.4f - oversteer to %.4f", steer_angle, actor->control.face_exactly_oversteer_angle);
 				}
+#endif
 
 				steer_angle = actor->control.face_exactly_oversteer_angle;
 			}
@@ -1667,10 +1677,12 @@ static void actor_move_calculate_movement(
 			{
 				rotate_vector_about_axis(&facing_vector, &rotation_axis, sine(adjust_angle), cosine(adjust_angle));
 
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "adjust angle %.4f -> %.4f (%.4f)", facing_angle, steer_angle, adjust_angle);
 				}
+#endif
 			}
 		}
 	}
@@ -2785,7 +2797,9 @@ boolean actor_path_refresh(
 								10.f);
 						}
 
+#ifdef DEBUG
 						path_state_new(&input, &state, ai_debug_get_path_storage(actor_index));
+#endif
 						path_state_destination(
 							&state,
 							&actor->control.path.destination.point,

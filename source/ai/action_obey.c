@@ -898,6 +898,7 @@ static boolean action_obey_command_begin(
 			break;
 		}
 
+#ifdef DEBUG
 		if (ai_debug.print_command_lists)
 		{
 			char encounterbuf[256];
@@ -924,6 +925,7 @@ static boolean action_obey_command_begin(
 				success ? "" : " FAILED",
 				temporary);
 		}
+#endif
 	}
 
 	return success;
@@ -1298,7 +1300,9 @@ static void action_obey_command_end(
 				{
 					char actorbuf[512];
 
+#ifdef DEBUG
 					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
+#endif
 					error(
 						_error_silent,
 						"%s: command list %s entry #%d tried to loop to itself",
@@ -1310,7 +1314,9 @@ static void action_obey_command_end(
 				{
 					char actorbuf[512];
 
+#ifdef DEBUG
 					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
+#endif
 					error(
 						_error_silent,
 						"%s: command list %s is stuck looping (aborting on loop #%d)",
@@ -1621,7 +1627,9 @@ boolean action_obey_command_list_setup(
 			{
 				char tempbuf[256];
 
+#ifdef DEBUG
 				ai_debug_describe_actor(actor_index, NONE, TRUE, tempbuf, sizeof(tempbuf));
+#endif
 				error(_error_silent, "swarm actor %s cannot execute command list, ran out of swarm caches", tempbuf);
 			}
 			else

@@ -474,6 +474,7 @@ static void unit_verify_vectors(
 	{
 		struct unit_datum *unit = unit_get(unit_index);
 
+#ifdef DEBUG
 		ai_debug_describe_actor(
 			unit->unit.actor_index == NONE ? unit->unit.swarm_actor_index : unit->unit.actor_index,
 			unit_index,
@@ -481,6 +482,7 @@ static void unit_verify_vectors(
 			actorbuf,
 			NUMBEROF(actorbuf)
 		);
+#endif
 		error(_error_silent, "**** unit_verify_vectors: problems with %s at location %s", actorbuf, debugstring);
 		error(
 			_error_silent,
@@ -7535,12 +7537,14 @@ static void unit_set_animation(
 			}
 		}
 
+#ifdef DEBUG
 		if (ai_debug.selected_actor_index != NONE &&
 			unit->unit.actor_index != ai_debug.selected_actor_index &&
 			unit->unit.swarm_actor_index != ai_debug.selected_actor_index)
 		{
 			print = FALSE;
 		}
+#endif
 
 		if (print)
 		{

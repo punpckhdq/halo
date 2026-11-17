@@ -1224,6 +1224,7 @@ static void actor_start_burst(
 	{
 		actor->control.burst_damage_modifier = firing_variant_definition->ranged_combat.weapon_damage_modifier;
 
+#ifdef DEBUG
 		if (ai_debug.print_damage_modifiers)
 		{
 			console_printf(
@@ -1232,6 +1233,7 @@ static void actor_start_burst(
 				tag_name_strip_path(tag_get_name(actor->meta.variant_definition_index)),
 				actor->control.burst_damage_modifier);
 		}
+#endif
 	}
 	else if (firing_variant_definition->ranged_combat.damage_per_second > 0.0f)
 	{
@@ -1255,6 +1257,7 @@ static void actor_start_burst(
 			{
 				actor->control.burst_damage_modifier = firing_variant_definition->ranged_combat.damage_per_second / damage_per_second;
 
+#ifdef DEBUG
 				if (ai_debug.print_damage_modifiers)
 				{
 					console_printf(
@@ -1267,6 +1270,7 @@ static void actor_start_burst(
 						firing_variant_definition->ranged_combat.damage_per_second,
 						actor->control.burst_damage_modifier);
 				}
+#endif
 			}
 		}
 	}

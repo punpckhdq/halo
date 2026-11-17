@@ -1033,10 +1033,12 @@ static void structure_visibility_traverse_cluster(
 		{
 			render_debug_hull(visible_region, DEBUG_HULL_OFFSET, global_real_argb_red);
 		}
+#ifdef DEBUG
 		else if (ai_debug_highlight_cluster(cluster_index, &render_color))
 		{
 			render_debug_hull(visible_region, DEBUG_HULL_OFFSET, render_color);
 		}
+#endif
 	}
 
 	for (portal_reference_index = 0; portal_reference_index < cluster->portal_indices.count; portal_reference_index++)

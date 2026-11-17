@@ -491,7 +491,7 @@ boolean actor_action_handle_panic_from_damage(
 	boolean result = FALSE;
 
 	if (actor->stimuli.was_damaged &&
-		((game_connection()==_game_connection_local && ai_debug.flee_always) ||
+		(AI_BEHAVIOR(flee_always) ||
 		actor->input.recent_body_damage>actor_definition->panic.panic_damage_threshold))
 	{
 		if (actor->stimuli.panic_type==_actor_panic_none || actor->stimuli.panic_prop_index==NONE)

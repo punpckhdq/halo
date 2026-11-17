@@ -796,6 +796,7 @@ void hs_evaluate_debug_string(
 	}
 	else
 	{
+#ifdef DEBUG
 		void (*debug_function)(long name_count, char const **names) = NULL;
 
 		switch (function_index)
@@ -817,6 +818,7 @@ void hs_evaluate_debug_string(
 		{
 			debug_function(*string_count, strings);
 		}
+#endif
 
 		hs_return(thread_index, NONE);
 	}

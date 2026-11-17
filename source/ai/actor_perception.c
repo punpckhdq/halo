@@ -379,6 +379,7 @@ void actor_perception_update(
 					new_state = _prop_state_becoming_acknowledged;
 					prop->awareness = 0.f;
 
+#ifdef DEBUG
 					if (prop->player && ai_debug.print_acknowledgement)
 					{
 						char aibuf[256];
@@ -386,6 +387,7 @@ void actor_perception_update(
 						ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
 						error(_error_silent, "%s: start to become aware", aibuf);
 					}
+#endif
 				}
 				else
 				{
@@ -405,6 +407,7 @@ void actor_perception_update(
 					{
 						actor_debug_info->num_debug_evaluations = NONE;
 
+#ifdef DEBUG
 						if (ai_debug.print_acknowledgement)
 						{
 							char aibuf[256];
@@ -412,6 +415,7 @@ void actor_perception_update(
 							ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
 							error(_error_silent, "%s: stop becoming aware", aibuf);
 						}
+#endif
 					}
 				}
 				else
@@ -456,6 +460,7 @@ void actor_perception_update(
 					{
 						actor_debug_info->num_debug_evaluations = acknowledgement_speed;
 
+#ifdef DEBUG
 						if (ai_debug.print_acknowledgement)
 						{
 							char const *acknowledgement_speed_names[NUMBER_OF_ACTOR_ACKNOWLEDGEMENT_SPEEDS] = { "never", "noncombat", "guard", "combat", "instant" };
@@ -482,6 +487,7 @@ void actor_perception_update(
 									(1.f - prop->awareness) / (awareness_delta * TICKS_PER_SECOND));
 							}
 						}
+#endif
 					}
 
 					prop->awareness += awareness_delta;
@@ -494,6 +500,7 @@ void actor_perception_update(
 						{
 							actor_debug_info->num_debug_evaluations = NONE;
 
+#ifdef DEBUG
 							if (ai_debug.print_acknowledgement)
 							{
 								char aibuf[256];
@@ -501,6 +508,7 @@ void actor_perception_update(
 								ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
 								error(_error_silent, "%s: become aware!", aibuf);
 							}
+#endif
 						}
 					}
 				}
@@ -1588,7 +1596,7 @@ void prop_status_refresh(
 
 		prop->ignore = TEST_FLAG(unit->unit.flags, _unit_ignored_by_actors_bit);
 
-		if (prop->player && game_connection()==_game_connection_local && ai_debug.ignore_player)
+		if (prop->player && AI_BEHAVIOR(ignore_player))
 		{
 			prop->ignore = TRUE;
 		}
@@ -1945,8 +1953,8 @@ void prop_status_refresh(
 			{
 				boolean invisible = blind;
 
-				if ((game_connection()==_game_connection_local && ai_debug.blind) ||
-					(game_connection()==_game_connection_local && ai_debug.invisible_player && prop->player))
+				if (AI_BEHAVIOR(blind) ||
+					(AI_BEHAVIOR(invisible_player) && prop->player))
 				{
 					invisible = TRUE;
 				}
@@ -2016,7 +2024,7 @@ void prop_status_refresh(
 					}
 				}
 
-				if ((game_connection()==_game_connection_local && ai_debug.deaf) || (encounter && encounter->deaf))
+				if (AI_BEHAVIOR(deaf) || (encounter && encounter->deaf))
 				{
 					prop->audibility = _actor_perception_none;
 				}

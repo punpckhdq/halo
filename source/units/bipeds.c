@@ -1964,12 +1964,14 @@ static boolean biped_check_discard(
 		(TEST_FLAG(biped->object.flags, _object_outside_of_map_bit) || biped->object.location.cluster_index == NONE) &&
 		biped->object.position.z < -2000.f)
 	{
+#ifdef DEBUG
 		error(_error_silent, "WARNING: biped %s (%s) is in a bad place (%.1f %.1f %.1f), erasing",
 			tag_name_strip_path(tag_get_name(biped->definition_index)),
 			biped->object.position.x,
 			biped->object.position.y,
 			biped->object.position.z,
 			ai_debug_describe_actor(biped->unit.swarm_actor_index != NONE ? biped->unit.swarm_actor_index : biped->unit.actor_index, biped_index, TRUE, temporary, 256));
+#endif
 		object_delete(biped_index);
 	}
 
@@ -2019,9 +2021,11 @@ static void biped_falling_damage(
 
 		if (!game_engine_running() && TEST_FLAG(biped->object.flags, _object_outside_of_map_bit) && player_index_from_unit_index(biped_index) == NONE)
 		{
+#ifdef DEBUG
 			error(_error_silent, "WARNING: biped %s (%s) fell outside world and was erased",
 				tag_name_strip_path(tag_get_name(biped->definition_index)),
 				ai_debug_describe_actor(biped->unit.swarm_actor_index != NONE ? biped->unit.swarm_actor_index : biped->unit.actor_index, biped_index, TRUE, temporary, 256));
+#endif
 			object_delete(biped_index);
 		}
 	}

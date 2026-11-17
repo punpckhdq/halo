@@ -443,7 +443,7 @@ boolean path_state_build_path(
 			match_assert("c:\\halo\\SOURCE\\ai\\path.c", 507, child_node_index != NONE);
 			match_assert("c:\\halo\\SOURCE\\ai\\path.c", 508, child_node->depth == 0);
 
-			if (game_connection() == _game_connection_local && ai_debug.path_disable_smoothing)
+			if (AI_BEHAVIOR(path_disable_smoothing))
 			{
 				smoothed_step_count = MIN(raw_step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
 				memcpy(smoothed_steps, raw_steps, sizeof(*smoothed_steps) * smoothed_step_count);
@@ -453,7 +453,7 @@ boolean path_state_build_path(
 				path_smooth(state, raw_step_count, raw_steps, &smoothed_step_count, smoothed_steps, &steps_finish_path);
 			}
 
-			if (game_connection() == _game_connection_local && ai_debug.path_disable_obstacle_avoidance)
+			if (AI_BEHAVIOR(path_disable_obstacle_avoidance))
 			{
 				avoided_step_count = MIN(smoothed_step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
 				memcpy(avoided_steps, smoothed_steps, sizeof(*avoided_steps) * avoided_step_count);

@@ -113,10 +113,15 @@ enum
 #define MAXIMUM_BALLISTIC_PILLS 16
 #define MAXIMUM_BALLISTIC_POINTS 64
 
+#ifdef DEBUG
 #define AI_BEHAVIOR(behavior) (game_connection() == _game_connection_local && ai_debug.behavior)
+#else
+#define AI_BEHAVIOR(behavior) FALSE
+#endif
 
 /* ---------- structures */
 
+#ifdef DEBUG
 struct ai_debug_firing_position
 {
 	boolean pursuit_position;
@@ -124,7 +129,6 @@ struct ai_debug_firing_position
 	struct firing_position last_evaluation;
 };
 
-#ifdef DEBUG
 struct ai_debug_state
 {
 	boolean enter_debugger;
@@ -334,6 +338,8 @@ struct ai_debug_state
 
 /* ---------- prototypes/AI_DEBUG.C */
 
+#ifdef DEBUG
+
 void ai_debug_initialize(void);
 void ai_debug_dispose(void);
 void ai_debug_dispose_from_old_map(void);
@@ -368,6 +374,27 @@ void ai_debug_initialize_for_new_map(void);
 void ai_debug_update(void);
 void ai_debug_render(void);
 
+#else
+
+__inline void ai_debug_actor_deleted(
+	long actor_index)
+{
+	return;
+}
+
+__inline void ai_debug_initialize_for_new_map(
+	void)
+{
+	return;
+}
+
+__inline void ai_debug_update(
+	void)
+{
+	return;
+}
+
+#endif
 
 /* ---------- globals */
 

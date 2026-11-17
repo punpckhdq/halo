@@ -196,6 +196,7 @@ boolean actor_look_secondary(
 			priority = global_secondary_look_priorities[type][certain];
 		}
 
+#ifdef DEBUG
 		if (ai_debug.print_secondary_looking)
 		{
 			char *priority_names[] =
@@ -234,6 +235,7 @@ boolean actor_look_secondary(
 				priority_names[priority],
 				timer);
 		}
+#endif
 
 		actor->control.secondary_look_type = type;
 		actor->control.secondary_look_priority = priority;
@@ -249,6 +251,7 @@ void actor_look_secondary_stop(
 {
 	struct actor_datum *actor = actor_get(actor_index);
 
+#ifdef DEBUG
 	if (actor->control.secondary_look_type>_secondary_look_none && ai_debug.print_secondary_looking)
 	{
 		console_printf(
@@ -256,6 +259,7 @@ void actor_look_secondary_stop(
 			"%s: look-stop",
 			ai_debug_describe_actor(actor_index, NONE, FALSE, temporary, sizeof(temporary)));
 	}
+#endif
 
 	actor->control.secondary_look_priority = _secondary_look_priority_none;
 	actor->control.secondary_look_type = _secondary_look_none;
@@ -698,10 +702,12 @@ static boolean actor_look_idle_find_prop(
 		look_delta_deviations[1] = cosine(actor_definition->looking.noncombat_looking_delta_angles[1]);
 	}
 
+#ifdef DEBUG
 	if (actor_index==ai_debug.selected_actor_index)
 	{
 		ai_debug_idle_look_clear(actor_index);
 	}
+#endif
 
 	prop_iterator_new(&iterator, actor_index);
 
@@ -736,10 +742,12 @@ static boolean actor_look_idle_find_prop(
 			prop->last_idle_look_interest = 0.f;
 		}
 
+#ifdef DEBUG
 		if (actor_index==ai_debug.selected_actor_index)
 		{
 			ai_debug_idle_look_addprop(iterator.index, interest);
 		}
+#endif
 
 		if (interest>0.f)
 		{
@@ -1020,6 +1028,7 @@ static long actor_look_idle_timer(
 			"looking",
 		};
 
+#ifdef DEBUG
 		error(
 			_error_silent,
 			"%s: logic error in actor looking: %s mode should be disabled (%.1f %.1f)",
@@ -1027,6 +1036,7 @@ static long actor_look_idle_timer(
 			mode_names[timer_type],
 			min_time,
 			max_time);
+#endif
 		time = 0.5f;
 	}
 	else
@@ -1247,6 +1257,7 @@ void actor_look_update(
 
 		if (actor->control.secondary_look_timer>0 && !--actor->control.secondary_look_timer)
 		{
+#ifdef DEBUG
 			if (ai_debug.print_secondary_looking)
 			{
 				console_printf(
@@ -1254,6 +1265,7 @@ void actor_look_update(
 					"%s: look timer expire",
 					ai_debug_describe_actor(actor_index, NONE, FALSE, temporary, sizeof(temporary)));
 			}
+#endif
 
 			actor->control.secondary_look_type = _secondary_look_none;
 			actor->control.secondary_look_priority = _secondary_look_priority_none;

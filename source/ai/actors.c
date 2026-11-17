@@ -1371,6 +1371,7 @@ void actor_delete(
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actors.c", 1488, actor_index != global_updating_actor_index);
 
+#ifdef DEBUG
 	if (ai_debug.selected_actor_index==actor_index)
 	{
 		ai_debug.selected_actor_index = NONE;
@@ -1380,6 +1381,7 @@ void actor_delete(
 	{
 		ai_debug.aiming_validity_actor_index = NONE;
 	}
+#endif
 
 	if (actor->meta.encounterless)
 	{
@@ -2400,10 +2402,12 @@ static void actor_debug_preupdate(
 
 	global_updating_actor_index = actor_index;
 
+#ifdef DEBUG
 	if (ai_debug.enter_debugger && ai_debug.selected_actor_index==actor_index)
 	{
 		ai_debug.enter_debugger = FALSE;
 	}
+#endif
 
 	return;
 }
@@ -3213,7 +3217,7 @@ void actor_handle_unit_effect(
 	struct prop_datum *prop = prop_get(prop_index);
 	boolean deaf = actor->meta.encounter_index!=NONE ? encounter_get(actor->meta.encounter_index)->deaf : FALSE;
 
-	if (game_connection()==_game_connection_local && ai_debug.deaf)
+	if (AI_BEHAVIOR(deaf))
 	{
 		deaf = TRUE;
 	}
