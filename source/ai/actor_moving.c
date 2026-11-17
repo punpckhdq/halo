@@ -2835,9 +2835,7 @@ boolean actor_path_refresh(
 								10.f);
 						}
 
-#ifdef DEBUG
 						path_state_new(&input, &state, ai_debug_get_path_storage(actor_index));
-#endif
 						path_state_destination(
 							&state,
 							&actor->control.path.destination.point,

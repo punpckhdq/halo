@@ -127,9 +127,11 @@ struct path_node
 	short quantized_cost_estimate;
 	short depth;
 	short heap_location;
+#ifdef DEBUG
 	short debug_render_traverse_index;
 	real closest_distance;
 	real_point3d closest_point;
+#endif
 };
 
 struct path_heap_element

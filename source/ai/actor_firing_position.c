@@ -1839,9 +1839,7 @@ short actor_select_firing_position(
 					path_input_set_attractor(&input, &actor->danger_zone.position, actor->danger_zone.danger_radius, actor->danger_zone.object_index, 10.0f);
 				}
 
-#ifdef DEBUG
 				path_state_new(&input, area_path_state, ai_debug_get_path_storage(actor_index));
-#endif
 				if (path_state_find(area_path_state))
 				{
 					*area_path_state_valid = TRUE;

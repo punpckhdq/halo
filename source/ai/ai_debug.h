@@ -394,6 +394,12 @@ __inline void ai_debug_update(
 	return;
 }
 
+__inline struct path_debug_storage *ai_debug_get_path_storage(
+	long actor_index)
+{
+	return NULL;
+}
+
 #endif
 
 /* ---------- globals */
