@@ -860,7 +860,7 @@ short collision_move_point(
 		{
 			struct collision_plane *downmost_clip_collision = &collisions[clip_collisions[lowest_clip]];
 
-			point_from_line3d((real_point3d const *)global_up3d, &downmost_clip_collision->plane.n, (real)(-downmost_clip_collision->plane.n.k), (real_point3d *)&composite->plane.n);
+			point_from_line3d((real_point3d const *)global_up3d, &downmost_clip_collision->plane.n, (-downmost_clip_collision->plane.n.k), (real_point3d *)&composite->plane.n);
 
 			if (normalize3d(&composite->plane.n) != 0.f)
 			{
@@ -1009,7 +1009,7 @@ static boolean object_test_vector(
 
 		if (object_index != ignore_object_index && !TEST_FLAG(object->object.flags, _object_invisible_bit) &&
 			TEST_FLAG(flags, _collision_test_objects_first_type_bit + object->object.type) &&
-			fast_vector_intersects_sphere(point, vector, &object->object.bounding_sphere_center, (real)(object->object.bounding_sphere_radius)))
+			fast_vector_intersects_sphere(point, vector, &object->object.bounding_sphere_center, (object->object.bounding_sphere_radius)))
 		{
 			if (TEST_FLAG(_object_mask_vehicle, object->object.type) && TEST_FLAG(flags, _collision_test_use_vehicle_physics_bit))
 			{
