@@ -578,10 +578,10 @@ boolean collision_fix_pill(
 			{ M_SQRT1_2, 0.f, M_SQRT1_2 },
 			{ 0.f, -M_SQRT1_2, M_SQRT1_2 },
 			{ 0.f, M_SQRT1_2, M_SQRT1_2 },
-			{ -0.57735026, -0.57735026, 0.57735026 },
-			{ 0.57735026, 0.57735026, 0.57735026 },
-			{ 0.57735026, -0.57735026, 0.57735026 },
-			{ -0.57735026, 0.57735026, 0.57735026 },
+			{ -M_SQRT1_3, -M_SQRT1_3, M_SQRT1_3 },
+			{ M_SQRT1_3, M_SQRT1_3, M_SQRT1_3 },
+			{ M_SQRT1_3, -M_SQRT1_3, M_SQRT1_3 },
+			{ -M_SQRT1_3, M_SQRT1_3, M_SQRT1_3 },
 		};
 		boolean found_valid_air_position = FALSE;
 
