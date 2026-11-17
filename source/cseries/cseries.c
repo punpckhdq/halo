@@ -31,7 +31,11 @@ enum
 
 /* ---------- macros */
 
+#ifdef DEBUG
 #define cseries_match_assert(file, line, expr) if (!(expr)) { stack_walk(FALSE); error(_error_silent, "EXCEPTION %s in %s,#%d: %s", "halt", MATCH_FILE(file), MATCH_LINE(line), STRINGIFY(expr)); system_exit(-1); }
+#else
+#define cseries_match_assert(file, line, expr)
+#endif
 #define cseries_assert(expr) cseries_match_assert(__FILE__, __LINE__, expr)
 
 /* ---------- structures */

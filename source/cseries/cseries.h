@@ -121,12 +121,21 @@ enum
 	#endif
 #endif
 
+#ifdef DEBUG
 #define match_halt(file, line) { display_assert(NULL, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_vhalt(file, line, string) { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_assert(file, line, expr) if (!(expr)) { display_assert(#expr, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_vassert(file, line, expr, string) if (!(expr)) { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_warn(file, line, expr) if (!(expr)) { display_assert(#expr, MATCH_FILE(file), MATCH_LINE(line), FALSE); }
 #define match_vwarn(file, line, expr, string) if (!(expr)) { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), FALSE); }
+#else
+#define match_halt(file, line)
+#define match_vhalt(file, line, string)
+#define match_assert(file, line, expr)
+#define match_vassert(file, line, expr, string)
+#define match_warn(file, line, expr)
+#define match_vwarn(file, line, expr, string)
+#endif
 #define match_unreachable(file, line) match_assert(file, line, !"unreachable")
 
 #define halt() match_halt(__FILE__, __LINE__)

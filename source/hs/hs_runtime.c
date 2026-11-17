@@ -72,7 +72,11 @@ enum
 
 #define valid_thread(thread) ((byte *)(thread)>=(byte *)hs_thread_data->data && (byte *)(thread)<(byte *)hs_thread_data->data+hs_thread_data->count*hs_thread_data->size && (byte *)(thread)->stack>=(thread)->stack_data && (byte *)(thread)->stack<(thread)->stack_data+HS_THREAD_STACK_SIZE && (thread)->stack->data+(thread)->stack->size<=(thread)->stack_data+HS_THREAD_STACK_SIZE)
 
+#ifdef DEBUG
 #define match_script_assert(file, line, thread_index, expr, message) if (!(expr)) { display_assert(csprintf(temporary, "a problem occurred while executing the script %s: %s (%s)", hs_thread_format(thread_index), (message) ? (message) : "no reason given.", #expr), MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); } /* fake name */
+#else
+#define match_script_assert(file, line, thread_index, expr, message)
+#endif
 #define script_assert(thread_index, expr, message) match_script_assert(__FILE__, __LINE__, thread_index, expr, message) /* fake name */
 #define script_demand(thread_index, expr, message) ((expr) || script_error((thread_index), (message), #expr)) /* fake name */
 

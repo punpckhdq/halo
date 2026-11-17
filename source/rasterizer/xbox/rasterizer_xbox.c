@@ -48,7 +48,11 @@ enum
 #define RASTERIZER_TARGET_RENDER_PRIMARY_FORMAT (D3DFORMAT_DMACHANNEL_A | D3DFORMAT_BORDERSOURCE_COLOR | (2<<D3DFORMAT_DIMENSION_SHIFT) | (D3DFMT_LIN_A8R8G8B8<<D3DFORMAT_FORMAT_SHIFT) | (1<<D3DFORMAT_MIPMAP_SHIFT)) /* fake name */
 #define RASTERIZER_TARGET_RENDER_PRIMARY_SIZE ((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH-1) | ((RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT-1)<<D3DSIZE_HEIGHT_SHIFT) | ((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH*sizeof(pixel32)/64-1)<<D3DSIZE_PITCH_SHIFT)) /* fake name */
 
+#ifdef DEBUG
 #define match_you_got_fucked(file, line, function_name) display_assert("### YOU GOT FUCKED in " function_name, MATCH_FILE(file), MATCH_LINE(line), TRUE) /* fake name */
+#else
+#define match_you_got_fucked(file, line, function_name)
+#endif
 
 /* ---------- structures */
 
