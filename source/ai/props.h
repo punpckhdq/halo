@@ -65,7 +65,7 @@ enum
 
 /* ---------- macros */
 
-#define prop_get(index)			((struct prop_datum *)datum_get(prop_data, (index)))
+#define prop_get(index)			DATUM_GET(prop_data, index, struct prop_datum)
 #define prop_try_and_get(index)	((struct prop_datum *)datum_try_and_get(prop_data, (index)))
 
 #define prop_orphaned(prop)		((prop)->state>=_prop_state_uninspected_orphan && (prop)->state<=_prop_state_inspected_orphan)

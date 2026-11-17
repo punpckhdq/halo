@@ -53,7 +53,7 @@ enum
 
 /* ---------- macros */
 
-#define object_render_state_get(index) ((struct object_render_state *)datum_get(cached_object_render_states, (index)))	/* fake name */
+#define object_render_state_get(index) DATUM_GET(cached_object_render_states, index, struct object_render_state)	/* fake name */
 
 /* ---------- structures */
 

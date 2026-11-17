@@ -11,6 +11,14 @@ header included in hcex build.
 /* ---------- headers */
 
 
+/* ---------- macros */
+
+#ifdef DEBUG
+#define DATUM_GET(array, index, type) ((type *)datum_get((array), (index)))
+#else
+#define DATUM_GET(array, index, type) (&((type *)(array)->data)[DATUM_INDEX_TO_ABSOLUTE_INDEX(index)])
+#endif
+
 /* ---------- structures */
 
 struct data_array

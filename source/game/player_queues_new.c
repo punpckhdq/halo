@@ -132,7 +132,7 @@ void update_queues_reset_and_fill_with_lies(
 		struct update_server_queue *queue;
 
 		update_server_start();
-		queue = datum_get(update_server_globals.queues, 0);
+		queue = DATUM_GET(update_server_globals.queues, 0, struct update_server_queue);
 		queue->next_update_number = update_server_globals.next_update_number_to_build;
 	}
 	else if (update_client_globals.initialized)
@@ -256,7 +256,7 @@ void update_server_build_server_update(
 	{
 		match_assert("c:\\halo\\SOURCE\\game\\player_queues_new.c", 286, machine_index<MAXIMUM_NETWORK_MACHINE_COUNT);
 
-		queue = datum_get(update_server_globals.queues, machine_index);
+		queue = DATUM_GET(update_server_globals.queues, machine_index, struct update_server_queue);
 
 		if (queue->next_update_number < update_server_globals.next_update_number_to_build)
 		{
@@ -491,7 +491,7 @@ void update_server_handle_client_update(
 	{
 		if (player_list[player_index] != NONE)
 		{
-			struct update_server_queue *queue = datum_get(update_server_globals.queues, player_list[player_index]);
+			struct update_server_queue *queue = DATUM_GET(update_server_globals.queues, player_list[player_index], struct update_server_queue);
 
 			queue->current_action = actions[action_index++];
 			match_assert_valid_real("c:\\halo\\SOURCE\\game\\player_queues_new.c", 568, queue->current_action.desired_facing.pitch);

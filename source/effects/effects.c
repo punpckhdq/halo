@@ -61,9 +61,9 @@ enum
 
 /* ---------- macros */
 
-#define effect_get(index) ((struct effect_datum *)datum_get(effect_data, (index)))
+#define effect_get(index) DATUM_GET(effect_data, index, struct effect_datum)
 #define effect_try_and_get(index) ((struct effect_datum *)datum_try_and_get(effect_data, (index)))
-#define effect_location_get(index) ((struct effect_location_datum *)datum_get(effect_location_data, (index)))
+#define effect_location_get(index) DATUM_GET(effect_location_data, index, struct effect_location_datum)
 
 /* ---------- structures */
 

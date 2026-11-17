@@ -133,7 +133,7 @@ enum
 
 /* ---------- macros */
 
-#define object_header_get(index)			((struct object_header_datum*)datum_get(object_header_data, (index)))
+#define object_header_get(index)			DATUM_GET(object_header_data, index, struct object_header_datum)
 #define object_header_try_and_get(index)	((struct object_header_datum*)datum_try_and_get(object_header_data, (index)))
 
 #define object_get(index)			((struct object_datum*)object_get_and_verify_type(index, _object_mask_all))

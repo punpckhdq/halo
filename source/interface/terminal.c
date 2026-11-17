@@ -32,7 +32,7 @@ enum
 
 /* ---------- macros */
 
-#define output_line_get(index) ((struct output_line_datum *)datum_get(terminal_globals.output_lines, (index)))
+#define output_line_get(index) DATUM_GET(terminal_globals.output_lines, index, struct output_line_datum)
 
 /* ---------- structures */
 

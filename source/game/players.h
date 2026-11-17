@@ -57,7 +57,7 @@ enum
 
 /* ---------- macros */
 
-#define player_get(index)			((struct player_datum*)datum_get(player_data, index))
+#define player_get(index)			DATUM_GET(player_data, index, struct player_datum)
 #define player_try_and_get(index)	((struct player_datum*)datum_try_and_get(player_data, index))
 
 /* ---------- structures */

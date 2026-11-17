@@ -37,7 +37,7 @@ enum
 
 /* ---------- macros */
 
-#define cache_sound_get(index) ((struct cache_sound_datum *)datum_get(xbox_sound_cache_globals.cache_sounds, (index))) /* fake name */
+#define cache_sound_get(index) DATUM_GET(xbox_sound_cache_globals.cache_sounds, index, struct cache_sound_datum) /* fake name */
 
 /* ---------- structures */
 

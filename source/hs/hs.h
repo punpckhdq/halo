@@ -139,7 +139,7 @@ enum
 #define HS_TYPE_IS_OBJECT(type) ((type)>=FIRST_HS_OBJECT_TYPE && (type)<=LAST_HS_OBJECT_TYPE)
 #define HS_TYPE_IS_OBJECT_NAME(type) ((type)>=FIRST_HS_OBJECT_NAME_TYPE && (type)<=LAST_HS_OBJECT_NAME_TYPE)
 
-#define hs_syntax_get(index) ((struct hs_syntax_node *)datum_get(hs_syntax_data, (index)))
+#define hs_syntax_get(index) DATUM_GET(hs_syntax_data, index, struct hs_syntax_node)
 #define HS_GLOBAL_INDEX(designator) ((short)(designator)&MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 
 #ifdef HS_COMPILER_ENABLED

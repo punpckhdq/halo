@@ -21,7 +21,7 @@ enum
 
 /* ---------- macros */
 
-#define lruv_cache_block_get(cache, block_index) ((struct lruv_cache_block *)datum_get((cache)->blocks, (block_index)))
+#define lruv_cache_block_get(cache, block_index) DATUM_GET((cache)->blocks, block_index, struct lruv_cache_block)
 
 /* ---------- structures */
 

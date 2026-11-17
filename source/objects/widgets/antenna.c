@@ -29,7 +29,7 @@ enum
 
 #define SECONDS_PER_TICK (1.f/TICKS_PER_SECOND) /* fake name */
 
-#define antenna_get(index) ((struct antenna_datum *)datum_get(antenna_data, (index))) /* fake name */
+#define antenna_get(index) DATUM_GET(antenna_data, index, struct antenna_datum) /* fake name */
 #define antenna_try_and_get(index) ((struct antenna_datum *)datum_try_and_get(antenna_data, (index))) /* fake name */
 
 /* ---------- structures */

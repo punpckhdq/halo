@@ -112,7 +112,7 @@ enum
 
 /* ---------- macros */
 
-#define pursuit_get(index) ((struct pursuit_datum *)datum_get(pursuit_data, (index))) /* fake name */
+#define pursuit_get(index) DATUM_GET(pursuit_data, index, struct pursuit_datum) /* fake name */
 
 /* ---------- structures */
 

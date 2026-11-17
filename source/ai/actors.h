@@ -444,13 +444,13 @@ enum
 
 /* ---------- macros */
 
-#define actor_get(index)			((struct actor_datum *)datum_get(actor_data, (index)))
+#define actor_get(index)			DATUM_GET(actor_data, index, struct actor_datum)
 #define actor_try_and_get(index)	((struct actor_datum *)datum_try_and_get(actor_data, (index)))
 
-#define swarm_get(index)			((struct swarm_datum *)datum_get(swarm_data, (index)))
+#define swarm_get(index)			DATUM_GET(swarm_data, index, struct swarm_datum)
 #define swarm_try_and_get(index)	((struct swarm_datum *)datum_try_and_get(swarm_data, (index)))
 
-#define swarm_component_get(index)	((struct swarm_component_datum *)datum_get(swarm_component_data, (index))) /* fake name */
+#define swarm_component_get(index)	DATUM_GET(swarm_component_data, index, struct swarm_component_datum) /* fake name */
 
 /* ---------- structures */
 

@@ -51,7 +51,7 @@ enum
 
 /* ---------- macros */
 
-#define game_looping_sound_get(index) ((struct game_looping_sound_datum *)datum_get(game_looping_sound_data, (index)))
+#define game_looping_sound_get(index) DATUM_GET(game_looping_sound_data, index, struct game_looping_sound_datum)
 #define game_looping_sound_try_and_get(index) ((struct game_looping_sound_datum *)datum_try_and_get(game_looping_sound_data, (index)))
 
 /* ---------- structures */

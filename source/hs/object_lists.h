@@ -10,7 +10,7 @@ OBJECT_LISTS.H
 
 /* ---------- macros */
 
-#define object_list_get(index)	((struct data_reference*)(datum_get(object_list_data, (index))))
+#define object_list_get(index)	DATUM_GET(object_list_data, index, struct data_reference)
 
 /* ---------- structures */
 

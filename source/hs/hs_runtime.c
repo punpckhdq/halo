@@ -66,9 +66,9 @@ enum
 
 /* ---------- macros */
 
-#define hs_thread_get(index) ((struct hs_thread *)datum_get(hs_thread_data, (index)))
+#define hs_thread_get(index) DATUM_GET(hs_thread_data, index, struct hs_thread)
 #define hs_global_runtime_index(designator) (((designator)&FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)) ? HS_GLOBAL_INDEX(designator) : HS_GLOBAL_INDEX(designator)+hs_external_global_count) /* fake name */
-#define hs_global_runtime_get(designator) ((struct hs_global_runtime *)datum_get(hs_global_data, hs_global_runtime_index(designator))) /* fake name */
+#define hs_global_runtime_get(designator) DATUM_GET(hs_global_data, hs_global_runtime_index(designator), struct hs_global_runtime) /* fake name */
 
 #define valid_thread(thread) ((byte *)(thread)>=(byte *)hs_thread_data->data && (byte *)(thread)<(byte *)hs_thread_data->data+hs_thread_data->count*hs_thread_data->size && (byte *)(thread)->stack>=(thread)->stack_data && (byte *)(thread)->stack<(thread)->stack_data+HS_THREAD_STACK_SIZE && (thread)->stack->data+(thread)->stack->size<=(thread)->stack_data+HS_THREAD_STACK_SIZE)
 

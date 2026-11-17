@@ -671,7 +671,7 @@ static long object_header_new(
 	
 	if (index!=NONE)
 	{
-		struct object_header_datum *header = (struct object_header_datum *)datum_get(data, index);
+		struct object_header_datum *header = DATUM_GET(data, index, struct object_header_datum);
 		if (memory_pool_block_allocate(object_memory_pool, (void**)&header->datum, size))
 		{
 			header->data_size = size;
@@ -691,7 +691,7 @@ static void object_header_delete(
 	struct data_array *data,
 	long object_index)
 {
-	struct object_header_datum *object_header = (struct object_header_datum *)datum_get(data, object_index);
+	struct object_header_datum *object_header = DATUM_GET(data, object_index, struct object_header_datum);
 
 	if (object_header->datum)
 	{

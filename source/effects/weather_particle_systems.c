@@ -40,7 +40,7 @@ enum
 
 /* ---------- macros */
 
-#define weather_particle_get(index) ((struct weather_particle_datum *)datum_get(weather_particle_data, (index)))
+#define weather_particle_get(index) DATUM_GET(weather_particle_data, index, struct weather_particle_datum)
 
 /* ---------- structures */
 

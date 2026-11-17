@@ -50,7 +50,7 @@ __inline long reference_list_get_next_datum_index(
 
 	if (*reference_index!=NONE)
 	{
-		reference = (struct data_reference *)datum_get(array, *reference_index);
+		reference = DATUM_GET(array, *reference_index, struct data_reference);
 		*reference_index = reference->next_reference_index;
 		result = reference->datum_index;
 	}
@@ -71,7 +71,7 @@ __inline void reference_list_add(
 
 	if (reference_index!=NONE)
 	{
-		struct data_reference *reference = (struct data_reference*)datum_get(array, reference_index);
+		struct data_reference *reference = DATUM_GET(array, reference_index, struct data_reference);
 		reference->datum_index = datum_index;
 		reference->next_reference_index = *first_reference_index;
 		*first_reference_index = reference_index;
@@ -93,7 +93,7 @@ __inline void reference_list_remove(
 
 	while (*first_reference_index != NONE)
 	{
-		reference = (struct data_reference *)datum_get(array, *first_reference_index);
+		reference = DATUM_GET(array, *first_reference_index, struct data_reference);
 
 		if (reference->datum_index == datum_index)
 		{
@@ -119,7 +119,7 @@ __inline void reference_list_delete(
 
 	for (i = first_reference_index; i!=NONE; i = reference->next_reference_index)
 	{
-		reference = (struct data_reference*)datum_get(array, i);
+		reference = DATUM_GET(array, i, struct data_reference);
 		datum_delete(array, i);
 	}
 

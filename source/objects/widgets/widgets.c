@@ -29,7 +29,7 @@ enum
 
 /* ---------- macros */
 
-#define widget_get(index) ((struct widget_datum *)datum_get(widget_data, (index))) /* fake name */
+#define widget_get(index) DATUM_GET(widget_data, index, struct widget_datum) /* fake name */
 #define widget_try_and_get(index) ((struct widget_datum *)datum_try_and_get(widget_data, (index))) /* fake name */
 
 /* ---------- structures */

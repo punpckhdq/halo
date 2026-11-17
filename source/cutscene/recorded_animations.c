@@ -225,7 +225,7 @@ static boolean recorded_animation_play_internal(
 
 					if (thread_index != NONE)
 					{
-						thread = datum_get(animation_threads, thread_index);
+						thread = DATUM_GET(animation_threads, thread_index, struct animation_thread);
 					}
 				}
 

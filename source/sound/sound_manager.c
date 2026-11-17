@@ -29,8 +29,8 @@ SOUND_MANAGER.C
 
 /* ---------- macros */
 
-#define sound_get(index) ((struct sound_datum *)datum_get(sound_data, (index)))
-#define looping_sound_get(index) ((struct looping_sound_datum *)datum_get(looping_sound_data, (index)))
+#define sound_get(index) DATUM_GET(sound_data, index, struct sound_datum)
+#define looping_sound_get(index) DATUM_GET(looping_sound_data, index, struct looping_sound_datum)
 #define looping_sound_try_and_get(index) ((struct looping_sound_datum *)datum_try_and_get(looping_sound_data, (index)))
 
 /* ---------- structures */

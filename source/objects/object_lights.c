@@ -46,7 +46,7 @@ enum
 
 /* ---------- macros */
 
-#define light_get(index) ((struct point_light *)datum_get(light_data, (index))) /* fake name */
+#define light_get(index) DATUM_GET(light_data, index, struct point_light) /* fake name */
 
 #define structure_material_get_vertex(material, vertex_index) ((struct environment_vertex_compressed const *)(material)->compressed_vertex_data.address + (vertex_index)) /* fake name */
 #define structure_material_get_lightmap_vertex(material, vertex_index) ((struct environment_lightmap_vertex_compressed const *)structure_material_get_vertex((material), (material)->vertices.count) + (vertex_index)) /* fake name */
