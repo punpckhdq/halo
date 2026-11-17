@@ -361,7 +361,7 @@ void physics_compute_new(
 
 	set_real_vector3d(total_force, 0.f, 0.f, -gravity*physics->mass);
 	set_real_vector3d(total_torque, 0.f, 0.f, 0.f);
-	csmemset(mass_points, 0, sizeof(struct mass_point_datum)*physics->mass_points.count);
+	memset(mass_points, 0, sizeof(struct mass_point_datum)*physics->mass_points.count);
 
 	for (mass_point_index = 0; mass_point_index < physics->mass_points.count; mass_point_index++)
 	{
@@ -965,7 +965,7 @@ static void physics_update_old(
 			matrix4x3_transpose(&powered_mass_point->rotation_matrix);
 		}
 	}
-	csmemset(mass_points, 0, sizeof(struct mass_point_datum)*physics->mass_points.count);
+	memset(mass_points, 0, sizeof(struct mass_point_datum)*physics->mass_points.count);
 	if (magic_force)
 	{
 		match_assert_valid_real_vector3d("c:\\halo\\SOURCE\\physics\\physics.c", 1255, magic_force);

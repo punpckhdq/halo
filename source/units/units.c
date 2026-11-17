@@ -2946,6 +2946,7 @@ void unit_render_debug(
 		}
 	}
 
+#ifdef DEBUG
 	if (debug_objects_unit_mouth_apeture)
 	{
 		real_point3d head_point;
@@ -2953,6 +2954,7 @@ void unit_render_debug(
 		unit_get_head_position(unit_index, &head_point);
 		render_debug_string_at_point(FALSE, &head_point, csprintf(temporary, "%.2f", unit->unit.mouth_aperture), global_real_argb_orange);
 	}
+#endif
 
 	return;
 }

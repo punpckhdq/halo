@@ -241,6 +241,7 @@ match_vassert(file, line, 													\
 match_vassert(file, line, valid_real_matrix4x3(matrix), csprintf(temporary, "%s: assert_valid_real_matrix4x3", string));	\
 
 
+#ifdef DEBUG
 #define match_assert_valid_real_matrix4x3(file, line, matrix)							\
 if (!valid_real_matrix4x3(matrix))														\
 {																						\
@@ -253,6 +254,10 @@ if (!valid_real_matrix4x3(matrix))															\
 	char const* string = (custom_string);													\
 	match_assert_valid_real_matrix4x3_internal(file, line, matrix, string);					\
 }
+#else
+#define match_assert_valid_real_matrix4x3(file, line, matrix)
+#define match_assert_valid_real_matrix4x3_custom_string(file, line, matrix, custom_string)
+#endif
 
 #define assert_valid_real(v) match_assert_valid_real(__FILE__, __LINE__, v)
 #define assert_valid_realcmp(a, b) match_assert_valid_realcmp(__FILE__, __LINE__, a, b)

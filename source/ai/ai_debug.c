@@ -511,7 +511,7 @@ char *ai_debug_describe_actor(
 
 		if (actor->meta.encounter_index==NONE)
 		{
-			csstrcpy(actor_string, "encounterless ");
+			strcpy(actor_string, "encounterless ");
 		}
 		else
 		{
@@ -2946,16 +2946,16 @@ static void ai_debug_render_actor(
 				switch (actor_debug_info->grenade_decision)
 				{
 				case _grenade_vehicle:
-					csstrcpy(temporary, "in vehicle");
+					strcpy(temporary, "in vehicle");
 					break;
 				case _grenade_unit_busy:
-					csstrcpy(temporary, "unit busy");
+					strcpy(temporary, "unit busy");
 					break;
 				case _grenade_being_hurt:
 					sprintf(temporary, "dmg %.2f", actor_debug_info->grenade_current_damage);
 					break;
 				case _grenade_no_grenades:
-					csstrcpy(temporary, "no grenades");
+					strcpy(temporary, "no grenades");
 					break;
 				case _grenade_random_failed:
 					sprintf(
@@ -2968,7 +2968,7 @@ static void ai_debug_render_actor(
 					sprintf(temporary, "encounter time %d", actor_debug_info->grenade_encounter_timeout_ticks);
 					break;
 				case _grenade_target_failed:
-					csstrcpy(temporary, "no target");
+					strcpy(temporary, "no target");
 					break;
 				case _grenade_not_enough_enemies:
 					sprintf(
@@ -2978,16 +2978,16 @@ static void ai_debug_render_actor(
 						actor_debug_info->grenade_required_enemy_count);
 					break;
 				case _grenade_collateral_damage:
-					csstrcpy(temporary, "collateral dmg");
+					strcpy(temporary, "collateral dmg");
 					break;
 				case _grenade_trajectory_failed:
-					csstrcpy(temporary, "no trajectory");
+					strcpy(temporary, "no trajectory");
 					break;
 				case _grenade_success:
-					csstrcpy(temporary, "success");
+					strcpy(temporary, "success");
 					break;
 				default:
-					csstrcpy(temporary, "<unknown>");
+					strcpy(temporary, "<unknown>");
 					break;
 				}
 
@@ -3139,22 +3139,22 @@ static void ai_debug_render_actor(
 				switch (actor_debug_info->dive_decision)
 				{
 				case _dive_not_attempted:
-					csstrcpy(temporary, "not attempted");
+					strcpy(temporary, "not attempted");
 					break;
 				case _dive_cannot_move:
-					csstrcpy(temporary, "cannot move");
+					strcpy(temporary, "cannot move");
 					break;
 				case _dive_no_animation:
-					csstrcpy(temporary, "animation unavailable");
+					strcpy(temporary, "animation unavailable");
 					break;
 				case _dive_animation_failure:
-					csstrcpy(temporary, "animation failed");
+					strcpy(temporary, "animation failed");
 					break;
 				case _dive_success:
-					csstrcpy(temporary, "success");
+					strcpy(temporary, "success");
 					break;
 				default:
-					csstrcpy(temporary, "<error>");
+					strcpy(temporary, "<error>");
 					break;
 				}
 
@@ -3242,7 +3242,7 @@ static void ai_debug_render_actor(
 				{
 					if (count > 0)
 					{
-						csstrcat(temporary, " ");
+						strcat(temporary, " ");
 					}
 
 					if (control_flag_bit<_unit_control_swap_weapons_bit)
@@ -3391,19 +3391,19 @@ static void ai_debug_render_actor(
 			switch (actor_debug_info->charge_decision)
 			{
 			case _charge_vehicle_success:
-				csstrcpy(temporary, "vehicle-success");
+				strcpy(temporary, "vehicle-success");
 				break;
 			case _charge_vehicle_not_driver:
-				csstrcpy(temporary, "vehicle-notdriver");
+				strcpy(temporary, "vehicle-notdriver");
 				break;
 			case _charge_melee_swarm_cant:
-				csstrcpy(temporary, "melee-swarmcan't");
+				strcpy(temporary, "melee-swarmcan't");
 				break;
 			case _charge_melee_inhibited:
-				csstrcpy(temporary, "melee-inhibited");
+				strcpy(temporary, "melee-inhibited");
 				break;
 			case _charge_melee_notarget:
-				csstrcpy(temporary, "melee-notarget");
+				strcpy(temporary, "melee-notarget");
 				break;
 			case _charge_melee_no_animation:
 				sprintf(temporary, "melee-noanimation (%sairborne)", actor_debug_info->field_198 ? "" : "not-");
@@ -3415,10 +3415,10 @@ static void ai_debug_render_actor(
 				sprintf(temporary, "melee-success (%sairborne)", actor_debug_info->field_198 ? "" : "not-" );
 				break;
 			case _charge_stalking_success:
-				csstrcpy(temporary, "stalking-success");
+				strcpy(temporary, "stalking-success");
 				break;
 			case _charge_close_success:
-				csstrcpy(temporary, "close-success");
+				strcpy(temporary, "close-success");
 				break;
 			default:
 				sprintf(temporary, "<unknown charge-setup decision %d>", actor_debug_info->charge_decision);
@@ -5107,13 +5107,13 @@ void ai_debug_change_selected_encounter(
 
 		if (TEST_FLAG(encounter_definition->flags, _encounter_3d_firing_positions_bit))
 		{
-			csstrcpy(bsp_string, "3d-positions");
+			strcpy(bsp_string, "3d-positions");
 		}
 		else
 		{
 			if (encounter_definition->runtime_structure_bsp_reference_index==NONE)
 			{
-				csstrcpy(bsp_index_string, "NONE");
+				strcpy(bsp_index_string, "NONE");
 			}
 			else
 			{

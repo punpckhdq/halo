@@ -177,7 +177,7 @@ void terminal_draw(
 			terminal_globals.input_state->prompt[TERMINAL_GETS_MAXIMUM_PROMPT_LENGTH] = '\0';
 			strcat(buffer, terminal_globals.input_state->prompt);
 			terminal_globals.input_state->result[TERMINAL_PRINTF_MAXIMUM_LINE_LENGTH] = '\0';
-			buff_len = csstrlen(buffer);
+			buff_len = strlen(buffer);
 
 			strcpy(&buffer[buff_len], terminal_globals.input_state->result);
 

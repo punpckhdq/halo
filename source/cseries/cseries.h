@@ -228,6 +228,7 @@ char *strnupr(char *string, int n);
 char *strnlwr(char *string, int n);
 char * __cdecl strupr(char *string);
 char * __cdecl strlwr(char *string);
+#ifdef DEBUG
 char *csprintf(char *buffer, char *format, ...);
 void display_assert(char *information, char *file, long line, boolean fatal);
 long csmemcmp(const void *p1, const void *p2, unsigned long size);
@@ -242,6 +243,7 @@ char *csstrtok(char *s1, const char *s2);
 unsigned long csstrlen(const char *s1);
 char *csstrcpy(char *destination, const char *source);
 void *csmemcpy(void *destination, const void *source, unsigned long size);
+#endif
 long csstrcasecmp(const char *s1, const char *s2);
 char *stristr(char const *haystack, char const *needle);
 unsigned long string_hash(char const *string);
@@ -285,18 +287,20 @@ unsigned long base_address_from_symbol_name(char const *name, struct debug_symbo
 
 /* ---------- macros */
 
-#define memcmp csmemcmp
-#define memmove csmemmove
-#define memset csmemset
-#define strcat csstrcat
-#define strcmp csstrcmp
-#define strncat csstrncat
-#define strncmp csstrncmp
-#define strncpy csstrncpy
-#define strtok csstrtok
-#define strlen csstrlen
-#define strcpy csstrcpy
-#define memcpy csmemcpy
+#ifdef DEBUG
+	#define memcmp csmemcmp
+	#define memmove csmemmove
+	#define memset csmemset
+	#define strcat csstrcat
+	#define strcmp csstrcmp
+	#define strncat csstrncat
+	#define strncmp csstrncmp
+	#define strncpy csstrncpy
+	#define strtok csstrtok
+	#define strlen csstrlen
+	#define strcpy csstrcpy
+	#define memcpy csmemcpy
+#endif
 
 #ifdef DEBUG
 	#define match_malloc(file, line, size) debug_malloc(size, FALSE, MATCH_FILE(file), MATCH_LINE(line))

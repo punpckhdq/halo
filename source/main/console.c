@@ -67,7 +67,7 @@ void console_initialize(
 	void)
 {
 	console_globals.input_state.color = console_color;
-	csstrcpy(console_globals.input_state.prompt, "halo( ");
+	strcpy(console_globals.input_state.prompt, "halo( ");
 	console_globals.input_state.result[0] = 0;
 	console_globals.newest_previous_command_index = NONE;
 	console_globals.previous_command_count = 0;
@@ -159,7 +159,7 @@ void console_warning(
 	terminal_printf(global_real_argb_red, "%s", buffer);
 	if (console_dump_to_file)
 	{
-		csstrncat(buffer, "\r\n", NUMBEROF(buffer));
+		strncat(buffer, "\r\n", NUMBEROF(buffer));
 		write_to_error_file(buffer, TRUE);
 	}
 
@@ -251,8 +251,8 @@ static void console_complete(
 
 			if (print_second_column)
 			{
-				csstrcat(print_buffer, matching_items[token_num]);
-				csstrcat(print_buffer, "|t");
+				strcat(print_buffer, matching_items[token_num]);
+				strcat(print_buffer, "|t");
 				if (token_num % 4 == 3)
 				{
 					console_printf(FALSE, print_buffer);

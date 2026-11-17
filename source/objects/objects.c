@@ -4049,7 +4049,7 @@ void objects_update(
 	memcpy(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count));
 	memcpy(active_cluster_bits, players_get_combined_pvs(), BIT_VECTOR_SIZE_IN_BYTES(cluster_count));
 
-	if (csmemcmp(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count)))
+	if (memcmp(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count)))
 	{
 		object_header = (struct object_header_datum *)object_header_data->data;
 		for (i = 0; i<object_header_data->count; ++object_header)
