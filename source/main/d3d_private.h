@@ -17,7 +17,7 @@ class CMiniport
 	byte __unknown00[0xA4];
 	BOOL m_InterruptsEnabled;
 	byte __unknownA8[0x13C];
-	void (*m_pVerticalBlankCallback)(unsigned long);
+	D3DCALLBACK m_pVerticalBlankCallback;
 	byte __unknown1E8[0x28];
 	volatile unsigned int m_VBlankFlipCount;
 	byte __unknown214[0x608];
