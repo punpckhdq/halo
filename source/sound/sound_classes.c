@@ -128,6 +128,7 @@ struct sound_class_datum *sound_class_data;
 
 /* ---------- public code */
 
+#ifdef DEBUG
 struct sound_class_definition *sound_class_get(
 	short class_index)
 {
@@ -140,6 +141,7 @@ struct sound_class_definition *sound_class_get(
 
 	return &sound_classes[class_index];
 }
+#endif
 
 void sound_classes_initialize(
 	void)

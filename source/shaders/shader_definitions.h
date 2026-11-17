@@ -884,7 +884,11 @@ struct shader_transparent_plasma
 
 /* ---------- prototypes/SHADER_DEFINITIONS.C */
 
+#ifdef DEBUG
 void *shader_get_and_verify_type(struct shader const *shader, short shader_type);
+#else
+#define shader_get_and_verify_type(shader, shader_type) ((void *)(shader))
+#endif
 
 /* ---------- globals */
 

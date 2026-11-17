@@ -460,6 +460,7 @@ boolean datastore_write(
 	return success;
 }
 
+#ifdef DEBUG
 struct file_reference_info *file_reference_get_info(
 	struct file_reference *reference)
 {
@@ -472,3 +473,4 @@ struct file_reference_info *file_reference_get_info(
 
 	return info;
 }
+#endif

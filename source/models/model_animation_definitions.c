@@ -251,6 +251,7 @@ void *animation_get_frame_data(
 	return data;
 }
 
+#ifdef DEBUG
 void *animation_get_frame_info(
 	struct animation const *animation,
 	short frame_index,
@@ -260,6 +261,7 @@ void *animation_get_frame_info(
 
 	return tag_data_get_pointer(&animation->frame_info, size*frame_index, size);
 }
+#endif
 
 char *animation_list_get_string(
 	struct animation_list *list,

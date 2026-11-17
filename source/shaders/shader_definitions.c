@@ -69,6 +69,7 @@ struct shader_effect global_shader_effect_alpha_blended =
 
 /* ---------- public code */
 
+#ifdef DEBUG
 void *shader_get_and_verify_type(
 	struct shader const *shader,
 	short shader_type)
@@ -78,5 +79,6 @@ void *shader_get_and_verify_type(
 
 	return (void *)shader;
 }
+#endif
 
 /* ---------- private code */

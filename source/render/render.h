@@ -184,7 +184,11 @@ void render_frame(struct render_window *windoze, short window_count, point2d con
 void render_frame_pregame(struct render_window const *window, struct bitmap_data *screenshot_bitmap);
 void render_frame_present(point2d const *screenshot_index, struct bitmap_data *bitmap);
 boolean render_location_visible(struct location *location);
+#ifdef DEBUG
 struct rendered_cluster *rendered_cluster_get(short rendered_cluster_index);
+#else
+#define rendered_cluster_get(rendered_cluster_index) (&render.rendered_clusters[rendered_cluster_index])
+#endif
 
 /* ---------- prototypes/RENDER_CONTRAILS.C */
 

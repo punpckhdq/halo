@@ -221,6 +221,7 @@ void scenario_unload(
 	return;
 }
 
+#ifdef DEBUG
 struct scenario *global_scenario_get(
 	void)
 {
@@ -266,6 +267,7 @@ struct game_globals *scenario_get_game_globals(
 
 	return global_game_globals;
 }
+#endif
 
 long global_structure_bsp_tag_index_get(
 	void)

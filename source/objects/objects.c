@@ -267,6 +267,7 @@ void *object_try_and_get_and_verify_type(
 	return result;
 }
 
+#ifdef DEBUG
 void *object_get_and_verify_type(
 	long object_index,
 	unsigned long valid_type_flags)
@@ -285,6 +286,7 @@ void *object_get_and_verify_type(
 
 	return result;
 }
+#endif
 
 void object_iterator_new(
 	struct object_iterator *iterator,

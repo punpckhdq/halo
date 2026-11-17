@@ -243,6 +243,7 @@ void tag_files_close(
 	cache_files_dispose();
 }
 
+#ifdef DEBUG
 void *tag_get(
 	long group_tag,
 	long tag_index)
@@ -269,6 +270,7 @@ void *tag_get(
 
 	return tag_instance->base_address;
 }
+#endif
 
 char *tag_get_name(
 	long tag_index)

@@ -164,7 +164,11 @@ static struct flags_definition name =	\
 static char *name##_strings[] =			\
 
 
-#define TAG_BLOCK_GET_ELEMENT(block_address, index, type) ((type *)tag_block_get_element_with_size((block_address), (index), sizeof(type)))
+#ifdef DEBUG
+	#define TAG_BLOCK_GET_ELEMENT(block_address, index, type) ((type *)tag_block_get_element_with_size((block_address), (index), sizeof(type)))
+#else
+	#define TAG_BLOCK_GET_ELEMENT(block_address, index, type) (((type *)(block_address)->address)+(index))
+#endif
 
 /* ---------- structures */
 
@@ -270,7 +274,11 @@ struct tag_group
 
 /* ---------- prototypes/TAG_GROUPS.C */
 
+#ifdef DEBUG
 long verify_tag_reference(struct tag_reference const *reference);
+#else
+#define verify_tag_reference(reference) ((reference)->index)
+#endif
 void *tag_data_get_pointer(struct tag_data const *data, long offset, long size);
 void *tag_block_get_element_with_size(struct tag_block const *block, long index, long element_size);
 long tag_block_add_element(struct tag_block *block);
@@ -285,7 +293,11 @@ boolean tag_data_resize(struct tag_data *data, long size);
 long tag_loaded(long group_tag, const char *name);
 long tag_load(unsigned long group_tag, char const *name, unsigned long flags);
 
+#ifdef DEBUG
 void *tag_get(long group_tag, long tag_index);
+#else
+#define tag_get(group_tag, tag_index) (global_tag_instances[DATUM_INDEX_TO_ABSOLUTE_INDEX(tag_index)].base_address)
+#endif
 void tag_block_delete_element(struct tag_block *block, long index);
 void tag_reference_set(struct tag_reference *reference, unsigned long group_tag, char const *name);
 

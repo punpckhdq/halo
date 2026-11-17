@@ -301,7 +301,11 @@ struct animation_list
 /* ---------- prototypes/MODEL_ANIMATION_DEFINITIONS.C */
 
 void *animation_get_frame_data(struct animation const *animation, short frame_index);
+#ifdef DEBUG
 void *animation_get_frame_info(struct animation const *animation, short frame_index, short size);
+#else
+#define animation_get_frame_info(animation, frame_index, size) tag_data_get_pointer(&(animation)->frame_info, (size)*(frame_index), (size))
+#endif
 char *animation_list_get_string(struct animation_list *list, short index);
 
 /* ---------- prototypes/MODEL_ANIMATIONS.C */

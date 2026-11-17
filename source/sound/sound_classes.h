@@ -109,7 +109,11 @@ struct sound_class_definition
 
 /* ---------- prototypes/SOUND_CLASSES.C */
 
+#ifdef DEBUG
 struct sound_class_definition *sound_class_get(short class_index);
+#else
+#define sound_class_get(class_index) (&sound_classes[class_index])
+#endif
 
 void sound_classes_initialize(void);
 void sound_classes_dispose(void);
