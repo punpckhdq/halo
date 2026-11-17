@@ -31,6 +31,11 @@ static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/tif_getimage.c,
  *
  * Read and return a packed RGBA image.
  */
+// halo decomp add
+#ifdef xbox
+#define	USE_PROTOTYPES	1
+#endif
+// halo decomp end
 #include "tiffio.h"
 #include "tiffcompat.h"
 #include "prototypes.h"
