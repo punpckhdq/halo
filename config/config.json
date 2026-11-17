@@ -376,7 +376,6 @@
 					"source/units/vehicles.h"
 				],
 				"defines": [
-					"DEBUG",
 					"xbox"
 				]
 			},

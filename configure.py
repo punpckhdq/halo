@@ -37,6 +37,7 @@ DEFAULT_VERSION = 0
 VERSIONS = [
     "2342",
     "2276_cachebeta",
+    "2276_cache",
 ]
 
 VERSION_CONFIGS: Dict[str, Dict[str, Any]] = {
@@ -50,10 +51,21 @@ VERSION_CONFIGS: Dict[str, Dict[str, Any]] = {
         "config": "cachebeta",
         "baserom": "cachebeta.xbe",
     },
+    "2276_cache": {
+        "build": 2276,
+        "config": "cache",
+        "baserom": "cache.xbe",
+    },
 }
 
 CONFIG_CFLAGS: Dict[str, List[str]] = {
     "cachebeta": ["/O2", "/Oy-"],
+    "cache": ["/O2", "/Gr"],
+}
+
+CONFIG_DEFINES: Dict[str, List[str]] = {
+    "cachebeta": ["DEBUG"],
+    "cache": [],
 }
 
 # arguments
@@ -156,6 +168,7 @@ sln.cflags = CONFIG_CFLAGS[version_config["config"]]
 sln.defines = [
     f"CONFIG_VERSION={version_config['build']}",
     f"VERSION_{args.version}",
+    *CONFIG_DEFINES[version_config["config"]],
 ]
 
 # Apply arguments
