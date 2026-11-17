@@ -98,11 +98,13 @@ static void (*disconnect_from_structure_bsp_procs[])(void) =
 	structure_decals_disconnect_from_structure_bsp,
 	decals_disconnect_from_structure_bsp
 };
+#ifdef DEBUG
 static struct memory_status scenario_load_memory_status = /* fake name */
 {
 	UNSIGNED_LONG_MAX,
 	0
 };
+#endif
 struct scenario_global_data *scenario_globals;
 struct game_globals *global_game_globals;
 struct bsp3d *global_bsp3d;
@@ -153,7 +155,9 @@ boolean scenario_load(
 {
 	boolean result = FALSE;
 
+#ifdef DEBUG
 	check_memory_status(&scenario_load_memory_status, "scenario_load");
+#endif
 	global_scenario_index = scenario_tags_load(name);
 
 	if (global_scenario_index != NONE)

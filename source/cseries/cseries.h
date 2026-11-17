@@ -252,6 +252,7 @@ void halt_and_catch_fire(void);
 
 /* ---------- prototypes/DEBUG_MEMORY.C */
 
+#ifdef DEBUG
 void debug_memory_manager_initialize(void);
 /*void debug_memory_manager_dispose(void);*/
 void check_memory_status(struct memory_status *status, char const *string);
@@ -262,6 +263,7 @@ void debug_check_memory(char const *source_file, long source_line);
 void debug_dump_memory_for_file(char const *source_file_substring);
 void debug_dump_memory_by_file(void);
 void debug_dump_memory(void);
+#endif
 
 /* ---------- prototypes/SORT.C */
 
@@ -296,10 +298,17 @@ unsigned long base_address_from_symbol_name(char const *name, struct debug_symbo
 #define strcpy csstrcpy
 #define memcpy csmemcpy
 
-#define match_malloc(file, line, size) debug_malloc(size, FALSE, MATCH_FILE(file), MATCH_LINE(line))
-#define match_calloc(file, line, count, size) debug_malloc((count)*(size), TRUE, MATCH_FILE(file), MATCH_LINE(line))
-#define match_free(file, line, ptr) debug_free(ptr, MATCH_FILE(file), MATCH_LINE(line))
-#define match_realloc(file, line, ptr, size) debug_realloc(ptr, size, MATCH_FILE(file), MATCH_LINE(line))
+#ifdef DEBUG
+	#define match_malloc(file, line, size) debug_malloc(size, FALSE, MATCH_FILE(file), MATCH_LINE(line))
+	#define match_calloc(file, line, count, size) debug_malloc((count)*(size), TRUE, MATCH_FILE(file), MATCH_LINE(line))
+	#define match_free(file, line, ptr) debug_free(ptr, MATCH_FILE(file), MATCH_LINE(line))
+	#define match_realloc(file, line, ptr, size) debug_realloc(ptr, size, MATCH_FILE(file), MATCH_LINE(line))
+#else
+	#define match_malloc(file, line, size) system_malloc(size)
+	#define match_calloc(file, line, count, size) system_calloc(count, size)
+	#define match_free(file, line, ptr) system_free(ptr)
+	#define match_realloc(file, line, ptr, size) system_realloc(ptr, size)
+#endif
 
 #define malloc(size) match_malloc(__FILE__, __LINE__, size)
 #define free(ptr) match_free(__FILE__, __LINE__, ptr)

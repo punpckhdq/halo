@@ -108,7 +108,9 @@ const real_rgb_color *global_real_rgb_violet = &global_real_argb_color_table[16]
 void cseries_initialize(
 	void)
 {
+#ifdef DEBUG
 	debug_memory_manager_initialize();
+#endif
 	profile_initialize();
 	profile_global_enable = FALSE;
 
@@ -118,7 +120,9 @@ void cseries_initialize(
 void cseries_dispose(
 	void)
 {
+#ifdef DEBUG
 	debug_dump_memory();
+#endif
 
 	return;
 };
