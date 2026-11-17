@@ -169,7 +169,9 @@ static void unit_melee_sound(long unit_index, long damage_definition_index, shor
 static long unit_get_weapon(struct unit_datum *unit, short index);
 static void unit_drop_item(long unit_index, long item_index);
 
+#ifdef DEBUG
 static void unit_verify_vectors(long unit_index, char const *debugstring);
+#endif
 static void unit_align_facing(long unit_index, real_vector2d const *alignment_vector);
 static void unit_flame_to_death(long unit_index);
 static void unit_running_blind(long unit_index, real_vector3d *run_vector);
@@ -464,6 +466,7 @@ static boolean unit_vectors_are_valid(
 	return result;
 }
 
+#ifdef DEBUG
 static void unit_verify_vectors(
 	long unit_index,
 	char const *debugstring)
@@ -590,6 +593,7 @@ static void unit_verify_vectors(
 	
 	return;
 }
+#endif
 
 boolean unit_update(
 	long unit_index)
@@ -603,7 +607,9 @@ boolean unit_update(
 
 	profile_enter(unit_update_section);
 
+#ifdef DEBUG
 	unit_verify_vectors(unit_index, "unit-update-begin");
+#endif
 
 	++unit->unit.timer;
 
@@ -980,7 +986,9 @@ boolean unit_update(
 			}
 		}
 
+#ifdef DEBUG
 		unit_verify_vectors(unit_index, "unit-update-prevectors");
+#endif
 
 		aim_scale = unit->unit.aiming_speed == _unit_aiming_speed_casual ? unit_definition->unit.casual_aiming_modifier : 1.f;
 		aiming_velocity_limit = (aim_scale * unit_definition->unit.aiming_velocity_maximum) / TICKS_PER_SECOND;
@@ -994,7 +1002,9 @@ boolean unit_update(
 			unit->unit.aiming_vector = unit->unit.desired_aiming_vector;
 			unit_clip_to_aiming_bounds(unit_index, &unit->unit.aiming_vector, TRUE);
 			unit->unit.aiming_velocity = *global_zero_vector3d;
+#ifdef DEBUG
 			unit_verify_vectors(unit_index, "unit-update-aim-set");
+#endif
 		}
 		else if (unit->unit.animation.aiming_with_euler_screen)
 		{
@@ -1014,7 +1024,9 @@ boolean unit_update(
 				aiming_velocity_limit,
 				aiming_angular_acceleration_limit);
 
+#ifdef DEBUG
 			unit_verify_vectors(unit_index, "unit-update-aim-euler");
+#endif
 		}
 		else
 		{
@@ -1024,7 +1036,9 @@ boolean unit_update(
 				&unit->unit.aiming_velocity,
 				aiming_velocity_limit,
 				aiming_angular_acceleration_limit);
+#ifdef DEBUG
 			unit_verify_vectors(unit_index, "unit-update-aim-3d");
+#endif
 		}
 
 		aiming_change = angle_between_vectors3d(&unit->unit.aiming_vector, &last_aiming_vector) / (unit_definition->unit.aiming_velocity_maximum / TICKS_PER_SECOND);
@@ -1043,7 +1057,9 @@ boolean unit_update(
 				unit_clip_to_aiming_bounds(unit_index, &unit->unit.looking_vector, FALSE);
 				unit->unit.looking_velocity = *global_zero_vector3d;
 
+#ifdef DEBUG
 				unit_verify_vectors(unit_index, "unit-update-look-set");
+#endif
 			}
 			else if (unit->unit.animation.looking_with_euler_screen)
 			{
@@ -1063,7 +1079,9 @@ boolean unit_update(
 					looking_velocity_limit,
 					looking_angular_acceleration_limit);
 
+#ifdef DEBUG
 				unit_verify_vectors(unit_index, "unit-update-look-euler");
+#endif
 			}
 			else
 			{
@@ -1073,13 +1091,17 @@ boolean unit_update(
 					&unit->unit.looking_velocity,
 					looking_velocity_limit,
 					looking_angular_acceleration_limit);
+#ifdef DEBUG
 				unit_verify_vectors(unit_index, "unit-update-look-3d");
+#endif
 			}
 		}
 
 		match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\units.c", 1076,&unit->unit.looking_vector);
 
+#ifdef DEBUG
 		unit_verify_vectors(unit_index, "unit-update-postvector");
+#endif
 
 		if (!jetpack_cheat_active)
 		{
@@ -1428,7 +1450,9 @@ boolean unit_update(
 		}
 	}
 
+#ifdef DEBUG
 	unit_verify_vectors(unit_index, "unit-update-end");
+#endif
 	
 	profile_exit(unit_update_section);
 	
@@ -1534,7 +1558,9 @@ void unit_control(
 	unit->unit.desired_facing_vector = control_data->facing_vector;
 	unit->unit.animation.desired_state = control_data->animation_state;
 
+#ifdef DEBUG
 	unit_verify_vectors(unit_index, "unit-control");
+#endif
 
 	return;
 }
@@ -1586,7 +1612,9 @@ void unit_preprocess_node_orientations(
 			node_orientations);
 	}
 
+#ifdef DEBUG
 	unit_verify_vectors(object_index, "unit-preprocess-nodes");
+#endif
 
 	unit->unit.animation.aiming_with_euler_screen = FALSE;
 	unit->unit.animation.looking_with_euler_screen = FALSE;

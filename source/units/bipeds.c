@@ -118,7 +118,9 @@ struct biped_physics
 /* ---------- prototypes */
 
 static long biped_find_ground_surface(long biped_index, real ground_distance, real_vector3d const *ground_direction, real_point3d *surface_point, real_vector3d *surface_normal);
+#ifdef DEBUG
 static void biped_verify_object_vectors(long biped_index, char const *debug_string);
+#endif
 static void biped_update_turning(long biped_index, struct unit_animation_update_data *animation);
 static void biped_update_moving(long biped_index, struct unit_animation_update_data *animation);
 static void biped_bumped_object(long biped_index, long object_index, real_vector3d const *old_velocity);
@@ -252,7 +254,9 @@ boolean biped_update(
 	{
 		profile_enter(biped_update_section);
 
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "pre-update");
+#endif
 
 		animation.state_desired = _unit_state_idle;
 		animation.crouching = FALSE;
@@ -344,14 +348,20 @@ boolean biped_update(
 			animation.state_desired = _unit_state_idle;
 			animation.crouching = TEST_FLAG(biped->unit.control_flags, _unit_control_crouch_modifier_bit);
 
+#ifdef DEBUG
 			biped_verify_object_vectors(biped_index, "pre-turning");
+#endif
 			if (!TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 			{
 				biped_update_turning(biped_index, &animation);
+#ifdef DEBUG
 				biped_verify_object_vectors(biped_index, "post-turning");
+#endif
 			}
 			biped_update_moving(biped_index, &animation);
+#ifdef DEBUG
 			biped_verify_object_vectors(biped_index, "post-moving");
+#endif
 
 			if (TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 			{
@@ -369,7 +379,9 @@ boolean biped_update(
 			{
 				biped_update_slipping(biped_index, &animation);
 			}
+#ifdef DEBUG
 			biped_verify_object_vectors(biped_index, "post-dead/air/land/slip");
+#endif
 
 			if (!biped->biped.player_melee_ticks)
 			{
@@ -421,7 +433,9 @@ boolean biped_update(
 			biped->object.idle_ticks = 0;
 		}
 
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-update");
+#endif
 
 		profile_exit(biped_update_section);
 	}
@@ -463,7 +477,9 @@ void biped_preprocess_node_orientations(
 	long biped_index,
 	struct real_orientation *node_orientations)
 {
+#ifdef DEBUG
 	biped_verify_object_vectors(biped_index, "preprocess-nodes");
+#endif
 
 	return;
 }
@@ -501,7 +517,9 @@ void biped_accelerate(
 
 	if (!TEST_FLAG(definition->unit.flags, _unit_is_special_bit))
 	{
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "pre-accel");
+#endif
 
 		if (!TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 		{
@@ -535,7 +553,9 @@ void biped_accelerate(
 			{
 				biped->object.forward = new_forward;
 				biped_snap_facing(biped_index);
+#ifdef DEBUG
 				biped_verify_object_vectors(biped_index, "post-accel");
+#endif
 			}
 		}
 	}
@@ -1076,6 +1096,7 @@ void biped_exit_seat_end(
 	return;
 }
 
+#ifdef DEBUG
 static void biped_verify_object_vectors(
 	long biped_index,
 	char const *debug_string)
@@ -1098,6 +1119,7 @@ static void biped_verify_object_vectors(
 
 	return;
 }
+#endif
 
 static void biped_update_turning(
 	long biped_index,
@@ -1190,7 +1212,9 @@ static void biped_update_turning(
 		}
 
 		biped_snap_facing(biped_index);
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-fly-turn");
+#endif
 	}
 	else
 	{
@@ -1296,7 +1320,9 @@ static void biped_update_turning(
 						normalize3d(&biped->object.forward);
 					}
 
+#ifdef DEBUG
 					biped_verify_object_vectors(biped_index, "post-moving-turn");
+#endif
 				}
 			}
 			else if (biped->biped.state == _biped_state_idle)
@@ -1312,7 +1338,9 @@ static void biped_update_turning(
 						animation->state_desired = turn_right ? _unit_state_turn_right : _unit_state_turn_left;
 					}
 
+#ifdef DEBUG
 					biped_verify_object_vectors(biped_index, "post-standing-turn");
+#endif
 				}
 			}
 		}
@@ -2083,7 +2111,9 @@ static void biped_update_dead(
 		{
 			biped_limp_noodle_relax_nodes_onto_environment(biped_index);
 		}
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-limp-noodle");
+#endif
 	}
 	else if (biped->biped.airborne_ticks < 3 || TEST_FLAG(definition->biped.flags, _biped_has_no_dying_airborne_bit))
 	{
@@ -2093,7 +2123,9 @@ static void biped_update_dead(
 			biped_snap_facing(biped_index);
 		}
 		animation->state_desired = _unit_state_dying;
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-dying");
+#endif
 	}
 	else
 	{
@@ -2102,7 +2134,9 @@ static void biped_update_dead(
 			biped_apply_rotation(biped_index);
 		}
 		animation->state_desired = _unit_state_dying_airborne;
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-dying-airborne");
+#endif
 	}
 	animation->crouching = FALSE;
 
@@ -2167,7 +2201,9 @@ static void biped_update_airborne(
 		animation->state_desired = _unit_state_airborne;
 	}
 
+#ifdef DEBUG
 	biped_verify_object_vectors(biped_index, "post-airborne");
+#endif
 
 	return;
 }
@@ -2241,7 +2277,9 @@ static void biped_update_landing(
 
 	animation->state_desired = biped->biped.landing == _biped_landing_hard ? _unit_state_land_hard : _unit_state_land_soft;
 
+#ifdef DEBUG
 	biped_verify_object_vectors(biped_index, "post-landing");
+#endif
 
 	return;
 }
@@ -2275,7 +2313,9 @@ static void biped_update_slipping(
 		}
 	}
 
+#ifdef DEBUG
 	biped_verify_object_vectors(biped_index, "post-slipping");
+#endif
 
 	return;
 }
@@ -3240,7 +3280,9 @@ static void biped_snap_facing(
 		scale_vector3d(&new_up, bank_cosine, &new_up);
 		normalize3d(&new_right);
 		point_from_line3d((real_point3d *)&new_up, &new_right, bank_sine, (real_point3d *)&biped->object.up);
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-bank-snapfacing");
+#endif
 	}
 	else if (TEST_FLAG(biped_definition->biped.flags, _biped_climbs_anything_bit) && !TEST_FLAG(biped->object.damage_flags, _object_dead_bit))
 	{
@@ -3304,13 +3346,17 @@ static void biped_snap_facing(
 			biped->object.forward = new_forward;
 			biped->object.up = new_up;
 		}
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-climb-snapfacing");
+#endif
 	}
 	else if (TEST_FLAG(biped->object.damage_flags, _object_dead_bit) && !TEST_FLAG(biped->biped.flags, _biped_airborne_bit))
 	{
 		real cosine_angle;
 
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "pre-deadplane-snapfacing");
+#endif
 		cosine_angle = dot_product3d(&biped->object.up, &biped->biped.ground_plane.n);
 		if (!(fabs(cosine_angle - 1.f) < _real_epsilon))
 		{
@@ -3330,7 +3376,9 @@ static void biped_snap_facing(
 				}
 			}
 		}
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-deadplane-snapfacing");
+#endif
 	}
 	else
 	{
@@ -3340,7 +3388,9 @@ static void biped_snap_facing(
 			biped->object.forward = *global_forward3d;
 		}
 		biped->object.up = *global_up3d;
+#ifdef DEBUG
 		biped_verify_object_vectors(biped_index, "post-normal-snapfacing");
+#endif
 	}
 
 	return;

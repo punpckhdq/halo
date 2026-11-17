@@ -33,7 +33,9 @@ struct path_test_pill2d_result
 /* ---------- prototypes */
 
 static void error_heap(short priority, struct obstacle_path *path);
+#ifdef DEBUG
 static boolean heap_verify(struct obstacle_path *path, char const *string);
+#endif
 static void heap_up(struct obstacle_path *path, short heap_index);
 static void heap_down(struct obstacle_path *path, short heap_index);
 static boolean heap_insert(struct obstacle_path *path, short step_index);
@@ -125,6 +127,7 @@ static void error_heap(
 	return;
 }
 
+#ifdef DEBUG
 static boolean heap_verify(
 	struct obstacle_path *path,
 	char const *string)
@@ -145,6 +148,7 @@ static boolean heap_verify(
 
 	return TRUE;
 }
+#endif
 
 static void heap_up(
 	struct obstacle_path *path,
@@ -215,7 +219,9 @@ static boolean heap_insert(
 	struct obstacle_path *path,
 	short step_index)
 {
+#ifdef DEBUG
 	heap_verify(path, "heap_insert input");
+#endif
 
 	if (path->heap_count < MAXIMUM_OBSTACLE_AVOIDANCE_STEPS)
 	{
@@ -224,7 +230,9 @@ static boolean heap_insert(
 
 		path->heap[heap_index] = step_index;
 		heap_up(path, heap_index);
+#ifdef DEBUG
 		heap_verify(path, "heap_insert output");
+#endif
 
 		return TRUE;
 	}
@@ -235,7 +243,9 @@ static boolean heap_insert(
 static short heap_remove(
 	struct obstacle_path *path)
 {
+#ifdef DEBUG
 	heap_verify(path, "heap_remove input");
+#endif
 
 	if (path->heap_count > 0)
 	{
@@ -244,7 +254,9 @@ static short heap_remove(
 		path->heap_count--;
 		path->heap[0] = path->heap[path->heap_count];
 		heap_down(path, 0);
+#ifdef DEBUG
 		heap_verify(path, "heap_remove output");
+#endif
 
 		return step_index;
 	}

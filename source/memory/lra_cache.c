@@ -54,8 +54,10 @@ static void lra_default_new_block_proc(void **reference, void *data);
 static void lra_default_purge_block_proc(void **reference);
 static void lra_purge_block(struct lra_cache *cache, struct lra_block *block);
 static long get_cache_block_offset(struct lra_cache *cache, struct lra_block *block);
+#ifdef DEBUG
 static void verify_lra_cache_block(struct lra_cache *cache, struct lra_block *block);
 static void verify_lra_cache(struct lra_cache *cache);
+#endif
 
 /* ---------- public code */
 
@@ -100,7 +102,9 @@ struct lra_cache *lra_new(
 			cache->allocated_base_address = allocated_base_address;
 			cache->purge_block_proc = purge_block_proc;
 			cache->new_block_proc = new_block_proc;
+#ifdef DEBUG
 			verify_lra_cache(cache);
+#endif
 		}
 		else
 		{
@@ -115,7 +119,9 @@ struct lra_cache *lra_new(
 void lra_dispose(
 	struct lra_cache *cache)
 {
+#ifdef DEBUG
 	verify_lra_cache(cache);
+#endif
 
 	if (cache->allocated_base_address)
 	{
@@ -130,7 +136,9 @@ void lra_dispose(
 void lra_flush(
 	struct lra_cache *cache)
 {
+#ifdef DEBUG
 	verify_lra_cache(cache);
+#endif
 
 	if (cache->last_block)
 	{
@@ -160,7 +168,9 @@ void *lra_allocate(
 {
 	void *result = NULL;
 
+#ifdef DEBUG
 	verify_lra_cache(cache);
+#endif
 
 	size += sizeof(struct lra_block);
 
@@ -182,7 +192,9 @@ void *lra_allocate(
 
 			if (next_block)
 			{
+#ifdef DEBUG
 				verify_lra_cache_block(cache, next_block);
+#endif
 			}
 
 			if (next_block && free_offset + size>get_cache_block_offset(cache, next_block))
@@ -249,8 +261,10 @@ void lra_free(
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 282, pointer);
 
+#ifdef DEBUG
 	verify_lra_cache(cache);
 	verify_lra_cache_block(cache, block);
+#endif
 	lra_purge_block(cache, block);
 
 	return;
@@ -264,8 +278,10 @@ void lra_lock(
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 298, pointer);
 
+#ifdef DEBUG
 	verify_lra_cache(cache);
 	verify_lra_cache_block(cache, block);
+#endif
 	SET_FLAG(block->signature, _lra_block_locked_bit, TRUE);
 
 	return;
@@ -279,8 +295,10 @@ void lra_unlock(
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lra_cache.c", 314, pointer);
 
+#ifdef DEBUG
 	verify_lra_cache(cache);
 	verify_lra_cache_block(cache, block);
+#endif
 	SET_FLAG(block->signature, _lra_block_locked_bit, FALSE);
 
 	return;
@@ -323,11 +341,14 @@ static long get_cache_block_offset(
 	struct lra_cache *cache,
 	struct lra_block *block)
 {
+#ifdef DEBUG
 	verify_lra_cache_block(cache, block);
+#endif
 
 	return (byte *)block - cache->base_address;
 }
 
+#ifdef DEBUG
 static void verify_lra_cache_block(
 	struct lra_cache *cache,
 	struct lra_block *block)
@@ -377,3 +398,4 @@ static void verify_lra_cache(
 
 	return;
 }
+#endif

@@ -62,7 +62,9 @@ struct lruv_cache_hole
 /* ---------- prototypes */
 
 static long lruv_cache_bytes_to_pages(struct lruv_cache *cache, long size_in_bytes);
+#ifdef DEBUG
 static void lruv_cache_verify(struct lruv_cache *cache, boolean verify_blocks);
+#endif
 
 /* ---------- public code */
 
@@ -120,7 +122,9 @@ void lruv_initialize(
 	cache->first_block_index = NONE;
 	cache->last_block_index = NONE;
 	cache->frame_index = 1;
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 
 	return;
 }
@@ -141,7 +145,9 @@ void lruv_update_function_pointers(
 void lruv_delete(
 	struct lruv_cache *cache)
 {
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 	data_dispose(cache->blocks);
 	memset(cache, 0, sizeof(*cache));
 	match_free("c:\\halo\\SOURCE\\memory\\lruv_cache.c", 163, cache);
@@ -152,7 +158,9 @@ void lruv_delete(
 void lruv_idle(
 	struct lruv_cache *cache)
 {
+#ifdef DEBUG
 	lruv_cache_verify(cache, FALSE);
+#endif
 	cache->frame_index++;
 
 	return;
@@ -163,7 +171,9 @@ void lruv_flush(
 {
 	struct data_iterator iterator;
 
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 
 	data_iterator_new(&iterator, cache->blocks);
 
@@ -380,7 +390,9 @@ long lruv_block_new(
 			block->first_page_index = best_hole.first_page_index;
 			block->page_count = desired_page_count;
 			block->last_used_frame_index = cache->frame_index;
+#ifdef DEBUG
 			lruv_cache_verify(cache, TRUE);
+#endif
 		}
 	}
 
@@ -393,7 +405,9 @@ void lruv_block_delete(
 {
 	struct lruv_cache_block *block = lruv_cache_block_get(cache, block_index);
 
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 
 	if (cache->delete_block_proc)
 	{
@@ -425,7 +439,9 @@ void lruv_block_delete(
 	}
 
 	datum_delete(cache->blocks, block_index);
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 
 	return;
 }
@@ -436,7 +452,9 @@ void lruv_block_touch(
 {
 	struct lruv_cache_block *block;
 
+#ifdef DEBUG
 	lruv_cache_verify(cache, FALSE);
+#endif
 	block = lruv_cache_block_get(cache, block_index);
 	block->last_used_frame_index = cache->frame_index;
 
@@ -449,7 +467,9 @@ unsigned long lruv_block_get_address(
 {
 	struct lruv_cache_block *block;
 
+#ifdef DEBUG
 	lruv_cache_verify(cache, FALSE);
+#endif
 	block = lruv_cache_block_get(cache, block_index);
 
 	return block->first_page_index<<cache->page_size_bits;
@@ -461,7 +481,9 @@ boolean lruv_block_touched(
 {
 	struct lruv_cache_block *block;
 
+#ifdef DEBUG
 	lruv_cache_verify(cache, FALSE);
+#endif
 	block = lruv_cache_block_get(cache, block_index);
 
 	return block->last_used_frame_index==cache->frame_index;
@@ -474,7 +496,9 @@ void lruv_cache_get_page_usage(
 	struct data_iterator iterator;
 	struct lruv_cache_block *block;
 
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 	memset(page_usage, 0, cache->page_count);
 
 	data_iterator_new(&iterator, cache->blocks);
@@ -512,7 +536,9 @@ void lruv_resize(
 	struct lruv_cache_block *block;
 
 	match_assert("c:\\halo\\SOURCE\\memory\\lruv_cache.c", 603, new_page_count>0);
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 
 	data_iterator_new(&iterator, cache->blocks);
 
@@ -547,7 +573,9 @@ void lruv_debug_to_file(
 {
 	FILE *file;
 
+#ifdef DEBUG
 	lruv_cache_verify(cache, TRUE);
+#endif
 
 	file = fopen(path, "w+");
 
@@ -635,13 +663,16 @@ static long lruv_cache_bytes_to_pages(
 	return page_count;
 }
 
+#ifdef DEBUG
 static void lruv_cache_verify(
 	struct lruv_cache *cache,
 	boolean verify_blocks)
 {
 	match_assert("c:\\halo\\SOURCE\\memory\\lruv_cache.c", 754, cache);
 	match_assert("c:\\halo\\SOURCE\\memory\\lruv_cache.c", 755, cache->signature==LRUV_CACHE_SIGNATURE);
+#ifdef DEBUG
 	data_verify(cache->blocks);
+#endif
 
 	if (verify_blocks)
 	{
@@ -683,3 +714,4 @@ static void lruv_cache_verify(
 
 	return;
 }
+#endif

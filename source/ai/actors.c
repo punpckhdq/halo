@@ -401,7 +401,9 @@ long actor_create_for_unit(
 				actor_attach_unit(actor_index, unit_index);
 			}
 
+#ifdef DEBUG
 			actor_verify_activation(actor_index);
+#endif
 		}
 	}
 
@@ -638,7 +640,9 @@ long actor_place(
 
 	if (actor_index!=NONE)
 	{
+#ifdef DEBUG
 		actor_verify_activation(actor_index);
+#endif
 	}
 
 	return actor_index;
@@ -725,7 +729,9 @@ short actors_spawn_from_unit(
 					}
 					else
 					{
+#ifdef DEBUG
 						actor_verify_activation(spawned_actor_index);
+#endif
 
 						if (velocity>0.f)
 						{
@@ -827,7 +833,9 @@ void actor_attach_unit(
 		unit_set_actively_controlled(unit_index, TRUE);
 	}
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	return;
 }
@@ -885,7 +893,9 @@ boolean actor_set_active(
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean success = TRUE;
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	if (actor->meta.active!=active)
 	{
@@ -929,7 +939,9 @@ boolean actor_set_active(
 		}
 	}
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	return success;
 }
@@ -1005,7 +1017,9 @@ void actor_set_dormant(
 		}
 	}
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	return;
 }
@@ -1062,6 +1076,7 @@ real_argb_color const *actor_activation_debug_color(
 	return color;
 }
 
+#ifdef DEBUG
 static void actor_verify_unit_activation(
 	long actor_index,
 	long unit_index,
@@ -1130,6 +1145,7 @@ void actor_verify_activation(
 
 	return;
 }
+#endif
 
 static void actor_swarm_component_setup(
 	long swarm_index,

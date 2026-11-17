@@ -84,7 +84,9 @@ struct decal_projection
 
 /* ---------- prototypes */
 
+#ifdef DEBUG
 static void decal_check(long decal_index, boolean layer_check);
+#endif
 static void decal_set_first_decal_index(short cluster_index, short layer, long decal_index);
 static real_rectangle2d *decal_sprite_get_bounds(struct decal_definition const *definition, short sequence_index, short sprite_index, real radius, real_rectangle2d *sprite_bounds, real_rectangle2d *extent);
 static void decal_update(long decal_index);
@@ -113,6 +115,7 @@ static real const SECONDS_PER_TICK = 1.f / TICKS_PER_SECOND;
 
 /* ---------- private code */
 
+#ifdef DEBUG
 static void decal_check(
 	long decal_index,
 	boolean layer_check)
@@ -139,6 +142,7 @@ static void decal_check(
 
 	return;
 }
+#endif
 
 static void decal_set_first_decal_index(
 	short cluster_index,
@@ -438,7 +442,9 @@ void decals_reconnect_to_structure_bsp(
 			match_assert("c:\\halo\\SOURCE\\effects\\decals.c", 660, decal->cluster_index==NONE);
 			match_assert("c:\\halo\\SOURCE\\effects\\decals.c", 661, decal->layer>=0 && decal->layer<NUMBER_OF_DECAL_LAYERS);
 
+#ifdef DEBUG
 			decal_check(decal_index, FALSE);
+#endif
 			scenario_location_from_point(&location, &decal->position);
 
 			if (location.cluster_index != NONE)
@@ -461,7 +467,9 @@ void decals_reconnect_to_structure_bsp(
 				decal_reinsert(decal_index, location.cluster_index, decal->layer);
 			}
 
+#ifdef DEBUG
 			decal_check(decal_index, FALSE);
+#endif
 			decal_index = next_decal_index;
 		}
 	}

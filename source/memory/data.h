@@ -60,7 +60,9 @@ long data_prev_index(struct data_array *data, long index);
 void *datum_try_and_get(struct data_array *data, long index);
 void *datum_get(struct data_array *data, long index);
 void data_compact(struct data_array *data);
+#ifdef DEBUG
 void data_verify(struct data_array *data);
+#endif
 
 /* ---------- prototypes/DATA_COMPRESS.C */
 

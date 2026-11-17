@@ -55,8 +55,10 @@ struct lru_cache
 static void lru_default_new_block_proc(void **reference, void *data);
 static void lru_default_purge_block_proc(void **reference);
 static long get_lru_cache_block_offset(struct lru_cache *cache, struct lru_block *block);
+#ifdef DEBUG
 static void verify_lru_cache_block(struct lru_cache *cache, struct lru_block *block);
 static void verify_lru_cache(struct lru_cache *cache);
+#endif
 
 /* ---------- public code */
 
@@ -115,7 +117,9 @@ struct lru_cache *lru_new(
 			cache->allocated_blocks = allocated_blocks;
 			strncpy(cache->name, name, sizeof(cache->name) - 1);
 			cache->name[sizeof(cache->name) - 1] = 0;
+#ifdef DEBUG
 			verify_lru_cache(cache);
+#endif
 		}
 		else
 		{
@@ -130,7 +134,9 @@ struct lru_cache *lru_new(
 void lru_dispose(
 	struct lru_cache *cache)
 {
+#ifdef DEBUG
 	verify_lru_cache(cache);
+#endif
 
 	if (cache->allocated_blocks)
 	{
@@ -148,11 +154,15 @@ void lru_flush(
 	long block_index;
 	struct lru_block *block;
 
+#ifdef DEBUG
 	verify_lru_cache(cache);
+#endif
 
 	for (block_index = 0, block = (struct lru_block *)cache->blocks; block_index<cache->used_block_count; block_index++, block = (struct lru_block *)offset_pointer(block, cache->block_size))
 	{
+#ifdef DEBUG
 		verify_lru_cache_block(cache, block);
+#endif
 		cache->purge_block_proc(block->reference);
 	}
 
@@ -164,7 +174,9 @@ void lru_flush(
 long lru_free_blocks(
 	struct lru_cache *cache)
 {
+#ifdef DEBUG
 	verify_lru_cache(cache);
+#endif
 
 	return cache->block_count - cache->used_block_count;
 }
@@ -176,7 +188,9 @@ void *lru_allocate(
 	struct lru_block *block = NULL;
 	void *result = NULL;
 
+#ifdef DEBUG
 	verify_lru_cache(cache);
+#endif
 
 	if (cache->used_block_count==cache->block_count)
 	{
@@ -186,7 +200,9 @@ void *lru_allocate(
 
 		for (block_index = 0, current_block = (struct lru_block *)cache->blocks; block_index<cache->used_block_count; block_index++, current_block = (struct lru_block *)offset_pointer(current_block, cache->block_size))
 		{
+#ifdef DEBUG
 			verify_lru_cache_block(cache, current_block);
+#endif
 
 			if (!TEST_FLAG(current_block->signature, _lru_block_locked_bit) && (!block || oldest_age>current_block->age))
 			{
@@ -225,8 +241,10 @@ void lru_lock(
 {
 	struct lru_block *block = lru_block_get(data);
 
+#ifdef DEBUG
 	verify_lru_cache(cache);
 	verify_lru_cache_block(cache, block);
+#endif
 	SET_FLAG(block->signature, _lru_block_locked_bit, TRUE);
 
 	return;
@@ -238,8 +256,10 @@ void lru_unlock(
 {
 	struct lru_block *block = lru_block_get(data);
 
+#ifdef DEBUG
 	verify_lru_cache(cache);
 	verify_lru_cache_block(cache, block);
+#endif
 	SET_FLAG(block->signature, _lru_block_locked_bit, FALSE);
 
 	return;
@@ -251,8 +271,10 @@ void lru_touch(
 {
 	struct lru_block *block = lru_block_get(data);
 
+#ifdef DEBUG
 	verify_lru_cache(cache);
 	verify_lru_cache_block(cache, block);
+#endif
 	block->age = cache->age++;
 
 	return;
@@ -281,11 +303,14 @@ static long get_lru_cache_block_offset(
 	struct lru_cache *cache,
 	struct lru_block *block)
 {
+#ifdef DEBUG
 	verify_lru_cache_block(cache, block);
+#endif
 
 	return (byte *)block - cache->blocks;
 }
 
+#ifdef DEBUG
 static void verify_lru_cache_block(
 	struct lru_cache *cache,
 	struct lru_block *block)
@@ -332,3 +357,4 @@ static void verify_lru_cache(
 
 	return;
 }
+#endif

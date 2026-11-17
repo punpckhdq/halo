@@ -352,6 +352,7 @@ void encounters_unit_died(
 	return;
 }
 
+#ifdef DEBUG
 void encounter_verify_firing_position_owner_actor_indices(
 	long encounter_index)
 {
@@ -379,6 +380,7 @@ void encounter_verify_firing_position_owner_actor_indices(
 
 	return;
 }
+#endif
 
 void encounter_build_firing_position_owner_actor_indices(
 	long encounter_index,
@@ -1940,7 +1942,9 @@ static void encounter_deactivate(
 			actor_set_active(iterator.index, FALSE);
 		}
 
+#ifdef DEBUG
 		actor_verify_activation(iterator.index);
+#endif
 	}
 
 	return;
@@ -2259,7 +2263,9 @@ static void encounters_test_activation(
 			}
 		}
 
+#ifdef DEBUG
 		actor_verify_activation(actor_index);
+#endif
 	}
 
 	data_iterator_new(&iterator, encounter_data);

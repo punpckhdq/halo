@@ -291,7 +291,9 @@ void object_iterator_new(
 	unsigned long type_flags,
 	byte flags)
 {
+#ifdef DEBUG
 	data_verify(object_header_data);
+#endif
 	iterator->signature = OBJECT_ITERATOR_SIGNATURE;
 	iterator->type_flags = type_flags;
 	iterator->flags = flags;
@@ -314,7 +316,9 @@ void *object_iterator_next(
 		iterator->signature==OBJECT_ITERATOR_SIGNATURE,
 		"uninitialized iterator passed to object_iterator_next()");
 
+#ifdef DEBUG
 	data_verify(object_header_data);
+#endif
 	
 	abs_index = iterator->absolute_index;
 

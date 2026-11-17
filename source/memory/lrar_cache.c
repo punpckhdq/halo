@@ -48,8 +48,10 @@ static void lrar_default_new_block_proc(short *reference, short block_index);
 static void lrar_default_purge_block_proc(short *reference);
 static void lrar_purge_block(struct lrar_cache *cache, struct lrar_block *block);
 static struct lrar_block *get_lrar_cache_block(struct lrar_cache *cache, short block_index);
+#ifdef DEBUG
 static void verify_lrar_cache_block(struct lrar_cache *cache, struct lrar_block *block);
 static void verify_lrar_cache(struct lrar_cache *cache);
+#endif
 
 /* ---------- public code */
 
@@ -104,7 +106,9 @@ struct lrar_cache *lrar_new(
 			cache->purge_block_proc = purge_block_proc;
 			cache->new_block_proc = new_block_proc;
 			cache->signature = LRAR_CACHE_SIGNATURE;
+#ifdef DEBUG
 			verify_lrar_cache(cache);
+#endif
 		}
 		else
 		{
@@ -119,7 +123,9 @@ struct lrar_cache *lrar_new(
 void lrar_dispose(
 	struct lrar_cache *cache)
 {
+#ifdef DEBUG
 	verify_lrar_cache(cache);
+#endif
 	match_free("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 152, cache->blocks);
 	match_free("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 153, cache);
 
@@ -131,7 +137,9 @@ void lrar_flush(
 {
 	short block_index;
 
+#ifdef DEBUG
 	verify_lrar_cache(cache);
+#endif
 
 	block_index = cache->first_block_index;
 
@@ -164,7 +172,9 @@ short lrar_allocate(
 {
 	short new_block_index = NONE;
 
+#ifdef DEBUG
 	verify_lrar_cache(cache);
+#endif
 
 	if (size & MASK(cache->alignment_bit))
 	{
@@ -283,7 +293,9 @@ void lrar_deallocate(
 	struct lrar_cache *cache,
 	short block_index)
 {
+#ifdef DEBUG
 	verify_lrar_cache(cache);
+#endif
 	lrar_purge_block(cache, get_lrar_cache_block(cache, block_index));
 
 	return;
@@ -327,15 +339,20 @@ static struct lrar_block *get_lrar_cache_block(
 {
 	struct lrar_block *block;
 
+#ifdef DEBUG
 	verify_lrar_cache(cache);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\lrar_cache.c", 366, block_index>=0 && block_index<cache->block_count);
 
 	block = &cache->blocks[block_index];
+#ifdef DEBUG
 	verify_lrar_cache_block(cache, block);
+#endif
 
 	return block;
 }
 
+#ifdef DEBUG
 static void verify_lrar_cache_block(
 	struct lrar_cache *cache,
 	struct lrar_block *block)
@@ -373,3 +390,4 @@ static void verify_lrar_cache(
 
 	return;
 }
+#endif

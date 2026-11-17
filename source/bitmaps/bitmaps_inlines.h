@@ -69,6 +69,7 @@ __inline pixel32 real_argb_color_to_pixel32(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		pixel32 verify;
 
@@ -104,6 +105,7 @@ __inline pixel32 real_argb_color_to_pixel32(
 
 		match_assert("..\\bitmaps\\bitmaps_inlines.h", 188, verify == result);
 	}
+#endif
 
 	return result;
 }

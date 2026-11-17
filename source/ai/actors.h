@@ -1309,7 +1309,9 @@ boolean actor_get_running_blind_vector(long actor_index, real_vector3d *run_vect
 
 boolean actor_set_active(long actor_index, boolean active);
 void actor_set_dormant(long actor_index, boolean dormant);
+#ifdef DEBUG
 void actor_verify_activation(long actor_index);
+#endif
 real actor_destination_tolerance(long actor_index);
 long actor_target_unit_index(long actor_index);
 void actor_find_pathfinding_location(long actor_index);

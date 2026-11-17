@@ -247,7 +247,9 @@ static void texture_page_verify(
 {
 	match_assert("c:\\halo\\SOURCE\\memory\\texture_page.c", 260, texture_page);
 	match_assert("c:\\halo\\SOURCE\\memory\\texture_page.c", 261, texture_page->width>0 && texture_page->height>0);
+#ifdef DEBUG
 	data_verify(texture_page->textures);
+#endif
 
 	return;
 }
