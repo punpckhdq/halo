@@ -133,6 +133,18 @@ enum
 
 enum
 {
+	_actor_stimulus_combat_none = 0,
+	_actor_stimulus_combat_friend,
+	_actor_stimulus_combat_body,
+	_actor_stimulus_combat_impact,
+	_actor_stimulus_combat_danger,
+	_actor_stimulus_combat_damage,
+	_actor_stimulus_combat_enemy,
+	NUMBER_OF_ACTOR_COMBAT_TRANSITION_TYPES,
+};
+
+enum
+{
 	_idle_look_none = 0,
 	_idle_look_noncombat,
 	_idle_look_guarding,
@@ -1036,7 +1048,13 @@ struct actor_debug_info
 	real_point3d burst_last_known_position;
 	real_point3d burst_tracked_position;
 	real_vector3d burst_lead_vector;
-	char __unknown1C[40];
+	long fire_alignment_time; /* fake name */
+	boolean fire_alignment_aligned; /* fake name */
+	boolean fire_alignment_ignored; /* fake name */
+	real_vector3d fire_alignment_weapon_vector; /* fake name */
+	real_vector3d fire_alignment_aim_vector; /* fake name */
+	real fire_alignment_threshold; /* fake name */
+	real fire_alignment_dot_product; /* fake name */
 	long last_projectile_aiming_time;
 	boolean aim_last_by_vector;
 	real_point3d aim_last_origin;
@@ -1329,8 +1347,8 @@ struct actor_variant_definition *actor_combat_get_firing_variant_definition(long
 struct weapon_definition *actor_get_weapon_definition(long actor_index);
 boolean actor_combat_currently_firing_burst(long actor_index);
 boolean actor_combat_plan_grenade_trajectory(long actor_index, short trajectory_type, real_point3d const *grenade_target, long grenade_target_prop_index, long grenade_ignore_object_index);
-void actor_combat_fire_wildly(long actor_index, short fire_ticks);
-void actor_combat_disable_bursts(long actor_index, short disable_timer);
+void actor_combat_fire_wildly(long actor_index, long fire_ticks);
+void actor_combat_disable_bursts(long actor_index, long disable_timer);
 boolean actor_combat_find_grenade_target(long actor_index, real_point3d *grenade_target, long *grenade_target_prop_index, long *grenade_ignore_object_index);
 boolean actor_combat_check_collateral_damage(long actor_index, real enemy_radius, real collateral_damage_radius, real_point3d const *target_point, short *enemy_count_reference);
 void actor_combat_update(long actor_index);
@@ -1343,6 +1361,7 @@ boolean actor_nearby_firing_positions(long actor_index, real_point3d *test_point
 short actor_change_firing_position(long actor_index, short firing_position_index, struct firing_position *firing_position, long previous_owner, struct path_state *cached_path_state, boolean cached_path_available);
 void actor_discard_firing_position(long actor_index, short firing_position_index, boolean temporary);
 void actor_clear_discarded_firing_positions(long actor_index, boolean clear_temporary_only);
+boolean actor_firing_position_discarded(long actor_index, short firing_position_index);
 short actor_select_firing_position(long actor_index, struct firing_position_evaluation_context *evaluation_context, struct firing_position *best_firing_position, long *current_owner, struct path_state *area_path_state, boolean *area_path_state_valid);
 
 /* ---------- prototypes/ACTOR_LOOKING.C */
@@ -1441,7 +1460,9 @@ void actor_stimulus_heard_shooting(long actor_index, long prop_index);
 void actor_stimulus_prop_just_killed(long actor_index, long prop_index);
 void actor_stimulus_enter_combat_friend_in_combat(long actor_index, long prop_index);
 void actor_stimulus_prop_fleeing(long actor_index, long prop_index);
-void actor_stimulus_prop_acknowledged(long actor_index, long prop_index, boolean had_orphan, boolean expected);
+void actor_stimulus_surprise(long actor_index, short surprise_level, long prop_index, real_vector3d const *surprise_vector);
+void actor_stimulus_prop_acknowledged(long actor_index, long prop_index, boolean reappearance, boolean expected);
+void actor_stimulus_suspicion(long actor_index, short suspicion_combat_status, long suspicion_timer);
 void actor_stimulus_noticed_danger_zone(long actor_index, short danger_type, short danger_hostility, long danger_object_index, real_point3d const *position);
 void actor_stimulus_prop_sighted(long actor_index, long prop_index, boolean new_enemy);
 void actor_stimulus_enter_combat_found_body(long actor_index, long prop_index);

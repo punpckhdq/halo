@@ -95,6 +95,23 @@ enum
 	NUMBER_OF_DEFENSIVE_CROUCH_TYPES,
 };
 
+enum
+{
+	_actor_special_fire_mode_none = 0,
+	_actor_special_fire_mode_overcharge,
+	_actor_special_fire_mode_secondary,
+	NUMBER_OF_ACTOR_SPECIAL_FIRE_MODES,
+};
+
+enum
+{
+	_actor_special_fire_situation_never = 0,
+	_actor_special_fire_situation_enemy_visible,
+	_actor_special_fire_situation_enemy_out_of_sight,
+	_actor_special_fire_situation_strafing,
+	NUMBER_OF_ACTOR_SPECIAL_FIRE_SITUATIONS,
+};
+
 
 /* ---------- macros */
 

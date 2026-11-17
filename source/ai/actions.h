@@ -529,6 +529,7 @@ void action_vehicle_begin(long actor_index);
 boolean action_vehicle_perform(long actor_index);
 void action_vehicle_update(long actor_index);
 void action_vehicle_control(long actor_index);
+void action_vehicle_flush_structure_indices(long actor_index);
 
 /* ---------- prototypes/ACTION_CHARGE.C */
 
