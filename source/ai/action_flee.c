@@ -204,12 +204,15 @@ boolean action_flee_perform(
 
 		if (actor->meta.timeslice && !state_data->done_fleeing)
 		{
-			if (state_data->flee_firing_position_index != NONE &&
-				!state_data->forced_flee_ticks &&
-				action_flee_current_position_exposed(actor_index, state_data))
+			if (state_data->flee_firing_position_index != NONE && !state_data->forced_flee_ticks)
 			{
-				state_data->flee_firing_position_index = NONE;
-				state_data->find_new_flee_position = TRUE;
+				boolean exposed = action_flee_current_position_exposed(actor_index, state_data);
+
+				if (exposed)
+				{
+					state_data->flee_firing_position_index = NONE;
+					state_data->find_new_flee_position = TRUE;
+				}
 			}
 
 			if (actor->input.vehicle_passenger)
@@ -554,7 +557,7 @@ static void action_flee_find_flee_position(
 		struct path_state state;
 		boolean dummy_straight_line;
 
-		if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged)
+		if (prop_acknowledged(prop))
 		{
 			actor_perception_find_prop_pathfinding_location(actor_index, flee_state_data->flee_prop_index);
 		}
@@ -631,7 +634,7 @@ static boolean action_flee_current_position_exposed(
 			prop->vehicle_index,
 			actor->input.vehicle_index != NONE);
 
-		if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged)
+		if (prop_acknowledged(prop))
 		{
 			exposed = line_of_sight == _ai_line_of_sight_clear;
 		}

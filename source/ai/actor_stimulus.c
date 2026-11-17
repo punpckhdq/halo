@@ -751,9 +751,6 @@ void actor_stimulus_noticed_danger_zone(
 
 	if (actor->meta.unit_index != NONE)
 	{
-		real_vector3d danger_vector;
-		real distance;
-
 		if (danger_type == _actor_danger_zone_projectile)
 		{
 			short hostility = NONE;
@@ -774,26 +771,31 @@ void actor_stimulus_noticed_danger_zone(
 			ai_communication_event(_ai_communication_grenade_sighted, actor->meta.unit_index, NONE, hostility, NONE, NONE, NULL);
 		}
 
-		vector_from_points3d(&actor->input.position.head_position, position, &danger_vector);
-		distance = normalize3d(&danger_vector);
-		if (actor->state.mode < _actor_mode_combat &&
-			distance < actor_definition->panic.surprise_distance &&
-			danger_type == _actor_danger_zone_projectile)
 		{
-			actor_stimulus_surprise(actor_index, _actor_surprise_unprepared_grenade, NONE, &danger_vector);
-		}
+			real_vector3d danger_vector;
+			real distance;
 
-		actor_stimulus_combat(
-			actor_index,
-			_actor_stimulus_combat_danger,
-			NULL,
-			NONE,
-			0.f,
-			0,
-			&danger_vector,
-			NONE,
-			0,
-			FALSE);
+			vector_from_points3d(&actor->input.position.head_position, position, &danger_vector);
+			distance = normalize3d(&danger_vector);
+			if (actor->state.mode < _actor_mode_combat &&
+				distance < actor_definition->panic.surprise_distance &&
+				danger_type == _actor_danger_zone_projectile)
+			{
+				actor_stimulus_surprise(actor_index, _actor_surprise_unprepared_grenade, NONE, &danger_vector);
+			}
+
+			actor_stimulus_combat(
+				actor_index,
+				_actor_stimulus_combat_danger,
+				NULL,
+				NONE,
+				0.f,
+				0,
+				&danger_vector,
+				NONE,
+				0,
+				FALSE);
+		}
 	}
 
 	return;

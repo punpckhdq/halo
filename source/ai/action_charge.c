@@ -127,10 +127,6 @@ boolean action_charge_setup(
 
 					if (unit_get_melee_range_and_ticks(actor->meta.unit_index, leaping, &melee_start_tick, &melee_start_range, &melee_end_tick, &melee_end_range))
 					{
-						real minimum_range;
-						real accept_radius;
-						boolean valid;
-
 						if (TEST_FLAG(actor_definition->flags, _actor_definition_suicidal_melee_attack_bit))
 						{
 							state_data->melee_ticks_until_dangerous = melee_end_tick;
@@ -156,27 +152,32 @@ boolean action_charge_setup(
 							state_data->melee_danger_range = melee_end_range - melee_start_range;
 						}
 
-						valid = FALSE;
-						state_data->acceptable_target_range = action_charge_find_target_range(actor_index, goal, state_data);
-
-						minimum_range = goal == _charge_goal_melee_leaping ? 4.f : 1.5f;
-						accept_radius = MAX(minimum_range, state_data->acceptable_target_range);
-
-						if (actor_move_to_prop(actor_index, actor->target.target_prop_index, accept_radius))
 						{
-							actor_move_keep_moving_past_destination(actor_index);
-							valid = action_charge_valid_melee_destination(actor_index, goal, &prop->center_of_mass);
-						}
+							real minimum_range;
+							real accept_radius;
+							boolean valid = FALSE;
 
-						if (valid)
-						{
-							success = TRUE;
-							actor_debug_info->charge_decision = _charge_melee_success;
-						}
-						else
-						{
-							actor_debug_info->charge_decision = _charge_melee_cannot_move;
-							actor_debug_info->field_194 = accept_radius;
+							state_data->acceptable_target_range = action_charge_find_target_range(actor_index, goal, state_data);
+
+							minimum_range = goal == _charge_goal_melee_leaping ? 4.f : 1.5f;
+							accept_radius = MAX(minimum_range, state_data->acceptable_target_range);
+
+							if (actor_move_to_prop(actor_index, actor->target.target_prop_index, accept_radius))
+							{
+								actor_move_keep_moving_past_destination(actor_index);
+								valid = action_charge_valid_melee_destination(actor_index, goal, &prop->center_of_mass);
+							}
+
+							if (valid)
+							{
+								success = TRUE;
+								actor_debug_info->charge_decision = _charge_melee_success;
+							}
+							else
+							{
+								actor_debug_info->charge_decision = _charge_melee_cannot_move;
+								actor_debug_info->field_194 = accept_radius;
+							}
 						}
 					}
 					else
@@ -434,7 +435,7 @@ boolean action_charge_perform(
 		{
 			struct unit_datum *unit = unit_get(actor->meta.unit_index);
 			real distance;
-			real_point3d target_position;
+			real_point3d estimated_target_position;
 			real lead_fraction;
 			real target_speed;
 
@@ -447,9 +448,9 @@ boolean action_charge_perform(
 				lead_fraction = (dot_product3d(&prop->velocity, &prop->actor_to_prop) / target_speed + 1.f) * 0.5f;
 			}
 
-			point_from_line3d(&prop->body_position, &prop->velocity, (real)state_data->melee_ticks_until_dangerous * lead_fraction, &target_position);
-			vector_from_points3d(&actor->input.position.body_position, &target_position, &vector_to_target);
-			point_from_line3d(&target_position, global_up3d, 0.05f, &actor_debug_info->field_13C);
+			point_from_line3d(&prop->body_position, &prop->velocity, (real)state_data->melee_ticks_until_dangerous * lead_fraction, &estimated_target_position);
+			vector_from_points3d(&actor->input.position.body_position, &estimated_target_position, &vector_to_target);
+			point_from_line3d(&estimated_target_position, global_up3d, 0.05f, &actor_debug_info->field_13C);
 
 			if (dot_product3d(&vector_to_target, &prop->actor_to_prop) < 0.f)
 			{
@@ -477,10 +478,10 @@ boolean action_charge_perform(
 				}
 				else if (distance < actor_definition->berserk.melee_leap_range_upper_bound)
 				{
-					real_vector3d aim_vector;
-					real horizontal_velocity;
-					real vertical_velocity;
 					real minimum_velocity = actor_definition->berserk.melee_leap_velocity * 0.3f;
+					real_vector3d aim_vector;
+					real vertical_velocity;
+					real horizontal_velocity;
 
 					if (projectile_aim_ballistic(
 						actor_definition->berserk.melee_leap_velocity,
@@ -525,10 +526,10 @@ boolean action_charge_perform(
 				}
 				else if (distance < actor_definition->berserk.suicide_sensing_distance)
 				{
-					real_vector3d relative_velocity;
+					real_vector3d target_relative_velocity;
 
-					subtract_vectors3d(&prop->velocity, &unit->object.translational_velocity, &relative_velocity);
-					if (dot_product3d(&relative_velocity, &vector_to_target) > 0.7f / TICKS_PER_SECOND)
+					subtract_vectors3d(&prop->velocity, &unit->object.translational_velocity, &target_relative_velocity);
+					if (dot_product3d(&target_relative_velocity, &vector_to_target) > 0.7f / TICKS_PER_SECOND)
 					{
 						melee_attack = TRUE;
 					}
@@ -718,7 +719,9 @@ static real action_charge_find_target_range(
 		}
 		else
 		{
-			target_range = MAX(target_range, actor_definition->berserk.melee_attack_range + state_data->melee_danger_range);
+			real range = state_data->melee_danger_range + actor_definition->berserk.melee_attack_range;
+
+			target_range = MAX(target_range, range);
 		}
 	}
 	else if (goal == _charge_goal_vehicle_strafing || goal == _charge_goal_close_range)

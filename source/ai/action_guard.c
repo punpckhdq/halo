@@ -469,7 +469,7 @@ void action_guard_update(
 		}
 	}
 
-	if (state_data->look_ticks > 0 && (!state_data->guard_look_until_reached_point || actor->control.path.at_destination))
+	if (state_data->look_ticks > 0 && !(state_data->guard_look_until_reached_point && !actor->control.path.at_destination))
 	{
 		state_data->look_ticks--;
 		if (state_data->look_ticks == 0)

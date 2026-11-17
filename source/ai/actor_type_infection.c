@@ -219,12 +219,11 @@ static void infection_swarm_control(
 			airborne = TEST_FLAG(biped->biped.flags, _biped_airborne_bit);
 		}
 
-		// choose a combat target for this swarm unit
 		if (actor->state.combat_status >= _actor_combat_status_definite)
 		{
 			real combat_range = actor_variant_definition->ranged_combat.combat_range_upper_bound;
-			struct prop_datum *best_prop = NULL;
 			long best_prop_index = NONE;
+			struct prop_datum *best_prop = NULL;
 			real best_weight = 0.0f;
 			real best_distance = 0.0f;
 			struct prop_iterator iterator;
@@ -243,7 +242,7 @@ static void infection_swarm_control(
 						weight = (1.0f - distance / combat_range) * 10.0f;
 					}
 
-					if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged)
+					if (prop_acknowledged(prop))
 					{
 						if (iterator.index == swarm_component->combat_target_prop_index)
 						{
@@ -273,7 +272,7 @@ static void infection_swarm_control(
 			swarm_component->combat_target_prop_index = best_prop_index;
 			if (best_prop_index != NONE &&
 				best_distance < actor_variant_definition->ranged_combat.melee_range &&
-				best_prop->state >= _prop_state_becoming_unacknowledged && best_prop->state <= _prop_state_acknowledged)
+				prop_acknowledged(best_prop))
 			{
 				in_melee_range = TRUE;
 			}
@@ -285,7 +284,6 @@ static void infection_swarm_control(
 			target_prop = NULL;
 		}
 
-		// decide how to move
 		switch (actor->state.action)
 		{
 			case _actor_action_sleep:
@@ -345,7 +343,6 @@ static void infection_swarm_control(
 				break;
 		}
 
-		// handle being attached to another unit
 		if (unit->object.parent_object_index == NONE)
 		{
 			swarm_component->attached_to_unit_ticks = 0;
@@ -371,7 +368,7 @@ static void infection_swarm_control(
 					parent_unit->unit.time_of_death + 75 < game_time_get() &&
 					target_prop &&
 					target_prop->unit_index != unit->object.parent_object_index &&
-					target_prop->state >= _prop_state_becoming_unacknowledged && target_prop->state <= _prop_state_acknowledged)
+					prop_acknowledged(target_prop))
 				{
 					detach = TRUE;
 				}
@@ -401,7 +398,10 @@ static void infection_swarm_control(
 			}
 		}
 
-		if (unit->object.parent_object_index == NONE)
+		if (unit->object.parent_object_index != NONE)
+		{
+		}
+		else
 		{
 			if (airborne)
 			{
@@ -551,12 +551,9 @@ static void infection_swarm_control(
 		if (moving)
 		{
 			real up_component;
-			real_vector3d left_vector;
-			real_vector3d final_left_vector;
 
 			normalize3d(&movement_vector);
 
-			// flatten the movement vector onto the plane we're standing on
 			up_component = dot_product3d(&movement_vector, &up_vector);
 			if (up_component > 0.9f)
 			{
@@ -569,6 +566,8 @@ static void infection_swarm_control(
 			}
 			else
 			{
+				real_vector3d left_vector;
+
 				cross_product3d(&up_vector, &movement_vector, &left_vector);
 				cross_product3d(&left_vector, &up_vector, &movement_vector);
 				if (normalize3d(&movement_vector) == 0.0f)
@@ -577,35 +576,34 @@ static void infection_swarm_control(
 				}
 			}
 
-			// steer away from the other members of the swarm
 			if (movement_type != _swarm_movement_obey)
 			{
+				real_point3d behind_point;
+				real_vector3d left_vector;
 				real avoidance = 0.0f;
-				real_point3d avoid_point;
-				real_vector3d avoid_left_vector;
 				short other_unit_index;
 
-				point_from_line3d(&swarm_component->position, &movement_vector, -0.2f, &avoid_point);
-				cross_product3d(&up_vector, &movement_vector, &avoid_left_vector);
+				point_from_line3d(&swarm_component->position, &movement_vector, -0.2f, &behind_point);
+				cross_product3d(&up_vector, &movement_vector, &left_vector);
 
 				for (other_unit_index = 0; other_unit_index < swarm->unit_count; other_unit_index++)
 				{
 					if (other_unit_index != swarm_unit_index)
 					{
 						struct swarm_component_datum *other_component = swarm_component_get(swarm->component_indices[other_unit_index]);
-						real_vector3d offset;
+						real_vector3d vector_to_friend;
 						real distance_squared;
 
-						vector_from_points3d(&avoid_point, &other_component->position, &offset);
-						distance_squared = magnitude_squared3d(&offset);
+						vector_from_points3d(&behind_point, &other_component->position, &vector_to_friend);
+						distance_squared = magnitude_squared3d(&vector_to_friend);
 						if (distance_squared < 0.8f * 0.8f)
 						{
 							real distance = square_root(distance_squared);
-							real forward_cosine = dot_product3d(&movement_vector, &offset) / distance;
+							real forward_cosine = dot_product3d(&movement_vector, &vector_to_friend) / distance;
 
 							if (forward_cosine > 0.5f)
 							{
-								if (dot_product3d(&offset, &avoid_left_vector) > 0.0f)
+								if (dot_product3d(&vector_to_friend, &left_vector) > 0.0f)
 								{
 									avoidance -= (forward_cosine - 0.5f) * 0.5f;
 								}
@@ -639,18 +637,21 @@ static void infection_swarm_control(
 				}
 			}
 
-			cross_product3d(&up_vector, &movement_vector, &final_left_vector);
-			if (normalize3d(&final_left_vector) == 0.0f)
 			{
-				movement_vector = unit->object.forward;
-			}
-			else
-			{
-				cross_product3d(&final_left_vector, &up_vector, &movement_vector);
+				real_vector3d left_vector;
+
+				cross_product3d(&up_vector, &movement_vector, &left_vector);
+				if (normalize3d(&left_vector) == 0.0f)
+				{
+					movement_vector = unit->object.forward;
+				}
+				else
+				{
+					cross_product3d(&left_vector, &up_vector, &movement_vector);
+				}
 			}
 		}
 
-		// decide whether to jump
 		if (TEST_FLAG(swarm_component->flags, _swarm_component_obey_desire_jump_bit))
 		{
 			jump = TRUE;
@@ -671,7 +672,6 @@ static void infection_swarm_control(
 			}
 		}
 
-		// melee attacks
 		if (TEST_FLAG(swarm_component->flags, _swarm_component_attached_to_unit_bit))
 		{
 			if (TEST_FLAG(swarm_component->flags, _swarm_component_attacking_in_melee_bit))
@@ -740,7 +740,10 @@ void infection_swarm_aim_jump(
 {
 	struct actor_datum *actor = actor_get(actor_index);
 
-	if (actor->meta.swarm_cache_index != NONE)
+	if (actor->meta.swarm_cache_index == NONE)
+	{
+	}
+	else
 	{
 		struct swarm_datum *swarm = swarm_get(actor->meta.swarm_cache_index);
 		short swarm_unit_index;

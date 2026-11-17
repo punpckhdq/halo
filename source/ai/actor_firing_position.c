@@ -169,159 +169,161 @@ static void pre_evaluator_global(
 
 	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
 	{
-		if (firing_position->valid)
+		if (!firing_position->valid)
 		{
-			if (actor_firing_position_discarded(actor_index, firing_position->original_index))
+			continue;
+		}
+
+		if (actor_firing_position_discarded(actor_index, firing_position->original_index))
+		{
+			if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_discarded))
 			{
-				if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_discarded))
+				firing_position->valid = FALSE;
+				continue;
+			}
+		}
+
+		if (evaluation_context->find_path_direction_from_actor)
+		{
+			real_vector3d danger_vector;
+
+			match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 186, (actor->danger_zone.danger_type > _actor_danger_zone_none) && actor->danger_zone.noticed_danger);
+
+			vector_from_points3d(&actor->danger_zone.position, &actor->danger_zone.predict_danger_position, &danger_vector);
+
+			if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &firing_position->definition->position) <
+				(actor->danger_zone.bounding_sphere_radius + 2.5f) * (actor->danger_zone.bounding_sphere_radius + 2.5f))
+			{
+				real distance_squared = point_to_line_distance_squared3d(&firing_position->definition->position, &actor->danger_zone.position, &danger_vector);
+				real evaluation = 0.0f;
+
+				if (distance_squared < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
 				{
-					firing_position->valid = FALSE;
-					continue;
+					if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_danger_zone_inside))
+					{
+						firing_position->valid = FALSE;
+						continue;
+					}
 				}
+				else if (distance_squared < (actor->danger_zone.danger_radius + 2.5f) * (actor->danger_zone.danger_radius + 2.5f))
+				{
+					real distance = square_root(distance_squared);
+
+					evaluation = (distance - actor->danger_zone.danger_radius) * 8.0f;
+				}
+				else
+				{
+					evaluation = 20.0f;
+				}
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_danger_zone_distance);
 			}
 
-			if (evaluation_context->find_path_direction_from_actor)
+			if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &actor->input.position.body_position) <
+				(actor->danger_zone.bounding_sphere_radius + 3.0f) * (actor->danger_zone.bounding_sphere_radius + 3.0f) &&
+				actor->danger_zone.current_distance_from_actor > actor->danger_zone.danger_radius)
 			{
-				real_vector3d danger_vector;
+				real distance_squared = point_to_line_distance_squared3d(&actor->input.position.body_position, &actor->danger_zone.position, &danger_vector);
 
-				match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 186, (actor->danger_zone.danger_type > _actor_danger_zone_none) && actor->danger_zone.noticed_danger);
-
-				vector_from_points3d(&actor->danger_zone.position, &actor->danger_zone.predict_danger_position, &danger_vector);
-
-				if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &firing_position->definition->position) <
-					(actor->danger_zone.bounding_sphere_radius + 2.5f) * (actor->danger_zone.bounding_sphere_radius + 2.5f))
+				if (distance_squared > actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
 				{
-					real distance_squared = point_to_line_distance_squared3d(&firing_position->definition->position, &actor->danger_zone.position, &danger_vector);
-					real evaluation = 0.0f;
+					real_vector3d actor_predicted_movement;
 
-					if (distance_squared < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
+					scale_vector3d(&firing_position->path_direction_from_actor, 3.0f, &actor_predicted_movement);
+					if (magnitude_squared3d(&actor_predicted_movement) > 0.0001f)
 					{
-						if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_danger_zone_inside))
+						if (vector_to_line_distance_squared3d(&actor->input.position.body_position, &actor_predicted_movement, &actor->danger_zone.position, &danger_vector) < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
 						{
-							firing_position->valid = FALSE;
-							continue;
-						}
-					}
-					else if (distance_squared < (actor->danger_zone.danger_radius + 2.5f) * (actor->danger_zone.danger_radius + 2.5f))
-					{
-						real distance = square_root(distance_squared);
-
-						evaluation = (distance - actor->danger_zone.danger_radius) * 8.0f;
-					}
-					else
-					{
-						evaluation = 20.0f;
-					}
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_danger_zone_distance);
-				}
-
-				if (distance_squared3d(&actor->danger_zone.bounding_sphere_center, &actor->input.position.body_position) <
-					(actor->danger_zone.bounding_sphere_radius + 3.0f) * (actor->danger_zone.bounding_sphere_radius + 3.0f) &&
-					actor->danger_zone.current_distance_from_actor > actor->danger_zone.danger_radius)
-				{
-					real distance_squared = point_to_line_distance_squared3d(&actor->input.position.body_position, &actor->danger_zone.position, &danger_vector);
-
-					if (distance_squared > actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
-					{
-						real_vector3d actor_predicted_movement;
-
-						scale_vector3d(&firing_position->path_direction_from_actor, 3.0f, &actor_predicted_movement);
-						if (magnitude_squared3d(&actor_predicted_movement) > 0.0001f)
-						{
-							if (vector_to_line_distance_squared3d(&actor->input.position.body_position, &actor_predicted_movement, &actor->danger_zone.position, &danger_vector) < actor->danger_zone.danger_radius * actor->danger_zone.danger_radius)
+							if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_danger_zone_crossed))
 							{
-								if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_danger_zone_crossed))
-								{
-									firing_position->valid = FALSE;
-									continue;
-								}
+								firing_position->valid = FALSE;
+								continue;
 							}
 						}
 					}
 				}
 			}
+		}
 
-			if (TEST_FLAG(evaluation_context->preferred_groups, firing_position->definition->group_index))
+		if (TEST_FLAG(evaluation_context->preferred_groups, firing_position->definition->group_index))
+		{
+			real evaluation = evaluation_context->preferred_weight;
+
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_distance_to_target);
+		}
+
+		if (evaluation_context->avoid_point_count > 0)
+		{
+			real closest_fraction = 1.0f;
+			short point_index;
+			real evaluation;
+
+			for (point_index = 0; point_index < evaluation_context->avoid_point_count; point_index++)
 			{
-				real evaluation = evaluation_context->preferred_weight;
+				real distance_squared = distance_squared3d(&firing_position->definition->position, &evaluation_context->avoid_point[point_index].point);
+				real fraction = distance_squared / (evaluation_context->avoid_point[point_index].radius * evaluation_context->avoid_point[point_index].radius);
 
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_pursuit_distance_to_target);
+				if (fraction < closest_fraction)
+				{
+					closest_fraction = fraction;
+				}
 			}
 
-			if (evaluation_context->avoid_point_count > 0)
+			evaluation = 10.0f;
+			if (closest_fraction < 1.0f)
 			{
-				real closest_fraction = 1.0f;
-				short point_index;
-				real evaluation;
-
-				for (point_index = 0; point_index < evaluation_context->avoid_point_count; point_index++)
-				{
-					real distance_squared = distance_squared3d(&firing_position->definition->position, &evaluation_context->avoid_point[point_index].point);
-					real fraction = distance_squared / (evaluation_context->avoid_point[point_index].radius * evaluation_context->avoid_point[point_index].radius);
-
-					if (fraction < closest_fraction)
-					{
-						closest_fraction = fraction;
-					}
-				}
-
-				evaluation = 10.0f;
-				if (closest_fraction < 1.0f)
-				{
-					evaluation = square_root(closest_fraction) * 10.0f;
-				}
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_hide_occluded);
+				evaluation = square_root(closest_fraction) * 10.0f;
 			}
+
+			firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_hide_occluded);
 		}
 	}
+}
 
-	if (evaluation_context->directional_driving && actor->input.vehicle_index != NONE)
+if (evaluation_context->directional_driving && actor->input.vehicle_index != NONE)
+{
+	struct vehicle_datum *vehicle = vehicle_get(actor->input.vehicle_index);
+	real_point3d vehicle_position;
+
+	object_get_origin(actor->input.vehicle_index, &vehicle_position);
+
+	for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
 	{
-		struct vehicle_datum *vehicle = vehicle_get(actor->input.vehicle_index);
-		real_point3d vehicle_position;
-
-		object_get_origin(actor->input.vehicle_index, &vehicle_position);
-
-		for (index = 0, firing_position = firing_positions; index < firing_position_count; index++, firing_position++)
+		if (firing_position->valid)
 		{
-			if (firing_position->valid)
+			real_vector3d vector_to_point;
+			real distance_squared;
+
+			vector_from_points3d(&vehicle_position, &firing_position->definition->position, &vector_to_point);
+			distance_squared = magnitude_squared3d(&vector_to_point);
+
+			if (!realcmp(distance_squared, 0.0f) && distance_squared < 900.0f)
 			{
-				real_vector3d vector;
-				real distance_squared;
+				real dot = dot_product3d(&vector_to_point, &vehicle->object.forward) / square_root(distance_squared);
+				real evaluation;
 
-				vector_from_points3d(&vehicle_position, &firing_position->definition->position, &vector);
-				distance_squared = magnitude_squared3d(&vector);
-
-				if (!realcmp(distance_squared, 0.0f) && distance_squared < 900.0f)
+				if ((evaluation_context->directional_driving_cannot_stop || magnitude_squared3d(&vehicle->object.translational_velocity) > (1.0f / 144.0f)) &&
+					distance_squared < 64.0f &&
+					dot < _sqrt2 / 2.f)
 				{
-					real dot = dot_product3d(&vector, &vehicle->object.forward) / square_root(distance_squared);
-					real evaluation;
-
-					if ((evaluation_context->directional_driving_cannot_stop || magnitude_squared3d(&vehicle->object.translational_velocity) > (1.0f / 144.0f)) &&
-						distance_squared < 64.0f &&
-						dot < _sqrt2 / 2.f)
+					if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_panic_approach_to_target))
 					{
-						if (firing_position_reject_debug(evaluation_context, firing_position, _firing_position_evaluation_panic_approach_to_target))
-						{
-							firing_position->valid = FALSE;
-							continue;
-						}
+						firing_position->valid = FALSE;
+						continue;
 					}
-
-					evaluation = 15.0f;
-					if (dot < 0.0f)
-					{
-						evaluation = 15.0f - dot * -15.0f;
-					}
-					else if (dot > _cosine30)
-					{
-						evaluation = (dot - _cosine30) * (15.0f / (1.0f - _cosine30)) + 15.0f;
-					}
-
-					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_vehicle_direction);
 				}
+
+				evaluation = 15.0f;
+				if (dot < 0.0f)
+				{
+					evaluation = 15.0f - dot * -15.0f;
+				}
+				else if (dot > _cosine30)
+				{
+					evaluation = (dot - _cosine30) * (15.0f / (1.0f - _cosine30)) + 15.0f;
+				}
+
+				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_vehicle_direction);
 			}
 		}
 	}
@@ -598,25 +600,24 @@ static void pre_evaluator_attack(
 			{
 				real closest_distance_squared = REAL_MAX;
 				short vector_index;
-				real evaluation;
 
 				for (vector_index = 0; vector_index < evaluation_context->attack_vector_count; vector_index++)
 				{
 					if (evaluation_context->attack_vectors[vector_index].type == _firing_position_attack_vector_dangerous_enemy)
 					{
-						real_vector3d vector;
+						real_vector3d vector_to_firing_position;
 						real dot;
 
 						match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 657, &evaluation_context->attack_vectors[vector_index].vector);
 
-						vector_from_points3d(&evaluation_context->attack_vectors[vector_index].point, &firing_position->definition->position, &vector);
-						dot = dot_product3d(&vector, &evaluation_context->attack_vectors[vector_index].vector);
+						vector_from_points3d(&evaluation_context->attack_vectors[vector_index].point, &firing_position->definition->position, &vector_to_firing_position);
+						dot = dot_product3d(&vector_to_firing_position, &evaluation_context->attack_vectors[vector_index].vector);
 						if (dot > 0.0f)
 						{
 							real distance_squared;
 
-							vector_from_line3d(&vector, &evaluation_context->attack_vectors[vector_index].vector, -dot, &vector);
-							distance_squared = magnitude_squared3d(&vector);
+							vector_from_line3d(&vector_to_firing_position, &evaluation_context->attack_vectors[vector_index].vector, -dot, &vector_to_firing_position);
+							distance_squared = magnitude_squared3d(&vector_to_firing_position);
 							if (distance_squared < closest_distance_squared)
 							{
 								closest_distance_squared = distance_squared;
@@ -625,15 +626,18 @@ static void pre_evaluator_attack(
 					}
 				}
 
-				evaluation = 6.0f;
-				if (closest_distance_squared < 12.25f)
 				{
-					real distance = square_root(closest_distance_squared);
+					real evaluation = 6.0f;
 
-					evaluation = distance * 0.25f;
+					if (closest_distance_squared < 12.25f)
+					{
+						real distance = square_root(closest_distance_squared);
+
+						evaluation = distance * 0.25f;
+					}
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_attack_no_line_of_sight);
 				}
-
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_attack_no_line_of_sight);
 			}
 		}
 	}
@@ -693,7 +697,6 @@ static void pre_evaluator_combatmove(
 			if (firing_position->valid)
 			{
 				short vector_index;
-				real evaluation;
 
 				for (vector_index = 0; vector_index < evaluation_context->attack_vector_count; vector_index++)
 				{
@@ -712,28 +715,32 @@ static void pre_evaluator_combatmove(
 					}
 				}
 
-				if (player_blockage >= 2)
 				{
-					evaluation = 0.0f;
-				}
-				else if (player_blockage >= 1)
-				{
-					evaluation = 1.5f;
-				}
-				else if (friend_blockage >= 2)
-				{
-					evaluation = 6.0f;
-				}
-				else if (friend_blockage >= 1)
-				{
-					evaluation = 8.5f;
-				}
-				else
-				{
-					evaluation = 10.0f;
-				}
+					real evaluation;
 
-				firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_panic_distance_to_target);
+					if (player_blockage >= 2)
+					{
+						evaluation = 0.0f;
+					}
+					else if (player_blockage >= 1)
+					{
+						evaluation = 1.5f;
+					}
+					else if (friend_blockage >= 2)
+					{
+						evaluation = 6.0f;
+					}
+					else if (friend_blockage >= 1)
+					{
+						evaluation = 8.5f;
+					}
+					else
+					{
+						evaluation = 10.0f;
+					}
+
+					firing_position_store_evaluation_debug(evaluation_context, firing_position, evaluation, _firing_position_evaluation_panic_distance_to_target);
+				}
 			}
 		}
 	}
@@ -1385,9 +1392,6 @@ short actor_select_firing_position(
 		struct firing_position firing_positions[MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER];
 		short firing_position_count = 0;
 		boolean any_position_in_range = FALSE;
-		boolean avoid_attack_vectors;
-		boolean too_many_firing_positions_reported;
-		short index;
 
 		match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1552, !actor->input.vehicle_passenger);
 
@@ -1440,7 +1444,7 @@ short actor_select_firing_position(
 				struct prop_datum *prop = prop_get(prop_index);
 
 				if (evaluation_context->find_path_distance_to_target &&
-					prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged)
+					prop_acknowledged(prop))
 				{
 					actor_perception_find_prop_pathfinding_location(actor_index, prop_index);
 				}
@@ -1465,7 +1469,7 @@ short actor_select_firing_position(
 					evaluation_context->target_line_of_sight_position = prop->head_position;
 				}
 
-				if (prop->state >= _prop_state_uninspected_orphan && prop->state <= _prop_state_inspected_orphan)
+				if (prop_orphaned(prop))
 				{
 					evaluation_context->target_has_hint_vector = TRUE;
 					evaluation_context->target_hint_vector = prop->orphan_hint_vector;
@@ -1542,7 +1546,7 @@ short actor_select_firing_position(
 					prop_iterator_new(&iterator, actor_index);
 					while (evaluation_context->avoid_point_count < MAXIMUM_FIRING_POSITION_AVOID_POINTS && (prop = prop_iterator_next(&iterator)))
 					{
-						if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged &&
+						if (prop_acknowledged(prop) &&
 							!prop->enemy && !prop->dead && !prop->player)
 						{
 							evaluation_context->avoid_point[evaluation_context->avoid_point_count].point = prop->body_position;
@@ -1558,78 +1562,81 @@ short actor_select_firing_position(
 		evaluation_context->friend_attack_vector_count = 0;
 		evaluation_context->dangerous_enemy_attack_vector_count = 0;
 
-		avoid_attack_vectors = FALSE;
-		if (TEST_FLAG(actor_definition->flags, _actor_definition_avoid_friend_line_of_fire_bit) && actor->state.combat_status >= _actor_combat_status_definite)
 		{
-			if (actor->situation.area_friends > 0)
+			boolean avoid_attack_vectors = FALSE;
+
+			if (TEST_FLAG(actor_definition->flags, _actor_definition_avoid_friend_line_of_fire_bit) && actor->state.combat_status >= _actor_combat_status_definite)
+			{
+				if (actor->situation.area_friends > 0)
+				{
+					avoid_attack_vectors = TRUE;
+				}
+			}
+			if (TEST_FLAG(actor_definition->flags2, _actor_definition_flags2_avoid_all_enemy_attack_vectors_bit) && actor->state.combat_status >= _actor_combat_status_definite)
 			{
 				avoid_attack_vectors = TRUE;
 			}
-		}
-		if (TEST_FLAG(actor_definition->flags2, _actor_definition_flags2_avoid_all_enemy_attack_vectors_bit) && actor->state.combat_status >= _actor_combat_status_definite)
-		{
-			avoid_attack_vectors = TRUE;
-		}
 
-		switch (evaluation_context->evaluation_mode)
-		{
-		case _firing_point_evaluation_mode_fight:
-		case _firing_point_evaluation_mode_cover:
-		case _firing_point_evaluation_mode_uncover:
-		case _firing_point_evaluation_mode_avoid:
-			if (avoid_attack_vectors)
+			switch (evaluation_context->evaluation_mode)
 			{
-				struct prop_iterator iterator;
-				struct prop_datum *prop;
-
-				prop_iterator_new(&iterator, actor_index);
-				while (evaluation_context->attack_vector_count < MAXIMUM_FIRING_POSITION_ATTACK_VECTORS && (prop = prop_iterator_next(&iterator)))
+			case _firing_point_evaluation_mode_fight:
+			case _firing_point_evaluation_mode_cover:
+			case _firing_point_evaluation_mode_uncover:
+			case _firing_point_evaluation_mode_avoid:
+				if (avoid_attack_vectors)
 				{
-					if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged && !prop->dead)
+					struct prop_iterator iterator;
+					struct prop_datum *prop;
+
+					prop_iterator_new(&iterator, actor_index);
+					while (evaluation_context->attack_vector_count < MAXIMUM_FIRING_POSITION_ATTACK_VECTORS && (prop = prop_iterator_next(&iterator)))
 					{
-						real_vector3d attack_vector;
-
-						if (!prop->enemy &&
-							(prop->player || prop->vehicle_index == NONE) &&
-							actor_perception_friend_prop_is_attacking(actor_index, iterator.index, &attack_vector))
+						if (prop_acknowledged(prop) && !prop->dead)
 						{
-							evaluation_context->attack_vectors[evaluation_context->attack_vector_count].type = prop->player ? _firing_position_attack_vector_friend_player : _firing_position_attack_vector_friend;
-							evaluation_context->attack_vectors[evaluation_context->attack_vector_count].point = prop->body_position;
-							evaluation_context->attack_vectors[evaluation_context->attack_vector_count++].vector = attack_vector;
-							evaluation_context->friend_attack_vector_count++;
-						}
+							real_vector3d attack_vector;
 
-						if (prop->enemy)
-						{
-							boolean avoid_enemy_attack_vector = TEST_FLAG(actor_definition->flags2, _actor_definition_flags2_avoid_all_enemy_attack_vectors_bit);
-
-							if (prop->unopposable_enemy)
+							if (!prop->enemy &&
+								(prop->player || prop->vehicle_index == NONE) &&
+								actor_perception_friend_prop_is_attacking(actor_index, iterator.index, &attack_vector))
 							{
-								if (prop->player)
-								{
-									avoid_enemy_attack_vector = TRUE;
-								}
-								else if (prop->shooting)
-								{
-									avoid_enemy_attack_vector = TRUE;
-								}
+								evaluation_context->attack_vectors[evaluation_context->attack_vector_count].type = prop->player ? _firing_position_attack_vector_friend_player : _firing_position_attack_vector_friend;
+								evaluation_context->attack_vectors[evaluation_context->attack_vector_count].point = prop->body_position;
+								evaluation_context->attack_vectors[evaluation_context->attack_vector_count++].vector = attack_vector;
+								evaluation_context->friend_attack_vector_count++;
 							}
 
-							if (avoid_enemy_attack_vector)
+							if (prop->enemy)
 							{
-								long unit_index = prop->vehicle_index != NONE ? prop->vehicle_index : prop->unit_index;
+								boolean avoid_enemy_attack_vector = TEST_FLAG(actor_definition->flags2, _actor_definition_flags2_avoid_all_enemy_attack_vectors_bit);
 
-								evaluation_context->attack_vectors[evaluation_context->attack_vector_count].type = _firing_position_attack_vector_dangerous_enemy;
-								evaluation_context->attack_vectors[evaluation_context->attack_vector_count].point = prop->body_position;
-								unit_get_aiming_vector(unit_index, &evaluation_context->attack_vectors[evaluation_context->attack_vector_count].vector);
-								evaluation_context->attack_vector_count++;
-								evaluation_context->dangerous_enemy_attack_vector_count++;
+								if (prop->unopposable_enemy)
+								{
+									if (prop->player)
+									{
+										avoid_enemy_attack_vector = TRUE;
+									}
+									else if (prop->shooting)
+									{
+										avoid_enemy_attack_vector = TRUE;
+									}
+								}
+
+								if (avoid_enemy_attack_vector)
+								{
+									long unit_index = prop->vehicle_index != NONE ? prop->vehicle_index : prop->unit_index;
+
+									evaluation_context->attack_vectors[evaluation_context->attack_vector_count].type = _firing_position_attack_vector_dangerous_enemy;
+									evaluation_context->attack_vectors[evaluation_context->attack_vector_count].point = prop->body_position;
+									unit_get_aiming_vector(unit_index, &evaluation_context->attack_vectors[evaluation_context->attack_vector_count].vector);
+									evaluation_context->attack_vector_count++;
+									evaluation_context->dangerous_enemy_attack_vector_count++;
+								}
 							}
 						}
 					}
 				}
+				break;
 			}
-			break;
 		}
 
 		evaluation_context->skipped_count = 0;
@@ -1648,86 +1655,90 @@ short actor_select_firing_position(
 		match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1830, area_path_state_valid);
 		*area_path_state_valid = FALSE;
 
-		too_many_firing_positions_reported = FALSE;
-		for (index = 0; index < encounter_definition->firing_positions.count; index++)
 		{
-			struct firing_position_definition *firing_position_definition = TAG_BLOCK_GET_ELEMENT(
-				&encounter_definition->firing_positions,
-				index,
-				struct firing_position_definition);
+			short index;
+			boolean too_many_firing_positions_reported = FALSE;
 
-			if (debug)
+			for (index = 0; index < encounter_definition->firing_positions.count; index++)
 			{
-				ai_debug.firing_positions[index].evaluated = FALSE;
-			}
+				struct firing_position_definition *firing_position_definition = TAG_BLOCK_GET_ELEMENT(
+					&encounter_definition->firing_positions,
+					index,
+					struct firing_position_definition);
 
-			if (!TEST_FLAG(evaluation_context->allowed_position_mask, firing_position_definition->group_index))
-			{
-				continue;
-			}
-
-			if (actor->meta.encounter_index == ai_debug.selected_encounter_index)
-			{
-				ai_debug.firing_positions[index].pursuit_position = evaluation_context->evaluation_mode == _firing_point_evaluation_mode_pursue;
-			}
-
-			if (!evaluation_context->flying && firing_position_definition->surface_index == NONE)
-			{
-				continue;
-			}
-
-			if (evaluation_context->evaluation_mode == _firing_point_evaluation_mode_pursue &&
-				!actor_nearby_firing_positions(actor_index, &firing_position_definition->position, firing_position_definition->surface_index, _firing_position_group_when_searching))
-			{
-				continue;
-			}
-
-			if (firing_position_owner_actor_indices[index] != NONE)
-			{
-				struct actor_datum *owner_actor;
-				real owner_distance;
-				real distance;
-
-				if (evaluation_context->evaluation_mode == _firing_point_evaluation_mode_guard &&
-					evaluation_context->avoid_point_count < MAXIMUM_FIRING_POSITION_AVOID_POINTS)
+				if (debug)
 				{
-					evaluation_context->avoid_point[evaluation_context->avoid_point_count].point = firing_position_definition->position;
-					evaluation_context->avoid_point[evaluation_context->avoid_point_count++].radius = 4.0f;
+					ai_debug.firing_positions[index].evaluated = FALSE;
 				}
 
-				owner_actor = actor_get(firing_position_owner_actor_indices[index]);
-				owner_distance = distance3d(&owner_actor->input.position.body_position, &firing_position_definition->position);
-				distance = distance3d(&actor->input.position.body_position, &firing_position_definition->position);
-				if (owner_distance < 1.0f || owner_distance < 2.0f * distance)
+				if (!TEST_FLAG(evaluation_context->allowed_position_mask, firing_position_definition->group_index))
 				{
 					continue;
 				}
-			}
 
-			if (firing_position_count < MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER)
-			{
-				firing_positions[firing_position_count].original_index = index;
-				firing_positions[firing_position_count].definition = firing_position_definition;
-				firing_positions[firing_position_count].line_of_sight = _ai_line_of_sight_clear;
-				firing_positions[firing_position_count].path_distance_from_actor = REAL_MAX;
-				firing_positions[firing_position_count].path_direction_from_actor = *global_zero_vector3d;
-				firing_positions[firing_position_count].path_distance_to_target = REAL_MAX;
-				firing_positions[firing_position_count].path_closest_approach_to_target = REAL_MAX;
-				firing_positions[firing_position_count].path_direction_from_target = *global_zero_vector3d;
-				firing_positions[firing_position_count].linear_distance_squared_to_target = 0.0f;
-				firing_positions[firing_position_count].pre_evaluation = 0.0f;
-				firing_positions[firing_position_count].evaluation = 0.0f;
-				firing_positions[firing_position_count].valid = TRUE;
-				firing_positions[firing_position_count].rejected = FALSE;
-				firing_position_count++;
-			}
-			else if (!too_many_firing_positions_reported)
-			{
-				error(_error_silent, "encounter %s has too many firing positions (%d > %d)",
-					encounter_definition->name,
-					encounter_definition->firing_positions.count,
-					MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER);
-				too_many_firing_positions_reported = TRUE;
+				if (actor->meta.encounter_index == ai_debug.selected_encounter_index)
+				{
+					ai_debug.firing_positions[index].pursuit_position = evaluation_context->evaluation_mode == _firing_point_evaluation_mode_pursue;
+				}
+
+				if (!evaluation_context->flying && firing_position_definition->surface_index == NONE)
+				{
+					continue;
+				}
+
+				if (evaluation_context->evaluation_mode == _firing_point_evaluation_mode_pursue &&
+					!actor_nearby_firing_positions(actor_index, &firing_position_definition->position, firing_position_definition->surface_index, _firing_position_group_when_searching))
+				{
+					continue;
+				}
+
+				if (firing_position_owner_actor_indices[index] != NONE)
+				{
+					struct actor_datum *owner_actor;
+					real owner_distance;
+					real distance;
+
+					if (evaluation_context->evaluation_mode == _firing_point_evaluation_mode_guard &&
+						evaluation_context->avoid_point_count < MAXIMUM_FIRING_POSITION_AVOID_POINTS)
+					{
+						evaluation_context->avoid_point[evaluation_context->avoid_point_count].point = firing_position_definition->position;
+						evaluation_context->avoid_point[evaluation_context->avoid_point_count++].radius = 4.0f;
+					}
+
+					owner_actor = actor_get(firing_position_owner_actor_indices[index]);
+					owner_distance = distance3d(&owner_actor->input.position.body_position, &firing_position_definition->position);
+					distance = distance3d(&actor->input.position.body_position, &firing_position_definition->position);
+					if (owner_distance < 1.0f || owner_distance < 2.0f * distance)
+					{
+						continue;
+					}
+				}
+
+				if (firing_position_count < MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER)
+				{
+					firing_positions[firing_position_count].original_index = index;
+					firing_positions[firing_position_count].definition = firing_position_definition;
+					firing_positions[firing_position_count].line_of_sight = _ai_line_of_sight_clear;
+					firing_positions[firing_position_count].path_distance_from_actor = REAL_MAX;
+					firing_positions[firing_position_count].path_direction_from_actor = *global_zero_vector3d;
+					firing_positions[firing_position_count].path_distance_to_target = REAL_MAX;
+					firing_positions[firing_position_count].path_closest_approach_to_target = REAL_MAX;
+					firing_positions[firing_position_count].path_direction_from_target = *global_zero_vector3d;
+					firing_positions[firing_position_count].linear_distance_squared_to_target = 0.0f;
+					firing_positions[firing_position_count].pre_evaluation = 0.0f;
+					firing_positions[firing_position_count].evaluation = 0.0f;
+					firing_positions[firing_position_count].valid = TRUE;
+					firing_positions[firing_position_count].rejected = FALSE;
+					firing_position_count++;
+				}
+				else if (!too_many_firing_positions_reported)
+				{
+					error(_error_silent, "encounter %s has too many firing positions (%d > %d)",
+						encounter_definition->name,
+						encounter_definition->firing_positions.count,
+						MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER);
+					too_many_firing_positions_reported = TRUE;
+				}
 			}
 		}
 
@@ -1825,49 +1836,53 @@ short actor_select_firing_position(
 				}
 			}
 
-			for (index = 0; index < firing_position_count; index++)
 			{
-				struct firing_position *firing_position = &firing_positions[index];
-				real_vector3d vector_from_actor;
-				real distance_squared;
+				short index;
 
-				if (evaluation_context->has_target)
+				for (index = 0; index < firing_position_count; index++)
 				{
-					firing_position->linear_distance_squared_to_target = distance_squared3d(&evaluation_context->target_point, &firing_position->definition->position);
-				}
+					struct firing_position *firing_position = &firing_positions[index];
+					real_vector3d vector_from_actor;
+					real distance_squared;
 
-				vector_from_points3d(&actor->input.position.body_position, &firing_position->definition->position, &vector_from_actor);
-				distance_squared = magnitude_squared3d(&vector_from_actor);
-				if (distance_squared < evaluation_context->maximum_search_range * evaluation_context->maximum_search_range)
-				{
-					if (evaluation_context->flying)
+					if (evaluation_context->has_target)
 					{
-						firing_position->path_closest_approach_to_target = square_root(point_to_line_distance_squared3d(&evaluation_context->target_point, &actor->input.position.body_position, &vector_from_actor));
-						firing_position->path_distance_from_actor = normalize3d(&vector_from_actor);
-						if (evaluation_context->find_path_direction_from_actor)
+						firing_position->linear_distance_squared_to_target = distance_squared3d(&evaluation_context->target_point, &firing_position->definition->position);
+					}
+
+					vector_from_points3d(&actor->input.position.body_position, &firing_position->definition->position, &vector_from_actor);
+					distance_squared = magnitude_squared3d(&vector_from_actor);
+					if (distance_squared < evaluation_context->maximum_search_range * evaluation_context->maximum_search_range)
+					{
+						if (evaluation_context->flying)
 						{
-							firing_position->path_direction_from_actor = vector_from_actor;
+							firing_position->path_closest_approach_to_target = square_root(point_to_line_distance_squared3d(&evaluation_context->target_point, &actor->input.position.body_position, &vector_from_actor));
+							firing_position->path_distance_from_actor = normalize3d(&vector_from_actor);
+							if (evaluation_context->find_path_direction_from_actor)
+							{
+								firing_position->path_direction_from_actor = vector_from_actor;
+							}
 						}
+						else
+						{
+							path_state_estimated_distance(
+								area_path_state,
+								&firing_position->definition->position,
+								firing_position->definition->surface_index,
+								&firing_position->path_distance_from_actor,
+								&firing_position->path_closest_approach_to_target,
+								evaluation_context->find_path_direction_from_actor ? &firing_position->path_direction_from_actor : NULL);
+						}
+					}
+
+					if (firing_position->path_distance_from_actor < evaluation_context->maximum_search_range)
+					{
+						any_position_in_range = TRUE;
 					}
 					else
 					{
-						path_state_estimated_distance(
-							area_path_state,
-							&firing_position->definition->position,
-							firing_position->definition->surface_index,
-							&firing_position->path_distance_from_actor,
-							&firing_position->path_closest_approach_to_target,
-							evaluation_context->find_path_direction_from_actor ? &firing_position->path_direction_from_actor : NULL);
+						firing_position->valid = FALSE;
 					}
-				}
-
-				if (firing_position->path_distance_from_actor < evaluation_context->maximum_search_range)
-				{
-					any_position_in_range = TRUE;
-				}
-				else
-				{
-					firing_position->valid = FALSE;
 				}
 			}
 
@@ -1979,7 +1994,7 @@ short actor_select_firing_position(
 
 				if (ai_debug.print_evaluation_statistics)
 				{
-					char *evaluation_mode_names[] =
+					char *mode_names[] =
 					{
 						"fight",
 						"panic",
@@ -1990,7 +2005,7 @@ short actor_select_firing_position(
 					};
 
 					error(_error_silent, "fp-eval %s: encounter %3d consider %3d valid %3d nonrejected %3d post-eval %3d skipped %3d",
-						evaluation_mode_names[evaluation_context->evaluation_mode],
+						mode_names[evaluation_context->evaluation_mode],
 						evaluation_context->encounter_count,
 						evaluation_context->consider_count,
 						evaluation_context->valid_count,
@@ -2181,7 +2196,7 @@ void actor_clear_discarded_firing_positions(
 	}
 
 	if (actor->firing_positions.last_discarded_firing_position_valid &&
-		(!clear_temporary_only || actor->firing_positions.last_discarded_firing_position_temporary))
+		!(clear_temporary_only && !actor->firing_positions.last_discarded_firing_position_temporary))
 	{
 		actor->firing_positions.last_discarded_firing_position_valid = FALSE;
 	}

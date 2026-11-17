@@ -88,11 +88,6 @@ void actor_combat_update(
 	long weapon_index = actor_get_weapon(actor_index);
 	struct actor_debug_info *debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 	short firing_decision = NONE;
-	boolean fire_primary;
-	boolean fire_secondary;
-	boolean primary_trigger;
-	boolean secondary_trigger;
-	real analog_primary_trigger;
 
 	if (actor->control.fire_state_timer > 0)
 	{
@@ -588,248 +583,253 @@ void actor_combat_update(
 		actor->control.fire_state = new_state;
 	}
 
-	fire_primary = FALSE;
-	fire_secondary = FALSE;
-	actor->control.burst_aim_by_vector = FALSE;
-
-	if (actor->control.fire_state == _actor_fire_state_wild)
 	{
-		fire_primary = TRUE;
-	}
-	else if (actor->control.fire_state == _actor_fire_state_bursting)
-	{
-		long ignore_unit_index = NONE;
-		long blocking_prop_index;
-		real_point3d gun_position;
-		real_vector3d fire_vector;
+		boolean fire_primary = FALSE;
+		boolean fire_secondary = FALSE;
 
-		match_assert("c:\\halo\\SOURCE\\ai\\actor_combat.c", 640, weapon_index != NONE);
+		actor->control.burst_aim_by_vector = FALSE;
 
-		actor->control.burst_origin = actor->control.burst_initial_position;
-		debug_info->burst_tracked_position = actor->control.burst_origin;
-		debug_info->burst_lead_vector = *global_zero_vector3d;
-
-		if (actor->control.current_fire_target_type == _actor_fire_target_prop)
+		if (actor->control.fire_state == _actor_fire_state_wild)
 		{
-			struct prop_datum *prop = prop_get(actor->control.current_fire_target_prop_index);
-			real track_fraction;
-			real_vector3d vector;
-			real lead_fraction;
+			fire_primary = TRUE;
+		}
+		else if (actor->control.fire_state == _actor_fire_state_bursting)
+		{
+			long ignore_unit_index = NONE;
+			long blocking_prop_index;
+			real_point3d gun_position;
+			real_vector3d fire_vector;
 
-			debug_info->burst_last_known_position = prop->center_of_mass;
-			ignore_unit_index = prop->attached_to_unit_index;
+			match_assert("c:\\halo\\SOURCE\\ai\\actor_combat.c", 640, weapon_index != NONE);
 
-			track_fraction = firing_variant_definition->ranged_combat.target_track_fraction;
-			track_fraction += game_difficulty_get_team_value(_game_difficulty_target_tracking_bonus, actor->meta.team_index);
-			track_fraction = MIN(1.0f, track_fraction);
-
-			if (track_fraction > 0.0f && !actor->control.current_fire_target_bombardment)
-			{
-				vector_from_points3d(&actor->control.burst_initial_position, &prop->center_of_mass, &vector);
-				point_from_line3d(&actor->control.burst_origin, &vector, firing_variant_definition->ranged_combat.target_track_fraction, &actor->control.burst_origin);
-			}
-
+			actor->control.burst_origin = actor->control.burst_initial_position;
 			debug_info->burst_tracked_position = actor->control.burst_origin;
+			debug_info->burst_lead_vector = *global_zero_vector3d;
 
-			lead_fraction = firing_variant_definition->ranged_combat.target_lead_fraction;
-			lead_fraction += game_difficulty_get_team_value(_game_difficulty_target_leading_bonus, actor->meta.team_index);
-			lead_fraction = MIN(1.0f, lead_fraction);
-
-			if (lead_fraction > 0.0f)
+			if (actor->control.current_fire_target_type == _actor_fire_target_prop)
 			{
-				real time_to_target = weapon_estimate_time_to_target(weapon_index, actor->control.fire_burst_secondary ? 1 : 0, actor->control.current_fire_target_distance);
-				real_vector3d lead_vector;
+				struct prop_datum *prop = prop_get(actor->control.current_fire_target_prop_index);
+				real track_fraction;
+				real_vector3d target_motion;
+				real lead_fraction;
 
-				scale_vector3d(&prop->velocity, time_to_target, &lead_vector);
-				debug_info->burst_lead_vector = lead_vector;
-				point_from_line3d(&actor->control.burst_origin, &lead_vector, firing_variant_definition->ranged_combat.target_lead_fraction, &actor->control.burst_origin);
-			}
-		}
-		else
-		{
-			match_assert("c:\\halo\\SOURCE\\ai\\actor_combat.c", 707, actor->control.current_fire_target_type == _actor_fire_target_manual_point);
-			debug_info->burst_last_known_position = actor->control.burst_origin;
-		}
+				debug_info->burst_last_known_position = prop->center_of_mass;
+				ignore_unit_index = prop->attached_to_unit_index;
 
-		add_vectors3d(&actor->control.burst_adjustment, &actor->control.burst_relative_position, &actor->control.burst_relative_position);
-		point_from_line3d(&actor->control.burst_origin, &actor->control.burst_relative_position, 1.0f, &actor->control.burst_target);
+				track_fraction = firing_variant_definition->ranged_combat.target_track_fraction;
+				track_fraction += game_difficulty_get_team_value(_game_difficulty_target_tracking_bonus, actor->meta.team_index);
+				track_fraction = MIN(1.0f, track_fraction);
 
-		if (actor->input.vehicle_index != NONE)
-		{
-			unit_get_camera_position(actor->meta.unit_index, &gun_position);
-		}
-		else
-		{
-			real_vector3d *gun_offset = NULL;
-
-			if (actor->control.crouching)
-			{
-				if (magnitude_squared3d(&firing_variant_definition->ranged_combat.gun_offset_crouch) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
+				if (track_fraction > 0.0f && !actor->control.current_fire_target_bombardment)
 				{
-					gun_offset = &firing_variant_definition->ranged_combat.gun_offset_crouch;
+					vector_from_points3d(&actor->control.burst_initial_position, &prop->center_of_mass, &target_motion);
+					point_from_line3d(&actor->control.burst_origin, &target_motion, firing_variant_definition->ranged_combat.target_track_fraction, &actor->control.burst_origin);
 				}
-				else if (magnitude_squared3d(&actor_definition->perception.gun_offset_crouch) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
+
+				debug_info->burst_tracked_position = actor->control.burst_origin;
+
+				lead_fraction = firing_variant_definition->ranged_combat.target_lead_fraction;
+				lead_fraction += game_difficulty_get_team_value(_game_difficulty_target_leading_bonus, actor->meta.team_index);
+				lead_fraction = MIN(1.0f, lead_fraction);
+
+				if (lead_fraction > 0.0f)
 				{
-					gun_offset = &actor_definition->perception.gun_offset_crouch;
+					real time_to_target = weapon_estimate_time_to_target(weapon_index, actor->control.fire_burst_secondary ? 1 : 0, actor->control.current_fire_target_distance);
+					real_vector3d lead_vector;
+
+					scale_vector3d(&prop->velocity, time_to_target, &lead_vector);
+					debug_info->burst_lead_vector = lead_vector;
+					point_from_line3d(&actor->control.burst_origin, &lead_vector, firing_variant_definition->ranged_combat.target_lead_fraction, &actor->control.burst_origin);
 				}
 			}
 			else
 			{
-				if (magnitude_squared3d(&firing_variant_definition->ranged_combat.gun_offset_stand) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
-				{
-					gun_offset = &firing_variant_definition->ranged_combat.gun_offset_stand;
-				}
-				else if (magnitude_squared3d(&actor_definition->perception.gun_offset_stand) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
-				{
-					gun_offset = &actor_definition->perception.gun_offset_stand;
-				}
+				match_assert("c:\\halo\\SOURCE\\ai\\actor_combat.c", 707, actor->control.current_fire_target_type == _actor_fire_target_manual_point);
+				debug_info->burst_last_known_position = actor->control.burst_origin;
 			}
 
-			if (!gun_offset)
+			add_vectors3d(&actor->control.burst_adjustment, &actor->control.burst_relative_position, &actor->control.burst_relative_position);
+			point_from_line3d(&actor->control.burst_origin, &actor->control.burst_relative_position, 1.0f, &actor->control.burst_target);
+
+			if (actor->input.vehicle_index != NONE)
 			{
-				gun_position = actor->input.position.head_position;
+				unit_get_camera_position(actor->meta.unit_index, &gun_position);
 			}
 			else
 			{
-				real_vector3d horizontal_aiming_vector;
+				real_vector3d *gun_offset = NULL;
 
-				vector_from_points3d(&actor->control.burst_target, &actor->input.position.body_position, &horizontal_aiming_vector);
-
-				if (normalize2d((real_vector2d *)&horizontal_aiming_vector) > 0.0f)
+				if (actor->control.crouching)
 				{
-					horizontal_aiming_vector.k = 0.0f;
-				}
-				else
-				{
-					horizontal_aiming_vector = actor->input.facing_vector;
-				}
-
-				unit_estimate_position(
-					actor->meta.unit_index,
-					_unit_estimate_gun_position,
-					&actor->input.position.body_position,
-					&horizontal_aiming_vector,
-					gun_offset,
-					&gun_position);
-			}
-		}
-
-		{
-		boolean aim_linear;
-		boolean aiming_success;
-
-			aiming_success = weapon_aim(
-				weapon_index,
-				actor->control.fire_burst_secondary ? 1 : 0,
-				&gun_position,
-				&actor->control.burst_target,
-				actor->control.current_fire_target_superballistic,
-				&actor->control.burst_aim_vector,
-				NULL,
-				NULL,
-				&aim_linear);
-			match_assert("c:\\halo\\SOURCE\\ai\\actor_combat.c", 784, aiming_success);
-			match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actor_combat.c", 785, &actor->control.burst_aim_vector);
-
-			actor->control.burst_aim_by_vector = !aim_linear;
-			vector_from_points3d(&gun_position, &actor->control.burst_target, &fire_vector);
-
-			if (ai_test_line_of_fire(actor_index, ignore_unit_index, &gun_position, &fire_vector, &blocking_prop_index))
-			{
-				actor->control.blocked_communication_timer = 0;
-
-				if (actor->control.fire_burst_secondary)
-				{
-					fire_secondary = TRUE;
-				}
-				else
-				{
-					fire_primary = TRUE;
-				}
-			}
-			else
-			{
-				actor->control.blocked_communication_timer++;
-				actor->control.fire_state_timer++;
-				firing_decision = _firing_blocked;
-
-				if (actor->control.blocked_communication_timer >= ACTOR_COMBAT_BLOCKED_COMMUNICATION_TICKS &&
-					actor->target.target_type >= _actor_target_acknowledged_enemy)
-				{
-					long blocking_unit_index = NONE;
-
-					if (blocking_prop_index != NONE)
+					if (magnitude_squared3d(&firing_variant_definition->ranged_combat.gun_offset_crouch) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
 					{
-						struct prop_datum *prop = prop_get(blocking_prop_index);
+						gun_offset = &firing_variant_definition->ranged_combat.gun_offset_crouch;
+					}
+					else if (magnitude_squared3d(&actor_definition->perception.gun_offset_crouch) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
+					{
+						gun_offset = &actor_definition->perception.gun_offset_crouch;
+					}
+				}
+				else
+				{
+					if (magnitude_squared3d(&firing_variant_definition->ranged_combat.gun_offset_stand) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
+					{
+						gun_offset = &firing_variant_definition->ranged_combat.gun_offset_stand;
+					}
+					else if (magnitude_squared3d(&actor_definition->perception.gun_offset_stand) > ACTOR_COMBAT_GUN_OFFSET_EPSILON)
+					{
+						gun_offset = &actor_definition->perception.gun_offset_stand;
+					}
+				}
 
-						blocking_unit_index = prop->unit_index;
+				if (!gun_offset)
+				{
+					gun_position = actor->input.position.head_position;
+				}
+				else
+				{
+					real_vector3d horizontal_aiming_vector;
+
+					vector_from_points3d(&actor->control.burst_target, &actor->input.position.body_position, &horizontal_aiming_vector);
+
+					if (normalize2d((real_vector2d *)&horizontal_aiming_vector) > 0.0f)
+					{
+						horizontal_aiming_vector.k = 0.0f;
+					}
+					else
+					{
+						horizontal_aiming_vector = actor->input.facing_vector;
 					}
 
-					ai_communication_event(_ai_communication_blocked, actor->meta.unit_index, blocking_unit_index, _comm_hostility_friend, NONE, NONE, NULL);
+					unit_estimate_position(
+						actor->meta.unit_index,
+						_unit_estimate_gun_position,
+						&actor->input.position.body_position,
+						&horizontal_aiming_vector,
+						gun_offset,
+						&gun_position);
+				}
+			}
+
+			{
+				boolean aiming_success;
+				boolean aim_linear;
+
+				aiming_success = weapon_aim(
+					weapon_index,
+					actor->control.fire_burst_secondary ? 1 : 0,
+					&gun_position,
+					&actor->control.burst_target,
+					actor->control.current_fire_target_superballistic,
+					&actor->control.burst_aim_vector,
+					NULL,
+					NULL,
+					&aim_linear);
+				match_assert("c:\\halo\\SOURCE\\ai\\actor_combat.c", 784, aiming_success);
+				match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actor_combat.c", 785, &actor->control.burst_aim_vector);
+
+				actor->control.burst_aim_by_vector = !aim_linear;
+				vector_from_points3d(&gun_position, &actor->control.burst_target, &fire_vector);
+
+				if (ai_test_line_of_fire(actor_index, ignore_unit_index, &gun_position, &fire_vector, &blocking_prop_index))
+				{
 					actor->control.blocked_communication_timer = 0;
+
+					if (actor->control.fire_burst_secondary)
+					{
+						fire_secondary = TRUE;
+					}
+					else
+					{
+						fire_primary = TRUE;
+					}
+				}
+				else
+				{
+					actor->control.blocked_communication_timer++;
+					actor->control.fire_state_timer++;
+					firing_decision = _firing_blocked;
+
+					if (actor->control.blocked_communication_timer >= ACTOR_COMBAT_BLOCKED_COMMUNICATION_TICKS &&
+						actor->target.target_type >= _actor_target_acknowledged_enemy)
+					{
+						long blocking_unit_index = NONE;
+
+						if (blocking_prop_index != NONE)
+						{
+							struct prop_datum *prop = prop_get(blocking_prop_index);
+
+							blocking_unit_index = prop->unit_index;
+						}
+
+						ai_communication_event(_ai_communication_blocked, actor->meta.unit_index, blocking_unit_index, _comm_hostility_friend, NONE, NONE, NULL);
+						actor->control.blocked_communication_timer = 0;
+					}
 				}
 			}
 		}
-	}
 
-	primary_trigger = FALSE;
-	secondary_trigger = FALSE;
-	analog_primary_trigger = 0.0f;
-
-	if (fire_primary)
-	{
-		real rate_of_fire = firing_variant_definition->ranged_combat.rate_of_fire;
-
-		if (actor->control.overcharging_weapon)
 		{
-			actor->control.overcharging_weapon = FALSE;
-		}
-		else if (rate_of_fire == 0.0f)
-		{
-			primary_trigger = TRUE;
-			analog_primary_trigger = 1.0f;
-		}
-		else if (actor->control.trigger_delay_timer == 0)
-		{
-			struct actor_burst_geometry *burst_geometry;
-			struct actor_firing_pattern *firing_pattern;
-			short trigger_delay;
+			boolean primary_trigger = FALSE;
+			boolean secondary_trigger = FALSE;
+			real analog_primary_trigger = 0.0f;
 
-			primary_trigger = TRUE;
-			analog_primary_trigger = 1.0f;
-			rate_of_fire *= game_difficulty_get_team_value(_game_difficulty_rate_of_fire_scale, actor->meta.team_index);
-			actor_combat_get_firing_parameters(actor_index, firing_variant_definition, &burst_geometry, &firing_pattern);
-
-			if (firing_pattern && firing_pattern->rate_of_fire_modifier > 0.0f)
+			if (fire_primary)
 			{
-				rate_of_fire *= firing_pattern->rate_of_fire_modifier;
+				real rate_of_fire = firing_variant_definition->ranged_combat.rate_of_fire;
+
+				if (actor->control.overcharging_weapon)
+				{
+					actor->control.overcharging_weapon = FALSE;
+				}
+				else if (rate_of_fire == 0.0f)
+				{
+					primary_trigger = TRUE;
+					analog_primary_trigger = 1.0f;
+				}
+				else if (actor->control.trigger_delay_timer == 0)
+				{
+					struct actor_burst_geometry *burst_geometry;
+					struct actor_firing_pattern *firing_pattern;
+					short trigger_delay;
+
+					primary_trigger = TRUE;
+					analog_primary_trigger = 1.0f;
+					rate_of_fire *= game_difficulty_get_team_value(_game_difficulty_rate_of_fire_scale, actor->meta.team_index);
+					actor_combat_get_firing_parameters(actor_index, firing_variant_definition, &burst_geometry, &firing_pattern);
+
+					if (firing_pattern && firing_pattern->rate_of_fire_modifier > 0.0f)
+					{
+						rate_of_fire *= firing_pattern->rate_of_fire_modifier;
+					}
+
+					debug_info->shooting_rof = rate_of_fire;
+					trigger_delay = (short)fast_ftol(TICKS_PER_SECOND / rate_of_fire);
+					actor->control.trigger_delay_timer = MAX(ACTOR_COMBAT_MINIMUM_TRIGGER_DELAY_TICKS, trigger_delay);
+				}
+			}
+			else if (fire_secondary)
+			{
+				if (actor->control.overcharging_weapon)
+				{
+					actor->control.overcharging_weapon = FALSE;
+				}
+				else
+				{
+					secondary_trigger = TRUE;
+				}
+			}
+			else if (actor->control.overcharging_weapon)
+			{
+				primary_trigger = TRUE;
+				analog_primary_trigger = 1.0f;
 			}
 
-			debug_info->shooting_rof = rate_of_fire;
-			trigger_delay = (short)fast_ftol(TICKS_PER_SECOND / rate_of_fire);
-			actor->control.trigger_delay_timer = MAX(ACTOR_COMBAT_MINIMUM_TRIGGER_DELAY_TICKS, trigger_delay);
+			actor_unit_control_primary_trigger(actor_index, primary_trigger, analog_primary_trigger);
+			actor_unit_control_secondary_trigger(actor_index, secondary_trigger);
+			debug_info->firing_decision = firing_decision;
 		}
 	}
-	else if (fire_secondary)
-	{
-		if (actor->control.overcharging_weapon)
-		{
-			actor->control.overcharging_weapon = FALSE;
-		}
-		else
-		{
-			secondary_trigger = TRUE;
-		}
-	}
-	else if (actor->control.overcharging_weapon)
-	{
-		primary_trigger = TRUE;
-		analog_primary_trigger = 1.0f;
-	}
-
-	actor_unit_control_primary_trigger(actor_index, primary_trigger, analog_primary_trigger);
-	actor_unit_control_secondary_trigger(actor_index, secondary_trigger);
-	debug_info->firing_decision = firing_decision;
 
 	return;
 }
@@ -872,7 +872,9 @@ static boolean actor_combat_allow_special_fire_situation(
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean result = TRUE;
 
-	if (special_fire_situation == _actor_special_fire_situation_strafing)
+	switch (special_fire_situation)
+	{
+	case _actor_special_fire_situation_strafing:
 	{
 		struct prop_datum *prop;
 
@@ -895,6 +897,8 @@ static boolean actor_combat_allow_special_fire_situation(
 			actor_combat_check_collateral_damage(actor_index, ACTOR_COMBAT_STRAFING_ENEMY_RADIUS, 0.0f, &prop->body_position, &enemies_nearby);
 			result = enemies_nearby >= ACTOR_COMBAT_STRAFING_MINIMUM_ENEMY_COUNT;
 		}
+		break;
+	}
 	}
 
 	return result;
@@ -964,7 +968,7 @@ long actor_aim_projectile(
 		{
 			struct prop_datum *prop = prop_get(actor->control.current_fire_target_prop_index);
 
-			if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged)
+			if (prop_acknowledged(prop))
 			{
 				target_unit_index = prop->unit_index;
 			}
@@ -1149,6 +1153,7 @@ static void actor_start_burst(
 	struct actor_burst_geometry *geometry;
 	struct actor_firing_pattern *pattern;
 	boolean bombardment = FALSE;
+	struct vehicle_datum *vehicle;
 	real new_target_time;
 	real burst_duration;
 	real error;
@@ -1168,8 +1173,7 @@ static void actor_start_burst(
 	}
 	else
 	{
-		struct vehicle_datum *vehicle = vehicle_get(actor->input.vehicle_index);
-
+		vehicle = vehicle_get(actor->input.vehicle_index);
 		actor->control.firing_while_moving = magnitude_squared3d(&vehicle->object.translational_velocity) > 1.0f;
 	}
 
@@ -1282,18 +1286,16 @@ static void actor_start_burst(
 	{
 		struct prop_datum *prop = prop_get(actor->control.current_fire_target_prop_index);
 
-		bombardment = !(prop->state >= _prop_state_becoming_unacknowledged &&
-			prop->state <= _prop_state_acknowledged &&
-			prop->visibility != _actor_perception_none);
+		bombardment = !(prop_acknowledged(prop) && prop->visibility != _actor_perception_none);
 	}
 
 	{
 		real_point3d origin;
 		real_vector3d offset;
 		real_vector3d adjustment;
-		real_vector3d side;
-		real_vector3d up;
-		real_vector3d forward;
+		real_vector3d x;
+		real_vector3d y;
+		real_vector3d z;
 		real origin_angle;
 		real return_angle;
 		real origin_radius;
@@ -1310,14 +1312,14 @@ static void actor_start_burst(
 			actor_combat_find_nearby_target(&origin, firing_variant_definition->ranged_combat.weapon_bombardment_range);
 		}
 
-		vector_from_points3d(&actor->input.position.head_position, &origin, &forward);
-		set_real_vector3d(&up, 0.0f, 0.0f, 1.0f);
-		cross_product3d(&forward, &up, &side);
-		normalize3d(&side);
+		vector_from_points3d(&actor->input.position.head_position, &origin, &z);
+		set_real_vector3d(&y, 0.0f, 0.0f, 1.0f);
+		cross_product3d(&z, &y, &x);
+		normalize3d(&x);
 
 		if (random_boolean())
 		{
-			negate_vector3d(&side, &side);
+			negate_vector3d(&x, &x);
 		}
 
 		origin_angle = real_random_range(-geometry->burst_origin_angle, geometry->burst_origin_angle);
@@ -1365,13 +1367,13 @@ static void actor_start_burst(
 		return_cosine = cosine(return_angle);
 		return_sine = sine(return_angle);
 
-		offset.i = (side.i * origin_cosine + up.i * origin_sine) * origin_radius;
-		offset.j = (side.j * origin_cosine + up.j * origin_sine) * origin_radius;
-		offset.k = (side.k * origin_cosine + up.k * origin_sine) * origin_radius;
+		offset.i = (x.i * origin_cosine + y.i * origin_sine) * origin_radius;
+		offset.j = (x.j * origin_cosine + y.j * origin_sine) * origin_radius;
+		offset.k = (x.k * origin_cosine + y.k * origin_sine) * origin_radius;
 
-		adjustment.i = -return_length * (side.i * return_cosine + up.i * return_sine);
-		adjustment.j = -return_length * (side.j * return_cosine + up.j * return_sine);
-		adjustment.k = -return_length * (side.k * return_cosine + up.k * return_sine);
+		adjustment.i = -return_length * (x.i * return_cosine + y.i * return_sine);
+		adjustment.j = -return_length * (x.j * return_cosine + y.j * return_sine);
+		adjustment.k = -return_length * (x.k * return_cosine + y.k * return_sine);
 
 		if (actor->control.fire_state_timer > 0)
 		{
@@ -1464,7 +1466,7 @@ static boolean actor_start_first_burst_delay(
 	{
 		struct prop_datum *prop = prop_get(actor->control.current_fire_target_prop_index);
 
-		if (prop->state >= _prop_state_uninspected_orphan && prop->state <= _prop_state_inspected_orphan)
+		if (prop_orphaned(prop))
 		{
 			actor->firing_positions.pursuit_fired_at_orphan = TRUE;
 			fire_immediately = TRUE;
@@ -1631,8 +1633,8 @@ static boolean actor_combat_build_grenade_trajectory(
 	real_vector3d *arc_initial_velocity,
 	real *arc_acceleration)
 {
-	struct projectile_definition *projectile_definition;
 	boolean result = FALSE;
+	struct projectile_definition *projectile_definition;
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actor_combat.c", 1780, grenade_origin && desired_impact_point && aim_vector && aim_speed);
 
@@ -1687,7 +1689,7 @@ long actor_aim_grenade(
 	{
 		struct prop_datum *prop = prop_get(actor->control.grenade_current_prop_index);
 
-		if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged)
+		if (prop_acknowledged(prop))
 		{
 			target_unit_index = prop->unit_index;
 		}
@@ -1703,7 +1705,6 @@ long actor_aim_grenade(
 
 	actor_combat_reaim_grenade(actor_index, origin);
 
-	/* aim_vector is left uninitialized when the actor is in a vehicle (original behaviour) */
 	if (actor->input.vehicle_index == NONE)
 	{
 		real_vector2d horizontal_aim_vector;
@@ -1748,7 +1749,7 @@ boolean actor_combat_find_grenade_target(
 
 		if (prop->enemy &&
 			!prop->dead &&
-			((prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged) || prop->state == _prop_state_uninspected_orphan) &&
+			(prop_acknowledged(prop) || prop->state == _prop_state_uninspected_orphan) &&
 			prop->distance > variant_definition->grenade_combat.grenade_range_lower_bound &&
 			prop->distance < variant_definition->grenade_combat.grenade_range_upper_bound)
 		{
@@ -1790,7 +1791,7 @@ boolean actor_combat_check_collateral_damage(
 
 		while (prop = prop_iterator_next(&iterator))
 		{
-			if (prop->state >= _prop_state_becoming_unacknowledged && prop->state <= _prop_state_acknowledged && !prop->dead)
+			if (prop_acknowledged(prop) && !prop->dead)
 			{
 				if (prop->enemy)
 				{
@@ -1914,9 +1915,18 @@ boolean actor_combat_plan_grenade_trajectory(
 {
 	struct actor_datum *actor = actor_get(actor_index);
 	struct actor_variant_definition *variant_definition = actor_variant_definition_get(actor->meta.variant_definition_index);
-	real_point3d const *target = grenade_target;
 	boolean result = FALSE;
-	real_point3d origin = actor->input.position.head_position;
+	real_point3d origin;
+	real_vector3d vector_to_target;
+
+	vector_from_points3d(&actor->input.position.body_position, grenade_target, &vector_to_target);
+	if (normalize2d((real_vector2d *)&vector_to_target) == 0.f)
+	{
+		*(real_vector2d *)&vector_to_target = *(real_vector2d *)&actor->input.facing_vector;
+		vector_to_target.k = 0.f;
+	}
+
+	origin = actor->input.position.head_position;
 
 	{
 		real_vector3d aim_vector;
@@ -1929,7 +1939,7 @@ boolean actor_combat_plan_grenade_trajectory(
 				variant_definition->grenade_combat.grenade_type,
 				&origin,
 				variant_definition->grenade_combat.grenade_maximum_velocity,
-				target,
+				grenade_target,
 				NULL,
 				FALSE,
 				&aim_vector,
@@ -1946,7 +1956,7 @@ boolean actor_combat_plan_grenade_trajectory(
 				grenade_ignore_object_index,
 				actor->input.vehicle_index != NONE))
 		{
-			actor->control.grenade_current_target = *target;
+			actor->control.grenade_current_target = *grenade_target;
 			actor->control.grenade_current_prop_index = grenade_target_prop_index;
 			actor->control.grenade_current_ignore_object_index = grenade_ignore_object_index;
 			actor->control.grenade_current_aim_vector = aim_vector;
