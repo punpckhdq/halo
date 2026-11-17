@@ -536,7 +536,7 @@ void rasterizer_windows_end(void);
 void rasterizer_frame_end(void);
 void rasterizer_present(struct bitmap_data *screenshot_bitmap, point2d const *screenshot_index);
 void rasterizer_dispose(void);
-void rasterizer_set_vblank_callback(void (*callback)(unsigned long));
+void rasterizer_set_vblank_callback(void (__cdecl *callback)(unsigned long));
 void rasterizer_profile_enable(boolean enable);
 long rasterizer_dynamic_triangles_new(long count);
 struct rasterizer_triangle *rasterizer_dynamic_triangles_lock(long dynamic_triangle_buffer_index);

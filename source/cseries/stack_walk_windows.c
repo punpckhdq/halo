@@ -47,7 +47,7 @@ struct _stack_walk_globals
 
 /* ---------- prototypes */
 
-static int symbol_sort_proc(void const *elem1, void const *elem2);
+static int __cdecl symbol_sort_proc(void const *elem1, void const *elem2);
 static boolean is_valid_ebp(void);
 static unsigned long walk_up(void);
 static void initialize_stack_walk(CONTEXT *context);
@@ -183,7 +183,7 @@ void stack_walk_with_context(
 	return;
 }
 
-static int symbol_sort_proc(
+static int __cdecl symbol_sort_proc(
 	void const *elem1,
 	void const *elem2)
 {

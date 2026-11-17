@@ -294,7 +294,7 @@ void rasterizer_dispose(
 }
 
 void rasterizer_set_vblank_callback(
-	void (*callback)(unsigned long))
+	void (__cdecl *callback)(unsigned long))
 {
 	_rasterizer_set_vblank_callback(callback);
 

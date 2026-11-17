@@ -25,7 +25,7 @@ NETWORK_GAME_MANAGER.C
 
 /* ---------- prototypes */
 
-static int sort_network_players(void const *elem0, void const *elem1);
+static int __cdecl sort_network_players(void const *elem0, void const *elem1);
 
 /* ---------- globals */
 
@@ -293,7 +293,7 @@ boolean network_game_remove_player(
 }
 
 /* bungie didn't follow code conventions here */
-static int sort_network_players(
+static int __cdecl sort_network_players(
 	void const *elem0,
 	void const *elem1)
 {

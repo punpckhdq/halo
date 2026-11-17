@@ -21,7 +21,7 @@ RASTERIZER_TRANSPARENT_GEOMETRY.C
 /* ---------- prototypes */
 
 __inline static void rasterizer_sort_internal(struct transparent_geometry_group *group);
-static long group_sorted_indices_cmpfn(short const *group_index1, short const *group_index2);
+static long __cdecl group_sorted_indices_cmpfn(short const *group_index1, short const *group_index2);
 static void rasterizer_sort_external(void);
 
 /* ---------- globals */
@@ -337,7 +337,7 @@ __inline static void rasterizer_sort_internal(
 	return;
 }
 
-static long group_sorted_indices_cmpfn(
+static long __cdecl group_sorted_indices_cmpfn(
 	short const *group_index1,
 	short const *group_index2)
 {

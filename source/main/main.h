@@ -93,7 +93,7 @@ void main_start_time(void);
 void main_framerate_render(void);
 void main_crash(char const *str);
 void main_print_version(void);
-void main_vertical_blank_interrupt_handler(unsigned long context);
+void __cdecl main_vertical_blank_interrupt_handler(unsigned long context);
 
 /* ---------- globals */
 

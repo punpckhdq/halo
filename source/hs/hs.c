@@ -698,7 +698,7 @@ short hs_find_function_by_name(
 }
 #endif
 
-static int alphabetize(
+static int __cdecl alphabetize(
 	void const *string1,
 	void const *string2)
 {
@@ -1082,7 +1082,7 @@ static boolean hs_rebuild_source_file(
 	return success;
 }
 
-static int alphabetize_file_references(
+static int __cdecl alphabetize_file_references(
 	void const *ref1,
 	void const *ref2)
 {

@@ -68,7 +68,7 @@ static long ai_scripting_count_internal(long ai_index, short count_type, long *o
 static short ai_scripting_migrate_find_target_squad(long source_encounter_index, short source_squad_index, struct actor_definition const *source_actor, struct actor_variant_definition const *source_actor_variant, boolean same_encounter, long target_ai_index, char const *debug_description);
 static void ai_scripting_migrate_internal(long source_index, long target_index, boolean generate_stimulus, boolean advancing_stimulus);
 static void ai_scripting_migrate_by_unit_internal(long unit_index, long ai_index, boolean generate_stimulus, boolean advancing_stimulus);
-static int ai_scripting_vehicle_candidate_qsort(void const *p1, void const *p2);
+static int __cdecl ai_scripting_vehicle_candidate_qsort(void const *p1, void const *p2);
 static void ai_scripting_go_to_vehicle_internal(long ai_index, long unit_index, char const *seat_substring_name, boolean override_previous_vehicles);
 static void ai_scripting_teleport_starting_location_private(long ai_index, boolean only_if_unsupported);
 static short ai_scripting_command_list_status_internal(long actor_index, long unit_index, short command_list_index, struct obey_individual_simple_control *simple_control, struct obey_individual_complex_control *complex_control);
@@ -2237,7 +2237,7 @@ boolean ai_scripting_allegiance_broken(
 	return broken;
 }
 
-static int ai_scripting_vehicle_candidate_qsort(
+static int __cdecl ai_scripting_vehicle_candidate_qsort(
 	void const *p1,
 	void const *p2)
 {

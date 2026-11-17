@@ -46,7 +46,7 @@ typedef void (*obey_individual_iterator)(long actor_index, long unit_index, shor
 
 /* ---------- prototypes */
 
-static int vehicle_possibility_qsort(void const *p1, void const *p2);
+static int __cdecl vehicle_possibility_qsort(void const *p1, void const *p2);
 static void action_obey_directmovement_update_facing(long actor_index, long unit_index, struct obey_individual_simple_control *simple_control);
 static boolean action_obey_command_begin(long actor_index, long unit_index, short command_list_index, struct obey_individual_simple_control *simple_control, struct obey_individual_complex_control *complex_control);
 static boolean action_obey_command_perform(long actor_index, long unit_index, short command_list_index, struct obey_individual_simple_control *simple_control, struct obey_individual_complex_control *complex_control);
@@ -62,7 +62,7 @@ static void action_obey_individuals_iterate(long actor_index, boolean initialize
 
 /* ---------- public code */
 
-static int vehicle_possibility_qsort(
+static int __cdecl vehicle_possibility_qsort(
 	void const *p1,
 	void const *p2)
 {

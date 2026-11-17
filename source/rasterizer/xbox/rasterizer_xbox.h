@@ -130,7 +130,7 @@ void _rasterizer_windows_end(void);
 void _rasterizer_frame_end(void);
 void _rasterizer_present(struct bitmap_data *screenshot_bitmap, point2d const *screenshot_index);
 void _rasterizer_dispose(void);
-void _rasterizer_set_vblank_callback(void (*callback)(unsigned long));
+void _rasterizer_set_vblank_callback(void (__cdecl *callback)(unsigned long));
 void rasterizer_set_framebuffer_blend_function(short framebuffer_blend_function);
 boolean rasterizer_set_texture_bitmap_data(short stage, struct bitmap_data const *bitmap);
 boolean rasterizer_set_texture_direct(short stage, long bitmap_group_index, short bitmap_index);

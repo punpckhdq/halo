@@ -34,13 +34,13 @@ struct temp_marker
 
 /* ---------- prototypes */
 
-static int compare_temp_markers(void const *a, void const *b);
+static int __cdecl compare_temp_markers(void const *a, void const *b);
 
 /* ---------- globals */
 
 /* ---------- public code */
 
-static int compare_temp_markers(
+static int __cdecl compare_temp_markers(
 	void const *a,
 	void const *b)
 {

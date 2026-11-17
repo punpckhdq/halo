@@ -151,7 +151,7 @@ static long recursive_object_adder(
 	long object_count,
 	long maximum_count,
 	long *object_indices);
-static long sort_dumps(struct dump_datum const *dump1, struct dump_datum const *dump2);
+static long __cdecl sort_dumps(struct dump_datum const *dump1, struct dump_datum const *dump2);
 static void object_add_to_dump(long object_index, struct dump_datum *dump);
 static void object_dump_write(FILE *stream, struct dump_datum *dump);
 static short object_find_region_permutations_available_with_variant(struct model_region *region, short variant_number, short *available_indices);
@@ -4301,7 +4301,7 @@ static long recursive_object_adder(
 	return object_count;
 }
 
-static long sort_dumps(
+static long __cdecl sort_dumps(
 	struct dump_datum const *dump1,
 	struct dump_datum const *dump2)
 {

@@ -67,7 +67,7 @@ struct line_of_fire_pill
 
 /* ---------- prototypes */
 
-static int compare_releasable_inactive_encounters(void const *p1, void const *p2);
+static int __cdecl compare_releasable_inactive_encounters(void const *p1, void const *p2);
 static void ai_generate_line_of_fire_pill(long unit_index, long prop_index, struct line_of_fire_pill *pill);
 static short ai_find_line_of_fire_friend_pills(long actor_index, short max_pill_count, struct line_of_fire_pill *pills);
 static void ai_place_pending_mounted_weapons(void);
@@ -434,7 +434,7 @@ boolean ai_release_inactive_swarms(
 	return swarm_unit_count > 0;
 }
 
-static int compare_releasable_inactive_encounters(
+static int __cdecl compare_releasable_inactive_encounters(
 	void const *p1,
 	void const *p2)
 {

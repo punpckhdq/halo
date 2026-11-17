@@ -223,7 +223,7 @@ static void dim_if_no_system_link_cable(struct widget_instance *widget);
 static void spinner_list_3wide_determine_displayed_item_indices(struct widget_instance *list_widget, long *displayed_item_index);
 static void player_profile_update_cache_for_nwide_list(long *profile_index, long number_of_profile_indices);
 static void variant_profile_update_cache_for_nwide_list(long *profile_index, long number_of_profile_indices);
-static int list_indices_sort_proc(void const *index1, void const *index2);
+static int __cdecl list_indices_sort_proc(void const *index1, void const *index2);
 static long filter_invalid_list_indices(long *indices, long number_of_items);
 
 /* ---------- globals */
@@ -3187,7 +3187,7 @@ static void variant_profile_update_cache_for_nwide_list(
 	return;
 }
 
-static int list_indices_sort_proc(
+static int __cdecl list_indices_sort_proc(
 	void const *index1,
 	void const *index2)
 {

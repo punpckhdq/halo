@@ -179,7 +179,7 @@ char *strnlwr(
 	return string;
 }
 
-char *strupr(
+char * __cdecl strupr(
 	char *string)
 {
 	unsigned char *p;
@@ -192,7 +192,7 @@ char *strupr(
 	return string;
 }
 
-char *strlwr(
+char * __cdecl strlwr(
 	char *string)
 {
 	unsigned char *p;

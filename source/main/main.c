@@ -133,7 +133,7 @@ struct _main_globals
 
 /* ---------- prototypes */
 
-static long sort_desired_local_player_controllers(short const *a, short const *b);
+static long __cdecl sort_desired_local_player_controllers(short const *a, short const *b);
 static void create_local_players(void);
 static void main_queue_map_private(void);
 static void compute_subframe_counts(long num_players, long *out_horizontal_count, long *out_vertical_count);
@@ -623,7 +623,7 @@ void main_load_last_solo_map(
 	return;
 }
 
-static long sort_desired_local_player_controllers(
+static long __cdecl sort_desired_local_player_controllers(
 	short const *a,
 	short const *b)
 {
@@ -2555,7 +2555,7 @@ void main_print_version(
 	return;
 }
 
-void main_vertical_blank_interrupt_handler(
+void __cdecl main_vertical_blank_interrupt_handler(
 	unsigned long context)
 {
 	rasterizer_globals.vblank_index++;

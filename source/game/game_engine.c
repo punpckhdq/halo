@@ -525,7 +525,7 @@ void game_engine_handle_server_message(
 	return;
 }
 
-int sort_statistic_buffer(
+int __cdecl sort_statistic_buffer(
 	struct statistic_buffer const *buffer_1,
 	struct statistic_buffer const *buffer_2)
 {
@@ -543,7 +543,7 @@ int sort_statistic_buffer(
 	return result;
 }
 
-int sort_statistic_buffer_ranking(
+int __cdecl sort_statistic_buffer_ranking(
 	struct statistic_buffer const *buffer_1,
 	struct statistic_buffer const *buffer_2)
 {

@@ -1042,7 +1042,7 @@ void _rasterizer_dispose(
 }
 
 void _rasterizer_set_vblank_callback(
-	void (*callback)(unsigned long))
+	void (__cdecl *callback)(unsigned long))
 {
 	IDirect3DDevice8_SetVerticalBlankCallback(global_d3d_device, callback);
 
