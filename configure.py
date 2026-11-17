@@ -136,6 +136,7 @@ class BuildConfigObject(TypedDict):
     name: str
     index: int
     status: Union[str, Dict[str, List[str]]]
+    versions: List[str]
     options: Dict[str, Any]
 
 class BuildConfigProject(TypedDict):
@@ -203,7 +204,15 @@ for build_project in build_config["projects"]:
             elif status == "NonMatching":
                 return ObjectStatus.NonMatching
             assert False, f"Invalid object status {status}"
-        project.objects.append(Object(get_object_completed(build_object["status"]), Path(build_object["name"]), **build_object.get("options", {})))
+        object_status = get_object_completed(build_object["status"])
+        # Objects that list versions are only built for those versions
+        object_versions = build_object.get("versions")
+        if object_versions is not None:
+            for version in object_versions:
+                assert version in VERSIONS, f"{build_object['name']}: unknown version {version}"
+            if args.version not in object_versions:
+                object_status = ObjectStatus.Missing
+        project.objects.append(Object(object_status, Path(build_object["name"]), **build_object.get("options", {})))
     sln.projects.append(project)
 
 # build file generation
