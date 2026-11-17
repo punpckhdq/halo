@@ -1654,7 +1654,7 @@ void decal_new_from_collision(
 
 						if (debug_decals)
 						{
-							error(_error_silent, "### WTF decals: failed to lock vertices");
+							error(_error_silent, "### ERROR decals: failed to lock vertices");
 						}
 					}
 				}
@@ -1667,7 +1667,7 @@ void decal_new_from_collision(
 					{
 						error(
 							_error_silent,
-							"### WTF decals: failed to insert decal (locked=%d, permanent=%d)",
+							"### ERROR decals: failed to insert decal (locked=%d, permanent=%d)",
 							decal_globals->locked_count,
 							decal_globals->permanent_count);
 					}
@@ -1681,7 +1681,7 @@ void decal_new_from_collision(
 				{
 					error(
 						_error_silent,
-						"### WTF decals: failed to allocate vertices (locked=%d, permanent=%d)",
+						"### ERROR decals: failed to allocate vertices (locked=%d, permanent=%d)",
 						decal_globals->locked_count,
 						decal_globals->permanent_count);
 				}

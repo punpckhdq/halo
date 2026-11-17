@@ -384,7 +384,7 @@ void bink_playback_start(
 		}
 		else
 		{
-			error(_error_immediate, "### ERROR bink failed to fucking steal some fucking memory from the fucking texture cache");
+			error(_error_immediate, "### ERROR bink failed to steal some memory from the texture cache");
 			bink_free_texture_cache();
 		}
 	}
@@ -471,7 +471,7 @@ static void *RADLINK bink_alloc(
 
 	if (bink_pointer_count > 0 && !bink_pointer_list[0])
 	{
-		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 735, is_all_bink_memory_free(), "### FATAL_ERROR bink just confused the hell out of me (1)");
+		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 735, is_all_bink_memory_free(), "### FATAL_ERROR bink just got really confused (1)");
 		if (is_all_bink_memory_free())
 		{
 			bink_pointer_count = 0;
@@ -528,7 +528,7 @@ static void RADLINK bink_free(
 			break;
 		}
 	}
-	match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 825, pointer_index < bink_pointer_count, "### FATAL_ERROR bink just confused the hell out of me (2)");
+	match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 825, pointer_index < bink_pointer_count, "### FATAL_ERROR bink just got really confused (2)");
 
 	bink_get_memory_available();
 

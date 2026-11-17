@@ -1515,7 +1515,7 @@ static void enumerate_memory_units(
 									usnprintf(
 										message,
 										MAXIMUM_FILENAME_LENGTH,
-										L"random crap found by XFindNextSaveGame(): display name= '%s' path= '%hs'",
+										L"random junk found by XFindNextSaveGame(): display name= '%s' path= '%hs'",
 										find_data.szSaveGameName,
 										find_data.wfd.cFileName);
 									message[MAXIMUM_FILENAME_LENGTH] = '\0';

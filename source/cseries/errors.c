@@ -39,7 +39,7 @@ static void reset_error_state(void);
 
 struct error_global_data error_globals;
 boolean find_all_fucked_up_shit = FALSE;
-long fucked_up_shit_count = 0;
+long unexpected_error_count = 0;
 
 /* ---------- public code */
 

@@ -185,7 +185,7 @@ HS_FUNCTION_2(_hs_type_void, units_set_desired_flashlight_state, units_set_desir
 HS_FUNCTION_2(_hs_type_void, unit_set_desired_flashlight_state, unit_set_desired_flashlight_state, "sets the unit's desired flashlight state", _hs_type_unit, _hs_type_boolean);
 HS_FUNCTION_1(_hs_type_boolean, unit_get_current_flashlight_state, unit_get_current_flashlight_state, "gets the unit's current flashlight state", _hs_type_unit);
 
-HS_FUNCTION_2(_hs_type_void, device_set_never_appears_locked, device_set_never_appears_locked, "changes a machine's never_appears_locked flag, but only if paul is a bastard", _hs_type_device, _hs_type_boolean);
+HS_FUNCTION_2(_hs_type_void, device_set_never_appears_locked, device_set_never_appears_locked, "changes a machine's never_appears_locked flag", _hs_type_device, _hs_type_boolean);
 HS_FUNCTION_2(_hs_type_void, device_set_power, device_set_power, "immediately sets the power of a named device to the given value", _hs_type_device, _hs_type_real);
 HS_FUNCTION_1(_hs_type_real, device_get_power, device_get_power, "gets the current power of a named device", _hs_type_device);
 HS_FUNCTION_2(_hs_type_boolean, device_set_position, device_set_desired_position, "set the desired position of the given device (used for devices without explicit device groups)", _hs_type_device, _hs_type_real);
@@ -354,7 +354,7 @@ HS_FUNCTION_0(_hs_type_short_integer, structure_bsp_index, global_structure_bsp_
 HS_FUNCTION_0(_hs_type_void, version, main_print_version, "prints the build version.");
 HS_FUNCTION_0(_hs_type_void, playback, main_set_game_connection_to_film_playback, "starts game in film playback mode");
 
-HS_FUNCTION_0(_hs_type_void, texture_cache_flush, texture_cache_flush, "don't make me kick your ass");
+HS_FUNCTION_0(_hs_type_void, texture_cache_flush, texture_cache_flush, "don't overuse this");
 
 HS_FUNCTION_0(_hs_type_void, sound_cache_flush, sound_cache_flush, "i'm a rebel!");
 
@@ -408,7 +408,7 @@ HS_FUNCTION_0(_hs_type_void, game_save_cancel, main_save_cancel, "cancels any pe
 HS_FUNCTION_0(_hs_type_void, game_save_no_timeout, main_save_map_no_timeout, "checks to see if it is safe to save game, then saves (this version never gives up)");
 HS_FUNCTION_0(_hs_type_void, game_save_totally_unsafe, main_save_map_nonsafe, "disregards player's current situation");
 HS_FUNCTION_0(_hs_type_boolean, game_saving, main_saving_map, "checks to see if the game is trying to save the map.");
-HS_FUNCTION_0(_hs_type_void, game_revert, main_revert_map, "reverts to last saved game, if any (for testing, the first bastard that does this to me gets it in the head)");
+HS_FUNCTION_0(_hs_type_void, game_revert, main_revert_map, "reverts to last saved game, if any (for testing only)");
 HS_FUNCTION_0(_hs_type_void, core_load, main_load_core, "loads debug game state from core\\core.bin");
 HS_FUNCTION_0(_hs_type_void, core_load_at_startup, main_load_core_at_startup, "loads debug game state from core\\core.bin as soon as the map is initialized");
 HS_FUNCTION_1(_hs_type_void, core_load_name, main_load_core_name, "loads debug game state from core\\<path>", _hs_type_string);
@@ -417,7 +417,7 @@ HS_FUNCTION_0(_hs_type_void, core_save, main_save_core, "saves debug game state 
 HS_FUNCTION_1(_hs_type_void, core_save_name, main_save_core_name, "saves debug game state to core\\<path>", _hs_type_string);
 HS_FUNCTION_1(_hs_type_void, game_skip_ticks, main_skip, "skips <short> amount of game ticks. ONLY USE IN CUTSCENES!!!", _hs_type_short_integer);
 
-HS_FUNCTION_0(_hs_type_boolean, game_reverted, game_state_reverted, "don't use this for anything, you black-hearted bastards.");
+HS_FUNCTION_0(_hs_type_boolean, game_reverted, game_state_reverted, "don't use this for anything.");
 
 HS_FUNCTION_3(_hs_type_void, sound_impulse_start, scripted_sound_new, "plays an impulse sound from the specified source object (or \"none\"), with the specified scale.", _hs_type_sound, _hs_type_object, _hs_type_real);
 HS_FUNCTION_1(_hs_type_long_integer, sound_impulse_time, scripted_sound_time, "returns the time remaining for the specified impulse sound.", _hs_type_sound);

@@ -1948,7 +1948,7 @@ static boolean process_sprites(
 	{
 		if (TEST_FLAG(extract_data.group->flags, _bitmap_group_uniform_sprite_sequences_bit))
 		{
-			error(_error_immediate, "### ERROR hey - don't even try it! (uniform sprite sequences)\ndon't fucking swim in that septic tank with your mouth open like that");
+			error(_error_immediate, "### ERROR hey - don't even try it! (uniform sprite sequences)\ndon't swim in that septic tank with your mouth open like that");
 		}
 
 		build_texture_pages_by_sequence(texture_pages, &texture_page_count, (short)page_size, spacing);

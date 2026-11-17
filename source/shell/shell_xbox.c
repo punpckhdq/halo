@@ -15,7 +15,7 @@ symbols in this file:
 00180AA0 0010:
 	_shell_idle (0000)
 00180AB0 00d0:
-	_fuck_code_in_the_eye (0000)
+	_protect_code_section (0000)
 00180B80 0090:
 	_main (0000)
 002A0A78 0007:
@@ -49,7 +49,7 @@ symbols in this file:
 
 /* ---------- prototypes */
 
-static void fuck_code_in_the_eye(void);
+static void protect_code_section(void);
 
 /* ---------- globals */
 
@@ -109,7 +109,7 @@ void shell_idle(
 int main(
 	void)
 {
-	fuck_code_in_the_eye();
+	protect_code_section();
 	rasterizer_preinitialize__fill_you_up_with_the_devils_cock();
 	physical_memory_allocate();
 
@@ -131,7 +131,7 @@ int main(
 
 /* ---------- private code */
 
-static void fuck_code_in_the_eye(
+static void protect_code_section(
 	void)
 {
 	DWORD flOldProtect;
@@ -147,7 +147,7 @@ static void fuck_code_in_the_eye(
 		walk_modsect = NULL;
 		while (DmWalkModuleSections(&walk_modsect, module_load.Name, &section_load)!=XBDM_ENDOFLIST)
 		{
-			if (fuck_code_in_the_eye>section_load.BaseAddress && fuck_code_in_the_eye<(void *)((byte *)section_load.BaseAddress + section_load.Size))
+			if (protect_code_section>section_load.BaseAddress && protect_code_section<(void *)((byte *)section_load.BaseAddress + section_load.Size))
 			{
 				VirtualProtect(section_load.BaseAddress, section_load.Size, PAGE_READONLY, &flOldProtect);
 				

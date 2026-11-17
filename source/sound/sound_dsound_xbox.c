@@ -597,7 +597,7 @@ static void dsound_flush(
 
 		if (channel->queued_packet_count)
 		{
-			error(_error_silent, "DirectSound: you're screwed if you try to save and quit -- the devil.");
+			error(_error_silent, "DirectSound: saving and quitting will fail -- the devil.");
 			channel->queued_packet_count = 0;
 		}
 	}
@@ -647,7 +647,7 @@ static void dsound_pause(
 
 			if (channel->queued_packet_count)
 			{
-				error(_error_silent, "DirectSound: you're screwed if you try to save and quit -- the devil.");
+				error(_error_silent, "DirectSound: saving and quitting will fail -- the devil.");
 				channel->queued_packet_count = 0;
 			}
 

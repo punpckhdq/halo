@@ -838,7 +838,7 @@ static void cache_copy_run_decompression(
 						1248,
 						csprintf(
 							decompressor_error_string,
-							"decompression fucked up with error code (%d), msg '%s'",
+							"decompression failed with error code (%d), msg '%s'",
 							result,
 							zlib_stream->msg ? zlib_stream->msg : ""));
 					set_copy_error(_copy_decompression_failed_bit);

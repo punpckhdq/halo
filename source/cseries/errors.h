@@ -41,7 +41,7 @@ void write_to_error_file(char *string, boolean date);
 
 extern struct error_global_data error_globals;
 extern boolean find_all_fucked_up_shit;
-extern long fucked_up_shit_count;
+extern long unexpected_error_count;
 
 /* ---------- public code */
 
