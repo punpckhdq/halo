@@ -652,6 +652,7 @@ short collision_move_point(
 	real_point3d clip_line_point;
 	real_vector3d clip_line_vector;
 	real_point3d clip_point;
+	boolean features_full;
 
 	short collision_count = 0;
 
@@ -667,6 +668,13 @@ short collision_move_point(
 	match_assert("c:\\halo\\SOURCE\\physics\\collisions.c", 943, features->count[_collision_feature_sphere]<=MAXIMUM_COLLISION_FEATURES_PER_TEST);
 	match_assert("c:\\halo\\SOURCE\\physics\\collisions.c", 944, features->count[_collision_feature_cylinder]<=MAXIMUM_COLLISION_FEATURES_PER_TEST);
 	match_assert("c:\\halo\\SOURCE\\physics\\collisions.c", 945, features->count[_collision_feature_prism]<=MAXIMUM_COLLISION_FEATURES_PER_TEST);
+
+	if (features->count[_collision_feature_sphere]==MAXIMUM_COLLISION_FEATURES_PER_TEST ||
+		features->count[_collision_feature_cylinder]==MAXIMUM_COLLISION_FEATURES_PER_TEST ||
+		features->count[_collision_feature_prism]==MAXIMUM_COLLISION_FEATURES_PER_TEST)
+	{
+		features_full = TRUE;
+	}
 
 	while (!(fabs(clipped_velocity.i) < _real_epsilon &&
 		fabs(clipped_velocity.j) < _real_epsilon &&
@@ -851,9 +859,8 @@ short collision_move_point(
 		else if (lowest_clip != NONE)
 		{
 			struct collision_plane *downmost_clip_collision = &collisions[clip_collisions[lowest_clip]];
-			real k = downmost_clip_collision->plane.n.k;
 
-			point_from_line3d((real_point3d const *)global_up3d, &downmost_clip_collision->plane.n, -k, (real_point3d *)&composite->plane.n);
+			point_from_line3d((real_point3d const *)global_up3d, &downmost_clip_collision->plane.n, (real)(-downmost_clip_collision->plane.n.k), (real_point3d *)&composite->plane.n);
 
 			if (normalize3d(&composite->plane.n) != 0.f)
 			{
@@ -1001,67 +1008,62 @@ static boolean object_test_vector(
 		struct object_datum *object = object_get(object_index);
 
 		if (object_index != ignore_object_index && !TEST_FLAG(object->object.flags, _object_invisible_bit) &&
-			TEST_FLAG(flags, _collision_test_objects_first_type_bit + object->object.type))
+			TEST_FLAG(flags, _collision_test_objects_first_type_bit + object->object.type) &&
+			fast_vector_intersects_sphere(point, vector, &object->object.bounding_sphere_center, (real)(object->object.bounding_sphere_radius)))
 		{
-			real_point3d const *center = &object->object.bounding_sphere_center;
-			real radius = object->object.bounding_sphere_radius;
-
-			if (fast_vector_intersects_sphere(point, vector, center, radius))
+			if (TEST_FLAG(_object_mask_vehicle, object->object.type) && TEST_FLAG(flags, _collision_test_use_vehicle_physics_bit))
 			{
-				if (TEST_FLAG(_object_mask_vehicle, object->object.type) && TEST_FLAG(flags, _collision_test_use_vehicle_physics_bit))
-				{
-					struct physics_instance instance;
-					struct physics_test_vector_result result;
+				struct physics_instance instance;
+				struct physics_test_vector_result result;
 
-					if (physics_instance_new(&instance, object_index) && physics_test_vector(&instance, point, vector, &result) && collision->t > result.t)
-					{
-						collision->type = _collision_result_object;
-						collision->t = result.t;
-						collision->plane = result.plane;
-						collision->material_type = NONE;
-						collision->object_index = object_index;
-						collision->region_index = NONE;
-						collision->node_index = NONE;
-						collision->bsp_index = NONE;
-						collision->surface_index = NONE;
-						collision->plane_designator = NONE;
-						collision->flags = 0;
-						collision->breakable_surface_index = 0;
-						collision->material_index = NONE;
-						hit = TRUE;
-					}
-				}
-				else
+				if (physics_instance_new(&instance, object_index) && physics_test_vector(&instance, point, vector, &result) && collision->t > result.t)
 				{
-					struct collision_model_instance instance;
-					struct collision_model_test_vector_result result;
-
-					if (collision_model_instance_new(&instance, object_index) && collision_model_test_vector(&instance, bsp_flags, point, vector, &result) && collision->t > result.bsp_result.t)
-					{
-						collision->type = _collision_result_object;
-						collision->t = result.bsp_result.t;
-						matrix4x3_transform_plane(&instance.matrices[result.node_index], result.bsp_result.plane, &collision->plane);
-						if (result.bsp_result.plane_designator & LONG_MIN)
-						{
-							plane3d_negate(&collision->plane, &collision->plane);
-						}
-						collision->material_type = collision_model_get_material_type(instance.model, result.bsp_result.material_index);
-						collision->object_index = object_index;
-						collision->region_index = result.region_index;
-						collision->node_index = result.node_index;
-						collision->bsp_index = result.bsp_index;
-						collision->surface_index = result.bsp_result.surface_index;
-						collision->plane_designator = result.bsp_result.plane_designator;
-						collision->flags = result.bsp_result.flags;
-						collision->breakable_surface_index = result.bsp_result.breakable_surface_index;
-						collision->material_index = result.bsp_result.material_index;
-						hit = TRUE;
-					}
-				}
-				if (object->object.first_child_object_index != NONE && object_test_vector(object->object.first_child_object_index, flags, bsp_flags, point, vector, ignore_object_index, collision))
-				{
+					collision->type = _collision_result_object;
+					collision->t = result.t;
+					collision->plane = result.plane;
+					collision->material_type = NONE;
+					collision->object_index = object_index;
+					collision->region_index = NONE;
+					collision->node_index = NONE;
+					collision->bsp_index = NONE;
+					collision->surface_index = NONE;
+					collision->plane_designator = NONE;
+					collision->flags = 0;
+					collision->breakable_surface_index = 0;
+					collision->material_index = NONE;
 					hit = TRUE;
 				}
+			}
+			else
+			{
+				struct collision_model_instance instance;
+				struct collision_model_test_vector_result result;
+
+				if (collision_model_instance_new(&instance, object_index) && collision_model_test_vector(&instance, bsp_flags, point, vector, &result) && collision->t > result.bsp_result.t)
+				{
+					collision->type = _collision_result_object;
+					collision->t = result.bsp_result.t;
+					matrix4x3_transform_plane(&instance.matrices[result.node_index], result.bsp_result.plane, &collision->plane);
+					if (result.bsp_result.plane_designator & LONG_MIN)
+					{
+						plane3d_negate(&collision->plane, &collision->plane);
+					}
+					collision->material_type = collision_model_get_material_type(instance.model, result.bsp_result.material_index);
+					collision->object_index = object_index;
+					collision->region_index = result.region_index;
+					collision->node_index = result.node_index;
+					collision->bsp_index = result.bsp_index;
+					collision->surface_index = result.bsp_result.surface_index;
+					collision->plane_designator = result.bsp_result.plane_designator;
+					collision->flags = result.bsp_result.flags;
+					collision->breakable_surface_index = result.bsp_result.breakable_surface_index;
+					collision->material_index = result.bsp_result.material_index;
+					hit = TRUE;
+				}
+			}
+			if (object->object.first_child_object_index != NONE && object_test_vector(object->object.first_child_object_index, flags, bsp_flags, point, vector, ignore_object_index, collision))
+			{
+				hit = TRUE;
 			}
 		}
 

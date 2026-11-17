@@ -921,7 +921,7 @@ void physics_update_new(
 		magnitude_squared3d(&linear_velocity) <= SECONDS_PER_TICK*SECONDS_PER_TICK &&
 		magnitude_squared3d(&angular_velocity) <= (_pi2*SECONDS_PER_TICK)*(_pi2*SECONDS_PER_TICK) &&
 		magnitude_squared3d(&linear_acceleration) <= (0.5f*SECONDS_PER_TICK*SECONDS_PER_TICK)*(0.5f*SECONDS_PER_TICK*SECONDS_PER_TICK) &&
-		magnitude_squared3d(&angular_acceleration) <= (_pi2*SECONDS_PER_TICK*SECONDS_PER_TICK)*(_pi2*SECONDS_PER_TICK*SECONDS_PER_TICK));
+		magnitude_squared3d(&angular_acceleration) <= (DEGREES_TO_RADIANS(90)*SECONDS_PER_TICK*SECONDS_PER_TICK)*(DEGREES_TO_RADIANS(90)*SECONDS_PER_TICK*SECONDS_PER_TICK));
 	SET_FLAG(object->object.flags, _object_on_ground_bit, mass_points_on_ground_count > 0);
 	SET_FLAG(object->object.flags, _object_on_media_bit, mass_points_in_water_count > 0);
 	SET_FLAG(object->object.flags, _object_partially_under_media_bit, mass_points_in_water_count > 0);
@@ -1060,8 +1060,8 @@ static void physics_update_old(
 			{
 				real_vector3d velocity;
 
-				point_from_line3d((real_point3d *)&mass_point->velocity, &mass_point->forward, -powered_mass_point->water_friction_velocity, (real_point3d *)&velocity);
-				scale_vector3d(&velocity, -physics->water_friction*mass_point_definition->mass, &mass_point->water_friction.friction);
+				point_from_line3d((real_point3d *)&mass_point->velocity, &mass_point->forward, -(powered_mass_point->water_friction_velocity), (real_point3d *)&velocity);
+				scale_vector3d(&velocity, -(physics->water_friction*mass_point_definition->mass), &mass_point->water_friction.friction);
 			}
 			else
 			{
@@ -1083,11 +1083,11 @@ static void physics_update_old(
 			real_vector3d velocity;
 
 			point_from_line3d((real_point3d *)&mass_point->velocity, &mass_point->forward, -powered_mass_point->air_friction_velocity, (real_point3d *)&velocity);
-			scale_vector3d(&velocity, -physics->air_friction*mass_point_definition->mass, &mass_point->air_friction.friction);
+			scale_vector3d(&velocity, -(physics->air_friction*mass_point_definition->mass), &mass_point->air_friction.friction);
 		}
 		else
 		{
-			scale_vector3d(&mass_point->velocity, -physics->air_friction*mass_point_definition->mass, &mass_point->air_friction.friction);
+			scale_vector3d(&mass_point->velocity, -(physics->air_friction*mass_point_definition->mass), &mass_point->air_friction.friction);
 		}
 		friction_evaluate(mass_point_definition->friction_type, mass_point_definition->friction_parallel_scale, mass_point_definition->friction_perpendicular_scale, &mass_point->air_friction, &mass_point->forward, &mass_point->up);
 		if (powered_mass_point_definition && TEST_FLAG(powered_mass_point_definition->flags, _powered_mass_point_air_lift_bit) && powered_mass_point->air_lift_ratio != 0.f)
@@ -1162,7 +1162,7 @@ static void physics_update_old(
 				struct mass_point_datum *mass_point = &mass_points[mass_point_index];
 				real_vector3d radius;
 
-				point_from_line3d((real_point3d *)&mass_point->radius, &torque_axle, -dot_product3d(&mass_point->radius, &torque_axle), (real_point3d *)&radius);
+				point_from_line3d((real_point3d *)&mass_point->radius, &torque_axle, -(dot_product3d(&mass_point->radius, &torque_axle)), (real_point3d *)&radius);
 				moment += (magnitude_squared3d(&radius)+0.4f*mass_point_definition->radius*mass_point_definition->radius)*mass_point_definition->mass*physics->moment;
 			}
 			if (moment != 0.f)
@@ -1196,7 +1196,7 @@ static void physics_update_old(
 			rotate_vector_about_axis(&object->object.forward, &axis, sine, cosine);
 			rotate_vector_about_axis(&object->object.up, &axis, sine, cosine);
 			normalize3d(&object->object.forward);
-			point_from_line3d((real_point3d *)&object->object.up, &object->object.forward, -dot_product3d(&object->object.up, &object->object.forward), (real_point3d *)&object->object.up);
+			point_from_line3d((real_point3d *)&object->object.up, &object->object.forward, -(dot_product3d(&object->object.up, &object->object.forward)), (real_point3d *)&object->object.up);
 			normalize3d(&object->object.up);
 		}
 	}
@@ -1205,7 +1205,7 @@ static void physics_update_old(
 		real const translational_velocity_threshold = SECONDS_PER_TICK*SECONDS_PER_TICK;
 		real const angular_velocity_threshold = (_pi2*SECONDS_PER_TICK)*(_pi2*SECONDS_PER_TICK);
 		real const translational_acceleration_threshold = (0.5f*SECONDS_PER_TICK*SECONDS_PER_TICK)*(0.5f*SECONDS_PER_TICK*SECONDS_PER_TICK);
-		real const angular_acceleration_threshold = (_pi2*SECONDS_PER_TICK*SECONDS_PER_TICK)*(_pi2*SECONDS_PER_TICK*SECONDS_PER_TICK);
+		real const angular_acceleration_threshold = (DEGREES_TO_RADIANS(90)*SECONDS_PER_TICK*SECONDS_PER_TICK)*(DEGREES_TO_RADIANS(90)*SECONDS_PER_TICK*SECONDS_PER_TICK);
 		real translational_velocity_squared = magnitude_squared3d(&object->object.translational_velocity);
 		real angular_velocity_squared = magnitude_squared3d(&object->object.angular_velocity);
 		real translational_acceleration_squared = magnitude_squared3d(&translational_acceleration);
