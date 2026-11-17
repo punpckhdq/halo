@@ -51,9 +51,11 @@ boolean action_charge_setup(
 	struct actor_datum *actor = actor_get(actor_index);
 	struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
 	boolean success = TRUE;
+#ifdef DEBUG
 	struct actor_debug_info *actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 
 	actor_debug_info->charge_last_time = game_time_get();
+#endif
 
 	match_assert("c:\\halo\\SOURCE\\ai\\action_charge.c", 47, state_data);
 
@@ -63,14 +65,18 @@ boolean action_charge_setup(
 	if (goal == _charge_goal_vehicle_ramming || goal == _charge_goal_vehicle_strafing)
 	{
 		success = actor->input.vehicle_driver_type > _actor_vehicle_driver_unknown;
+#ifdef DEBUG
 		actor_debug_info->charge_decision = !success;
+#endif
 	}
 	else if (goal == _charge_goal_melee)
 	{
 		if (actor->meta.swarm)
 		{
 			success = FALSE;
+#ifdef DEBUG
 			actor_debug_info->charge_decision = _charge_melee_swarm_cant;
+#endif
 		}
 		else
 		{
@@ -80,12 +86,16 @@ boolean action_charge_setup(
 			if (TEST_FLAG(unit->object.damage_flags, _object_melee_attack_inhibited_bit))
 			{
 				success = FALSE;
+#ifdef DEBUG
 				actor_debug_info->charge_decision = _charge_melee_inhibited;
+#endif
 			}
 			else if (actor->target.target_prop_index == NONE)
 			{
 				success = FALSE;
+#ifdef DEBUG
 				actor_debug_info->charge_decision = _charge_melee_notarget;
+#endif
 			}
 			else
 			{
@@ -117,7 +127,9 @@ boolean action_charge_setup(
 					goal = _charge_goal_melee_leaping;
 				}
 
+#ifdef DEBUG
 				actor_debug_info->field_198 = leaping;
+#endif
 
 				{
 					short melee_start_tick;
@@ -171,18 +183,24 @@ boolean action_charge_setup(
 							if (valid)
 							{
 								success = TRUE;
+#ifdef DEBUG
 								actor_debug_info->charge_decision = _charge_melee_success;
+#endif
 							}
 							else
 							{
+#ifdef DEBUG
 								actor_debug_info->charge_decision = _charge_melee_cannot_move;
 								actor_debug_info->field_194 = accept_radius;
+#endif
 							}
 						}
 					}
 					else
 					{
+#ifdef DEBUG
 						actor_debug_info->charge_decision = _charge_melee_no_animation;
+#endif
 					}
 				}
 			}
@@ -196,11 +214,15 @@ boolean action_charge_setup(
 			!actor->emotions.berserk)
 		{
 			goal = _charge_goal_stalking;
+#ifdef DEBUG
 			actor_debug_info->charge_decision = _charge_stalking_success;
+#endif
 		}
 		else
 		{
+#ifdef DEBUG
 			actor_debug_info->charge_decision = _charge_close_success;
+#endif
 		}
 	}
 
@@ -415,19 +437,25 @@ boolean action_charge_perform(
 		prop)
 	{
 		boolean melee_attack = FALSE;
+#ifdef DEBUG
 		struct actor_debug_info *actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 		real_vector3d vector_to_target;
 
+#ifdef DEBUG
 		actor_debug_info->last_melee_time = game_time_get();
 		point_from_line3d(&actor->input.position.body_position, global_up3d, 0.05f, &actor_debug_info->field_108);
 		actor_debug_info->field_114 = actor->input.facing_vector;
 		point_from_line3d(&prop->body_position, global_up3d, 0.05f, &actor_debug_info->field_120);
+#endif
 
 		match_assert("c:\\halo\\SOURCE\\ai\\action_charge.c", 487, !actor->meta.swarm);
 
 		if (prop->distance < 0.8f)
 		{
+#ifdef DEBUG
 			actor_debug_info->field_139 = TRUE;
+#endif
 			vector_to_target = prop->actor_to_prop;
 			melee_attack = TRUE;
 		}
@@ -439,7 +467,9 @@ boolean action_charge_perform(
 			real lead_fraction;
 			real target_speed;
 
+#ifdef DEBUG
 			actor_debug_info->field_139 = FALSE;
+#endif
 
 			lead_fraction = 0.f;
 			target_speed = magnitude3d(&prop->velocity);
@@ -450,7 +480,9 @@ boolean action_charge_perform(
 
 			point_from_line3d(&prop->body_position, &prop->velocity, (real)state_data->melee_ticks_until_dangerous * lead_fraction, &estimated_target_position);
 			vector_from_points3d(&actor->input.position.body_position, &estimated_target_position, &vector_to_target);
+#ifdef DEBUG
 			point_from_line3d(&estimated_target_position, global_up3d, 0.05f, &actor_debug_info->field_13C);
+#endif
 
 			if (dot_product3d(&vector_to_target, &prop->actor_to_prop) < 0.f)
 			{
@@ -468,8 +500,10 @@ boolean action_charge_perform(
 
 			if (state_data->goal == _charge_goal_melee_leaping && !state_data->launched_leap)
 			{
+#ifdef DEBUG
 				actor_debug_info->field_148 = actor_definition->berserk.melee_leap_range_lower_bound;
 				actor_debug_info->field_14C = actor_definition->berserk.melee_leap_range_upper_bound;
+#endif
 
 				if (distance < actor_definition->berserk.melee_leap_range_lower_bound && prop->unreachable_ticks == 0 && !prop->flying)
 				{
@@ -517,8 +551,10 @@ boolean action_charge_perform(
 			}
 			else if (state_data->melee_suicide)
 			{
+#ifdef DEBUG
 				actor_debug_info->field_148 = 0.f;
 				actor_debug_info->field_14C = actor_definition->berserk.melee_attack_range;
+#endif
 
 				if (distance < actor_definition->berserk.melee_attack_range)
 				{
@@ -542,8 +578,10 @@ boolean action_charge_perform(
 					distance -= dot_product3d(&vector_to_target, &unit->object.translational_velocity) * (real)state_data->melee_ticks_until_dangerous;
 				}
 
+#ifdef DEBUG
 				actor_debug_info->field_148 = state_data->melee_danger_range;
 				actor_debug_info->field_14C = state_data->melee_danger_range + actor_definition->berserk.melee_attack_range;
+#endif
 
 				if (distance < state_data->melee_danger_range + actor_definition->berserk.melee_attack_range)
 				{
@@ -571,8 +609,10 @@ boolean action_charge_perform(
 			}
 		}
 
+#ifdef DEBUG
 		actor_debug_info->field_12C = vector_to_target;
 		actor_debug_info->field_138 = melee_attack;
+#endif
 
 		if (melee_attack)
 		{

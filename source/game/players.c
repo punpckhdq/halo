@@ -2492,6 +2492,7 @@ void players_handle_deleted_object(
 	return;
 }
 
+#ifdef DEBUG
 boolean debug_render_player_teleport = FALSE;
 
 void players_debug_render(
@@ -2557,5 +2558,6 @@ void debug_player_teleport(
 
 	return;
 }
+#endif
 
 /* ---------- private code */

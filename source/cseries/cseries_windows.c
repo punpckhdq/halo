@@ -22,6 +22,7 @@ static char *exception_code_get_string(unsigned long exception_code);
 
 /* ---------- public code */
 
+#ifdef DEBUG
 void display_debug_string(
 	char const *string)
 {
@@ -29,6 +30,7 @@ void display_debug_string(
 
 	return;
 }
+#endif
 
 void system_exit(
 	long code)

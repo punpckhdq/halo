@@ -378,7 +378,11 @@ typedef struct message_client_graceful_game_exit_postgame message_client_gracefu
 void initialize_network_game_packets(void);
 message_header *create_network_game_message(short message_type, void *message_struct, short message_struct_size);
 boolean decode_network_game_message(void *message_struct, void *encoded_message, short *encoded_message_size, short *packet_type, short *packet_version, short expected_packet_class);
+#ifdef DEBUG
 void network_event(char *format, ...);
+#else
+#define network_event
+#endif
 
 /* ---------- globals */
 

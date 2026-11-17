@@ -417,6 +417,7 @@ void obstacles_recompute(
 	return;
 }
 
+#ifdef DEBUG
 void render_debug_obstacles(
 	struct obstacles const *obstacles,
 	real radius)
@@ -484,3 +485,4 @@ void render_debug_obstacles(
 
 	return;
 }
+#endif

@@ -137,7 +137,9 @@ static void hs_global_reconcile_write(short global_designator);
 
 boolean debug_trigger_volumes;
 boolean debug_scripting;
+#ifdef DEBUG
 unsigned long hs_debug_data[BIT_VECTOR_SIZE_IN_LONGS(MAXIMUM_TRIGGER_VOLUMES_PER_SCENARIO)];
+#endif
 struct data_array *hs_global_data;
 struct data_array *hs_thread_data;
 
@@ -256,7 +258,9 @@ void hs_runtime_initialize_for_new_map(
 		}
 	}
 
+#ifdef DEBUG
 	memset(hs_debug_data, 0, sizeof(hs_debug_data));
+#endif
 
 	return;
 }
@@ -459,7 +463,9 @@ void render_debug_scripting(
 
 		buffer[1024] = '\0';
 		draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
+#ifdef DEBUG
 		render_debug_string(TRUE, buffer);
+#endif
 		draw_string_set_tab_stops(tab_stops, 0);
 	}
 
@@ -547,15 +553,19 @@ void render_debug_trigger_volumes(
 
 				if (BIT_VECTOR_TEST_FLAG(hs_debug_data, trigger_volume_index))
 				{
+#ifdef DEBUG
 					render_debug_polygon_edges(points, NUMBEROF(points), global_real_argb_blue);
+#endif
 				}
 				else
 				{
 					real_argb_color color = *global_real_argb_blue;
 
 					color.alpha = 0.15f;
+#ifdef DEBUG
 					render_debug_polygon_edges(points, NUMBEROF(points), global_real_argb_red);
 					render_debug_polygon(points, NUMBEROF(points), &color);
+#endif
 				}
 			}
 
@@ -577,11 +587,15 @@ void render_debug_trigger_volumes(
 				{
 					if (BIT_VECTOR_TEST_FLAG(hs_debug_data, trigger_volume_index))
 					{
+#ifdef DEBUG
 						render_debug_string_at_point(TRUE, &center, trigger_volume->name, global_real_argb_yellow);
+#endif
 					}
 					else
 					{
+#ifdef DEBUG
 						render_debug_string_at_point(TRUE, &center, trigger_volume->name, global_real_argb_white);
+#endif
 					}
 				}
 			}

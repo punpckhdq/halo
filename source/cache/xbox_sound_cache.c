@@ -466,7 +466,9 @@ void sound_cache_debug_render(
 						point_from_line3d(&points[point_index], &vector, distance, &points[point_index]);
 					}
 
+#ifdef DEBUG
 					render_debug_line(TRUE, &points[0], &points[1], colors[flag_index]);
+#endif
 				}
 			}
 		}

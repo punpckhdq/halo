@@ -406,7 +406,9 @@ void rasterizer_profile_frame_end(
 
 		frame_pushbuffer_size = (long)MIN(-frame_pushbuffer_offset, LONG_MAX);
 		D3DDevice_InsertCallback(D3DCALLBACK_WRITE, frame_callback_function, frame_index * 2 + 1);
+#ifdef DEBUG
 		profile_rasterizer_stats((real)frame_times[last_frame_index] * 1000.f / (real)profile_frequency.QuadPart, frame_pushbuffer_size);
+#endif
 	}
 
 	return;

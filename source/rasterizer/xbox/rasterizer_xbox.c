@@ -1112,9 +1112,13 @@ boolean rasterizer_set_texture_bitmap_data(
 	{
 		IDirect3DBaseTexture8 *hardware_format;
 
+#ifdef DEBUG
 		profile_texture_start();
+#endif
 		hardware_format = _texture_cache_bitmap_get_hardware_format(bitmap, TRUE, TRUE);
+#ifdef DEBUG
 		profile_texture_end();
+#endif
 
 		IDirect3DDevice8_SetTexture(global_d3d_device, stage, hardware_format);
 	}

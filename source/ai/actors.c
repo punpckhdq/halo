@@ -41,8 +41,10 @@ enum
 
 static void actor_swarm_component_refresh(long unit_index, long swarm_component_index);
 static void actor_update(long actor_index);
+#ifdef DEBUG
 static void actor_debug_preupdate(long actor_index);
 static void actor_debug_postupdate(void);
+#endif
 static boolean actor_general_update(long actor_index);
 static boolean actor_get_timeslice(long actor_index);
 static void actor_clear_output(long actor_index);
@@ -131,7 +133,9 @@ long actor_new(
 
 			if (actor_index!=NONE)
 			{
+#ifdef DEBUG
 				struct actor_debug_info *debug_info;
+#endif
 				struct actor_datum *actor = actor_get(actor_index);
 
 				actor->meta.swarm = TEST_FLAG(actor_definition->flags, _actor_definition_swarm_actor_bit);
@@ -243,6 +247,7 @@ long actor_new(
 				actor_clear_discarded_firing_positions(actor_index, FALSE);
 				actor->firing_positions.pursuit_prop_index = NONE;
 
+#ifdef DEBUG
 				debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 				memset(debug_info, 0, sizeof(*debug_info));
 				debug_info->last_path_refresh = NONE;
@@ -255,6 +260,7 @@ long actor_new(
 				debug_info->field_19C = NONE;
 				debug_info->vision_last_time = NONE;
 				debug_info->num_debug_evaluations = NONE;
+#endif
 
 				actor_type_initialize(actor_index);
 			}
@@ -2371,7 +2377,9 @@ static void actor_update(
 {
 	struct actor_datum *actor = actor_get(actor_index);
 
+#ifdef DEBUG
 	actor_debug_preupdate(actor_index);
+#endif
 
 	if (actor_general_update(actor_index))
 	{
@@ -2406,11 +2414,14 @@ static void actor_update(
 		}
 	}
 
+#ifdef DEBUG
 	actor_debug_postupdate();
+#endif
 
 	return;
 }
 
+#ifdef DEBUG
 static void actor_debug_preupdate(
 	long actor_index)
 {
@@ -2418,12 +2429,10 @@ static void actor_debug_preupdate(
 
 	global_updating_actor_index = actor_index;
 
-#ifdef DEBUG
 	if (ai_debug.enter_debugger && ai_debug.selected_actor_index==actor_index)
 	{
 		ai_debug.enter_debugger = FALSE;
 	}
-#endif
 
 	return;
 }
@@ -2435,6 +2444,7 @@ static void actor_debug_postupdate(
 
 	return;
 }
+#endif
 
 static boolean actor_general_update(
 	long actor_index)
@@ -2442,29 +2452,41 @@ static boolean actor_general_update(
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean result = TRUE;
 
+#ifdef DEBUG
 	++ai_profile.meters[_ai_meter_actor_active].current_count;
+#endif
 
 	if (!actor->meta.dormant)
 	{
+#ifdef DEBUG
 		++ai_profile.meters[_ai_meter_actor_non_dormant].current_count;
+#endif
 	}
 
 	if (actor->meta.swarm)
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_unit_active].current_count += actor->meta.swarm_unit_count;
+#endif
 
 		if (!actor->meta.dormant)
 		{
+#ifdef DEBUG
 			ai_profile.meters[_ai_meter_unit_non_dormant].current_count += actor->meta.swarm_unit_count;
+#endif
 		}
 	}
 	else
 	{
+#ifdef DEBUG
 		++ai_profile.meters[_ai_meter_unit_active].current_count;
+#endif
 
 		if (!actor->meta.dormant)
 		{
+#ifdef DEBUG
 			++ai_profile.meters[_ai_meter_unit_non_dormant].current_count;
+#endif
 		}
 	}
 
@@ -2851,7 +2873,9 @@ static void actor_input_update(
 
 		if (actor->meta.encounter_index!=NONE)
 		{
+#ifdef DEBUG
 			struct actor_debug_info *debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 			struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->ai_encounters, DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index), struct encounter_definition);
 			boolean wrong_encounter_type = FALSE;
 
@@ -2866,6 +2890,7 @@ static void actor_input_update(
 
 			if (wrong_encounter_type)
 			{
+#ifdef DEBUG
 				if (debug_info->evaluation_mode<5 * TICKS_PER_SECOND && ++debug_info->evaluation_mode==5 * TICKS_PER_SECOND)
 				{
 					if (actor->state.flying)
@@ -2877,10 +2902,13 @@ static void actor_input_update(
 						error(_error_silent, "actor %s is not flying but was placed in a 3d-firing-position encounter (%s)", tag_get_name(actor->meta.definition_index), encounter_definition->name);
 					}
 				}
+#endif
 			}
 			else
 			{
+#ifdef DEBUG
 				debug_info->evaluation_mode = 0;
+#endif
 			}
 		}
 

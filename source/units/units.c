@@ -192,14 +192,18 @@ static struct unit_globals *unit_globals;
 
 static struct profile_section unit_update_section = {"unit_update", NONE, TRUE};
 
+#ifdef DEBUG
 boolean debug_objects_unit_mouth_apeture;
 boolean debug_objects_unit_seats;
 boolean debug_objects_unit_vectors;
+#endif
 boolean stun_enable;
+#ifdef DEBUG
 boolean debug_damage_taken;
 boolean debug_unit_illumination;
 boolean debug_unit_animations;
 boolean debug_unit_all_animations;
+#endif
 
 /* ---------- public code */
 
@@ -477,7 +481,6 @@ static void unit_verify_vectors(
 	{
 		struct unit_datum *unit = unit_get(unit_index);
 
-#ifdef DEBUG
 		ai_debug_describe_actor(
 			unit->unit.actor_index == NONE ? unit->unit.swarm_actor_index : unit->unit.actor_index,
 			unit_index,
@@ -485,7 +488,6 @@ static void unit_verify_vectors(
 			actorbuf,
 			NUMBEROF(actorbuf)
 		);
-#endif
 		error(_error_silent, "**** unit_verify_vectors: problems with %s at location %s", actorbuf, debugstring);
 		error(
 			_error_silent,
@@ -1282,6 +1284,7 @@ boolean unit_update(
 	{
 		unit_refresh_illumination(unit_index);
 
+#ifdef DEBUG
 		if (debug_unit_illumination)
 		{
 			if (unit->unit.player_index != NONE)
@@ -1300,6 +1303,7 @@ boolean unit_update(
 				}
 			}
 		}
+#endif
 	}
 
 	if (unit->unit.flaming_death_delay > 0)
@@ -2908,6 +2912,7 @@ void unit_render_debug(
 	struct unit_datum *unit = unit_get(unit_index);
 	struct unit_definition *unit_definition = unit_definition_get(unit->definition_index);
 
+#ifdef DEBUG
 	if (debug_objects_unit_vectors)
 	{
 		real_point3d head_position;
@@ -2946,7 +2951,6 @@ void unit_render_debug(
 		}
 	}
 
-#ifdef DEBUG
 	if (debug_objects_unit_mouth_apeture)
 	{
 		real_point3d head_point;
@@ -3507,6 +3511,7 @@ static boolean unit_animation_set_state(
 			animation_index = NONE;
 		}
 
+#ifdef DEBUG
 		if (debug_unit_animations && unit->object.type == _object_type_biped && animation_index == NONE)
 		{
 			console_warning("MISSING: %s '%s %s %s'",
@@ -3515,6 +3520,7 @@ static boolean unit_animation_set_state(
 				unit_seat_animation_index != NONE ? animation_list_get_string(&unit_seat_animation_list, unit_seat_animation_index) : weapon_class->label,
 				weapon_class_animation_index != NONE ? animation_list_get_string(&weapon_class_animation_list, weapon_class_animation_index) : "");
 		}
+#endif
 
 		if (animation_index != NONE || unit_animation_state_can_be_entered_without_animation(new_state))
 		{
@@ -3538,6 +3544,7 @@ static boolean unit_animation_set_state(
 				aiming_screen_index >= 0 && aiming_screen_index < weapon_class->animations.count ?
 				animation_graph_animation_index_get(&weapon_class->animations)[aiming_screen_index].animation_index : NONE);
 
+#ifdef DEBUG
 			if (debug_unit_animations && unit->object.type == _object_type_biped && unit->unit.animation.aiming_screen_index == NONE && aiming_screen_index != NONE)
 			{
 				console_warning("MISSING: %s '%s %s %s'",
@@ -3546,6 +3553,7 @@ static boolean unit_animation_set_state(
 					weapon_class->label,
 					animation_list_get_string(&weapon_class_animation_list, aiming_screen_index));
 			}
+#endif
 
 			interpolation_frame_count = 6;
 			interpolate = TRUE;
@@ -3557,6 +3565,7 @@ static boolean unit_animation_set_state(
 				unit_seat->animations.count > _unit_seat_animation_looking ?
 				animation_graph_animation_index_get(&unit_seat->animations)[_unit_seat_animation_looking].animation_index : NONE);
 
+#ifdef DEBUG
 			if (debug_unit_animations && unit->object.type == _object_type_biped && unit->unit.animation.looking_screen_index == NONE)
 			{
 				console_warning("MISSING: %s '%s %s'",
@@ -3564,6 +3573,7 @@ static boolean unit_animation_set_state(
 					unit_seat->label,
 					animation_list_get_string(&unit_seat_animation_list, _unit_seat_animation_looking));
 			}
+#endif
 		}
 
 		if (interpolate)
@@ -3638,6 +3648,7 @@ static void unit_animation_start_overlay_action(
 			unit->unit.animation.overlay_action_animation.frame_index = 0;
 			unit->unit.animation.overlay_action = (char)overlay_action;
 		}
+#ifdef DEBUG
 		else if (debug_unit_animations && unit->object.type == _object_type_biped && unit->unit.animation.aiming_screen_index == NONE)
 		{
 			console_warning("MISSING: %s '%s %s'",
@@ -3647,6 +3658,7 @@ static void unit_animation_start_overlay_action(
 				weapon_type->label,
 				animation_list_get_string(&weapon_type_animation_list, weapon_type_animation_index));
 		}
+#endif
 	}
 
 	return;
@@ -4180,6 +4192,7 @@ void unit_damage_aftermath(
 	boolean died = TEST_FLAG(being_damaged_flags, _object_being_damaged_body_depleted_bit);
 	boolean feigned = FALSE;
 
+#ifdef DEBUG
 	if (debug_damage_taken && unit->unit.player_index != NONE)
 	{
 		char const *owner_name = "<unknown>";
@@ -4217,6 +4230,7 @@ void unit_damage_aftermath(
 		owner_name,
 		damage_name);
 	}
+#endif
 
 	{
 		real recent_damage = unit->object.recent_shield_damage + unit->object.recent_body_damage;
@@ -7552,6 +7566,7 @@ static void unit_set_animation(
 	unit->object.animation.state.index = animation_index;
 	unit->object.animation.state.frame_index = 0;
 
+#ifdef DEBUG
 	if (debug_unit_all_animations)
 	{
 		char const *animation_name = "<none>";
@@ -7567,20 +7582,19 @@ static void unit_set_animation(
 			}
 		}
 
-#ifdef DEBUG
 		if (ai_debug.selected_actor_index != NONE &&
 			unit->unit.actor_index != ai_debug.selected_actor_index &&
 			unit->unit.swarm_actor_index != ai_debug.selected_actor_index)
 		{
 			print = FALSE;
 		}
-#endif
 
 		if (print)
 		{
 			console_printf(FALSE, "%s: animation %s", tag_name_strip_path(tag_get_name(unit->definition_index)), animation_name);
 		}
 	}
+#endif
 
 	return;
 }

@@ -101,7 +101,9 @@ struct netgame_goal global_goal[MAXIMUM_NETGAME_GOALS] = {0};
 struct game_variant global_variant = {0};
 struct game_engine *game_engine = NULL;
 
+#ifdef DEBUG
 short debug_player_color = NONE;
+#endif
 
 /* ---------- public code */
 
@@ -4132,10 +4134,12 @@ real_rgb_color game_engine_player_get_change_color(
 	{
 		long color_index = player->network_player_data.primary_color_index;
 
+#ifdef DEBUG
 		if (debug_player_color != NONE)
 		{
 			color_index = debug_player_color;
 		}
+#endif
 
 		color = player_profile_get_rgb_color(color_index);
 	}

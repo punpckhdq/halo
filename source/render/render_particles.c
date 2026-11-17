@@ -96,7 +96,9 @@ void render_particles(
 
 	profile_enter(render_particles_section);
 
+#ifdef DEBUG
 	if (render_particles_enabled)
+#endif
 	{
 		long particle_index;
 		short local_player_index = render.local_player_index;

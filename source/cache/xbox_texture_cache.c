@@ -508,6 +508,7 @@ static void texture_cache_initialize_hardware_format(
 	return;
 }
 
+#ifdef DEBUG
 void texture_cache_debug_render(
 	void)
 {
@@ -616,6 +617,7 @@ void texture_cache_debug_render(
 
 	return;
 }
+#endif
 
 /* ---------- private code */
 

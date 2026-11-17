@@ -80,7 +80,9 @@ boolean collision_model_get_features_in_sphere(
 		real width,
 		struct collision_feature_list *features);
 
+#ifdef DEBUG
 void render_debug_collision_model(struct collision_model_instance const *instance);
+#endif
 
 /* ---------- globals */
 

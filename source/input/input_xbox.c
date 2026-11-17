@@ -577,7 +577,9 @@ boolean input_initialize(
 		error(_error_silent, "XInputDebugInitKeyboardQueue failed (#%d) during input_initialize()", result);
 	}
 
+#ifdef DEBUG
 	HATInit();
+#endif
 	input_update_gamepads();
 	input_update();
 	input_globals.rumble_thread_resumed = FALSE;
@@ -590,7 +592,9 @@ void input_dispose(
 {
 	short gamepad_index;
 
+#ifdef DEBUG
 	HATCleanup();
+#endif
 
 	if (input_globals.keyboard_handle)
 	{
@@ -1149,10 +1153,12 @@ void input_update(
 	input_update_keyboard();
 	acquire_input_mutex();
 
+#ifdef DEBUG
 	HATRun(&input_globals.gamepads[0]);
 	HATRun(&input_globals.gamepads[1]);
 	HATRun(&input_globals.gamepads[2]);
 	HATRun(&input_globals.gamepads[3]);
+#endif
 
 	return;
 }

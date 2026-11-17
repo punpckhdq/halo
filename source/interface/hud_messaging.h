@@ -52,9 +52,11 @@ void scripted_hud_set_timer_position(short x, short y, short corner);
 void scripted_hud_show_timer(boolean enabled);
 void scripted_hud_pause_timer(boolean paused);
 short scripted_hud_get_timer_ticks(void);
+#ifdef DEBUG
 void scripted_hud_time_code_show(boolean show);
 void scripted_hud_time_code_start(boolean start);
 void scripted_hud_time_code_reset(void);
+#endif
 void hud_render_timer(void);
 void hud_set_state_message(short local_player_index, short message_index);
 void hud_set_state_message_icon(short local_player_index, short custom_icon_index, struct icon_hud_element_definition const *icon);

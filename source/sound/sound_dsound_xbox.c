@@ -574,7 +574,9 @@ static void dsound_end_scene(
 				}
 			}
 		}
+#ifdef DEBUG
 		render_debug_string(FALSE, buffer);
+#endif
 	}
 
 	return;

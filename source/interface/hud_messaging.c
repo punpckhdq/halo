@@ -415,6 +415,7 @@ short scripted_hud_get_timer_ticks(
 	return ticks;
 }
 
+#ifdef DEBUG
 void scripted_hud_time_code_show(
 	boolean show)
 {
@@ -461,6 +462,7 @@ void scripted_hud_time_code_reset(
 
 	return;
 }
+#endif
 
 void hud_render_timer(
 	void)
@@ -572,7 +574,9 @@ void hud_render_timer(
 	if (time_code_time != NONE)
 	{
 		sprintf(temporary, "%d", (time_code_stop_time == NONE ? game_time_get() : time_code_stop_time) - time_code_time);
+#ifdef DEBUG
 		render_debug_string(TRUE, temporary);
+#endif
 	}
 
 	return;

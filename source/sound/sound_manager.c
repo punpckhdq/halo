@@ -784,10 +784,14 @@ static void render_debug_sound(
 		struct sound_datum *sound = sound_get(sound_index);
 		struct sound_definition *definition = sound_definition_get(sound->definition_index);
 
+#ifdef DEBUG
 		render_debug_sphere(FALSE, &sound->source.location.position, sound_definition_get_maximum_distance(sound->definition_index), global_real_argb_yellow);
 		render_debug_sphere(FALSE, &sound->source.location.position, sound_definition_get_minimum_distance(sound->definition_index), global_real_argb_red);
+#endif
 		sprintf(printbuffer, "%s|n%f %f", tag_get_name(sound->definition_index), sound->source.obstruction, sound->source.occlusion);
+#ifdef DEBUG
 		render_debug_string_at_point(FALSE, &sound->source.location.position, printbuffer, global_real_argb_white);
+#endif
 	}
 
 	return;
@@ -836,9 +840,11 @@ static void render_debug_looping_sound(
 			}
 		}
 
+#ifdef DEBUG
 		render_debug_string_at_point(FALSE, &source->location.position, tag_get_name(definition_index), global_real_argb_white);
 		render_debug_sphere(FALSE, &source->location.position, maximum_distance, global_real_argb_cyan);
 		render_debug_sphere(FALSE, &source->location.position, minimum_distance, global_real_argb_blue);
+#endif
 	}
 
 	return;

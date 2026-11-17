@@ -236,7 +236,9 @@ void build_sprite_prepare_for_window(
 			"   coverage: %.1f big sprites: %d",
 			build_sprite_globals.screen_coverage,
 			build_sprite_globals.big_sprite_count);
+#ifdef DEBUG
 		render_debug_string(FALSE, printbuffer);
+#endif
 	}
 
 	build_sprite_globals.screen_coverage = 0.f;

@@ -225,10 +225,12 @@ boolean unit_should_autopick_weapon(long unit_index, long weapon_index);
 boolean player_teleport(long player_index, long source_unit_index, real_point3d const *position);
 boolean player_handle_powerup(long player_index, short powerup_type, short duration_in_ticks);
 void player_handle_powerup_minor(long player_index, short powerup_type, short minor_duration);
+#ifdef DEBUG
 void players_debug_render(void);
 void debug_player_teleport(short source_local_player_index, short destination_local_player_index);
 
 void players_debug_render(void);
+#endif
 
 /* ---------- prototypes/PLAYER_RUMBLE.C */
 

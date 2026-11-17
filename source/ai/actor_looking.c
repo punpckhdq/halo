@@ -1097,7 +1097,9 @@ static boolean actor_look_find_random_vector(
 			struct collision_result result;
 			real_vector3d test_vector;
 
+#ifdef DEBUG
 			ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 			match_collision_log_begin_user("c:\\halo\\SOURCE\\ai\\actor_looking.c", 1066, _collision_user_ai_look);
 			scale_vector3d(&random_vector, 3.f, &test_vector);
 			clear = !collision_test_vector(

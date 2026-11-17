@@ -3812,7 +3812,9 @@ real ai_communication_get_player_rating(
 						struct collision_result collision;
 						boolean blocked;
 
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						match_collision_log_begin_user("c:\\halo\\SOURCE\\ai\\ai_communication.c", 3729, _collision_user_ai_comms);
 						blocked = collision_test_line(
 							FLAG(_collision_test_front_facing_surfaces_bit) | FLAG(_collision_test_back_facing_surfaces_bit) | FLAG(_collision_test_ignore_two_sided_surfaces_bit) | FLAG(_collision_test_structure_bit),

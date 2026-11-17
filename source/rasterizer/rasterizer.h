@@ -658,7 +658,9 @@ void rasterizer_hud_motion_sensor_blip_end(real_point2d const *center_point, rea
 
 /* ---------- prototypes/RASTERIZER_DEBUG.C */
 
+#ifdef DEBUG
 long rasterizer_debug_new_primitive(long *count);
+#endif
 boolean rasterizer_debug_initialize(void);
 void rasterizer_debug_begin(void);
 void rasterizer_debug_end(void);

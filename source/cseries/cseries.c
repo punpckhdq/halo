@@ -97,9 +97,9 @@ void cseries_initialize(
 {
 #ifdef DEBUG
 	debug_memory_manager_initialize();
-#endif
 	profile_initialize();
 	profile_global_enable = FALSE;
+#endif
 
 	return;
 };

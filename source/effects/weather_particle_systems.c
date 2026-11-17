@@ -531,7 +531,9 @@ static void weather_particle_system_transform_clip_planes_to_box(
 void weather_particle_systems_render(
 	void)
 {
+#ifdef DEBUG
 	if (render_particle_systems_enabled)
+#endif
 	{
 		if (weather)
 		{

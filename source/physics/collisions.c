@@ -40,8 +40,10 @@ static __int64 features_start_time;
 static __int64 structure_start_time;
 static __int64 objects_start_time;
 
+#ifdef DEBUG
 boolean debug_collision_skip_objects = FALSE;
 boolean debug_collision_skip_vectors = FALSE;
+#endif
 
 /* ---------- public code */
 
@@ -76,10 +78,12 @@ boolean collision_test_point(
 		long leaf_index = bsp3d_test_point(global_bsp3d_get(), 0, point);
 		boolean test_objects = TEST_FLAG(flags, _collision_test_objects_bit);
 
+#ifdef DEBUG
 		if (debug_collision_skip_objects)
 		{
 			test_objects = FALSE;
 		}
+#endif
 
 		if (leaf_index == NONE)
 		{
@@ -115,10 +119,12 @@ boolean collision_test_vector(
 	boolean hit = FALSE;
 	boolean test = TEST_FLAG(flags, _collision_test_structure_bit) || TEST_FLAG(flags, _collision_test_media_bit) || TEST_FLAG(flags, _collision_test_objects_bit);
 
+#ifdef DEBUG
 	if (debug_collision_skip_vectors)
 	{
 		test = FALSE;
 	}
+#endif
 
 	collision->type = NONE;
 	collision->start_location.leaf_index = NONE;
@@ -134,10 +140,12 @@ boolean collision_test_vector(
 		boolean test_objects = TEST_FLAG(flags, _collision_test_objects_bit);
 		struct collision_bsp_test_vector_result structure_result;
 
+#ifdef DEBUG
 		if (debug_collision_skip_objects)
 		{
 			test_objects = FALSE;
 		}
+#endif
 
 		if (!TEST_FLAG(flags, _collision_test_front_facing_surfaces_bit) && !TEST_FLAG(flags, _collision_test_back_facing_surfaces_bit))
 		{
@@ -151,8 +159,10 @@ boolean collision_test_vector(
 		SET_FLAG(bsp_flags, _collision_bsp_test_ignore_breakable_surfaces_bit, TEST_FLAG(flags, _collision_test_ignore_breakable_surfaces_bit));
 
 		{
+#ifdef DEBUG
 			collision_log_usage(_collision_function_vector_structure);
 			collision_log_start_time(&structure_start_time);
+#endif
 			
 			if (collision_bsp_test_vector(bsp_flags, global_collision_bsp_get(), MAXIMUM_BREAKABLE_SURFACES_PER_MAP, breakable_surface_flags_get(), point, vector, REAL_MAX, &structure_result) && TEST_FLAG(flags, _collision_test_structure_bit))
 			{
@@ -180,7 +190,9 @@ boolean collision_test_vector(
 				collision->location.cluster_index = collision->location.leaf_index == NONE ? NONE : TAG_BLOCK_GET_ELEMENT(&global_structure_bsp_get()->leaves, collision->location.leaf_index & LONG_MAX, struct structure_leaf)->cluster_index;
 			}
 
+#ifdef DEBUG
 			collision_log_end_time(_collision_function_vector_structure, structure_start_time);
+#endif
 		}
 
 		if (TEST_FLAG(flags, _collision_test_media_bit) && collision->location.cluster_index != NONE)
@@ -230,8 +242,10 @@ boolean collision_test_vector(
 		{
 			long index;
 
+#ifdef DEBUG
 			collision_log_usage(_collision_function_vector_objects);
 			collision_log_start_time(&objects_start_time);
+#endif
 
 			if (!(flags & _collision_test_objects_all_types_flags))
 			{
@@ -262,7 +276,9 @@ boolean collision_test_vector(
 
 			object_marker_end();
 			structure_cluster_marker_end();
+#ifdef DEBUG
 			collision_log_end_time(_collision_function_vector_objects, objects_start_time);
+#endif
 		}
 
 		if (!hit)
@@ -478,6 +494,7 @@ boolean collision_get_features_in_sphere(
 		struct collision_bsp *bsp = global_collision_bsp_get();
 		boolean test_objects = TEST_FLAG(flags, _collision_test_objects_bit);
 
+#ifdef DEBUG
 		if (debug_collision_skip_objects)
 		{
 			test_objects = FALSE;
@@ -485,6 +502,7 @@ boolean collision_get_features_in_sphere(
 		
 		collision_log_usage(_collision_function_vector_bounds_object);
 		collision_log_start_time(&features_start_time);
+#endif
 		radius += 1.f / 16.f;
 		
 		if (collision_bsp_test_sphere(bsp, MAXIMUM_BREAKABLE_SURFACES_PER_MAP, breakable_surface_flags_get(), center, radius, &structure_result) && TEST_FLAG(flags, _collision_test_structure_bit))
@@ -527,7 +545,9 @@ boolean collision_get_features_in_sphere(
 			object_marker_end();
 			structure_cluster_marker_end();
 		}
+#ifdef DEBUG
 		collision_log_end_time(_collision_function_vector_bounds_object, features_start_time);
+#endif
 	}
 
 	return features->count[_collision_feature_sphere] || features->count[_collision_feature_cylinder] || features->count[_collision_feature_prism];
@@ -547,8 +567,10 @@ boolean collision_fix_pill(
 
 	boolean fixed_pill = FALSE;
 
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\physics\\collisions.c", 1272, global_current_collision_user_depth < MAXIMUM_COLLISION_USER_STACK_DEPTH);
 	global_current_collision_users[global_current_collision_user_depth++] = _collision_user_bipeds;
+#endif
 	
 	{
 		real_point3d test_center;
@@ -632,8 +654,10 @@ boolean collision_fix_pill(
 		fixed_pill = TRUE;
 	}
 
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\physics\\collisions.c", 1378, global_current_collision_user_depth > 1);
 	global_current_collision_user_depth--;
+#endif
 
 	return fixed_pill;
 }
@@ -902,9 +926,11 @@ short collision_move_pill(
 
 	short collision_count = 0;
 
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\physics\\collisions.c", 1214, global_current_collision_user_depth < MAXIMUM_COLLISION_USER_STACK_DEPTH);
 	
 	global_current_collision_users[global_current_collision_user_depth++] = _collision_user_bipeds;
+#endif
 	point_from_line3d(old_position, old_velocity, 0.5f, &test_center);
 	test_center.z += height * 0.5f;
 	test_radius = magnitude3d(old_velocity) * 0.5f + height * 0.5f + width;
@@ -919,8 +945,10 @@ short collision_move_pill(
 		*new_velocity = *old_velocity;
 	}
 
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\physics\\collisions.c", 1230, global_current_collision_user_depth > 1);
 	global_current_collision_user_depth--;
+#endif
 
 	return collision_count;
 }

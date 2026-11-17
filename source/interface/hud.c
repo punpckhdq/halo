@@ -51,10 +51,14 @@ enum
 static boolean weapon_state_is_depleted(struct weapon_interface_state const *state);
 static short get_object_icon_text_index(long object_index);
 static void hud_show_action_response(long player_index);
+#ifdef DEBUG
 static void temporary_hud_draw_reticle(real angle, real_argb_color const *color);
+#endif
 static void hud_draw_friendly_indicator(long player_index);
 static void hud_draw_players(void);
+#ifdef DEBUG
 static void temporary_hud_draw(void);
+#endif
 
 /* ---------- globals */
 
@@ -217,7 +221,9 @@ void hud_draw_screen(
 
 	if (temporary_hud)
 	{
+#ifdef DEBUG
 		temporary_hud_draw();
+#endif
 	}
 
 	return;
@@ -553,6 +559,7 @@ void hud_picked_up_powerup(
 	return;
 }
 
+#ifdef DEBUG
 static void temporary_hud_draw_reticle(
 	real angle,
 	real_argb_color const *color)
@@ -577,6 +584,7 @@ static void temporary_hud_draw_reticle(
 
 	return;
 }
+#endif
 
 void hud_load(
 	boolean begin)
@@ -690,6 +698,7 @@ static void hud_draw_players(
 	return;
 }
 
+#ifdef DEBUG
 static void temporary_hud_draw(
 	void)
 {
@@ -783,3 +792,4 @@ static void temporary_hud_draw(
 
 	return;
 }
+#endif

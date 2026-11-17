@@ -229,7 +229,9 @@ void main_loop(
 	main_globals.halt_time_scale = TRUE;
 
 	console_initialize();
+#ifdef DEBUG
 	debug_keys_initialize();
+#endif
 	game_initialize();
 	console_startup();
 	main_setup_connection();
@@ -327,13 +329,17 @@ void main_loop(
 			}
 		}
 
+#ifdef DEBUG
 		profile_frame_start();
+#endif
 		input_frame_begin();
 		input_update();
 		input_abstraction_update();
 		shell_idle();
 		event_manager_update();
+#ifdef DEBUG
 		telnet_console_process();
+#endif
 
 		if (!shell_application_is_paused())
 		{
@@ -390,7 +396,9 @@ void main_loop(
 
 				if (!console_update() || main_globals.connection!=_game_connection_local)
 				{
+#ifdef DEBUG
 					debug_keys_update();
+#endif
 					cheats_update();
 					player_control_update(main_globals.halt_time_scale*main_globals.seconds_elapsed);
 
@@ -412,10 +420,14 @@ void main_loop(
 						(main_globals.halt_time_scale && (game_time_get_paused() || game_time_get_elapsed()>0 || game_time_get_speed()<1.f));
 					render &= !game_engine_running() || game_time_get()>=3;
 
+#ifdef DEBUG
 					collision_log_continue_period(_collision_period_render_frame);
+#endif
 					director_update(main_globals.halt_time_scale*main_globals.seconds_elapsed);
 					observer_update(main_globals.halt_time_scale*main_globals.seconds_elapsed);
+#ifdef DEBUG
 					collision_log_end_period();
+#endif
 					game_engine_update_non_deterministic(main_globals.halt_time_scale*main_globals.seconds_elapsed);
 				}
 
@@ -426,16 +438,24 @@ void main_loop(
 
 				if (render && !debug_no_drawing)
 				{
+#ifdef DEBUG
 					profile_render_start();
+#endif
 					main_game_render(main_globals.seconds_elapsed);
+#ifdef DEBUG
 					profile_render_end();
+#endif
 				}
 			}
 			else
 			{
+#ifdef DEBUG
 				profile_render_start();
+#endif
 				main_pregame_render();
+#ifdef DEBUG
 				profile_render_end();
+#endif
 			}
 
 			main_rasterizer_throttle();
@@ -447,7 +467,9 @@ void main_loop(
 		}
 
 		input_frame_end();
+#ifdef DEBUG
 		profile_frame_end();
+#endif
 		main_frame_rate_debug();
 
 		if (main_globals.restart_time)
@@ -472,7 +494,9 @@ void main_loop_of_death(
 		input_update();
 		shell_idle();
 		event_manager_update();
+#ifdef DEBUG
 		telnet_console_process();
+#endif
 		process_ui_widgets();
 		main_pregame_render();
 		main_rasterizer_throttle();
@@ -1316,7 +1340,9 @@ void main_pregame_render(
 	real_vector3d forward;
 	real_vector3d up;
 
+#ifdef DEBUG
 	collision_log_continue_period(_collision_period_render_frame);
+#endif
 	sound_render();
 
 	set_real_point3d(&camera_position, 0.f, 0.f, 0.f);
@@ -1334,7 +1360,9 @@ void main_pregame_render(
 	window.rasterizer_camera.z_far = 1.f;
 	window.render_camera = window.rasterizer_camera;
 	render_frame_pregame(&window, main_globals.movie);
+#ifdef DEBUG
 	collision_log_end_period();
+#endif
 
 	return;
 }
@@ -1402,7 +1430,9 @@ static void main_game_render(
 	struct render_window *current_window;
 
 	lock_global_random_seed();
+#ifdef DEBUG
 	collision_log_continue_period(_collision_period_render_frame);
+#endif
 	sound_render();
 
 	single_screen = game_engine_force_single_screen();
@@ -1469,7 +1499,9 @@ static void main_game_render(
 		screenshot_render(window);
 	}
 
+#ifdef DEBUG
 	collision_log_end_period();
+#endif
 	unlock_global_random_seed();
 
 	return;
@@ -1976,7 +2008,9 @@ static void main_exit(
 
 	game_dispose_from_old_map();
 	game_dispose();
+#ifdef DEBUG
 	debug_keys_dispose();
+#endif
 	console_dispose();
 
 	return;
@@ -2124,18 +2158,24 @@ static void main_update_time(
 
 		if (elapsed_msec<33)
 		{
+#ifdef DEBUG
 			profile_idle_start();
+#endif
 
 			if (global_frame_rate_throttle)
 			{
 				Sleep(33-elapsed_msec);
 			}
 
+#ifdef DEBUG
 			profile_idle_end();
+#endif
 		}
 		else
 		{
+#ifdef DEBUG
 			profile_lapsed_msec(elapsed_msec-33);
+#endif
 		}
 	}
 
@@ -2168,7 +2208,9 @@ static void main_update_time(
 	main_globals.last_time_msec = current_milliseconds;
 	main_globals.last_vblank_index = target_display_vblank_index;
 	main_globals.seconds_elapsed = seconds_elapsed;
+#ifdef DEBUG
 	profile_seconds_elapsed(seconds_elapsed);
+#endif
 	main_globals.last_initial_vblank_index = rasterizer_globals.vblank_index;
 
 	return;
@@ -2194,7 +2236,9 @@ void main_rasterizer_throttle(
 			boolean precaching = cache_files_precache_in_progress();
 
 			throttled = TRUE;
+#ifdef DEBUG
 			profile_idle_start();
+#endif
 
 			while (rasterizer_globals.vblank_index<vblank_to_begin_present)
 			{
@@ -2211,7 +2255,9 @@ void main_rasterizer_throttle(
 				}
 			}
 
+#ifdef DEBUG
 			profile_idle_end();
+#endif
 		}
 	}
 
@@ -2225,7 +2271,9 @@ void main_rasterizer_throttle(
 		throttled ? rasterizer_globals.vblank_index-vblank_index : lapsed);
 
 	main_globals.vblank_interval_held = main_globals.vblank_interval_current>0 && lapsed==0;
+#ifdef DEBUG
 	profile_lapsed_frames(lapsed, at_minimum, main_globals.time_debug_string);
+#endif
 
 	return;
 }

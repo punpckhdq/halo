@@ -47,7 +47,9 @@ boolean recorded_animation_play(long unit_index, short animation_index);
 boolean recorded_animation_play_and_delete(long unit_index, short animation_index);
 boolean recorded_animation_play_and_hover(long vehicle_index, short animation_index);
 
+#ifdef DEBUG
 void render_debug_recording(void);
+#endif
 
 /* ---------- globals */
 

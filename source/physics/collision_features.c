@@ -632,6 +632,7 @@ boolean collision_features_test_vector(
 	return FALSE;
 }
 
+#ifdef DEBUG
 void render_debug_collision_features(
 	struct collision_feature_list const *features)
 {
@@ -658,6 +659,7 @@ void render_debug_collision_features(
 
 	return;
 }
+#endif
 
 /* ---------- private code */
 
@@ -1065,6 +1067,7 @@ boolean collision_prism_test_vector(
 	return TRUE;
 }
 
+#ifdef DEBUG
 void render_debug_collision_sphere(
 	struct collision_sphere const *sphere,
 	real_argb_color const *color)
@@ -1103,3 +1106,4 @@ void render_debug_collision_prism(
 
 	return;
 }
+#endif

@@ -396,7 +396,9 @@ void actor_perception_update(
 
 			case _prop_state_becoming_acknowledged:
 			{
+#ifdef DEBUG
 				struct actor_debug_info *actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 
 				if (!prop->perception)
 				{
@@ -405,9 +407,9 @@ void actor_perception_update(
 
 					if (prop->player)
 					{
+#ifdef DEBUG
 						actor_debug_info->num_debug_evaluations = NONE;
 
-#ifdef DEBUG
 						if (ai_debug.print_acknowledgement)
 						{
 							char aibuf[256];
@@ -456,11 +458,11 @@ void actor_perception_update(
 							break;
 					}
 
+#ifdef DEBUG
 					if (prop->player && actor_debug_info->num_debug_evaluations!=acknowledgement_speed)
 					{
 						actor_debug_info->num_debug_evaluations = acknowledgement_speed;
 
-#ifdef DEBUG
 						if (ai_debug.print_acknowledgement)
 						{
 							char const *acknowledgement_speed_names[NUMBER_OF_ACTOR_ACKNOWLEDGEMENT_SPEEDS] = { "never", "noncombat", "guard", "combat", "instant" };
@@ -487,8 +489,8 @@ void actor_perception_update(
 									(1.f - prop->awareness) / (awareness_delta * TICKS_PER_SECOND));
 							}
 						}
-#endif
 					}
+#endif
 
 					prop->awareness += awareness_delta;
 
@@ -498,9 +500,9 @@ void actor_perception_update(
 
 						if (prop->player)
 						{
+#ifdef DEBUG
 							actor_debug_info->num_debug_evaluations = NONE;
 
-#ifdef DEBUG
 							if (ai_debug.print_acknowledgement)
 							{
 								char aibuf[256];
@@ -810,45 +812,63 @@ void actor_perception_update(
 		{
 			if (prop_acknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_acknowledged_body].current_count++;
+#endif
 			}
 			else if (prop_orphaned(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_orphaned_body].current_count++;
+#endif
 			}
 			else if (prop_unacknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_unacknowledged_body].current_count++;
+#endif
 			}
 		}
 		else if (prop->enemy)
 		{
 			if (prop_acknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_acknowledged_enemy].current_count++;
+#endif
 			}
 			else if (prop_orphaned(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_orphaned_enemy].current_count++;
+#endif
 			}
 			else if (prop_unacknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_unacknowledged_enemy].current_count++;
+#endif
 			}
 		}
 		else
 		{
 			if (prop_acknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_acknowledged_friend].current_count++;
+#endif
 			}
 			else if (prop_orphaned(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_orphaned_friend].current_count++;
+#endif
 			}
 			else if (prop_unacknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_unacknowledged_friend].current_count++;
+#endif
 			}
 		}
 	}
@@ -1013,7 +1033,9 @@ short actor_visibility_at_point(
 		if (distance_squared<maximum_vision_distance * maximum_vision_distance)
 		{
 			real fog;
+#ifdef DEBUG
 			struct actor_debug_info *actor_debug_info;
+#endif
 			real perception_factor = 1.f;
 
 			if (!TEST_FLAG(actor_definition->flags, _actor_definition_can_see_in_darkness_bit))
@@ -1042,13 +1064,17 @@ short actor_visibility_at_point(
 			}
 
 			perception_factor = MAX(perception_factor, 0.15f);
+#ifdef DEBUG
 			actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 
 			if (store_debugging_information)
 			{
+#ifdef DEBUG
 				actor_debug_info->vision_last_time = game_time_get();
 				actor_debug_info->vision_last_maximum_distance = maximum_vision_distance;
 				actor_debug_info->vision_last_perception_factor = perception_factor;
+#endif
 			}
 
 			if (distance_squared<(maximum_vision_distance * perception_factor) * (maximum_vision_distance * perception_factor))
@@ -1244,7 +1270,9 @@ short actor_audibility_at_point(
 	{
 		real_vector3d actor_to_position;
 		real distance_squared;
+#ifdef DEBUG
 		struct actor_debug_info *actor_debug_info;
+#endif
 		real hearing_distance = actor_definition->perception.hearing_distance;
 		real propagation_distance = -1.f;
 		real final_distance = -1.f;
@@ -1308,6 +1336,7 @@ short actor_audibility_at_point(
 			}
 		}
 
+#ifdef DEBUG
 		actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 		actor_debug_info->audibility_valid = TRUE;
 		actor_debug_info->audibility_result = audibility;
@@ -1315,6 +1344,7 @@ short actor_audibility_at_point(
 		actor_debug_info->audibility_propagation_distance = propagation_distance;
 		actor_debug_info->audibility_straight_distance = square_root(distance_squared);
 		actor_debug_info->audibility_final_distance = final_distance;
+#endif
 	}
 
 	return audibility;

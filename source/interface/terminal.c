@@ -304,7 +304,9 @@ void terminal_printf(
 				)
 			);
 			line->tabstop = strstr(line->buffer, "|t") != 0;
+#ifdef DEBUG
 			telnet_console_print(line->buffer);
+#endif
 		}
 	}
 

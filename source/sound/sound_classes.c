@@ -174,6 +174,7 @@ static struct sound_class_datum *sound_class_datum_get(
 	return &sound_class_data[index];
 }
 
+#ifdef DEBUG
 void debug_sound_classes_enable(
 	char const *substring,
 	boolean enabled)
@@ -226,6 +227,7 @@ void debug_sound_classes_set_wet(
 
 	return;
 }
+#endif
 
 void sound_classes_initialize_for_new_map(
 	void)

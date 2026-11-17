@@ -302,13 +302,19 @@ boolean obstacles_test_pill(struct obstacles const *obstacles, short ignore_disc
 void obstacles_disc_tangents(struct obstacles const *obstacles, short disc_index, real_point2d const *point, real radius, real_vector2d *right_direction, real_vector2d *left_direction, real *tangent_distance);
 void obstacles_disc_neighborhood(struct obstacles const *obstacles, real radius, short seed_disc_index, byte *disc_flags);
 void obstacles_recompute(struct obstacles *obstacles, real radius);
+#ifdef DEBUG
 void render_debug_obstacles(struct obstacles const *obstacles, real radius);
+#endif
 
 /* ---------- prototypes/PATH_OBSTACLE_AVOIDANCE.C */
 
+#ifdef DEBUG
 void render_debug_path(struct obstacle_path const *path);
+#endif
 boolean path_avoid_obstacles(struct path_state *state, short input_step_count, struct path_step const *input_steps, short *avoided_step_count, struct path_step *avoided_steps, boolean *steps_finish_path);
+#ifdef DEBUG
 void render_debug_obstacle_path(void);
+#endif
 
 /* ---------- globals */
 

@@ -1397,7 +1397,9 @@ short actor_select_firing_position(
 
 		match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1552, !actor->input.vehicle_passenger);
 
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_firing_point_eval].current_count++;
+#endif
 
 		encounter_build_firing_position_owner_actor_indices(actor->meta.encounter_index, firing_position_owner_actor_indices);
 		if (actor->firing_positions.current_position_index != NONE)
@@ -2192,7 +2194,9 @@ short actor_change_firing_position(
 
 	if (actor->meta.encounter_index != NONE)
 	{
+#ifdef DEBUG
 		encounter_verify_firing_position_owner_actor_indices(actor->meta.encounter_index);
+#endif
 	}
 
 	return actor->firing_positions.current_position_index;

@@ -90,7 +90,9 @@ static boolean bink_saved_frame_rate_throttle = TRUE; /* fake name */
 static void *bink_pointer_list[MAXIMUM_BINK_POINTER_BLOCKS] = {0};
 static struct bitmap_data bink_bitmap = {0}; /* fake name */
 static IDirect3DBaseTexture8 bink_texture = {0}; /* fake name */
+#ifdef DEBUG
 boolean debug_bink = FALSE;
+#endif
 struct _bink_globals bink_globals = {0};
 static long bink_pointer_count = 0;
 
@@ -595,6 +597,7 @@ static void bink_draw_frame(
 	}
 	rasterizer_psuedo_dynamic_screen_quad_draw(&bink_globals.screen_geometry_parameters, vertices);
 
+#ifdef DEBUG
 	if (debug_bink)
 	{
 		char bink_string[4096];
@@ -650,6 +653,7 @@ static void bink_draw_frame(
 		draw_string_set_color(global_real_argb_red);
 		rasterizer_draw_string(&bounds, NULL, &cursor, -4, bink_string);
 	}
+#endif
 
 	return;
 }

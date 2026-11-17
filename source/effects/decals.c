@@ -1724,12 +1724,14 @@ void render_debug_decals(
 			{
 				struct decal_vertex_internal const *vertex = &decal_geometry.decal_vertices[vertex_offset + vertex_index];
 
+#ifdef DEBUG
 				render_debug_line(TRUE, &previous_vertex->position, &vertex->position, global_real_argb_yellow);
 				render_debug_point(
 					TRUE,
 					&vertex->position,
 					DECAL_DEBUG_POINT_SIZE,
 					vertex->clipped ? global_real_argb_red : global_real_argb_white);
+#endif
 				previous_vertex = vertex;
 			}
 
@@ -1759,7 +1761,9 @@ void render_debug_decals(
 					struct decal_datum const *decal = decal_get(decal_index);
 
 					sprintf(decal_string, "%d", DECAL_VERTICES_PER_QUAD * decal->quad_count);
+#ifdef DEBUG
 					render_debug_string_at_point(FALSE, &decal->position, decal_string, global_real_argb_red);
+#endif
 					decal_index = decal->next_decal_index;
 				}
 			}

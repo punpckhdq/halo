@@ -175,7 +175,9 @@ struct build_sprite_data
 
 /* ---------- prototypes/RENDER.C */
 
+#ifdef DEBUG
 void render_effects(boolean enable);
+#endif
 void render_initialize(void);
 void render_initialize_for_new_map(void);
 void render_dispose_from_old_map(void);

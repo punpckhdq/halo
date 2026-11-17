@@ -35,7 +35,9 @@ void texture_cache_return_memory(void);
 void texture_cache_flush(void);
 D3DFORMAT bitmap_format_to_d3d_format(short format, word flags);
 D3DFORMAT bitmap_format_to_d3d_linear_format(short format, word flags);
+#ifdef DEBUG
 void texture_cache_debug_render(void);
+#endif
 
 /* ---------- globals */
 

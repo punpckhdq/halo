@@ -867,12 +867,16 @@ void rasterizer_debug_model_vertices(
 					sprintf(temp2, "%d%c", info->vertex_indices[index], index==info->vertex_index_count-1 ? ' ' : ',');
 					strcat(temporary, temp2);
 				}
+#ifdef DEBUG
 				render_debug_point(FALSE, &info->position, 0.03125f, global_real_argb_red);
 				render_debug_string_at_point(FALSE, &info->position, temporary, global_real_argb_yellow);
+#endif
 			}
 			else
 			{
+#ifdef DEBUG
 				render_debug_point(FALSE, &info->position, 0.03125f, global_real_argb_white);
+#endif
 			}
 		}
 	}

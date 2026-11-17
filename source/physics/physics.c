@@ -1223,6 +1223,7 @@ static void physics_update_old(
 	return;
 }
 
+#ifdef DEBUG
 void render_debug_physics(
 	struct physics_instance *instance)
 {
@@ -1249,3 +1250,4 @@ void render_debug_physics(
 
 	return;
 }
+#endif

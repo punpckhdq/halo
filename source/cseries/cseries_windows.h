@@ -14,7 +14,9 @@ CSERIES_WINDOWS.H
 
 /* ---------- prototypes/CSERIES_WINDOWS.C */
 
+#ifdef DEBUG
 void display_debug_string(char const *string);
+#endif
 void system_exit(long code);
 void system_unique_identifier_get(struct system_unique_identifier *identifier);
 boolean system_unique_identifiers_equal(struct system_unique_identifier const *identifier1, struct system_unique_identifier const *identifier2);

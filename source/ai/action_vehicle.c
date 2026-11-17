@@ -565,7 +565,9 @@ static boolean action_vehicle_find_destination(
 	struct actor_datum *actor = actor_get(actor_index);
 	struct unit_datum *vehicle = unit_get(vehicle_index);
 	struct unit_definition *vehicle_definition = unit_definition_get(vehicle->definition_index);
+#ifdef DEBUG
 	struct actor_debug_info *actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 	real_point3d modified_destination = *entry_point;
 	boolean success = FALSE;
 	boolean ignore_hint = ignore_hint_reference ? *ignore_hint_reference : FALSE;
@@ -619,6 +621,7 @@ static boolean action_vehicle_find_destination(
 			}
 		}
 
+#ifdef DEBUG
 		actor_debug_info->last_vehicle_avoidance_time = game_time_get();
 		actor_debug_info->vehicle_avoidance_point = actor->input.position.body_position;
 		actor_debug_info->vehicle_center = vehicle_center;
@@ -626,6 +629,7 @@ static boolean action_vehicle_find_destination(
 		actor_debug_info->vehicle_intended_entry_point = target_point;
 		actor_debug_info->vehicle_intersect_t = REAL_MAX;
 		actor_debug_info->vehicle_modified = FALSE;
+#endif
 
 		distance_squared = magnitude_squared2d(&actor_to_target_point);
 		if (distance_squared > 0.0f)
@@ -634,7 +638,9 @@ static boolean action_vehicle_find_destination(
 			real_vector2d avoid_vehicle_direction;
 			boolean avoid = FALSE;
 
+#ifdef DEBUG
 			actor_debug_info->vehicle_intersect_t = t;
+#endif
 			if (t > 0.0f && t < 1.2f)
 			{
 				perpendicular2d(&actor_to_target_point, &avoid_vehicle_direction);
@@ -677,8 +683,10 @@ static boolean action_vehicle_find_destination(
 					}
 				}
 
+#ifdef DEBUG
 				actor_debug_info->vehicle_modified = TRUE;
 				actor_debug_info->vehicle_modified_point = modified_destination;
+#endif
 			}
 		}
 	}

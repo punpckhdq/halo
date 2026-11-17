@@ -289,7 +289,9 @@ void encounters_update(
 
 	while (encounter = encounter_iterator_next(&iterator))
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_encounter_active].current_count++;
+#endif
 
 		if ((short)(DATUM_INDEX_TO_ABSOLUTE_INDEX(iterator.index) % ENCOUNTER_UPDATE_TICKS) == update_index)
 		{

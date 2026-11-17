@@ -260,7 +260,9 @@ void rasterizer_transparent_geometry_group_draw(
 					color.red = PIN(color.red * 3.f, 0.f, 1.f);
 					color.green = PIN(color.red * 3.f, 0.f, 1.f);
 					color.blue = PIN(color.red * 3.f, 0.f, 1.f);
+#ifdef DEBUG
 					render_debug_string_at_point(FALSE, &group->centroid, string, &color);
+#endif
 				}
 			}
 		}

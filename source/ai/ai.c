@@ -106,8 +106,8 @@ void ai_initialize(
 	memset(ai_globals, 0, sizeof(*ai_globals));
 #ifdef DEBUG
 	ai_debug_initialize();
-#endif
 	ai_profile_initialize();
+#endif
 	paths_initialize();
 	actors_initialize();
 	props_initialize();
@@ -128,8 +128,8 @@ void ai_dispose(
 	props_dispose();
 	actors_dispose();
 	paths_dispose();
-	ai_profile_dispose();
 #ifdef DEBUG
+	ai_profile_dispose();
 	ai_debug_dispose();
 #endif
 
@@ -152,7 +152,9 @@ void ai_initialize_for_new_map(
 	memset(ai_globals->last_shout_time, NONE, sizeof(ai_globals->last_shout_time));
 
 	ai_debug_initialize_for_new_map();
+#ifdef DEBUG
 	ai_profile_initialize_for_new_map();
+#endif
 	paths_initialize_for_new_map();
 	actors_initialize_for_new_map();
 	props_initialize_for_new_map();
@@ -175,8 +177,8 @@ void ai_dispose_from_old_map(
 	props_dispose_from_old_map();
 	actors_dispose_from_old_map();
 	paths_dispose_from_old_map();
-	ai_profile_dispose_from_old_map();
 #ifdef DEBUG
+	ai_profile_dispose_from_old_map();
 	ai_debug_dispose_from_old_map();
 #endif
 
@@ -196,15 +198,22 @@ void ai_place(
 void ai_update(
 	void)
 {
+#ifdef DEBUG
 	boolean active = ai_globals->ai_initialized_for_map && !ai_profile.disable_ai;
 	boolean move_randomly = ai_profile.move_randomly;
+#else
+	boolean active = ai_globals->ai_initialized_for_map;
+	boolean move_randomly = FALSE;
+#endif
 
 	profile_enter(ai_update_section);
 
 	if (active)
 	{
 		ai_debug_update();
+#ifdef DEBUG
 		ai_profile_update();
+#endif
 		ai_place_pending_mounted_weapons();
 
 		if (move_randomly)
@@ -686,7 +695,9 @@ boolean ai_test_line_of_fire(
 	boolean success = TRUE;
 	long prop_index = NONE;
 
+#ifdef DEBUG
 	ai_profile.meters[_ai_meter_line_of_fire].current_count++;
+#endif
 	pill_count = ai_find_line_of_fire_friend_pills(actor_index, NUMBEROF(pills), pills);
 
 	for (pill_index = 0; pill_index < pill_count; pill_index++)
@@ -774,7 +785,9 @@ short ai_test_line_of_sight(
 #endif
 
 	match_collision_log_begin_user("c:\\halo\\SOURCE\\ai\\ai.c", 841, _collision_user_ai_lineofsight);
+#ifdef DEBUG
 	ai_profile.meters[_ai_meter_line_of_sight].current_count++;
+#endif
 
 	if (p0_cluster_index != NONE && p1_cluster_index != NONE && !scenario_test_pvs(p0_cluster_index, p1_cluster_index))
 	{
@@ -807,7 +820,9 @@ short ai_test_line_of_sight(
 			SET_FLAG(flags, _collision_test_objects_vehicles_bit, FALSE);
 		}
 
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 
 		if (!collision_test_line(flags, p0, p1, ignore_object_index, &collision))
 		{
@@ -855,13 +870,17 @@ short ai_test_line_of_sight(
 				{
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = collision_test_line(flags, &p0a, p1, ignore_object_index, &collision);
 					}
 
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = collision_test_line(flags, &p0b, p1, ignore_object_index, &collision);
 					}
 				}
@@ -869,13 +888,17 @@ short ai_test_line_of_sight(
 				{
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = !collision_test_line(flags, &p0a, p1, ignore_object_index, &collision);
 					}
 
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = !collision_test_line(flags, &p0b, p1, ignore_object_index, &collision);
 					}
 				}
@@ -892,19 +915,25 @@ short ai_test_line_of_sight(
 
 				if (!occluded)
 				{
+#ifdef DEBUG
 					ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 					occluded = collision_test_line(flags, &p1a, p0, ignore_object_index, &collision);
 				}
 
 				if (!occluded)
 				{
+#ifdef DEBUG
 					ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 					occluded = collision_test_line(flags, &p1b, p0, ignore_object_index, &collision);
 				}
 
 				if (!occluded)
 				{
+#ifdef DEBUG
 					ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 					occluded = collision_test_line(flags, &p1c, p0, ignore_object_index, &collision);
 				}
 			}

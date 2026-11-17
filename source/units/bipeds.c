@@ -153,10 +153,12 @@ static struct profile_section biped_update_section = /* fake name */
 	TRUE
 };
 
+#ifdef DEBUG
 boolean debug_biped_physics = FALSE;
 boolean debug_biped_skip_update = FALSE;
 boolean debug_biped_skip_collision = FALSE;
 boolean debug_biped_limp_body_disable = FALSE;
+#endif
 
 /* ---------- public code */
 
@@ -250,7 +252,9 @@ boolean biped_update(
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 	struct unit_animation_update_data animation;
 
+#ifdef DEBUG
 	if (!debug_biped_skip_update)
+#endif
 	{
 		profile_enter(biped_update_section);
 
@@ -877,6 +881,7 @@ void biped_render_debug(
 	real width;
 	real_vector3d height_vector;
 
+#ifdef DEBUG
 	if (debug_objects_biped_physics_pills)
 	{
 		biped_get_physics_pill(biped_index, &base, &height, &width);
@@ -903,6 +908,7 @@ void biped_render_debug(
 			render_debug_sphere(TRUE, &base, width, global_real_argb_red);
 		}
 	}
+#endif
 
 	return;
 }
@@ -1031,10 +1037,12 @@ void biped_start_limp_body_physics(
 	struct biped_definition *definition = biped_definition_get(biped->definition_index);
 	boolean uses_limp_body_physics = TEST_FLAG(definition->biped.flags, _biped_uses_limp_body_physics_bit);
 
+#ifdef DEBUG
 	if (debug_biped_limp_body_disable)
 	{
 		uses_limp_body_physics = FALSE;
 	}
+#endif
 
 	if (uses_limp_body_physics &&
 		TEST_FLAG(biped->object.flags, _object_at_rest_bit) &&
@@ -2102,10 +2110,12 @@ static void biped_update_dead(
 	{
 		boolean uses_limp_body_physics = TRUE;
 
+#ifdef DEBUG
 		if (debug_biped_limp_body_disable)
 		{
 			uses_limp_body_physics = FALSE;
 		}
+#endif
 
 		if (uses_limp_body_physics)
 		{
@@ -2683,7 +2693,9 @@ static void biped_update_physics(
 		velocity = physics->new_velocity;
 		velocity.k += physics->crouch_velocity;
 
+#ifdef DEBUG
 		skip_collision = debug_biped_skip_collision;
+#endif
 		if (skip_collision)
 		{
 			collision_count = 1;
@@ -2705,6 +2717,7 @@ static void biped_update_physics(
 			collision_count = collision_move_pill(collision_flags, &position, &velocity, physics->height, physics->width, physics->biped_index, &new_position, &new_velocity, MAXIMUM_BIPED_PHYSICS_COLLISIONS, collisions);
 		}
 
+#ifdef DEBUG
 		if (debug_biped_physics && object_get(physics->biped_index)->object.owner_player_index != NONE)
 		{
 			collision_debug_point = position;
@@ -2714,6 +2727,7 @@ static void biped_update_physics(
 			collision_debug_width = physics->width;
 			collision_debug_height = physics->height;
 		}
+#endif
 
 		SET_FLAG(physics->out_flags, _biped_physics_out_splatter_bit, collision_count >= MAXIMUM_BIPED_PHYSICS_COLLISIONS);
 

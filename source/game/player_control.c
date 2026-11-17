@@ -753,7 +753,9 @@ boolean player_control_update(
 	short local_player_index;
 
 	profile_enter(player_control_update_section);
+#ifdef DEBUG
 	collision_log_begin_period(_collision_period_player_input);
+#endif
 	update_client_queue_push();
 
 	for (local_player_index = 0; local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; local_player_index++)
@@ -761,7 +763,9 @@ boolean player_control_update(
 		handle_one_player_input(local_player_index, seconds_elapsed);
 	}
 
+#ifdef DEBUG
 	collision_log_end_period();
+#endif
 	profile_exit(player_control_update_section);
 
 	return FALSE;

@@ -652,11 +652,15 @@ boolean path_state_find(
 
 	if (state->destination_valid)
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_path_find].current_count++;
+#endif
 	}
 	else
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_path_flood].current_count++;
+#endif
 	}
 
 	path_state_reset(state);

@@ -77,7 +77,9 @@ static boolean network_game_server_have_all_machines_have_precached(struct netwo
 static boolean network_game_server_idle_pregame_tasks(struct network_game_server *server);
 static boolean network_game_server_setup_game_from_playlist(struct network_game_server *server);
 static short network_game_server_number_of_machines_connected(struct network_game_server *server);
+#ifdef DEBUG
 static void dump_network_game_data(char *prefix, struct network_game_data *game);
+#endif
 static void network_game_server_dump(struct network_game_server *server);
 
 /* ---------- globals */
@@ -2428,6 +2430,7 @@ static short network_game_server_number_of_machines_connected(
 	return client_machine_count;
 }
 
+#ifdef DEBUG
 static void dump_network_game_data(
 	char *prefix,
 	struct network_game_data *game)
@@ -2475,18 +2478,21 @@ static void dump_network_game_data(
 
 	return;
 }
+#endif
 
 static void network_game_server_dump(
 	struct network_game_server *server)
 {
 	long machine_index;
 
+#ifdef DEBUG
 	network_event("*************BEGIN*************");
 	network_event("\tconnection %x", server->connection);
 	network_event("\tstate %x", server->state);
 	network_event("\tflags %x", server->flags);
 	dump_network_game_data("\t", &server->game);
 	network_event("client_machines:");
+#endif
 
 	for (machine_index = 0; machine_index < MAXIMUM_NETWORK_MACHINE_COUNT; machine_index++)
 	{

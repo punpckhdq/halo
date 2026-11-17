@@ -646,25 +646,34 @@ void vehicle_render_debug(
 
 		object_get_origin(vehicle_index, &text_point);
 		sprintf(textbuf, "speed %.2f angvel %.2f", speed, angular_speed);
+#ifdef DEBUG
 		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+#endif
 
 		point_from_line3d(&text_point, global_up3d, 0.4f, &text_point);
 		sprintf(textbuf, "thrust %.2f", vehicle->vehicle.thrust);
+#ifdef DEBUG
 		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+#endif
 
 		point_from_line3d(&text_point, global_up3d, 0.4f, &text_point);
 		sprintf(textbuf, "old-bank %.2f contrail %.2f", old_bank, old_contrail);
+#ifdef DEBUG
 		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+#endif
 
 		point_from_line3d(&text_point, global_up3d, 0.4f, &text_point);
 		sprintf(textbuf, "new-bank %.2f contrail %.2f", new_bank, new_contrail);
+#ifdef DEBUG
 		render_debug_string_at_point(FALSE, &text_point, textbuf, global_real_argb_white);
+#endif
 	}
 
 	if (definition->object.physics.index != NONE)
 	{
 		struct physics_definition *physics = physics_definition_get(definition->object.physics.index);
 
+#ifdef DEBUG
 		if (debug_objects_vehicle_powered_mass_points)
 		{
 			short mass_point_index;
@@ -673,6 +682,7 @@ void vehicle_render_debug(
 			{
 			}
 		}
+#endif
 	}
 
 	return;

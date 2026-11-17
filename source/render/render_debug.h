@@ -51,7 +51,9 @@ void render_debug_polygon_edges(real_point3d const *points, short point_count, r
 void render_debug_string(boolean immediate, char const *string);
 void render_debug_string_at_point(boolean immediate, real_point3d const *point, char const *string, real_argb_color const *color);
 
+#ifdef DEBUG
 void render_debug_collision_surface(struct collision_bsp const *bsp, long surface_index, real_matrix4x3 const *matrix, real_argb_color const *color);
+#endif
 
 void render_debug(void);
 

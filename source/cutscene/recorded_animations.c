@@ -102,8 +102,10 @@ static struct animation_playback *playback_codec[RECORDED_ANIMATION_VERSION] =
 
 static struct data_array *animation_threads = NULL;
 
+#ifdef DEBUG
 boolean debug_recording = FALSE;
 short debug_recording_newlines = 10;
+#endif
 
 static struct animation_thread_debug *animation_threads_debug = NULL;
 
@@ -446,6 +448,7 @@ boolean recorded_animation_controlling_unit(
 	return controlling_unit;
 }
 
+#ifdef DEBUG
 void render_debug_recording(
 	void)
 {
@@ -498,6 +501,7 @@ void render_debug_recording(
 
 	return;
 }
+#endif
 
 /* ---------- private code */
 

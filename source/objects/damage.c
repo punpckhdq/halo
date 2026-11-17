@@ -1838,6 +1838,7 @@ static void object_permutation_shield_regions(
 	return;
 }
 
+#ifdef DEBUG
 void render_debug_object_damage(
 	void)
 {
@@ -1908,3 +1909,4 @@ void render_debug_object_damage(
 
 	return;
 }
+#endif

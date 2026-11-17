@@ -47,6 +47,7 @@ static boolean overflow_warning_given = FALSE; /* fake name */
 
 /* ---------- public code */
 
+#ifdef DEBUG
 long rasterizer_debug_new_primitive(
 	long *count)
 {
@@ -69,12 +70,14 @@ long rasterizer_debug_new_primitive(
 
 	return index;
 }
+#endif
 
 boolean rasterizer_debug_initialize(
 	void)
 {
 	boolean success = TRUE;
 
+#ifdef DEBUG
 	debug_data.opaque_triangles = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 96, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(*debug_data.opaque_triangles));
 	debug_data.opaque_lines = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 97, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(*debug_data.opaque_lines));
 	debug_data.non_opaque_primitives = match_malloc("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 98, RASTERIZER_MAXIMUM_DEBUG_PRIMITIVES*sizeof(*debug_data.non_opaque_primitives));
@@ -89,6 +92,7 @@ boolean rasterizer_debug_initialize(
 		success = FALSE;
 		debug_data.initialized = success;
 	}
+#endif
 
 	return success;
 }
@@ -96,10 +100,12 @@ boolean rasterizer_debug_initialize(
 void rasterizer_debug_begin(
 	void)
 {
+#ifdef DEBUG
 	debug_data.opaque_triangle_count = 0;
 	debug_data.opaque_line_count = 0;
 	debug_data.non_opaque_primitive_count = 0;
 	debug_data.primitive_count = 0;
+#endif
 
 	return;
 }
@@ -113,6 +119,7 @@ void rasterizer_debug_end(
 void rasterizer_debug_dispose(
 	void)
 {
+#ifdef DEBUG
 	if (debug_data.initialized)
 	{
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 137, debug_data.opaque_triangles);
@@ -124,6 +131,7 @@ void rasterizer_debug_dispose(
 		match_free("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 143, debug_data.non_opaque_primitives);
 		debug_data.initialized = FALSE;
 	}
+#endif
 
 	return;
 }
@@ -133,7 +141,9 @@ void rasterizer_debug_line(
 	real_point3d const *p1,
 	real_argb_color const *color)
 {
+#ifdef DEBUG
 	rasterizer_debug_line_shaded(p0, p1, color, color);
+#endif
 
 	return;
 }
@@ -144,6 +154,7 @@ void rasterizer_debug_line_shaded(
 	real_argb_color const *color0,
 	real_argb_color const *color1)
 {
+#ifdef DEBUG
 	if (debug_data.initialized && rasterizer_debug_options.draw_debug_geometry)
 	{
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 171, p0 && p1 && color0 && color1);
@@ -174,6 +185,7 @@ void rasterizer_debug_line_shaded(
 			}
 		}
 	}
+#endif
 
 	return;
 }
@@ -184,7 +196,9 @@ void rasterizer_debug_triangle(
 	real_point3d const *p2,
 	real_argb_color const *color)
 {
+#ifdef DEBUG
 	rasterizer_debug_triangle_shaded(p0, p1, p2, color, color, color);
+#endif
 
 	return;
 }
@@ -197,6 +211,7 @@ void rasterizer_debug_triangle_shaded(
 	real_argb_color const *color1,
 	real_argb_color const *color2)
 {
+#ifdef DEBUG
 	if (debug_data.initialized && rasterizer_debug_options.draw_debug_geometry)
 	{
 		match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_debug.c", 229, p0 && p1 && p2 && color0 && color1 && color2);
@@ -231,6 +246,7 @@ void rasterizer_debug_triangle_shaded(
 			}
 		}
 	}
+#endif
 
 	return;
 }
@@ -241,6 +257,7 @@ void rasterizer_debug_test(
 	return;
 }
 
+#ifdef DEBUG
 static long compare_debug_primitives(
 	struct debug_primitive const *a,
 	struct debug_primitive const *b)
@@ -274,12 +291,14 @@ static long compare_debug_primitives(
 
 	return result;
 }
+#endif
 
 void rasterizer_debug_draw(
 	void)
 {
 	boolean success = TRUE;
 
+#ifdef DEBUG
 	if (debug_data.initialized && debug_data.primitive_count>0 && rasterizer_debug_options.draw_debug_geometry)
 	{
 		long primitive_index;
@@ -404,6 +423,7 @@ void rasterizer_debug_draw(
 
 		rasterizer_globals.current_lock_operation = _rasterizer_lock_none;
 	}
+#endif
 
 	return;
 }

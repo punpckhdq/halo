@@ -477,8 +477,10 @@ boolean collision_bsp_test_sphere(
 	struct test_sphere_data data;
 	short collision_function = (bsp == global_collision_bsp) + _collision_function_sphere_intersect_bsp_object;
 
+#ifdef DEBUG
 	collision_log_usage(collision_function);
 	collision_log_start_time(&sphere_start_time);
+#endif
 
 	data.bsp = bsp;
 	data.breakable_surface_count = breakable_surface_count;
@@ -497,7 +499,9 @@ boolean collision_bsp_test_sphere(
 
 	bsp3d_test_sphere_recursive(&data, BSP3D_ROOT_NODE_INDEX);
 
+#ifdef DEBUG
 	collision_log_end_time(collision_function, sphere_start_time);
+#endif
 
 	return result->surface_count > 0 || result->edge_count > 0;
 }
@@ -727,6 +731,7 @@ static void collision_surface_test_sphere(
 	return;
 }
 
+#ifdef DEBUG
 void render_debug_collision_vertex(
 	struct collision_bsp const *bsp,
 	long vertex_index,
@@ -807,6 +812,7 @@ void render_debug_collision_bsp(
 
 	return;
 }
+#endif
 
 static void add_feature(
 	long *count,
@@ -845,8 +851,10 @@ boolean collision_bsp_test_vector(
 	short collision_function = (bsp == global_collision_bsp) + _collision_function_vector_intersect_bsp_object;
 	boolean collision;
 
+#ifdef DEBUG
 	collision_log_usage(collision_function);
 	collision_log_start_time(&vector_start_time);
+#endif
 
 	data.flags = flags;
 	data.bsp = bsp;
@@ -871,7 +879,9 @@ boolean collision_bsp_test_vector(
 		0.f,
 		PIN(maximum_t, 0.f, 1.f));
 
+#ifdef DEBUG
 	collision_log_end_time(collision_function, vector_start_time);
+#endif
 
 	return collision;
 }
