@@ -148,6 +148,12 @@ enum
 #define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {NULL, type, pointer} /* fake name */
 #endif
 
+#ifdef DEBUG
+#define HS_GLOBAL_EXTERNAL_DEBUG(name, type, pointer) HS_GLOBAL_EXTERNAL(name, type, pointer) /* fake name */
+#else
+#define HS_GLOBAL_EXTERNAL_DEBUG(name, type, pointer) HS_GLOBAL_EXTERNAL(name, type, NULL) /* fake name */
+#endif
+
 /* ---------- structures */
 
 struct hs_syntax_node
