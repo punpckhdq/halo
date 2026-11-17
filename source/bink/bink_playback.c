@@ -70,7 +70,7 @@ struct _bink_globals
 
 /* ---------- prototypes */
 
-static void bink_get_memory_available();
+static void bink_get_memory_available(char *string);
 static void bink_playback_update__internal(void);
 static void bink_free_texture_cache(void);
 static void *bink_alloc_permanent(unsigned long size_in_bytes, unsigned long alignment_in_bytes);
@@ -96,7 +96,8 @@ static long bink_pointer_count = 0;
 
 /* ---------- public code */
 
-static void bink_get_memory_available()
+static void bink_get_memory_available(
+	char *string)
 {
 	MEMORYSTATUS status;
 
@@ -252,7 +253,7 @@ void bink_playback_start(
 	unsigned long surface_pixel_sizes[] = {4, 0x80000004, 2, 2, 0x80000002, 0x80000002};
 	long bitmap_formats[] = {_bitmap_format_x8r8g8b8, _bitmap_format_a8r8g8b8, NONE, _bitmap_format_r5g6b5, _bitmap_format_a1r5g5b5, _bitmap_format_a4r4g4b4};
 
-	bink_get_memory_available();
+	bink_get_memory_available("entering bink code...");
 
 	if (bink_globals.initialized && !cache_files_precache_in_progress())
 	{
@@ -467,7 +468,7 @@ static void *RADLINK bink_alloc(
 	void *pointer = NULL;
 	boolean fail_to_allocate;
 
-	bink_get_memory_available();
+	bink_get_memory_available("begin bink_alloc");
 
 	if (bink_pointer_count > 0 && !bink_pointer_list[0])
 	{
@@ -499,7 +500,7 @@ static void *RADLINK bink_alloc(
 		match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 787, bink_pointer_count < MAXIMUM_BINK_POINTER_BLOCKS, "### FATAL_ERROR bink needs more pointer blocks");
 		bink_pointer_list[bink_pointer_count++] = pointer;
 
-		bink_get_memory_available();
+		bink_get_memory_available("end bink_alloc");
 
 		{
 			long guard_bytes = 0x3000;
@@ -518,7 +519,7 @@ static void RADLINK bink_free(
 {
 	long pointer_index;
 
-	bink_get_memory_available();
+	bink_get_memory_available("begin bink_free");
 
 	for (pointer_index = 0; pointer_index < bink_pointer_count; pointer_index++)
 	{
@@ -530,7 +531,7 @@ static void RADLINK bink_free(
 	}
 	match_vassert("c:\\halo\\SOURCE\\bink\\bink_playback.c", 825, pointer_index < bink_pointer_count, "### FATAL_ERROR bink just confused the hell out of me (2)");
 
-	bink_get_memory_available();
+	bink_get_memory_available("end bink_free");
 
 	return;
 }
