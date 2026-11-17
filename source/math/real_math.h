@@ -19,6 +19,8 @@ file has inline function assertions.
 #define _cosine30 0.8660254f	/* fake name */
 #define _sine30 0.5f	/* fake name */
 
+#define M_SQRT1_3 0.577350269189625764509
+
 #define REAL_MIN -3.4028235e38f
 #define REAL_MAX 3.4028235e38f
 #define DOUBLE_MIN 3.62314807E-315
