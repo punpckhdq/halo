@@ -262,13 +262,11 @@ static void breakable_surface_effect(
 
 	if (breakable_surface_effect_enabled)
 	{
-		long material_type;
-		struct material_definition *material_def;
+		struct structure_collision_material *collision_material;
 
 		collision_surface = TAG_BLOCK_GET_ELEMENT(&collision_bsp->surfaces, seed_surface_index, struct collision_surface);
-		material_type = TAG_BLOCK_GET_ELEMENT(&structure_bsp->collision_materials, collision_surface->material_index, struct structure_collision_material)->runtime_physics_material_type;
-		material_def = TAG_BLOCK_GET_ELEMENT(&scenario_get_game_globals()->materials, material_type, struct material_definition);
-		breakable_surface = &material_def->breakable_surface;
+		collision_material = TAG_BLOCK_GET_ELEMENT(&structure_bsp->collision_materials, collision_surface->material_index, struct structure_collision_material);
+		breakable_surface = &TAG_BLOCK_GET_ELEMENT(&scenario_get_game_globals()->materials, collision_material->runtime_physics_material_type, struct material_definition)->breakable_surface;
 
 		total_bounds_valid = FALSE;
 		surface_queue_read_index = 0;
@@ -330,11 +328,6 @@ static void breakable_surface_effect(
 
 					plane3d_from_point_and_normal(&s_plane, &origin, &s_normal);
 					plane3d_from_point_and_normal(&t_plane, &origin, &t_normal);
-
-					// NOTE: the reason the file does not bytematch is the plane3d_distance_to_point() calls below.
-					// sapien confirms this function, but the bytematch doesn't line up.
-					// Terms should be `x + (y + z)` instead of `x + y + z`
-					// Can be forced to match, but doesn't really affect anything
 
 					surface_bounds.x1 = plane3d_distance_to_point(&s_plane, vertex_point);
 					surface_bounds.x0 = surface_bounds.x1;
