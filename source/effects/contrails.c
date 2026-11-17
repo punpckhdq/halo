@@ -631,6 +631,7 @@ static void contrail_update_points(
 static void contrail_verify(
 	long contrail_index)
 {
+#ifdef DEBUG
 	short instance_index;
 	struct contrail_datum const *contrail = contrail_get(contrail_index);
 	struct contrail_definition const *definition = contrail_definition_get(contrail->definition_index);
@@ -682,6 +683,7 @@ static void contrail_verify(
 				contrail->contrail_point_counts[instance_index],
 				point_count));
 	}
+#endif
 
 	return;
 }

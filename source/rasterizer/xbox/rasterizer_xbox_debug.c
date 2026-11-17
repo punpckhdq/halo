@@ -22,6 +22,7 @@ void rasterizer_debug_drawing_begin(
 	boolean opaque,
 	long z_bias)
 {
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_debug.c", 19, global_d3d_device);
 
 	if (rasterizer_debug_options.draw_debug_geometry)
@@ -57,6 +58,7 @@ void rasterizer_debug_drawing_begin(
 
 		rasterizer_set_pixel_shader(&pixel_shader);
 	}
+#endif
 
 	return;
 }

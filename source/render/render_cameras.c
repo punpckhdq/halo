@@ -1019,6 +1019,7 @@ void render_camera_debug_frustum(
 	struct render_camera const *camera,
 	struct render_frustum const *frustum)
 {
+#ifdef DEBUG
 	if (render_camera_debug_this_fucking_frustum)
 	{
 		real_point3d frustum_grid[3][3];
@@ -1052,6 +1053,7 @@ void render_camera_debug_frustum(
 			}
 		}
 	}
+#endif
 
 	return;
 }

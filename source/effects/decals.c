@@ -1707,6 +1707,7 @@ void decal_new_from_collision(
 void render_debug_decals(
 	void)
 {
+#ifdef DEBUG
 	if (debug_decals)
 	{
 		short decal_surface_index;
@@ -1769,6 +1770,7 @@ void render_debug_decals(
 			}
 		}
 	}
+#endif
 
 	return;
 }

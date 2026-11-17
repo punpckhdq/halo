@@ -640,6 +640,7 @@ void rasterizer_screen_flash(
 void rasterizer_models_begin(
 	boolean sky)
 {
+#ifdef DEBUG
 	if (!sky)
 	{
 		struct collision_result collision;
@@ -657,6 +658,7 @@ void rasterizer_models_begin(
 	{
 		rasterizer_debug_model_vertices_object_index = NONE;
 	}
+#endif
 
 	_rasterizer_models_begin(sky);
 
@@ -723,6 +725,7 @@ void rasterizer_debug_model_vertices(
 	struct render_skinning const *skinning,
 	struct model_geometry_part const *part)
 {
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer.c", 830, part);
 
 	if (rasterizer_debug_options.debug_model_vertices_enabled && target_object_index==rasterizer_debug_model_vertices_object_index)
@@ -880,6 +883,7 @@ void rasterizer_debug_model_vertices(
 			}
 		}
 	}
+#endif
 
 	return;
 }

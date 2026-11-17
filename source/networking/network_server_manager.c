@@ -2483,6 +2483,7 @@ static void dump_network_game_data(
 static void network_game_server_dump(
 	struct network_game_server *server)
 {
+#ifdef DEBUG
 	long machine_index;
 
 #ifdef DEBUG
@@ -2520,6 +2521,7 @@ static void network_game_server_dump(
 		"\ttime_of_first_client_loading_completion %d",
 		server->time_of_first_client_loading_completion);
 	network_event("*************END*************");
+#endif
 
 	return;
 }

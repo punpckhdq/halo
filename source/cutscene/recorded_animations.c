@@ -129,11 +129,13 @@ void recorded_animations_initialize(
 void recorded_animations_dispose(
 	void)
 {
+#ifdef DEBUG
 	if (animation_threads_debug)
 	{
 		match_free("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 123, animation_threads_debug);
 		animation_threads_debug = NULL;
 	}
+#endif
 
 	return;
 }
@@ -158,8 +160,10 @@ void recorded_animations_dispose_from_old_map(
 void recorded_animations_clear_debug_storage(
 	void)
 {
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 153, animation_threads_debug);
 	memset(animation_threads_debug, 0, MAX_RECORDINGS_PLAYING*sizeof(*animation_threads_debug));
+#endif
 
 	return;
 }

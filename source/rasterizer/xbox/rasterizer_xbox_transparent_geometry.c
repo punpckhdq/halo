@@ -1675,6 +1675,7 @@ void rasterizer_transparent_geometry_group_draw(
 void rasterizer_transparent_geometry_groups_end(
 	void)
 {
+#ifdef DEBUG
 	if (rasterizer_debug_options.__unknown88 && rasterizer_debug_options.transparent_pixel_counter_enabled)
 	{
 		ULONGLONG timestamp;
@@ -1727,6 +1728,7 @@ void rasterizer_transparent_geometry_groups_end(
 			error(_error_silent, "### ERROR rasterizer_transparent_geometry_groups_begin failed");
 		}
 	}
+#endif
 
 	return;
 }

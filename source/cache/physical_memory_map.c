@@ -65,6 +65,7 @@ void physical_memory_allocate(
 void physical_memory_verify(
 	void)
 {
+#ifdef DEBUG
 	byte *address;
 
 
@@ -85,6 +86,7 @@ void physical_memory_verify(
 
 		match_assert("c:\\halo\\SOURCE\\cache\\physical_memory_map.c", 86, page_status == PAGE_READWRITE);
 	}
+#endif
 }
 
 void physical_memory_free(

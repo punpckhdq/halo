@@ -1117,6 +1117,7 @@ void input_get_raw_data_string(
 	match_assert("c:\\halo\\SOURCE\\input\\input_xbox.c", 811, buffer);
 	match_assert("c:\\halo\\SOURCE\\input\\input_xbox.c", 812, size>0);
 
+#ifdef DEBUG
 	if (buffer && size > 0)
 	{
 		short length = _snprintf(buffer, size, "|n|n|n|ngamepad|tleft stick|tright stick|t|n");
@@ -1135,6 +1136,9 @@ void input_get_raw_data_string(
 			}
 		}
 	}
+#else
+	buffer[0] = 0;
+#endif
 
 	return;
 }
@@ -1168,7 +1172,9 @@ void input_frame_begin(
 {
 	release_input_mutex();
 	input_update_gamepads();
+#ifdef DEBUG
 	input_globals.in_frame = TRUE;
+#endif
 
 	return;
 }
@@ -1176,7 +1182,9 @@ void input_frame_begin(
 void input_frame_end(
 	void)
 {
+#ifdef DEBUG
 	input_globals.in_frame = FALSE;
+#endif
 
 	return;
 }
