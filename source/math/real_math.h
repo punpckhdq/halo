@@ -624,7 +624,7 @@ extern real_rectangle3d const *global_null_rectangle3d;
 
 /* ---------- public code */
 
-__inline long fast_ftol(
+__inline long __cdecl fast_ftol(
 	real d)
 {
 	long result;
@@ -640,7 +640,7 @@ __inline long fast_ftol(
 
 // truncates toward zero like a C cast, fast_ftol rounds to nearest
 // This is likely ASM because it's not inlined and exactly the same in sapien
-__inline long fast_ftol_C(
+__inline long __cdecl fast_ftol_C(
 	real x)
 {
 	long result;
