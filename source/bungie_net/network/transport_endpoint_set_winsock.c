@@ -32,6 +32,7 @@ enum
 
 /* ---------- prototypes */
 
+static void net_startup_debug(XNetStartupParams *startup);
 static long get_next_available_set_array_index(struct transport_endpoint_set const *set);
 static int __cdecl poll_ep_array_compare_proc(void const *a, void const *b);
 
@@ -43,8 +44,8 @@ static long global_key_depth = 0;
 
 /* ---------- public code */
 
-void net_startup_debug(
-	void)
+static void net_startup_debug(
+	XNetStartupParams *startup) /* fake name */
 {
 	return;
 }
@@ -258,6 +259,8 @@ long transport_initialize(
 			startup.cfgFlags |= XNET_STARTUP_BYPASS_SECURITY;
 			fclose(file);
 		}
+
+		net_startup_debug(&startup);
 
 		if (XNetStartup(&startup))
 		{

@@ -93,13 +93,14 @@ void render_media_dispose_from_old_map(
 }
 
 boolean render_media_build_render_target(
-	void)
+	void *unused0, /* fake name */
+	void *unused1) /* fake name */
 {
 	return FALSE;
 }
 
 void render_media(
-	void)
+	void *unused) /* fake name */
 {
 	return;
 }

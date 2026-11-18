@@ -51,7 +51,7 @@ enum
 
 /* ---------- prototypes */
 
-static boolean new_particle_is_visible(struct particle_definition const *definition, struct location const *location);
+static boolean new_particle_is_visible(struct particle_definition const *definition, struct location const *location, real_point3d const *point, real radius);
 static boolean particle_next_sequence(long particle_index);
 static boolean particle_next_frame(long particle_index);
 static boolean particle_update_frame_time(long particle_index, real dt);
@@ -160,7 +160,7 @@ void particle_new(
 
 		scenario_location_from_point(&location, &world_position);
 
-		if (location.leaf_index != NONE && new_particle_is_visible(definition, &location))
+		if (location.leaf_index != NONE && new_particle_is_visible(definition, &location, &world_position, data->radius))
 		{
 			particle_index = datum_new(particle_data);
 
@@ -397,7 +397,9 @@ void particles_reconnect_to_structure_bsp(
 
 static boolean new_particle_is_visible(
 	struct particle_definition const *definition,
-	struct location const *location)
+	struct location const *location,
+	real_point3d const *point, /* fake name */
+	real radius) /* fake name */
 {
 	if (scenario_location_potentially_visible_local(location))
 	{

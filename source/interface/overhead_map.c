@@ -68,7 +68,8 @@ void overhead_map_dispose_from_old_map(
 void overhead_map_post_rasterize(
 	void *unused0,
 	void *unused1,
-	real_point2d const *position)
+	real_point2d const *position,
+	void *unused2) /* fake name */
 {
 	if (overhead_map_globals.active)
 	{

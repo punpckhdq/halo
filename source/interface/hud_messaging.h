@@ -66,7 +66,7 @@ void hud_set_state_text(short local_player_index, wchar_t const *message);
 wchar_t const *hud_messaging_get_objective(void);
 void scripted_hud_messages_clear(void);
 long hud_get_font_index(void);
-real_argb_color *hud_get_text_color(real_argb_color *result);
+real_argb_color hud_get_text_color(void);
 void hud_messaging_globals_update(void);
 void hud_print_message(short local_player_index, wchar_t const *text);
 void hud_add_item_message(short local_player_index, long item_definition_index, short quantity, char message_offset);

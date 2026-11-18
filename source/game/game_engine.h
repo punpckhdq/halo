@@ -658,7 +658,7 @@ void game_engine_post_rasterize_post_game(void);
 void game_engine_post_rasterize_objects(void);
 void game_engine_post_rasterize(void);
 boolean match_game_type(long game_engine_type, long count, short const *game_type);
-void game_engine_load_stage(char const *map_name);
+void game_engine_load_stage(char const *map_name, void *unused);
 void game_engine_playlist_begin(void);
 boolean game_engine_get_current_stage(struct game_variant *variant, char *map_name);
 void game_engine_update_player_always_invis(long player_index);

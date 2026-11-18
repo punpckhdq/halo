@@ -853,12 +853,10 @@ long hud_get_font_index(
 	return local_player_count() > 1 && hud_msg_def->multi_player_font.index != NONE ? hud_msg_def->multi_player_font.index : hud_msg_def->single_player_font.index;
 }
 
-real_argb_color *hud_get_text_color(
-	real_argb_color *result)
+real_argb_color hud_get_text_color(
+	void)
 {
-	*result = hud_msg_def->state_color;
-
-	return result;
+	return hud_msg_def->state_color;
 }
 
 void hud_messaging_globals_update(

@@ -101,7 +101,7 @@ static void ctf_engine_player_damaged_player(long killing_player_index, long dea
 static void ctf_engine_player_killed_player(long killing_player_index, long killing_object_index, long dead_player_index, boolean friendly_fire);
 static boolean ctf_engine_display_score(long player_index, long message, long message_data, wchar_t *buffer, long buffer_size);
 static void ctf_engine_prespawn_player_update(long player_index);
-void ctf_state_message_update_warning(long team_index);
+static void ctf_state_message_update_warning(long team_index);
 static void ctf_sound_update_warning(long team_index);
 static void ctf_set_flag_warning(long team_index, boolean warning);
 static void ctf_weapon_drop(long weapon_index);
@@ -799,7 +799,7 @@ static void ctf_engine_prespawn_player_update(
 	return;
 }
 
-void ctf_state_message_update_warning(
+static void ctf_state_message_update_warning(
 	long team_index)
 {
 	return;

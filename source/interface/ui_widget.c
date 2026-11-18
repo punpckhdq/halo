@@ -201,14 +201,14 @@ static void widget_instance_render_text_box(struct widget_instance *widget, stru
 static void widget_instance_render_spinner_list(struct ui_widget_definition *definition, struct widget_instance *widget, rectangle2d *clip_rect, point2d offset, boolean focus);
 static void widget_instance_give_focus_by_tag(struct widget_instance *widget, long tag_index, short local_player_index);
 static void widget_instance_go_back_to_previous(struct widget_instance *widget);
-static void widget_instance_update_animation_parameters(struct widget_instance *widget);
+static void widget_instance_update_animation_parameters(struct widget_instance *widget, struct ui_widget_definition *definition);
 static void widget_instance_reload_recursive(struct widget_instance *widget);
 static void ui_widget_reload_by_tag(long tag_index);
 static void widget_instance_give_focus_directly(struct widget_instance *widget, struct widget_instance *target);
 static void widget_instance_set_focused_child_by_index(long focused_child_parent_widget_tag, struct widget_instance *widget, short focused_child_index);
 static void play_sound_tag(long definition_index);
 static long search_and_replace(wchar_t const *search, wchar_t const *replace, wchar_t **in_buffer);
-static void spinner_list_update(struct widget_instance *widget);
+static void spinner_list_update(struct widget_instance *widget, struct ui_widget_definition *definition);
 static void column_list_update(struct widget_instance *widget, struct ui_widget_definition *definition);
 static struct widget_instance *widget_instance_get_tail_child_widget(struct widget_instance const *widget);
 static void widget_instance_tab_to_next_valid_widget(struct widget_instance *widget);
@@ -2987,11 +2987,11 @@ static void widget_instance_process_one_event_recursive(
 
 	if (!widget_deleted)
 	{
-		widget_instance_update_animation_parameters(widget);
+		widget_instance_update_animation_parameters(widget, definition);
 
 		if (widget->widget_type == _widget_type_spinner_list)
 		{
-			spinner_list_update(widget);
+			spinner_list_update(widget, definition);
 		}
 		else if (widget->widget_type == _widget_type_column_list)
 		{
@@ -4395,7 +4395,8 @@ static void widget_instance_render_column_list(
 }
 
 static void widget_instance_update_animation_parameters(
-	struct widget_instance *widget)
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition)
 {
 	widget->animation_data.first_frame_index = FLOOR(widget->animation_data.first_frame_index, 0);
 	widget->animation_data.last_frame_index = FLOOR(widget->animation_data.last_frame_index, 0);
@@ -4643,7 +4644,8 @@ static long search_and_replace(
 }
 
 static void spinner_list_update(
-	struct widget_instance *widget)
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition)
 {
 	struct widget_instance *child;
 

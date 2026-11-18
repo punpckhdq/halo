@@ -64,7 +64,7 @@ static void release_input_mutex(void);
 static void input_update_gamepads(void);
 static void input_update_gamepads_rumble(void);
 static void input_update_keyboard(void);
-static DWORD WINAPI input_update_thread_proc(LPVOID parameter);
+static DWORD WINAPI input_update_thread_proc(void);
 
 /* ---------- globals */
 
@@ -561,7 +561,7 @@ boolean input_initialize(
 
 	input_globals.rumble_this_vertical_blank = TRUE;
 	input_globals.rumble_event = CreateEvent(NULL, FALSE, FALSE, NULL);
-	input_globals.rumble_thread = CreateThread(NULL, INPUT_RUMBLE_THREAD_STACK_SIZE, input_update_thread_proc, NULL, CREATE_SUSPENDED, NULL);
+	input_globals.rumble_thread = CreateThread(NULL, INPUT_RUMBLE_THREAD_STACK_SIZE, (LPTHREAD_START_ROUTINE)input_update_thread_proc, NULL, CREATE_SUSPENDED, NULL);
 	SetThreadPriority(input_globals.rumble_thread, THREAD_PRIORITY_HIGHEST);
 	input_globals.rumble_thread_resumed = TRUE;
 	input_globals.unused = 0;
@@ -1190,7 +1190,7 @@ void input_frame_end(
 }
 
 static DWORD WINAPI input_update_thread_proc(
-	LPVOID parameter)
+	void)
 {
 	for (;;)
 	{

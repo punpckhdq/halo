@@ -202,8 +202,8 @@ void render_contrails_normal(void);
 
 void render_media_initialize_for_new_map(void);
 void render_media_dispose_from_old_map(void);
-boolean render_media_build_render_target(void);
-void render_media(void);
+boolean render_media_build_render_target(void *unused0, void *unused1);
+void render_media(void *unused);
 
 /* ---------- prototypes/RENDER_SKY.C */
 

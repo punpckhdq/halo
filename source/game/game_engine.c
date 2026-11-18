@@ -1960,7 +1960,8 @@ static void game_engine_update_item_spawn(
 }
 
 void game_engine_load_stage(
-	char const *map_name)
+	char const *map_name,
+	void *unused) /* fake name */
 {
 	if (!map_name || strcmp(global_stage.map_name, map_name))
 	{
@@ -5642,7 +5643,8 @@ static void game_engine_rasterize_in_game_score(
 			wchar_t *status_string;
 			real_argb_color *line_color;
 
-			color = *hud_get_text_color(&normal_color);
+			normal_color = hud_get_text_color();
+			color = normal_color;
 			player = player_get(statistic_player_index);
 			team_colors[0].alpha = alpha;
 			team_colors[0].red = 0.6f;
