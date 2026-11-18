@@ -146,11 +146,15 @@ void hud_fix_weapon_data(
 void hud_update_weapon(
 	void)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	short local_player_index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	for (local_player_index = local_player_get_next(NONE); local_player_index != NONE; local_player_index = local_player_get_next(local_player_index))
 	{
@@ -210,11 +214,13 @@ void hud_update_weapon(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_weapon.c", 212);
 	}
+#endif
 
 	return;
 }
@@ -225,13 +231,17 @@ static void hud_update_weapon_local_player(
 	long hud_index,
 	struct weapon_interface_state *weapon_state)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct player_datum *player;
 	long unit_index;
 	struct unit_datum *unit;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	player = player_get(local_player_get_player_index(local_player_index));
 	unit_index = player->unit_index;
@@ -402,11 +412,13 @@ static void hud_update_weapon_local_player(
 		crosshair->render_flags = render_flags;
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_weapon.c", 414);
 	}
+#endif
 
 	return;
 }
@@ -514,10 +526,14 @@ static void render_weapon_hud(
 	short const *new_overlay_flags,
 	short const *new_numbers)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	{
 		struct scenario *scenario;
@@ -893,11 +909,13 @@ static void render_weapon_hud(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_weapon.c", 776);
 	}
+#endif
 
 	return;
 }
@@ -920,13 +938,17 @@ static void render_grenade_hud(
 	short local_player_index,
 	long unit_index)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	long weapon_index;
 	struct unit_datum *unit;
 	struct unit_definition *unit_definition;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	weapon_index = unit_inventory_get_weapon(unit_index, unit_get(unit_index)->unit.current_weapon_index);
 	unit = unit_get(unit_index);
@@ -1026,11 +1048,13 @@ static void render_grenade_hud(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_weapon.c", 930);
 	}
+#endif
 
 	return;
 }
@@ -1049,10 +1073,14 @@ static void crosshairs_draw(
 	long hud_index,
 	struct weapon_interface_state *weapon_state)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	if (TEST_FLAG(weapon_hud_globals->script_flags, _hud_crosshair_show_bit) && hud_index != NONE)
 	{
@@ -1304,11 +1332,13 @@ static void crosshairs_draw(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_weapon.c", 1250);
 	}
+#endif
 
 	return;
 }

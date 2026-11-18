@@ -74,7 +74,9 @@ static short portal_hull_from_points(struct render_camera const *camera, struct 
 static short portal_hull_from_portal(short portal_index, boolean direction, struct portal_hull *result);
 static boolean points_within_distance(short point_count, real_point3d const *points, real distance);
 static void grow_clipping_rectangle_by_portal_hull(real_rectangle2d *rectangle, struct portal_hull const *hull);
+#ifdef DEBUG
 static void render_debug_hull(struct portal_hull const *hull, real offset, real_argb_color const *color);
+#endif
 
 /* ---------- globals */
 
@@ -988,7 +990,11 @@ static void structure_visibility_find_clusters(
 			struct structure_cluster *cluster = TAG_BLOCK_GET_ELEMENT(&structure_bsp->clusters, rendered_cluster->cluster_index, struct structure_cluster);
 
 			render_camera_build_clipped_frustum_bounds(&render.camera, &rendered_cluster->clip_bounds, &frustum_bounds);
+#ifdef DEBUG
 			render_camera_build_frustum(&render.camera, &frustum_bounds, &rendered_cluster->frustum, TRUE);
+#else
+			render_camera_build_frustum(&render.camera, &frustum_bounds, &rendered_cluster->frustum, FALSE);
+#endif
 		}
 	}
 
@@ -1031,12 +1037,16 @@ static void structure_visibility_traverse_cluster(
 
 		if (debug_portals)
 		{
+#ifdef DEBUG
 			render_debug_hull(visible_region, DEBUG_HULL_OFFSET, global_real_argb_red);
+#endif
 		}
+#ifdef DEBUG
 		else if (ai_debug_highlight_cluster(cluster_index, &render_color))
 		{
 			render_debug_hull(visible_region, DEBUG_HULL_OFFSET, render_color);
 		}
+#endif
 	}
 
 	for (portal_reference_index = 0; portal_reference_index < cluster->portal_indices.count; portal_reference_index++)
@@ -1261,6 +1271,7 @@ static void grow_clipping_rectangle_by_portal_hull(
 	return;
 }
 
+#ifdef DEBUG
 static void render_debug_hull(
 	struct portal_hull const *hull,
 	real offset,
@@ -1290,5 +1301,6 @@ static void render_debug_hull(
 
 	return;
 }
+#endif
 
 /* ---------- private code */

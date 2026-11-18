@@ -110,7 +110,11 @@ enum
 #define RASTERIZER_MAXIMUM_COMBINER_STAGES 8
 
 /* fake name */
+#ifdef DEBUG
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
+#else
+#define D3DCALL(success, call) (call)
+#endif
 
 /* ---------- prototypes/RASTERIZER_XBOX.C */
 
@@ -130,7 +134,7 @@ void _rasterizer_windows_end(void);
 void _rasterizer_frame_end(void);
 void _rasterizer_present(struct bitmap_data *screenshot_bitmap, point2d const *screenshot_index);
 void _rasterizer_dispose(void);
-void _rasterizer_set_vblank_callback(void (*callback)(unsigned long));
+void _rasterizer_set_vblank_callback(void (__cdecl *callback)(unsigned long));
 void rasterizer_set_framebuffer_blend_function(short framebuffer_blend_function);
 boolean rasterizer_set_texture_bitmap_data(short stage, struct bitmap_data const *bitmap);
 boolean rasterizer_set_texture_direct(short stage, long bitmap_group_index, short bitmap_index);
@@ -158,7 +162,6 @@ void rasterizer_error(HRESULT hr, char const *format, ...);
 
 /* ---------- prototypes/RASTERIZER_XBOX_PROFILE.C */
 
-boolean rasterizer_profile_enabled(void);
 boolean rasterizer_profile_initialize(void);
 void rasterizer_profile_dispose(void);
 void rasterizer_profile_frame_begin(void);

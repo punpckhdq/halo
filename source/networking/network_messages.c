@@ -813,6 +813,7 @@ boolean decode_network_game_message(
 	return success;
 }
 
+#ifdef DEBUG
 void network_event(
 	char *format,
 	...)
@@ -827,6 +828,7 @@ void network_event(
 
 	return;
 }
+#endif
 
 /* ---------- private code */
 

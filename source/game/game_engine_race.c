@@ -898,7 +898,9 @@ static boolean race_engine_display_score(
 {
 	struct player_datum *message_player = NULL;
 	boolean result = TRUE;
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
+#endif
 
 	switch (message)
 	{
@@ -916,39 +918,67 @@ static boolean race_engine_display_score(
 	switch (message)
 	{
 	case race_message_you_touched_a_flag_rally:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_scored_a_flag);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"You scored a flag!");
+#endif
 		break;
 	case race_message_ally_touched_a_flag_rally:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_ally_name_scored_a_flag);
 		usnprintf(buffer, buffer_size, string, message_player->name);
+#else
+		usnprintf(buffer, buffer_size, L"Ally %s scored a flag!", message_player->name);
+#endif
 		break;
 	case race_message_enemy_touched_a_flag_rally:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_enemy_name_scored_a_flag);
 		usnprintf(buffer, buffer_size, string, message_player->name);
+#else
+		usnprintf(buffer, buffer_size, L"Enemy %s scored a flag!", message_player->name);
+#endif
 		break;
 	case race_message_you_completed_a_lap:
 	{
 		real seconds = (real)player_get(message_data)->statistics.multiplayer_statistics.race_statistics.last_lap_time * (1.f / TICKS_PER_SECOND);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_completed_lap_n_in_x_seconds);
 		usnprintf(buffer, buffer_size, string, message_player->statistics.multiplayer_statistics.race_statistics.laps + 1, seconds);
+#else
+		usnprintf(buffer, buffer_size, L"You completed lap %d in %.2f seconds.", message_player->statistics.multiplayer_statistics.race_statistics.laps + 1, seconds);
+#endif
 		break;
 	}
 	case race_message_ally_completed_a_lap:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_ally_name_completed_a_lap_n);
 		usnprintf(buffer, buffer_size, string, message_player->name, message_player->statistics.multiplayer_statistics.race_statistics.laps + 1);
+#else
+		usnprintf(buffer, buffer_size, L"Ally %s completed a lap %d.", message_player->name, message_player->statistics.multiplayer_statistics.race_statistics.laps + 1);
+#endif
 		break;
 	case race_message_enemy_completed_a_lap:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_enemy_name_completed_a_lap);
 		usnprintf(buffer, buffer_size, string, message_player->name, message_player->statistics.multiplayer_statistics.race_statistics.laps);
+#else
+		usnprintf(buffer, buffer_size, L"Enemy %s completed a lap.", message_player->name, message_player->statistics.multiplayer_statistics.race_statistics.laps);
+#endif
 		break;
 	case race_message_new_best_lap_time:
 	{
 		real seconds = (real)player_get(message_data)->statistics.multiplayer_statistics.race_statistics.best_lap_time * (1.f / TICKS_PER_SECOND);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_new_best_lap_time_x);
 		usnprintf(buffer, buffer_size, string, seconds);
+#else
+		usnprintf(buffer, buffer_size, L"new best lap time %.2f.", seconds);
+#endif
 		break;
 	}
 	case game_engine_message_show_score:
@@ -956,26 +986,42 @@ static boolean race_engine_display_score(
 		{
 			if (message_player->statistics.multiplayer_statistics.race_statistics.laps == 1)
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_name_1_flag);
 				usnprintf(buffer, buffer_size, string, get_place_name(game_engine_get_place(player_index, _get_score_team)));
+#else
+				usnprintf(buffer, buffer_size, L"%s 1 flag", get_place_name(game_engine_get_place(player_index, _get_score_team)));
+#endif
 			}
 			else
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_name_n_flags);
 				usnprintf(buffer, buffer_size, string, get_place_name(game_engine_get_place(player_index, _get_score_team)), message_player->statistics.multiplayer_statistics.race_statistics.laps);
+#else
+				usnprintf(buffer, buffer_size, L"%s %d flags", get_place_name(game_engine_get_place(player_index, _get_score_team)), message_player->statistics.multiplayer_statistics.race_statistics.laps);
+#endif
 			}
 		}
 		else
 		{
 			if (message_player->statistics.multiplayer_statistics.race_statistics.laps + 1 > game_engine_get_variant()->universal_variant.score_to_win)
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_name_all_laps_complete);
 				usnprintf(buffer, buffer_size, string, get_place_name(game_engine_get_place(player_index, _get_score_team)));
+#else
+				usnprintf(buffer, buffer_size, L"%s all laps complete", get_place_name(game_engine_get_place(player_index, _get_score_team)));
+#endif
 			}
 			else
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_name_lap_n_of_total);
 				usnprintf(buffer, buffer_size, string, get_place_name(game_engine_get_place(player_index, _get_score_team)), message_player->statistics.multiplayer_statistics.race_statistics.laps + 1, game_engine_get_variant()->universal_variant.score_to_win);
+#else
+				usnprintf(buffer, buffer_size, L"%s lap %d of %d", get_place_name(game_engine_get_place(player_index, _get_score_team)), message_player->statistics.multiplayer_statistics.race_statistics.laps + 1, game_engine_get_variant()->universal_variant.score_to_win);
+#endif
 			}
 		}
 		break;
@@ -1063,11 +1109,22 @@ static wchar_t *race_get_score_string(
 static wchar_t *race_get_score_header_string(
 	wchar_t *buffer)
 {
+#if CONFIG_VERSION >= 2342
 	long string_index = game_engine_get_variant()->game_engine_variant.race.race_type == _race_type_flag_rally ? _string_flags : _string_laps;
 	wchar_t *string;
 
 	multiplayer_game_text_get_string(string, string_index);
 	ustrcpy(buffer, string);
+#else
+	if (game_engine_get_variant()->game_engine_variant.race.race_type == _race_type_flag_rally)
+	{
+		usprintf(buffer, L"Flags");
+	}
+	else
+	{
+		usprintf(buffer, L"Laps");
+	}
+#endif
 
 	return buffer;
 }

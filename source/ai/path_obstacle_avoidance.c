@@ -32,8 +32,10 @@ struct path_test_pill2d_result
 
 /* ---------- prototypes */
 
+#ifdef DEBUG
 static void error_heap(short priority, struct obstacle_path *path);
 static boolean heap_verify(struct obstacle_path *path, char const *string);
+#endif
 static void heap_up(struct obstacle_path *path, short heap_index);
 static void heap_down(struct obstacle_path *path, short heap_index);
 static boolean heap_insert(struct obstacle_path *path, short step_index);
@@ -47,12 +49,14 @@ static boolean path_find(struct obstacle_path *path, boolean ignore_broken_surfa
 
 /* ---------- globals */
 
+#ifdef DEBUG
 boolean debug_obstacle_path_on_failure = FALSE;
 boolean debug_obstacle_path = FALSE;
 real_point3d debug_obstacle_path_start_point;
 long debug_obstacle_path_start_surface_index;
 real_point3d debug_obstacle_path_goal_point;
 long debug_obstacle_path_goal_surface_index;
+#endif
 real debug_obstacle_path_radius;
 boolean debug_obstacle_path_finishing;
 boolean debug_ignore_broken_surfaces;
@@ -109,6 +113,7 @@ __inline real heap_cost(
 	return step->total_distance;
 }
 
+#ifdef DEBUG
 static void error_heap(
 	short priority,
 	struct obstacle_path *path)
@@ -145,6 +150,7 @@ static boolean heap_verify(
 
 	return TRUE;
 }
+#endif
 
 static void heap_up(
 	struct obstacle_path *path,
@@ -215,7 +221,9 @@ static boolean heap_insert(
 	struct obstacle_path *path,
 	short step_index)
 {
+#ifdef DEBUG
 	heap_verify(path, "heap_insert input");
+#endif
 
 	if (path->heap_count < MAXIMUM_OBSTACLE_AVOIDANCE_STEPS)
 	{
@@ -224,7 +232,9 @@ static boolean heap_insert(
 
 		path->heap[heap_index] = step_index;
 		heap_up(path, heap_index);
+#ifdef DEBUG
 		heap_verify(path, "heap_insert output");
+#endif
 
 		return TRUE;
 	}
@@ -235,7 +245,9 @@ static boolean heap_insert(
 static short heap_remove(
 	struct obstacle_path *path)
 {
+#ifdef DEBUG
 	heap_verify(path, "heap_remove input");
+#endif
 
 	if (path->heap_count > 0)
 	{
@@ -244,7 +256,9 @@ static short heap_remove(
 		path->heap_count--;
 		path->heap[0] = path->heap[path->heap_count];
 		heap_down(path, 0);
+#ifdef DEBUG
 		heap_verify(path, "heap_remove output");
+#endif
 
 		return step_index;
 	}
@@ -252,6 +266,7 @@ static short heap_remove(
 	return NONE;
 }
 
+#ifdef DEBUG
 void render_debug_path(
 	struct obstacle_path const *path)
 {
@@ -312,6 +327,7 @@ void render_debug_path(
 
 	return;
 }
+#endif
 
 static short path_add_step(
 	struct obstacle_path *path,
@@ -856,6 +872,7 @@ boolean path_avoid_obstacles(
 		}
 		else
 		{
+#ifdef DEBUG
 			if (debug_obstacle_path_on_failure)
 			{
 				error(_error_silent, "obstacle path failure!");
@@ -871,6 +888,7 @@ boolean path_avoid_obstacles(
 				debug_obstacles = *obstacles;
 				debug_path = *obstacle_path;
 			}
+#endif
 
 			success = FALSE;
 			break;
@@ -880,6 +898,7 @@ boolean path_avoid_obstacles(
 	return success;
 }
 
+#ifdef DEBUG
 void render_debug_obstacle_path(
 	void)
 {
@@ -927,3 +946,4 @@ void render_debug_obstacle_path(
 
 	return;
 }
+#endif

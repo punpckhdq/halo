@@ -121,13 +121,26 @@ enum
 	#endif
 #endif
 
+#ifdef DEBUG
 #define match_halt(file, line) { display_assert(NULL, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_vhalt(file, line, string) { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_assert(file, line, expr) if (!(expr)) { display_assert(#expr, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_vassert(file, line, expr, string) if (!(expr)) { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); }
 #define match_warn(file, line, expr) if (!(expr)) { display_assert(#expr, MATCH_FILE(file), MATCH_LINE(line), FALSE); }
 #define match_vwarn(file, line, expr, string) if (!(expr)) { display_assert(string, MATCH_FILE(file), MATCH_LINE(line), FALSE); }
+#else
+#define match_halt(file, line)
+#define match_vhalt(file, line, string)
+#define match_assert(file, line, expr)
+#define match_vassert(file, line, expr, string)
+#define match_warn(file, line, expr)
+#define match_vwarn(file, line, expr, string)
+#endif
+#ifdef DEBUG
 #define match_unreachable(file, line) match_assert(file, line, !"unreachable")
+#else
+#define match_unreachable(file, line) __assume(0)
+#endif
 
 #define halt() match_halt(__FILE__, __LINE__)
 #define vhalt(string) match_vhalt(__FILE__, __LINE__, string)
@@ -135,7 +148,7 @@ enum
 #define vassert(expr, string) match_vassert(__FILE__, __LINE__, expr, string)
 #define warn(expr) match_warn(__FILE__, __LINE__, expr)
 #define vwarn(expr, string) match_vwarn(__FILE__, __LINE__, expr, string)
-#define unreachable() match_assert(__FILE__, __LINE__, !"unreachable")
+#define unreachable() match_unreachable(__FILE__, __LINE__)
 
 #define ABS(x) ((x>=0) ? (x) : -(x))
 
@@ -217,8 +230,9 @@ char *tag_to_string(tag t, char *s);
 long strnlen(const char *string, long n);
 char *strnupr(char *string, int n);
 char *strnlwr(char *string, int n);
-char *strupr(char *string);
-char *strlwr(char *string);
+char * __cdecl strupr(char *string);
+char * __cdecl strlwr(char *string);
+#ifdef DEBUG
 char *csprintf(char *buffer, char *format, ...);
 void display_assert(char *information, char *file, long line, boolean fatal);
 long csmemcmp(const void *p1, const void *p2, unsigned long size);
@@ -233,6 +247,7 @@ char *csstrtok(char *s1, const char *s2);
 unsigned long csstrlen(const char *s1);
 char *csstrcpy(char *destination, const char *source);
 void *csmemcpy(void *destination, const void *source, unsigned long size);
+#endif
 long csstrcasecmp(const char *s1, const char *s2);
 char *stristr(char const *haystack, char const *needle);
 unsigned long string_hash(char const *string);
@@ -243,6 +258,7 @@ void halt_and_catch_fire(void);
 
 /* ---------- prototypes/DEBUG_MEMORY.C */
 
+#ifdef DEBUG
 void debug_memory_manager_initialize(void);
 /*void debug_memory_manager_dispose(void);*/
 void check_memory_status(struct memory_status *status, char const *string);
@@ -253,6 +269,7 @@ void debug_check_memory(char const *source_file, long source_line);
 void debug_dump_memory_for_file(char const *source_file_substring);
 void debug_dump_memory_by_file(void);
 void debug_dump_memory(void);
+#endif
 
 /* ---------- prototypes/SORT.C */
 
@@ -274,23 +291,32 @@ unsigned long base_address_from_symbol_name(char const *name, struct debug_symbo
 
 /* ---------- macros */
 
-#define memcmp csmemcmp
-#define memmove csmemmove
-#define memset csmemset
-#define strcat csstrcat
-#define strcmp csstrcmp
-#define strncat csstrncat
-#define strncmp csstrncmp
-#define strncpy csstrncpy
-#define strtok csstrtok
-#define strlen csstrlen
-#define strcpy csstrcpy
-#define memcpy csmemcpy
+#ifdef DEBUG
+	#define memcmp csmemcmp
+	#define memmove csmemmove
+	#define memset csmemset
+	#define strcat csstrcat
+	#define strcmp csstrcmp
+	#define strncat csstrncat
+	#define strncmp csstrncmp
+	#define strncpy csstrncpy
+	#define strtok csstrtok
+	#define strlen csstrlen
+	#define strcpy csstrcpy
+	#define memcpy csmemcpy
+#endif
 
-#define match_malloc(file, line, size) debug_malloc(size, FALSE, MATCH_FILE(file), MATCH_LINE(line))
-#define match_calloc(file, line, count, size) debug_malloc((count)*(size), TRUE, MATCH_FILE(file), MATCH_LINE(line))
-#define match_free(file, line, ptr) debug_free(ptr, MATCH_FILE(file), MATCH_LINE(line))
-#define match_realloc(file, line, ptr, size) debug_realloc(ptr, size, MATCH_FILE(file), MATCH_LINE(line))
+#ifdef DEBUG
+	#define match_malloc(file, line, size) debug_malloc(size, FALSE, MATCH_FILE(file), MATCH_LINE(line))
+	#define match_calloc(file, line, count, size) debug_malloc((count)*(size), TRUE, MATCH_FILE(file), MATCH_LINE(line))
+	#define match_free(file, line, ptr) debug_free(ptr, MATCH_FILE(file), MATCH_LINE(line))
+	#define match_realloc(file, line, ptr, size) debug_realloc(ptr, size, MATCH_FILE(file), MATCH_LINE(line))
+#else
+	#define match_malloc(file, line, size) system_malloc(size)
+	#define match_calloc(file, line, count, size) system_calloc(count, size)
+	#define match_free(file, line, ptr) system_free(ptr)
+	#define match_realloc(file, line, ptr, size) system_realloc(ptr, size)
+#endif
 
 #define malloc(size) match_malloc(__FILE__, __LINE__, size)
 #define free(ptr) match_free(__FILE__, __LINE__, ptr)

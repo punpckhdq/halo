@@ -19,7 +19,7 @@ enum
 
 /* ---------- macros */
 
-#define object_list_header_get(index)	((struct object_list_header_datum*)(datum_get(object_list_header_data, (index))))
+#define object_list_header_get(index)	DATUM_GET(object_list_header_data, index, struct object_list_header_datum)
 
 /* ---------- structures */
 

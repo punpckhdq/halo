@@ -135,7 +135,7 @@ HS_FUNCTION_1(_hs_type_short_integer, scenery_get_animation_time, scenery_get_an
 HS_FUNCTION_3(_hs_type_void, scenery_animation_start, scenery_animation_start, "starts a custom animation playing on a piece of scenery", _hs_type_scenery, _hs_type_animation_graph, _hs_type_string);
 HS_FUNCTION_4(_hs_type_void, scenery_animation_start_at_frame, scenery_animation_start_at_frame, "starts a custom animation playing on a piece of scenery at a specific frame", _hs_type_scenery, _hs_type_animation_graph, _hs_type_string, _hs_type_short_integer);
 
-HS_FUNCTION_1(_hs_type_void, render_effects, render_effects, "", _hs_type_boolean);
+HS_DEBUG_FUNCTION_1(_hs_type_void, render_effects, render_effects, "", _hs_type_boolean);
 
 HS_FUNCTION_2(_hs_type_void, unit_can_blink, unit_scripting_can_blink, "allows a unit to blink or not (units never blink when they are dead)", _hs_type_unit, _hs_type_boolean);
 HS_FUNCTION_1(_hs_type_void, unit_open, unit_open, "opens the hatches on the given unit", _hs_type_unit);
@@ -342,46 +342,46 @@ HS_FUNCTION_0(_hs_type_boolean, player_action_test_look_relative_all_directions,
 HS_FUNCTION_0(_hs_type_boolean, player_action_test_move_relative_all_directions, player_control_action_test_move_relative_all_directions, "returns true if any player has moved forward, backward, left, and right since the last call to (player_action_test_reset).");
 HS_FUNCTION_3(_hs_type_void, player_add_equipment, player_add_equipment, "adds/resets the player's health, shield, and inventory (weapons and grenades) to the named profile. resets if third parameter is true, adds if false.", _hs_type_unit, _hs_type_starting_profile, _hs_type_boolean);
 
-HS_FUNCTION_2(_hs_type_void, debug_teleport_player, debug_player_teleport, "", _hs_type_short_integer, _hs_type_short_integer);
+HS_DEBUG_FUNCTION_2(_hs_type_void, debug_teleport_player, debug_player_teleport, "", _hs_type_short_integer, _hs_type_short_integer);
 
 HS_FUNCTION_0(_hs_type_void, map_reset, main_reset_map, "starts the map from the beginning.");
 HS_FUNCTION_1(_hs_type_void, map_name, main_set_map_name, "changes the name of the solo player map.", _hs_type_string);
 HS_FUNCTION_1(_hs_type_void, multiplayer_map_name, main_set_multiplayer_map_name, "changes the name of the multiplayer map", _hs_type_string);
 HS_FUNCTION_1(_hs_type_void, game_difficulty_set, main_set_difficulty, "changes the difficulty setting for the next map to be loaded.", _hs_type_enum_game_difficulty);
-HS_FUNCTION_1(_hs_type_void, crash, main_crash, "crashes (for debugging).", _hs_type_string);
+HS_DEBUG_FUNCTION_1(_hs_type_void, crash, main_crash, "crashes (for debugging).", _hs_type_string);
 HS_FUNCTION_1(_hs_type_void, switch_bsp, scenario_switch_structure_bsp, "takes off your condom and changes to a different structure bsp", _hs_type_short_integer);
 HS_FUNCTION_0(_hs_type_short_integer, structure_bsp_index, global_structure_bsp_index_get, "returns the current structure bsp index");
 HS_FUNCTION_0(_hs_type_void, version, main_print_version, "prints the build version.");
 HS_FUNCTION_0(_hs_type_void, playback, main_set_game_connection_to_film_playback, "starts game in film playback mode");
 
-HS_FUNCTION_0(_hs_type_void, texture_cache_flush, texture_cache_flush, "don't make me kick your ass");
+HS_DEBUG_FUNCTION_0(_hs_type_void, texture_cache_flush, texture_cache_flush, "don't make me kick your ass");
 
-HS_FUNCTION_0(_hs_type_void, sound_cache_flush, sound_cache_flush, "i'm a rebel!");
+HS_DEBUG_FUNCTION_0(_hs_type_void, sound_cache_flush, sound_cache_flush, "i'm a rebel!");
 
-HS_FUNCTION_0(_hs_type_void, debug_memory, debug_dump_memory, "dumps memory leaks.");
-HS_FUNCTION_0(_hs_type_void, debug_memory_by_file, debug_dump_memory_by_file, "dumps memory leaks by source file.");
-HS_FUNCTION_1(_hs_type_void, debug_memory_for_file, debug_dump_memory_for_file, "dumps memory leaks from the specified source file.", _hs_type_string);
-HS_FUNCTION_0(_hs_type_void, debug_tags, tag_groups_dump_memory, "writes all memory being used by tag files into tag_dump.txt");
+HS_DEBUG_FUNCTION_0(_hs_type_void, debug_memory, debug_dump_memory, "dumps memory leaks.");
+HS_DEBUG_FUNCTION_0(_hs_type_void, debug_memory_by_file, debug_dump_memory_by_file, "dumps memory leaks by source file.");
+HS_DEBUG_FUNCTION_1(_hs_type_void, debug_memory_for_file, debug_dump_memory_for_file, "dumps memory leaks from the specified source file.", _hs_type_string);
+HS_DEBUG_FUNCTION_0(_hs_type_void, debug_tags, tag_groups_dump_memory, "writes all memory being used by tag files into tag_dump.txt");
 
-HS_FUNCTION_0(_hs_type_void, profile_reset, profile_initialize, "resets profiling data.");
-HS_FUNCTION_1(_hs_type_void, profile_dump, profile_dump_to_file, "dumps profile based on a substring.", _hs_type_string);
-HS_FUNCTION_1(_hs_type_void, profile_activate, profile_sections_activate, "activates profile sections based on a substring.", _hs_type_string);
-HS_FUNCTION_1(_hs_type_void, profile_deactivate, profile_sections_deactivate, "deactivates profile sections based on a substring.", _hs_type_string);
-HS_FUNCTION_1(_hs_type_void, profile_graph_toggle, profile_graph_toggle, "enables or disables profile graph display of a particular value.", _hs_type_string);
+HS_DEBUG_FUNCTION_0(_hs_type_void, profile_reset, profile_initialize, "resets profiling data.");
+HS_DEBUG_FUNCTION_1(_hs_type_void, profile_dump, profile_dump_to_file, "dumps profile based on a substring.", _hs_type_string);
+HS_DEBUG_FUNCTION_1(_hs_type_void, profile_activate, profile_sections_activate, "activates profile sections based on a substring.", _hs_type_string);
+HS_DEBUG_FUNCTION_1(_hs_type_void, profile_deactivate, profile_sections_deactivate, "deactivates profile sections based on a substring.", _hs_type_string);
+HS_DEBUG_FUNCTION_1(_hs_type_void, profile_graph_toggle, profile_graph_toggle, "enables or disables profile graph display of a particular value.", _hs_type_string);
 
-HS_FUNCTION_1(_hs_type_void, debug_pvs, debug_pvs, "displays the current pvs.", _hs_type_boolean);
+HS_DEBUG_FUNCTION_1(_hs_type_void, debug_pvs, debug_pvs, "displays the current pvs.", _hs_type_boolean);
 
-HS_FUNCTION_0(_hs_type_void, radiosity_start, radiosity_hack_start, "starts radiosity computation.");
-HS_FUNCTION_0(_hs_type_void, radiosity_save, radiosity_hack_save, "saves radiosity solution.");
-HS_FUNCTION_0(_hs_type_void, radiosity_debug_point, radiosity_hack_find_point, "tests sun occlusion at a point.");
+HS_DEBUG_FUNCTION_0(_hs_type_void, radiosity_start, radiosity_hack_start, "starts radiosity computation.");
+HS_DEBUG_FUNCTION_0(_hs_type_void, radiosity_save, radiosity_hack_save, "saves radiosity solution.");
+HS_DEBUG_FUNCTION_0(_hs_type_void, radiosity_debug_point, radiosity_hack_find_point, "tests sun occlusion at a point.");
 
-HS_FUNCTION_0(_hs_type_void, ai_lines, ai_profile_change_render_spray, "cycles through AI line-spray modes");
+HS_DEBUG_FUNCTION_0(_hs_type_void, ai_lines, ai_profile_change_render_spray, "cycles through AI line-spray modes");
 
-HS_FUNCTION_0(_hs_type_void, ai_debug_sound_point_set, ai_debug_sound_point_set, "drops the AI debugging sound point at the camera location");
-HS_FUNCTION_2(_hs_type_void, ai_debug_vocalize, ai_debug_vocalize, "makes the selected AI vocalize", _hs_type_string, _hs_type_string);
-HS_FUNCTION_1(_hs_type_void, ai_debug_teleport_to, ai_debug_teleport_to, "teleports all players to the specified encounter", _hs_type_ai);
-HS_FUNCTION_1(_hs_type_void, ai_debug_speak, ai_debug_speak, "makes the currently selected AI speak a vocalization (e.g. ai_speak \"pain minor\")", _hs_type_string);
-HS_FUNCTION_1(_hs_type_void, ai_debug_speak_list, ai_debug_speak_list, "makes the currently selected AI speak a list of vocalizations (e.g. ai_speak_list \"involuntary\")", _hs_type_string);
+HS_DEBUG_FUNCTION_0(_hs_type_void, ai_debug_sound_point_set, ai_debug_sound_point_set, "drops the AI debugging sound point at the camera location");
+HS_DEBUG_FUNCTION_2(_hs_type_void, ai_debug_vocalize, ai_debug_vocalize, "makes the selected AI vocalize", _hs_type_string, _hs_type_string);
+HS_DEBUG_FUNCTION_1(_hs_type_void, ai_debug_teleport_to, ai_debug_teleport_to, "teleports all players to the specified encounter", _hs_type_ai);
+HS_DEBUG_FUNCTION_1(_hs_type_void, ai_debug_speak, ai_debug_speak, "makes the currently selected AI speak a vocalization (e.g. ai_speak \"pain minor\")", _hs_type_string);
+HS_DEBUG_FUNCTION_1(_hs_type_void, ai_debug_speak_list, ai_debug_speak_list, "makes the currently selected AI speak a list of vocalizations (e.g. ai_speak_list \"involuntary\")", _hs_type_string);
 
 HS_FUNCTION_4(_hs_type_void, fade_in, player_effect_screen_fade_in, "does a screen fade in from a particular color", _hs_type_real, _hs_type_real, _hs_type_real, _hs_type_short_integer);
 HS_FUNCTION_4(_hs_type_void, fade_out, player_effect_screen_fade_out, "does a screen fade out to a particular color", _hs_type_real, _hs_type_real, _hs_type_real, _hs_type_short_integer);
@@ -429,12 +429,12 @@ HS_FUNCTION_1(_hs_type_void, sound_looping_stop, scripted_looping_sound_stop, "s
 HS_FUNCTION_2(_hs_type_void, sound_looping_set_scale, scripted_looping_sound_set_scale, "changes the scale of the sound (which should affect the volume) within the range 0 to 1.", _hs_type_looping_sound, _hs_type_real);
 HS_FUNCTION_2(_hs_type_void, sound_looping_set_alternate, scripted_looping_sound_set_alternate, "enables or disables the alternate loop/alternate end for a looping sound.", _hs_type_looping_sound, _hs_type_boolean);
 
-HS_FUNCTION_2(_hs_type_void, debug_sounds_enable, debug_sound_classes_enable, "enables or disabled all sound classes matching the substring.", _hs_type_string, _hs_type_boolean);
-HS_FUNCTION_3(_hs_type_void, debug_sounds_distances, debug_sound_classes_set_distances, "changes the minimum and maximum distances for all sound classes matching the substring.", _hs_type_string, _hs_type_real, _hs_type_real);
-HS_FUNCTION_2(_hs_type_void, debug_sounds_wet, debug_sound_classes_set_wet, "changes the reverb level for all sound classes matching the substring.", _hs_type_string, _hs_type_real);
+HS_DEBUG_FUNCTION_2(_hs_type_void, debug_sounds_enable, debug_sound_classes_enable, "enables or disabled all sound classes matching the substring.", _hs_type_string, _hs_type_boolean);
+HS_DEBUG_FUNCTION_3(_hs_type_void, debug_sounds_distances, debug_sound_classes_set_distances, "changes the minimum and maximum distances for all sound classes matching the substring.", _hs_type_string, _hs_type_real, _hs_type_real);
+HS_DEBUG_FUNCTION_2(_hs_type_void, debug_sounds_wet, debug_sound_classes_set_wet, "changes the reverb level for all sound classes matching the substring.", _hs_type_string, _hs_type_real);
 HS_FUNCTION_3(_hs_type_void, sound_class_set_gain, sound_class_set_gain, "changes the gain on the specified sound class(es) to the specified game over the specified number of ticks.", _hs_type_string, _hs_type_real, _hs_type_short_integer);
 
-HS_FUNCTION_1(_hs_type_void, sound_enable, sound_enable, "enables or disables all sound.", _hs_type_boolean);
+HS_DEBUG_FUNCTION_1(_hs_type_void, sound_enable, sound_enable, "enables or disables all sound.", _hs_type_boolean);
 
 HS_FUNCTION_2(_hs_type_void, vehicle_hover, vehicle_hover, "stops the vehicle from running real physics and runs fake hovering physics instead.", _hs_type_vehicle, _hs_type_boolean);
 
@@ -483,9 +483,9 @@ HS_FUNCTION_1(_hs_type_void, show_hud_timer, scripted_hud_show_timer, "displays 
 HS_FUNCTION_1(_hs_type_void, pause_hud_timer, scripted_hud_pause_timer, "pauses or unpauses the hud timer", _hs_type_boolean);
 HS_FUNCTION_0(_hs_type_short_integer, hud_get_timer_ticks, scripted_hud_get_timer_ticks, "returns the ticks left on the hud timer");
 
-HS_FUNCTION_1(_hs_type_void, time_code_show, scripted_hud_time_code_show, "shows the time code timer", _hs_type_boolean);
-HS_FUNCTION_1(_hs_type_void, time_code_start, scripted_hud_time_code_start, "starts/stops the time code timer", _hs_type_boolean);
-HS_FUNCTION_0(_hs_type_void, time_code_reset, scripted_hud_time_code_reset, "resets the time code timer");
+HS_DEBUG_FUNCTION_1(_hs_type_void, time_code_show, scripted_hud_time_code_show, "shows the time code timer", _hs_type_boolean);
+HS_DEBUG_FUNCTION_1(_hs_type_void, time_code_start, scripted_hud_time_code_start, "starts/stops the time code timer", _hs_type_boolean);
+HS_DEBUG_FUNCTION_0(_hs_type_void, time_code_reset, scripted_hud_time_code_reset, "resets the time code timer");
 
 HS_FUNCTION_0(_hs_type_void, rasterizer_decals_flush, rasterizer_decals_flush, "flush all decals");
 HS_FUNCTION_0(_hs_type_void, rasterizer_fps_accumulate, rasterizer_fps_accumulate, "average fps");
@@ -507,9 +507,9 @@ HS_FUNCTION_2(_hs_type_void, cinematic_screen_effect_set_video, rasterizer_scree
 HS_FUNCTION_0(_hs_type_void, cinematic_screen_effect_stop, rasterizer_screen_effect_stop, "returns control of the screen effects to the rest of the game");
 HS_FUNCTION_1(_hs_type_void, cinematic_set_near_clip_distance, rasterizer_set_near_clip_distance, "", _hs_type_real);
 
-HS_FUNCTION_0(_hs_type_void, enumerate_memory_units, enumerate_memory_units_test, "enumerate memory units");
+HS_DEBUG_FUNCTION_0(_hs_type_void, enumerate_memory_units, enumerate_memory_units_test, "enumerate memory units");
 
-HS_FUNCTION_0(_hs_type_void, delete_save_game_files, saved_game_files_delete_all_custom_profiles, "delete all custom profile files");
+HS_DEBUG_FUNCTION_0(_hs_type_void, delete_save_game_files, saved_game_files_delete_all_custom_profiles, "delete all custom profile files");
 
 HS_FUNCTION_0(_hs_type_void, fast_setup_network_server, player_ui_fast_setup_network_server, "for zach's multiplayer testing");
 HS_FUNCTION_0(_hs_type_void, profile_unlock_solo_levels, player_ui_activate_all_solo_levels, "unlocks all the solo player levels for player 1's profile");

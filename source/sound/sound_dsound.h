@@ -39,7 +39,7 @@ static __inline long dsound_volume_from_gain(
 	}
 	else
 	{
-		volume = (long)(log10(gain)*2000.0 + maximum_volume);
+		volume = (long)((log10(gain)*2000.0) + maximum_volume);
 		volume = PIN(volume, DSBVOLUME_MIN, maximum_volume);
 	}
 

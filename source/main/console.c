@@ -67,7 +67,7 @@ void console_initialize(
 	void)
 {
 	console_globals.input_state.color = console_color;
-	csstrcpy(console_globals.input_state.prompt, "halo( ");
+	strcpy(console_globals.input_state.prompt, "halo( ");
 	console_globals.input_state.result[0] = 0;
 	console_globals.newest_previous_command_index = NONE;
 	console_globals.previous_command_count = 0;
@@ -89,7 +89,9 @@ void console_open(
 	{
 		console_globals.input_state.result[0] = '\0';
 		console_globals.active = terminal_gets_begin(&console_globals.input_state);
+#ifdef DEBUG
 		profile_global_enable = FALSE;
+#endif
 	}
 
 	return;
@@ -159,7 +161,7 @@ void console_warning(
 	terminal_printf(global_real_argb_red, "%s", buffer);
 	if (console_dump_to_file)
 	{
-		csstrncat(buffer, "\r\n", NUMBEROF(buffer));
+		strncat(buffer, "\r\n", NUMBEROF(buffer));
 		write_to_error_file(buffer, TRUE);
 	}
 
@@ -251,8 +253,8 @@ static void console_complete(
 
 			if (print_second_column)
 			{
-				csstrcat(print_buffer, matching_items[token_num]);
-				csstrcat(print_buffer, "|t");
+				strcat(print_buffer, matching_items[token_num]);
+				strcat(print_buffer, "|t");
 				if (token_num % 4 == 3)
 				{
 					console_printf(FALSE, print_buffer);
@@ -283,7 +285,6 @@ void console_startup(
 {
 	char buffer[200];
 	FILE *file;
-	short newest_previous_command_index;
 
 	if (!game_in_editor())
 	{
@@ -299,15 +300,8 @@ void console_startup(
 		while (fgets(buffer, NUMBEROF(buffer)-1, file))
 		{
 			strtok(buffer, "\r\n\t");
-			newest_previous_command_index = (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
 
-			console_globals.newest_previous_command_index = newest_previous_command_index;
-			strcpy(console_globals.previous_commands[newest_previous_command_index], buffer);
-
-			console_globals.previous_command_count = MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
-
-			console_globals.selected_previous_command_index = NONE;
-			if (hs_compile_and_evaluate(buffer))
+			if (console_process_command(buffer))
 			{
 				error(_error_log, "init: %s", buffer);
 			}
@@ -394,7 +388,9 @@ boolean console_update(
 	{
 		console_globals.input_state.result[0] = '\0';
 		console_globals.active = terminal_gets_begin(&console_globals.input_state);
+#ifdef DEBUG
 		profile_global_enable = FALSE;
+#endif
 	}
 
 	return console_globals.active;

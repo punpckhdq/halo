@@ -30,7 +30,9 @@ static void render_debug_point_physics(
 
 TAG_REFERENCE_DEFINITION(global_point_physics_reference, POINT_PHYSICS_DEFINITION_TAG);
 
+#ifdef DEBUG
 boolean debug_point_physics = FALSE;
+#endif
 
 static real global_air_mass_over_radius_cubed = 0.0f;
 static real global_water_mass_over_radius_cubed = 0.0f;
@@ -225,10 +227,12 @@ unsigned long point_physics_update(
 		match_collision_log_end_user("c:\\halo\\SOURCE\\physics\\point_physics.c", 312);
 	}
 
+#ifdef DEBUG
 	if (debug_point_physics)
 	{
 		render_debug_point_physics(definition, position, radius);
 	}
+#endif
 
 	return result;
 }
@@ -271,7 +275,9 @@ static void render_debug_point_physics(
 		? global_real_argb_red
 		: global_real_argb_green;
 
+#ifdef DEBUG
 	render_debug_point(TRUE, position, radius, color);
+#endif
 
 	return;
 }

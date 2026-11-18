@@ -68,12 +68,14 @@ struct network_connection
 	network_connection_rejection_procedure connection_rejection_procedure;
 	struct circular_queue *reliable_incoming_queue;
 	struct circular_queue *unreliable_incoming_queue;
+#ifdef DEBUG
 	FILE *traffic_log; /* fake name */
 	unsigned long traffic_log_start_time; /* fake name */
 	long datagrams_sent; /* fake name */
 	long datagrams_received; /* fake name */
 	long stream_messages_sent; /* fake name */
 	long stream_messages_received; /* fake name */
+#endif
 	unsigned long flags;
 	word well_known_port;
 };
@@ -93,7 +95,9 @@ static boolean network_client_reliable_connection_read(struct network_connection
 static boolean network_client_unreliable_connection_read(struct network_connection *connection, void *message, word *buffer_size, struct transport_address *source_address);
 static boolean network_connection_idle_server_reliable_endpoint(struct network_server_connection *connection, struct network_connection **new_client_connection);
 static boolean network_connection_idle_client_reliable_endpoint(struct network_connection *connection);
+#ifdef DEBUG
 static void network_connection_log_traffic_event(struct network_connection *connection, long event, long amount);
+#endif
 
 /* ---------- globals */
 
@@ -245,7 +249,9 @@ struct network_connection *network_connection_new(
 		}
 		else
 		{
+#ifdef DEBUG
 			network_connection_log_traffic_event(connection, _network_connection_traffic_event_open, 1);
+#endif
 		}
 	}
 
@@ -257,7 +263,9 @@ void network_connection_delete(
 {
 	if (connection)
 	{
+#ifdef DEBUG
 		network_connection_log_traffic_event(connection, _network_connection_traffic_event_close, 1);
+#endif
 
 		if (connection->reliable_endpoint)
 		{
@@ -368,7 +376,9 @@ boolean network_connection_write(
 		}
 
 		result = write_to_endpoint(connection->unreliable_endpoint, message, buffer_size, dest_address);
+#ifdef DEBUG
 		network_connection_log_traffic_event(connection, _network_connection_traffic_event_datagram_sent, buffer_size);
+#endif
 	}
 	else if (reliable)
 	{
@@ -385,11 +395,13 @@ boolean network_connection_write(
 			if (bytes_written > 0)
 			{
 				result = TRUE;
+#ifdef DEBUG
 				network_connection_log_traffic_event(
 					connection,
 					_network_connection_traffic_event_stream_bytes_sent,
 					bytes_written);
 				network_connection_log_traffic_event(connection, _network_connection_traffic_event_stream_message_sent, 1);
+#endif
 				break;
 			}
 			else if (bytes_written != _transport_result_operation_would_block)
@@ -411,16 +423,20 @@ boolean network_connection_write(
 			if (endpoint_connected(connection->unreliable_endpoint))
 			{
 				write_endpoint(connection->unreliable_endpoint, message, buffer_size);
+#ifdef DEBUG
 				network_connection_log_traffic_event(
 					connection,
 					_network_connection_traffic_event_datagram_sent,
 					buffer_size);
+#endif
 			}
 		}
 		else
 		{
 			write_to_endpoint(connection->unreliable_endpoint, message, buffer_size, dest_address);
+#ifdef DEBUG
 			network_connection_log_traffic_event(connection, _network_connection_traffic_event_datagram_sent, buffer_size);
+#endif
 		}
 	}
 
@@ -585,10 +601,12 @@ boolean network_connection_idle(
 						address.address_length = IPV4_ADDRESS_LENGTH;
 					}
 
+#ifdef DEBUG
 					network_connection_log_traffic_event(
 						connection,
 						_network_connection_traffic_event_datagram_received,
 						bytes_read);
+#endif
 				}
 			}
 			else
@@ -597,10 +615,12 @@ boolean network_connection_idle(
 
 				if (bytes_read > 0)
 				{
+#ifdef DEBUG
 					network_connection_log_traffic_event(
 						connection,
 						_network_connection_traffic_event_datagram_received,
 						bytes_read);
+#endif
 				}
 			}
 
@@ -853,7 +873,9 @@ static struct network_connection *network_connection_create_client_from_endpoint
 		}
 		else
 		{
+#ifdef DEBUG
 			network_connection_log_traffic_event(connection, _network_connection_traffic_event_open, 1);
+#endif
 		}
 	}
 
@@ -911,7 +933,9 @@ static boolean network_client_reliable_connection_read(
 
 			*buffer_size = message_size;
 			success = TRUE;
+#ifdef DEBUG
 			network_connection_log_traffic_event(connection, _network_connection_traffic_event_stream_message_received, 1);
+#endif
 		}
 
 		if (reset_queue)
@@ -1138,10 +1162,12 @@ static boolean network_connection_idle_client_reliable_endpoint(
 		if (bytes_read > 0)
 		{
 			network_connection_keep_alive(connection);
+#ifdef DEBUG
 			network_connection_log_traffic_event(
 				connection,
 				_network_connection_traffic_event_stream_bytes_received,
 				bytes_read);
+#endif
 
 			if (!circular_queue_queue_data(connection->reliable_incoming_queue, buffer, bytes_read))
 			{
@@ -1186,6 +1212,7 @@ static boolean network_connection_idle_client_reliable_endpoint(
 	return success;
 }
 
+#ifdef DEBUG
 static void network_connection_log_traffic_event(
 	struct network_connection *connection,
 	long event,
@@ -1318,6 +1345,7 @@ static void network_connection_log_traffic_event(
 
 	return;
 }
+#endif
 
 void network_connection_keep_alive(
 	struct network_connection *connection)

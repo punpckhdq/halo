@@ -44,7 +44,7 @@ void connected_geometry_delete(
 
 	for (edge_index= 0; edge_index<geometry->edges.count; edge_index++)
 	{
-		struct connected_edge *edge= dynamic_array_get_element(&geometry->edges, edge_index, sizeof(struct connected_edge));
+		struct connected_edge *edge= dynamic_array_get_element_inline(&geometry->edges, edge_index, sizeof(struct connected_edge));
 
 		dynamic_array_delete(&edge->triangle_indices);
 	}
@@ -63,7 +63,7 @@ void connected_geometry_group_recursive(
 	long group_index,
 	long triangle_index)
 {
-	struct connected_triangle *triangle= dynamic_array_get_element(&geometry->triangles, triangle_index, sizeof(struct connected_triangle));
+	struct connected_triangle *triangle= dynamic_array_get_element_inline(&geometry->triangles, triangle_index, sizeof(struct connected_triangle));
 
 	if (triangle->group_index==NONE)
 	{
@@ -76,13 +76,13 @@ void connected_geometry_group_recursive(
 			{
 				if (triangle->edge_designators[edge_index]!=NONE)
 				{
-					struct connected_edge *edge= dynamic_array_get_element(&geometry->edges, triangle->edge_designators[edge_index]&LONG_MAX, sizeof(struct connected_edge));
+					struct connected_edge *edge= dynamic_array_get_element_inline(&geometry->edges, triangle->edge_designators[edge_index]&LONG_MAX, sizeof(struct connected_edge));
 					short edge_triangle_index;
 
 					for (edge_triangle_index= 0; edge_triangle_index<edge->triangle_indices.count; edge_triangle_index++)
 					{
 						connected_geometry_group_recursive(geometry, group_test, data, group_index,
-							*(long *)dynamic_array_get_element(&edge->triangle_indices, edge_triangle_index, sizeof(long)));
+							*(long *)dynamic_array_get_element_inline(&edge->triangle_indices, edge_triangle_index, sizeof(long)));
 					}
 				}
 			}
@@ -100,9 +100,9 @@ static long connected_geometry_find_or_add_vertex(
 
 	for (point_index= 0; point_index<geometry->points.count; point_index++)
 	{
-		if (POINT_COORDINATES_EQUAL(point->x, ((real_point3d *)dynamic_array_get_element(&geometry->points, point_index, sizeof(real_point3d)))->x) &&
-			POINT_COORDINATES_EQUAL(point->y, ((real_point3d *)dynamic_array_get_element(&geometry->points, point_index, sizeof(real_point3d)))->y) &&
-			POINT_COORDINATES_EQUAL(point->z, ((real_point3d *)dynamic_array_get_element(&geometry->points, point_index, sizeof(real_point3d)))->z))
+		if (POINT_COORDINATES_EQUAL(point->x, ((real_point3d *)dynamic_array_get_element_inline(&geometry->points, point_index, sizeof(real_point3d)))->x) &&
+			POINT_COORDINATES_EQUAL(point->y, ((real_point3d *)dynamic_array_get_element_inline(&geometry->points, point_index, sizeof(real_point3d)))->y) &&
+			POINT_COORDINATES_EQUAL(point->z, ((real_point3d *)dynamic_array_get_element_inline(&geometry->points, point_index, sizeof(real_point3d)))->z))
 		{
 			break;
 		}
@@ -113,7 +113,7 @@ static long connected_geometry_find_or_add_vertex(
 		point_index= dynamic_array_add_element(&geometry->points);
 		if (point_index!=NONE)
 		{
-			*(real_point3d *)dynamic_array_get_element(&geometry->points, point_index, sizeof(real_point3d))= *point;
+			*(real_point3d *)dynamic_array_get_element_inline(&geometry->points, point_index, sizeof(real_point3d))= *point;
 		}
 	}
 
@@ -131,7 +131,7 @@ static long connected_geometry_find_or_add_edge(
 
 	for (edge_index= 0; edge_index<geometry->edges.count; edge_index++)
 	{
-		struct connected_edge *edge= dynamic_array_get_element(&geometry->edges, edge_index, sizeof(struct connected_edge));
+		struct connected_edge *edge= dynamic_array_get_element_inline(&geometry->edges, edge_index, sizeof(struct connected_edge));
 
 		if (edge->point_indices[0]==point_index0 && edge->point_indices[1]==point_index1)
 		{
@@ -151,7 +151,7 @@ static long connected_geometry_find_or_add_edge(
 		forward= TRUE;
 		if (edge_index!=NONE)
 		{
-			struct connected_edge *edge= dynamic_array_get_element(&geometry->edges, edge_index, sizeof(struct connected_edge));
+			struct connected_edge *edge= dynamic_array_get_element_inline(&geometry->edges, edge_index, sizeof(struct connected_edge));
 
 			dynamic_array_new(&edge->triangle_indices, sizeof(long));
 			edge->point_indices[0]= point_index0;
@@ -161,7 +161,7 @@ static long connected_geometry_find_or_add_edge(
 
 	if (edge_index!=NONE)
 	{
-		struct connected_edge *edge= dynamic_array_get_element(&geometry->edges, edge_index, sizeof(struct connected_edge));
+		struct connected_edge *edge= dynamic_array_get_element_inline(&geometry->edges, edge_index, sizeof(struct connected_edge));
 		long edge_triangle_index= dynamic_array_add_element(&edge->triangle_indices);
 
 		if (edge_triangle_index==NONE)
@@ -170,7 +170,7 @@ static long connected_geometry_find_or_add_edge(
 		}
 		else
 		{
-			*(long *)dynamic_array_get_element(&edge->triangle_indices, edge_triangle_index, sizeof(long))= triangle_index;
+			*(long *)dynamic_array_get_element_inline(&edge->triangle_indices, edge_triangle_index, sizeof(long))= triangle_index;
 		}
 	}
 
@@ -189,7 +189,7 @@ long connected_geometry_add_triangle(
 
 	if (triangle_index!=NONE)
 	{
-		struct connected_triangle *triangle= dynamic_array_get_element(&geometry->triangles, triangle_index, sizeof(struct connected_triangle));
+		struct connected_triangle *triangle= dynamic_array_get_element_inline(&geometry->triangles, triangle_index, sizeof(struct connected_triangle));
 		long point_indices[NUMBER_OF_VERTICES_PER_TRIANGLE];
 		short edge_index;
 
@@ -219,7 +219,7 @@ long connected_geometry_add_triangle(
 
 			for (other_triangle_index= 0; other_triangle_index<geometry->triangles.count-1; other_triangle_index++)
 			{
-				struct connected_triangle *other_triangle= dynamic_array_get_element(&geometry->triangles, other_triangle_index, sizeof(struct connected_triangle));
+				struct connected_triangle *other_triangle= dynamic_array_get_element_inline(&geometry->triangles, other_triangle_index, sizeof(struct connected_triangle));
 				boolean duplicate= TRUE;
 
 				for (edge_index= 0; edge_index<NUMBER_OF_EDGES_PER_TRIANGLE; edge_index++)
@@ -289,12 +289,12 @@ long connected_geometry_add_intermediate_triangle(
 	long triangle_index,
 	boolean check_for_duplicates)
 {
-	struct intermediate_triangle const *triangle= dynamic_array_get_element(&intermediate_geometry->triangles, triangle_index, sizeof(struct intermediate_triangle));
+	struct intermediate_triangle const *triangle= dynamic_array_get_element_inline(&intermediate_geometry->triangles, triangle_index, sizeof(struct intermediate_triangle));
 
 	return connected_geometry_add_triangle(geometry,
-		&((struct intermediate_vertex *)dynamic_array_get_element(&intermediate_geometry->vertices, triangle->vertex_indices[0], sizeof(struct intermediate_vertex)))->position,
-		&((struct intermediate_vertex *)dynamic_array_get_element(&intermediate_geometry->vertices, triangle->vertex_indices[1], sizeof(struct intermediate_vertex)))->position,
-		&((struct intermediate_vertex *)dynamic_array_get_element(&intermediate_geometry->vertices, triangle->vertex_indices[2], sizeof(struct intermediate_vertex)))->position,
+		&((struct intermediate_vertex *)dynamic_array_get_element_inline(&intermediate_geometry->vertices, triangle->vertex_indices[0], sizeof(struct intermediate_vertex)))->position,
+		&((struct intermediate_vertex *)dynamic_array_get_element_inline(&intermediate_geometry->vertices, triangle->vertex_indices[1], sizeof(struct intermediate_vertex)))->position,
+		&((struct intermediate_vertex *)dynamic_array_get_element_inline(&intermediate_geometry->vertices, triangle->vertex_indices[2], sizeof(struct intermediate_vertex)))->position,
 		check_for_duplicates);
 }
 
@@ -306,7 +306,7 @@ long connected_geometry_group_coplanar(
 
 	for (triangle_index= 0; triangle_index<geometry->triangles.count; triangle_index++)
 	{
-		struct connected_triangle *triangle= dynamic_array_get_element(&geometry->triangles, triangle_index, sizeof(struct connected_triangle));
+		struct connected_triangle *triangle= dynamic_array_get_element_inline(&geometry->triangles, triangle_index, sizeof(struct connected_triangle));
 		real_plane3d plane;
 
 		plane3d_from_points(&plane,

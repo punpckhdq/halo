@@ -166,6 +166,7 @@ static void prop_add(
 {
 	if (prop_index == NONE)
 	{
+#ifdef DEBUG
 		static long last_warning_time = NONE;
 		long current_time = game_time_get();
 
@@ -174,6 +175,7 @@ static void prop_add(
 			error(_error_silent, "AI knowledge database (%d entries) is full (warns once every 30 sec)", MAXIMUM_NUMBER_OF_PROPS);
 			last_warning_time = current_time;
 		}
+#endif
 	}
 	else
 	{

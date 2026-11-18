@@ -44,7 +44,9 @@ void collision_bsp_get_features_in_sphere(
 		real width,
 		long object_index,
 		struct collision_feature_list *features);
+#ifdef DEBUG
 void render_debug_collision_bsp(struct collision_bsp *bsp, const real_matrix4x3 *matrix);
+#endif
 
 /* ---------- globals */
 
@@ -162,8 +164,10 @@ boolean collision_model_test_vector(
 
 	static __int64 collision_model_test_vector_time;
 
+#ifdef DEBUG
 	collision_log_usage(3);
 	collision_log_start_time(&collision_model_test_vector_time);
+#endif
 
 	result->bsp_result.t = FLT_MAX;
 
@@ -206,7 +210,9 @@ boolean collision_model_test_vector(
 		}
 	}
 
+#ifdef DEBUG
 	collision_log_end_time(3, collision_model_test_vector_time);
+#endif
 
 	return return_value;
 }
@@ -346,6 +352,7 @@ boolean collision_model_get_features_in_sphere(
 	return return_val;
 }
 
+#ifdef DEBUG
 void render_debug_collision_model(
 	struct collision_model_instance const *instance)
 {
@@ -376,5 +383,6 @@ void render_debug_collision_model(
 		}
 	}
 }
+#endif
 
 /* ---------- private code */

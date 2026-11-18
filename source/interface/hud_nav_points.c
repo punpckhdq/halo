@@ -301,8 +301,10 @@ void custom_render_nav_point(
 	short nav_index,
 	short waypoint_type)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct hud_waypoint_arrow *arrow;
 	real_point3d position;
 	real distance;
@@ -311,7 +313,9 @@ void custom_render_nav_point(
 	real a, b, ab, bx, ay;
 	real theta;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 	arrow = TAG_BLOCK_GET_ELEMENT(&hud_globals->waypoint.arrows, nav_index, struct hud_waypoint_arrow);
 	position = *position_pointer;
 
@@ -418,10 +422,12 @@ void custom_render_nav_point(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 675);
 	}
+#endif
 
 	return;
 }
@@ -697,13 +703,17 @@ static void hud_deactivate_team_nav_point(
 static void hud_update_nav_point_local_player(
 	short local_player_index)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct hud_nav_point_player_datum *data;
 	long unit_index;
 	short index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 	data = get_nav_point_datum(local_player_index);
 	unit_index = local_player_get_player_index(local_player_index) == NONE ? NONE : player_get(local_player_get_player_index(local_player_index))->unit_index;
 	for (index = 0; index < MAXIMUM_ACTIVE_NAV_POINTS; index++)
@@ -751,10 +761,12 @@ static void hud_update_nav_point_local_player(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 496);
 	}
+#endif
 
 	return;
 }

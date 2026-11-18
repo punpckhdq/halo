@@ -53,7 +53,7 @@ enum
 
 /* ---------- macros */
 
-#define object_render_state_get(index) ((struct object_render_state *)datum_get(cached_object_render_states, (index)))	/* fake name */
+#define object_render_state_get(index) DATUM_GET(cached_object_render_states, index, struct object_render_state)	/* fake name */
 
 /* ---------- structures */
 
@@ -459,6 +459,7 @@ static void render_object_list(
 
 					object_header = object_header_get(object_index);
 
+#ifdef DEBUG
 					if (debug_inactive_objects &&
 						object->object.parent_object_index == NONE &&
 						!TEST_FLAG(object_header->flags, _object_header_active_bit) &&
@@ -480,6 +481,7 @@ static void render_object_list(
 							global_real_argb_blue);
 						render_debug_string_at_point(FALSE, &text_point, text_buffer, global_real_argb_blue);
 					}
+#endif
 
 					render_model(
 						definition->object.model.index,

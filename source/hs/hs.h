@@ -139,13 +139,19 @@ enum
 #define HS_TYPE_IS_OBJECT(type) ((type)>=FIRST_HS_OBJECT_TYPE && (type)<=LAST_HS_OBJECT_TYPE)
 #define HS_TYPE_IS_OBJECT_NAME(type) ((type)>=FIRST_HS_OBJECT_NAME_TYPE && (type)<=LAST_HS_OBJECT_NAME_TYPE)
 
-#define hs_syntax_get(index) ((struct hs_syntax_node *)datum_get(hs_syntax_data, (index)))
+#define hs_syntax_get(index) DATUM_GET(hs_syntax_data, index, struct hs_syntax_node)
 #define HS_GLOBAL_INDEX(designator) ((short)(designator)&MASK(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT))
 
 #ifdef HS_COMPILER_ENABLED
 #define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {#name, type, pointer} /* fake name */
 #else
 #define HS_GLOBAL_EXTERNAL(name, type, pointer) static struct hs_global_external name##_definition = {NULL, type, pointer} /* fake name */
+#endif
+
+#ifdef DEBUG
+#define HS_GLOBAL_EXTERNAL_DEBUG(name, type, pointer) HS_GLOBAL_EXTERNAL(name, type, pointer) /* fake name */
+#else
+#define HS_GLOBAL_EXTERNAL_DEBUG(name, type, pointer) HS_GLOBAL_EXTERNAL(name, type, NULL) /* fake name */
 #endif
 
 /* ---------- structures */
@@ -184,10 +190,19 @@ void hs_dispose(void);
 void hs_recompile(void);
 void hs_update(void);
 void hs_node_gc(void);
+#ifdef DEBUG
 struct hs_function_definition const *hs_function_get(short function_index);
+#else
+extern struct hs_function_definition const *hs_function_table[];
+#define hs_function_get(function_index) (hs_function_table[function_index])
+#endif
 short hs_find_script_by_name(char const *name);
 short hs_find_tag_reference_by_index(long tag_index);
+#ifdef DEBUG
 struct hs_global_external *hs_global_external_get(short global_index);
+#else
+#define hs_global_external_get(global_index) (hs_external_globals[global_index])
+#endif
 short hs_global_get_type(short designator);
 char const *hs_global_get_name(short designator);
 short hs_find_global_by_name(char const *name);

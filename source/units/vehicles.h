@@ -106,8 +106,8 @@ void vehicle_hover(long vehicle_index, boolean hover);
 void vehicle_accelerate(long vehicle_index, real_vector3d const *acceleration);
 
 boolean vehicle_causes_collision_damage(long vehicle_index);
-boolean vehicle_build_update(void);
-boolean vehicle_parse_update(void);
+boolean vehicle_build_update(long vehicle_index, void *buffer, short *size, real priority);
+boolean vehicle_parse_update(long vehicle_index, void *buffer, short *size, real priority);
 long vehicle_find_pathfinding_surface_index(long vehicle_index, real_point3d *pathfinding_point);
 boolean vehicle_is_flipped(long vehicle_index);
 boolean vehicle_moving_near_any_player(void);

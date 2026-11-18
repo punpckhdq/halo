@@ -287,12 +287,12 @@ void collision_debug_render(void)
 			render_debug_vector(TRUE, &old_position, &old_velocity, 1.f, global_real_argb_blue);
 			match_assert("c:\\halo\\SOURCE\\physics\\collision_debug.c", 297, count<=14);
 
-			csmemmove(collisions + 1, collisions, sizeof(*collisions) * count);
+			memmove(collisions + 1, collisions, sizeof(*collisions) * count);
 			collisions[0].point = old_position;
-			csmemset(&collisions[0].plane, 0, sizeof(collisions[0].plane));
+			memset(&collisions[0].plane, 0, sizeof(collisions[0].plane));
 			count++;
 			collisions[count].point = new_position;
-			csmemset(&collisions[count].plane, 0, sizeof(collisions[count].plane));
+			memset(&collisions[count].plane, 0, sizeof(collisions[count].plane));
 			count++;
 
 			for (index = 0; index < count; index++)

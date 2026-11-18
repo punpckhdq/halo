@@ -47,6 +47,7 @@
 #define	bzero(dst,len)		memset((char *)dst, 0, len)
 #define	bcopy(src,dst,len)	memcpy((char *)dst, (char *)src, len)
 #define	bcmp(src, dst, len)	memcmp((char *)dst, (char *)src, len)
+#include <io.h>
 #endif
 // halo decomp end
 #if (defined(_MSC_VER) || defined(__STDC__) || defined(__EXTENDED__)) && !defined(USE_PROTOTYPES)
@@ -165,7 +166,9 @@ extern	void TIFFUnmapFileContents();
 #ifdef applec
 #define	lseek	mpw_lseek
 extern long mpw_lseek(int, long, int);
-#else
+// halo decomp add
+#elif !defined(xbox)
+// halo decomp end
 extern	long lseek();
 #endif
 

@@ -89,7 +89,9 @@ boolean rasterizer_detail_objects_initialize(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_detail_objects_initialize failed");
+#endif
 	}
 
 	return success;
@@ -187,7 +189,9 @@ void _rasterizer_detail_objects_begin(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_detail_objects_begin failed");
+#endif
 	}
 
 	return;
@@ -275,7 +279,9 @@ void _rasterizer_detail_objects_rebuild_vertices(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_detail_objects_rebuild_vertices failed");
+#endif
 	}
 
 	return;
@@ -296,8 +302,6 @@ void _rasterizer_detail_objects_draw(
 
 		for (layer_index = 0; layer_index < detail_object_view_data->layer_count; layer_index++)
 		{
-			real_vector4d vsh_constants__detailobj_typedata[MAXIMUM_DETAIL_OBJECT_TYPES_PER_COLLECTION];
-			real_vector4d vsh_constants__detailobj_framedata[MAXIMUM_DETAIL_OBJECT_SPRITES_PER_COLLECTION];
 			short frame_count;
 			short type_index;
 			short sequence_index;
@@ -320,57 +324,62 @@ void _rasterizer_detail_objects_draw(
 				rasterizer_set_vertex_shader_permutation(_vertex_shader_detail_object_type0,_rasterizer_vertex_type_detail_object, collection_definition->collection_type);
 			}
 
-			frame_count = 0;
-
-			for (type_index = 0; type_index < collection_definition->type_definitions.count; type_index++)
 			{
-				real_vector4d *typedata;
-				struct detail_object_type_definition *type_definition = TAG_BLOCK_GET_ELEMENT(&collection_definition->type_definitions, type_index, struct detail_object_type_definition);
-				struct bitmap_group_sequence *sequence = TAG_BLOCK_GET_ELEMENT(&bitmap_group->sequences, type_definition->sequence_index, struct bitmap_group_sequence);
-				struct bitmap_data *bitmap = TAG_BLOCK_GET_ELEMENT(&bitmap_group->bitmaps, sequence->first_bitmap_index, struct bitmap_data);
-				real fade_scale = type_definition->far_fade_distance - type_definition->near_fade_distance;
-				real size = type_definition->size_min;
+				real_vector4d vsh_constants__detailobj_typedata[MAXIMUM_DETAIL_OBJECT_TYPES_PER_COLLECTION];
+				real_vector4d vsh_constants__detailobj_framedata[MAXIMUM_DETAIL_OBJECT_SPRITES_PER_COLLECTION];
 
-				if (fade_scale > 0.f)
+				frame_count = 0;
+
+				for (type_index = 0; type_index < collection_definition->type_definitions.count; type_index++)
 				{
-					fade_scale = 1.f / fade_scale;
+					real_vector4d *typedata;
+					struct detail_object_type_definition *type_definition = TAG_BLOCK_GET_ELEMENT(&collection_definition->type_definitions, type_index, struct detail_object_type_definition);
+					struct bitmap_group_sequence *sequence = TAG_BLOCK_GET_ELEMENT(&bitmap_group->sequences, type_definition->sequence_index, struct bitmap_group_sequence);
+					struct bitmap_data *bitmap = TAG_BLOCK_GET_ELEMENT(&bitmap_group->bitmaps, sequence->first_bitmap_index, struct bitmap_data);
+					real fade_scale = type_definition->far_fade_distance - type_definition->near_fade_distance;
+					real size = type_definition->size_min;
+
+					if (fade_scale > 0.f)
+					{
+						fade_scale = 1.f / fade_scale;
+					}
+
+					typedata = &vsh_constants__detailobj_typedata[type_index];
+					typedata->i = fade_scale * type_definition->far_fade_distance;
+					typedata->j = -fade_scale;
+					typedata->k = (real)bitmap->width * size;
+					typedata->l = (real)bitmap->height * size;
 				}
 
-				typedata = &vsh_constants__detailobj_typedata[type_index];
-				typedata->i = fade_scale * type_definition->far_fade_distance;
-				typedata->j = -fade_scale;
-				typedata->k = (real)bitmap->width * size;
-				typedata->l = (real)bitmap->height * size;
-			}
-
-			for (sequence_index = 0; sequence_index < bitmap_group->sequences.count; sequence_index++)
-			{
-				short sprite_index;
-				struct bitmap_group_sequence *sequence = TAG_BLOCK_GET_ELEMENT(&bitmap_group->sequences, sequence_index, struct bitmap_group_sequence);
-
-				for (sprite_index = 0; sprite_index < sequence->sprites.count; sprite_index++)
+				for (sequence_index = 0; sequence_index < bitmap_group->sequences.count; sequence_index++)
 				{
-					real_vector4d *framedata;
-					struct bitmap_group_sprite *sprite = TAG_BLOCK_GET_ELEMENT(&sequence->sprites, sprite_index, struct bitmap_group_sprite);
+					short sprite_index;
+					struct bitmap_group_sequence *sequence = TAG_BLOCK_GET_ELEMENT(&bitmap_group->sequences, sequence_index, struct bitmap_group_sequence);
 
-					TAG_BLOCK_GET_ELEMENT(&bitmap_group->bitmaps, sprite->bitmap_index, struct bitmap_data);
+					for (sprite_index = 0; sprite_index < sequence->sprites.count; sprite_index++)
+					{
+						real_vector4d *framedata;
+						struct bitmap_group_sprite *sprite = TAG_BLOCK_GET_ELEMENT(&sequence->sprites, sprite_index, struct bitmap_group_sprite);
 
-					framedata = &vsh_constants__detailobj_framedata[frame_count++];
-					framedata->i = sprite->bounds.x0;
-					framedata->j = sprite->bounds.y0;
-					framedata->k = sprite->bounds.x1 - sprite->bounds.x0;
-					framedata->l = sprite->bounds.y1 - sprite->bounds.y0;
+						TAG_BLOCK_GET_ELEMENT(&bitmap_group->bitmaps, sprite->bitmap_index, struct bitmap_data);
+
+						framedata = &vsh_constants__detailobj_framedata[frame_count++];
+						framedata->i = sprite->bounds.x0;
+						framedata->j = sprite->bounds.y0;
+						framedata->k = sprite->bounds.x1 - sprite->bounds.x0;
+						framedata->l = sprite->bounds.y1 - sprite->bounds.y0;
+					}
 				}
-			}
 
-			D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device,
-				VSH_CONSTANTS__DETAILOBJ_TYPEDATA_OFFSET,
-				vsh_constants__detailobj_typedata,
-				collection_definition->type_definitions.count));
-			D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device,
-				VSH_CONSTANTS__DETAILOBJ_FRAMEDATA_OFFSET,
-				vsh_constants__detailobj_framedata,
-				frame_count));
+				D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device,
+					VSH_CONSTANTS__DETAILOBJ_TYPEDATA_OFFSET,
+					vsh_constants__detailobj_typedata,
+					collection_definition->type_definitions.count));
+				D3DCALL(success, IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device,
+					VSH_CONSTANTS__DETAILOBJ_FRAMEDATA_OFFSET,
+					vsh_constants__detailobj_framedata,
+					frame_count));
+			}
 
 			for (cell_index = 0; cell_index < layer->cell_count; cell_index++)
 			{
@@ -399,7 +408,9 @@ void _rasterizer_detail_objects_draw(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "### ERROR rasterizer_detail_objects_draw failed");
+#endif
 		}
 	}
 

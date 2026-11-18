@@ -208,7 +208,9 @@ boolean _rasterizer_environment_shadow_begin(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_environment_shadow_begin failed");
+#endif
 	}
 
 	return TRUE;
@@ -473,7 +475,9 @@ void _rasterizer_environment_shadow_draw(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_environment_shadow_draw failed");
+#endif
 	}
 
 	return;

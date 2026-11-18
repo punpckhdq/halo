@@ -75,7 +75,11 @@ void file_printf(struct file_reference *file, char *format, ...);
 void directory_create_or_delete_contents(char const *directory_name);
 boolean datastore_read(char const *file_name, char const *field_name, long length, void *data);
 boolean datastore_write(char const *file_name, char const *field_name, long length, void const *data);
+#ifdef DEBUG
 struct file_reference_info *file_reference_get_info(struct file_reference *reference);
+#else
+#define file_reference_get_info(reference) ((struct file_reference_info *)(reference))
+#endif
 
 /* ---------- prototypes/FILES_WINDOWS.C */
 

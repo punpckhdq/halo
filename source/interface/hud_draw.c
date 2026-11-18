@@ -55,10 +55,14 @@ static real_rectangle2d const *get_sprite_clip_rect(
 	short frame)
 {
 	real_rectangle2d const *result = NULL;
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	if (bitmap_index != NONE && sequence_index != NONE && frame != NONE)
 	{
@@ -75,11 +79,13 @@ static real_rectangle2d const *get_sprite_clip_rect(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 100);
 	}
+#endif
 
 	return result;
 }
@@ -99,12 +105,16 @@ void hud_calculate_point(
 	real override_scale,
 	point2d *result)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	real scale;
 	real_point2d temp_result;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	if (!in_multiplayer || override_scale == 0.f)
 	{
@@ -167,11 +177,13 @@ void hud_calculate_point(
 	result->x = (short)fast_ftol(temp_result.x);
 	result->y = (short)fast_ftol(temp_result.y);
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 181);
 	}
+#endif
 
 	return;
 }
@@ -183,10 +195,14 @@ void hud_retrieve_bitmap_and_bounding_rect(
 	struct bitmap_data const **bitmap,
 	real_rectangle2d const **clip)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 	match_assert("c:\\halo\\SOURCE\\interface\\hud_draw.c", 193, bitmap);
 	match_assert("c:\\halo\\SOURCE\\interface\\hud_draw.c", 194, clip);
 
@@ -223,11 +239,13 @@ void hud_retrieve_bitmap_and_bounding_rect(
 		*clip = NULL;
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 228);
 	}
+#endif
 
 	return;
 }
@@ -242,14 +260,18 @@ unsigned long get_flash_color(
 	struct hud_color_definition const *hud_color_def,
 	long reference_value)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	real_argb_color out_color;
 	real_argb_color hud_color;
 	real_argb_color hud_flash_color;
 	real flash_time;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	flash_time = (real)fmod((game_time_get() - reference_value) * SECONDS_PER_TICK, hud_color_def->flash_period);
 	pixel32_to_real_argb_color(hud_color_def->color, &hud_color);
@@ -322,11 +344,13 @@ unsigned long get_flash_color(
 		out_color = hud_color;
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 311);
 	}
+#endif
 
 	return real_argb_color_to_pixel32(&out_color);
 }
@@ -341,12 +365,16 @@ void hud_draw_meter(
 	real reference_time,
 	real reference_value)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct bitmap_group *bitmap_group;
 	struct bitmap_data *bitmap;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	bitmap_group = bitmap_group_get(verify_tag_reference(&meter->meter_bitmap));
 	bitmap = bitmap_group_get_bitmap_from_sequence(meter->meter_bitmap.index, meter->sequence_index, 0);
@@ -438,11 +466,13 @@ void hud_draw_meter(
 			FALSE);
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 428);
 	}
+#endif
 
 	return;
 }
@@ -457,11 +487,15 @@ void hud_draw_numbers(
 	long flash_reference_time,
 	real override_scale)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	long hud_number_index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	hud_number_index = interface_get_tag_index(_interface_hud_digits);
 
@@ -714,11 +748,13 @@ void hud_draw_numbers(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 602);
 	}
+#endif
 
 	return;
 }
@@ -730,12 +766,16 @@ void hud_draw_static_element(
 	short draw_flags,
 	long flash_reference_time)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct bitmap_group *bitmap_group;
 	struct bitmap_data *bitmap;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	bitmap_group = bitmap_group_get(verify_tag_reference(&static_element->interface_bitmap));
 	bitmap = bitmap_group_get_bitmap_from_sequence(static_element->interface_bitmap.index, static_element->sequence_index, 0);
@@ -813,11 +853,13 @@ void hud_draw_static_element(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 685);
 	}
+#endif
 
 	return;
 }
@@ -831,11 +873,15 @@ void hud_draw_weapon_overlays(
 	short draw_flags,
 	boolean in_multiplayer)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	long item_index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	for (item_index = 0; item_index < overlays->items.count; item_index++)
 	{
@@ -897,11 +943,13 @@ void hud_draw_weapon_overlays(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 748);
 	}
+#endif
 
 	return;
 }
@@ -947,14 +995,18 @@ static void hud_draw_bitmap_with_meter(
 	boolean is_interface_bitmap,
 	boolean is_crosshair_bitmap)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	real_rectangle2d default_clip;
 	real_rectangle2d local_box;
 	real_vector2d xy_scale;
 	point2d point;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	default_clip.x0 = 0.f;
 	default_clip.x1 = 1.f;
@@ -984,11 +1036,13 @@ static void hud_draw_bitmap_with_meter(
 	hud_calculate_bitmap_bounds(bitmap, absolute_placement->corner, clip, &local_box, is_interface_bitmap);
 	hud_draw_bitmap_internal(meter_parameters, bitmap, &point, clip, &local_box, &xy_scale, theta, color32);
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 814);
 	}
+#endif
 
 	return;
 }
@@ -1003,13 +1057,17 @@ void hud_draw_bitmap_direct(
 	unsigned long color,
 	boolean is_interface_bitmap)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	real_rectangle2d default_clip;
 	real_rectangle2d local_box;
 	real_vector2d xy_scale;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	default_clip.x0 = 0.f;
 	default_clip.x1 = 1.f;
@@ -1032,11 +1090,13 @@ void hud_draw_bitmap_direct(
 	hud_calculate_bitmap_bounds(bitmap, placement, clip, &local_box, is_interface_bitmap);
 	hud_draw_bitmap_internal(NULL, bitmap, point, clip, &local_box, &xy_scale, theta, color);
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 856);
 	}
+#endif
 
 	return;
 }
@@ -1050,12 +1110,16 @@ static void hud_calculate_bitmap_bounds(
 	real_rectangle2d *bounds,
 	boolean is_interface_bitmap)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	real width;
 	real height;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	width = (clip->x1 - clip->x0) * (is_interface_bitmap ? 1 : bitmap->width);
 	height = (clip->y1 - clip->y0) * (is_interface_bitmap ? 1 : bitmap->height);
@@ -1097,11 +1161,13 @@ static void hud_calculate_bitmap_bounds(
 		break;
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 907);
 	}
+#endif
 
 	return;
 }
@@ -1116,15 +1182,19 @@ static void hud_draw_bitmap_internal(
 	real theta,
 	unsigned long color)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct dynamic_screen_vertex vertices[4];
 	struct rasterizer_dynamic_screen_geometry_parameters parameters;
 	real sine_theta;
 	real cosine_theta;
 	short vertex_index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	sine_theta = sine(theta);
 	cosine_theta = cosine(theta);
@@ -1154,11 +1224,13 @@ static void hud_draw_bitmap_internal(
 	parameters.map[0] = (struct bitmap_data *)bitmap;
 	rasterizer_psuedo_dynamic_screen_quad_draw(&parameters, vertices);
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 985);
 	}
+#endif
 
 	return;
 }
@@ -1168,11 +1240,15 @@ static boolean hud_draw_multitexture_overlay_get_current_weapon_definition(
 	struct weapon_interface_state *weapon_state)
 {
 	boolean result = FALSE;
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	long weapon_index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	weapon_index = unit_inventory_get_weapon(player->unit_index, unit_get(player->unit_index)->unit.current_weapon_index);
 
@@ -1201,11 +1277,13 @@ static boolean hud_draw_multitexture_overlay_get_current_weapon_definition(
 		result = TRUE;
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 1032);
 	}
+#endif
 
 	return result;
 }
@@ -1220,8 +1298,10 @@ static void hud_draw_multitexture_overlay(
 	real theta,
 	unsigned long color)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct dynamic_screen_vertex vertices[4];
 	struct rasterizer_dynamic_screen_geometry_parameters parameters;
 	real_point2d texture_offset[3];
@@ -1236,7 +1316,9 @@ static void hud_draw_multitexture_overlay(
 	short map_index;
 	short function_index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	sine_theta = sine(theta);
 	cosine_theta = cosine(theta);
@@ -1489,11 +1571,13 @@ static void hud_draw_multitexture_overlay(
 
 	rasterizer_psuedo_dynamic_screen_quad_draw(&parameters, vertices);
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_draw.c", 1372);
 	}
+#endif
 
 	return;
 }

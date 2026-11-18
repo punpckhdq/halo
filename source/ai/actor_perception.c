@@ -379,6 +379,7 @@ void actor_perception_update(
 					new_state = _prop_state_becoming_acknowledged;
 					prop->awareness = 0.f;
 
+#ifdef DEBUG
 					if (prop->player && ai_debug.print_acknowledgement)
 					{
 						char aibuf[256];
@@ -386,6 +387,7 @@ void actor_perception_update(
 						ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
 						error(_error_silent, "%s: start to become aware", aibuf);
 					}
+#endif
 				}
 				else
 				{
@@ -394,7 +396,9 @@ void actor_perception_update(
 
 			case _prop_state_becoming_acknowledged:
 			{
+#ifdef DEBUG
 				struct actor_debug_info *actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 
 				if (!prop->perception)
 				{
@@ -403,6 +407,7 @@ void actor_perception_update(
 
 					if (prop->player)
 					{
+#ifdef DEBUG
 						actor_debug_info->num_debug_evaluations = NONE;
 
 						if (ai_debug.print_acknowledgement)
@@ -412,6 +417,7 @@ void actor_perception_update(
 							ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
 							error(_error_silent, "%s: stop becoming aware", aibuf);
 						}
+#endif
 					}
 				}
 				else
@@ -452,6 +458,7 @@ void actor_perception_update(
 							break;
 					}
 
+#ifdef DEBUG
 					if (prop->player && actor_debug_info->num_debug_evaluations!=acknowledgement_speed)
 					{
 						actor_debug_info->num_debug_evaluations = acknowledgement_speed;
@@ -483,6 +490,7 @@ void actor_perception_update(
 							}
 						}
 					}
+#endif
 
 					prop->awareness += awareness_delta;
 
@@ -492,6 +500,7 @@ void actor_perception_update(
 
 						if (prop->player)
 						{
+#ifdef DEBUG
 							actor_debug_info->num_debug_evaluations = NONE;
 
 							if (ai_debug.print_acknowledgement)
@@ -501,6 +510,7 @@ void actor_perception_update(
 								ai_debug_describe_actor(actor_index, actor->meta.unit_index, NONE, aibuf, sizeof(aibuf));
 								error(_error_silent, "%s: become aware!", aibuf);
 							}
+#endif
 						}
 					}
 				}
@@ -802,45 +812,63 @@ void actor_perception_update(
 		{
 			if (prop_acknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_acknowledged_body].current_count++;
+#endif
 			}
 			else if (prop_orphaned(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_orphaned_body].current_count++;
+#endif
 			}
 			else if (prop_unacknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_unacknowledged_body].current_count++;
+#endif
 			}
 		}
 		else if (prop->enemy)
 		{
 			if (prop_acknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_acknowledged_enemy].current_count++;
+#endif
 			}
 			else if (prop_orphaned(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_orphaned_enemy].current_count++;
+#endif
 			}
 			else if (prop_unacknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_unacknowledged_enemy].current_count++;
+#endif
 			}
 		}
 		else
 		{
 			if (prop_acknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_acknowledged_friend].current_count++;
+#endif
 			}
 			else if (prop_orphaned(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_orphaned_friend].current_count++;
+#endif
 			}
 			else if (prop_unacknowledged(prop))
 			{
+#ifdef DEBUG
 				ai_profile.meters[_ai_meter_prop_unacknowledged_friend].current_count++;
+#endif
 			}
 		}
 	}
@@ -1005,7 +1033,9 @@ short actor_visibility_at_point(
 		if (distance_squared<maximum_vision_distance * maximum_vision_distance)
 		{
 			real fog;
+#ifdef DEBUG
 			struct actor_debug_info *actor_debug_info;
+#endif
 			real perception_factor = 1.f;
 
 			if (!TEST_FLAG(actor_definition->flags, _actor_definition_can_see_in_darkness_bit))
@@ -1034,13 +1064,17 @@ short actor_visibility_at_point(
 			}
 
 			perception_factor = MAX(perception_factor, 0.15f);
+#ifdef DEBUG
 			actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 
 			if (store_debugging_information)
 			{
+#ifdef DEBUG
 				actor_debug_info->vision_last_time = game_time_get();
 				actor_debug_info->vision_last_maximum_distance = maximum_vision_distance;
 				actor_debug_info->vision_last_perception_factor = perception_factor;
+#endif
 			}
 
 			if (distance_squared<(maximum_vision_distance * perception_factor) * (maximum_vision_distance * perception_factor))
@@ -1236,7 +1270,9 @@ short actor_audibility_at_point(
 	{
 		real_vector3d actor_to_position;
 		real distance_squared;
+#ifdef DEBUG
 		struct actor_debug_info *actor_debug_info;
+#endif
 		real hearing_distance = actor_definition->perception.hearing_distance;
 		real propagation_distance = -1.f;
 		real final_distance = -1.f;
@@ -1300,6 +1336,7 @@ short actor_audibility_at_point(
 			}
 		}
 
+#ifdef DEBUG
 		actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 		actor_debug_info->audibility_valid = TRUE;
 		actor_debug_info->audibility_result = audibility;
@@ -1307,6 +1344,7 @@ short actor_audibility_at_point(
 		actor_debug_info->audibility_propagation_distance = propagation_distance;
 		actor_debug_info->audibility_straight_distance = square_root(distance_squared);
 		actor_debug_info->audibility_final_distance = final_distance;
+#endif
 	}
 
 	return audibility;
@@ -1393,7 +1431,7 @@ static long actor_perception_unit_from_swarm(
 
 			if (mark_units)
 			{
-				object_mark_function(swarm->unit_indices[index]);
+				object_mark(swarm->unit_indices[index]);
 			}
 		}
 	}
@@ -1424,7 +1462,7 @@ static long actor_perception_unit_from_swarm(
 
 			if (mark_units)
 			{
-				object_mark_function(unit_index);
+				object_mark(unit_index);
 			}
 
 			unit_index = unit->unit.swarm_next_unit_index;
@@ -1588,7 +1626,7 @@ void prop_status_refresh(
 
 		prop->ignore = TEST_FLAG(unit->unit.flags, _unit_ignored_by_actors_bit);
 
-		if (prop->player && game_connection()==_game_connection_local && ai_debug.ignore_player)
+		if (prop->player && AI_BEHAVIOR(ignore_player))
 		{
 			prop->ignore = TRUE;
 		}
@@ -1945,8 +1983,8 @@ void prop_status_refresh(
 			{
 				boolean invisible = blind;
 
-				if ((game_connection()==_game_connection_local && ai_debug.blind) ||
-					(game_connection()==_game_connection_local && ai_debug.invisible_player && prop->player))
+				if (AI_BEHAVIOR(blind) ||
+					(AI_BEHAVIOR(invisible_player) && prop->player))
 				{
 					invisible = TRUE;
 				}
@@ -2016,7 +2054,7 @@ void prop_status_refresh(
 					}
 				}
 
-				if ((game_connection()==_game_connection_local && ai_debug.deaf) || (encounter && encounter->deaf))
+				if (AI_BEHAVIOR(deaf) || (encounter && encounter->deaf))
 				{
 					prop->audibility = _actor_perception_none;
 				}
@@ -2299,7 +2337,7 @@ static void actor_perception_refresh(
 
 					for (index = 0; index<swarm->unit_count; index++)
 					{
-						object_mark_function(swarm->unit_indices[index]);
+						object_mark(swarm->unit_indices[index]);
 					}
 				}
 				else
@@ -2310,13 +2348,13 @@ static void actor_perception_refresh(
 					{
 						struct unit_datum *unit = unit_get(unit_index);
 
-						object_mark_function(unit_index);
+						object_mark(unit_index);
 						unit_index = unit->unit.swarm_next_unit_index;
 					}
 				}
 			}
 
-			object_mark_function(prop->unit_index);
+			object_mark(prop->unit_index);
 
 			if (desired)
 			{
@@ -2334,10 +2372,13 @@ static void actor_perception_refresh(
 					}
 					else
 					{
+#ifdef DEBUG
 						static long last_overflow_time = NONE;
+#endif
 
 						desired = FALSE;
 
+#ifdef DEBUG
 						if (last_overflow_time==NONE || game_time_get()>last_overflow_time + 5 * TICKS_PER_SECOND)
 						{
 							error(
@@ -2347,6 +2388,7 @@ static void actor_perception_refresh(
 								MAXIMUM_OPTIONAL_PROPS_PER_ACTOR);
 							last_overflow_time = game_time_get();
 						}
+#endif
 					}
 				}
 				else if (!prop->dead)
@@ -2530,7 +2572,7 @@ static void actor_perception_refresh_test_object(
 	{
 		struct object_datum *object = object_get(object_index);
 
-		if (object_mark_function(object_index))
+		if (object_mark(object_index))
 		{
 			if (object->object.type==_object_type_biped)
 			{

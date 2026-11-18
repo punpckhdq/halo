@@ -30,7 +30,9 @@ enum
 
 boolean attract_mode_should_start(void);
 void attract_mode_reset_timer(void);
+#if CONFIG_VERSION >= 2342
 const char *attract_mode_get_localized_movie_path(short movie);
+#endif
 void attract_mode_start(void);
 void game_end_credits_start(void);
 

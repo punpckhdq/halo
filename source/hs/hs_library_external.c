@@ -125,7 +125,9 @@ boolean hs_trigger_volume_test_objects(
 		}
 	}
 
+#ifdef DEBUG
 	BIT_VECTOR_SET_FLAG(hs_debug_data, trigger_volume_index, result);
+#endif
 	return result;
 }
 

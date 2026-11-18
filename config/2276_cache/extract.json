@@ -1,0 +1,5 @@
+[
+{ "symbol": "_dsound_effects_image", "size": "0x3A5C", "header": "sound_dsound_xbox_effects_image.h", "declaration": "static const byte dsound_effects_image[]", "source": "source/sound/sound_dsound_xbox.c" },
+{ "symbol": "_new_logo", "size": "0x67E4", "header": "progress_bar_new_logo.h", "declaration": "byte new_logo[]", "source": "source/interface/progress_bar.c" },
+{ "symbol": "_compressed_monk_tone", "size": "0x47DC", "header": "progress_bar_monk_tone.h", "declaration": "byte compressed_monk_tone[]", "source": "source/interface/progress_bar.c" }
+]

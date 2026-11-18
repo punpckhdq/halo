@@ -112,7 +112,7 @@ enum
 
 /* ---------- macros */
 
-#define pursuit_get(index) ((struct pursuit_datum *)datum_get(pursuit_data, (index))) /* fake name */
+#define pursuit_get(index) DATUM_GET(pursuit_data, index, struct pursuit_datum) /* fake name */
 
 /* ---------- structures */
 
@@ -254,10 +254,12 @@ void encounters_create_for_new_map(
 			struct encounter_definition);
 		boolean create = !TEST_FLAG(encounter_definition->flags, _encounter_not_initially_placed_bit);
 
+#ifdef DEBUG
 		if (DATUM_INDEX_TO_ABSOLUTE_INDEX(iterator.index) == DATUM_INDEX_TO_ABSOLUTE_INDEX(ai_debug.selected_encounter_index))
 		{
 			create = TRUE;
 		}
+#endif
 
 		if (create)
 		{
@@ -287,7 +289,9 @@ void encounters_update(
 
 	while (encounter = encounter_iterator_next(&iterator))
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_encounter_active].current_count++;
+#endif
 
 		if ((short)(DATUM_INDEX_TO_ABSOLUTE_INDEX(iterator.index) % ENCOUNTER_UPDATE_TICKS) == update_index)
 		{
@@ -350,6 +354,7 @@ void encounters_unit_died(
 	return;
 }
 
+#ifdef DEBUG
 void encounter_verify_firing_position_owner_actor_indices(
 	long encounter_index)
 {
@@ -377,6 +382,7 @@ void encounter_verify_firing_position_owner_actor_indices(
 
 	return;
 }
+#endif
 
 void encounter_build_firing_position_owner_actor_indices(
 	long encounter_index,
@@ -753,11 +759,13 @@ void encounter_attach_actor(
 				}
 				else
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"WARNING: actor changing to encounter %s/%s is being forced to change teams",
 						encounter_definition->name,
 						squad_definition->name);
+#endif
 					actor_set_team(actor_index, encounter->team_index);
 				}
 			}
@@ -1186,10 +1194,12 @@ static long encounter_find_pursuit(
 		}
 		else
 		{
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"WARNING: too many actors searching, exceeded MAXIMUM_EXAMINED_PURSUIT_POSITIONS_PER_MAP (%d)",
 				MAXIMUM_EXAMINED_PURSUIT_POSITIONS_PER_MAP);
+#endif
 		}
 	}
 
@@ -1359,6 +1369,7 @@ void encounter_determine_pursuit_availability(
 	*allow_pursuit_search = pursue_count < maximum_pursue_count;
 	*allow_pursuit = pursue_count < maximum_pursue_count;
 
+#ifdef DEBUG
 	if (ai_debug.print_pursuit_checks &&
 		encounter_index == ai_debug.selected_encounter_index &&
 		(actor_index == ai_debug.selected_actor_index || ai_debug.selected_actor_index == NONE))
@@ -1385,6 +1396,7 @@ void encounter_determine_pursuit_availability(
 			temporary);
 		console_printf(FALSE, temporary);
 	}
+#endif
 
 	return;
 }
@@ -1668,6 +1680,7 @@ void encounter_create(
 		boolean create_all = desired_platoon_index == NONE && desired_squad_index == NONE;
 		short squad_index;
 
+#ifdef DEBUG
 		if (ai_debug.print_placement)
 		{
 			if (desired_platoon_index != NONE)
@@ -1704,6 +1717,7 @@ void encounter_create(
 					encounter_definition->name);
 			}
 		}
+#endif
 
 		for (squad_index = 0; squad_index < encounter_definition->squads.count; squad_index++)
 		{
@@ -1756,6 +1770,7 @@ void encounter_create(
 							create_leader = count + encounter->original_count >= 10;
 						}
 
+#ifdef DEBUG
 						if (ai_debug.print_placement)
 						{
 							console_printf(
@@ -1768,6 +1783,7 @@ void encounter_create(
 								count,
 								create_leader ? "new leader" : "no leader");
 						}
+#endif
 						break;
 					}
 
@@ -1932,7 +1948,9 @@ static void encounter_deactivate(
 			actor_set_active(iterator.index, FALSE);
 		}
 
+#ifdef DEBUG
 		actor_verify_activation(iterator.index);
+#endif
 	}
 
 	return;
@@ -2223,7 +2241,9 @@ static void encounters_test_activation(
 
 		activate |= actor->meta.force_active;
 		activate |= game_in_editor();
+#ifdef DEBUG
 		activate |= ai_debug.force_all_active | !actor->meta.dormant_desire;
+#endif
 
 		if (activate)
 		{
@@ -2249,7 +2269,9 @@ static void encounters_test_activation(
 			}
 		}
 
+#ifdef DEBUG
 		actor_verify_activation(actor_index);
+#endif
 	}
 
 	data_iterator_new(&iterator, encounter_data);
@@ -2266,7 +2288,9 @@ static void encounters_test_activation(
 		activate = encounter->force_active;
 		activate |= game_in_editor();
 		activate |= encounter->respawn_delay_ticks > 0;
+#ifdef DEBUG
 		activate |= ai_debug.force_all_active;
+#endif
 
 		if (encounter_definition->runtime_structure_bsp_reference_index == NONE ||
 			encounter_definition->runtime_structure_bsp_reference_index == global_structure_bsp_index)
@@ -2807,11 +2831,13 @@ static boolean encounter_place_actor(
 
 		if (actor_palette_index < 0 || actor_palette_index >= scenario->ai_actor_palette.count)
 		{
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"WARNING: cannot spawn actors in %s/%s because the actor variant specified for this squad is NONE or invalid",
 				encounter_definition->name,
 				squad_definition->name);
+#endif
 		}
 		else
 		{
@@ -2953,6 +2979,7 @@ static void encounter_update_respawn(
 
 				while (squad->respawn_actors_left > 0 && squad->current_count < squad_definition->respawn_min_actors)
 				{
+#ifdef DEBUG
 					if (ai_debug.print_respawn)
 					{
 						console_printf(
@@ -2964,9 +2991,11 @@ static void encounter_update_respawn(
 							squad_definition->respawn_min_actors,
 							squad->respawn_actors_left);
 					}
+#endif
 
 					if (!encounter_spawn_actor(encounter_index, squad_index))
 					{
+#ifdef DEBUG
 						if (ai_debug.print_respawn)
 						{
 							console_printf(
@@ -2975,6 +3004,7 @@ static void encounter_update_respawn(
 								encounter_definition->name,
 								squad_definition->name);
 						}
+#endif
 
 						break;
 					}
@@ -2993,6 +3023,7 @@ static void encounter_update_respawn(
 						BIT_VECTOR_SET_FLAG(squad_desires_respawn, squad_index, TRUE);
 					}
 
+#ifdef DEBUG
 					if (ai_debug.print_respawn)
 					{
 						console_printf(
@@ -3003,6 +3034,7 @@ static void encounter_update_respawn(
 							squad->current_count,
 							squad_definition->respawn_max_actors);
 					}
+#endif
 				}
 			}
 
@@ -3020,6 +3052,7 @@ static void encounter_update_respawn(
 						}
 						else if (encounter_spawn_actor(encounter_index, squad_index))
 						{
+#ifdef DEBUG
 							if (ai_debug.print_respawn)
 							{
 								struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
@@ -3033,9 +3066,11 @@ static void encounter_update_respawn(
 									encounter_definition->name,
 									squad_definition->name);
 							}
+#endif
 
 							break;
 						}
+#ifdef DEBUG
 						else if (ai_debug.print_respawn)
 						{
 							struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
@@ -3049,6 +3084,7 @@ static void encounter_update_respawn(
 								encounter_definition->name,
 								squad_definition->name);
 						}
+#endif
 					}
 				}
 			}
@@ -3080,6 +3116,7 @@ void encounter_squad_timer_expire(
 		ai_scripting_magically_see_players(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index));
 	}
 
+#ifdef DEBUG
 	if (ai_debug.print_rules)
 	{
 		console_printf(
@@ -3088,6 +3125,7 @@ void encounter_squad_timer_expire(
 			encounter_definition->name,
 			squad_definition->name);
 	}
+#endif
 
 	return;
 }
@@ -3127,6 +3165,7 @@ static void encounter_update_squads(
 			{
 				squad->delay_timer_started = TEST_FLAG(squad_definition->flags, _squad_timer_starts_immediately_bit) || encounter->current_in_combat_count > 0;
 
+#ifdef DEBUG
 				if (squad->delay_timer_started && ai_debug.print_rules)
 				{
 					console_printf(
@@ -3136,6 +3175,7 @@ static void encounter_update_squads(
 						squad_definition->name,
 						squad_definition->squad_delay_timer);
 				}
+#endif
 			}
 		}
 	}
@@ -3168,6 +3208,7 @@ static void encounter_update_platoons(
 			{
 				platoon->maneuvering = encounter_test_rule(encounter_index, &platoon_definition->maneuvering_rule);
 
+#ifdef DEBUG
 				if (platoon->maneuvering && ai_debug.print_rules)
 				{
 					console_printf(
@@ -3176,6 +3217,7 @@ static void encounter_update_platoons(
 						encounter_definition->name,
 						platoon_definition->name);
 				}
+#endif
 			}
 
 			if (platoon->maneuver_disable || !platoon->maneuvering)
@@ -3186,6 +3228,7 @@ static void encounter_update_platoons(
 				{
 					platoon->defending = defending;
 
+#ifdef DEBUG
 					if (ai_debug.print_rules)
 					{
 						console_printf(
@@ -3195,6 +3238,7 @@ static void encounter_update_platoons(
 							platoon_definition->name,
 							defending ? "defending" : "attacking");
 					}
+#endif
 				}
 			}
 		}
@@ -3303,6 +3347,7 @@ static void encounter_update_follow(
 					}
 					else if (squad_definition->platoon_index != NONE)
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"WARNING: squad %s/%s has an invalid platoon - %d is outside range of [0, %d)",
@@ -3310,6 +3355,7 @@ static void encounter_update_follow(
 							squad_definition->name,
 							squad_definition->platoon_index,
 							encounter_definition->platoons.count);
+#endif
 					}
 
 					if (defending)
@@ -3457,6 +3503,7 @@ static void encounter_update_follow(
 					real tolerance = (encounter->follow_target_distance > 0.f) ? encounter->follow_target_distance : 2.f;
 					boolean migrate = best_dist < current_dist - tolerance;
 
+#ifdef DEBUG
 					if (ai_debug.print_automatic_migration)
 					{
 						struct squad_definition *current_squad_definition = (current_squad_index == NONE) ? NULL : TAG_BLOCK_GET_ELEMENT(
@@ -3479,6 +3526,7 @@ static void encounter_update_follow(
 							tolerance,
 							migrate ? "migrate" : "stay");
 					}
+#endif
 
 					if (!migrate)
 					{
@@ -3637,6 +3685,7 @@ static boolean encounter_test_rule(
 		}
 	}
 
+#ifdef DEBUG
 	if (ai_debug.print_rule_values && result)
 	{
 		switch (rule->rule_type)
@@ -3670,6 +3719,7 @@ static boolean encounter_test_rule(
 			break;
 		}
 	}
+#endif
 
 	return result;
 }

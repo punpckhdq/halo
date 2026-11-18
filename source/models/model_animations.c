@@ -57,6 +57,7 @@ static boolean animation_is_compressed(
 	return TEST_FLAG(animation->flags, _animation_compressed_bit) && (hs_model_animation_compression_enabled || !animation->compressed_data_offset);
 }
 
+#ifdef DEBUG
 short build_damage_animation_index(
 	short damage_type,
 	short damage_direction,
@@ -68,6 +69,7 @@ short build_damage_animation_index(
 
 	return (damage_type*NUMBER_OF_ANIMATION_DAMAGE_DIRECTIONS + damage_direction)*NUMBER_OF_DAMAGE_PARTS + damage_part;
 }
+#endif
 
 void animation_get_x_offsets(
 	struct animation *animation,
@@ -780,7 +782,9 @@ void overlay_animation_apply_continuous_scaled(
 
 	if (real_frame_index<0.f || real_frame_index>(real)animation->frame_count)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR animation frame index out of bounds B(%f,%x) -- tell Bernie!!", real_frame_index, *(long *)&real_frame_index);
+#endif
 	}
 
 	if (frame_index>=animation->frame_count)
@@ -1393,7 +1397,7 @@ static void animation_get_keyframe_rotation(
 	short node_index,
 	real_quaternion *result)
 {
-	struct animation_compressed_data_header *header = tag_data_get_pointer(&animation->data, animation->compressed_data_offset, 0);
+	struct animation_compressed_data_header *header = tag_data_get_pointer_inline(&animation->data, animation->compressed_data_offset, 0);
 	struct compressed_quaternion_6byte *default_data = (struct compressed_quaternion_6byte *)((byte *)header + header->rotation_default_data_offset);
 	unsigned long keyframe_info = header->rotation_keyframe_info[adjusted_node_index];
 	short first_keyframe_index = (short)(keyframe_info>>12);
@@ -1473,7 +1477,7 @@ static void animation_get_keyframe_translation(
 	short node_index,
 	real_point3d *result)
 {
-	struct animation_compressed_data_header *header = tag_data_get_pointer(&animation->data, animation->compressed_data_offset, 0);
+	struct animation_compressed_data_header *header = tag_data_get_pointer_inline(&animation->data, animation->compressed_data_offset, 0);
 	real_point3d *default_data = (real_point3d *)((byte *)header + header->translation_default_data_offset);
 	unsigned long keyframe_info = *(unsigned long *)((byte *)header + header->translation_keyframe_info_offset + adjusted_node_index*sizeof(unsigned long));
 	short first_keyframe_index = (short)(keyframe_info>>12);
@@ -1549,7 +1553,7 @@ static void animation_get_keyframe_scale(
 	short node_index,
 	real *result)
 {
-	struct animation_compressed_data_header *header = tag_data_get_pointer(&animation->data, animation->compressed_data_offset, 0);
+	struct animation_compressed_data_header *header = tag_data_get_pointer_inline(&animation->data, animation->compressed_data_offset, 0);
 	real *default_data = (real *)((byte *)header + header->scale_default_data_offset);
 	unsigned long keyframe_info = *(unsigned long *)((byte *)header + header->scale_keyframe_info_offset + adjusted_node_index*sizeof(unsigned long));
 	short first_keyframe_index = (short)(keyframe_info>>12);

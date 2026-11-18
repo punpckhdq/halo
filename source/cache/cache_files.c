@@ -51,6 +51,7 @@ static struct
 
 /* ---------- public code */
 
+#if CONFIG_VERSION >= 2342
 char *cache_files_map_directory(
 	void)
 {
@@ -103,6 +104,7 @@ char *cache_files_map_directory(
 
 	return map_directory;
 }
+#endif
 
 long scenario_tags_load(
 	char const *name)
@@ -176,12 +178,14 @@ boolean scenario_structure_bsp_load(
 	struct scenario_structure_bsp_reference *reference)
 {
 	struct cache_file_tag_instance *tag_instance;
+#ifdef DEBUG
 	byte *tag_cache_base_address = physical_memory_get_tag_cache_base_address();
 
 	memset(
 		tag_cache_base_address + cache_file_globals.header.tags_size,
 		TAG_CACHE_GARBAGE_FILL_BYTE,
 		TAG_CACHE_SIZE - cache_file_globals.header.tags_size);
+#endif
 
 	{
 		boolean completion_flag;
@@ -243,6 +247,7 @@ void tag_files_close(
 	cache_files_dispose();
 }
 
+#ifdef DEBUG
 void *tag_get(
 	long group_tag,
 	long tag_index)
@@ -269,6 +274,7 @@ void *tag_get(
 
 	return tag_instance->base_address;
 }
+#endif
 
 char *tag_get_name(
 	long tag_index)

@@ -25,7 +25,8 @@ NETWORK_GAME_MANAGER.C
 
 /* ---------- prototypes */
 
-static int sort_network_players(void const *elem0, void const *elem1);
+static int __cdecl sort_network_players(void const *elem0, void const *elem1);
+static void network_game_assign_players_to_team(struct network_game_data *game);
 
 /* ---------- globals */
 
@@ -293,7 +294,7 @@ boolean network_game_remove_player(
 }
 
 /* bungie didn't follow code conventions here */
-static int sort_network_players(
+static int __cdecl sort_network_players(
 	void const *elem0,
 	void const *elem1)
 {
@@ -385,6 +386,7 @@ boolean network_game_create_game_objects(
 		game->local_data.game_objects_loaded = TRUE;
 		game_initialize_for_new_map();
 		qsort(game->players, NUMBEROF(game->players), sizeof(*game->players), sort_network_players);
+		network_game_assign_players_to_team(game);
 
 		for (player_index = 0; player_index < NETWORK_GAME_MAXIMUM_PLAYER_COUNT; player_index++)
 		{
@@ -560,7 +562,8 @@ boolean network_game_player_is_valid(
 	return success;
 }
 
-void network_game_assign_players_to_team(
+/* TODO make this work with static */
+static void network_game_assign_players_to_team(
 	struct network_game_data *game)
 {
 	return;

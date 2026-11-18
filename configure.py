@@ -37,6 +37,7 @@ DEFAULT_VERSION = 0
 VERSIONS = [
     "2342",
     "2276_cachebeta",
+    "2276_cache",
 ]
 
 VERSION_CONFIGS: Dict[str, Dict[str, Any]] = {
@@ -50,10 +51,21 @@ VERSION_CONFIGS: Dict[str, Dict[str, Any]] = {
         "config": "cachebeta",
         "baserom": "cachebeta.xbe",
     },
+    "2276_cache": {
+        "build": 2276,
+        "config": "cache",
+        "baserom": "cache.xbe",
+    },
 }
 
 CONFIG_CFLAGS: Dict[str, List[str]] = {
     "cachebeta": ["/O2", "/Oy-"],
+    "cache": ["/O2", "/Gr"],
+}
+
+CONFIG_DEFINES: Dict[str, List[str]] = {
+    "cachebeta": ["DEBUG"],
+    "cache": [],
 }
 
 # arguments
@@ -124,6 +136,7 @@ class BuildConfigObject(TypedDict):
     name: str
     index: int
     status: Union[str, Dict[str, List[str]]]
+    versions: List[str]
     options: Dict[str, Any]
 
 class BuildConfigProject(TypedDict):
@@ -156,6 +169,7 @@ sln.cflags = CONFIG_CFLAGS[version_config["config"]]
 sln.defines = [
     f"CONFIG_VERSION={version_config['build']}",
     f"VERSION_{args.version}",
+    *CONFIG_DEFINES[version_config["config"]],
 ]
 
 # Apply arguments
@@ -190,7 +204,15 @@ for build_project in build_config["projects"]:
             elif status == "NonMatching":
                 return ObjectStatus.NonMatching
             assert False, f"Invalid object status {status}"
-        project.objects.append(Object(get_object_completed(build_object["status"]), Path(build_object["name"]), **build_object.get("options", {})))
+        object_status = get_object_completed(build_object["status"])
+        # Objects that list versions are only built for those versions
+        object_versions = build_object.get("versions")
+        if object_versions is not None:
+            for version in object_versions:
+                assert version in VERSIONS, f"{build_object['name']}: unknown version {version}"
+            if args.version not in object_versions:
+                object_status = ObjectStatus.Missing
+        project.objects.append(Object(object_status, Path(build_object["name"]), **build_object.get("options", {})))
     sln.projects.append(project)
 
 # build file generation

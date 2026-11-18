@@ -87,6 +87,7 @@ int main(
 	rasterizer_preinitialize__fill_you_up_with_the_devils_cock();
 	physical_memory_allocate();
 
+#ifdef DEBUG
 	__try
 	{
 		if (shell_initialize())
@@ -99,6 +100,13 @@ int main(
 	{
 		halt_and_catch_fire();
 	}
+#else
+	if (shell_initialize())
+	{
+		main_loop();
+		shell_dispose();
+	}
+#endif
 
 	return EXIT_SUCCESS;
 }
@@ -108,6 +116,7 @@ int main(
 static void fuck_code_in_the_eye(
 	void)
 {
+#ifdef DEBUG
 	DWORD flOldProtect;
 
 	PDM_WALK_MODSECT walk_modsect = NULL;
@@ -130,4 +139,5 @@ static void fuck_code_in_the_eye(
 			}
 		}
 	}
+#endif
 }

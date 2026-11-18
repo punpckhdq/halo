@@ -104,7 +104,9 @@ void material_effect_new_from_point(
 		}
 		else if (debug_material_effects)
 		{
+#ifdef DEBUG
 			render_debug_sphere(FALSE, origin, 0.05f, global_real_argb_red);
+#endif
 		}
 	}
 
@@ -163,7 +165,9 @@ void material_effect_new(
 
 			if (debug_material_effects)
 			{
+#ifdef DEBUG
 				render_debug_sphere(FALSE, origin, 0.05f, global_real_argb_cyan);
+#endif
 			}
 		}
 	}

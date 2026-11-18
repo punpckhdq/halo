@@ -32,6 +32,7 @@ enum
 
 /* ---------- prototypes */
 
+static void net_startup_debug(XNetStartupParams *startup);
 static long get_next_available_set_array_index(struct transport_endpoint_set const *set);
 static int __cdecl poll_ep_array_compare_proc(void const *a, void const *b);
 
@@ -43,8 +44,8 @@ static long global_key_depth = 0;
 
 /* ---------- public code */
 
-void net_startup_debug(
-	void)
+static void net_startup_debug(
+	XNetStartupParams *startup) /* fake name */
 {
 	return;
 }
@@ -135,7 +136,7 @@ boolean transport_nonce_is_equal(
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_set_winsock.c", 163, src != NULL);
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_set_winsock.c", 164, dst != NULL);
 
-	if (!memcmp(src, dst, sizeof(global_nonce)))
+	if (0 == memcmp(src, dst, sizeof(global_nonce)))
 	{
 		result = TRUE;
 	}
@@ -220,7 +221,9 @@ long transport_initialize(
 	if (!transport_initialized)
 	{
 		unsigned long link_status;
+#ifdef DEBUG
 		FILE *file;
+#endif
 		WSADATA winsock_data = {0};
 		XNetStartupParams startup = {0};
 
@@ -248,6 +251,7 @@ long transport_initialize(
 
 		startup.cfgSizeOfStruct = sizeof(XNetStartupParams);
 		startup.cfgFlags = 0;
+#ifdef DEBUG
 		file = fopen("d:\\bypass_security.txt", "r");
 
 		if (file)
@@ -256,6 +260,9 @@ long transport_initialize(
 			startup.cfgFlags |= XNET_STARTUP_BYPASS_SECURITY;
 			fclose(file);
 		}
+#endif
+
+		net_startup_debug(&startup);
 
 		if (XNetStartup(&startup))
 		{

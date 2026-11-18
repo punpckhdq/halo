@@ -76,7 +76,11 @@ struct gravy_rect	/* fake name */
 
 static boolean progress_bar_is_stuff_ready(void);
 static void progress_bar_render(real t);
+#if CONFIG_VERSION >= 2342
 static void progress_bar_uncompress_grayscale_buffer(IDirect3DTexture8 **texture);
+#else
+static void progress_bar_uncompress_grayscale_buffer(byte const *buffer, long buffer_size, long width, long height, IDirect3DTexture8 **texture);
+#endif
 static void progress_bar_create_noise_texture(void);
 static void progress_bar_create_mask_texture(void);
 static void progress_bar_make_stuff_ready(void);
@@ -95,6 +99,12 @@ unsigned long current_time;
 
 static boolean progress_bar_enabled = TRUE;	/* fake name */
 
+#if CONFIG_VERSION < 2342
+short new_logo_width = 320;
+short new_logo_height = 240;
+
+#include "progress_bar_new_logo.h"
+#endif
 #include "progress_bar_monk_tone.h"
 
 real delta_z = 5.f;
@@ -200,6 +210,7 @@ static boolean progress_bar_is_stuff_ready(
 void progress_bar_initialize(
 	void)
 {
+#if CONFIG_VERSION >= 2342
 	char source_path[40];
 	char destination_path[40];
 	char map_directory[40];
@@ -212,6 +223,7 @@ void progress_bar_initialize(
 	destination_directory[strlen(destination_directory) - 1] = '\0';
 	CreateDirectory(destination_directory, NULL);
 	CopyFile(source_path, destination_path, TRUE);
+#endif
 
 	return;
 }
@@ -609,6 +621,7 @@ static void progress_bar_render(
 	return;
 }
 
+#if CONFIG_VERSION >= 2342
 static void progress_bar_uncompress_grayscale_buffer(
 	IDirect3DTexture8 **texture)
 {
@@ -637,6 +650,48 @@ static void progress_bar_uncompress_grayscale_buffer(
 
 	return;
 }
+#else
+static void progress_bar_uncompress_grayscale_buffer(
+	byte const *buffer,
+	long buffer_size,
+	long width,
+	long height,
+	IDirect3DTexture8 **texture)
+{
+	D3DLOCKED_RECT locked_rect;
+	D3DSURFACE_DESC description;
+	unsigned long *pixels;
+	long buffer_index = 0;
+
+	IDirect3DDevice8_CreateTexture(
+		global_d3d_device,
+		width,
+		height,
+		1,
+		0,
+		D3DFMT_LIN_A8B8G8R8,
+		0,
+		texture);
+	IDirect3DTexture8_LockRect(*texture, 0, &locked_rect, NULL, 0);
+	IDirect3DTexture8_GetLevelDesc(*texture, 0, &description);
+	pixels = locked_rect.pBits;
+
+	while (buffer_index < buffer_size)
+	{
+		byte value = buffer[buffer_index++];
+		byte gray = (value % 16) << 4;
+		byte count = value >> 4;
+		unsigned long color = (gray << 16) | ((gray >> 1) << 8) | (gray >> 2);
+
+		while (count--)
+		{
+			*pixels++ = color;
+		}
+	}
+
+	return;
+}
+#endif
 
 static void progress_bar_create_mask_texture(
 	void)
@@ -732,7 +787,11 @@ static void progress_bar_make_stuff_ready(
 	D3DXMatrixIdentity(&progress_bar_view);
 	D3DXMatrixOrthoLH(&progress_bar_projection, 2.f, 2.f, -1.f, 2.f);
 	D3DXMatrixPerspectiveLH(&gravy_projection, .64f, .48f, 1.f, 1000.f);
+#if CONFIG_VERSION >= 2342
 	progress_bar_uncompress_grayscale_buffer(&progress_bar_texture);
+#else
+	progress_bar_uncompress_grayscale_buffer(new_logo, sizeof(new_logo), new_logo_width, new_logo_height, &progress_bar_texture);
+#endif
 	progress_bar_create_noise_texture();
 	progress_bar_create_mask_texture();
 

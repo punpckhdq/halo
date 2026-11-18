@@ -203,7 +203,9 @@ void rasterizer_draw_string(
 			}
 			else if (!warned)
 			{
+#ifdef DEBUG
 				error(_error_silent, "### ERROR failed to allocate dynamic vertices for screen geometry");
+#endif
 				success = FALSE;
 				warned = TRUE;
 			}
@@ -212,7 +214,9 @@ void rasterizer_draw_string(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_string failed");
+#endif
 	}
 	unlock_rasterizer_text_data();
 
@@ -299,7 +303,9 @@ void rasterizer_draw_unicode_string(
 			}
 			else if (!warned)
 			{
+#ifdef DEBUG
 				error(_error_silent, "### ERROR failed to allocate dynamic vertices for screen geometry");
+#endif
 				success = FALSE;
 				warned = TRUE;
 			}
@@ -308,7 +314,9 @@ void rasterizer_draw_unicode_string(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_unicode_string failed");
+#endif
 	}
 	unlock_rasterizer_text_data();
 

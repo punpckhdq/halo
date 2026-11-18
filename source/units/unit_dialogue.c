@@ -425,10 +425,12 @@ boolean unit_make_damage_sound(
 			short priority = died ? _unit_speech_death : (involuntary ? _unit_speech_involuntary : _unit_speech_pain);
 			short play_type = unit_test_speech(unit_index, priority, TRUE, FALSE, NULL, &vocalization_type, &sound_definition_index);
 
+#ifdef DEBUG
 			if (ai_debug.disable_wounded_sounds)
 			{
 				play_type = _unit_play_speech_none;
 			}
+#endif
 
 			if (play_type > _unit_play_speech_none)
 			{
@@ -675,7 +677,9 @@ void unit_dialogue_determine_variant(
 				}
 				else
 				{
+#ifdef DEBUG
 					error(_error_silent, "unit_dialogue_determine_variant overflowed variant array");
+#endif
 					break;
 				}
 			}
@@ -861,6 +865,7 @@ static void unit_lose_speech(
 
 	match_assert("c:\\halo\\SOURCE\\units\\unit_dialogue.c", 1045, speech_item);
 
+#ifdef DEBUG
 	if (ai_debug.print_lost_speech)
 	{
 		struct unit_definition *definition = unit_definition_get(unit->definition_index);
@@ -888,6 +893,7 @@ static void unit_lose_speech(
 
 		console_printf(FALSE, "%s: lost %s speech %s", definition->object.model.name, (play_type == _unit_play_speech_immediate) ? "waiting" : "queued", speech_name);
 	}
+#endif
 
 	return;
 }

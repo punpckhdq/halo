@@ -97,6 +97,7 @@ void action_uncover_begin(
 	state_data->uncover_desired_time = (long)(uncover_time * TICKS_PER_SECOND);
 	state_data->uncover_remaining_time = state_data->uncover_desired_time;
 
+#ifdef DEBUG
 	if (ai_debug.print_uncovering)
 	{
 		char aibuf[256];
@@ -112,6 +113,7 @@ void action_uncover_begin(
 			uncover_time,
 			state_data->able_to_search ? "" : "un");
 	}
+#endif
 
 	if (state_data->pursuit_location.type == _pursuit_location_target && actor->target.target_prop_index != NONE && actor->state.combat_status < _actor_combat_status_definite)
 	{
@@ -169,6 +171,7 @@ boolean action_uncover_perform(
 			{
 				if (new_firing_position.line_of_sight != _ai_line_of_sight_clear && new_firing_position.line_of_sight != _ai_line_of_sight_occluded)
 				{
+#ifdef DEBUG
 					if (!state_data->no_target_sight_available && ai_debug.print_uncovering)
 					{
 						char aibuf[256];
@@ -176,6 +179,7 @@ boolean action_uncover_perform(
 						ai_debug_describe_actor(actor_index, NONE, TRUE, aibuf, sizeof(aibuf));
 						error(_error_silent, "%s: unable to see target's current location", aibuf);
 					}
+#endif
 
 					state_data->no_target_sight_available = TRUE;
 				}
@@ -183,6 +187,7 @@ boolean action_uncover_perform(
 			else if (new_firing_position.line_of_sight == _ai_line_of_sight_clear &&
 				actor_destination_tolerance(actor_index) > new_firing_position.path_distance_from_actor)
 			{
+#ifdef DEBUG
 				if (!state_data->pursuit_location_inspected && ai_debug.print_uncovering)
 				{
 					char aibuf[256];
@@ -190,6 +195,7 @@ boolean action_uncover_perform(
 					ai_debug_describe_actor(actor_index, NONE, TRUE, aibuf, sizeof(aibuf));
 					error(_error_silent, "%s: inspected pursuit location", aibuf);
 				}
+#endif
 
 				state_data->pursuit_location_inspected = TRUE;
 			}
@@ -336,6 +342,7 @@ void action_uncover_update(
 				done = TRUE;
 			}
 
+#ifdef DEBUG
 			if (done && ai_debug.print_uncovering)
 			{
 				char aibuf[256];
@@ -367,6 +374,7 @@ void action_uncover_update(
 					(state_data->pursuit_location.type == _pursuit_location_target) ? "target" : "pursuit",
 					reasonbuf);
 			}
+#endif
 
 			state_data->uncover_done = done;
 		}

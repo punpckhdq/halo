@@ -41,7 +41,9 @@ static void create_initial_device_groups(void);
 
 struct data_array *device_groups_data;
 
+#ifdef DEBUG
 boolean debug_objects_devices;
+#endif
 
 /* ---------- public code */
 
@@ -342,6 +344,7 @@ void device_render_debug(
 {
 	struct device_datum const *device = device_get(device_index);
 
+#ifdef DEBUG
 	if (debug_objects_devices)
 	{
 		char string[512];
@@ -366,6 +369,7 @@ void device_render_debug(
 		point_from_line3d(&position, global_up3d, 0.4f, &position);
 		render_debug_string_at_point(FALSE, &position, string, global_real_argb_white);
 	}
+#endif
 
 	return;
 }

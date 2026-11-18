@@ -47,6 +47,7 @@ static void parse_string_new(struct parse_string_state *state, char *string, lon
 static short parse_unicode_string(struct parse_string_state *state);
 static void draw_string_partial(draw_character_proc draw_character, point2d *cursor, rectangle2d const *bounds, rectangle2d const *clip, pixel32 color, char *string, short string_index, short string_length);
 static void draw_unicode_string_partial(draw_character_proc draw_character, point2d *cursor, rectangle2d const *bounds, rectangle2d const *clip, pixel32 color, wchar_t const *string, short string_index, short string_length);
+static short parse_string(struct parse_string_state *state);
 
 /* ---------- globals */
 
@@ -785,9 +786,15 @@ static void bitmap_draw_character(
 	short dy)
 {
 	word color16;
+#if CONFIG_VERSION >= 2342
 	short format = draw_character_software_globals.bitmap->format;
 	short alpha = (short)PIXEL32_ALPHA(color);
 	byte *character_pixels = (byte *)font_header->pixels.address + character->pixels_offset;
+#else
+	byte *character_pixels = (byte *)font_header->pixels.address + character->pixels_offset;
+	short format = draw_character_software_globals.bitmap->format;
+	short alpha = (short)PIXEL32_ALPHA(color);
+#endif
 
 	if (format == _bitmap_format_r5g6b5)
 	{
@@ -921,7 +928,7 @@ static void parse_string_new(
 	return;
 }
 
-short parse_string(
+static short parse_string(
 	struct parse_string_state *state)
 {
 	word character;

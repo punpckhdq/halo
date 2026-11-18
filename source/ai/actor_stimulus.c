@@ -171,6 +171,7 @@ void actor_stimulus_prop_acknowledged(
 				}
 			}
 
+#ifdef DEBUG
 			if (ai_debug.print_surprise && prop->player)
 			{
 				char const *surprise_names[NUMBER_OF_ACTOR_SURPRISE_TYPES] =
@@ -200,6 +201,7 @@ void actor_stimulus_prop_acknowledged(
 					prop->distance < actor_definition->panic.surprise_distance ? '<' : '>',
 					actor_definition->panic.surprise_distance);
 			}
+#endif
 
 			if (surprise_level > _actor_surprise_none)
 			{

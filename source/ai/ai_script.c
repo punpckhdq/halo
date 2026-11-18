@@ -68,7 +68,7 @@ static long ai_scripting_count_internal(long ai_index, short count_type, long *o
 static short ai_scripting_migrate_find_target_squad(long source_encounter_index, short source_squad_index, struct actor_definition const *source_actor, struct actor_variant_definition const *source_actor_variant, boolean same_encounter, long target_ai_index, char const *debug_description);
 static void ai_scripting_migrate_internal(long source_index, long target_index, boolean generate_stimulus, boolean advancing_stimulus);
 static void ai_scripting_migrate_by_unit_internal(long unit_index, long ai_index, boolean generate_stimulus, boolean advancing_stimulus);
-static int ai_scripting_vehicle_candidate_qsort(void const *p1, void const *p2);
+static int __cdecl ai_scripting_vehicle_candidate_qsort(void const *p1, void const *p2);
 static void ai_scripting_go_to_vehicle_internal(long ai_index, long unit_index, char const *seat_substring_name, boolean override_previous_vehicles);
 static void ai_scripting_teleport_starting_location_private(long ai_index, boolean only_if_unsupported);
 static short ai_scripting_command_list_status_internal(long actor_index, long unit_index, short command_list_index, struct obey_individual_simple_control *simple_control, struct obey_individual_complex_control *complex_control);
@@ -527,6 +527,7 @@ void ai_scripting_attach_unit(
 {
 	struct scenario *scenario = global_scenario_get();
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -539,6 +540,7 @@ void ai_scripting_attach_unit(
 			DATUM_INDEX_TO_ABSOLUTE_INDEX(unit_index),
 			aibuf);
 	}
+#endif
 
 	if (ai_globals->ai_initialized_for_map && unit_index != NONE && ai_index != NONE)
 	{
@@ -620,19 +622,23 @@ void ai_scripting_attach_unit(
 
 				if (!success)
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"ai_attach: no actor variant specified for %s/%s, cannot create actor to attach to biped",
 						encounter->name,
 						squad_definition->name);
+#endif
 				}
 			}
 			else
 			{
+#ifdef DEBUG
 				error(
 					_error_silent,
 					"ai_attach: could not find a squad in encounter %s to attach actor",
 					encounter->name);
+#endif
 			}
 		}
 	}
@@ -659,6 +665,7 @@ void ai_scripting_attach_units(
 void ai_scripting_detach_unit(
 	long unit_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -667,6 +674,7 @@ void ai_scripting_detach_unit(
 			hs_runtime_get_executing_thread_name(),
 			DATUM_INDEX_TO_ABSOLUTE_INDEX(unit_index));
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -699,6 +707,7 @@ void ai_scripting_detach_units(
 void ai_scripting_place(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -710,6 +719,7 @@ void ai_scripting_place(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -748,6 +758,7 @@ static void ai_scripting_kill_internal(
 void ai_scripting_kill(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -759,6 +770,7 @@ void ai_scripting_kill(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_scripting_kill_internal(ai_index, FALSE);
 
@@ -768,6 +780,7 @@ void ai_scripting_kill(
 void ai_scripting_kill_silent(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -779,6 +792,7 @@ void ai_scripting_kill_silent(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_scripting_kill_internal(ai_index, TRUE);
 
@@ -788,6 +802,7 @@ void ai_scripting_kill_silent(
 void ai_scripting_erase(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -799,6 +814,7 @@ void ai_scripting_erase(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -818,6 +834,7 @@ void ai_scripting_erase(
 void ai_scripting_erase_all(
 	void)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -825,6 +842,7 @@ void ai_scripting_erase_all(
 			"%s: ai_erase_all",
 			hs_runtime_get_executing_thread_name());
 	}
+#endif
 
 	ai_erase(NONE, NONE, NONE, FALSE);
 
@@ -836,7 +854,9 @@ void ai_scripting_deselect(
 {
 	if (ai_globals->ai_initialized_for_map)
 	{
+#ifdef DEBUG
 		ai_debug_select_actor(NONE, NONE);
+#endif
 	}
 
 	return;
@@ -847,7 +867,9 @@ void ai_scripting_select(
 {
 	if (ai_globals->ai_initialized_for_map)
 	{
+#ifdef DEBUG
 		ai_debug_select_encounter(ai_index == NONE ? NONE : AI_INDEX_GET_ENCOUNTER_INDEX(ai_index));
+#endif
 	}
 
 	return;
@@ -856,6 +878,7 @@ void ai_scripting_select(
 void ai_scripting_spawn_actor(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -867,6 +890,7 @@ void ai_scripting_spawn_actor(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_globals->ai_initialized_for_map && ai_index != NONE)
 	{
@@ -909,6 +933,7 @@ void ai_scripting_set_respawn(
 	long ai_index,
 	boolean respawn)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -921,6 +946,7 @@ void ai_scripting_set_respawn(
 			aibuf,
 			respawn ? "on" : "off");
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -934,6 +960,7 @@ void ai_scripting_set_deaf(
 	long ai_index,
 	boolean deaf)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -946,6 +973,7 @@ void ai_scripting_set_deaf(
 			aibuf,
 			deaf ? "on" : "off");
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -959,6 +987,7 @@ void ai_scripting_set_blind(
 	long ai_index,
 	boolean blind)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -971,6 +1000,7 @@ void ai_scripting_set_blind(
 			aibuf,
 			blind ? "on" : "off");
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -984,6 +1014,7 @@ void ai_scripting_magically_see_encounter(
 	long ai_index,
 	long target_ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -998,6 +1029,7 @@ void ai_scripting_magically_see_encounter(
 			aibuf,
 			aibuf2);
 	}
+#endif
 
 	if (ai_index != NONE && target_ai_index != NONE)
 	{
@@ -1025,6 +1057,7 @@ void ai_scripting_magically_see_encounter(
 void ai_scripting_magically_see_players(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1036,6 +1069,7 @@ void ai_scripting_magically_see_players(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -1057,6 +1091,7 @@ void ai_scripting_magically_see_unit(
 	long ai_index,
 	long unit_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1069,6 +1104,7 @@ void ai_scripting_magically_see_unit(
 			aibuf,
 			DATUM_INDEX_TO_ABSOLUTE_INDEX(unit_index));
 	}
+#endif
 
 	if (ai_index != NONE && unit_index != NONE)
 	{
@@ -1117,6 +1153,7 @@ void ai_scripting_magically_see_units(
 void ai_scripting_timer_start(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1128,6 +1165,7 @@ void ai_scripting_timer_start(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -1148,6 +1186,7 @@ void ai_scripting_timer_start(
 void ai_scripting_timer_expire(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1159,6 +1198,7 @@ void ai_scripting_timer_expire(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -1385,6 +1425,7 @@ boolean ai_scripting_is_attacking(
 void ai_scripting_attack(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1396,6 +1437,7 @@ void ai_scripting_attack(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -1416,6 +1458,7 @@ void ai_scripting_attack(
 void ai_scripting_defend(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1427,6 +1470,7 @@ void ai_scripting_defend(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -1455,6 +1499,7 @@ void ai_scripting_retreat(
 void ai_scripting_maneuver(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1466,6 +1511,7 @@ void ai_scripting_maneuver(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -1487,6 +1533,7 @@ void ai_scripting_maneuver_enable(
 	long ai_index,
 	boolean enabled)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -1499,6 +1546,7 @@ void ai_scripting_maneuver_enable(
 			aibuf,
 			enabled ? "on" : "off");
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -1599,6 +1647,7 @@ static short ai_scripting_migrate_find_target_squad(
 	{
 		found_squad_index = same_squad_index;
 
+#ifdef DEBUG
 		if (ai_debug.print_migration)
 		{
 			error(
@@ -1606,11 +1655,13 @@ static short ai_scripting_migrate_find_target_squad(
 				"  %s unchanged",
 				debug_description);
 		}
+#endif
 	}
 	else if (same_variant_squad_index != NONE)
 	{
 		found_squad_index = same_variant_squad_index;
 
+#ifdef DEBUG
 		if (ai_debug.print_migration)
 		{
 			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
@@ -1655,11 +1706,13 @@ static short ai_scripting_migrate_find_target_squad(
 				squad_definition->name,
 				variant_name);
 		}
+#endif
 	}
 	else if (same_actor_squad_index != NONE)
 	{
 		found_squad_index = same_actor_squad_index;
 
+#ifdef DEBUG
 		if (ai_debug.print_migration)
 		{
 			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
@@ -1687,11 +1740,13 @@ static short ai_scripting_migrate_find_target_squad(
 				squad_definition->name,
 				actor_name);
 		}
+#endif
 	}
 	else if (same_type_squad_index != NONE)
 	{
 		found_squad_index = same_type_squad_index;
 
+#ifdef DEBUG
 		if (ai_debug.print_migration)
 		{
 			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
@@ -1706,11 +1761,13 @@ static short ai_scripting_migrate_find_target_squad(
 				squad_definition->name,
 				actor_type_get_name(source_actor->type));
 		}
+#endif
 	}
 	else if (any_squad_index != NONE)
 	{
 		found_squad_index = any_squad_index;
 
+#ifdef DEBUG
 		if (ai_debug.print_migration)
 		{
 			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
@@ -1724,11 +1781,13 @@ static short ai_scripting_migrate_find_target_squad(
 				debug_description,
 				squad_definition->name);
 		}
+#endif
 	}
 	else if (target_encounter_definition->squads.count > 0)
 	{
 		found_squad_index = 0;
 
+#ifdef DEBUG
 		if (ai_debug.print_migration)
 		{
 			struct squad_definition *squad_definition = TAG_BLOCK_GET_ELEMENT(
@@ -1742,6 +1801,7 @@ static short ai_scripting_migrate_find_target_squad(
 				debug_description,
 				squad_definition->name);
 		}
+#endif
 	}
 
 	if (found_squad_index != NONE)
@@ -1819,8 +1879,10 @@ static void ai_scripting_migrate_internal(
 							}
 						}
 
+#ifdef DEBUG
 						sprintf(temporary, "squad %s", squad_definition->name);
 						debug_description = temporary;
+#endif
 						target_squad_indices[source_iterator.squad_index] = ai_scripting_migrate_find_target_squad(
 							source_encounter_index,
 							(short)source_iterator.squad_index,
@@ -1976,6 +2038,7 @@ void ai_scripting_migrate(
 	long source_index,
 	long target_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_migration || ai_debug.print_scripting)
 	{
 		char source_name[512];
@@ -1990,6 +2053,7 @@ void ai_scripting_migrate(
 			source_name,
 			target_name);
 	}
+#endif
 
 	ai_scripting_migrate_internal(source_index, target_index, FALSE, FALSE);
 
@@ -2047,6 +2111,7 @@ void ai_scripting_migrate_by_unit(
 	long object_list_index,
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_migration || ai_debug.print_scripting)
 	{
 		char target_name[512];
@@ -2058,6 +2123,7 @@ void ai_scripting_migrate_by_unit(
 			hs_runtime_get_executing_thread_name(),
 			target_name);
 	}
+#endif
 
 	if (object_list_index != NONE && ai_index != NONE)
 	{
@@ -2105,6 +2171,7 @@ void ai_scripting_migrate_and_speak(
 {
 	boolean advancing;
 
+#ifdef DEBUG
 	if (ai_debug.print_migration || ai_debug.print_scripting)
 	{
 		char source_name[512];
@@ -2119,6 +2186,7 @@ void ai_scripting_migrate_and_speak(
 			source_name,
 			target_name);
 	}
+#endif
 
 	if (!_stricmp(speech_type, "advance"))
 	{
@@ -2146,6 +2214,7 @@ void ai_scripting_allegiance(
 	short team1_index,
 	short team2_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -2155,6 +2224,7 @@ void ai_scripting_allegiance(
 			team1_index,
 			team2_index);
 	}
+#endif
 
 	if (team1_index != NONE && team2_index != NONE)
 	{
@@ -2205,6 +2275,7 @@ void ai_scripting_allegiance_remove(
 	short team1_index,
 	short team2_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -2214,6 +2285,7 @@ void ai_scripting_allegiance_remove(
 			team1_index,
 			team2_index);
 	}
+#endif
 
 	if (team1_index != NONE && team2_index != NONE)
 	{
@@ -2237,7 +2309,7 @@ boolean ai_scripting_allegiance_broken(
 	return broken;
 }
 
-static int ai_scripting_vehicle_candidate_qsort(
+static int __cdecl ai_scripting_vehicle_candidate_qsort(
 	void const *p1,
 	void const *p2)
 {
@@ -2333,6 +2405,7 @@ void ai_scripting_go_to_vehicle(
 	long unit_index,
 	char const *seat_substring_name)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2346,6 +2419,7 @@ void ai_scripting_go_to_vehicle(
 			DATUM_INDEX_TO_ABSOLUTE_INDEX(unit_index),
 			seat_substring_name);
 	}
+#endif
 
 	ai_scripting_go_to_vehicle_internal(ai_index, unit_index, seat_substring_name, FALSE);
 
@@ -2357,6 +2431,7 @@ void ai_scripting_go_to_vehicle_override(
 	long unit_index,
 	char const *seat_substring_name)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2370,6 +2445,7 @@ void ai_scripting_go_to_vehicle_override(
 			DATUM_INDEX_TO_ABSOLUTE_INDEX(unit_index),
 			seat_substring_name);
 	}
+#endif
 
 	ai_scripting_go_to_vehicle_internal(ai_index, unit_index, seat_substring_name, TRUE);
 
@@ -2402,6 +2478,7 @@ void ai_scripting_exit_vehicle(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2413,6 +2490,7 @@ void ai_scripting_exit_vehicle(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2433,6 +2511,7 @@ void ai_scripting_braindead(
 {
 	struct ai_index_actor_iterator iterator;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2445,6 +2524,7 @@ void ai_scripting_braindead(
 			aibuf,
 			braindead ? "on" : "off");
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -2466,6 +2546,7 @@ void ai_scripting_braindead_by_unit(
 	long object_list_reference_index;
 	long object_index = object_list_get_first(object_list_index, &object_list_reference_index);
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -2474,6 +2555,7 @@ void ai_scripting_braindead_by_unit(
 			hs_runtime_get_executing_thread_name(),
 			braindead ? "on" : "off");
 	}
+#endif
 
 	while (object_index != NONE)
 	{
@@ -2523,6 +2605,7 @@ void ai_scripting_ignore(
 	long object_list_reference_index;
 	long object_index = object_list_get_first(object_list_index, &object_list_reference_index);
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -2531,6 +2614,7 @@ void ai_scripting_ignore(
 			hs_runtime_get_executing_thread_name(),
 			ignore ? "on" : "off");
 	}
+#endif
 
 	while (object_index != NONE)
 	{
@@ -2554,6 +2638,7 @@ void ai_scripting_prefer_target(
 	long object_list_reference_index;
 	long object_index = object_list_get_first(object_list_index, &object_list_reference_index);
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -2562,6 +2647,7 @@ void ai_scripting_prefer_target(
 			hs_runtime_get_executing_thread_name(),
 			prefer ? "on" : "off");
 	}
+#endif
 
 	while (object_index != NONE)
 	{
@@ -2636,6 +2722,7 @@ static void ai_scripting_teleport_starting_location_private(
 void ai_scripting_teleport_starting_location_if_unsupported(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2647,6 +2734,7 @@ void ai_scripting_teleport_starting_location_if_unsupported(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_scripting_teleport_starting_location_private(ai_index, TRUE);
 
@@ -2656,6 +2744,7 @@ void ai_scripting_teleport_starting_location_if_unsupported(
 void ai_scripting_teleport_starting_location(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2667,6 +2756,7 @@ void ai_scripting_teleport_starting_location(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_scripting_teleport_starting_location_private(ai_index, FALSE);
 
@@ -2679,6 +2769,7 @@ void ai_scripting_renew(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2690,6 +2781,7 @@ void ai_scripting_renew(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2732,6 +2824,7 @@ void ai_scripting_try_to_fight_nothing(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2743,6 +2836,7 @@ void ai_scripting_try_to_fight_nothing(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2761,6 +2855,7 @@ void ai_scripting_try_to_fight(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2775,6 +2870,7 @@ void ai_scripting_try_to_fight(
 			aibuf,
 			aibuf2);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2793,6 +2889,7 @@ void ai_scripting_try_to_fight_player(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2804,6 +2901,7 @@ void ai_scripting_try_to_fight_player(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2822,6 +2920,7 @@ void ai_scripting_allow_charge(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2834,6 +2933,7 @@ void ai_scripting_allow_charge(
 			aibuf,
 			allow_charge ? "true" : "false");
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2852,6 +2952,7 @@ void ai_scripting_command_list(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2864,6 +2965,7 @@ void ai_scripting_command_list(
 			aibuf,
 			command_list_index);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2884,6 +2986,7 @@ void ai_scripting_command_list_by_unit(
 	long unit_index,
 	short command_list_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -2892,6 +2995,7 @@ void ai_scripting_command_list_by_unit(
 			hs_runtime_get_executing_thread_name(),
 			command_list_index);
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -2920,6 +3024,7 @@ void ai_scripting_command_list_advance(
 {
 	struct ai_index_actor_iterator iterator;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -2931,6 +3036,7 @@ void ai_scripting_command_list_advance(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -2945,6 +3051,7 @@ void ai_scripting_command_list_advance(
 void ai_scripting_command_list_advance_by_unit(
 	long unit_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -2952,6 +3059,7 @@ void ai_scripting_command_list_advance_by_unit(
 			"%s: ai_command_list_advance_by_unit <some unit>",
 			hs_runtime_get_executing_thread_name());
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3104,6 +3212,7 @@ void ai_scripting_free(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3115,6 +3224,7 @@ void ai_scripting_free(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -3142,6 +3252,7 @@ void ai_scripting_free_units(
 	long object_index = object_list_get_first(object_list_index, &object_list_reference_index);
 	short freed_count = 0;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3149,6 +3260,7 @@ void ai_scripting_free_units(
 			"%s: ai_free_units <some units>",
 			hs_runtime_get_executing_thread_name());
 	}
+#endif
 
 	while (object_index != NONE)
 	{
@@ -3182,6 +3294,7 @@ void ai_scripting_attach_free(
 	long unit_index,
 	long actor_variant_tag_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3191,6 +3304,7 @@ void ai_scripting_attach_free(
 			DATUM_INDEX_TO_ABSOLUTE_INDEX(unit_index),
 			actor_variant_tag_index == NONE ? "<error>" : tag_name_strip_path(tag_get_name(actor_variant_tag_index)));
 	}
+#endif
 
 	if (ai_globals->ai_initialized_for_map && unit_index != NONE && actor_variant_tag_index != NONE)
 	{
@@ -3234,6 +3348,7 @@ void ai_scripting_force_active(
 	long ai_index,
 	boolean active)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3246,6 +3361,7 @@ void ai_scripting_force_active(
 			aibuf,
 			active ? "true" : "false");
 	}
+#endif
 
 	if (ai_globals->ai_initialized_for_map && ai_index != NONE)
 	{
@@ -3267,6 +3383,7 @@ void ai_scripting_force_active_by_unit(
 	long unit_index,
 	boolean active)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3275,6 +3392,7 @@ void ai_scripting_force_active_by_unit(
 			hs_runtime_get_executing_thread_name(),
 			active ? "true" : "false");
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3299,11 +3417,13 @@ void ai_scripting_force_active_by_unit(
 					actor->meta.squad_index,
 					struct squad_definition);
 
+#ifdef DEBUG
 				error(
 					_error_silent,
 					"ai_force_active_by_unit: unit is a member of encounter %s/%s, you must use ai_force_active instead",
 					encounter_definition->name,
 					squad_definition->name);
+#endif
 			}
 		}
 	}
@@ -3318,6 +3438,7 @@ void ai_scripting_set_return_state(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3330,6 +3451,7 @@ void ai_scripting_set_return_state(
 			aibuf,
 			default_state);
 	}
+#endif
 
 	if (default_state >= 0 && default_state < NUMBER_OF_ACTOR_DEFAULT_STATES)
 	{
@@ -3358,6 +3480,7 @@ void ai_scripting_set_current_state(
 {
 	struct ai_index_actor_iterator iterator;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3370,6 +3493,7 @@ void ai_scripting_set_current_state(
 			aibuf,
 			current_state);
 	}
+#endif
 
 	if (current_state >= 0 && current_state < NUMBER_OF_ACTOR_DEFAULT_STATES)
 	{
@@ -3429,6 +3553,7 @@ short ai_scripting_status(
 	struct actor_datum *actor;
 	short status = _ai_scripting_status_inactive;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3440,6 +3565,7 @@ short ai_scripting_status(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	ai_index_actor_iterator_new(ai_index, &iterator);
 
@@ -3463,6 +3589,7 @@ void ai_scripting_playfight(
 	long ai_index,
 	boolean playfight)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3475,6 +3602,7 @@ void ai_scripting_playfight(
 			aibuf,
 			playfight ? "on" : "off");
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -3490,6 +3618,7 @@ void ai_scripting_vehicle_encounter(
 	long unit_index,
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3501,6 +3630,7 @@ void ai_scripting_vehicle_encounter(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3632,6 +3762,7 @@ void ai_scripting_vehicle_enterable_distance(
 	long unit_index,
 	real distance)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3639,6 +3770,7 @@ void ai_scripting_vehicle_enterable_distance(
 			"%s: ai_vehicle_enterable_distance <some vehicle>",
 			hs_runtime_get_executing_thread_name());
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3657,6 +3789,7 @@ void ai_scripting_vehicle_enterable_team(
 	long unit_index,
 	short team_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3665,6 +3798,7 @@ void ai_scripting_vehicle_enterable_team(
 			hs_runtime_get_executing_thread_name(),
 			team_index);
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3683,6 +3817,7 @@ void ai_scripting_vehicle_enterable_actor_type(
 	long unit_index,
 	short actor_type)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3691,6 +3826,7 @@ void ai_scripting_vehicle_enterable_actor_type(
 			hs_runtime_get_executing_thread_name(),
 			actor_type);
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3709,6 +3845,7 @@ void ai_scripting_vehicle_enterable_actors(
 	long unit_index,
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3720,6 +3857,7 @@ void ai_scripting_vehicle_enterable_actors(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (unit_index != NONE && ai_index != NONE)
 	{
@@ -3747,6 +3885,7 @@ void ai_scripting_vehicle_enterable_actors(
 void ai_scripting_vehicle_enterable_disable(
 	long unit_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3754,6 +3893,7 @@ void ai_scripting_vehicle_enterable_disable(
 			"%s: ai_vehicle_enterable_disable <some vehicle>",
 			hs_runtime_get_executing_thread_name());
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3782,6 +3922,7 @@ void ai_scripting_look_at_object(
 	long unit_index,
 	long object_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3789,6 +3930,7 @@ void ai_scripting_look_at_object(
 			"%s: ai_look_at_object <some unit> <some object>",
 			hs_runtime_get_executing_thread_name());
 	}
+#endif
 
 	if (unit_index != NONE && object_index != NONE)
 	{
@@ -3814,6 +3956,7 @@ void ai_scripting_look_at_object(
 void ai_scripting_stop_looking(
 	long unit_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		error(
@@ -3821,6 +3964,7 @@ void ai_scripting_stop_looking(
 			"%s: ai_stop_looking <some unit>",
 			hs_runtime_get_executing_thread_name());
 	}
+#endif
 
 	if (unit_index != NONE)
 	{
@@ -3842,6 +3986,7 @@ void ai_scripting_automatic_migration_target(
 	struct ai_index_squad_iterator iterator;
 	struct squad_datum *squad;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3854,6 +3999,7 @@ void ai_scripting_automatic_migration_target(
 			aibuf,
 			enable ? "on" : "off");
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -3871,6 +4017,7 @@ void ai_scripting_automatic_migration_target(
 void ai_scripting_follow_target_disable(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3882,6 +4029,7 @@ void ai_scripting_follow_target_disable(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -3896,6 +4044,7 @@ void ai_scripting_follow_target_disable(
 void ai_scripting_follow_target_players(
 	long ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3907,6 +4056,7 @@ void ai_scripting_follow_target_players(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -3922,6 +4072,7 @@ void ai_scripting_follow_target_unit(
 	long ai_index,
 	long unit_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3933,6 +4084,7 @@ void ai_scripting_follow_target_unit(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -3956,6 +4108,7 @@ void ai_scripting_follow_target_ai(
 	long ai_index,
 	long target_ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -3970,6 +4123,7 @@ void ai_scripting_follow_target_ai(
 			aibuf,
 			aibuf2);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -3993,6 +4147,7 @@ void ai_scripting_follow_distance(
 	long ai_index,
 	real follow_target_distance)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -4005,6 +4160,7 @@ void ai_scripting_follow_distance(
 			aibuf,
 			follow_target_distance);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -4019,6 +4175,7 @@ void ai_scripting_follow_distance(
 boolean ai_scripting_conversation(
 	short conversation_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		struct scenario *scenario = global_scenario_get();
@@ -4040,6 +4197,7 @@ boolean ai_scripting_conversation(
 			hs_runtime_get_executing_thread_name(),
 			conversation_name);
 	}
+#endif
 
 	return ai_conversation(conversation_index, TRUE);
 }
@@ -4047,6 +4205,7 @@ boolean ai_scripting_conversation(
 void ai_scripting_conversation_stop(
 	short conversation_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		struct scenario *scenario = global_scenario_get();
@@ -4068,6 +4227,7 @@ void ai_scripting_conversation_stop(
 			hs_runtime_get_executing_thread_name(),
 			conversation_name);
 	}
+#endif
 
 	ai_conversation_stop(conversation_index);
 
@@ -4077,6 +4237,7 @@ void ai_scripting_conversation_stop(
 void ai_scripting_conversation_advance(
 	short conversation_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		struct scenario *scenario = global_scenario_get();
@@ -4098,6 +4259,7 @@ void ai_scripting_conversation_advance(
 			hs_runtime_get_executing_thread_name(),
 			conversation_name);
 	}
+#endif
 
 	ai_conversation_advance(conversation_index);
 
@@ -4120,6 +4282,7 @@ void ai_scripting_link_activation(
 	long target_ai_index,
 	long link_ai_index)
 {
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[512];
@@ -4134,6 +4297,7 @@ void ai_scripting_link_activation(
 			aibuf,
 			aibuf2);
 	}
+#endif
 
 	if (target_ai_index != NONE && link_ai_index != NONE)
 	{
@@ -4156,6 +4320,7 @@ void ai_scripting_berserk(
 	struct ai_index_actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -4167,6 +4332,7 @@ void ai_scripting_berserk(
 			hs_runtime_get_executing_thread_name(),
 			aibuf);
 	}
+#endif
 
 	if (ai_index != NONE)
 	{
@@ -4210,6 +4376,7 @@ void ai_scripting_allow_dormant(
 	struct ai_index_squad_iterator iterator;
 	struct squad_datum *squad;
 
+#ifdef DEBUG
 	if (ai_debug.print_scripting)
 	{
 		char aibuf[256];
@@ -4222,6 +4389,7 @@ void ai_scripting_allow_dormant(
 			aibuf,
 			allow_dormant ? "true" : "false");
 	}
+#endif
 
 	ai_index_squad_iterator_new(ai_index, &iterator);
 

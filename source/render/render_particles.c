@@ -41,7 +41,7 @@ struct rendered_particle_datum
 
 /* ---------- prototypes */
 
-static int compare_rendered_particles(void const *a, void const *b);
+static int __cdecl compare_rendered_particles(void const *a, void const *b);
 
 /* ---------- globals */
 
@@ -96,7 +96,9 @@ void render_particles(
 
 	profile_enter(render_particles_section);
 
+#ifdef DEBUG
 	if (render_particles_enabled)
+#endif
 	{
 		long particle_index;
 		short local_player_index = render.local_player_index;
@@ -290,7 +292,7 @@ void render_particles(
 
 /* ---------- private code */
 
-static int compare_rendered_particles(
+static int __cdecl compare_rendered_particles(
 	void const *a,
 	void const *b)
 {

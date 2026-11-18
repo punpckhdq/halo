@@ -323,11 +323,15 @@ boolean player_ui_rumble_disabled(
 boolean player_ui_autolevel_enabled(
 	short controller_index)
 {
-	short local_player_index = controller_index;
+	short local_player_index;
 
 	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", 320, (controller_index>=0) && (controller_index<MAXIMUM_GAMEPADS));
 
-	if (!network_game_is_active())
+	if (network_game_is_active())
+	{
+		local_player_index = controller_index;
+	}
+	else
 	{
 		local_player_index = player_ui_get_single_player_local_player_from_controller(controller_index);
 	}
@@ -614,22 +618,28 @@ boolean player_ui_save_profile(
 	case _saved_game_file_type_player_profile:
 		if (TEST_FLAG(player_ui_globals.edit_profile_data.profile_index, _default_profile_bit30))
 		{
+#ifdef DEBUG
 			error(_error_silent, "### WARNING: saving over a default player profile");
+#endif
 		}
 
+#ifdef DEBUG
 		if (!player_ui_edit_profile_is_dirty())
 		{
 			error(_error_silent, "### WARNING: saving player profile even though it hasn't been changed");
 		}
+#endif
 
 		player_profile_save(player_ui_globals.edit_profile_data.profile_index, &player_ui_globals.edit_profile_data.edit_profile.player_profile);
 		success = TRUE;
 		break;
 	case _saved_game_file_type_play_list:
+#ifdef DEBUG
 		if (!player_ui_edit_profile_is_dirty())
 		{
 			error(_error_silent, "### WARNING: saving player profile even though it hasn't been changed");
 		}
+#endif
 
 		if (TEST_FLAG(player_ui_globals.edit_profile_data.profile_index, _default_profile_bit30))
 		{
@@ -803,6 +813,7 @@ void player0_look_invert_pitch(
 
 	if (player_ui_globals.player_data[0].profile_index != NONE)
 	{
+#if CONFIG_VERSION >= 2342
 		wchar_t *string;
 		long string_list_index = tag_loaded(UNICODE_STRING_LISTS_GROUP_TAG, TEMPORARY_STRINGS_TAG_NAME);
 
@@ -816,6 +827,9 @@ void player0_look_invert_pitch(
 		}
 
 		hud_message_to_all(string);
+#else
+		hud_message_to_all(L"Saving...");
+#endif
 		player_profile_save(player_ui_globals.player_data[0].profile_index, &player_ui_globals.player_data[0].profile);
 	}
 

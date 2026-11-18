@@ -102,7 +102,9 @@ void physics_compute_new(struct physics_instance const *instance, struct powered
 void physics_update_new(struct physics_instance const *instance, struct powered_mass_point_datum const *powered_mass_points, struct mass_point_datum const *mass_points, real_vector3d const *total_force, real_vector3d const *total_torque);
 void physics_update(long object_index, struct powered_mass_point_datum *powered_mass_points, struct mass_point_datum *mass_points, real_vector3d const *magic_force, real_vector3d const *magic_torque);
 
+#ifdef DEBUG
 void render_debug_physics(struct physics_instance *instance);
+#endif
 
 
 /* ---------- globals */

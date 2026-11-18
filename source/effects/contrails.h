@@ -33,8 +33,8 @@ enum
 
 /* ---------- macros */
 
-#define contrail_get(index) ((struct contrail_datum *)datum_get(contrail_data, (index)))
-#define contrail_point_get(index) ((struct contrail_point_datum *)datum_get(contrail_point_data, (index)))
+#define contrail_get(index) DATUM_GET(contrail_data, index, struct contrail_datum)
+#define contrail_point_get(index) DATUM_GET(contrail_point_data, index, struct contrail_point_datum)
 
 /* ---------- structures */
 

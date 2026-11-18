@@ -49,7 +49,7 @@ enum
 
 /* ---------- macros */
 
-#define decal_get(index) ((struct decal_datum *)datum_get(global_decal_data, (index)))
+#define decal_get(index) DATUM_GET(global_decal_data, index, struct decal_datum)
 
 /* ---------- structures */
 

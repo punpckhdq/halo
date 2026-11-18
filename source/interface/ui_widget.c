@@ -201,14 +201,14 @@ static void widget_instance_render_text_box(struct widget_instance *widget, stru
 static void widget_instance_render_spinner_list(struct ui_widget_definition *definition, struct widget_instance *widget, rectangle2d *clip_rect, point2d offset, boolean focus);
 static void widget_instance_give_focus_by_tag(struct widget_instance *widget, long tag_index, short local_player_index);
 static void widget_instance_go_back_to_previous(struct widget_instance *widget);
-static void widget_instance_update_animation_parameters(struct widget_instance *widget);
+static void widget_instance_update_animation_parameters(struct widget_instance *widget, struct ui_widget_definition *definition);
 static void widget_instance_reload_recursive(struct widget_instance *widget);
 static void ui_widget_reload_by_tag(long tag_index);
 static void widget_instance_give_focus_directly(struct widget_instance *widget, struct widget_instance *target);
 static void widget_instance_set_focused_child_by_index(long focused_child_parent_widget_tag, struct widget_instance *widget, short focused_child_index);
 static void play_sound_tag(long definition_index);
 static long search_and_replace(wchar_t const *search, wchar_t const *replace, wchar_t **in_buffer);
-static void spinner_list_update(struct widget_instance *widget);
+static void spinner_list_update(struct widget_instance *widget, struct ui_widget_definition *definition);
 static void column_list_update(struct widget_instance *widget, struct ui_widget_definition *definition);
 static struct widget_instance *widget_instance_get_tail_child_widget(struct widget_instance const *widget);
 static void widget_instance_tab_to_next_valid_widget(struct widget_instance *widget);
@@ -468,7 +468,11 @@ struct widget_instance *ui_widget_load_by_name_or_tag(
 	{
 		struct ui_widget_definition *definition = ui_widget_definition_get(tag_index);
 
-		widget = pool_new_pointer(widget_memory_pool, sizeof(*widget), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 395);
+		widget = pool_new_pointer(widget_memory_pool, sizeof(*widget)
+#ifdef DEBUG
+			, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(395)
+#endif
+			);
 
 		if (widget)
 		{
@@ -982,6 +986,7 @@ void render_ui_widgets(
 					local_window_bounds.y0 = 0;
 					widget_instance_render_recursive(widget_globals.active_widgets[widget_stack], &local_window_bounds, offset, TRUE, FALSE);
 
+#ifdef DEBUG
 					if (widget_globals.debug_show_path)
 					{
 						real_argb_color color = { 1.f, 1.f, 1.f, 1.f };
@@ -993,6 +998,7 @@ void render_ui_widgets(
 						draw_string_set_draw_mode(tag_loaded(FONT_GROUP_TAG, SMALL_UI_FONT_TAG_NAME), NONE, _text_justification_left, 0, &color);
 						rasterizer_draw_string(&local_window_bounds, NULL, NULL, 0, tag_get_name(widget_globals.active_widgets[widget_stack]->ui_widget_tag_index));
 					}
+#endif
 				}
 			}
 
@@ -1077,11 +1083,18 @@ struct widget_instance *widget_instance_get_nth_child(
 
 void *ui_widget_realloc(
 	void *ptr,
-	word size,
-	char const *file,
-	long line)
+	word size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
-	return pool_resize_pointer(widget_memory_pool, ptr, size, file, line);
+	return pool_resize_pointer(widget_memory_pool, ptr, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 }
 
 void widget_free(
@@ -1489,7 +1502,11 @@ void main_screen_shell_load(
 			SET_FLAG(flags, _bink_playback_return_to_main_menu_when_finished_bit, TRUE);
 			SET_FLAG(flags, _bink_playback_dont_allow_skipping_if_filesystem_check_thread_is_active_bit, TRUE);
 			SET_FLAG(flags, _bink_playback_eat_up_memory_like_a_goddamn_beaver_bit, TRUE);
+#if CONFIG_VERSION >= 2342
 			bink_playback_start(attract_mode_get_localized_movie_path(_bink_intro_movie), flags);
+#else
+			bink_playback_start("d:\\bink\\intro.bik", flags);
+#endif
 			load_main_menu = FALSE;
 
 			if (!bink_playback_active())
@@ -2398,7 +2415,11 @@ static void push_widget(
 	struct widget_stack_node **top,
 	struct _widget_stack_node_data const *data)
 {
-	struct widget_stack_node *node = pool_new_pointer(widget_memory_pool, sizeof(*node), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 2532);
+	struct widget_stack_node *node = pool_new_pointer(widget_memory_pool, sizeof(*node)
+#ifdef DEBUG
+		, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(2532)
+#endif
+		);
 
 	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2534, top && data);
 
@@ -2972,11 +2993,11 @@ static void widget_instance_process_one_event_recursive(
 
 	if (!widget_deleted)
 	{
-		widget_instance_update_animation_parameters(widget);
+		widget_instance_update_animation_parameters(widget, definition);
 
 		if (widget->widget_type == _widget_type_spinner_list)
 		{
-			spinner_list_update(widget);
+			spinner_list_update(widget, definition);
 		}
 		else if (widget->widget_type == _widget_type_column_list)
 		{
@@ -4083,7 +4104,11 @@ static void widget_instance_render_text_box(
 
 		string = unicode_string_list_get_string(definition->text_label_unicode_string_list_tag.index, string_index);
 		string_length = ustrlen(string);
-		widget->parameters.text_box_parameters.text = pool_resize_pointer(widget_memory_pool, widget->parameters.text_box_parameters.text, (string_length + 1) * sizeof(wchar_t), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4421);
+		widget->parameters.text_box_parameters.text = pool_resize_pointer(widget_memory_pool, widget->parameters.text_box_parameters.text, (string_length + 1) * sizeof(wchar_t)
+#ifdef DEBUG
+			, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(4421)
+#endif
+			);
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -4255,7 +4280,11 @@ static void widget_instance_render_spinner_list(
 				wchar_t *list_string = unicode_string_list_get_string(definition->text_label_unicode_string_list_tag.index, item_index);
 				long string_length = ustrlen(list_string);
 
-				string = pool_new_pointer(widget_memory_pool, (string_length + 1) * sizeof(wchar_t), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4610);
+				string = pool_new_pointer(widget_memory_pool, (string_length + 1) * sizeof(wchar_t)
+#ifdef DEBUG
+					, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(4610)
+#endif
+					);
 
 				if (string)
 				{
@@ -4372,7 +4401,8 @@ static void widget_instance_render_column_list(
 }
 
 static void widget_instance_update_animation_parameters(
-	struct widget_instance *widget)
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition)
 {
 	widget->animation_data.first_frame_index = FLOOR(widget->animation_data.first_frame_index, 0);
 	widget->animation_data.last_frame_index = FLOOR(widget->animation_data.last_frame_index, 0);
@@ -4591,7 +4621,11 @@ static long search_and_replace(
 
 			if (replace_count > 0)
 			{
-				result = pool_resize_pointer(widget_memory_pool, result, sizeof(wchar_t) * (string_length + difference * replace_count), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4994);
+				result = pool_resize_pointer(widget_memory_pool, result, sizeof(wchar_t) * (string_length + difference * replace_count)
+#ifdef DEBUG
+					, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(4994)
+#endif
+					);
 
 				if (!result)
 				{
@@ -4616,7 +4650,8 @@ static long search_and_replace(
 }
 
 static void spinner_list_update(
-	struct widget_instance *widget)
+	struct widget_instance *widget,
+	struct ui_widget_definition *definition)
 {
 	struct widget_instance *child;
 

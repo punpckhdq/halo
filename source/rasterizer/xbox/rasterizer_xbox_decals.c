@@ -42,6 +42,7 @@ static void rasterizer_decal_vertices_purge_proc(
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 31, decal_index!=NONE);
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_decals.c", 32, decal_index!=0);
 
+#ifdef DEBUG
 	if (TEST_FLAG(decal_get(decal_index)->flags, _decal_locked_bit) && !locked_warning_issued)
 	{
 		error(_error_silent, "### ERROR decals: deleting locked decal (#%d, queried=#%d) in rasterizer -- tell Bernie!!", decal_index, last_decal_index_queried_by_lruv_cache);
@@ -53,6 +54,7 @@ static void rasterizer_decal_vertices_purge_proc(
 		error(_error_silent, "### ERROR decals: deleting permanent decal (#%d, queried=#%d) in rasterizer -- tell Bernie!!", decal_index, last_decal_index_queried_by_lruv_cache);
 		permanent_warning_issued = TRUE;
 	}
+#endif
 
 	decal_delete(decal_index);
 
@@ -273,7 +275,11 @@ void _rasterizer_decals_begin(
 		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
+#ifdef DEBUG
 		SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+#else
+		SetRenderStateSmart(D3DRS_ZBIAS, 8);
+#endif
 
 		if (layer == _decal_layer_alpha_tested)
 		{

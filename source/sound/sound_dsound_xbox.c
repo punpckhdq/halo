@@ -574,7 +574,9 @@ static void dsound_end_scene(
 				}
 			}
 		}
+#ifdef DEBUG
 		render_debug_string(FALSE, buffer);
+#endif
 	}
 
 	return;
@@ -1061,11 +1063,13 @@ static boolean dsound_channel_queue_packet(
 					}
 				}
 			}
+#ifdef DEBUG
 			else
 			{
 				sprintf(temporary, "trying to queue sound %s but it's outside the valid range. (%ld)", channel->playing_permutation->name, channel->playing_permutation->cache_base_address);
 				interrupt_time_error(NULL, temporary);
 			}
+#endif
 		}
 		else
 		{

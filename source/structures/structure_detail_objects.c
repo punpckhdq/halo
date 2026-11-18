@@ -292,7 +292,9 @@ void render_debug_detail_objects(
 							out_of_bounds = TRUE;
 						}
 
+#ifdef DEBUG
 						render_debug_point(TRUE, &obj_pos, DEBUG_DETAIL_OBJECT_POINT_SIZE, global_real_argb_red);
+#endif
 					}
 
 					{
@@ -304,14 +306,18 @@ void render_debug_detail_objects(
 						box.y1 = (real)(cell->cell_y * DETAIL_OBJECT_CELL_SIZE + DETAIL_OBJECT_CELL_SIZE);
 						box.z0 = cell->cell_z * DETAIL_OBJECT_CELL_SIZE;
 						box.z1 = (cell->cell_z + 1.f) * DETAIL_OBJECT_CELL_SIZE;
+#ifdef DEBUG
 						render_debug_box_outline(TRUE, &box, global_real_argb_blue);
+#endif
 
 						if (out_of_bounds)
 						{
 							real_argb_color color = *global_real_argb_grey;
 
 							color.alpha = DEBUG_DETAIL_OBJECT_ALPHA;
+#ifdef DEBUG
 							render_debug_box_outline(TRUE, &box, &color);
+#endif
 						}
 					}
 				}

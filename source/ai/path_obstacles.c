@@ -118,7 +118,9 @@ boolean obstacles_add_disc(
 	disc->object_index = object_index;
 	project_point3d(center, _z, TRUE, &disc->center);
 	disc->radius = radius;
+#ifdef DEBUG
 	disc->z = center->z;
+#endif
 
 	return TRUE;
 }
@@ -417,6 +419,7 @@ void obstacles_recompute(
 	return;
 }
 
+#ifdef DEBUG
 void render_debug_obstacles(
 	struct obstacles const *obstacles,
 	real radius)
@@ -484,3 +487,4 @@ void render_debug_obstacles(
 
 	return;
 }
+#endif

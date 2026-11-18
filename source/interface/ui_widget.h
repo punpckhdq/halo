@@ -146,7 +146,11 @@ void render_ui_widgets_postgame(short local_player_index, rectangle2d const *win
 void render_ui_widgets(short local_player_index, rectangle2d const *window_bounds);
 int widget_instance_count_children(struct widget_instance const *widget);
 struct widget_instance *widget_instance_get_nth_child(struct widget_instance const *widget, int n);
+#ifdef DEBUG
 void *ui_widget_realloc(void *ptr, word size, char const *file, long line);
+#else
+void *ui_widget_realloc(void *ptr, word size);
+#endif
 void widget_free(void *ptr);
 boolean ui_widgets_active(void);
 boolean ui_widgets_active_for_local_player(short local_player_index);

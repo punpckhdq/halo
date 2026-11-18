@@ -67,7 +67,7 @@ struct line_of_fire_pill
 
 /* ---------- prototypes */
 
-static int compare_releasable_inactive_encounters(void const *p1, void const *p2);
+static int __cdecl compare_releasable_inactive_encounters(void const *p1, void const *p2);
 static void ai_generate_line_of_fire_pill(long unit_index, long prop_index, struct line_of_fire_pill *pill);
 static short ai_find_line_of_fire_friend_pills(long actor_index, short max_pill_count, struct line_of_fire_pill *pills);
 static void ai_place_pending_mounted_weapons(void);
@@ -104,8 +104,10 @@ void ai_initialize(
 	match_assert("c:\\halo\\SOURCE\\ai\\ai.c", 140, ai_globals);
 
 	memset(ai_globals, 0, sizeof(*ai_globals));
+#ifdef DEBUG
 	ai_debug_initialize();
 	ai_profile_initialize();
+#endif
 	paths_initialize();
 	actors_initialize();
 	props_initialize();
@@ -126,8 +128,10 @@ void ai_dispose(
 	props_dispose();
 	actors_dispose();
 	paths_dispose();
+#ifdef DEBUG
 	ai_profile_dispose();
 	ai_debug_dispose();
+#endif
 
 	return;
 }
@@ -148,7 +152,9 @@ void ai_initialize_for_new_map(
 	memset(ai_globals->last_shout_time, NONE, sizeof(ai_globals->last_shout_time));
 
 	ai_debug_initialize_for_new_map();
+#ifdef DEBUG
 	ai_profile_initialize_for_new_map();
+#endif
 	paths_initialize_for_new_map();
 	actors_initialize_for_new_map();
 	props_initialize_for_new_map();
@@ -171,8 +177,10 @@ void ai_dispose_from_old_map(
 	props_dispose_from_old_map();
 	actors_dispose_from_old_map();
 	paths_dispose_from_old_map();
+#ifdef DEBUG
 	ai_profile_dispose_from_old_map();
 	ai_debug_dispose_from_old_map();
+#endif
 
 	ai_globals->ai_initialized_for_map = FALSE;
 
@@ -190,15 +198,22 @@ void ai_place(
 void ai_update(
 	void)
 {
+#ifdef DEBUG
 	boolean active = ai_globals->ai_initialized_for_map && !ai_profile.disable_ai;
 	boolean move_randomly = ai_profile.move_randomly;
+#else
+	boolean active = ai_globals->ai_initialized_for_map;
+	boolean move_randomly = FALSE;
+#endif
 
 	profile_enter(ai_update_section);
 
 	if (active)
 	{
 		ai_debug_update();
+#ifdef DEBUG
 		ai_profile_update();
+#endif
 		ai_place_pending_mounted_weapons();
 
 		if (move_randomly)
@@ -307,6 +322,7 @@ boolean ai_consider_major_upgrade(
 	squad->major_upgrade_error += delta;
 	ai_globals->major_upgrade_error += delta;
 
+#ifdef DEBUG
 	if (ai_debug.print_major_upgrade)
 	{
 		struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(
@@ -333,6 +349,7 @@ boolean ai_consider_major_upgrade(
 			"%s",
 			temporary);
 	}
+#endif
 
 	return upgrade;
 }
@@ -434,7 +451,7 @@ boolean ai_release_inactive_swarms(
 	return swarm_unit_count > 0;
 }
 
-static int compare_releasable_inactive_encounters(
+static int __cdecl compare_releasable_inactive_encounters(
 	void const *p1,
 	void const *p2)
 {
@@ -678,7 +695,9 @@ boolean ai_test_line_of_fire(
 	boolean success = TRUE;
 	long prop_index = NONE;
 
+#ifdef DEBUG
 	ai_profile.meters[_ai_meter_line_of_fire].current_count++;
+#endif
 	pill_count = ai_find_line_of_fire_friend_pills(actor_index, NUMBEROF(pills), pills);
 
 	for (pill_index = 0; pill_index < pill_count; pill_index++)
@@ -717,6 +736,7 @@ boolean ai_test_line_of_fire(
 		}
 	}
 
+#ifdef DEBUG
 	if (ai_debug.render_lineoffire)
 	{
 		ai_debug_lineoffire_new(origin, vector);
@@ -732,6 +752,7 @@ boolean ai_test_line_of_fire(
 
 		ai_debug_lineoffire_success(success);
 	}
+#endif
 
 	if (prop_index_reference)
 	{
@@ -756,13 +777,17 @@ short ai_test_line_of_sight(
 	boolean clear;
 	boolean occluded = FALSE;
 
+#ifdef DEBUG
 	if (ai_debug.render_lineofsight)
 	{
 		ai_debug_lineofsight(p0, p0_cluster_index, p1, p1_cluster_index);
 	}
+#endif
 
 	match_collision_log_begin_user("c:\\halo\\SOURCE\\ai\\ai.c", 841, _collision_user_ai_lineofsight);
+#ifdef DEBUG
 	ai_profile.meters[_ai_meter_line_of_sight].current_count++;
+#endif
 
 	if (p0_cluster_index != NONE && p1_cluster_index != NONE && !scenario_test_pvs(p0_cluster_index, p1_cluster_index))
 	{
@@ -776,7 +801,7 @@ short ai_test_line_of_sight(
 
 		flags = FLAG(_collision_test_front_facing_surfaces_bit) | FLAG(_collision_test_back_facing_surfaces_bit) | FLAG(_collision_test_structure_bit) | FLAG(_collision_test_objects_bit) | _collision_test_objects_sight_blocking_flags;
 
-		if (game_connection() == _game_connection_local && ai_debug.fast_los)
+		if (AI_BEHAVIOR(fast_los))
 		{
 			flags &= ~(FLAG(_collision_test_objects_bit) | _collision_test_objects_all_types_flags);
 		}
@@ -795,7 +820,9 @@ short ai_test_line_of_sight(
 			SET_FLAG(flags, _collision_test_objects_vehicles_bit, FALSE);
 		}
 
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 
 		if (!collision_test_line(flags, p0, p1, ignore_object_index, &collision))
 		{
@@ -843,13 +870,17 @@ short ai_test_line_of_sight(
 				{
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = collision_test_line(flags, &p0a, p1, ignore_object_index, &collision);
 					}
 
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = collision_test_line(flags, &p0b, p1, ignore_object_index, &collision);
 					}
 				}
@@ -857,13 +888,17 @@ short ai_test_line_of_sight(
 				{
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = !collision_test_line(flags, &p0a, p1, ignore_object_index, &collision);
 					}
 
 					if (!occluded)
 					{
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						occluded = !collision_test_line(flags, &p0b, p1, ignore_object_index, &collision);
 					}
 				}
@@ -880,19 +915,25 @@ short ai_test_line_of_sight(
 
 				if (!occluded)
 				{
+#ifdef DEBUG
 					ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 					occluded = collision_test_line(flags, &p1a, p0, ignore_object_index, &collision);
 				}
 
 				if (!occluded)
 				{
+#ifdef DEBUG
 					ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 					occluded = collision_test_line(flags, &p1b, p0, ignore_object_index, &collision);
 				}
 
 				if (!occluded)
 				{
+#ifdef DEBUG
 					ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 					occluded = collision_test_line(flags, &p1c, p0, ignore_object_index, &collision);
 				}
 			}
@@ -958,6 +999,7 @@ boolean ai_test_ballistic_line_of_fire(
 	match_collision_log_begin_user("c:\\halo\\SOURCE\\ai\\ai.c", 1032, _collision_user_ai_lineoffire);
 	friend_pill_count = ai_find_line_of_fire_friend_pills(actor_index, NUMBEROF(friend_pills), friend_pills);
 
+#ifdef DEBUG
 	if (!ai_debug.ballistic_lineoffire_freeze)
 	{
 		short pill_index;
@@ -975,6 +1017,7 @@ boolean ai_test_ballistic_line_of_fire(
 			ai_debug.ballistic_pillwidth[pill_index] = friend_pills[pill_index].width;
 		}
 	}
+#endif
 
 	flags = FLAG(_collision_test_front_facing_surfaces_bit) | FLAG(_collision_test_back_facing_surfaces_bit) | FLAG(_collision_test_ignore_breakable_surfaces_bit) | FLAG(_collision_test_structure_bit) | FLAG(_collision_test_objects_bit) | _collision_test_objects_sight_blocking_flags;
 
@@ -990,10 +1033,12 @@ boolean ai_test_ballistic_line_of_fire(
 
 	do
 	{
+#ifdef DEBUG
 		if (!ai_debug.ballistic_lineoffire_freeze && ai_debug.ballistic_numpoints < MAXIMUM_BALLISTIC_POINTS)
 		{
 			ai_debug.ballistic_points[ai_debug.ballistic_numpoints++] = current_point;
 		}
+#endif
 
 		point_from_line3d(&current_point, &current_velocity, next_time - current_time, &end_point);
 		end_point.z += arc_acceleration * 0.5f * ((next_time - current_time) * (next_time - current_time));
@@ -1032,6 +1077,7 @@ boolean ai_test_ballistic_line_of_fire(
 	}
 	while (success && current_time < arc_time);
 
+#ifdef DEBUG
 	if (!ai_debug.ballistic_lineoffire_freeze && ai_debug.ballistic_numpoints < MAXIMUM_BALLISTIC_POINTS)
 	{
 		ai_debug.ballistic_points[ai_debug.ballistic_numpoints++] = end_point;
@@ -1041,6 +1087,7 @@ boolean ai_test_ballistic_line_of_fire(
 	{
 		ai_debug.ballistic_success = success;
 	}
+#endif
 
 	match_collision_log_end_user("c:\\halo\\SOURCE\\ai\\ai.c", 1144);
 
@@ -1099,7 +1146,7 @@ long ai_get_responsible_unit(
 			}
 		}
 
-		if (unit_index != NONE && game_connection() == _game_connection_local && ai_debug.ignore_player)
+		if (unit_index != NONE && AI_BEHAVIOR(ignore_player))
 		{
 			struct unit_datum *responsible_unit = unit_get(unit_index);
 
@@ -1155,6 +1202,7 @@ boolean ai_handle_killing_spree(
 	short minimum_killing_spree_count = (unit->unit.player_index != NONE) ? 5 : 3;
 	boolean result = FALSE;
 
+#ifdef DEBUG
 	if (ai_debug.print_killing_sprees)
 	{
 		char unitbuf[512];
@@ -1170,6 +1218,7 @@ boolean ai_handle_killing_spree(
 
 		console_printf(FALSE, "%s killing spree: %d", unitbuf, killing_spree_count);
 	}
+#endif
 
 	if (killing_spree_count >= minimum_killing_spree_count)
 	{
@@ -1196,6 +1245,7 @@ void ai_handle_allegiance_status_changed(
 	struct actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_allegiance)
 	{
 		console_printf(
@@ -1206,6 +1256,7 @@ void ai_handle_allegiance_status_changed(
 			broken ? "broken" : "reformed",
 			permanently_broken ? " permanently" : "");
 	}
+#endif
 
 	actor_iterator_new(&iterator, TRUE);
 
@@ -1262,6 +1313,7 @@ void ai_handle_allegiance_broken_notification(
 	struct actor_iterator iterator;
 	struct actor_datum *actor;
 
+#ifdef DEBUG
 	if (ai_debug.print_allegiance)
 	{
 		console_printf(
@@ -1271,6 +1323,7 @@ void ai_handle_allegiance_broken_notification(
 			global_game_team_names[team2_index],
 			broken ? "broken" : "reformed");
 	}
+#endif
 
 	actor_iterator_new(&iterator, TRUE);
 
@@ -1508,10 +1561,12 @@ void ai_create_mounted_weapons_for_unit(
 		{
 			struct unit_datum *unit = unit_get(unit_index);
 
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"WARNING: cannot create mounted weapons for %s, exceeded MAXIMUM_NUMBER_OF_MOUNTED_WEAPON_UNITS",
 				tag_name_strip_path(tag_get_name(unit->definition_index)));
+#endif
 		}
 	}
 
@@ -1586,7 +1641,9 @@ void ai_handle_editing(
 			struct actor_iterator iterator;
 			struct actor_datum *actor;
 
+#ifdef DEBUG
 			ai_debug.selected_encounter_index = NONE;
+#endif
 			actor_iterator_new(&iterator, FALSE);
 
 			while (actor = actor_iterator_next(&iterator))
@@ -1745,7 +1802,7 @@ void ai_handle_unit_effect(
 			struct unit_datum *unit = unit_get(owner_unit_index);
 			long current_time = game_time_get();
 
-			if (game_connection() == _game_connection_local && ai_debug.ignore_player && unit->unit.player_index != NONE)
+			if (AI_BEHAVIOR(ignore_player) && unit->unit.player_index != NONE)
 			{
 			}
 			else if (effect_type <= unit->unit.last_unit_effect_type && current_time <= unit->unit.game_time_at_last_unit_effect + TICKS_PER_SECOND)
@@ -2020,8 +2077,10 @@ void ai_handle_spatial_effect(
 
 			if (!spatial_effect)
 			{
+#ifdef DEBUG
 				short distance_to_effect;
 				short distance_to_end_of_queue;
+#endif
 
 				if (empty_effect_index == NONE)
 				{
@@ -2038,9 +2097,11 @@ void ai_handle_spatial_effect(
 					effect_index = empty_effect_index;
 				}
 
+#ifdef DEBUG
 				distance_to_effect = (effect_index - ai_globals->spatial_effects_first_index + NUMBER_OF_CACHED_SPATIAL_EFFECTS) & (NUMBER_OF_CACHED_SPATIAL_EFFECTS - 1);
 				distance_to_end_of_queue = (ai_globals->spatial_effects_last_index - ai_globals->spatial_effects_first_index + NUMBER_OF_CACHED_SPATIAL_EFFECTS) & (NUMBER_OF_CACHED_SPATIAL_EFFECTS - 1);
 				match_assert("c:\\halo\\SOURCE\\ai\\ai.c", 2161, (distance_to_effect >= 0) && (distance_to_effect < distance_to_end_of_queue));
+#endif
 				spatial_effect = &ai_globals->spatial_effects[effect_index];
 				spatial_effect->position = *position;
 				spatial_effect->last_tick = current_time;
@@ -2086,7 +2147,9 @@ void ai_disconnect_from_structure_bsp(
 				char aibuf[256];
 				boolean transition = FALSE;
 
+#ifdef DEBUG
 				ai_debug_describe_actor(iterator.index, NONE, TRUE, aibuf, sizeof(aibuf));
+#endif
 
 				if (actor->target.target_prop_index != NONE && actor->target.target_type >= _actor_target_uninspected_orphan)
 				{
@@ -2148,6 +2211,7 @@ void ai_disconnect_from_structure_bsp(
 
 						if (!components_outside_pvs_count)
 						{
+#ifdef DEBUG
 							if (ai_debug.print_bsp_transition)
 							{
 								error(
@@ -2155,11 +2219,13 @@ void ai_disconnect_from_structure_bsp(
 									"%s: all swarm inside PVS, transition unchanged",
 									aibuf);
 							}
+#endif
 						}
 						else if (components_outside_pvs_count == swarm->unit_count)
 						{
 							transition = FALSE;
 
+#ifdef DEBUG
 							if (ai_debug.print_bsp_transition)
 							{
 								error(
@@ -2167,6 +2233,7 @@ void ai_disconnect_from_structure_bsp(
 									"%s: no units inside PVS, do not transition",
 									aibuf);
 							}
+#endif
 						}
 						else
 						{
@@ -2202,6 +2269,7 @@ void ai_disconnect_from_structure_bsp(
 								}
 							}
 
+#ifdef DEBUG
 							if (ai_debug.print_bsp_transition)
 							{
 								error(
@@ -2213,12 +2281,14 @@ void ai_disconnect_from_structure_bsp(
 									reattached_count,
 									reattached_count < components_outside_pvs_count ? " (deleted some)" : "");
 							}
+#endif
 						}
 					}
 				}
 
 				if (transition)
 				{
+#ifdef DEBUG
 					if (ai_debug.print_bsp_transition)
 					{
 						error(
@@ -2226,6 +2296,7 @@ void ai_disconnect_from_structure_bsp(
 							"%s: disconnect and transition to new bsp",
 							aibuf);
 					}
+#endif
 
 					actor->meta.disconnected_encounter_index = encounter_index;
 					actor->meta.disconnected_squad_index = actor->meta.squad_index;

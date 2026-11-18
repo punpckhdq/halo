@@ -86,7 +86,9 @@ void object_can_take_damage(long object_list_index);
 void object_cannot_take_damage(long object_list_index);
 void object_set_ranged_attack_inhibited(long object_index, boolean inhibited);
 void object_set_melee_attack_inhibited(long object_index, boolean inhibited);
+#ifdef DEBUG
 void render_debug_object_damage(void);
+#endif
 
 /* ---------- globals */
 

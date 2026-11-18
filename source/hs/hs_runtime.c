@@ -66,13 +66,17 @@ enum
 
 /* ---------- macros */
 
-#define hs_thread_get(index) ((struct hs_thread *)datum_get(hs_thread_data, (index)))
+#define hs_thread_get(index) DATUM_GET(hs_thread_data, index, struct hs_thread)
 #define hs_global_runtime_index(designator) (((designator)&FLAG(HS_GLOBAL_DESIGNATOR_EXTERNAL_BIT)) ? HS_GLOBAL_INDEX(designator) : HS_GLOBAL_INDEX(designator)+hs_external_global_count) /* fake name */
-#define hs_global_runtime_get(designator) ((struct hs_global_runtime *)datum_get(hs_global_data, hs_global_runtime_index(designator))) /* fake name */
+#define hs_global_runtime_get(designator) DATUM_GET(hs_global_data, hs_global_runtime_index(designator), struct hs_global_runtime) /* fake name */
 
 #define valid_thread(thread) ((byte *)(thread)>=(byte *)hs_thread_data->data && (byte *)(thread)<(byte *)hs_thread_data->data+hs_thread_data->count*hs_thread_data->size && (byte *)(thread)->stack>=(thread)->stack_data && (byte *)(thread)->stack<(thread)->stack_data+HS_THREAD_STACK_SIZE && (thread)->stack->data+(thread)->stack->size<=(thread)->stack_data+HS_THREAD_STACK_SIZE)
 
+#ifdef DEBUG
 #define match_script_assert(file, line, thread_index, expr, message) if (!(expr)) { display_assert(csprintf(temporary, "a problem occurred while executing the script %s: %s (%s)", hs_thread_format(thread_index), (message) ? (message) : "no reason given.", #expr), MATCH_FILE(file), MATCH_LINE(line), TRUE); system_exit(-1); } /* fake name */
+#else
+#define match_script_assert(file, line, thread_index, expr, message)
+#endif
 #define script_assert(thread_index, expr, message) match_script_assert(__FILE__, __LINE__, thread_index, expr, message) /* fake name */
 #define script_demand(thread_index, expr, message) ((expr) || script_error((thread_index), (message), #expr)) /* fake name */
 
@@ -133,7 +137,9 @@ static void hs_global_reconcile_write(short global_designator);
 
 boolean debug_trigger_volumes;
 boolean debug_scripting;
+#ifdef DEBUG
 unsigned long hs_debug_data[BIT_VECTOR_SIZE_IN_LONGS(MAXIMUM_TRIGGER_VOLUMES_PER_SCENARIO)];
+#endif
 struct data_array *hs_global_data;
 struct data_array *hs_thread_data;
 
@@ -252,7 +258,9 @@ void hs_runtime_initialize_for_new_map(
 		}
 	}
 
+#ifdef DEBUG
 	memset(hs_debug_data, 0, sizeof(hs_debug_data));
+#endif
 
 	return;
 }
@@ -455,7 +463,9 @@ void render_debug_scripting(
 
 		buffer[1024] = '\0';
 		draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
+#ifdef DEBUG
 		render_debug_string(TRUE, buffer);
+#endif
 		draw_string_set_tab_stops(tab_stops, 0);
 	}
 
@@ -543,15 +553,19 @@ void render_debug_trigger_volumes(
 
 				if (BIT_VECTOR_TEST_FLAG(hs_debug_data, trigger_volume_index))
 				{
+#ifdef DEBUG
 					render_debug_polygon_edges(points, NUMBEROF(points), global_real_argb_blue);
+#endif
 				}
 				else
 				{
 					real_argb_color color = *global_real_argb_blue;
 
 					color.alpha = 0.15f;
+#ifdef DEBUG
 					render_debug_polygon_edges(points, NUMBEROF(points), global_real_argb_red);
 					render_debug_polygon(points, NUMBEROF(points), &color);
+#endif
 				}
 			}
 
@@ -573,11 +587,15 @@ void render_debug_trigger_volumes(
 				{
 					if (BIT_VECTOR_TEST_FLAG(hs_debug_data, trigger_volume_index))
 					{
+#ifdef DEBUG
 						render_debug_string_at_point(TRUE, &center, trigger_volume->name, global_real_argb_yellow);
+#endif
 					}
 					else
 					{
+#ifdef DEBUG
 						render_debug_string_at_point(TRUE, &center, trigger_volume->name, global_real_argb_white);
+#endif
 					}
 				}
 			}

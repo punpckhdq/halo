@@ -109,7 +109,11 @@ struct sound_class_definition
 
 /* ---------- prototypes/SOUND_CLASSES.C */
 
+#ifdef DEBUG
 struct sound_class_definition *sound_class_get(short class_index);
+#else
+#define sound_class_get(class_index) (&sound_classes[class_index])
+#endif
 
 void sound_classes_initialize(void);
 void sound_classes_dispose(void);
@@ -120,9 +124,11 @@ void sound_classes_update(long ticks_elapsed);
 real sound_class_get_gain(short class_index);
 void sound_class_set_gain(char const *substring, real gain, short ticks);
 
+#ifdef DEBUG
 void debug_sound_classes_enable(char const *substring, boolean enabled);
 void debug_sound_classes_set_distances(char const *substring, real minimum_distance, real maximum_distance);
 void debug_sound_classes_set_wet(char const *substring, real wet);
+#endif
 
 /* ---------- globals */
 

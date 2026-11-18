@@ -56,13 +56,16 @@ static void render_window(short local_player_index, struct render_camera const *
 
 struct render_globals render;
 
+#ifdef DEBUG
 boolean render_contrails_enabled = TRUE;
 boolean render_particles_enabled = TRUE;
 boolean render_particle_systems_enabled = TRUE;
 boolean render_weather_particle_systems_enabled = TRUE;
+#endif
 
 /* ---------- public code */
 
+#ifdef DEBUG
 void render_effects(
 	boolean enable)
 {
@@ -73,6 +76,7 @@ void render_effects(
 
 	return;
 }
+#endif
 
 void render_initialize(
 	void)
@@ -223,7 +227,9 @@ static void render_nonplayer_frame(
 {
 	struct rasterizer_window_begin_parameters rasterizer_parameters;
 
+#ifdef DEBUG
 	profile_render_window_start(FALSE);
+#endif
 	memset(&rasterizer_parameters, 0, sizeof(rasterizer_parameters));
 	render.camera = window->render_camera;
 	render_camera_build_frustum(&render.camera, NULL, &render.frustum, TRUE);
@@ -249,7 +255,9 @@ static void render_nonplayer_frame(
 	}
 
 	rasterizer_window_end();
+#ifdef DEBUG
 	profile_render_window_end();
+#endif
 
 	return;
 }
@@ -318,7 +326,9 @@ static void render_window(
 {
 	struct rasterizer_window_begin_parameters parameters;
 
+#ifdef DEBUG
 	profile_render_window_start(TRUE);
+#endif
 	render.scene_index++;
 	memset(&parameters, 0, sizeof(parameters));
 	render.local_player_index = local_player_index;
@@ -422,11 +432,15 @@ static void render_window(
 
 	bink_playback_render();
 	render_camera_debug_frustum(&render.camera, &render.frustum);
+#ifdef DEBUG
 	render_debug();
+#endif
 	editor_render();
 	rasterizer_debug_draw();
 	rasterizer_window_end();
+#ifdef DEBUG
 	profile_render_window_end();
+#endif
 
 	return;
 }
@@ -441,7 +455,9 @@ void render_frame_pregame(
 	render.frame_index++;
 	rasterizer_frame_begin(&parameters);
 	rasterizer_windows_begin();
+#ifdef DEBUG
 	profile_render_window_start(FALSE);
+#endif
 	memset(&rasterizer_parameters, 0, sizeof(rasterizer_parameters));
 	render.camera = window->render_camera;
 	render_camera_build_frustum(&render.camera, NULL, &render.frustum, TRUE);
@@ -462,7 +478,9 @@ void render_frame_pregame(
 	}
 
 	rasterizer_window_end();
+#ifdef DEBUG
 	profile_render_window_end();
+#endif
 	rasterizer_windows_end();
 	rasterizer_frame_end();
 
@@ -478,6 +496,7 @@ void render_frame_present(
 	return;
 }
 
+#ifdef DEBUG
 boolean render_location_visible(
 	struct location *location)
 {
@@ -485,7 +504,9 @@ boolean render_location_visible(
 
 	return BIT_VECTOR_TEST_FLAG(render.visible_cluster_flags, location->cluster_index);
 }
+#endif
 
+#ifdef DEBUG
 struct rendered_cluster *rendered_cluster_get(
 	short rendered_cluster_index)
 {
@@ -493,5 +514,6 @@ struct rendered_cluster *rendered_cluster_get(
 
 	return &render.rendered_clusters[rendered_cluster_index];
 }
+#endif
 
 /* ---------- private code */

@@ -24,7 +24,11 @@ enum
 
 enum
 {
+#ifdef DEBUG
 	EVENT_TIMEOUT = 5000,
+#else
+	EVENT_TIMEOUT = 10000,
+#endif
 	BLOCKING_PROGRESS_CHECK_SLEEP_INTERVAL = 16,
 };
 
@@ -598,8 +602,10 @@ static void cache_copy_initialize_and_fill_with_garbage(
 		buffer += WRITE_FILE_BLOCK_SIZE;
 	}
 
+#ifdef DEBUG
 	XPhysicalProtect(self->allocated_buffer, TOTAL_BUFFER_SIZE, PAGE_READWRITE);
 	memset(self->allocated_buffer, GARBAGE_BUFFER_FILL, TOTAL_READ_WRITE_BUFFER_SIZE);
+#endif
 	XPhysicalProtect(self->allocated_buffer, TOTAL_READ_WRITE_BUFFER_SIZE, PAGE_READONLY);
 
 	self->zlib_buffer_size = MIN_ZLIB_BUFFER_SIZE;

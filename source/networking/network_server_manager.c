@@ -77,7 +77,9 @@ static boolean network_game_server_have_all_machines_have_precached(struct netwo
 static boolean network_game_server_idle_pregame_tasks(struct network_game_server *server);
 static boolean network_game_server_setup_game_from_playlist(struct network_game_server *server);
 static short network_game_server_number_of_machines_connected(struct network_game_server *server);
+#ifdef DEBUG
 static void dump_network_game_data(char *prefix, struct network_game_data *game);
+#endif
 static void network_game_server_dump(struct network_game_server *server);
 
 /* ---------- globals */
@@ -1089,7 +1091,7 @@ boolean network_game_server_add_player_to_game(
 	struct network_client_machine *machine,
 	struct network_player *player)
 {
-	boolean success;
+	boolean success = FALSE;
 	static long next_team_index = 0;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_manager.c", 1132, server);
@@ -1133,7 +1135,6 @@ boolean network_game_server_add_player_to_game(
 	else
 	{
 		network_event("client machine tried to add a player with a non-matching machine identifier");
-		success = FALSE;
 	}
 
 	return success;
@@ -1144,7 +1145,7 @@ boolean network_game_server_remove_player_from_game(
 	struct network_client_machine *machine,
 	struct network_player *player)
 {
-	boolean success;
+	boolean success = FALSE;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_manager.c", 1184, server);
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_manager.c", 1185, machine);
@@ -1169,7 +1170,6 @@ boolean network_game_server_remove_player_from_game(
 	else
 	{
 		network_event("client machine tried to remove a player with a non-matching machine identifier");
-		success = FALSE;
 	}
 
 	return success;
@@ -1720,6 +1720,36 @@ void network_game_generate_join_game_token(
 
 	memset(join_token, 0, sizeof(join_token));
 	memcpy(join_token, join_token_seed, MIN(NETWORK_JOIN_GAME_TOKEN_SIZE, sizeof(join_token_seed)));
+
+#ifndef DEBUG
+	{
+		char const *date_string = "Oct 12 2001" "16:11:19";
+		long date_string_length = strlen(date_string);
+		unsigned long checksum = tag_groups_checksum();
+		long token_index;
+		long checksum_index;
+		long date_string_index;
+
+		for (token_index = 0; token_index<sizeof(checksum); token_index++)
+		{
+			for (date_string_index = 0; date_string_index<date_string_length; date_string_index++)
+			{
+				join_token[token_index] ^= date_string[date_string_index];
+			}
+		}
+
+		checksum_index = 0;
+		token_index = 0;
+		do
+		{
+			join_token[token_index] ^= ((byte *)&checksum)[checksum_index];
+			if (++checksum_index==sizeof(checksum))
+			{
+				checksum_index = 0;
+			}
+		} while (++token_index<sizeof(checksum));
+	}
+#endif
 
 	return;
 }
@@ -2398,6 +2428,7 @@ static short network_game_server_number_of_machines_connected(
 	return client_machine_count;
 }
 
+#ifdef DEBUG
 static void dump_network_game_data(
 	char *prefix,
 	struct network_game_data *game)
@@ -2445,18 +2476,22 @@ static void dump_network_game_data(
 
 	return;
 }
+#endif
 
 static void network_game_server_dump(
 	struct network_game_server *server)
 {
+#ifdef DEBUG
 	long machine_index;
 
+#ifdef DEBUG
 	network_event("*************BEGIN*************");
 	network_event("\tconnection %x", server->connection);
 	network_event("\tstate %x", server->state);
 	network_event("\tflags %x", server->flags);
 	dump_network_game_data("\t", &server->game);
 	network_event("client_machines:");
+#endif
 
 	for (machine_index = 0; machine_index < MAXIMUM_NETWORK_MACHINE_COUNT; machine_index++)
 	{
@@ -2484,6 +2519,7 @@ static void network_game_server_dump(
 		"\ttime_of_first_client_loading_completion %d",
 		server->time_of_first_client_loading_completion);
 	network_event("*************END*************");
+#endif
 
 	return;
 }

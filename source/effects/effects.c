@@ -61,9 +61,9 @@ enum
 
 /* ---------- macros */
 
-#define effect_get(index) ((struct effect_datum *)datum_get(effect_data, (index)))
+#define effect_get(index) DATUM_GET(effect_data, index, struct effect_datum)
 #define effect_try_and_get(index) ((struct effect_datum *)datum_try_and_get(effect_data, (index)))
-#define effect_location_get(index) ((struct effect_location_datum *)datum_get(effect_location_data, (index)))
+#define effect_location_get(index) DATUM_GET(effect_location_data, index, struct effect_location_datum)
 
 /* ---------- structures */
 
@@ -293,6 +293,7 @@ long effect_new_from_object(
 			SET_FLAG(effect->flags, _effect_nonviolent_bit, TRUE);
 		}
 
+#ifdef DEBUG
 		if (debug_effects_nonviolent)
 		{
 			struct object_datum const *object = object_try_and_get(object_index);
@@ -304,6 +305,7 @@ long effect_new_from_object(
 				tag_name_strip_path(tag_get_name(definition_index)),
 				!object ? "<none>" : tag_name_strip_path(tag_get_name(object->definition_index)));
 		}
+#endif
 
 		memset(effect->location_datum_indices, NONE, sizeof(effect->location_datum_indices));
 		effect_build_locations(effect, object_get_marker_by_name);
@@ -361,6 +363,7 @@ long effect_new_attached_from_markers(
 			SET_FLAG(effect->flags, _effect_nonviolent_bit, TRUE);
 		}
 
+#ifdef DEBUG
 		if (debug_effects_nonviolent)
 		{
 			struct object_datum const *object = object_try_and_get(object_index);
@@ -372,6 +375,7 @@ long effect_new_attached_from_markers(
 				tag_name_strip_path(tag_get_name(definition_index)),
 				!object ? "<none>" : tag_name_strip_path(tag_get_name(object->definition_index)));
 		}
+#endif
 
 		marker_list.count = marker_count;
 		marker_list.names = marker_names;

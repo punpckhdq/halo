@@ -101,7 +101,31 @@ struct netgame_goal global_goal[MAXIMUM_NETGAME_GOALS] = {0};
 struct game_variant global_variant = {0};
 struct game_engine *game_engine = NULL;
 
+#ifdef DEBUG
 short debug_player_color = NONE;
+#endif
+
+#if CONFIG_VERSION < 2342
+static wchar_t *place_strings[MULTIPLAYER_MAXIMUM_PLAYERS] = /* fake name */
+{
+	L"1st",
+	L"2nd",
+	L"3rd",
+	L"4th",
+	L"5th",
+	L"6th",
+	L"7th",
+	L"8th",
+	L"9th",
+	L"10th",
+	L"11th",
+	L"12th",
+	L"13th",
+	L"14th",
+	L"15th",
+	L"16th"
+};
+#endif
 
 /* ---------- public code */
 
@@ -525,7 +549,7 @@ void game_engine_handle_server_message(
 	return;
 }
 
-int sort_statistic_buffer(
+int __cdecl sort_statistic_buffer(
 	struct statistic_buffer const *buffer_1,
 	struct statistic_buffer const *buffer_2)
 {
@@ -543,7 +567,7 @@ int sort_statistic_buffer(
 	return result;
 }
 
-int sort_statistic_buffer_ranking(
+int __cdecl sort_statistic_buffer_ranking(
 	struct statistic_buffer const *buffer_1,
 	struct statistic_buffer const *buffer_2)
 {
@@ -733,12 +757,16 @@ static long place_get_position(
 static wchar_t *get_place_string(
 	struct statistic_buffer *buffer)
 {
+#if CONFIG_VERSION >= 2342
 	wchar_t *result;
 	short place = PIN(buffer->place & MASK(7), 0, MULTIPLAYER_MAXIMUM_PLAYERS - 1);
 
 	multiplayer_game_text_get_string(result, place + _string_1st);
 
 	return result;
+#else
+	return place_strings[buffer->place & MASK(7)];
+#endif
 }
 
 static struct statistic_buffer game_engine_get_player_place(
@@ -768,6 +796,7 @@ static void game_engine_generate_title_string(
 	long player_index,
 	wchar_t *title_string)
 {
+#if CONFIG_VERSION >= 2342
 	wchar_t n_limited_lives_string[128];
 	struct player_datum *player = player_get(player_index);
 	wchar_t *lives_string = L"";
@@ -888,6 +917,114 @@ static void game_engine_generate_title_string(
 	}
 
 	title_string[MAXIMUM_TITLE_STRING_LENGTH - 1] = '\0';
+#else
+	wchar_t lives_string[40];
+	struct player_datum *player = player_get(player_index);
+
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(867, 878), title_string);
+
+	usprintf(lives_string, L"");
+
+	if (global_variant.universal_variant.lives > 0)
+	{
+		long lives_remaining = global_variant.universal_variant.lives - player_get(player_index)->statistics.deaths;
+
+		switch (lives_remaining)
+		{
+		case 0:
+			usprintf(lives_string, L"(no lives)");
+			break;
+		case 1:
+			usprintf(lives_string, L"(1 life)");
+			break;
+		default:
+			usprintf(lives_string, L"(%d lives)", lives_remaining);
+			break;
+		}
+	}
+
+	if (game_engine_globals.mode == game_engine_mode_postgame_delay)
+	{
+		long win = game_engine_did_player_win(player_index);
+		boolean teams = game_engine_has_teams();
+
+		switch (win)
+		{
+		case NONE:
+			if (teams)
+			{
+				usprintf(title_string, L"Game ends in a draw");
+			}
+			else
+			{
+				usprintf(title_string, L"Game ends in a draw");
+			}
+			break;
+		case FALSE:
+			if (teams)
+			{
+				usprintf(title_string, L"Your team lost");
+			}
+			else
+			{
+				usprintf(title_string, L"You lost");
+			}
+			break;
+		case TRUE:
+			if (teams)
+			{
+				usprintf(title_string, L"Your team won");
+			}
+			else
+			{
+				usprintf(title_string, L"You won");
+			}
+			break;
+		}
+	}
+	else if (game_engine_has_teams())
+	{
+		wchar_t team0_score_string[8];
+		wchar_t team1_score_string[8];
+		long team0_score;
+		long team1_score;
+
+		game_engine->get_team_score_string(0, team0_score_string);
+		game_engine->get_team_score_string(1, team1_score_string);
+		team0_score = game_engine_get_team_score(0);
+		team1_score = game_engine_get_team_score(1);
+
+		if (team0_score > team1_score)
+		{
+			usprintf(title_string, L"Red leads Blue %s to %s %s", team0_score_string, team1_score_string, lives_string);
+		}
+		else if (team0_score < team1_score)
+		{
+			usprintf(title_string, L"Blue leads Red %s to %s %s", team1_score_string, team0_score_string, lives_string);
+		}
+		else
+		{
+			usprintf(title_string, L"Teams tied at %s %s", team1_score_string, lives_string);
+		}
+	}
+	else
+	{
+		struct statistic_buffer place;
+		wchar_t personalScore[256];
+
+		place = game_engine_get_player_place(player_index);
+		game_engine->get_score_string(player_index, personalScore);
+
+		if (is_place_tied(&place))
+		{
+			usprintf(title_string, L"Tied for %s place with %s %s", get_place_string(&place), personalScore, lives_string);
+		}
+		else
+		{
+			usprintf(title_string, L"In %s place with %s %s", get_place_string(&place), personalScore, lives_string);
+		}
+	}
+#endif
 
 	return;
 }
@@ -1064,7 +1201,9 @@ void game_engine_post_rasterize_post_game(
 		real_argb_color normal_color;
 		real_argb_color hilite_color;
 		real_argb_color winner_color;
+#if CONFIG_VERSION >= 2342
 		wchar_t *fields[5];
+#endif
 		long player_count;
 		long index;
 		short tab_stops[6] = {50, 125, 250, 350, 410, 500};
@@ -1104,8 +1243,13 @@ void game_engine_post_rasterize_post_game(
 			long team_order[2] = {0, 1};
 			long team_won = game_engine_did_team_win(0);
 
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(team_string[0], _string_tab_red_team_tab_string);
 			multiplayer_game_text_get_string(team_string[1], _string_tab_blue_team_tab_string);
+#else
+			team_string[0] = L"\tRed Team\t%s";
+			team_string[1] = L"\tBlue Team\t%s";
+#endif
 
 			if (!team_won)
 			{
@@ -1120,12 +1264,17 @@ void game_engine_post_rasterize_post_game(
 				long team_index = team_order[index];
 
 				game_engine->get_team_score_string(team_index, custom_buffer);
+#if CONFIG_VERSION >= 2342
 				usnprintf(buffer, NUMBEROF(buffer), team_string[team_index], custom_buffer);
 				buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+				usprintf(buffer, team_string[team_index], custom_buffer);
+#endif
 				drawline(buffer, index + 4, 0);
 			}
 		}
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(fields[0], _string_place);
 		multiplayer_game_text_get_string(fields[1], _string_name);
 		multiplayer_game_text_get_string(fields[2], _string_kills);
@@ -1143,6 +1292,18 @@ void game_engine_post_rasterize_post_game(
 			fields[3],
 			fields[4]);
 		buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+		game_engine->get_score_header_string(custom_buffer);
+		usprintf(
+			buffer,
+			L"\t%s\t%s\t%s\t%s\t%s\t%s",
+			L"Place",
+			L"Name",
+			custom_buffer,
+			L"Kills",
+			L"Assists",
+			L"Deaths");
+#endif
 		draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
 		drawline(buffer, 7, 0);
 		player_count = select_players_to_display(NONE, statistic_buffer, _postgame_statistic_ranking, 12);
@@ -1163,8 +1324,12 @@ void game_engine_post_rasterize_post_game(
 			}
 
 			draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t%s", get_place_string(&statistic_buffer[index]));
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t%s", get_place_string(&statistic_buffer[index]));
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1183,8 +1348,12 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&team_colors[PIN(player->team_index, 0, 1)]);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t%s", player->name);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t%s", player->name);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1194,8 +1363,12 @@ void game_engine_post_rasterize_post_game(
 			}
 
 			game_engine->get_score_string(player_index, custom_buffer);
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t%s", custom_buffer);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t%s", custom_buffer);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1204,8 +1377,12 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&winner_color);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t \t%d", player->statistics.kills[0]);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t \t%d", player->statistics.kills[0]);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1214,8 +1391,12 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&winner_color);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t \t \t%d", player->statistics.assists[0]);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t \t \t%d", player->statistics.assists[0]);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1224,14 +1405,20 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&winner_color);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t \t \t \t%d", player->statistics.deaths);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t \t \t \t%d", player->statistics.deaths);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
 		}
 
 		{
+#if CONFIG_VERSION >= 2342
 			wchar_t *string;
+#endif
 			rectangle2d bounds = render.camera.window_bounds;
 			real_argb_color options_color = normal_color;
 
@@ -1245,14 +1432,22 @@ void game_engine_post_rasterize_post_game(
 			if (global_network_game_server_get())
 			{
 				bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - 260;
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_server_post_game_stats_footer);
 				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, string, FALSE);
+#else
+				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, L"\t%b-button =quit    %a-button =pick game", FALSE);
+#endif
 			}
 			else
 			{
 				bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - 120;
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_client_post_game_stats_footer);
 				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, string, FALSE);
+#else
+				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, L"\t%b-button =quit", FALSE);
+#endif
 			}
 		}
 	}
@@ -1404,7 +1599,9 @@ static boolean internal_rasterize_score(
 	wchar_t *buffer,
 	long buffer_size)
 {
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
+#endif
 	boolean result = TRUE;
 	struct player_datum *player = player_get(player_index);
 	long team_score = 0;
@@ -1442,146 +1639,258 @@ static boolean internal_rasterize_score(
 	switch (message)
 	{
 	case game_engine_message_welcome:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_welcome_player_name);
 		usnprintf(buffer, buffer_size, string, player->name);
+#else
+		usnprintf(buffer, buffer_size, L"Welcome %s", player->name);
+#endif
 		break;
 	case game_engine_message_killed_by_unknown:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_player_name_died);
 		usnprintf(buffer, buffer_size, string, player->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s died", player->name);
+#endif
 		break;
 	case game_engine_message_killed_by_biped:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_player_name_was_killed_by_the_guardians);
 		usnprintf(buffer, buffer_size, string, player->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s was killed by the guardians", player->name);
+#endif
 		break;
 	case game_engine_message_killed_by_vehicle:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_player_name_was_killed_by_a_vehicle);
 		usnprintf(buffer, buffer_size, string, player->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s was killed by a vehicle", player->name);
+#endif
 		break;
 	case game_engine_message_killed_by_player:
 	{
 		struct player_datum *killer = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_player_name_was_killed_by_player_name);
 		usnprintf(buffer, buffer_size, string, player->name, killer->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s was killed by %s", player->name, killer->name);
+#endif
 		break;
 	}
 	case game_engine_message_killed_by_friendly_fire:
 	{
 		struct player_datum *killer = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_player_name_was_betrayed_by_player_name);
 		usnprintf(buffer, buffer_size, string, player->name, killer->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s was betrayed by %s", player->name, killer->name);
+#endif
 		break;
 	}
 	case game_engine_message_quit:
 	{
 		struct player_datum *quitter = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_player_name_quit);
 		usnprintf(buffer, buffer_size, string, quitter->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s quit", quitter->name);
+#endif
 		break;
 	}
 	case game_engine_message_killed_by_self:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_player_name_committed_suicide);
 		usnprintf(buffer, buffer_size, string, player->name);
+#else
+	{
+		struct player_datum *killer = player_get(message_data);
+
+		usnprintf(buffer, buffer_size, L"%s committed suicide", player->name);
+	}
+#endif
 		break;
 	case game_engine_message_killed_friendly:
 	{
 		struct player_datum *victim = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_betrayed_player_name);
 		usnprintf(buffer, buffer_size, string, victim->name);
+#else
+		usnprintf(buffer, buffer_size, L"You betrayed %s", victim->name);
+#endif
 		break;
 	}
 	case game_engine_message_multi_kill:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_killtacular);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"Killtacular!");
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_killtacular_kill);
 		break;
 	case game_engine_message_triple_kill:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_triple_kill);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"Triple Kill!");
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_triple_kill);
 		break;
 	case game_engine_message_double_kill:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_double_kill);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"Double Kill!");
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_double_kill);
 		break;
 	case game_engine_message_ten_kills_in_a_row:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_running_riot);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"Running Riot!");
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_running_riot);
 		break;
 	case game_engine_message_five_kills_in_row:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_are_on_a_killing_spree);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"You are on a killing spree!");
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_killing_spree);
 		break;
 	case game_engine_message_killed_enemy:
 	{
 		struct player_datum *victim = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_killed_player_name);
 		usnprintf(buffer, buffer_size, string, victim->name);
+#else
+		usnprintf(buffer, buffer_size, L"You killed %s", victim->name);
+#endif
 		break;
 	}
 	case game_engine_message_multi_kill_with_score:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_killtacular_score);
 		usnprintf(buffer, buffer_size, string, team_score);
+#else
+		usnprintf(buffer, buffer_size, L"Killtacular! (%d)", team_score);
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_killtacular_kill);
 		break;
 	case game_engine_message_triple_kill_with_score:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_triple_kill_score);
 		usnprintf(buffer, buffer_size, string, team_score);
+#else
+		usnprintf(buffer, buffer_size, L"Triple Kill! (%d)", team_score);
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_triple_kill);
 		break;
 	case game_engine_message_double_kill_with_score:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_double_kill_score);
 		usnprintf(buffer, buffer_size, string, team_score);
+#else
+		usnprintf(buffer, buffer_size, L"Double Kill! (%d)", team_score);
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_double_kill);
 		break;
 	case game_engine_message_ten_kills_in_a_row_with_score:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_running_riot_score);
 		usnprintf(buffer, buffer_size, string, team_score);
+#else
+		usnprintf(buffer, buffer_size, L"Running Riot! (%d)", team_score);
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_running_riot);
 		break;
 	case game_engine_message_five_kills_in_row_with_score:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_are_on_a_killing_spree_score);
 		usnprintf(buffer, buffer_size, string, team_score);
+#else
+		usnprintf(buffer, buffer_size, L"You are on a killing spree! (%d)", team_score);
+#endif
 		game_engine_play_multiplayer_sound(_multiplayer_sound_killing_spree);
 		break;
 	case game_engine_message_killed_enemy_with_score:
 	{
 		struct player_datum *victim = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_killed_player_name_score);
 		usnprintf(buffer, buffer_size, string, victim->name, team_score);
+#else
+		usnprintf(buffer, buffer_size, L"You killed %s (%d)", victim->name, team_score);
+#endif
 		break;
 	}
 	case game_engine_message_odd_man_out:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_are_the_odd_man_out);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"You are the odd man out");
+#endif
 		break;
 	case game_engine_message_out_of_lives:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_are_out_of_lives);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"You are out of lives");
+#endif
 		break;
 	case game_engine_message_respawn_timer:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_rejoin_in_seconds);
 		usnprintf(buffer, buffer_size, string, message_data);
+#else
+		usnprintf(buffer, buffer_size, L"Rejoin in %d", message_data);
+#endif
 		break;
 	case game_engine_message_waiting_for_space_to_clear:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_waiting_for_space_to_clear);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"Waiting for space to clear");
+#endif
 		break;
 	case game_engine_message_player_quit_self:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_quit_out_of_game);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"You quit out of the game");
+#endif
 		break;
 	case game_engine_message_press_back_for_score:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_hold_back_for_score);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"Hold BACK for score");
+#endif
 		break;
 	default:
 		result = FALSE;
@@ -1958,7 +2267,8 @@ static void game_engine_update_item_spawn(
 }
 
 void game_engine_load_stage(
-	char const *map_name)
+	char const *map_name,
+	void *unused) /* fake name */
 {
 	if (!map_name || strcmp(global_stage.map_name, map_name))
 	{
@@ -3031,11 +3341,16 @@ static void game_engine_update_teleporter(
 							}
 							else
 							{
+#if CONFIG_VERSION >= 2342
 								wchar_t *string;
 
 								blocked_message_delay = 120;
 								multiplayer_game_text_get_string(string, _string_teleporter_is_blocked);
 								hud_print_message(unit_get_local_player_index(teleported_player->unit_index), string);
+#else
+								blocked_message_delay = 120;
+								hud_print_message(unit_get_local_player_index(teleported_player->unit_index), L"Teleporter is blocked");
+#endif
 							}
 
 							goto exit;
@@ -3562,59 +3877,59 @@ struct game_variant game_engine_get_variant_by_name(
 
 	memset(&result, 0, sizeof(result));
 
-	if (!strcmp(name, "race"))
+	if (0 == strcmp(name, "race"))
 	{
 		result = build_game_variant_race();
 	}
-	else if (!strcmp(name, "team_race"))
+	else if (0 == strcmp(name, "team_race"))
 	{
 		result = build_game_variant_team_race();
 	}
-	else if (!strcmp(name, "rally"))
+	else if (0 == strcmp(name, "rally"))
 	{
 		result = build_game_variant_rally();
 	}
-	else if (!strcmp(name, "slayer"))
+	else if (0 == strcmp(name, "slayer"))
 	{
 		result = build_game_variant_slayer();
 	}
-	else if (!strcmp(name, "team_slayer"))
+	else if (0 == strcmp(name, "team_slayer"))
 	{
 		result = build_game_variant_team_slayer();
 	}
-	else if (!strcmp(name, "elimination"))
+	else if (0 == strcmp(name, "elimination"))
 	{
 		result = build_game_variant_elimination();
 	}
-	else if (!strcmp(name, "stalker"))
+	else if (0 == strcmp(name, "stalker"))
 	{
 		result = build_game_variant_stalker();
 	}
-	else if (!strcmp(name, "team_oddball"))
+	else if (0 == strcmp(name, "team_oddball"))
 	{
 		result = build_game_variant_team_oddball();
 	}
-	else if (!strcmp(name, "accumulation"))
+	else if (0 == strcmp(name, "accumulation"))
 	{
 		result = build_game_variant_accumulation();
 	}
-	else if (!strcmp(name, "oddball"))
+	else if (0 == strcmp(name, "oddball"))
 	{
 		result = build_game_variant_oddball();
 	}
-	else if (!strcmp(name, "ctf"))
+	else if (0 == strcmp(name, "ctf"))
 	{
 		result = build_game_variant_ctf();
 	}
-	else if (!strcmp(name, "ironctf"))
+	else if (0 == strcmp(name, "ironctf"))
 	{
 		result = build_game_variant_iron_ctf();
 	}
-	else if (!strcmp(name, "king"))
+	else if (0 == strcmp(name, "king"))
 	{
 		result = build_game_variant_king();
 	}
-	else if (!strcmp(name, "team_king"))
+	else if (0 == strcmp(name, "team_king"))
 	{
 		result = build_game_variant_team_king();
 	}
@@ -4132,10 +4447,12 @@ real_rgb_color game_engine_player_get_change_color(
 	{
 		long color_index = player->network_player_data.primary_color_index;
 
+#ifdef DEBUG
 		if (debug_player_color != NONE)
 		{
 			color_index = debug_player_color;
 		}
+#endif
 
 		color = player_profile_get_rgb_color(color_index);
 	}
@@ -4200,14 +4517,92 @@ wchar_t *get_place_name(
 {
 	enum
 	{
+#if CONFIG_VERSION >= 2342
 		maximum_places = 16,
+#else
+		maximum_places = 32,
+#endif
 		_place_name_even = 2 * maximum_places,
 		_place_name_winning,
 		_place_name_losing,
 		_place_name_tied
 	};
 
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
+#else
+	wchar_t *place_names[] = /* fake name */
+	{
+		L"first place",
+		L"second place",
+		L"third place",
+		L"fourth place",
+		L"fifth place",
+		L"sixth place",
+		L"seventh place",
+		L"eighth place",
+		L"9th place",
+		L"10th place",
+		L"11th place",
+		L"12th place",
+		L"13th place",
+		L"14th place",
+		L"15th place",
+		L"16th place",
+		L"17th place",
+		L"18th place",
+		L"19th place",
+		L"20th place",
+		L"21st place",
+		L"22nd place",
+		L"23rd place",
+		L"24th place",
+		L"25th place",
+		L"26th place",
+		L"27th place",
+		L"28th place",
+		L"29th place",
+		L"30th place",
+		L"31st place",
+		L"32st place",
+		L"tied for first place",
+		L"tied for second place",
+		L"tied for third place",
+		L"tied for fourth place",
+		L"tied for fifth place",
+		L"tied for sixth place",
+		L"tied for seventh place",
+		L"tied for eighth place",
+		L"tied for 9th place",
+		L"tied for 10th place",
+		L"tied for 11th place",
+		L"tied for 12th place",
+		L"tied for 13th place",
+		L"tied for 14th place",
+		L"tied for 15th place",
+		L"tied for 16th place",
+		L"tied for 17th place",
+		L"tied for 18th place",
+		L"tied for 19th place",
+		L"tied for 20th place",
+		L"tied for 21st place",
+		L"tied for 22nd place",
+		L"tied for 23rd place",
+		L"tied for 24th place",
+		L"tied for 25th place",
+		L"tied for 26th place",
+		L"tied for 27th place",
+		L"tied for 28th place",
+		L"tied for 29th place",
+		L"tied for 30th place",
+		L"tied for 31st place",
+		L"tied for 32st place",
+		L"even",
+		L"winning",
+		L"losing",
+		L"tied"
+	};
+#endif
 	long lookup_index;
 
 	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(4751, 4886), place.place < maximum_places);
@@ -4240,9 +4635,13 @@ wchar_t *get_place_name(
 
 	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(4778, 4913), NONE != lookup_index);
 
+#if CONFIG_VERSION >= 2342
 	multiplayer_game_text_get_string(string, lookup_index + _string_first_place);
 
 	return string;
+#else
+	return place_names[lookup_index];
+#endif
 }
 
 struct game_engine_place game_engine_get_place(
@@ -5599,8 +5998,10 @@ static void game_engine_rasterize_in_game_score(
 	wchar_t custom_buffer[256];
 	real_argb_color team_colors[2];
 	real_argb_color normal_color;
+#if CONFIG_VERSION >= 2342
 	wchar_t *place_string;
 	wchar_t *name_string;
+#endif
 	long statistic_index;
 	boolean teams = game_engine_has_teams();
 
@@ -5615,6 +6016,7 @@ static void game_engine_rasterize_in_game_score(
 	color.green = 0.5f;
 	color.blue = 0.5f;
 	color.alpha = alpha;
+#if CONFIG_VERSION >= 2342
 	multiplayer_game_text_get_string(place_string, _string_place);
 	multiplayer_game_text_get_string(name_string, _string_name);
 
@@ -5625,6 +6027,15 @@ static void game_engine_rasterize_in_game_score(
 		place_string,
 		name_string,
 		custom_buffer);
+#else
+	game_engine->get_score_header_string(custom_buffer);
+	usprintf(
+		buffer,
+		L"\t%s\t%s\t%s",
+		L"Place",
+		L"Name",
+		custom_buffer);
+#endif
 	rasterize_in_game_score_draw_line(buffer, FALSE, &color, 1);
 
 	for (statistic_index = 0; statistic_index < count; statistic_index++)
@@ -5638,7 +6049,8 @@ static void game_engine_rasterize_in_game_score(
 			wchar_t *status_string;
 			real_argb_color *line_color;
 
-			color = *hud_get_text_color(&normal_color);
+			normal_color = hud_get_text_color();
+			color = normal_color;
 			player = player_get(statistic_player_index);
 			team_colors[0].alpha = alpha;
 			team_colors[0].red = 0.6f;
@@ -5653,11 +6065,19 @@ static void game_engine_rasterize_in_game_score(
 
 			if (game_engine_player_is_out_of_lives(statistic_player_index))
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(status_string, _string_dead);
+#else
+				status_string = L"Dead";
+#endif
 			}
 			else if (player->quit_out_of_game)
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(status_string, _string_quit);
+#else
+				status_string = L"Quit";
+#endif
 			}
 			else
 			{
@@ -5895,7 +6315,7 @@ void game_engine_variant_cleanup(
 		break;
 	}
 
-	if (memcmp(&old_variant, variant, sizeof(*variant)))
+	if (0 != memcmp(&old_variant, variant, sizeof(*variant)))
 	{
 		struct game_variant test;
 

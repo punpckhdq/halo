@@ -393,19 +393,23 @@ static boolean slayer_engine_display_score(
 	wchar_t *buffer,
 	long buffer_size)
 {
+	boolean result = TRUE;
 	struct player_datum *player = player_get(player_index);
 	struct player_datum *target = NULL;
 	wchar_t score_string[128];
-	boolean result = TRUE;
 
 	if (message == slayer_message_new_target)
 	{
 		if (game_engine_get_variant()->universal_variant.teams)
 		{
+#if CONFIG_VERSION >= 2342
 			wchar_t *format;
 
 			multiplayer_game_text_get_string(format, _string_n_team_n);
 			usnprintf(score_string, NUMBEROF(score_string), format, slayer_get_score(player_index, _get_score_individual), slayer_get_score(player_index, _get_score_team));
+#else
+			usnprintf(score_string, NUMBEROF(score_string), L"%d team %d", slayer_get_score(player_index, _get_score_individual), slayer_get_score(player_index, _get_score_team));
+#endif
 		}
 		else
 		{
@@ -419,28 +423,42 @@ static boolean slayer_engine_display_score(
 	{
 	case slayer_message_new_target:
 	{
+#if CONFIG_VERSION >= 2342
 		wchar_t *format;
 
 		multiplayer_game_text_get_string(format, _string_new_target_name);
 		usnprintf(buffer, buffer_size, format, target->name);
+#else
+		usnprintf(buffer, buffer_size, L"New Target %s", target->name);
+#endif
 		break;
 	}
 	case game_engine_message_show_score:
 	{
 		wchar_t *place_name;
+#if CONFIG_VERSION >= 2342
 		wchar_t *format;
+#endif
 
 		if (game_engine_get_variant()->universal_variant.teams)
 		{
 			place_name = get_place_name(game_engine_get_place(player_index, _get_score_team));
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(format, _string_name_kills_score_n_team_score_of_max);
 			usnprintf(buffer, buffer_size, format, place_name, slayer_get_score(player_index, _get_score_individual), slayer_get_score(player_index, _get_score_team), game_engine_get_variant()->universal_variant.score_to_win);
+#else
+			usnprintf(buffer, buffer_size, L"%s kills %d team %d of %d", place_name, slayer_get_score(player_index, _get_score_individual), slayer_get_score(player_index, _get_score_team), game_engine_get_variant()->universal_variant.score_to_win);
+#endif
 		}
 		else
 		{
 			place_name = get_place_name(game_engine_get_place(player_index, _get_score_team));
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(format, _string_name_kills_score_of_max);
 			usnprintf(buffer, buffer_size, format, place_name, slayer_get_score(player_index, _get_score_team), game_engine_get_variant()->universal_variant.score_to_win);
+#else
+			usnprintf(buffer, buffer_size, L"%s kills %d of %d", place_name, slayer_get_score(player_index, _get_score_team), game_engine_get_variant()->universal_variant.score_to_win);
+#endif
 		}
 		break;
 	}
@@ -561,10 +579,14 @@ static wchar_t *slayer_get_score_string(
 static wchar_t *slayer_get_score_header_string(
 	wchar_t *buffer)
 {
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
 
 	multiplayer_game_text_get_string(string, _string_score);
 	ustrcpy(buffer, string);
+#else
+	usprintf(buffer, L"Score");
+#endif
 
 	return buffer;
 }

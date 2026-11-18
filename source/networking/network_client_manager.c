@@ -957,6 +957,7 @@ boolean network_game_client_handle_game_update(
 	}
 	else if (!global_network_game_server_get())
 	{
+#ifdef DEBUG
 		if (game_time_get() == message_packet->update_number && message_packet->debug_game_time != game_time_get())
 		{
 			network_event(
@@ -965,12 +966,11 @@ boolean network_game_client_handle_game_update(
 				message_packet->debug_game_time,
 				game_time_get());
 		}
+#endif
 
 		if (game_time_get() == message_packet->debug_game_time)
 		{
-			unsigned long server_random_seed = message_packet->debug_random_seed;
-
-			if (server_random_seed != get_random_seed())
+			if (message_packet->debug_random_seed != get_random_seed())
 			{
 				network_event(
 					"out of sync: client/server random seed mismatch, update= #%ld, game time= #%ld (%ld) (#%lx/#%lx)",
@@ -978,17 +978,19 @@ boolean network_game_client_handle_game_update(
 					game_time_get(),
 					message_packet->debug_game_time,
 					get_random_seed(),
-					server_random_seed);
+					message_packet->debug_random_seed);
 				network_game_client_game_out_of_sync(client);
 			}
 		}
 
+#ifdef DEBUG
 		if (!(message_packet->update_number % TICKS_PER_SECOND))
 		{
 			network_event(
 				"client is lagging behind the server by #%d game ticks",
 				message_packet->update_number - game_time_get());
 		}
+#endif
 	}
 
 	update.number_of_actions = message_packet->player_count;

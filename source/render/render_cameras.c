@@ -45,7 +45,9 @@ enum
 
 /* ---------- prototypes */
 
+#ifdef DEBUG
 static void render_camera_warn_once(short id, real value);
+#endif
 
 /* ---------- globals */
 
@@ -57,6 +59,7 @@ boolean render_camera_debug_this_fucking_frustum = FALSE;
 
 /* ---------- public code */
 
+#ifdef DEBUG
 static void render_camera_warn_once(
 	short id,
 	real value)
@@ -77,6 +80,7 @@ static void render_camera_warn_once(
 
 	return;
 }
+#endif
 
 void render_camera_new(
 	struct render_camera *camera)
@@ -452,6 +456,7 @@ void render_camera_build_frustum(
 	{
 		short condition_index = 0;
 
+#ifdef DEBUG
 		render_camera_warn_once(
 			condition_index++,
 			(real)fabs(plane3d_distance_to_point(&frustum->world_planes[0], &frustum->world_vertices[0])));
@@ -518,6 +523,7 @@ void render_camera_build_frustum(
 		render_camera_warn_once(
 			condition_index++,
 			plane3d_distance_to_point(&frustum->world_planes[5], &frustum->world_midpoint));
+#endif
 	}
 
 	return;
@@ -1013,6 +1019,7 @@ void render_camera_debug_frustum(
 	struct render_camera const *camera,
 	struct render_frustum const *frustum)
 {
+#ifdef DEBUG
 	if (render_camera_debug_this_fucking_frustum)
 	{
 		real_point3d frustum_grid[3][3];
@@ -1039,11 +1046,14 @@ void render_camera_debug_frustum(
 		{
 			for (j = 0; j < 3; j++)
 			{
+#ifdef DEBUG
 				render_debug_line(TRUE, &frustum_grid[j][0], &frustum_grid[i][2], global_real_argb_red);
 				render_debug_line(TRUE, &frustum_grid[0][j], &frustum_grid[2][i], global_real_argb_red);
+#endif
 			}
 		}
 	}
+#endif
 
 	return;
 }

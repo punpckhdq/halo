@@ -43,7 +43,7 @@ enum
 
 /* ---------- macros */
 
-#define texture_get(index) ((struct texture_datum *)datum_get(xbox_texture_cache_globals.textures, (index))) /* fake name */
+#define texture_get(index) DATUM_GET(xbox_texture_cache_globals.textures, index, struct texture_datum) /* fake name */
 
 /* ---------- structures */
 
@@ -508,6 +508,7 @@ static void texture_cache_initialize_hardware_format(
 	return;
 }
 
+#ifdef DEBUG
 void texture_cache_debug_render(
 	void)
 {
@@ -616,6 +617,7 @@ void texture_cache_debug_render(
 
 	return;
 }
+#endif
 
 /* ---------- private code */
 

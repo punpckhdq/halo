@@ -47,7 +47,7 @@ enum
 
 /* ---------- macros */
 
-#define flag_get(index) ((struct flag_datum *)datum_get(flag_data, (index))) /* fake name */
+#define flag_get(index) DATUM_GET(flag_data, index, struct flag_datum) /* fake name */
 #define flag_try_and_get(index) ((struct flag_datum *)datum_try_and_get(flag_data, (index))) /* fake name */
 
 /* ---------- structures */

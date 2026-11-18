@@ -89,7 +89,7 @@ void breakable_surfaces_initialize_for_new_map(
 	{
 		short surface_index;
 
-		csmemset(globals->breakable_surface_flags[bsp_index], NONE, sizeof(globals->breakable_surface_flags[bsp_index]));
+		memset(globals->breakable_surface_flags[bsp_index], NONE, sizeof(globals->breakable_surface_flags[bsp_index]));
 
 		for (surface_index = 0; surface_index < MAXIMUM_BREAKABLE_SURFACES_PER_MAP; ++surface_index)
 		{

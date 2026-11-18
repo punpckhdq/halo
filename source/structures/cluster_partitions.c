@@ -167,7 +167,7 @@ void cluster_partition_disconnect(
 	reference_index = *first_cluster_reference;
 	while (reference_index != NONE)
 	{
-		reference = (struct data_reference *)datum_get(partition->cluster_reference_data, reference_index);
+		reference = DATUM_GET(partition->cluster_reference_data, reference_index, struct data_reference);
 		cluster_index = (short)reference->datum_index;
 		datum_delete(partition->cluster_reference_data, reference_index);
 		reference_list_remove(

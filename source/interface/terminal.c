@@ -32,7 +32,7 @@ enum
 
 /* ---------- macros */
 
-#define output_line_get(index) ((struct output_line_datum *)datum_get(terminal_globals.output_lines, (index)))
+#define output_line_get(index) DATUM_GET(terminal_globals.output_lines, index, struct output_line_datum)
 
 /* ---------- structures */
 
@@ -177,7 +177,7 @@ void terminal_draw(
 			terminal_globals.input_state->prompt[TERMINAL_GETS_MAXIMUM_PROMPT_LENGTH] = '\0';
 			strcat(buffer, terminal_globals.input_state->prompt);
 			terminal_globals.input_state->result[TERMINAL_PRINTF_MAXIMUM_LINE_LENGTH] = '\0';
-			buff_len = csstrlen(buffer);
+			buff_len = strlen(buffer);
 
 			strcpy(&buffer[buff_len], terminal_globals.input_state->result);
 
@@ -304,7 +304,9 @@ void terminal_printf(
 				)
 			);
 			line->tabstop = strstr(line->buffer, "|t") != 0;
+#ifdef DEBUG
 			telnet_console_print(line->buffer);
+#endif
 		}
 	}
 

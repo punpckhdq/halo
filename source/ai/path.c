@@ -369,10 +369,12 @@ boolean path_state_build_path(
 	struct path_state *state,
 	struct path_result *path)
 {
+#ifdef DEBUG
 	if (state->debug)
 	{
 		state->debug->path_build_result = _path_build_result_none;
 	}
+#endif
 
 	path->valid = FALSE;
 
@@ -443,7 +445,7 @@ boolean path_state_build_path(
 			match_assert("c:\\halo\\SOURCE\\ai\\path.c", 507, child_node_index != NONE);
 			match_assert("c:\\halo\\SOURCE\\ai\\path.c", 508, child_node->depth == 0);
 
-			if (game_connection() == _game_connection_local && ai_debug.path_disable_smoothing)
+			if (AI_BEHAVIOR(path_disable_smoothing))
 			{
 				smoothed_step_count = MIN(raw_step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
 				memcpy(smoothed_steps, raw_steps, sizeof(*smoothed_steps) * smoothed_step_count);
@@ -453,7 +455,7 @@ boolean path_state_build_path(
 				path_smooth(state, raw_step_count, raw_steps, &smoothed_step_count, smoothed_steps, &steps_finish_path);
 			}
 
-			if (game_connection() == _game_connection_local && ai_debug.path_disable_obstacle_avoidance)
+			if (AI_BEHAVIOR(path_disable_obstacle_avoidance))
 			{
 				avoided_step_count = MIN(smoothed_step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
 				memcpy(avoided_steps, smoothed_steps, sizeof(*avoided_steps) * avoided_step_count);
@@ -462,10 +464,12 @@ boolean path_state_build_path(
 			{
 				success = path_avoid_obstacles(state, smoothed_step_count, smoothed_steps, &avoided_step_count, avoided_steps, &steps_finish_path);
 
+#ifdef DEBUG
 				if (state->debug && !success)
 				{
 					state->debug->path_build_result = _path_build_result_obstacle_avoidance_failed;
 				}
+#endif
 			}
 
 			if (success)
@@ -483,12 +487,15 @@ boolean path_state_build_path(
 					path->endpoint.target_radius = distance3d(&path->endpoint.point, &state->destination.point);
 				}
 
+#ifdef DEBUG
 				if (state->debug)
 				{
 					state->debug->path_build_result = _path_build_result_success;
 				}
+#endif
 			}
 
+#ifdef DEBUG
 			if (state->debug)
 			{
 				state->debug->raw_step_count = raw_step_count;
@@ -498,17 +505,23 @@ boolean path_state_build_path(
 				state->debug->avoided_step_count = avoided_step_count;
 				memcpy(state->debug->avoided_steps, avoided_steps, sizeof(*avoided_steps) * avoided_step_count);
 			}
+#endif
 		}
+#ifdef DEBUG
 		else if (state->debug)
 		{
 			state->debug->path_build_result = state->closest_node_index == NONE ? _path_build_result_cached_node_missing : _path_build_result_not_close_enough_to_destination;
 		}
+#endif
 	}
+#ifdef DEBUG
 	else if (state->debug)
 	{
 		state->debug->path_build_result = _path_build_result_no_destination;
 	}
+#endif
 
+#ifdef DEBUG
 	if (state->debug)
 	{
 		state->debug->result = *path;
@@ -520,6 +533,7 @@ boolean path_state_build_path(
 
 		match_assert("c:\\halo\\SOURCE\\ai\\path.c", 613, state->debug->path_build_result != _path_build_result_none);
 	}
+#endif
 
 	return path->valid;
 }
@@ -582,6 +596,7 @@ static boolean path_state_begin(
 			distance = distance3d(&state->input.start_point, &state->destination.point);
 			quantized_cost_estimate = (long)(distance / PATH_COST_ESTIMATE_GRANULARITY);
 
+#ifdef DEBUG
 			if (quantized_cost_estimate >= SHORT_MAX)
 			{
 				error(
@@ -596,6 +611,7 @@ static boolean path_state_begin(
 					distance,
 					SHORT_MAX * PATH_COST_ESTIMATE_GRANULARITY);
 			}
+#endif
 		}
 		else
 		{
@@ -623,7 +639,9 @@ static boolean path_state_begin(
 			initial_node->total_cost_estimate = distance;
 			initial_node->quantized_cost_estimate = (short)quantized_cost_estimate;
 			initial_node->depth = 0;
+#ifdef DEBUG
 			initial_node->debug_render_traverse_index = NONE;
+#endif
 
 			bsp = TAG_BLOCK_GET_ELEMENT(&state->structure->collision_bsp, 0, struct collision_bsp);
 			match_assert("c:\\halo\\SOURCE\\ai\\path.c", 739, (initial_node->surface_index >= 0) && (initial_node->surface_index < bsp->surfaces.count));
@@ -652,29 +670,38 @@ boolean path_state_find(
 
 	if (state->destination_valid)
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_path_find].current_count++;
+#endif
 	}
 	else
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_path_flood].current_count++;
+#endif
 	}
 
 	path_state_reset(state);
 
+#ifdef DEBUG
 	if (state->debug)
 	{
 		state->debug->path_traverse_result = _path_traverse_result_none;
 	}
+#endif
 
 	if (path_state_begin(state))
 	{
 		success = path_state_traverse(state);
 	}
+#ifdef DEBUG
 	else if (state->debug)
 	{
 		state->debug->path_traverse_result = _path_traverse_result_initial_not_pathfindable;
 	}
+#endif
 
+#ifdef DEBUG
 	if (state->debug)
 	{
 		state->debug->path_state = *state;
@@ -687,6 +714,7 @@ boolean path_state_find(
 			state->debug->failure = TRUE;
 		}
 	}
+#endif
 
 	return success;
 }
@@ -709,10 +737,12 @@ static boolean path_state_traverse(
 
 		if (cheapest_node_index == NONE)
 		{
+#ifdef DEBUG
 			if (state->debug && state->debug->path_traverse_result == _path_traverse_result_none)
 			{
 				state->debug->path_traverse_result = _path_traverse_result_exhausted_search;
 			}
+#endif
 
 			break;
 		}
@@ -735,10 +765,12 @@ static boolean path_state_traverse(
 
 			if (cheapest_node->total_cost_estimate > 10.f * MAX(5.f, state->closest_distance) + state->closest_cost_estimate)
 			{
+#ifdef DEBUG
 				if (state->debug && state->debug->path_traverse_result == _path_traverse_result_none)
 				{
 					state->debug->path_traverse_result = _path_traverse_result_never_close_enough;
 				}
+#endif
 
 				break;
 			}
@@ -829,6 +861,7 @@ static boolean path_state_traverse(
 
 				if (quantized_cost_estimate >= SHORT_MAX)
 				{
+#ifdef DEBUG
 					if (!warned)
 					{
 						error(
@@ -838,6 +871,7 @@ static boolean path_state_traverse(
 							SHORT_MAX * PATH_COST_ESTIMATE_GRANULARITY);
 						warned = TRUE;
 					}
+#endif
 				}
 				else
 				{
@@ -885,10 +919,12 @@ static boolean path_state_traverse(
 									state->hash_table[hash_index] = new_node_index;
 									state->node_list[new_node_index].heap_location = NONE;
 								}
+#ifdef DEBUG
 								else if (state->debug && state->debug->path_traverse_result == _path_traverse_result_none)
 								{
 									state->debug->path_traverse_result = _path_traverse_result_overflowed_nodes;
 								}
+#endif
 
 								break;
 							}
@@ -912,8 +948,10 @@ static boolean path_state_traverse(
 					new_node->total_cost_estimate = total_cost_estimate;
 					new_node->quantized_cost_estimate = (short)quantized_cost_estimate;
 					new_node->depth = cheapest_node->depth + 1;
+#ifdef DEBUG
 					new_node->debug_render_traverse_index = NONE;
 					new_node->closest_distance = REAL_MAX;
+#endif
 
 					bsp = TAG_BLOCK_GET_ELEMENT(&state->structure->collision_bsp, 0, struct collision_bsp);
 					match_assert("c:\\halo\\SOURCE\\ai\\path.c", 1126, (new_node->surface_index >= 0) && (new_node->surface_index < bsp->surfaces.count));
@@ -941,8 +979,10 @@ static boolean path_state_traverse(
 							closest_distance = closest_available_point_on_surface(state->structure, edge->adjacent_surface_index, &state->destination.point, &closest_point);
 						}
 
+#ifdef DEBUG
 						new_node->closest_distance = closest_distance;
 						new_node->closest_point = closest_point;
+#endif
 
 						if (closest_distance < state->closest_distance)
 						{
@@ -962,10 +1002,12 @@ static boolean path_state_traverse(
 		success = state->closest_distance <= state->destination.target_radius;
 	}
 
+#ifdef DEBUG
 	if (state->debug && success)
 	{
 		state->debug->path_traverse_result = _path_traverse_result_success;
 	}
+#endif
 
 	return success;
 }

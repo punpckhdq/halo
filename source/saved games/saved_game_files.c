@@ -23,7 +23,11 @@ SAVED_GAME_FILES.C
 
 enum
 {
+#ifdef DEBUG
 	SAVED_GAME_FILES_MUTEX_TIMEOUT = MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE * MINUTES_PER_HOUR,	/* fake name */
+#else
+	SAVED_GAME_FILES_MUTEX_TIMEOUT = 5 * MILLISECONDS_PER_SECOND,										/* fake name */
+#endif
 	MEMORY_UNIT_ROOT_PATH_SIZE = 8,																		/* fake name */
 	MAXIMUM_UNTITLED_SAVED_GAMES = 999,																	/* fake name */
 	MINIMUM_FREE_DISK_SPACE = 40 * 1024 * 1024															/* fake name */
@@ -1454,7 +1458,9 @@ static void enumerate_memory_units(
 	byte block[SAVED_GAME_FILE_BLOCK_SIZE];
 	struct file_reference saved_game_file;
 	XCALCSIG_SIGNATURE checksum;
+#ifdef DEBUG
 	unsigned long old_style_crc;
+#endif
 	HANDLE find_handle;
 	unsigned long memory_unit_index = _memory_unit_hard_drive;
 	long number_of_enumerated_files = 0;
@@ -1528,7 +1534,11 @@ static void enumerate_memory_units(
 									ustrncpy(file.display_name, find_data.szSaveGameName, MAXIMUM_SAVED_GAME_NAME_LENGTH - 1);
 									file.display_name[MAXIMUM_SAVED_GAME_NAME_LENGTH - 1] = '\0';
 
+#ifdef DEBUG
 									if (file_open(&saved_game_file, FLAG(_permission_read_bit) | FLAG(_permission_write_bit)))
+#else
+									if (file_open(&saved_game_file, FLAG(_permission_read_bit)))
+#endif
 									{
 										if (file_read(&saved_game_file, sizeof(block), block))
 										{
@@ -1541,15 +1551,18 @@ static void enumerate_memory_units(
 											else
 											{
 												error(_error_silent, "checksum validation failed for '%s'", file.full_path);
+#ifdef DEBUG
 												crc_new(&old_style_crc);
 												crc_checksum_buffer(&old_style_crc, block, checksum_data_size);
 
 												if (!memcmp(&old_style_crc, block + checksum_data_size, sizeof(old_style_crc)))
 												{
+#ifdef DEBUG
 													error(
 														_error_silent,
 														"checksum validation matched old-style crc; updating saved game file '%s'",
 														file.full_path);
+#endif
 													memcpy(block + checksum_data_size, &checksum, sizeof(checksum));
 
 													if (file_set_position(&saved_game_file, 0) &&
@@ -1558,6 +1571,7 @@ static void enumerate_memory_units(
 														file.checksum_valid = TRUE;
 													}
 												}
+#endif
 											}
 										}
 										else

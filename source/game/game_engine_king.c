@@ -770,7 +770,9 @@ static boolean king_engine_display_score(
 {
 	struct player_datum *player = player_get(player_index);
 	boolean result = TRUE;
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
+#endif
 
 	switch (message)
 	{
@@ -785,18 +787,30 @@ static boolean king_engine_display_score(
 		{
 			wchar_t *place_name = get_place_name(game_engine_get_place(player_index, _get_score_team));
 
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(string, _string_place_score_seconds);
 			usnprintf(buffer, buffer_size, string, place_name, seconds);
+#else
+			usnprintf(buffer, buffer_size, L"%s (%d seconds)", place_name, seconds);
+#endif
 		}
 		else if (message == king_message_ally_on_the_hill)
 		{
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(string, _string_ally_name_is_on_the_hill_score_seconds);
 			usnprintf(buffer, buffer_size, string, message_player->name, seconds);
+#else
+			usnprintf(buffer, buffer_size, L"Ally %s in on the hill (%d seconds)", message_player->name, seconds);
+#endif
 		}
 		else if (message == king_message_enemy_on_the_hill)
 		{
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(string, _string_enemy_name_is_on_the_hill_score_seconds);
 			usnprintf(buffer, buffer_size, string, message_player->name, seconds);
+#else
+			usnprintf(buffer, buffer_size, L"Enemy %s in on the hill (%d seconds)", message_player->name, seconds);
+#endif
 		}
 		else
 		{
@@ -968,10 +982,14 @@ static wchar_t *king_get_score_string(
 static wchar_t *king_get_score_header_string(
 	wchar_t *buffer)
 {
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
 
 	multiplayer_game_text_get_string(string, _string_time);
 	ustrcpy(buffer, string);
+#else
+	usprintf(buffer, L"Time");
+#endif
 
 	return buffer;
 }

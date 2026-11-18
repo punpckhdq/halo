@@ -79,12 +79,23 @@ void scenario_dispose_from_old_map(void);
 void scenario_frame_update(real dt);
 boolean scenario_load(char const *name);
 void scenario_unload(void);
+#ifdef DEBUG
 struct scenario *global_scenario_get(void);
 struct scenario *global_scenario_try_and_get(void);
 struct structure_bsp *global_structure_bsp_get(void);
 struct collision_bsp *global_collision_bsp_get(void);
 struct bsp3d *global_bsp3d_get(void);
 struct game_globals *scenario_get_game_globals(void);
+#else
+extern struct structure_bsp *global_structure_bsp;
+extern struct game_globals *global_game_globals;
+#define global_scenario_get() global_scenario
+#define global_scenario_try_and_get() global_scenario
+#define global_structure_bsp_get() global_structure_bsp
+#define global_collision_bsp_get() global_collision_bsp
+#define global_bsp3d_get() global_bsp3d
+#define scenario_get_game_globals() global_game_globals
+#endif
 long global_structure_bsp_tag_index_get(void);
 void scenario_location_from_point(struct location *location, real_point3d const *point);
 void scenario_location_from_line(struct location *location, struct location const *start_location, real_point3d const *start_point, real_point3d const *end_point);

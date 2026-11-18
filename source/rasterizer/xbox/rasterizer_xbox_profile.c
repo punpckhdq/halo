@@ -52,6 +52,7 @@ enum
 static void profile_assert(short profile, char const *message, boolean condition);
 static void __cdecl callback_function(DWORD context);
 static void __cdecl frame_callback_function(DWORD context);
+static boolean rasterizer_profile_enabled(void);
 
 /* ---------- globals */
 
@@ -201,7 +202,7 @@ static void __cdecl frame_callback_function(
 	return;
 }
 
-boolean rasterizer_profile_enabled(
+static boolean rasterizer_profile_enabled(
 	void)
 {
 	return rasterizer_debug_options.statistics_mode==_rasterizer_statistics_mode_profile || rasterizer_debug_options.profile_log_enabled;
@@ -406,7 +407,9 @@ void rasterizer_profile_frame_end(
 
 		frame_pushbuffer_size = (long)MIN(-frame_pushbuffer_offset, LONG_MAX);
 		D3DDevice_InsertCallback(D3DCALLBACK_WRITE, frame_callback_function, frame_index * 2 + 1);
+#ifdef DEBUG
 		profile_rasterizer_stats((real)frame_times[last_frame_index] * 1000.f / (real)profile_frequency.QuadPart, frame_pushbuffer_size);
+#endif
 	}
 
 	return;

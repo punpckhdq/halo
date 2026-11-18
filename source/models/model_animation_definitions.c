@@ -235,7 +235,7 @@ void *animation_get_frame_data(
 	short frame_index)
 {
 	boolean compressed = TEST_FLAG(animation->flags, _animation_compressed_bit) && hs_model_animation_compression_enabled;
-	byte *data = tag_data_get_pointer(&animation->data, 0, 0);
+	byte *data = tag_data_get_pointer_inline(&animation->data, 0, 0);
 
 	match_assert("c:\\halo\\SOURCE\\models\\model_animation_definitions.c", MATCH_LINE_NTSC(1146, 1147), frame_index>=0 && frame_index<animation->frame_count);
 
@@ -251,6 +251,7 @@ void *animation_get_frame_data(
 	return data;
 }
 
+#ifdef DEBUG
 void *animation_get_frame_info(
 	struct animation const *animation,
 	short frame_index,
@@ -258,8 +259,9 @@ void *animation_get_frame_info(
 {
 	match_assert("c:\\halo\\SOURCE\\models\\model_animation_definitions.c", MATCH_LINE_NTSC(1166, 1167), frame_index>=0 && frame_index<animation->frame_count);
 
-	return tag_data_get_pointer(&animation->frame_info, size*frame_index, size);
+	return tag_data_get_pointer_inline(&animation->frame_info, size*frame_index, size);
 }
+#endif
 
 char *animation_list_get_string(
 	struct animation_list *list,

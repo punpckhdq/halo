@@ -10,7 +10,11 @@ header included in hcex build.
 
 /* ---------- macros */
 
-#define BUILD_NAME "halobeta xbox"
+#ifdef DEBUG
+	#define BUILD_NAME "halobeta xbox"
+#else
+	#define BUILD_NAME "halo xbox"
+#endif
 
 #if CONFIG_VERSION == 2276
 	#define BUILD_NUMBER "01.10.12.2276"
@@ -25,7 +29,11 @@ header included in hcex build.
 	#define BUILD_TIME __TIME__
 #elif CONFIG_VERSION == 2276
 	#define BUILD_DATE "Oct 12 2001"
-	#define BUILD_TIME "16:07:48"
+	#ifdef DEBUG
+		#define BUILD_TIME "16:07:48"
+	#else
+		#define BUILD_TIME "16:11:06"
+	#endif
 #else
 	#define BUILD_DATE "Jan 14 2002"
 	#define BUILD_TIME "12:49:20"

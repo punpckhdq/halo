@@ -415,6 +415,7 @@ short scripted_hud_get_timer_ticks(
 	return ticks;
 }
 
+#ifdef DEBUG
 void scripted_hud_time_code_show(
 	boolean show)
 {
@@ -461,6 +462,7 @@ void scripted_hud_time_code_reset(
 
 	return;
 }
+#endif
 
 void hud_render_timer(
 	void)
@@ -471,7 +473,9 @@ void hud_render_timer(
 	{
 		struct number_hud_element_definition numbers;
 		long hud_digits_index;
+#if CONFIG_VERSION >= 2342
 		short seconds;
+#endif
 		struct hud_absolute_placement_definition absolute_placement = { timer->corner };
 		long time = game_time_get();
 		short draw_flags = 0;
@@ -536,6 +540,7 @@ void hud_render_timer(
 			}
 		}
 
+#if CONFIG_VERSION >= 2342
 		ticks = MAX(ticks, 0);
 		seconds = ticks / TICKS_PER_SECOND;
 		hud_draw_numbers(
@@ -567,13 +572,47 @@ void hud_render_timer(
 			draw_flags,
 			timer->reference_time,
 			2.f);
+#else
+		ticks = MAX(ticks, 0);
+		hud_draw_numbers(
+			render.local_player_index,
+			&absolute_placement,
+			&numbers,
+			(long)((ticks * (1.f / TICKS_PER_SECOND)) / SECONDS_PER_MINUTE),
+			NONE,
+			draw_flags,
+			timer->reference_time,
+			2.f);
+		numbers.placement.offset.x += digit_width * 2.5;
+		hud_draw_numbers(
+			render.local_player_index,
+			&absolute_placement,
+			&numbers,
+			ticks / TICKS_PER_SECOND % SECONDS_PER_MINUTE,
+			NONE,
+			draw_flags,
+			timer->reference_time,
+			2.f);
+		numbers.placement.offset.x += digit_width * 2.5;
+		hud_draw_numbers(
+			render.local_player_index,
+			&absolute_placement,
+			&numbers,
+			100 * (ticks % (TICKS_PER_SECOND * SECONDS_PER_MINUTE)) / TICKS_PER_SECOND,
+			NONE,
+			draw_flags,
+			timer->reference_time,
+			2.f);
+#endif
 	}
 
+#ifdef DEBUG
 	if (time_code_time != NONE)
 	{
 		sprintf(temporary, "%d", (time_code_stop_time == NONE ? game_time_get() : time_code_stop_time) - time_code_time);
 		render_debug_string(TRUE, temporary);
 	}
+#endif
 
 	return;
 }
@@ -692,7 +731,7 @@ wchar_t const *hud_messaging_get_objective(
 
 		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(673, 674), message->element_count==1);
 		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(674, 675), element->type==_hud_message_type_text);
-		result = tag_data_get_pointer(&messages->text_data, message->text_start_index * sizeof(wchar_t), element->data * sizeof(wchar_t));
+		result = tag_data_get_pointer_inline(&messages->text_data, message->text_start_index * sizeof(wchar_t), element->data * sizeof(wchar_t));
 	}
 
 	return result;
@@ -849,12 +888,10 @@ long hud_get_font_index(
 	return local_player_count() > 1 && hud_msg_def->multi_player_font.index != NONE ? hud_msg_def->multi_player_font.index : hud_msg_def->single_player_font.index;
 }
 
-real_argb_color *hud_get_text_color(
-	real_argb_color *result)
+real_argb_color hud_get_text_color(
+	void)
 {
-	*result = hud_msg_def->state_color;
-
-	return result;
+	return hud_msg_def->state_color;
 }
 
 void hud_messaging_globals_update(
@@ -949,7 +986,11 @@ void hud_messaging_update(
 			bounds.x0 = upper_left.x;
 			bounds.x1 = render.camera.window_bounds.x1 - render.camera.viewport_bounds.x0;
 			bounds.y0 = offset;
+#if CONFIG_VERSION >= 2342
 			bounds.y1 = offset + 5 * line_height;
+#else
+			bounds.y1 = hud_scripted_globals->show_hud_help_text ? offset + 5 * line_height : offset + line_height;
+#endif
 			cursor_bounds = bounds;
 			draw_string_set_draw_mode(font_index, _text_style_plain, _text_justification_left, 0, &color);
 
@@ -998,7 +1039,7 @@ void hud_messaging_update(
 						render_state_text(
 							&bounds,
 							&cursor_bounds,
-							tag_data_get_pointer(&messages->text_data, text_index * sizeof(wchar_t), element->data * sizeof(wchar_t)),
+							tag_data_get_pointer_inline(&messages->text_data, text_index * sizeof(wchar_t), element->data * sizeof(wchar_t)),
 							FALSE);
 						text_index += element->data;
 						break;

@@ -169,18 +169,21 @@ static void unit_melee_sound(long unit_index, long damage_definition_index, shor
 static long unit_get_weapon(struct unit_datum *unit, short index);
 static void unit_drop_item(long unit_index, long item_index);
 
+#ifdef DEBUG
 static void unit_verify_vectors(long unit_index, char const *debugstring);
+#endif
 static void unit_align_facing(long unit_index, real_vector2d const *alignment_vector);
-static void unit_flame_to_death(long unit_index);
+void unit_flame_to_death(long unit_index);
 static void unit_running_blind(long unit_index, real_vector3d *run_vector);
 
 static boolean unit_integrated_night_vision_is_active(long unit_index);
 
 static void unit_animation_start_overlay_action(long unit_index, short overlay_action);
-static short unit_test_spawning(long unit_index);
+short unit_test_spawning(long unit_index);
 
 static short unit_animation_impulse_get_index(short animation_impulse, short *interpolation_frame_count);
 static boolean unit_can_play_animation_impulse(long unit_index, short animation_impulse);
+static void unit_ping_animation(long unit_index, boolean died, boolean feign_death, boolean died_flying, boolean ignore_hard_pings, boolean force_hard_pings, real angle, short damage_part, real_vector2d *alignment_vector);
 
 /* ---------- globals */
 
@@ -190,14 +193,18 @@ static struct unit_globals *unit_globals;
 
 static struct profile_section unit_update_section = {"unit_update", NONE, TRUE};
 
+#ifdef DEBUG
 boolean debug_objects_unit_mouth_apeture;
 boolean debug_objects_unit_seats;
 boolean debug_objects_unit_vectors;
+#endif
 boolean stun_enable;
+#ifdef DEBUG
 boolean debug_damage_taken;
 boolean debug_unit_illumination;
 boolean debug_unit_animations;
 boolean debug_unit_all_animations;
+#endif
 
 /* ---------- public code */
 
@@ -464,6 +471,7 @@ static boolean unit_vectors_are_valid(
 	return result;
 }
 
+#ifdef DEBUG
 static void unit_verify_vectors(
 	long unit_index,
 	char const *debugstring)
@@ -588,6 +596,7 @@ static void unit_verify_vectors(
 	
 	return;
 }
+#endif
 
 boolean unit_update(
 	long unit_index)
@@ -601,7 +610,9 @@ boolean unit_update(
 
 	profile_enter(unit_update_section);
 
+#ifdef DEBUG
 	unit_verify_vectors(unit_index, "unit-update-begin");
+#endif
 
 	++unit->unit.timer;
 
@@ -736,12 +747,14 @@ boolean unit_update(
 		* Grenade throw button
 		* Primary weapon fire button
 		*/
+#ifdef DEBUG
 		if (cheat.jetpack &&
 			TEST_FLAG(unit->unit.control_flags, _unit_control_weapon_primary_trigger_bit) &&
 			TEST_FLAG(unit->unit.control_flags, _unit_control_throw_grenade_bit))
 		{
 			jetpack_cheat_active = TRUE;
 		}
+#endif
 
 		if (TEST_FLAG(unit->unit.flags, _unit_active_camouflaged_bit))
 		{
@@ -978,7 +991,9 @@ boolean unit_update(
 			}
 		}
 
+#ifdef DEBUG
 		unit_verify_vectors(unit_index, "unit-update-prevectors");
+#endif
 
 		aim_scale = unit->unit.aiming_speed == _unit_aiming_speed_casual ? unit_definition->unit.casual_aiming_modifier : 1.f;
 		aiming_velocity_limit = (aim_scale * unit_definition->unit.aiming_velocity_maximum) / TICKS_PER_SECOND;
@@ -992,7 +1007,9 @@ boolean unit_update(
 			unit->unit.aiming_vector = unit->unit.desired_aiming_vector;
 			unit_clip_to_aiming_bounds(unit_index, &unit->unit.aiming_vector, TRUE);
 			unit->unit.aiming_velocity = *global_zero_vector3d;
+#ifdef DEBUG
 			unit_verify_vectors(unit_index, "unit-update-aim-set");
+#endif
 		}
 		else if (unit->unit.animation.aiming_with_euler_screen)
 		{
@@ -1012,7 +1029,9 @@ boolean unit_update(
 				aiming_velocity_limit,
 				aiming_angular_acceleration_limit);
 
+#ifdef DEBUG
 			unit_verify_vectors(unit_index, "unit-update-aim-euler");
+#endif
 		}
 		else
 		{
@@ -1022,7 +1041,9 @@ boolean unit_update(
 				&unit->unit.aiming_velocity,
 				aiming_velocity_limit,
 				aiming_angular_acceleration_limit);
+#ifdef DEBUG
 			unit_verify_vectors(unit_index, "unit-update-aim-3d");
+#endif
 		}
 
 		aiming_change = angle_between_vectors3d(&unit->unit.aiming_vector, &last_aiming_vector) / (unit_definition->unit.aiming_velocity_maximum / TICKS_PER_SECOND);
@@ -1041,7 +1062,9 @@ boolean unit_update(
 				unit_clip_to_aiming_bounds(unit_index, &unit->unit.looking_vector, FALSE);
 				unit->unit.looking_velocity = *global_zero_vector3d;
 
+#ifdef DEBUG
 				unit_verify_vectors(unit_index, "unit-update-look-set");
+#endif
 			}
 			else if (unit->unit.animation.looking_with_euler_screen)
 			{
@@ -1061,7 +1084,9 @@ boolean unit_update(
 					looking_velocity_limit,
 					looking_angular_acceleration_limit);
 
+#ifdef DEBUG
 				unit_verify_vectors(unit_index, "unit-update-look-euler");
+#endif
 			}
 			else
 			{
@@ -1071,13 +1096,17 @@ boolean unit_update(
 					&unit->unit.looking_velocity,
 					looking_velocity_limit,
 					looking_angular_acceleration_limit);
+#ifdef DEBUG
 				unit_verify_vectors(unit_index, "unit-update-look-3d");
+#endif
 			}
 		}
 
 		match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\units\\units.c", 1076,&unit->unit.looking_vector);
 
+#ifdef DEBUG
 		unit_verify_vectors(unit_index, "unit-update-postvector");
+#endif
 
 		if (!jetpack_cheat_active)
 		{
@@ -1258,6 +1287,7 @@ boolean unit_update(
 	{
 		unit_refresh_illumination(unit_index);
 
+#ifdef DEBUG
 		if (debug_unit_illumination)
 		{
 			if (unit->unit.player_index != NONE)
@@ -1276,6 +1306,7 @@ boolean unit_update(
 				}
 			}
 		}
+#endif
 	}
 
 	if (unit->unit.flaming_death_delay > 0)
@@ -1426,7 +1457,9 @@ boolean unit_update(
 		}
 	}
 
+#ifdef DEBUG
 	unit_verify_vectors(unit_index, "unit-update-end");
+#endif
 	
 	profile_exit(unit_update_section);
 	
@@ -1472,6 +1505,7 @@ void unit_export_function_values(
 				{
 					struct animation_graph *animation_graph = animation_graph_definition_get(unit->object.animation.animation_graph_index);
 					struct animation *animation = TAG_BLOCK_GET_ELEMENT(&animation_graph->animations, unit->object.animation.state.index, struct animation);
+#if CONFIG_VERSION >= 2342
 					short loop_frame_index = animation_loop_frame_index(animation);
 
 					if (unit->object.animation.state.index >= loop_frame_index)
@@ -1482,6 +1516,17 @@ void unit_export_function_values(
 					{
 						value = (real)unit->object.animation.state.index / loop_frame_index;
 					}
+#else
+
+					if (unit->object.animation.state.index >= animation_loop_frame_index(animation))
+					{
+						value = 1.f - unit->unit.shield_sap_timeout / 90.f;
+					}
+					else
+					{
+						value = (real)unit->object.animation.state.index / animation_loop_frame_index(animation);
+					}
+#endif
 				}
 				break;
 			}
@@ -1532,7 +1577,9 @@ void unit_control(
 	unit->unit.desired_facing_vector = control_data->facing_vector;
 	unit->unit.animation.desired_state = control_data->animation_state;
 
+#ifdef DEBUG
 	unit_verify_vectors(unit_index, "unit-control");
+#endif
 
 	return;
 }
@@ -1584,7 +1631,9 @@ void unit_preprocess_node_orientations(
 			node_orientations);
 	}
 
+#ifdef DEBUG
 	unit_verify_vectors(object_index, "unit-preprocess-nodes");
+#endif
 
 	unit->unit.animation.aiming_with_euler_screen = FALSE;
 	unit->unit.animation.looking_with_euler_screen = FALSE;
@@ -2539,10 +2588,12 @@ short unit_update_animation(
 
 		match_assert("c:\\halo\\SOURCE\\units\\units.c", 2931, desired_base_seat_index!=NONE);
 
+#ifdef DEBUG
 		if (unit->unit.player_index != NONE && magic_base_animation_seat_index != NONE)
 		{
 			desired_base_seat_index = PIN(magic_base_animation_seat_index, 0, NUMBER_OF_UNIT_BASE_SEATS);
 		}
+#endif
 
 		if (unit->unit.magic_seat_index != NONE)
 		{
@@ -2878,6 +2929,7 @@ void unit_render_debug(
 	struct unit_datum *unit = unit_get(unit_index);
 	struct unit_definition *unit_definition = unit_definition_get(unit->definition_index);
 
+#ifdef DEBUG
 	if (debug_objects_unit_vectors)
 	{
 		real_point3d head_position;
@@ -2923,6 +2975,7 @@ void unit_render_debug(
 		unit_get_head_position(unit_index, &head_point);
 		render_debug_string_at_point(FALSE, &head_point, csprintf(temporary, "%.2f", unit->unit.mouth_aperture), global_real_argb_orange);
 	}
+#endif
 
 	return;
 }
@@ -3475,6 +3528,7 @@ static boolean unit_animation_set_state(
 			animation_index = NONE;
 		}
 
+#ifdef DEBUG
 		if (debug_unit_animations && unit->object.type == _object_type_biped && animation_index == NONE)
 		{
 			console_warning("MISSING: %s '%s %s %s'",
@@ -3483,6 +3537,7 @@ static boolean unit_animation_set_state(
 				unit_seat_animation_index != NONE ? animation_list_get_string(&unit_seat_animation_list, unit_seat_animation_index) : weapon_class->label,
 				weapon_class_animation_index != NONE ? animation_list_get_string(&weapon_class_animation_list, weapon_class_animation_index) : "");
 		}
+#endif
 
 		if (animation_index != NONE || unit_animation_state_can_be_entered_without_animation(new_state))
 		{
@@ -3506,6 +3561,7 @@ static boolean unit_animation_set_state(
 				aiming_screen_index >= 0 && aiming_screen_index < weapon_class->animations.count ?
 				animation_graph_animation_index_get(&weapon_class->animations)[aiming_screen_index].animation_index : NONE);
 
+#ifdef DEBUG
 			if (debug_unit_animations && unit->object.type == _object_type_biped && unit->unit.animation.aiming_screen_index == NONE && aiming_screen_index != NONE)
 			{
 				console_warning("MISSING: %s '%s %s %s'",
@@ -3514,6 +3570,7 @@ static boolean unit_animation_set_state(
 					weapon_class->label,
 					animation_list_get_string(&weapon_class_animation_list, aiming_screen_index));
 			}
+#endif
 
 			interpolation_frame_count = 6;
 			interpolate = TRUE;
@@ -3525,6 +3582,7 @@ static boolean unit_animation_set_state(
 				unit_seat->animations.count > _unit_seat_animation_looking ?
 				animation_graph_animation_index_get(&unit_seat->animations)[_unit_seat_animation_looking].animation_index : NONE);
 
+#ifdef DEBUG
 			if (debug_unit_animations && unit->object.type == _object_type_biped && unit->unit.animation.looking_screen_index == NONE)
 			{
 				console_warning("MISSING: %s '%s %s'",
@@ -3532,6 +3590,7 @@ static boolean unit_animation_set_state(
 					unit_seat->label,
 					animation_list_get_string(&unit_seat_animation_list, _unit_seat_animation_looking));
 			}
+#endif
 		}
 
 		if (interpolate)
@@ -3606,6 +3665,7 @@ static void unit_animation_start_overlay_action(
 			unit->unit.animation.overlay_action_animation.frame_index = 0;
 			unit->unit.animation.overlay_action = (char)overlay_action;
 		}
+#ifdef DEBUG
 		else if (debug_unit_animations && unit->object.type == _object_type_biped && unit->unit.animation.aiming_screen_index == NONE)
 		{
 			console_warning("MISSING: %s '%s %s'",
@@ -3615,6 +3675,7 @@ static void unit_animation_start_overlay_action(
 				weapon_type->label,
 				animation_list_get_string(&weapon_type_animation_list, weapon_type_animation_index));
 		}
+#endif
 	}
 
 	return;
@@ -3829,7 +3890,7 @@ boolean unit_enter_seat(
 	return result;
 }
 
-void unit_ping_animation(
+static void unit_ping_animation(
 	long unit_index,
 	boolean died,
 	boolean feign_death,
@@ -4148,6 +4209,7 @@ void unit_damage_aftermath(
 	boolean died = TEST_FLAG(being_damaged_flags, _object_being_damaged_body_depleted_bit);
 	boolean feigned = FALSE;
 
+#ifdef DEBUG
 	if (debug_damage_taken && unit->unit.player_index != NONE)
 	{
 		char const *owner_name = "<unknown>";
@@ -4185,6 +4247,7 @@ void unit_damage_aftermath(
 		owner_name,
 		damage_name);
 	}
+#endif
 
 	{
 		real recent_damage = unit->object.recent_shield_damage + unit->object.recent_body_damage;
@@ -4529,7 +4592,7 @@ void unit_record_damage(
 	return;
 }
 
-static short unit_test_spawning(
+short unit_test_spawning(
 	long unit_index)
 {
 	struct unit_datum *unit = unit_get(unit_index);
@@ -7365,10 +7428,12 @@ static void unit_throw_grenade_release(
 				}
 			}
 		}
+#if CONFIG_VERSION >= 2342
 		else
 		{
 			unit->unit.grenade_throw_state = _unit_grenade_throw_ending;
 		}
+#endif
 	}
 
 	return;
@@ -7520,6 +7585,7 @@ static void unit_set_animation(
 	unit->object.animation.state.index = animation_index;
 	unit->object.animation.state.frame_index = 0;
 
+#ifdef DEBUG
 	if (debug_unit_all_animations)
 	{
 		char const *animation_name = "<none>";
@@ -7547,6 +7613,7 @@ static void unit_set_animation(
 			console_printf(FALSE, "%s: animation %s", tag_name_strip_path(tag_get_name(unit->definition_index)), animation_name);
 		}
 	}
+#endif
 
 	return;
 }
@@ -8662,7 +8729,7 @@ void unit_stop_running_blindly(
 	return;
 }
 
-static void unit_flame_to_death(
+void unit_flame_to_death(
 	long unit_index)
 {
 	struct unit_datum *unit = unit_get(unit_index);
@@ -8700,7 +8767,9 @@ static void unit_flame_to_death(
 
 	if (!TEST_FLAG(unit->object.damage_flags, _object_dead_bit))
 	{
+#ifdef DEBUG
 		error(_error_silent, "WARNING: %s tried to die from flaming to death but couldn't", tag_name_strip_path(tag_get_name(unit->definition_index)));
+#endif
 		SET_FLAG(unit->object.damage_flags, _object_die_act_of_god_bit, TRUE);
 	}
 

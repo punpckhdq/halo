@@ -1186,6 +1186,7 @@ static void virtual_keyboard_render_internal(
 						}
 					}
 					break;
+#if CONFIG_VERSION >= 2342
 				case _vkey_symbols:
 					if (virtual_keyboard_layout_table[virtual_keyboard_globals.row][virtual_keyboard_globals.column] == key_index)
 					{
@@ -1231,6 +1232,43 @@ static void virtual_keyboard_render_internal(
 						}
 					}
 					break;
+#else
+				case _vkey_symbols:
+					if (virtual_keyboard_layout_table[virtual_keyboard_globals.row][virtual_keyboard_globals.column] == key_index)
+					{
+						if (virtual_keyboard_globals.last_event == _event_key_select)
+						{
+							if (virtual_keys[key_index].active_background_bitmap_tag.index != NONE)
+							{
+								bitmap = bitmap_group_get_bitmap_from_sequence(
+									virtual_keys[key_index].active_background_bitmap_tag.index,
+									0,
+									0);
+							}
+						}
+						else
+						{
+							if (virtual_keys[key_index].selected_background_bitmap_tag.index != NONE)
+							{
+								bitmap = bitmap_group_get_bitmap_from_sequence(
+									virtual_keys[key_index].selected_background_bitmap_tag.index,
+									0,
+									0);
+							}
+						}
+					}
+					else
+					{
+						if (virtual_keys[key_index].unselected_background_bitmap_tag.index != NONE)
+						{
+							bitmap = bitmap_group_get_bitmap_from_sequence(
+								virtual_keys[key_index].unselected_background_bitmap_tag.index,
+								0,
+								0);
+						}
+					}
+					break;
+#endif
 				case _vkey_backspace:
 				case _vkey_left:
 				case _vkey_right:

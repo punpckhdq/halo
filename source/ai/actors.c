@@ -41,8 +41,10 @@ enum
 
 static void actor_swarm_component_refresh(long unit_index, long swarm_component_index);
 static void actor_update(long actor_index);
+#ifdef DEBUG
 static void actor_debug_preupdate(long actor_index);
 static void actor_debug_postupdate(void);
+#endif
 static boolean actor_general_update(long actor_index);
 static boolean actor_get_timeslice(long actor_index);
 static void actor_clear_output(long actor_index);
@@ -131,7 +133,9 @@ long actor_new(
 
 			if (actor_index!=NONE)
 			{
+#ifdef DEBUG
 				struct actor_debug_info *debug_info;
+#endif
 				struct actor_datum *actor = actor_get(actor_index);
 
 				actor->meta.swarm = TEST_FLAG(actor_definition->flags, _actor_definition_swarm_actor_bit);
@@ -243,6 +247,7 @@ long actor_new(
 				actor_clear_discarded_firing_positions(actor_index, FALSE);
 				actor->firing_positions.pursuit_prop_index = NONE;
 
+#ifdef DEBUG
 				debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 				memset(debug_info, 0, sizeof(*debug_info));
 				debug_info->last_path_refresh = NONE;
@@ -255,6 +260,7 @@ long actor_new(
 				debug_info->field_19C = NONE;
 				debug_info->vision_last_time = NONE;
 				debug_info->num_debug_evaluations = NONE;
+#endif
 
 				actor_type_initialize(actor_index);
 			}
@@ -369,12 +375,14 @@ long actor_create_for_unit(
 
 					if (actor->meta.swarm!=actor_type_get_swarm(actor->meta.type))
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"%s actor variant %s cannot have type %s (swarm flag does not match)",
 							actor->meta.swarm ? "swarm" : "individual",
 							tag_name_strip_path(tag_get_name(actor_variant_definition_index)),
 							actor_type_get_name(actor->meta.type));
+#endif
 						actor_delete(actor_index, FALSE);
 						actor_index = NONE;
 					}
@@ -401,7 +409,9 @@ long actor_create_for_unit(
 				actor_attach_unit(actor_index, unit_index);
 			}
 
+#ifdef DEBUG
 			actor_verify_activation(actor_index);
+#endif
 		}
 	}
 
@@ -538,6 +548,7 @@ long actor_place(
 
 	unit_index = object_new(&placement_data);
 
+#ifdef DEBUG
 	if (unit_index==NONE)
 	{
 		char aibuf[256];
@@ -553,6 +564,7 @@ long actor_place(
 
 		error(_error_silent, "WARNING: cannot create unit for actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
 	}
+#endif
 
 	if (unit_index!=NONE)
 	{
@@ -604,6 +616,7 @@ long actor_place(
 			command_list_index,
 			noncombat_sequence_id);
 
+#ifdef DEBUG
 		if (actor_index==NONE)
 		{
 			char aibuf[256];
@@ -619,6 +632,7 @@ long actor_place(
 
 			error(_error_silent, "WARNING: cannot create actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
 		}
+#endif
 	}
 
 	if (actor_index==NONE || unit_index==NONE)
@@ -638,7 +652,9 @@ long actor_place(
 
 	if (actor_index!=NONE)
 	{
+#ifdef DEBUG
 		actor_verify_activation(actor_index);
+#endif
 	}
 
 	return actor_index;
@@ -720,12 +736,16 @@ short actors_spawn_from_unit(
 
 					if (spawned_actor_index==NONE)
 					{
+#ifdef DEBUG
 						error(_error_silent, "WARNING: cannot create actor to be spawned from unit");
+#endif
 						object_delete(spawned_unit_index);
 					}
 					else
 					{
+#ifdef DEBUG
 						actor_verify_activation(spawned_actor_index);
+#endif
 
 						if (velocity>0.f)
 						{
@@ -827,7 +847,9 @@ void actor_attach_unit(
 		unit_set_actively_controlled(unit_index, TRUE);
 	}
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	return;
 }
@@ -885,7 +907,9 @@ boolean actor_set_active(
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean success = TRUE;
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	if (actor->meta.active!=active)
 	{
@@ -897,7 +921,9 @@ boolean actor_set_active(
 
 				if (actor->meta.swarm_cache_index==NONE)
 				{
+#ifdef DEBUG
 					error(_error_silent, "swarm tried to become active but couldn't, erasing %d units", actor->meta.swarm_unit_count);
+#endif
 					actor->meta.erase_next_tick = TRUE;
 					success = FALSE;
 				}
@@ -929,7 +955,9 @@ boolean actor_set_active(
 		}
 	}
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	return success;
 }
@@ -1005,7 +1033,9 @@ void actor_set_dormant(
 		}
 	}
 
+#ifdef DEBUG
 	actor_verify_activation(actor_index);
+#endif
 
 	return;
 }
@@ -1062,6 +1092,7 @@ real_argb_color const *actor_activation_debug_color(
 	return color;
 }
 
+#ifdef DEBUG
 static void actor_verify_unit_activation(
 	long actor_index,
 	long unit_index,
@@ -1130,6 +1161,7 @@ void actor_verify_activation(
 
 	return;
 }
+#endif
 
 static void actor_swarm_component_setup(
 	long swarm_index,
@@ -1174,7 +1206,9 @@ boolean actor_swarm_attach_unit(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "unable to create any more swarm components (max %d)", MAXIMUM_NUMBER_OF_SWARM_COMPONENTS);
+#endif
 		}
 		else
 		{
@@ -1371,6 +1405,7 @@ void actor_delete(
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actors.c", 1488, actor_index != global_updating_actor_index);
 
+#ifdef DEBUG
 	if (ai_debug.selected_actor_index==actor_index)
 	{
 		ai_debug.selected_actor_index = NONE;
@@ -1380,6 +1415,7 @@ void actor_delete(
 	{
 		ai_debug.aiming_validity_actor_index = NONE;
 	}
+#endif
 
 	if (actor->meta.encounterless)
 	{
@@ -1434,7 +1470,9 @@ long actor_swarm_cache_new(
 
 		if (actor->meta.swarm_cache_index==NONE)
 		{
+#ifdef DEBUG
 			error(_error_silent, "exceeded MAXIMUM_NUMBER_OF_ACTIVE_SWARMS (%d)", MAXIMUM_NUMBER_OF_ACTIVE_SWARMS);
+#endif
 		}
 		else
 		{
@@ -1453,7 +1491,9 @@ long actor_swarm_cache_new(
 
 				if (swarm_component_index==NONE)
 				{
+#ifdef DEBUG
 					error(_error_silent, "unable to create any more swarm components (max %d)", MAXIMUM_NUMBER_OF_SWARM_COMPONENTS);
+#endif
 					break;
 				}
 
@@ -2353,7 +2393,9 @@ static void actor_update(
 {
 	struct actor_datum *actor = actor_get(actor_index);
 
+#ifdef DEBUG
 	actor_debug_preupdate(actor_index);
+#endif
 
 	if (actor_general_update(actor_index))
 	{
@@ -2388,11 +2430,14 @@ static void actor_update(
 		}
 	}
 
+#ifdef DEBUG
 	actor_debug_postupdate();
+#endif
 
 	return;
 }
 
+#ifdef DEBUG
 static void actor_debug_preupdate(
 	long actor_index)
 {
@@ -2415,6 +2460,7 @@ static void actor_debug_postupdate(
 
 	return;
 }
+#endif
 
 static boolean actor_general_update(
 	long actor_index)
@@ -2422,29 +2468,41 @@ static boolean actor_general_update(
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean result = TRUE;
 
+#ifdef DEBUG
 	++ai_profile.meters[_ai_meter_actor_active].current_count;
+#endif
 
 	if (!actor->meta.dormant)
 	{
+#ifdef DEBUG
 		++ai_profile.meters[_ai_meter_actor_non_dormant].current_count;
+#endif
 	}
 
 	if (actor->meta.swarm)
 	{
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_unit_active].current_count += actor->meta.swarm_unit_count;
+#endif
 
 		if (!actor->meta.dormant)
 		{
+#ifdef DEBUG
 			ai_profile.meters[_ai_meter_unit_non_dormant].current_count += actor->meta.swarm_unit_count;
+#endif
 		}
 	}
 	else
 	{
+#ifdef DEBUG
 		++ai_profile.meters[_ai_meter_unit_active].current_count;
+#endif
 
 		if (!actor->meta.dormant)
 		{
+#ifdef DEBUG
 			++ai_profile.meters[_ai_meter_unit_non_dormant].current_count;
+#endif
 		}
 	}
 
@@ -2831,7 +2889,9 @@ static void actor_input_update(
 
 		if (actor->meta.encounter_index!=NONE)
 		{
+#ifdef DEBUG
 			struct actor_debug_info *debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
+#endif
 			struct encounter_definition *encounter_definition = TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->ai_encounters, DATUM_INDEX_TO_ABSOLUTE_INDEX(actor->meta.encounter_index), struct encounter_definition);
 			boolean wrong_encounter_type = FALSE;
 
@@ -2846,6 +2906,7 @@ static void actor_input_update(
 
 			if (wrong_encounter_type)
 			{
+#ifdef DEBUG
 				if (debug_info->evaluation_mode<5 * TICKS_PER_SECOND && ++debug_info->evaluation_mode==5 * TICKS_PER_SECOND)
 				{
 					if (actor->state.flying)
@@ -2857,10 +2918,13 @@ static void actor_input_update(
 						error(_error_silent, "actor %s is not flying but was placed in a 3d-firing-position encounter (%s)", tag_get_name(actor->meta.definition_index), encounter_definition->name);
 					}
 				}
+#endif
 			}
 			else
 			{
+#ifdef DEBUG
 				debug_info->evaluation_mode = 0;
+#endif
 			}
 		}
 
@@ -2992,18 +3056,24 @@ static void actor_decision_loop(
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean performed = FALSE;
 	long iteration_count = 0;
+#ifdef DEBUG
 	long history_index = 0;
 	short update_history[ACTOR_DECISION_HISTORY_COUNT];
+#endif
 	boolean error_condition;
 
+#ifdef DEBUG
 	memset(update_history, NONE, sizeof(update_history));
+#endif
 
 	while (TRUE)
 	{
 		error_condition = FALSE;
 		++iteration_count;
+#ifdef DEBUG
 		update_history[history_index] = actor->state.action;
 		history_index = (history_index + 1) % ACTOR_DECISION_HISTORY_COUNT;
+#endif
 		actor->state.action_changed = FALSE;
 
 		actor_type_decide_action(actor_index);
@@ -3033,6 +3103,7 @@ static void actor_decision_loop(
 
 	if (error_condition)
 	{
+#ifdef DEBUG
 		char errbuf[1024];
 		char encounterbuf[256];
 
@@ -3076,6 +3147,7 @@ static void actor_decision_loop(
 
 		match_vwarn("c:\\halo\\SOURCE\\ai\\actors.c", 3436, FALSE, errbuf);
 		error(_error_silent, "AI error condition detected, attempting to recover (please tell butcher)...");
+#endif
 		actor_action_change(actor_index, _actor_action_none, NULL);
 	}
 
@@ -3213,7 +3285,7 @@ void actor_handle_unit_effect(
 	struct prop_datum *prop = prop_get(prop_index);
 	boolean deaf = actor->meta.encounter_index!=NONE ? encounter_get(actor->meta.encounter_index)->deaf : FALSE;
 
-	if (game_connection()==_game_connection_local && ai_debug.deaf)
+	if (AI_BEHAVIOR(deaf))
 	{
 		deaf = TRUE;
 	}

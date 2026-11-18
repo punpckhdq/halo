@@ -46,7 +46,7 @@ typedef void (*obey_individual_iterator)(long actor_index, long unit_index, shor
 
 /* ---------- prototypes */
 
-static int vehicle_possibility_qsort(void const *p1, void const *p2);
+static int __cdecl vehicle_possibility_qsort(void const *p1, void const *p2);
 static void action_obey_directmovement_update_facing(long actor_index, long unit_index, struct obey_individual_simple_control *simple_control);
 static boolean action_obey_command_begin(long actor_index, long unit_index, short command_list_index, struct obey_individual_simple_control *simple_control, struct obey_individual_complex_control *complex_control);
 static boolean action_obey_command_perform(long actor_index, long unit_index, short command_list_index, struct obey_individual_simple_control *simple_control, struct obey_individual_complex_control *complex_control);
@@ -62,7 +62,7 @@ static void action_obey_individuals_iterate(long actor_index, boolean initialize
 
 /* ---------- public code */
 
-static int vehicle_possibility_qsort(
+static int __cdecl vehicle_possibility_qsort(
 	void const *p1,
 	void const *p2)
 {
@@ -898,6 +898,7 @@ static boolean action_obey_command_begin(
 			break;
 		}
 
+#ifdef DEBUG
 		if (ai_debug.print_command_lists)
 		{
 			char encounterbuf[256];
@@ -924,6 +925,7 @@ static boolean action_obey_command_begin(
 				success ? "" : " FAILED",
 				temporary);
 		}
+#endif
 	}
 
 	return success;
@@ -1298,6 +1300,7 @@ static void action_obey_command_end(
 				{
 					char actorbuf[512];
 
+#ifdef DEBUG
 					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
 					error(
 						_error_silent,
@@ -1305,11 +1308,13 @@ static void action_obey_command_end(
 						actorbuf,
 						command_list->name,
 						simple_control->current_command_index);
+#endif
 				}
 				else if (simple_control->loop_counter>=MAXIMUM_COMMAND_LIST_LOOPS)
 				{
 					char actorbuf[512];
 
+#ifdef DEBUG
 					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
 					error(
 						_error_silent,
@@ -1317,6 +1322,7 @@ static void action_obey_command_end(
 						actorbuf,
 						command_list->name,
 						simple_control->current_command_index);
+#endif
 				}
 				else
 				{
@@ -1621,8 +1627,10 @@ boolean action_obey_command_list_setup(
 			{
 				char tempbuf[256];
 
+#ifdef DEBUG
 				ai_debug_describe_actor(actor_index, NONE, TRUE, tempbuf, sizeof(tempbuf));
 				error(_error_silent, "swarm actor %s cannot execute command list, ran out of swarm caches", tempbuf);
+#endif
 			}
 			else
 			{

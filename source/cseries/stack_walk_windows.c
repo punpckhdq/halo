@@ -47,7 +47,7 @@ struct _stack_walk_globals
 
 /* ---------- prototypes */
 
-static int symbol_sort_proc(void const *elem1, void const *elem2);
+static int __cdecl symbol_sort_proc(void const *elem1, void const *elem2);
 static boolean is_valid_ebp(void);
 static unsigned long walk_up(void);
 static void initialize_stack_walk(CONTEXT *context);
@@ -70,12 +70,14 @@ static unsigned long old_esp; /* fake name */
 void stack_walk_initialize(
 	void)
 {
+#ifdef DEBUG
 	load_symbol_table("d:\\cachebeta.map", &stack_walk_globals.symbol_table, "Mon Dec 17 12:49:36 2001");
 
 	if (stack_walk_globals.fixup == NONE)
 	{
 		stack_walk_globals.fixup = 0;
 	}
+#endif
 
 	return;
 }
@@ -183,7 +185,7 @@ void stack_walk_with_context(
 	return;
 }
 
-static int symbol_sort_proc(
+static int __cdecl symbol_sort_proc(
 	void const *elem1,
 	void const *elem2)
 {

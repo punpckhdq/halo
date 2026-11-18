@@ -78,7 +78,7 @@ enum
 
 /* ---------- macros */
 
-#define device_group_get(index)				((struct device_group_datum *)datum_get(device_groups_data, (index))) // [fake name?]
+#define device_group_get(index)				DATUM_GET(device_groups_data, index, struct device_group_datum) // [fake name?]
 #define device_group_try_and_get(index)		((struct device_group_datum *)datum_try_and_get(device_groups_data, (index))) // [fake name?]
 
 #define device_get(index)					((struct device_datum *)object_get_and_verify_type((index), _object_mask_device)) // [fake name?]

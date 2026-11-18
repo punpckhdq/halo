@@ -110,7 +110,6 @@ char const *winsock_error_to_string(long error_number);
 
 /* ---------- prototypes/TRANSPORT_ENDPOINT_SET_WINSOCK.C */
 
-void net_startup_debug(void);
 void transport_push_key(XNKEY const *key, XNKID const *key_id);
 void transport_pop_key(void);
 short transport_server_initialize(void);

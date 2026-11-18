@@ -146,7 +146,9 @@ void scripted_camera_set(
 	long relative_to_object_index)
 {
 	struct scenario_cutscene_camera_point const *camera_point = TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->cutscene_camera_points, camera_point_index, struct scenario_cutscene_camera_point);
+#if CONFIG_VERSION >= 2342
 	long seconds = tick_count / TICKS_PER_SECOND;
+#endif
 
 	camera_script_globals.mode = _camera_script_mode_point;
 	camera_script_globals.first_update = TRUE;
@@ -154,7 +156,11 @@ void scripted_camera_set(
 	camera_script_globals.point = camera_point->position;
 	vectors3d_from_euler_angles3d(&camera_script_globals.forward, &camera_script_globals.up, &camera_point->orientation);
 	camera_script_globals.field_of_view = camera_point->field_of_view != 0.f ? camera_point->field_of_view : DEGREES_TO_RADIANS(DEFAULT_HORIZONTAL_FIELD_OF_VIEW);
+#if CONFIG_VERSION >= 2342
 	camera_script_globals.time_stop = (real)seconds;
+#else
+	camera_script_globals.time_stop = (real)(tick_count / TICKS_PER_SECOND);
+#endif
 	camera_script_globals.relative_object_index = relative_to_object_index;
 
 	director_update(0.f);

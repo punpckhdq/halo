@@ -48,7 +48,11 @@ enum
 #define RASTERIZER_TARGET_RENDER_PRIMARY_FORMAT (D3DFORMAT_DMACHANNEL_A | D3DFORMAT_BORDERSOURCE_COLOR | (2<<D3DFORMAT_DIMENSION_SHIFT) | (D3DFMT_LIN_A8R8G8B8<<D3DFORMAT_FORMAT_SHIFT) | (1<<D3DFORMAT_MIPMAP_SHIFT)) /* fake name */
 #define RASTERIZER_TARGET_RENDER_PRIMARY_SIZE ((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH-1) | ((RASTERIZER_TARGET_RENDER_PRIMARY_HEIGHT-1)<<D3DSIZE_HEIGHT_SHIFT) | ((RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH*sizeof(pixel32)/64-1)<<D3DSIZE_PITCH_SHIFT)) /* fake name */
 
+#ifdef DEBUG
 #define match_you_got_fucked(file, line, function_name) display_assert("### YOU GOT FUCKED in " function_name, MATCH_FILE(file), MATCH_LINE(line), TRUE) /* fake name */
+#else
+#define match_you_got_fucked(file, line, function_name)
+#endif
 
 /* ---------- structures */
 
@@ -162,7 +166,7 @@ boolean rasterizer_preinitialize__fill_you_up_with_the_devils_cock(
 		else
 		{
 			IDirect3DDevice8_GetDeviceCaps(global_d3d_device, &global_d3d_caps);
-			success = SUCCEEDED(IDirect3DDevice8_Present(global_d3d_device, NULL, NULL, NULL, NULL));
+			D3DCALL(success, IDirect3DDevice8_Present(global_d3d_device, NULL, NULL, NULL, NULL));
 
 			if (global_d3d_device)
 			{
@@ -916,7 +920,9 @@ void _rasterizer_frame_end(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_frame_end failed");
+#endif
 	}
 
 	return;
@@ -978,7 +984,7 @@ void _rasterizer_present(
 						memcpy(destination, (byte *)d3d_locked_rect.pBits + row_index*d3d_locked_rect.Pitch, d3d_locked_rect.Pitch);
 					}
 
-					success = SUCCEEDED(IDirect3DSurface8_UnlockRect(d3d_backbuffer));
+					D3DCALL(success, IDirect3DSurface8_UnlockRect(d3d_backbuffer));
 				}
 				else
 				{
@@ -1042,7 +1048,7 @@ void _rasterizer_dispose(
 }
 
 void _rasterizer_set_vblank_callback(
-	void (*callback)(unsigned long))
+	void (__cdecl *callback)(unsigned long))
 {
 	IDirect3DDevice8_SetVerticalBlankCallback(global_d3d_device, callback);
 
@@ -1108,9 +1114,13 @@ boolean rasterizer_set_texture_bitmap_data(
 	{
 		IDirect3DBaseTexture8 *hardware_format;
 
+#ifdef DEBUG
 		profile_texture_start();
+#endif
 		hardware_format = _texture_cache_bitmap_get_hardware_format(bitmap, TRUE, TRUE);
+#ifdef DEBUG
 		profile_texture_end();
+#endif
 
 		IDirect3DDevice8_SetTexture(global_d3d_device, stage, hardware_format);
 	}
@@ -1560,7 +1570,9 @@ void rasterizer_set_target_as_texture(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_set_target_as_texture failed");
+#endif
 	}
 
 	return;

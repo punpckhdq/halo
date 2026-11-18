@@ -290,9 +290,9 @@ struct rasterizer_screen_effect_parameters const *rasterizer_screen_effect_get_c
 			cinematic_screen_effect_globals->parameters.convolution_type = _rasterizer_screen_effect_convolution_type_none;
 			cinematic_screen_effect_globals->parameters.convolution_extra_passes = 0;
 		}
-		else
+		else if (main_get_window_count()>1)
 		{
-			match_vassert("c:\\halo\\SOURCE\\rasterizer\\rasterizer_cinematics.c", 336, main_get_window_count()<=1, "### FATAL_ERROR screen effects can't use convolution when main_get_window_count>1\r\nmaybe you forgot to turn off the cinematic screen effect?");
+			match_vhalt("c:\\halo\\SOURCE\\rasterizer\\rasterizer_cinematics.c", 336, "### FATAL_ERROR screen effects can't use convolution when main_get_window_count>1\r\nmaybe you forgot to turn off the cinematic screen effect?");
 		}
 
 		if (cinematic_screen_effect_globals->parameters.filter_light_enhancement_intensity<=_real_epsilon &&

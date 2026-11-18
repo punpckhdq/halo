@@ -1283,13 +1283,17 @@ static boolean multiplayer_level_select(
 	struct event_record *event,
 	boolean *widget_deleted)
 {
+#ifdef DEBUG
 	char automation_map_name[64];
+#endif
 	struct widget_instance *child;
 	struct widget_instance *level_list;
 	struct ui_widget_definition *definition;
 	struct network_game_server *server;
 	char *map_name;
+#ifdef DEBUG
 	FILE *automation_file;
+#endif
 	long level_index;
 
 	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1280, ui_widget_definition_get(wrapper_widget->ui_widget_tag_index)->child_widget_references.count == 1, "expected a wrapper widget around the multiplayer level select screen");
@@ -1313,6 +1317,7 @@ static boolean multiplayer_level_select(
 	match_vassert("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c", 1298, (level_list->parameters.list_parameters.current_list_item_index>=0) && (level_list->parameters.list_parameters.current_list_item_index<NUMBER_OF_MULTIPLAYER_LEVELS), "invalid multiplayer level specified from 'multiplayer level list' list widget");
 	map_name = multiplayer_level_names[level_list->parameters.list_parameters.current_list_item_index];
 
+#ifdef DEBUG
 	automation_file = fopen("d:\\map_automation.txt", "r");
 
 	if (automation_file)
@@ -1323,6 +1328,7 @@ static boolean multiplayer_level_select(
 		map_name = automation_map_name;
 		fclose(automation_file);
 	}
+#endif
 
 	main_set_multiplayer_map_name(map_name);
 	game_engine_override_map_name(map_name);
@@ -1364,7 +1370,11 @@ static boolean multiplayer_profiles_list_initialize(
 
 
 
-	profile_indices = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(1390, 1390));
+	profile_indices = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long)
+#ifdef DEBUG
+		, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(1390, 1390)
+#endif
+		);
 	list_widget->parameters.list_parameters.list_items = profile_indices;
 
 	if (profile_indices)
@@ -1427,9 +1437,11 @@ static boolean multiplayer_profile_set_for_game(
 	boolean *widget_deleted)
 {
 	char profile_directory_path[MAXIMUM_FILENAME_LENGTH+1];
+#ifdef DEBUG
 	struct game_variant automation_variant;
 	struct game_variant empty_variant;
 	char automation_variant_name[128];
+#endif
 	struct game_variant variant;
 	struct widget_instance *child;
 	struct ui_widget_definition *definition;
@@ -1471,7 +1483,9 @@ static boolean multiplayer_profile_set_for_game(
 	}
 	else if (playlist_profile_get(profile_index, &variant))
 	{
+#ifdef DEBUG
 		FILE *automation_file;
+#endif
 		struct network_game_server *server = global_network_game_server_get();
 
 		if (saved_game_file_get_path_to_enclosing_directory(profile_index, profile_directory_path))
@@ -1479,6 +1493,7 @@ static boolean multiplayer_profile_set_for_game(
 			saved_game_file_remember_last_used_multiplayer_variant_directory(profile_directory_path);
 		}
 
+#ifdef DEBUG
 		automation_file = fopen("d:\\variant_automation.txt", "r");
 
 		if (automation_file)
@@ -1496,6 +1511,7 @@ static boolean multiplayer_profile_set_for_game(
 
 			fclose(automation_file);
 		}
+#endif
 
 		player_ui_set_game_variant(&variant);
 
@@ -1611,7 +1627,11 @@ static boolean player_profiles_list_initialize(
 
 
 
-	list_widget->parameters.list_parameters.list_items = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(1693, 1693));
+	list_widget->parameters.list_parameters.list_items = ui_widget_realloc(list_widget->parameters.list_parameters.list_items, MAXIMUM_ENUMERATED_SAVED_GAME_FILES_ANY_TYPE_PER_MEMORY_UNIT * sizeof(long)
+#ifdef DEBUG
+		, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(1693, 1693)
+#endif
+		);
 
 	if (list_widget->parameters.list_parameters.list_items)
 	{
@@ -2695,7 +2715,11 @@ static boolean playlist_profile_initialize_name(
 
 	if (variant)
 	{
-		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 128 * sizeof(wchar_t), MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(2774, 2774));
+		widget->parameters.text_box_parameters.text = ui_widget_realloc(widget->parameters.text_box_parameters.text, 128 * sizeof(wchar_t)
+#ifdef DEBUG
+			, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(2774, 2774)
+#endif
+			);
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -3480,7 +3504,11 @@ static boolean player_profile_color_picker_menu_initialize(
 
 
 
-	widget->parameters.list_parameters.list_items = ui_widget_realloc(widget->parameters.list_parameters.list_items, number_of_colors, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(3581, 3581));
+	widget->parameters.list_parameters.list_items = ui_widget_realloc(widget->parameters.list_parameters.list_items, number_of_colors
+#ifdef DEBUG
+		, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget_event_handler_functions.c"), MATCH_LINE_NTSC(3581, 3581)
+#endif
+		);
 
 	if (widget->parameters.list_parameters.list_items)
 	{

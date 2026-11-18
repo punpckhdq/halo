@@ -301,12 +301,20 @@ struct animation_list
 /* ---------- prototypes/MODEL_ANIMATION_DEFINITIONS.C */
 
 void *animation_get_frame_data(struct animation const *animation, short frame_index);
+#ifdef DEBUG
 void *animation_get_frame_info(struct animation const *animation, short frame_index, short size);
+#else
+#define animation_get_frame_info(animation, frame_index, size) tag_data_get_pointer_inline(&(animation)->frame_info, (size)*(frame_index), (size))
+#endif
 char *animation_list_get_string(struct animation_list *list, short index);
 
 /* ---------- prototypes/MODEL_ANIMATIONS.C */
 
+#ifdef DEBUG
 short build_damage_animation_index(short damage_type, short damage_direction, short damage_part);
+#else
+#define build_damage_animation_index(damage_type, damage_direction, damage_part) (((damage_type)*NUMBER_OF_ANIMATION_DAMAGE_DIRECTIONS + (damage_direction))*NUMBER_OF_DAMAGE_PARTS + (damage_part))
+#endif
 void animation_get_x_offsets(struct animation *animation, real *key_frame_offset_reference, real *last_frame_offset_reference);
 void animation_frame_get_xy_translation(struct animation *animation, short frame_index, real_vector2d *offset);
 void animation_set_frame_size(struct animation *animation);

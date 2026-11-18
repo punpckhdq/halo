@@ -43,7 +43,9 @@ struct memory_pool
 
 static long memory_pool_block_compute_actual_size(long size);
 static struct memory_pool_block *memory_pool_block_new(struct memory_pool *pool, long size);
+#ifdef DEBUG
 static void memory_pool_verify(struct memory_pool *pool);
+#endif
 static struct memory_pool_block *memory_pool_block_get(struct memory_pool *pool, void **reference);
 
 /* ---------- public code */
@@ -65,7 +67,9 @@ struct memory_pool *memory_pool_new(
 void memory_pool_delete(
 	struct memory_pool *pool)
 {
+#ifdef DEBUG
 	memory_pool_verify(pool);
+#endif
 	memset(pool, 0, sizeof(*pool));
 	match_free("c:\\halo\\SOURCE\\memory\\memory_pool.c", 85, pool);
 
@@ -103,7 +107,9 @@ boolean memory_pool_block_allocate(
 	struct memory_pool_block *block;
 	long actual_size = memory_pool_block_compute_actual_size(size);
 
+#ifdef DEBUG
 	memory_pool_verify(pool);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 124, size>=0);
 
 	block = memory_pool_block_new(pool, actual_size);
@@ -209,7 +215,9 @@ void memory_pool_block_free(
 		pool->last_block = block->previous_block;
 	}
 
+#ifdef DEBUG
 	memset(block, 0, block->size);
+#endif
 
 	return;
 }
@@ -251,7 +259,9 @@ void memory_pool_compact(
 		pool->last_block = previous_block;
 	}
 
+#ifdef DEBUG
 	memory_pool_verify(pool);
+#endif
 
 	return;
 }
@@ -305,6 +315,7 @@ static struct memory_pool_block *memory_pool_block_new(
 	}
 }
 
+#ifdef DEBUG
 static void memory_pool_verify(
 	struct memory_pool *pool)
 {
@@ -334,22 +345,29 @@ static void memory_pool_verify(
 
 	return;
 }
+#endif
 
 static struct memory_pool_block *memory_pool_block_get(
 	struct memory_pool *pool,
 	void **reference)
 {
 	struct memory_pool_block *block;
+#ifdef DEBUG
 	struct memory_pool_block *other_block;
+#endif
 
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 372, reference && (*reference));
+#ifdef DEBUG
 	memory_pool_verify(pool);
+#endif
 
 	block = (struct memory_pool_block *)*reference - 1;
 	match_vassert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 379, block->reference==reference, csprintf(temporary, "expected reference %08x but got %08x", block->reference, reference));
 
+#ifdef DEBUG
 	for (other_block = pool->first_block; other_block && block!=other_block; other_block = other_block->next_block);
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 388, other_block);
+#endif
 
 	return block;
 }

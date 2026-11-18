@@ -98,18 +98,22 @@ static void (*disconnect_from_structure_bsp_procs[])(void) =
 	structure_decals_disconnect_from_structure_bsp,
 	decals_disconnect_from_structure_bsp
 };
+#ifdef DEBUG
 static struct memory_status scenario_load_memory_status = /* fake name */
 {
 	UNSIGNED_LONG_MAX,
 	0
 };
+#endif
 struct scenario_global_data *scenario_globals;
 struct game_globals *global_game_globals;
 struct bsp3d *global_bsp3d;
 struct collision_bsp *global_collision_bsp;
 struct structure_bsp *global_structure_bsp;
 struct scenario *global_scenario;
+#ifdef DEBUG
 boolean debug_sound_environment;
+#endif
 
 /* ---------- public code */
 
@@ -153,7 +157,9 @@ boolean scenario_load(
 {
 	boolean result = FALSE;
 
+#ifdef DEBUG
 	check_memory_status(&scenario_load_memory_status, "scenario_load");
+#endif
 	global_scenario_index = scenario_tags_load(name);
 
 	if (global_scenario_index != NONE)
@@ -221,6 +227,7 @@ void scenario_unload(
 	return;
 }
 
+#ifdef DEBUG
 struct scenario *global_scenario_get(
 	void)
 {
@@ -266,6 +273,7 @@ struct game_globals *scenario_get_game_globals(
 
 	return global_game_globals;
 }
+#endif
 
 long global_structure_bsp_tag_index_get(
 	void)
@@ -804,7 +812,9 @@ boolean scenario_switch_structure_bsp(
 
 		match_assert("c:\\halo\\SOURCE\\scenario\\scenario.c", 695, global_scenario);
 		main_stop_time();
+#ifdef DEBUG
 		collision_log_enable(FALSE);
+#endif
 
 		if (global_structure_bsp_index != NONE)
 		{
@@ -838,7 +848,9 @@ boolean scenario_switch_structure_bsp(
 			error(_error_immediate, "failed to load structure bsp '%s'", reference->structure_bsp.name);
 		}
 
+#ifdef DEBUG
 		collision_log_enable(TRUE);
+#endif
 		main_start_time();
 	}
 
@@ -1013,11 +1025,13 @@ void scenario_get_sound_environment(
 		}
 	}
 
+#ifdef DEBUG
 	if (debug_sound_environment)
 	{
 		sprintf(temporary, "|n|n|n|n%s", environment_index == NONE ? "no sound environment" : tag_get_name(environment_index));
 		render_debug_string(FALSE, temporary);
 	}
+#endif
 
 	desired = sound_environment_get(environment_index);
 	current = &scenario_globals->sound_environment_interpolator;

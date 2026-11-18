@@ -214,7 +214,11 @@ void rasterizer_model_draw_environment_shader(
 			SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
 			SetRenderStateSmart(D3DRS_ZWRITEENABLE, !alpha_blended_decal);
 			SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+#ifdef DEBUG
 			SetRenderStateSmart(D3DRS_ZBIAS, alpha_blended_decal ? rasterizer_debug_options.zbias : 0);
+#else
+			SetRenderStateSmart(D3DRS_ZBIAS, alpha_blended_decal ? 8 : 0);
+#endif
 		}
 
 		IDirect3DDevice8_SetRenderState(global_d3d_device, D3DRS_CULLMODE, D3DCULL_CCW);
@@ -416,7 +420,9 @@ void rasterizer_model_draw_environment_shader(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_model_draw_environment failed");
+#endif
 	}
 
 	return;
@@ -623,7 +629,11 @@ void _rasterizer_model_draw(
 					SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
 					SetRenderStateSmart(D3DRS_ZWRITEENABLE, !alpha_blended_decal);
 					SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+#ifdef DEBUG
 					SetRenderStateSmart(D3DRS_ZBIAS, alpha_blended_decal ? rasterizer_debug_options.zbias : 0);
+#else
+					SetRenderStateSmart(D3DRS_ZBIAS, alpha_blended_decal ? 8 : 0);
+#endif
 				}
 
 				SetRenderStateSmart(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -959,7 +969,9 @@ void _rasterizer_model_draw(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_model_draw failed");
+#endif
 	}
 
 	return;

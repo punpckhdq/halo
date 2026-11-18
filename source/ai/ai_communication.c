@@ -767,9 +767,11 @@ void ai_communication_event(
 	short time_since_shout[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	short time_since_talk[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	short time_since_chatter[NUMBER_OF_AI_COMMUNICATION_TEAMS];
+#ifdef DEBUG
 	real seconds_since_shout[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	real seconds_since_talk[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	real seconds_since_chatter[NUMBER_OF_AI_COMMUNICATION_TEAMS];
+#endif
 	short speech_disabled_reason[NUMBER_OF_AI_COMMUNICATION_TEAMS][NUMBER_OF_AI_COMMUNICATION_PRIORITIES][NUMBER_OF_COMMUNICATION_RATINGS];
 	boolean enemy_status_enabled[NUMBER_OF_COMMUNICATION_ENEMY_STATUS_TYPES];
 	boolean hostility_enabled[NUMBER_OF_AI_COMMUNICATION_HOSTILITIES];
@@ -948,6 +950,7 @@ void ai_communication_event(
 				hostility = _comm_hostility_traitor;
 			}
 
+#ifdef DEBUG
 			if (ai_debug.print_allegiance)
 			{
 				console_printf(
@@ -958,6 +961,7 @@ void ai_communication_event(
 					betrayal ? "betrayal" : "accident",
 					observed ? "observed" : "unobserved");
 			}
+#endif
 
 			if (observed)
 			{
@@ -973,6 +977,7 @@ void ai_communication_event(
 					ai_handle_allegiance_broken_notification(cause_team_index, subject_team_index, allegiance_broken);
 				}
 
+#ifdef DEBUG
 				if (ai_debug.print_allegiance && !allegiance_broken)
 				{
 					short threshold;
@@ -985,6 +990,7 @@ void ai_communication_event(
 						incidents,
 						(threshold == NONE) ? 999 : threshold);
 				}
+#endif
 			}
 		}
 
@@ -994,6 +1000,7 @@ void ai_communication_event(
 		}
 	}
 
+#ifdef DEBUG
 	if (ai_debug.print_communication)
 	{
 		char hostility_chars[NUMBER_OF_AI_COMMUNICATION_HOSTILITIES] = { 'n', 's', 'f', 'e', 't' };
@@ -1002,6 +1009,7 @@ void ai_communication_event(
 		strupr(printbuffer);
 		strcpy(silent_printbuffer, "");
 	}
+#endif
 
 	if (!subject_actor)
 	{
@@ -1059,9 +1067,11 @@ void ai_communication_event(
 		time_since_shout[team_index] = (short)MAX(0, current_time - ai_globals->last_shout_time[team_index]);
 		time_since_talk[team_index] = (short)MAX(0, current_time - ai_globals->last_talk_time[team_index]);
 		time_since_chatter[team_index] = (short)MAX(0, current_time - ai_globals->last_chatter_time[team_index]);
+#ifdef DEBUG
 		seconds_since_shout[team_index] = time_since_shout[team_index] * SECONDS_PER_TICK;
 		seconds_since_talk[team_index] = time_since_talk[team_index] * SECONDS_PER_TICK;
 		seconds_since_chatter[team_index] = time_since_chatter[team_index] * SECONDS_PER_TICK;
+#endif
 		speech_disabled[team_index][_ai_communication_priority_none][_communication_rating_normal] = TRUE;
 		speech_disabled[team_index][_ai_communication_priority_none][_communication_rating_low] = TRUE;
 
@@ -1127,6 +1137,7 @@ void ai_communication_event(
 
 	if (!ai_globals->dialogue_triggers_enabled)
 	{
+#ifdef DEBUG
 		if (ai_debug.print_communication)
 		{
 			strcat(printbuffer, "DISABLED");
@@ -1136,12 +1147,14 @@ void ai_communication_event(
 				error(_error_silent, printbuffer);
 			}
 		}
+#endif
 
 		return;
 	}
 
 	dialogue_index = global_communication_table_indices[communication_type];
 
+#ifdef DEBUG
 	if (game_connection() == _game_connection_local && BIT_VECTOR_TEST_FLAG(ai_debug.communication_suppress_flags, communication_type))
 	{
 		dialogue_index = NONE;
@@ -1156,6 +1169,7 @@ void ai_communication_event(
 	{
 		suppress_print = TRUE;
 	}
+#endif
 
 	if (dialogue_index != NONE)
 	{
@@ -1182,17 +1196,22 @@ void ai_communication_event(
 			real player_rating;
 			real recent_rating;
 			real reply_rating;
+#ifdef DEBUG
 			char classificationbuf[256];
+#endif
 			boolean no_unit;
 			short communication_priority = usage->communication_priority;
 
+#ifdef DEBUG
 			if (ai_debug.communication_focus_enable && BIT_VECTOR_TEST_FLAG(ai_debug.vocalization_focus_flags, usage->vocalization_type))
 			{
 				suppress_print = FALSE;
 			}
+#endif
 
 			if (usage->required_hostility != NONE && !hostility_enabled[usage->required_hostility])
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					char const *hostility_names[NUMBER_OF_AI_COMMUNICATION_HOSTILITIES] = { "none", "self", "friend", "enemy", "traitor" };
@@ -1204,6 +1223,7 @@ void ai_communication_event(
 						dialogue_index,
 						hostility_names[usage->required_hostility]));
 				}
+#endif
 
 				any_silent_rejection = TRUE;
 				continue;
@@ -1211,10 +1231,12 @@ void ai_communication_event(
 
 			if (sound_scripted_dialog_is_playing() && usage->communication_priority < _ai_communication_priority_yell && !TEST_FLAG(usage->flags, _dialogue_usage_override_scripted_bit))
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					strcat(silent_printbuffer, "[scripted-override] ");
 				}
+#endif
 
 				any_silent_rejection = TRUE;
 				continue;
@@ -1222,6 +1244,7 @@ void ai_communication_event(
 
 			if (usage->required_enemy_status != NONE && !enemy_status_enabled[usage->required_enemy_status])
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					char const *status_names[NUMBER_OF_COMMUNICATION_ENEMY_STATUS_TYPES] = { "never", "dead", "lost", "notvis", "nodanger", "vis" };
@@ -1233,6 +1256,7 @@ void ai_communication_event(
 						dialogue_index,
 						status_names[usage->required_enemy_status]));
 				}
+#endif
 
 				any_silent_rejection = TRUE;
 				continue;
@@ -1240,6 +1264,7 @@ void ai_communication_event(
 
 			if (usage->required_subject_race != NONE && (subject_unit_index == NONE || !(subject_race & usage->required_subject_race)))
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					strcat(silent_printbuffer, csprintf(
@@ -1248,6 +1273,7 @@ void ai_communication_event(
 						dialogue_get_vocalization_name(usage->vocalization_type, TRUE),
 						dialogue_index));
 				}
+#endif
 
 				any_silent_rejection = TRUE;
 				continue;
@@ -1255,6 +1281,7 @@ void ai_communication_event(
 
 			if (usage->required_cause_race != NONE && (cause_unit_index == NONE || !(cause_race & usage->required_cause_race)))
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					strcat(silent_printbuffer, csprintf(
@@ -1263,6 +1290,7 @@ void ai_communication_event(
 						dialogue_get_vocalization_name(usage->vocalization_type, TRUE),
 						dialogue_index));
 				}
+#endif
 
 				any_silent_rejection = TRUE;
 				continue;
@@ -1270,6 +1298,7 @@ void ai_communication_event(
 
 			if (usage->required_damage != NONE && usage->required_damage != damage_type)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					strcat(silent_printbuffer, csprintf(
@@ -1278,6 +1307,7 @@ void ai_communication_event(
 						dialogue_get_vocalization_name(usage->vocalization_type, TRUE),
 						dialogue_index));
 				}
+#endif
 
 				any_silent_rejection = TRUE;
 				continue;
@@ -1297,7 +1327,9 @@ void ai_communication_event(
 			speech_enable_after = 0;
 			recent_rating = 1.f;
 			reply_rating = 1.f;
+#ifdef DEBUG
 			strcpy(classificationbuf, "<err>");
+#endif
 
 			switch (usage->protagonist_type)
 			{
@@ -1446,6 +1478,7 @@ void ai_communication_event(
 
 			if (no_unit)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					char protagonist_code = (usage->protagonist_type == _comm_protagonist_subject) ? 's' :
@@ -1460,6 +1493,7 @@ void ai_communication_event(
 						dialogue_index,
 						protagonist_code));
 				}
+#endif
 
 				any_printed = TRUE;
 				continue;
@@ -1482,6 +1516,7 @@ void ai_communication_event(
 
 				if (preselected_reply_actor_index == NONE)
 				{
+#ifdef DEBUG
 					if (ai_debug.print_communication)
 					{
 						strcat(printbuffer, csprintf(
@@ -1490,6 +1525,7 @@ void ai_communication_event(
 							dialogue_get_vocalization_name(usage->vocalization_type, TRUE),
 							dialogue_index));
 					}
+#endif
 
 					any_printed = TRUE;
 					continue;
@@ -1498,6 +1534,7 @@ void ai_communication_event(
 
 			if (usage->required_group != NONE && comm_groups_enabled && !comm_groups_enabled[usage->required_group])
 			{
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					char group_code = (usage->required_group == _comm_group_extended) ? 'e' :
@@ -1510,6 +1547,7 @@ void ai_communication_event(
 						dialogue_index,
 						group_code));
 				}
+#endif
 
 				any_printed = TRUE;
 				continue;
@@ -1520,7 +1558,9 @@ void ai_communication_event(
 				communication_priority = communication_player_speaking_priorities[communication_priority];
 				low_priority = FALSE;
 				player_rating = 2.f;
+#ifdef DEBUG
 				strcpy(classificationbuf, "player");
+#endif
 			}
 			else
 			{
@@ -1530,6 +1570,7 @@ void ai_communication_event(
 
 				if (player_rating == 0.f)
 				{
+#ifdef DEBUG
 					if (ai_debug.print_communication)
 					{
 						strcat(printbuffer, csprintf(
@@ -1538,6 +1579,7 @@ void ai_communication_event(
 							dialogue_get_vocalization_name(usage->vocalization_type, TRUE),
 							dialogue_index));
 					}
+#endif
 
 					any_printed = TRUE;
 					continue;
@@ -1548,7 +1590,9 @@ void ai_communication_event(
 
 				if (communication_team == NONE)
 				{
+#ifdef DEBUG
 					strcpy(classificationbuf, "unteamed");
+#endif
 				}
 				else
 				{
@@ -1559,6 +1603,7 @@ void ai_communication_event(
 						(communication_priority > _ai_communication_priority_none) &&
 						(communication_priority < NUMBER_OF_AI_COMMUNICATION_PRIORITIES));			
 					
+#ifdef DEBUG
 					sprintf(
 						classificationbuf,
 						"%s-%c%c%c%s",
@@ -1567,11 +1612,13 @@ void ai_communication_event(
 						global_communication_priority_names[communication_priority][1],
 						global_communication_priority_names[communication_priority][2],
 						low_priority ? "-lo" : "-hi");
+#endif
 
 					if (speech_disabled[communication_team][communication_priority][low_priority])
 					{
 						match_assert("c:\\halo\\SOURCE\\ai\\ai_communication.c", 1593, communication_priority < _ai_communication_priority_yell);
 
+#ifdef DEBUG
 						if (ai_debug.print_communication)
 						{
 							char disabled_reasonbuf[512];
@@ -1613,6 +1660,7 @@ void ai_communication_event(
 								classificationbuf,
 								disabled_reasonbuf));
 						}
+#endif
 
 						any_printed = TRUE;
 						continue;
@@ -1632,7 +1680,7 @@ void ai_communication_event(
 							recent_rating = PIN(recent_rating, 0.f, 1.f);
 						}
 
-						if ((game_connection() != _game_connection_local || !ai_debug.communication_timeout_disabled) && status->disable_until_time != NONE)
+						if (!AI_BEHAVIOR(communication_timeout_disabled) && status->disable_until_time != NONE)
 						{
 							long disable_ticks = status->disable_until_time - current_time;
 
@@ -1643,6 +1691,7 @@ void ai_communication_event(
 
 							if (disable_ticks > 0)
 							{
+#ifdef DEBUG
 								if (ai_debug.print_communication)
 								{
 									strcat(printbuffer, csprintf(
@@ -1653,6 +1702,7 @@ void ai_communication_event(
 										global_communication_team_names[communication_team][1],
 										disable_ticks));
 								}
+#endif
 
 								any_printed = TRUE;
 								continue;
@@ -1757,6 +1807,7 @@ void ai_communication_event(
 
 					if (play_type == _unit_play_speech_none)
 					{
+#ifdef DEBUG
 						if (ai_debug.print_communication)
 						{
 							strcat(printbuffer, csprintf(
@@ -1767,6 +1818,7 @@ void ai_communication_event(
 								(speech_rating > 0.f) ? "dis" : "n/a",
 								debug_string));
 						}
+#endif
 
 						any_printed = TRUE;
 						continue;
@@ -1807,12 +1859,14 @@ void ai_communication_event(
 				{
 					if (num_possibilities >= MAXIMUM_COMMUNICATION_POSSIBILITIES)
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"ai_communication_event: type %d (%s) overflowed MAXIMUM_COMMUNICATION_POSSIBILITIES (%d)",
 							communication_type,
 							global_communication_type_names[communication_type],
 							MAXIMUM_COMMUNICATION_POSSIBILITIES);
+#endif
 						break;
 					}
 
@@ -1843,6 +1897,7 @@ void ai_communication_event(
 
 					num_possibilities++;
 
+#ifdef DEBUG
 					if (ai_debug.print_communication)
 					{
 						strcat(printbuffer, csprintf(
@@ -1862,6 +1917,7 @@ void ai_communication_event(
 							reply_rating,
 							possibilities[num_possibilities - 1].weight));
 					}
+#endif
 
 					any_printed = TRUE;
 					total_possibility_weight += weight;
@@ -1870,10 +1926,12 @@ void ai_communication_event(
 		}
 	}
 
+#ifdef DEBUG
 	if (ai_debug.print_communication_player && !player_involved)
 	{
 		suppress_print = TRUE;
 	}
+#endif
 
 	if (num_possibilities > 0)
 	{
@@ -1905,6 +1963,7 @@ void ai_communication_event(
 
 			match_assert("c:\\halo\\SOURCE\\ai\\ai_communication.c", 1902, total_possibility_weight > 0.0f);
 
+#ifdef DEBUG
 			if (ai_debug.print_communication)
 			{
 				strcat(printbuffer, csprintf(
@@ -1915,6 +1974,7 @@ void ai_communication_event(
 					forced_count,
 					total_possibility_weight));
 			}
+#endif
 		}
 
 		if (num_possibilities > 1)
@@ -1935,6 +1995,7 @@ void ai_communication_event(
 
 			selected_possibility = &possibilities[possibility_index];
 
+#ifdef DEBUG
 			if (ai_debug.print_communication)
 			{
 				strcat(printbuffer, csprintf(
@@ -1945,6 +2006,7 @@ void ai_communication_event(
 					accumulated_weight,
 					possibility_index));
 			}
+#endif
 		}
 
 		ai_packet.communication_type = communication_type;
@@ -2044,6 +2106,7 @@ void ai_communication_event(
 				NONE);
 		}
 
+#ifdef DEBUG
 		if (ai_debug.print_communication)
 		{
 			strcat(printbuffer, strupr(csprintf(
@@ -2056,10 +2119,12 @@ void ai_communication_event(
 				error(_error_silent, printbuffer);
 			}
 		}
+#endif
 
 		return;
 	}
 
+#ifdef DEBUG
 	if (ai_debug.print_communication)
 	{
 		if (any_silent_rejection && !any_printed)
@@ -2077,6 +2142,7 @@ void ai_communication_event(
 			}
 		}
 	}
+#endif
 
 	return;
 }
@@ -2096,6 +2162,7 @@ void ai_communication_started(
 	case _unit_speech_death:
 		break;
 	default:
+#ifdef DEBUG
 		if (ai_debug.print_vocalizations)
 		{
 			char buffer[1024];
@@ -2178,6 +2245,7 @@ void ai_communication_started(
 					unit_describe_speech(unit_index, TRUE, sizeof(speechbuf), speechbuf));
 			}
 		}
+#endif
 
 		if (!ai_information->updated_dialogue_timers)
 		{
@@ -2287,6 +2355,7 @@ static long ai_communication_find_actor_to_reply_to_player(
 		char printbuffer[1024];
 		struct reply_usage const *reply;
 		short reply_index;
+#ifdef DEBUG
 		boolean suppress_print = ai_debug.communication_focus_enable;
 
 		if (ai_debug.print_communication)
@@ -2298,6 +2367,7 @@ static long ai_communication_find_actor_to_reply_to_player(
 		{
 			suppress_print = FALSE;
 		}
+#endif
 
 		reply = global_reply_table;
 
@@ -2308,23 +2378,27 @@ static long ai_communication_find_actor_to_reply_to_player(
 			{
 				short unit_speech_priority = communication_speech_priorities[reply->communication_priority];
 
+#ifdef DEBUG
 				if (ai_debug.communication_focus_enable && BIT_VECTOR_TEST_FLAG(ai_debug.vocalization_focus_flags, reply->vocalization_type))
 				{
 					suppress_print = FALSE;
 				}
+#endif
 
 				if (sound_scripted_dialog_is_playing() && !TEST_FLAG(reply->flags, _reply_usage_override_scripted_bit))
 				{
+#ifdef DEBUG
 					if (ai_debug.print_communication)
 					{
 						strcat(printbuffer, "[scripted-override] ");
 					}
+#endif
 				}
 				else if (reply->player_chance > 0.f)
 				{
 					real random = real_random();
 
-					if ((game_connection() == _game_connection_local && ai_debug.communication_random_disabled) || random < reply->player_chance)
+					if (AI_BEHAVIOR(communication_random_disabled) || random < reply->player_chance)
 					{
 						switch (reply->protagonist_type)
 						{
@@ -2378,6 +2452,7 @@ static long ai_communication_find_actor_to_reply_to_player(
 
 						if (reply_actor_index == NONE)
 						{
+#ifdef DEBUG
 							if (ai_debug.print_communication)
 							{
 								strcat(printbuffer, csprintf(
@@ -2385,6 +2460,7 @@ static long ai_communication_find_actor_to_reply_to_player(
 									"[%s nobody] ",
 									dialogue_get_vocalization_name(reply->vocalization_type, TRUE)));
 							}
+#endif
 						}
 						else
 						{
@@ -2401,12 +2477,13 @@ static long ai_communication_find_actor_to_reply_to_player(
 									reply_rating = PIN(reply_rating, 0.f, 1.f);
 								}
 
-								if ((game_connection() != _game_connection_local || !ai_debug.communication_timeout_disabled) && status->disable_until_time != NONE)
+								if (!AI_BEHAVIOR(communication_timeout_disabled) && status->disable_until_time != NONE)
 								{
 									long disable_ticks = status->disable_until_time - current_time;
 
 									if (disable_ticks > 0)
 									{
+#ifdef DEBUG
 										if (ai_debug.print_communication)
 										{
 											strcat(
@@ -2418,12 +2495,14 @@ static long ai_communication_find_actor_to_reply_to_player(
 													global_communication_team_names[communication_team][1],
 													disable_ticks));
 										}
+#endif
 
 										reply_actor_index = NONE;
 									}
 								}
 							}
 
+#ifdef DEBUG
 							if (reply_actor_index != NONE && ai_debug.print_communication)
 							{
 								strcat(printbuffer, csprintf(
@@ -2431,8 +2510,10 @@ static long ai_communication_find_actor_to_reply_to_player(
 									"[%s found-actor] ",
 									dialogue_get_vocalization_name(reply->vocalization_type, TRUE)));
 							}
+#endif
 						}
 					}
+#ifdef DEBUG
 					else if (ai_debug.print_communication)
 					{
 						strcat(printbuffer, csprintf(
@@ -2442,7 +2523,9 @@ static long ai_communication_find_actor_to_reply_to_player(
 							random,
 							reply->player_chance));
 					}
+#endif
 				}
+#ifdef DEBUG
 				else if (ai_debug.print_communication)
 				{
 					strcat(printbuffer, csprintf(
@@ -2450,6 +2533,7 @@ static long ai_communication_find_actor_to_reply_to_player(
 						"[%s 0-player-chance] ",
 						dialogue_get_vocalization_name(reply->vocalization_type, TRUE)));
 				}
+#endif
 
 				if (reply_actor_index != NONE)
 				{
@@ -2460,10 +2544,12 @@ static long ai_communication_find_actor_to_reply_to_player(
 			reply++;
 		}
 
+#ifdef DEBUG
 		if (ai_debug.print_communication && !suppress_print)
 		{
 			error(_error_silent, printbuffer);
 		}
+#endif
 	}
 
 	if (reply_rating_reference)
@@ -2492,6 +2578,7 @@ void ai_communication_finished(
 		boolean suppress_print = FALSE;
 		boolean any_reply = FALSE;
 
+#ifdef DEBUG
 		if (ai_debug.print_communication)
 		{
 			sprintf(printbuffer, "REPLY %s: ", dialogue_get_vocalization_name(vocalization_type, FALSE));
@@ -2501,6 +2588,7 @@ void ai_communication_finished(
 		{
 			suppress_print = !BIT_VECTOR_TEST_FLAG(ai_debug.vocalization_focus_flags, vocalization_type);
 		}
+#endif
 
 		reply = global_reply_table;
 		reply_index = 0;
@@ -2516,6 +2604,7 @@ void ai_communication_finished(
 
 				any_reply = TRUE;
 
+#ifdef DEBUG
 				if (ai_debug.print_communication)
 				{
 					strcat(printbuffer, csprintf(
@@ -2528,15 +2617,18 @@ void ai_communication_finished(
 				{
 					suppress_print = FALSE;
 				}
+#endif
 
 				if (reply->original_damage_category == NONE || reply->original_damage_category == ai_information->damage_category)
 				{
 					if (sound_scripted_dialog_is_playing() && !TEST_FLAG(reply->flags, _reply_usage_override_scripted_bit))
 					{
+#ifdef DEBUG
 						if (ai_debug.print_communication)
 						{
 							strcat(printbuffer, "override-scripted ");
 						}
+#endif
 					}
 					else
 					{
@@ -2634,10 +2726,11 @@ void ai_communication_finished(
 									{
 										real random = real_random();
 
-										if ((game_connection() == _game_connection_local && ai_debug.communication_random_disabled) || random < reply->chance)
+										if (AI_BEHAVIOR(communication_random_disabled) || random < reply->chance)
 										{
 											chance_succeeded = TRUE;
 										}
+#ifdef DEBUG
 										else if (ai_debug.print_communication)
 										{
 											strcat(printbuffer, csprintf(
@@ -2646,21 +2739,26 @@ void ai_communication_finished(
 												random,
 												reply->chance));
 										}
+#endif
 									}
+#ifdef DEBUG
 									else if (ai_debug.print_communication)
 									{
 										strcat(printbuffer, "0-chance ");
 									}
+#endif
 								}
 
 								if (chance_succeeded)
 								{
 									if (reply->reply_filter && !reply->reply_filter(unit_index, ai_information, reply_unit->unit.actor_index))
 									{
+#ifdef DEBUG
 										if (ai_debug.print_communication)
 										{
 											strcat(printbuffer, "filter ");
 										}
+#endif
 									}
 									else
 									{
@@ -2716,6 +2814,7 @@ void ai_communication_finished(
 												unit_index,
 												NONE);
 
+#ifdef DEBUG
 											if (ai_debug.print_communication)
 											{
 												strcat(printbuffer, strupr(csprintf(
@@ -2723,9 +2822,11 @@ void ai_communication_finished(
 													">>%s<<",
 													dialogue_get_vocalization_name(speech.vocalization_type, TRUE))));
 											}
+#endif
 											break;
 										}
 
+#ifdef DEBUG
 										if (ai_debug.print_communication)
 										{
 											strcat(printbuffer, csprintf(
@@ -2734,38 +2835,49 @@ void ai_communication_finished(
 												(weight > 0.f) ? "dis" : "n/a",
 												debugbuf));
 										}
+#endif
 									}
 								}
+#ifdef DEBUG
 								else if (ai_debug.print_communication)
 								{
 									strcat(printbuffer, "rand-failed ");
 								}
+#endif
 							}
+#ifdef DEBUG
 							else if (ai_debug.print_communication)
 							{
 								strcat(printbuffer, "playercant ");
 							}
+#endif
 						}
+#ifdef DEBUG
 						else if (ai_debug.print_communication)
 						{
 							strcat(printbuffer, "nobody ");
 						}
+#endif
 					}
 				}
+#ifdef DEBUG
 				else if (ai_debug.print_communication)
 				{
 					strcat(printbuffer, "wrong-dmg ");
 				}
+#endif
 			}
 
 			reply++;
 			reply_index++;
 		}
 
+#ifdef DEBUG
 		if (any_reply && ai_debug.print_communication && !suppress_print)
 		{
 			error(_error_silent, printbuffer);
 		}
+#endif
 	}
 
 	return;
@@ -3100,17 +3212,19 @@ static short ai_communication_consider_speech(
 
 	if (play_type == _unit_play_speech_none)
 	{
+#ifdef DEBUG
 		if (debugstring)
 		{
 			sprintf(debugstring, "nospch-%s", unit_get_speech_priority_name(speech_priority));
 		}
+#endif
 	}
 	else if (play_type == _unit_play_speech_queue)
 	{
 		*weight *= 0.3f;
 	}
 
-	if ((game_connection() != _game_connection_local || !ai_debug.communication_unit_repeat_disabled) &&
+	if (!AI_BEHAVIOR(communication_unit_repeat_disabled) &&
 		allow_recent_disabling &&
 		communication_priority < _ai_communication_priority_shout &&
 		last_speech_time != NONE)
@@ -3124,10 +3238,12 @@ static short ai_communication_consider_speech(
 			play_type = _unit_play_speech_none;
 			*weight = 0.f;
 
+#ifdef DEBUG
 			if (debugstring)
 			{
 				sprintf(debugstring, "spk%d<tol%d+%d", time_since_speech, delay_ticks, tolerance_ticks - delay_ticks);
 			}
+#endif
 		}
 		else if (time_since_speech < tolerance_ticks + communication_unit_prefer_silent_time)
 		{
@@ -3196,6 +3312,7 @@ static void ai_communication_update_speech_timers(
 					ai_globals->last_shout_time[communication_team] = MAX(ai_globals->last_shout_time[communication_team], finish_time);
 				}
 
+#ifdef DEBUG
 				if (ai_debug.print_speech_timers)
 				{
 					error(
@@ -3208,6 +3325,7 @@ static void ai_communication_update_speech_timers(
 						(priority >= _unit_speech_talk) ? "talk" : "chatter",
 						finish_time - current_time);
 				}
+#endif
 			}
 
 			if (dialogue_type_index != NONE)
@@ -3220,7 +3338,7 @@ static void ai_communication_update_speech_timers(
 				status = &global_dialogue_events[communication_team + NUMBER_OF_AI_COMMUNICATION_TEAMS * dialogue_type_index];
 				status->last_time_spoken = current_time;
 
-				if (game_connection() != _game_connection_local || !ai_debug.communication_timeout_disabled)
+				if (!AI_BEHAVIOR(communication_timeout_disabled))
 				{
 					if (dialogue->repeat_delay > 0.f)
 					{
@@ -3239,7 +3357,7 @@ static void ai_communication_update_speech_timers(
 				status = &global_reply_events[communication_team + NUMBER_OF_AI_COMMUNICATION_TEAMS * reply_table_index];
 				status->last_time_spoken = current_time;
 
-				if (game_connection() != _game_connection_local || !ai_debug.communication_timeout_disabled)
+				if (!AI_BEHAVIOR(communication_timeout_disabled))
 				{
 					if (reply->repeat_delay > 0.f)
 					{
@@ -3714,7 +3832,9 @@ real ai_communication_get_player_rating(
 						struct collision_result collision;
 						boolean blocked;
 
+#ifdef DEBUG
 						ai_profile.meters[_ai_meter_collision_vector].current_count++;
+#endif
 						match_collision_log_begin_user("c:\\halo\\SOURCE\\ai\\ai_communication.c", 3729, _collision_user_ai_comms);
 						blocked = collision_test_line(
 							FLAG(_collision_test_front_facing_surfaces_bit) | FLAG(_collision_test_back_facing_surfaces_bit) | FLAG(_collision_test_ignore_two_sided_surfaces_bit) | FLAG(_collision_test_structure_bit),
@@ -3811,14 +3931,18 @@ boolean ai_conversation(
 	{
 		long conversation_index = ai_conversation_new(conversation_definition_index, scripted);
 
+#ifdef DEBUG
 		if (ai_debug.print_conversations)
 		{
 			console_printf(FALSE, "%s: script tried to start conversation", ai_conversation_definition_get(conversation_definition_index)->name);
 		}
+#endif
 
 		if (conversation_index == NONE)
 		{
+#ifdef DEBUG
 			error(_error_silent, "WARNING: too many executing conversations (ran out of MAXIMUM_CONVERSATIONS_PER_MAP %d)", MAXIMUM_CONVERSATIONS_PER_MAP);
+#endif
 		}
 		else
 		{
@@ -3826,15 +3950,18 @@ boolean ai_conversation(
 
 			if (ai_conversation_begin(conversation_index, &keep_trying))
 			{
+#ifdef DEBUG
 				if (ai_debug.print_conversations)
 				{
 					console_printf(FALSE, "%s: begun successfully", ai_conversation_definition_get(conversation_definition_index)->name);
 				}
+#endif
 
 				success = TRUE;
 			}
 			else if (keep_trying)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_conversations)
 				{
 					console_printf(
@@ -3842,11 +3969,13 @@ boolean ai_conversation(
 						"%s: can't begin yet but will remember and keep trying it",
 						ai_conversation_definition_get(conversation_definition_index)->name);
 				}
+#endif
 
 				success = TRUE;
 			}
 			else
 			{
+#ifdef DEBUG
 				if (ai_debug.print_conversations)
 				{
 					console_printf(
@@ -3854,6 +3983,7 @@ boolean ai_conversation(
 						"%s: could not start, and not set to keep trying... aborting (status 5)",
 						ai_conversation_definition_get(conversation_definition_index)->name);
 				}
+#endif
 
 				ai_conversation_finish(conversation_index, TRUE, FALSE);
 			}
@@ -3962,10 +4092,12 @@ void ai_conversation_stop(
 	{
 		if (conversation->conversation_definition_index == conversation_definition_index)
 		{
+#ifdef DEBUG
 			if (ai_debug.print_conversations)
 			{
 				console_printf(FALSE, "%s: told to stop by scripting", ai_conversation_definition_get(conversation_definition_index)->name);
 			}
+#endif
 
 			ai_conversation_finish(iterator.index, FALSE, FALSE);
 		}
@@ -3986,12 +4118,14 @@ void ai_conversation_advance(
 	{
 		if (conversation->conversation_definition_index == conversation_definition_index)
 		{
+#ifdef DEBUG
 			if (ai_debug.print_conversations)
 			{
 				struct ai_conversation *conversation_definition = ai_conversation_definition_get(conversation_definition_index);
 
 				console_printf(FALSE, "%s: told to advance by scripting", conversation_definition->name);
 			}
+#endif
 
 			conversation->told_to_advance = TRUE;
 		}
@@ -4019,20 +4153,24 @@ void ai_conversation_update(
 
 			if (!((current_time - conversation->creation_time) % TICKS_PER_SECOND))
 			{
+#ifdef DEBUG
 				if (ai_debug.print_conversations)
 				{
 					console_printf(FALSE, "%s: trying to begin", conversation_definition->name);
 				}
+#endif
 
 				ai_conversation_begin(iterator.index, &keep_trying);
 			}
 
 			if (!conversation->begun && !keep_trying)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_conversations)
 				{
 					console_printf(FALSE, "%s: unable to begin, and no point in continuing", conversation_definition->name);
 				}
+#endif
 
 				ai_conversation_finish(iterator.index, TRUE, FALSE);
 			}
@@ -4053,10 +4191,12 @@ void ai_conversation_update(
 
 				if (conversation->line_index >= conversation_definition->lines.count)
 				{
+#ifdef DEBUG
 					if (ai_debug.print_conversations)
 					{
 						console_printf(FALSE, "%s: no more lines to play", conversation_definition->name);
 					}
+#endif
 
 					conversation->finished = TRUE;
 					break;
@@ -4209,10 +4349,12 @@ void ai_conversation_unit_died(
 
 			if (abort)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_conversations)
 				{
 					console_printf(FALSE, "%s: unit died, aborting", conversation_definition->name);
 				}
+#endif
 
 				ai_conversation_finish(iterator.index, FALSE, FALSE);
 				break;
@@ -4236,6 +4378,7 @@ void ai_conversation_finish(
 		struct conversation_datum *conversation = conversation_get(conversation_index);
 		struct ai_conversation *conversation_definition = ai_conversation_definition_get(conversation->conversation_definition_index);
 
+#ifdef DEBUG
 		if (ai_debug.print_conversations)
 		{
 			console_printf(
@@ -4245,6 +4388,7 @@ void ai_conversation_finish(
 				success ? "successfully" : "prematurely",
 				unable_to_begin ? " (unable to begin)" : "");
 		}
+#endif
 
 		finished_conversation = conversation_get(conversation_index);
 		recent_index = ai_globals->recent_conversation_next_index;
@@ -4367,6 +4511,7 @@ static boolean ai_conversation_begin(
 				participant_missing = TRUE;
 			}
 
+#ifdef DEBUG
 			if (ai_debug.print_conversations)
 			{
 				char const *name = "none";
@@ -4396,6 +4541,7 @@ static boolean ai_conversation_begin(
 						name);
 				}
 			}
+#endif
 			break;
 		}
 	}
@@ -4416,6 +4562,7 @@ static boolean ai_conversation_begin(
 		found_specific_unit &&
 		best_participant_distance > conversation_definition->trigger_dist)
 	{
+#ifdef DEBUG
 		if (ai_debug.print_conversations)
 		{
 			console_printf(
@@ -4425,6 +4572,7 @@ static boolean ai_conversation_begin(
 				best_participant_distance,
 				conversation_definition->trigger_dist);
 		}
+#endif
 
 		success = FALSE;
 		wait = TRUE;
@@ -4481,10 +4629,12 @@ static boolean ai_conversation_begin(
 
 			if (conversation->triggering_player_unit_index == NONE)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_conversations)
 				{
 					console_printf(FALSE, "%s: cannot start, nobody can see player", conversation_definition->name);
 				}
+#endif
 
 				success = FALSE;
 
@@ -4528,10 +4678,12 @@ static boolean ai_conversation_begin(
 
 		if (!looking)
 		{
+#ifdef DEBUG
 			if (ai_debug.print_conversations)
 			{
 				console_printf(FALSE, "%s: cannot start, players are not looking at us", conversation_definition->name);
 			}
+#endif
 
 			success = FALSE;
 
@@ -4614,6 +4766,7 @@ static long ai_conversation_new(
 
 		if (oldest_index != NONE)
 		{
+#ifdef DEBUG
 			if (ai_debug.print_conversations)
 			{
 				console_printf(
@@ -4621,6 +4774,7 @@ static long ai_conversation_new(
 					"%s: this conversation is already running or trying to run, overwrite it",
 					ai_conversation_definition_get(conversation_definition_index)->name);
 			}
+#endif
 
 			ai_conversation_finish(oldest_index, FALSE, FALSE);
 			conversation_index = datum_new_at_index(conversation_data, oldest_index);
@@ -4950,6 +5104,7 @@ static boolean ai_conversation_find_participant(
 			}
 		}
 
+#ifdef DEBUG
 		if (!success && ai_debug.print_conversations)
 		{
 			char potential_desc[256];
@@ -5011,6 +5166,7 @@ static boolean ai_conversation_find_participant(
 				console_printf(FALSE, tempstring);
 			}
 		}
+#endif
 	}
 
 	if (success)
@@ -5192,10 +5348,12 @@ static boolean ai_conversation_line_perform(
 							speech.ai.look_data.unit.unit_index = conversation->line_unit_index;
 							speech.ai.information_type = _ai_information_none;
 
+#ifdef DEBUG
 							if (ai_debug.print_conversations)
 							{
 								console_printf(FALSE, "%s: speak %s", conversation_definition->name, tag_get_name(speech.sound_definition_index));
 							}
+#endif
 
 							unit_speak(conversation->line_unit_index, play_type, &speech);
 						}

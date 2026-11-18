@@ -461,11 +461,11 @@ static void build_default_profile(
 	memset(profile, 0, sizeof(*profile));
 	profile->primary_color_index = NONE;
 	profile->controller_settings.look_sensitivity = DEFAULT_LOOK_SENSITIVITY;
+	SET_FLAG(profile->flags, _profile_is_default_bit, TRUE);
+	profile->flags |= i << CHAR_BITS;
 	profile->controller_settings.invert_look = FALSE;
 	profile->controller_settings.flight_stick_aircraft_controls = FALSE;
 	profile->controller_settings.ingame_help_disabled = FALSE;
-	SET_FLAG(profile->flags, _profile_is_default_bit, TRUE);
-	profile->flags |= i << CHAR_BITS;
 	profile->controller_settings.vibration_disabled = FALSE;
 	profile->last_single_player_map_played = 0;
 
@@ -730,7 +730,9 @@ long player_profile_new(
 			ustrncpy(profile->player_name, name, MAXIMUM_PLAYER_PROFILE_NAME_LENGTH);
 			profile->player_name[MAXIMUM_PLAYER_PROFILE_NAME_LENGTH] = '\0';
 
+#ifdef DEBUG
 			error(_error_silent, "### DEBUG unlocking all solo levels for newly created profile");
+#endif
 
 			for (level = 0; level < NUMBER_OF_SINGLE_PLAYER_LEVELS; level++)
 			{

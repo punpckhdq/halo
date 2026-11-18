@@ -1197,6 +1197,7 @@ static boolean firing_position_forced_evaluation(
 
 	firing_position_pre_evaluate(actor_index, evaluation_context, 1, firing_position);
 
+#ifdef DEBUG
 	if (firing_position->valid)
 	{
 		evaluation_context->valid_count++;
@@ -1205,6 +1206,7 @@ static boolean firing_position_forced_evaluation(
 	{
 		evaluation_context->nonrejected_count++;
 	}
+#endif
 
 	if (firing_position->valid)
 	{
@@ -1215,7 +1217,9 @@ static boolean firing_position_forced_evaluation(
 
 		firing_position->pre_evaluation = firing_position->evaluation;
 		firing_position->valid = firing_position_post_evaluate(actor_index, evaluation_context, firing_position);
+#ifdef DEBUG
 		evaluation_context->post_evaluation_count++;
+#endif
 	}
 
 	return firing_position->valid;
@@ -1367,6 +1371,7 @@ short actor_select_firing_position(
 	real best_evaluation = 0.0f;
 	boolean debug = FALSE;
 
+#ifdef DEBUG
 	if (actor->meta.encounter_index == ai_debug.selected_encounter_index &&
 		(ai_debug.selected_actor_index == NONE || ai_debug.selected_actor_index == actor_index))
 	{
@@ -1379,6 +1384,7 @@ short actor_select_firing_position(
 			debug = TRUE;
 		}
 	}
+#endif
 
 	if (actor->meta.encounter_index != NONE)
 	{
@@ -1395,7 +1401,9 @@ short actor_select_firing_position(
 
 		match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1552, !actor->input.vehicle_passenger);
 
+#ifdef DEBUG
 		ai_profile.meters[_ai_meter_firing_point_eval].current_count++;
+#endif
 
 		encounter_build_firing_position_owner_actor_indices(actor->meta.encounter_index, firing_position_owner_actor_indices);
 		if (actor->firing_positions.current_position_index != NONE)
@@ -1639,17 +1647,21 @@ short actor_select_firing_position(
 			}
 		}
 
+#ifdef DEBUG
 		evaluation_context->skipped_count = 0;
 		evaluation_context->post_evaluation_count = 0;
 		evaluation_context->nonrejected_count = 0;
 		evaluation_context->valid_count = 0;
 		evaluation_context->consider_count = 0;
 		evaluation_context->encounter_count = 0;
+#endif
 
 		if (debug)
 		{
+#ifdef DEBUG
 			ai_debug.firing_position_context_valid = TRUE;
 			ai_debug.firing_position_context = *evaluation_context;
+#endif
 		}
 
 		match_assert("c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 1830, area_path_state_valid);
@@ -1668,7 +1680,9 @@ short actor_select_firing_position(
 
 				if (debug)
 				{
+#ifdef DEBUG
 					ai_debug.firing_positions[index].evaluated = FALSE;
+#endif
 				}
 
 				if (!TEST_FLAG(evaluation_context->allowed_position_mask, firing_position_definition->group_index))
@@ -1676,10 +1690,12 @@ short actor_select_firing_position(
 					continue;
 				}
 
+#ifdef DEBUG
 				if (actor->meta.encounter_index == ai_debug.selected_encounter_index)
 				{
 					ai_debug.firing_positions[index].pursuit_position = evaluation_context->evaluation_mode == _firing_point_evaluation_mode_pursue;
 				}
+#endif
 
 				if (!evaluation_context->flying && firing_position_definition->surface_index == NONE)
 				{
@@ -1742,8 +1758,10 @@ short actor_select_firing_position(
 			}
 		}
 
+#ifdef DEBUG
 		evaluation_context->encounter_count = (short)encounter_definition->firing_positions.count;
 		evaluation_context->consider_count = firing_position_count;
+#endif
 
 		if (firing_position_count == 0)
 		{
@@ -1904,8 +1922,10 @@ short actor_select_firing_position(
 
 				if (debug)
 				{
+#ifdef DEBUG
 					ai_debug.firing_positions[firing_position->original_index].evaluated = TRUE;
 					ai_debug.firing_positions[firing_position->original_index].last_evaluation = *firing_position;
+#endif
 				}
 			}
 			else
@@ -1934,6 +1954,7 @@ short actor_select_firing_position(
 					firing_position_index = (short)firing_position_indices[sorted_index];
 					firing_position = &firing_positions[firing_position_index];
 
+#ifdef DEBUG
 					if (firing_position->valid)
 					{
 						evaluation_context->valid_count++;
@@ -1942,12 +1963,14 @@ short actor_select_firing_position(
 					{
 						evaluation_context->nonrejected_count++;
 					}
+#endif
 
 					if (!firing_position->valid ||
 						(evaluation_context->post_evaluation_bounded && firing_position->evaluation + evaluation_context->post_evaluation_bound <= best_evaluation))
 					{
-						if (game_connection() || !ai_debug.evaluate_all_positions)
+						if (!AI_BEHAVIOR(evaluate_all_positions))
 						{
+#ifdef DEBUG
 							short index;
 
 							for (index = sorted_index; index < firing_position_count; index++)
@@ -1958,6 +1981,7 @@ short actor_select_firing_position(
 									evaluation_context->skipped_count++;
 								}
 							}
+#endif
 							break;
 						}
 
@@ -1971,7 +1995,9 @@ short actor_select_firing_position(
 							firing_position_compute_line_of_sight(actor_index, evaluation_context, firing_position);
 						}
 
+#ifdef DEBUG
 						evaluation_context->post_evaluation_count++;
+#endif
 						firing_position->pre_evaluation = firing_position->evaluation;
 						if (firing_position_post_evaluate(actor_index, evaluation_context, firing_position) &&
 							firing_position->evaluation > best_evaluation)
@@ -1987,11 +2013,14 @@ short actor_select_firing_position(
 				{
 					for (firing_position_index = 0, firing_position = firing_positions; firing_position_index < firing_position_count; firing_position_index++, firing_position++)
 					{
+#ifdef DEBUG
 						ai_debug.firing_positions[firing_position->original_index].evaluated = TRUE;
 						ai_debug.firing_positions[firing_position->original_index].last_evaluation = *firing_position;
+#endif
 					}
 				}
 
+#ifdef DEBUG
 				if (ai_debug.print_evaluation_statistics)
 				{
 					char *mode_names[] =
@@ -2013,6 +2042,7 @@ short actor_select_firing_position(
 						evaluation_context->post_evaluation_count,
 						evaluation_context->skipped_count);
 				}
+#endif
 			}
 		}
 
@@ -2176,7 +2206,9 @@ short actor_change_firing_position(
 
 	if (actor->meta.encounter_index != NONE)
 	{
+#ifdef DEBUG
 		encounter_verify_firing_position_owner_actor_indices(actor->meta.encounter_index);
+#endif
 	}
 
 	return actor->firing_positions.current_position_index;

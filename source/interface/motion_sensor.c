@@ -105,7 +105,7 @@ static char blip_type_get(long object_index, long local_player_index);
 static void motion_sensor_blip_set_type_and_size(struct motion_sensor_blip *blip, long unit_index, long local_player_index);
 static real blip_size_get(char size_type);
 static struct motion_sensor_player_datum *get_motion_sensor_data(short local_player_index);
-static boolean should_track_object(long object_index);
+static boolean should_track_object(long object_index, boolean unused);
 static boolean should_draw_object(long object_index);
 static void render_blip(struct motion_sensor_datum *sensor_datum, char blip_type, char blip_size_type, real_point2d const *point, real relative_scale, real fade, real radius);
 static void motion_sensor_update(void);
@@ -349,7 +349,8 @@ void motion_sensor_dispose_from_old_map(
 /* ---------- private code */
 
 static boolean should_track_object(
-	long object_index)
+	long object_index,
+	boolean unused) /* fake name */
 {
 	struct unit_datum *unit = unit_try_and_get(object_index);
 	boolean track = FALSE;
@@ -490,12 +491,16 @@ void motion_sensor_tick(
 static void motion_sensor_update(
 	void)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	long game_time;
 	boolean done;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	game_engine_running();
 	game_time = game_time_get();
@@ -560,7 +565,7 @@ static void motion_sensor_update(
 
 		while (object_iterator_next(&iter) && !done)
 		{
-			if (should_track_object(iter.index) && should_draw_object(iter.index))
+			if (should_track_object(iter.index, FALSE) && should_draw_object(iter.index))
 			{
 				real_point3d center;
 				real dummy;
@@ -604,11 +609,13 @@ static void motion_sensor_update(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\motion_sensor.c", 642);
 	}
+#endif
 
 	return;
 }
@@ -616,12 +623,16 @@ static void motion_sensor_update(
 static void update_motion_sensor(
 	short local_player_index)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	struct motion_sensor_player_datum *player_sensor;
 	long game_time;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	player_sensor = get_motion_sensor_data(local_player_index);
 	game_time = game_time_get();
@@ -711,11 +722,13 @@ static void update_motion_sensor(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\motion_sensor.c", 756);
 	}
+#endif
 
 	return;
 }
@@ -725,11 +738,15 @@ static void render_motion_sensor(
 	boolean in_multiplayer,
 	point2d const *reference)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	short perspective;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 
 	perspective = director_get_perspective(local_player_index);
 
@@ -785,11 +802,13 @@ static void render_motion_sensor(
 		rasterizer_hud_motion_sensor_blip_end(&center_point, sweep_theta);
 	}
 
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\motion_sensor.c", 830);
 	}
+#endif
 
 	return;
 }

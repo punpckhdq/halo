@@ -133,9 +133,11 @@ void generate_public_key(
 		public_key->dwords[i] = generate_diffie_hellman_public_key(p->dwords[i], x->dwords[i], g->dwords[i]);
 	}
 
+#ifdef DEBUG
 	error(_error_silent, "p= %8lX%8lX\nx= %8lX%8lX\ng= %8lX%8lX\npublic key= %8lX%8lX\n\n",
 		p->dwords[0], p->dwords[1], x->dwords[0], x->dwords[1],
 		g->dwords[0], g->dwords[1], public_key->dwords[0], public_key->dwords[1]);
+#endif
 
 	return;
 }
@@ -154,9 +156,11 @@ void generate_private_key(
 		private_key->dwords[i] = SWAP4(private_key->dwords[i]);
 	}
 
+#ifdef DEBUG
 	error(_error_silent, "public_key= %8lX%8lX\np= %8lX%8lX\nx= %8lX%8lX\nprivate key= %8lX%8lX\n\n",
 		public_key->dwords[0], public_key->dwords[1], p->dwords[0], p->dwords[1],
 		x->dwords[0], x->dwords[1], private_key->dwords[0], private_key->dwords[1]);
+#endif
 
 	return;
 }

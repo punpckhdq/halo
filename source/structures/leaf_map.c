@@ -922,6 +922,7 @@ void render_debug_leaf_portal(
 
 	for (vertex_index = 2; vertex_index < portal->vertices.count; vertex_index++)
 	{
+#ifdef DEBUG
 		render_debug_triangle(
 			TRUE,
 			TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
@@ -933,8 +934,10 @@ void render_debug_leaf_portal(
 			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index - 1, real_point3d),
 			TAG_BLOCK_GET_ELEMENT(&portal->vertices, vertex_index, real_point3d),
 			global_real_argb_red);
+#endif
 	}
 
+#ifdef DEBUG
 	render_debug_line(
 		TRUE,
 		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
@@ -945,6 +948,7 @@ void render_debug_leaf_portal(
 		TAG_BLOCK_GET_ELEMENT(&portal->vertices, 0, real_point3d),
 		TAG_BLOCK_GET_ELEMENT(&portal->vertices, portal->vertices.count - 1, real_point3d),
 		global_real_argb_red);
+#endif
 
 	return;
 }
@@ -1008,13 +1012,17 @@ void render_debug_leaf_faces(
 		leaf_face_get_vertex3d(map, face, 0, &p0);
 		leaf_face_get_vertex3d(map, face, 1, &p1);
 		last_p = p1;
+#ifdef DEBUG
 		render_debug_line(TRUE, &p0, &p1, global_real_argb_white);
+#endif
 
 		for (vertex_index = 2; vertex_index < face->vertices.count; vertex_index++)
 		{
 			leaf_face_get_vertex3d(map, face, vertex_index, &p);
+#ifdef DEBUG
 			render_debug_triangle(TRUE, &p0, &last_p, &p, &face_color);
 			render_debug_line(TRUE, &last_p, &p, global_real_argb_white);
+#endif
 			last_p = p;
 		}
 	}

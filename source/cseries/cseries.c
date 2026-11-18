@@ -6,19 +6,6 @@ CSERIES.C
 
 #include "cseries.h"
 
-#undef memcmp
-#undef memmove
-#undef memset
-#undef strcat
-#undef strcmp
-#undef strncat
-#undef strncmp
-#undef strncpy
-#undef strtok
-#undef strlen
-#undef strcpy
-#undef memcpy
-
 /* ---------- constants */
 
 enum
@@ -31,7 +18,11 @@ enum
 
 /* ---------- macros */
 
+#ifdef DEBUG
 #define cseries_match_assert(file, line, expr) if (!(expr)) { stack_walk(FALSE); error(_error_silent, "EXCEPTION %s in %s,#%d: %s", "halt", MATCH_FILE(file), MATCH_LINE(line), STRINGIFY(expr)); system_exit(-1); }
+#else
+#define cseries_match_assert(file, line, expr)
+#endif
 #define cseries_assert(expr) cseries_match_assert(__FILE__, __LINE__, expr)
 
 /* ---------- structures */
@@ -104,9 +95,11 @@ const real_rgb_color *global_real_rgb_violet = &global_real_argb_color_table[16]
 void cseries_initialize(
 	void)
 {
+#ifdef DEBUG
 	debug_memory_manager_initialize();
 	profile_initialize();
 	profile_global_enable = FALSE;
+#endif
 
 	return;
 };
@@ -114,7 +107,9 @@ void cseries_initialize(
 void cseries_dispose(
 	void)
 {
+#ifdef DEBUG
 	debug_dump_memory();
+#endif
 
 	return;
 };
@@ -179,7 +174,7 @@ char *strnlwr(
 	return string;
 }
 
-char *strupr(
+char * __cdecl strupr(
 	char *string)
 {
 	unsigned char *p;
@@ -192,7 +187,7 @@ char *strupr(
 	return string;
 }
 
-char *strlwr(
+char * __cdecl strlwr(
 	char *string)
 {
 	unsigned char *p;
@@ -205,6 +200,7 @@ char *strlwr(
 	return string;
 }
 
+#ifdef DEBUG
 char *csprintf(
 	char *buffer,
 	char *format,
@@ -231,6 +227,19 @@ void display_assert(
 	
 	error(_error_silent, "EXCEPTION %s in %s,#%d: %s", fatal ? "halt" : "warn", file, line, information ? information : "<no reason given>");
 }
+
+#undef memcmp
+#undef memmove
+#undef memset
+#undef strcat
+#undef strcmp
+#undef strncat
+#undef strncmp
+#undef strncpy
+#undef strtok
+#undef strlen
+#undef strcpy
+#undef memcpy
 
 long csmemcmp(
 	const void *p1,
@@ -363,6 +372,20 @@ void *csmemcpy(
 }
 
 
+#define memcmp csmemcmp
+#define memmove csmemmove
+#define memset csmemset
+#define strcat csstrcat
+#define strcmp csstrcmp
+#define strncat csstrncat
+#define strncmp csstrncmp
+#define strncpy csstrncpy
+#define strtok csstrtok
+#define strlen csstrlen
+#define strcpy csstrcpy
+#define memcpy csmemcpy
+#endif
+
 long csstrcasecmp(
 	char const *s1,
 	char const *s2)
@@ -409,7 +432,7 @@ char *stristr(
 
 	if ((c = *needle++) != 0)
 	{
-		length = csstrlen(needle);
+		length = strlen(needle);
 		do
 		{
 			do
@@ -434,7 +457,7 @@ unsigned long string_hash(
 	unsigned long hash;
 	
 	crc_new(&hash);
-	crc_checksum_buffer(&hash, string, csstrlen(string));
+	crc_checksum_buffer(&hash, string, strlen(string));
 	
 	return hash;
 }

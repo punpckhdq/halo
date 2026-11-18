@@ -34,13 +34,13 @@ struct temp_marker
 
 /* ---------- prototypes */
 
-static int compare_temp_markers(void const *a, void const *b);
+static int __cdecl compare_temp_markers(void const *a, void const *b);
 
 /* ---------- globals */
 
 /* ---------- public code */
 
-static int compare_temp_markers(
+static int __cdecl compare_temp_markers(
 	void const *a,
 	void const *b)
 {
@@ -202,7 +202,7 @@ boolean build_structure_lens_flares(
 
 									for (triangle_index = 0; triangle_index < geometry.triangles.count; triangle_index++)
 									{
-										struct connected_triangle *triangle = dynamic_array_get_element(&geometry.triangles, triangle_index, sizeof(*triangle));
+										struct connected_triangle *triangle = dynamic_array_get_element_inline(&geometry.triangles, triangle_index, sizeof(*triangle));
 
 										if (triangle->group_index == coplanar_group_index)
 										{

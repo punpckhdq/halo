@@ -22,6 +22,7 @@ void rasterizer_debug_drawing_begin(
 	boolean opaque,
 	long z_bias)
 {
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_debug.c", 19, global_d3d_device);
 
 	if (rasterizer_debug_options.draw_debug_geometry)
@@ -57,6 +58,7 @@ void rasterizer_debug_drawing_begin(
 
 		rasterizer_set_pixel_shader(&pixel_shader);
 	}
+#endif
 
 	return;
 }
@@ -78,7 +80,11 @@ void _rasterizer_debug_immediate_begin(
 	SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 	SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
 	SetRenderStateSmart(D3DRS_ZWRITEENABLE, TRUE);
+#ifdef DEBUG
 	SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+#else
+	SetRenderStateSmart(D3DRS_ZBIAS, 8);
+#endif
 
 	rasterizer_set_vertex_shader_permutation(_vertex_shader_debug, _rasterizer_vertex_type_debug, _vertex_shader_permutation_default);
 

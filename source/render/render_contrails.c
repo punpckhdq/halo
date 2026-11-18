@@ -58,7 +58,9 @@ void render_contrails_normal(
 static void render_contrails(
 	unsigned long render_type_flags)
 {
+#ifdef DEBUG
 	if (render_contrails_enabled)
+#endif
 	{
 		long contrail_index;
 

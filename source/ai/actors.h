@@ -444,13 +444,13 @@ enum
 
 /* ---------- macros */
 
-#define actor_get(index)			((struct actor_datum *)datum_get(actor_data, (index)))
+#define actor_get(index)			DATUM_GET(actor_data, index, struct actor_datum)
 #define actor_try_and_get(index)	((struct actor_datum *)datum_try_and_get(actor_data, (index)))
 
-#define swarm_get(index)			((struct swarm_datum *)datum_get(swarm_data, (index)))
+#define swarm_get(index)			DATUM_GET(swarm_data, index, struct swarm_datum)
 #define swarm_try_and_get(index)	((struct swarm_datum *)datum_try_and_get(swarm_data, (index)))
 
-#define swarm_component_get(index)	((struct swarm_component_datum *)datum_get(swarm_component_data, (index))) /* fake name */
+#define swarm_component_get(index)	DATUM_GET(swarm_component_data, index, struct swarm_component_datum) /* fake name */
 
 /* ---------- structures */
 
@@ -1260,6 +1260,7 @@ struct firing_position_evaluation_context
 	boolean post_evaluation_bounded;
 	real post_evaluation_bound;
 
+#ifdef DEBUG
 	/* fake names */
 	short encounter_count; /* fake name */
 	short consider_count; /* fake name */
@@ -1267,6 +1268,7 @@ struct firing_position_evaluation_context
 	short nonrejected_count; /* fake name */
 	short post_evaluation_count; /* fake name */
 	short skipped_count; /* fake name */
+#endif
 };
 
 /* ---------- prototypes/ACTORS.C */
@@ -1309,7 +1311,9 @@ boolean actor_get_running_blind_vector(long actor_index, real_vector3d *run_vect
 
 boolean actor_set_active(long actor_index, boolean active);
 void actor_set_dormant(long actor_index, boolean dormant);
+#ifdef DEBUG
 void actor_verify_activation(long actor_index);
+#endif
 real actor_destination_tolerance(long actor_index);
 long actor_target_unit_index(long actor_index);
 void actor_find_pathfinding_location(long actor_index);

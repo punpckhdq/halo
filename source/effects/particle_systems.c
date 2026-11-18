@@ -837,7 +837,9 @@ static void particle_system_update(
 void particle_systems_render(
 	void)
 {
+#ifdef DEBUG
 	if (render_particle_systems_enabled)
+#endif
 	{
 		long system_index;
 

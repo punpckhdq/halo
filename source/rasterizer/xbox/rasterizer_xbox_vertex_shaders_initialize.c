@@ -202,7 +202,9 @@ boolean rasterizer_vertex_shaders_initialize(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_vertex_shaders_initialize failed");
+#endif
 	}
 
 	return success;
@@ -221,7 +223,9 @@ void rasterizer_vertex_shaders_dispose(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_vertex_shaders_dispose failed");
+#endif
 	}
 
 	return;

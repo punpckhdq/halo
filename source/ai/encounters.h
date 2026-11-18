@@ -34,7 +34,7 @@ enum
 
 #define MAXIMUM_FIRING_POSITIONS_PER_ENCOUNTER 512
 
-#define encounter_get(index)			((struct encounter_datum *)datum_get(encounter_data, (index)))
+#define encounter_get(index)			DATUM_GET(encounter_data, index, struct encounter_datum)
 #define encounter_try_and_get(index)	((struct encounter_datum *)datum_try_and_get(encounter_data, (index)))
 
 /* ---------- structures */
@@ -181,7 +181,9 @@ void encounterless_detach_actor(long actor_index);
 short encounter_get_actor_starting_location(long encounter_index, long squad_index, boolean spawn);
 boolean encounter_link_activation(long encounter_index, short link_encounter_index);
 void encounter_attach_unit(long encounter_index, long unit_index);
+#ifdef DEBUG
 void encounter_verify_firing_position_owner_actor_indices(long encounter_index);
+#endif
 boolean encounter_mark_examined_pursuit_position(long encounter_index, long actor_index, short firing_position_index, long history_start_time);
 void encounter_modify_pursuit_desires(long encounter_index, short squad_index, boolean *pursue_tenacious, short *group_pursuit_restriction, boolean *group_pursuit_controller, short *desired_target_search, short *desired_pursuit, short *desired_pursuit_search);
 void encounter_determine_pursuit_availability(long encounter_index, long actor_index, short group_pursuit_restriction, boolean is_pursuit_controller, boolean *allow_target_uncover, boolean *allow_indefinite_target_uncover, boolean *allow_target_search, boolean *allow_pursuit, boolean *allow_pursuit_search, boolean *controlling_group_pursuit, boolean *controlled_by_group_pursuit, boolean *wait_after_pursuit);

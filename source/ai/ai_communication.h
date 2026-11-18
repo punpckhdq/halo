@@ -103,7 +103,7 @@ enum
 
 /* ---------- macros */
 
-#define conversation_get(index) ((struct conversation_datum *)datum_get(conversation_data, (index))) /* fake name */
+#define conversation_get(index) DATUM_GET(conversation_data, index, struct conversation_datum) /* fake name */
 
 /* ---------- structures */
 

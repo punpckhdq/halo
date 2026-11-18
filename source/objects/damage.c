@@ -795,10 +795,12 @@ void object_cause_damage(
 
 	match_assert("c:\\halo\\SOURCE\\objects\\damage.c", 824, region_index==NONE || (region_index>=0 && region_index<MAXIMUM_REGIONS_PER_OBJECT));
 
+#ifdef DEBUG
 	if (damage_data->owner_player_index != NONE)
 	{
 		damage_debug_object_index = object_index;
 	}
+#endif
 
 	total_damage = damage_data->multiplier * ((1.f - damage_data->scale) * damage_definition->damage_minimum +
 		damage_data->scale * real_random_range(damage_definition->damage_lower_bound, damage_definition->damage_upper_bound));
@@ -1074,6 +1076,7 @@ void object_cause_damage(
 					damage_data->material_effect_scale = PIN(current_object->object.body_vitality, 0.f, 1.f);
 				}
 
+#ifdef DEBUG
 				if (debug_damage && current_object_index == damage_debug_object_index)
 				{
 					console_printf(
@@ -1086,6 +1089,7 @@ void object_cause_damage(
 						shield_damage,
 						body_damage);
 				}
+#endif
 
 				caused_damage = TRUE;
 			}
@@ -1838,6 +1842,7 @@ static void object_permutation_shield_regions(
 	return;
 }
 
+#ifdef DEBUG
 void render_debug_object_damage(
 	void)
 {
@@ -1908,3 +1913,4 @@ void render_debug_object_damage(
 
 	return;
 }
+#endif

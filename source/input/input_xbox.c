@@ -64,7 +64,7 @@ static void release_input_mutex(void);
 static void input_update_gamepads(void);
 static void input_update_gamepads_rumble(void);
 static void input_update_keyboard(void);
-static DWORD WINAPI input_update_thread_proc(LPVOID parameter);
+static DWORD WINAPI input_update_thread_proc(void);
 
 /* ---------- globals */
 
@@ -485,7 +485,9 @@ static short const ascii_to_key_table[NUMBER_OF_ASCII_CODES]=
 };
 
 static XINPUT_FEEDBACK gamepad_feedback[MAXIMUM_GAMEPADS] = {0}; /* fake name */
+#ifdef DEBUG
 static point2d gamepad_raw_sticks[MAXIMUM_GAMEPADS][NUMBER_OF_GAMEPAD_STICKS] = {0}; /* fake name */
+#endif
 static struct input_globals_xbox input_globals = {0};
 
 /* ---------- public code */
@@ -561,7 +563,7 @@ boolean input_initialize(
 
 	input_globals.rumble_this_vertical_blank = TRUE;
 	input_globals.rumble_event = CreateEvent(NULL, FALSE, FALSE, NULL);
-	input_globals.rumble_thread = CreateThread(NULL, INPUT_RUMBLE_THREAD_STACK_SIZE, input_update_thread_proc, NULL, CREATE_SUSPENDED, NULL);
+	input_globals.rumble_thread = CreateThread(NULL, INPUT_RUMBLE_THREAD_STACK_SIZE, (LPTHREAD_START_ROUTINE)input_update_thread_proc, NULL, CREATE_SUSPENDED, NULL);
 	SetThreadPriority(input_globals.rumble_thread, THREAD_PRIORITY_HIGHEST);
 	input_globals.rumble_thread_resumed = TRUE;
 	input_globals.unused = 0;
@@ -577,7 +579,9 @@ boolean input_initialize(
 		error(_error_silent, "XInputDebugInitKeyboardQueue failed (#%d) during input_initialize()", result);
 	}
 
+#ifdef DEBUG
 	HATInit();
+#endif
 	input_update_gamepads();
 	input_update();
 	input_globals.rumble_thread_resumed = FALSE;
@@ -590,7 +594,9 @@ void input_dispose(
 {
 	short gamepad_index;
 
+#ifdef DEBUG
 	HATCleanup();
+#endif
 
 	if (input_globals.keyboard_handle)
 	{
@@ -956,10 +962,12 @@ static void input_update_gamepads(
 					update_ticks(&gamepad->buttons[FIRST_GAMEPAD_BINARY_BUTTON + button_index], state.Gamepad.wButtons & gamepad_binary_button_table[button_index]);
 				}
 
+#ifdef DEBUG
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_left].x = state.Gamepad.sThumbLX;
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_left].y = state.Gamepad.sThumbLY;
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_right].x = state.Gamepad.sThumbRX;
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_right].y = state.Gamepad.sThumbRY;
+#endif
 
 				gamepad->sticks[_gamepad_stick_left].x = fix_dead_zone(state.Gamepad.sThumbLX, GAMEPAD_STICK_DEAD_ZONE);
 				gamepad->sticks[_gamepad_stick_left].y = fix_dead_zone(state.Gamepad.sThumbLY, GAMEPAD_STICK_DEAD_ZONE);
@@ -1113,6 +1121,7 @@ void input_get_raw_data_string(
 	match_assert("c:\\halo\\SOURCE\\input\\input_xbox.c", 811, buffer);
 	match_assert("c:\\halo\\SOURCE\\input\\input_xbox.c", 812, size>0);
 
+#ifdef DEBUG
 	if (buffer && size > 0)
 	{
 		short length = _snprintf(buffer, size, "|n|n|n|ngamepad|tleft stick|tright stick|t|n");
@@ -1131,6 +1140,9 @@ void input_get_raw_data_string(
 			}
 		}
 	}
+#else
+	buffer[0] = 0;
+#endif
 
 	return;
 }
@@ -1149,10 +1161,12 @@ void input_update(
 	input_update_keyboard();
 	acquire_input_mutex();
 
+#ifdef DEBUG
 	HATRun(&input_globals.gamepads[0]);
 	HATRun(&input_globals.gamepads[1]);
 	HATRun(&input_globals.gamepads[2]);
 	HATRun(&input_globals.gamepads[3]);
+#endif
 
 	return;
 }
@@ -1162,7 +1176,9 @@ void input_frame_begin(
 {
 	release_input_mutex();
 	input_update_gamepads();
+#ifdef DEBUG
 	input_globals.in_frame = TRUE;
+#endif
 
 	return;
 }
@@ -1170,13 +1186,15 @@ void input_frame_begin(
 void input_frame_end(
 	void)
 {
+#ifdef DEBUG
 	input_globals.in_frame = FALSE;
+#endif
 
 	return;
 }
 
 static DWORD WINAPI input_update_thread_proc(
-	LPVOID parameter)
+	void)
 {
 	for (;;)
 	{

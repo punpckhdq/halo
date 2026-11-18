@@ -246,7 +246,9 @@ static short rasterizer_sun_glow_convolve(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "### ERROR rasterizer_sun_glow_convolve failed");
+#endif
 		}
 	}
 
@@ -432,7 +434,9 @@ void rasterizer_sun_glow_draw(
 
 				if (!success)
 				{
+#ifdef DEBUG
 					error(_error_silent, "### ERROR rasterizer_sun_glow_draw failed");
+#endif
 				}
 			}
 		}

@@ -67,7 +67,9 @@ void data_initialize(
 void data_dispose(
 	struct data_array *data)
 {
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	memset(data, 0, sizeof(struct data_array));
 	match_free("c:\\halo\\SOURCE\\memory\\data.c", 89, data);
 
@@ -77,7 +79,9 @@ void data_dispose(
 void data_make_valid(
 	struct data_array *data)
 {
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	data->valid = TRUE;
 	data_delete_all(data);
 
@@ -87,7 +91,9 @@ void data_make_valid(
 void data_make_invalid(
 	struct data_array *data)
 {
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	data->valid = FALSE;
 
 	return;
@@ -99,9 +105,10 @@ long datum_new_at_index(
 {
 	short identifier = DATUM_INDEX_TO_IDENTIFIER(index);
 	short absolute_index = DATUM_INDEX_TO_ABSOLUTE_INDEX(index);
-	long result = NONE;
 
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 123, data->valid);
 
 	if (absolute_index>=0 && absolute_index<data->maximum_count && identifier)
@@ -119,11 +126,19 @@ long datum_new_at_index(
 			datum_initialize(data, header);
 			header->identifier = identifier;
 
-			result = DATUM_INDEX_NEW(absolute_index, identifier);
+			index = DATUM_INDEX_NEW(absolute_index, identifier);
+		}
+		else
+		{
+			index = NONE;
 		}
 	}
+	else
+	{
+		index = NONE;
+	}
 
-	return result;
+	return index;
 }
 
 long datum_new(
@@ -133,7 +148,9 @@ long datum_new(
 	struct datum_header *header;
 	long result = NONE;
 
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 163, data->valid);
 
 	for (absolute_index = data->first_free_absolute_index, header = (struct datum_header *)((byte *)data->data+absolute_index*data->size);
@@ -193,7 +210,9 @@ void data_delete_all(
 {
 	short absolute_index;
 
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 226, data->valid);
 
 	data->count = 0;
@@ -218,7 +237,9 @@ void data_iterator_new(
 	struct data_iterator *iterator,
 	struct data_array *data)
 {
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 249, data->valid);
 
 	iterator->data = data;
@@ -238,7 +259,9 @@ void *data_iterator_next(
 	struct datum_header *header;
 
 	match_vassert("c:\\halo\\SOURCE\\memory\\data.c", 268, iterator->signature==((unsigned long)iterator->data^DATA_ITERATOR_SIGNATURE), "uninitialized iterator passed to iterator_next()");
+#ifdef DEBUG
 	data_verify(iterator->data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 271, iterator->data->valid);
 
 	absolute_index = iterator->absolute_index;
@@ -270,7 +293,9 @@ long data_next_index(
 	long result = NONE;
 	short absolute_index = DATUM_INDEX_TO_ABSOLUTE_INDEX(index)+1;
 
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 303, data->valid);
 
 	if (absolute_index>=0 && absolute_index<data->count)
@@ -300,7 +325,9 @@ long data_prev_index(
 	short absolute_index;
 	long result = NONE;
 
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 335, data->valid);
 
 	if (index==NONE)
@@ -386,7 +413,9 @@ void data_compact(
 {
 	void *buffer = match_malloc("c:\\halo\\SOURCE\\memory\\data.c", 421, data->size*data->maximum_count);
 
+#ifdef DEBUG
 	data_verify(data);
+#endif
 	match_assert("c:\\halo\\SOURCE\\memory\\data.c", 424, data->valid);
 
 	if (buffer)
@@ -418,6 +447,7 @@ void data_compact(
 	return;
 }
 
+#ifdef DEBUG
 void data_verify(
 	struct data_array *data)
 {
@@ -439,6 +469,7 @@ void data_verify(
 
 	return;
 }
+#endif
 
 /* ---------- private code */
 

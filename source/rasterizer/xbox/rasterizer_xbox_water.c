@@ -193,7 +193,9 @@ void rasterizer_water_build_bumpmap(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "### ERROR rasterizer_water_build_bumpmap failed");
+#endif
 		}
 	}
 

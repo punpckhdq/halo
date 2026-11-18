@@ -176,6 +176,7 @@ void actor_destination_update(
 			{
 				actor_path_clear(actor_index);
 			}
+#ifdef DEBUG
 			else if (ai_debug.print_unfinished_paths)
 			{
 				char actorbuf[512];
@@ -183,6 +184,7 @@ void actor_destination_update(
 				ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
 				error(_error_silent, "%s: fell off end of unfinished path %d/%d", actorbuf, actor->control.path.path.step_count, MAXIMUM_SMOOTHED_PATH_STEPS);
 			}
+#endif
 		}
 	}
 
@@ -194,7 +196,9 @@ void actor_destination_update(
 
 		if (magnitude3d(&actor->control.moving_towards_vector)>=1000000.f)
 		{
+#ifdef DEBUG
 			error(_error_silent, "pathfinding is attempting to walk to tau ceti");
+#endif
 			actor->control.path.path.valid = FALSE;
 		}
 	}
@@ -629,7 +633,7 @@ void actor_move_update(
 		crouch = FALSE;
 	}
 
-	if (game_connection()==_game_connection_local && ai_debug.force_crouch)
+	if (AI_BEHAVIOR(force_crouch))
 	{
 		crouch = TRUE;
 	}
@@ -1576,7 +1580,7 @@ static void actor_move_calculate_movement(
 		*movement_thwarted = TRUE;
 	}
 
-	if (game_connection()==_game_connection_local && ai_debug.oversteer_disable)
+	if (AI_BEHAVIOR(oversteer_disable))
 	{
 		oversteer_maximum_angle = 0.f;
 		oversteer_minimum_angle = 0.f;
@@ -1623,33 +1627,41 @@ static void actor_move_calculate_movement(
 			{
 				actor->control.face_exactly_oversteer_angle = MIN(steer_angle, oversteer_maximum_angle);
 
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "steer %.4f (set oversteer %.4f)", steer_angle, actor->control.face_exactly_oversteer_angle);
 				}
+#endif
 			}
+#ifdef DEBUG
 			else if (ai_debug.print_oversteer)
 			{
 				console_printf(FALSE, "steer %.4f", steer_angle);
 			}
+#endif
 		}
 		else if (actor->control.face_exactly_oversteer_angle>0.f)
 		{
 			if (steer_angle<oversteer_minimum_angle)
 			{
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "steer %.4f < %.4f - clear oversteer %.4f", steer_angle, oversteer_minimum_angle, actor->control.face_exactly_oversteer_angle);
 				}
+#endif
 
 				actor->control.face_exactly_oversteer_angle = 0.f;
 			}
 			else
 			{
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "steer %.4f - oversteer to %.4f", steer_angle, actor->control.face_exactly_oversteer_angle);
 				}
+#endif
 
 				steer_angle = actor->control.face_exactly_oversteer_angle;
 			}
@@ -1667,10 +1679,12 @@ static void actor_move_calculate_movement(
 			{
 				rotate_vector_about_axis(&facing_vector, &rotation_axis, sine(adjust_angle), cosine(adjust_angle));
 
+#ifdef DEBUG
 				if (ai_debug.print_oversteer)
 				{
 					console_printf(FALSE, "adjust angle %.4f -> %.4f (%.4f)", facing_angle, steer_angle, adjust_angle);
 				}
+#endif
 			}
 		}
 	}
@@ -2074,9 +2088,11 @@ static void actor_move_vector_avoidance(
 		real obstruction_emergency;
 		struct object_datum *object = object_get(object_index);
 		boolean avoiding = FALSE;
+#ifdef DEBUG
 		struct actor_debug_info *actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 
 		actor_debug_info->field_19C = game_time_get();
+#endif
 
 		avoidance_data.structure = global_structure_bsp_get();
 		avoidance_data.bsp = global_collision_bsp_get();
@@ -2114,10 +2130,12 @@ static void actor_move_vector_avoidance(
 			real_vector3d ray_direction;
 			short sense_ray_result = actor_move_test_avoidance_vector(&avoidance_data, &sense_rays[sense_ray_index], &ray_origin, &ray_direction, &sense_ray_t, NULL);
 
+#ifdef DEBUG
 			actor_debug_info->ray_origin[sense_ray_index] = ray_origin;
 			actor_debug_info->ray_direction[sense_ray_index] = ray_direction;
 			actor_debug_info->avoidance_type[sense_ray_index] = sense_ray_result;
 			actor_debug_info->collision_t[sense_ray_index] = sense_ray_t;
+#endif
 
 			if (sense_ray_result>_actor_vector_avoidance_clear)
 			{
@@ -2157,10 +2175,12 @@ static void actor_move_vector_avoidance(
 					&ray_direction,
 					&avoid_ray_t[avoid_ray_index],
 					&actor->control.vector_avoidance_clear_times[direction_index][avoid_ray_index]);
+#ifdef DEBUG
 				actor_debug_info->field_6358[direction_index][avoid_ray_index] = ray_origin;
 				actor_debug_info->field_6418[direction_index][avoid_ray_index] = ray_direction;
 				actor_debug_info->avoid_result[direction_index][avoid_ray_index] = avoid_ray_result[avoid_ray_index];
 				actor_debug_info->avoid_t[direction_index][avoid_ray_index] = avoid_ray_t[avoid_ray_index];
+#endif
 			}
 
 			obstructed = FALSE;
@@ -2210,7 +2230,9 @@ static void actor_move_vector_avoidance(
 		}
 
 		turn_speed = magnitude3d(&object->object.angular_velocity);
+#ifdef DEBUG
 		actor_debug_info->field_6551 = FALSE;
+#endif
 
 		if (turn_speed>0.02f)
 		{
@@ -2253,11 +2275,13 @@ static void actor_move_vector_avoidance(
 				turn_weight = 0.f;
 			}
 
+#ifdef DEBUG
 			actor_debug_info->field_6551 = TRUE;
 			actor_debug_info->field_6554 = turn_weight;
 			actor_debug_info->field_6558 = turn_speed;
 			actor_debug_info->avoidance_vector = turn_direction_in_vector_space;
 			actor_debug_info->field_6568 = turn_avoidance_weight_approximation;
+#endif
 		}
 
 		best_avoidance_weight = -REAL_MAX;
@@ -2274,7 +2298,9 @@ static void actor_move_vector_avoidance(
 
 		match_assert("c:\\halo\\SOURCE\\ai\\actor_moving.c", 2435, (best_avoidance_direction >= 0) && (best_avoidance_direction < VECTOR_AVOIDANCE_NUMBER_OF_DIRECTIONS));
 
+#ifdef DEBUG
 		memcpy(actor_debug_info->avoidance_weights, avoidance_weights, sizeof(avoidance_weights));
+#endif
 
 		movement_vector = *movement_direction;
 		forward_projection = 1.f;
@@ -2303,12 +2329,14 @@ static void actor_move_vector_avoidance(
 
 		match_assert("c:\\halo\\SOURCE\\ai\\actor_moving.c", 2466, (movement_direction_approximation >= 0) && (movement_direction_approximation <= ((real) VECTOR_AVOIDANCE_NUMBER_OF_DIRECTIONS)));
 
+#ifdef DEBUG
 		actor_debug_info->field_6524 = avoidance_data.forward;
 		actor_debug_info->field_6530 = *movement_direction;
 		actor_debug_info->field_64FC = best_avoidance_weight;
 		actor_debug_info->field_6500 = best_avoidance_direction;
 		actor_debug_info->field_6504 = movement_direction_approximation;
 		actor_debug_info->field_6508 = movement_avoidance_weight_approximation;
+#endif
 
 		avoidance_weight_difference = (best_avoidance_weight - movement_avoidance_weight_approximation);
 		sharp_turn = FALSE;
@@ -2322,15 +2350,19 @@ static void actor_move_vector_avoidance(
 			obstruction_emergency = MIN(1.f, maximum_obstruction / 0.3f);
 		}
 
+#ifdef DEBUG
 		actor_debug_info->field_6510 = forward_projection;
 		actor_debug_info->sign_no_danger = avoidance_weight_difference;
+#endif
 
 		if (forward_projection<-0.2f)
 		{
 			if (actor->control.vector_avoidance_sharp_turn_timer!=NONE && actor->control.vector_avoidance_sharp_turn_timer<3 * TICKS_PER_SECOND)
 			{
 				sharp_turn = TRUE;
+#ifdef DEBUG
 				actor_debug_info->field_653C = _vector_avoidance_decision_continue_sharp_turn;
+#endif
 			}
 			else if (magnitude_squared3d(&object->object.angular_velocity)>0.05f * 0.05f)
 			{
@@ -2338,7 +2370,9 @@ static void actor_move_vector_avoidance(
 
 				if (sharp_turn)
 				{
+#ifdef DEBUG
 					actor_debug_info->field_653C = _vector_avoidance_decision_sharp_turn_moving;
+#endif
 				}
 			}
 			else
@@ -2347,7 +2381,9 @@ static void actor_move_vector_avoidance(
 
 				if (sharp_turn)
 				{
+#ifdef DEBUG
 					actor_debug_info->field_653C = _vector_avoidance_decision_sharp_turn_stationary;
+#endif
 				}
 			}
 		}
@@ -2410,18 +2446,24 @@ static void actor_move_vector_avoidance(
 
 					scale_vector3d(&avoidance_data.forward, rotation_angle, &rotation_vector);
 					avoiding = TRUE;
+#ifdef DEBUG
 					actor_debug_info->field_653C = _vector_avoidance_decision_sign_rotated;
 					actor_debug_info->sign_rotated = rotation_angle;
+#endif
 				}
 				else
 				{
+#ifdef DEBUG
 					actor_debug_info->field_653C = _vector_avoidance_decision_sign_too_far;
 					actor_debug_info->sign_too_far_cosangle = cosangle;
+#endif
 				}
 			}
 			else
 			{
+#ifdef DEBUG
 				actor_debug_info->field_653C = _vector_avoidance_decision_sign_no_danger;
+#endif
 			}
 		}
 		else if (maximum_obstruction>0.f)
@@ -2440,16 +2482,22 @@ static void actor_move_vector_avoidance(
 			}
 
 			avoiding = TRUE;
+#ifdef DEBUG
 			actor_debug_info->field_653C = _vector_avoidance_decision_turn;
 			actor_debug_info->field_6520 = rotation_angle;
 			actor_debug_info->field_651C = maximum_obstruction;
+#endif
 		}
 		else
 		{
+#ifdef DEBUG
 			actor_debug_info->field_653C = _vector_avoidance_decision_none;
+#endif
 		}
 
+#ifdef DEBUG
 		actor_debug_info->field_6550 = avoiding;
+#endif
 
 		if (avoiding)
 		{
@@ -2460,9 +2508,11 @@ static void actor_move_vector_avoidance(
 			actor->control.vector_avoidance_current_direction = NONE;
 		}
 
+#ifdef DEBUG
 		actor_debug_info->avoidance_data = avoidance_data;
 		actor_debug_info->field_6540 = rotation_vector;
 		actor_debug_info->field_654C = rotation_emergency;
+#endif
 	}
 
 	*avoidance_rotation = rotation_vector;
@@ -2514,7 +2564,9 @@ void actor_move_get_avoidance_direction(
 	if (angle==REAL_MAX)
 	{
 		angle = 0.f;
+#ifdef DEBUG
 		error(_error_silent, "warning: actor_move_get_avoidance_vector couldn't find out-of-bounds direction %.4f", direction);
+#endif
 	}
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actor_moving.c", 2743, (angle >= 0.0f) && (angle < _full_circle));
@@ -2737,9 +2789,11 @@ boolean actor_path_refresh(
 				{
 					struct actor_definition *actor_definition = actor_definition_get(actor->meta.definition_index);
 					real destination_distance = distance3d(&actor->input.position.body_position, &actor->control.path.destination.point);
+#ifdef DEBUG
 					struct actor_debug_info *actor_debug_info = &actor_debug_array[DATUM_INDEX_TO_ABSOLUTE_INDEX(actor_index)];
 
 					actor_debug_info->last_path_refresh = game_time_get();
+#endif
 
 					if (actor->state.flying)
 					{

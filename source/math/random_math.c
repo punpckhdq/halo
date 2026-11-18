@@ -65,10 +65,12 @@ void unlock_global_random_seed(
 unsigned long *get_global_random_seed_address(
 	void)
 {
+#ifdef DEBUG
 	if (game_engine_running())
 	{
 		match_vassert("c:\\halo\\SOURCE\\math\\random_math.c", 56, !random_seed_lock_count, "you should not be using global random(); use local random() instead");
 	}
+#endif
 
 	return &global_random_seed;
 }

@@ -86,7 +86,7 @@ static void vector_tree_add_node(
 
 	if (node_index!=NONE)
 	{
-		struct vector_tree_node *node = dynamic_array_get_element(&tree->nodes, node_index, sizeof(struct vector_tree_node));
+		struct vector_tree_node *node = dynamic_array_get_element_inline(&tree->nodes, node_index, sizeof(struct vector_tree_node));
 
 		node->lesser_node_index = NONE;
 		node->equal_node_index = NONE;
@@ -115,7 +115,7 @@ boolean vector_tree_find(
 
 	while (*node_index_reference!=NONE)
 	{
-		struct vector_tree_node *node = dynamic_array_get_element(&tree->nodes, *node_index_reference, sizeof(struct vector_tree_node));
+		struct vector_tree_node *node = dynamic_array_get_element_inline(&tree->nodes, *node_index_reference, sizeof(struct vector_tree_node));
 		void *node_vector = tree->get_vector(tree->data, node->vector_index);
 		long comparison = tree->compare_component(tree->data, vector, node_vector, component);
 

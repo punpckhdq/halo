@@ -175,7 +175,9 @@ struct build_sprite_data
 
 /* ---------- prototypes/RENDER.C */
 
+#ifdef DEBUG
 void render_effects(boolean enable);
+#endif
 void render_initialize(void);
 void render_initialize_for_new_map(void);
 void render_dispose_from_old_map(void);
@@ -183,8 +185,14 @@ void render_dispose(void);
 void render_frame(struct render_window *windoze, short window_count, point2d const *screenshot_page_index, point2d const *screenshot_index, struct bitmap_data *screenshot_bitmap, real time_delta_since_tick_sec);
 void render_frame_pregame(struct render_window const *window, struct bitmap_data *screenshot_bitmap);
 void render_frame_present(point2d const *screenshot_index, struct bitmap_data *bitmap);
+#ifdef DEBUG
 boolean render_location_visible(struct location *location);
+#endif
+#ifdef DEBUG
 struct rendered_cluster *rendered_cluster_get(short rendered_cluster_index);
+#else
+#define rendered_cluster_get(rendered_cluster_index) (&render.rendered_clusters[rendered_cluster_index])
+#endif
 
 /* ---------- prototypes/RENDER_CONTRAILS.C */
 
@@ -196,8 +204,8 @@ void render_contrails_normal(void);
 
 void render_media_initialize_for_new_map(void);
 void render_media_dispose_from_old_map(void);
-boolean render_media_build_render_target(void);
-void render_media(void);
+boolean render_media_build_render_target(void *unused0, void *unused1);
+void render_media(void *unused);
 
 /* ---------- prototypes/RENDER_SKY.C */
 
@@ -242,5 +250,13 @@ extern boolean debug_inactive_objects;
 extern boolean debug_sprites;
 
 /* ---------- public code */
+
+#ifndef DEBUG
+__inline boolean render_location_visible(
+	struct location *location)
+{
+	return BIT_VECTOR_TEST_FLAG(render.visible_cluster_flags, location->cluster_index);
+}
+#endif
 
 #endif // __RENDER_H

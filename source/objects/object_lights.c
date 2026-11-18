@@ -46,7 +46,7 @@ enum
 
 /* ---------- macros */
 
-#define light_get(index) ((struct point_light *)datum_get(light_data, (index))) /* fake name */
+#define light_get(index) DATUM_GET(light_data, index, struct point_light) /* fake name */
 
 #define structure_material_get_vertex(material, vertex_index) ((struct environment_vertex_compressed const *)(material)->compressed_vertex_data.address + (vertex_index)) /* fake name */
 #define structure_material_get_lightmap_vertex(material, vertex_index) ((struct environment_lightmap_vertex_compressed const *)structure_material_get_vertex((material), (material)->vertices.count) + (vertex_index)) /* fake name */
@@ -107,8 +107,10 @@ struct lights_globals /* fake name */
 /* ---------- prototypes */
 
 // belong to profile.h, bitmaps.h and bitmap_group.h, but adding them to the precompiled headers moves symbol bands in other units
+#ifdef DEBUG
 void profile_texture_start(void);
 void profile_texture_end(void);
+#endif
 pixel32 bitmap_2d_get_pixel(struct bitmap_data const *bitmap, real_point2d const *point, real lod);
 struct bitmap_data *bitmap_group_try_and_get_bitmap(long bitmap_group_index, short bitmap_index);
 
@@ -184,9 +186,13 @@ void *texture_cache_bitmap_load(
 {
 	void *hardware_format;
 
+#ifdef DEBUG
 	profile_texture_start();
+#endif
 	hardware_format = _texture_cache_bitmap_get_hardware_format(bitmap, TRUE, TRUE);
+#ifdef DEBUG
 	profile_texture_end();
+#endif
 
 	return hardware_format;
 }
@@ -1419,8 +1425,10 @@ boolean lights_distant_lighting_at_point(
 
 							lightmap_color_argb.rgb = lightmap_color;
 							lightmap_color_argb.alpha = 1.f;
+#ifdef DEBUG
 							render_debug_point(TRUE, position, 0.5f, &lightmap_color_argb);
 							render_debug_vector(TRUE, position, &radiosity_normal, radiosity_accuracy, &lightmap_color_argb);
+#endif
 						}
 
 						build_distant_lights(
@@ -1873,8 +1881,10 @@ static void render_debug_light(
 		real radius = definition->geometry.radius_modifier_upper_bound * definition->geometry.radius;
 		real_argb_color color = *global_real_argb_orange;
 
+#ifdef DEBUG
 		render_debug_sphere(TRUE, &light->position, definition->geometry.lens_flare_radius, global_real_argb_white);
 		render_debug_sphere(TRUE, &light->position, light->radius, &color);
+#endif
 		color.red *= 0.8f;
 		color.green *= 0.8f;
 		color.blue *= 0.8f;
@@ -1882,17 +1892,21 @@ static void render_debug_light(
 		if (!TEST_FLAG(definition->flags, _light_no_specular_bit))
 		{
 			radius *= definition->geometry.specular_radius_multiplier;
+#ifdef DEBUG
 			render_debug_sphere(
 				TRUE,
 				&light->position,
 				definition->geometry.specular_radius_multiplier * light->radius,
 				&color);
+#endif
 		}
 
 		color.red *= 0.8f;
 		color.green *= 0.8f;
 		color.blue *= 0.8f;
+#ifdef DEBUG
 		render_debug_sphere(TRUE, &light->position, radius, &color);
+#endif
 	}
 
 	return;

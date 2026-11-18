@@ -734,10 +734,14 @@ void players_update_after_game(
 				{
 					if (player->local_player_index != NONE)
 					{
+#if CONFIG_VERSION >= 2342
 						wchar_t *string;
 
 						multiplayer_game_text_get_string(string, 183);
 						hud_print_message(player->local_player_index, string);
+#else
+						hud_print_message(player->local_player_index, L"You were telefragged");
+#endif
 					}
 
 					player_telefrag_effect_stop(iterator.index);
@@ -1063,7 +1067,9 @@ static boolean is_player_in_trigger(
 	long unit_index,
 	short switch_trigger_index)
 {
-	return switch_trigger_index != NONE && scenario_trigger_volume_test_object(TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->bsp_switch_trigger_volumes, switch_trigger_index, struct scenario_bsp_switch_trigger_volume)->trigger_volume_index, unit_index);
+	struct scenario_bsp_switch_trigger_volume *switch_trigger = switch_trigger_index == NONE ? NULL : TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->bsp_switch_trigger_volumes, switch_trigger_index, struct scenario_bsp_switch_trigger_volume);
+
+	return switch_trigger_index != NONE && scenario_trigger_volume_test_object(switch_trigger->trigger_volume_index, unit_index);
 }
 
 static void player_teleport_on_bsp_switch(
@@ -1476,6 +1482,7 @@ short player_get_starting_location_count(
 	struct scenario *scenario = global_scenario_get();
 	short starting_location_count = (short)scenario->players.count;
 
+#ifdef DEBUG
 	if (ai_debug.selected_encounter_index != NONE)
 	{
 		struct encounter_definition *encounter = TAG_BLOCK_GET_ELEMENT(&scenario->ai_encounters, DATUM_INDEX_TO_ABSOLUTE_INDEX(ai_debug.selected_encounter_index), struct encounter_definition);
@@ -1485,6 +1492,7 @@ short player_get_starting_location_count(
 			starting_location_count = (short)encounter->player_starting_locations.count;
 		}
 	}
+#endif
 
 	return starting_location_count;
 }
@@ -1500,6 +1508,7 @@ struct scenario_player *player_get_starting_location(
 		starting_location = TAG_BLOCK_GET_ELEMENT(&scenario->players, starting_location_index, struct scenario_player);
 	}
 
+#ifdef DEBUG
 	if (ai_debug.selected_encounter_index != NONE)
 	{
 		struct encounter_definition *encounter = TAG_BLOCK_GET_ELEMENT(&scenario->ai_encounters, DATUM_INDEX_TO_ABSOLUTE_INDEX(ai_debug.selected_encounter_index), struct encounter_definition);
@@ -1514,6 +1523,7 @@ struct scenario_player *player_get_starting_location(
 			}
 		}
 	}
+#endif
 
 	return starting_location;
 }
@@ -2488,6 +2498,7 @@ void players_handle_deleted_object(
 	return;
 }
 
+#ifdef DEBUG
 boolean debug_render_player_teleport = FALSE;
 
 void players_debug_render(
@@ -2553,5 +2564,6 @@ void debug_player_teleport(
 
 	return;
 }
+#endif
 
 /* ---------- private code */

@@ -19,7 +19,11 @@ enum
 
 enum
 {
+#ifdef DEBUG
 	INTERNAL_POINTER_OVERHEAD = 32,
+#else
+	INTERNAL_POINTER_OVERHEAD = 16,
+#endif
 };
 
 enum
@@ -36,9 +40,11 @@ struct memory_block
 	unsigned long index;
 	struct memory_block *previous_block;
 	struct memory_block *next_block;
+#ifdef DEBUG
 	char const *file; /* fake name */
 	long line; /* fake name */
 	unsigned long signature; /* fake name */
+#endif
 };
 
 /* ---------- prototypes */
@@ -52,16 +58,26 @@ __inline static unsigned long memory_block_get_real_size(struct memory_block *bl
 __inline static unsigned long memory_block_get_user_size(struct memory_block *block);
 __inline static void *memory_block_get_user_address(struct memory_block *block);
 __inline static unsigned long memory_block_get_pool_index(struct memory_block *block);
+#ifdef DEBUG
 static struct memory_block *stack_memory_pool_new_block(struct stack_memory_pool *pool, unsigned long size, char const *file, long line);
 static struct memory_block *stack_memory_pool_new_block_clear(struct stack_memory_pool *pool, unsigned long size, char const *file, long line);
 static struct memory_block *stack_memory_pool_resize_block(struct stack_memory_pool *pool, struct memory_block *reference, unsigned long new_size, char const *file, long line);
+#else
+static struct memory_block *stack_memory_pool_new_block(struct stack_memory_pool *pool, unsigned long size);
+static struct memory_block *stack_memory_pool_new_block_clear(struct stack_memory_pool *pool, unsigned long size);
+static struct memory_block *stack_memory_pool_resize_block(struct stack_memory_pool *pool, struct memory_block *reference, unsigned long new_size);
+#endif
 static void stack_memory_pool_dispose_block(struct stack_memory_pool *pool, struct memory_block *reference);
 static void *stack_memory_pool_lock_block(struct stack_memory_pool *pool, struct memory_block *reference);
 static void stack_memory_pool_unlock_block(struct stack_memory_pool *pool, struct memory_block *reference);
 static unsigned long stack_memory_pool_free_space_at_end_of_pool(struct stack_memory_pool *pool);
 static long stack_memory_pool_find_first_unused_memory_block(struct stack_memory_pool *pool);
 static void stack_memory_pool_set_next_block_index(struct stack_memory_pool *pool);
+#ifdef DEBUG
 static struct memory_block *stack_memory_pool_allocate(struct stack_memory_pool *pool, unsigned long size, char const *file, long line);
+#else
+static struct memory_block *stack_memory_pool_allocate(struct stack_memory_pool *pool, unsigned long size);
+#endif
 static void stack_memory_pool_compact(struct stack_memory_pool *pool);
 static boolean stack_memory_pool_valid_block(struct stack_memory_pool *pool, struct memory_block *block);
 static void *stack_memory_pool_find_space_between_blocks(struct stack_memory_pool *pool, unsigned long size, struct memory_block **free_space_in_pool_previous);
@@ -70,11 +86,18 @@ static void *stack_memory_pool_find_space_between_blocks(struct stack_memory_poo
 
 handle pool_new_handle(
 	struct stack_memory_pool *pool,
-	unsigned long size,
-	char const *file,
-	long line)
+	unsigned long size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
-	struct memory_block *block = stack_memory_pool_new_block(pool, size, file, line);
+	struct memory_block *block = stack_memory_pool_new_block(pool, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 	handle h;
 
 	if (block)
@@ -108,11 +131,18 @@ handle pool_new_handle(
 
 handle pool_new_handle_clear(
 	struct stack_memory_pool *pool,
-	unsigned long size,
-	char const *file,
-	long line)
+	unsigned long size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
-	struct memory_block *block = stack_memory_pool_new_block_clear(pool, size, file, line);
+	struct memory_block *block = stack_memory_pool_new_block_clear(pool, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 	handle h;
 
 	if (block)
@@ -147,9 +177,12 @@ handle pool_new_handle_clear(
 boolean pool_resize_handle(
 	struct stack_memory_pool *pool,
 	handle *h,
-	unsigned long new_size,
-	char const *file,
-	long line)
+	unsigned long new_size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
 	boolean success;
 	struct memory_block *block;
@@ -164,7 +197,11 @@ boolean pool_resize_handle(
 	if (success)
 	{
 		old_size = memory_block_get_real_size(block);
-		block = stack_memory_pool_resize_block(pool, block, new_size, file, line);
+		block = stack_memory_pool_resize_block(pool, block, new_size
+#ifdef DEBUG
+			, file, line
+#endif
+			);
 
 		if (block)
 		{
@@ -248,12 +285,19 @@ void unlock_handle(
 
 void *pool_new_pointer(
 	struct stack_memory_pool *pool,
-	unsigned long size,
-	char const *file,
-	long line)
+	unsigned long size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
 	void *p = NULL;
-	struct memory_block *block = stack_memory_pool_new_block(pool, size, file, line);
+	struct memory_block *block = stack_memory_pool_new_block(pool, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 
 	if (block)
 	{
@@ -283,12 +327,19 @@ void *pool_new_pointer(
 
 void *pool_new_pointer_clear(
 	struct stack_memory_pool *pool,
-	unsigned long size,
-	char const *file,
-	long line)
+	unsigned long size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
 	void *p = NULL;
-	struct memory_block *block = stack_memory_pool_new_block_clear(pool, size, file, line);
+	struct memory_block *block = stack_memory_pool_new_block_clear(pool, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 
 	if (block)
 	{
@@ -319,20 +370,33 @@ void *pool_new_pointer_clear(
 void *pool_resize_pointer(
 	struct stack_memory_pool *pool,
 	void *p,
-	unsigned long new_size,
-	char const *file,
-	long line)
+	unsigned long new_size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
+#ifdef DEBUG
 	struct memory_block *block = p ? (struct memory_block *)((byte *)p - 24) : NULL;
+#else
+	struct memory_block *block = p ? (struct memory_block *)((byte *)p - sizeof(struct memory_block)) : NULL;
+#endif
 	long old_size = 0;
 
 	if (block)
 	{
+#ifdef DEBUG
 		block = (struct memory_block *)((byte *)block - 4);
+#endif
 		old_size = memory_block_get_real_size(block);
 	}
 
-	block = stack_memory_pool_resize_block(pool, block, new_size, file, line);
+	block = stack_memory_pool_resize_block(pool, block, new_size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 
 	if (block)
 	{
@@ -377,8 +441,7 @@ void dispose_pointer(
 
 	match_assert("c:\\halo\\SOURCE\\memory\\stack_memory_pool.c", 407, p);
 
-	block = (struct memory_block *)((byte *)p - 24);
-	block = (struct memory_block *)((byte *)block - 4);
+	block = (struct memory_block *)((byte *)p - sizeof(struct memory_block));
 	match_vassert("c:\\halo\\SOURCE\\memory\\stack_memory_pool.c", 413, stack_memory_pool_valid_block(pool, block), "invalid pointer");
 
 	size = memory_block_get_real_size(block);
@@ -422,6 +485,7 @@ __inline static boolean memory_block_valid(
 	struct memory_block *block)
 {
 	boolean valid;
+#ifdef DEBUG
 	unsigned long real_size;
 
 	if (!block)
@@ -452,6 +516,16 @@ __inline static boolean memory_block_valid(
 			valid = TRUE;
 		}
 	}
+#else
+	if (block && memory_block_get_real_size(block) - INTERNAL_POINTER_OVERHEAD>0)
+	{
+		valid = TRUE;
+	}
+	else
+	{
+		valid = FALSE;
+	}
+#endif
 
 	return valid;
 }
@@ -491,8 +565,10 @@ __inline static void memory_block_set_size_and_index(
 
 	block->bits = new_size;
 	block->index = index;
+#ifdef DEBUG
 	block->signature = MEMORY_BLOCK_HEADER_SIGNATURE;
 	*(unsigned long *)((byte *)block + new_size - sizeof(unsigned long)) = MEMORY_BLOCK_TRAILER_SIGNATURE;
+#endif
 
 	return;
 }
@@ -531,20 +607,34 @@ __inline static unsigned long memory_block_get_pool_index(
 
 static struct memory_block *stack_memory_pool_new_block(
 	struct stack_memory_pool *pool,
-	unsigned long size,
-	char const *file,
-	long line)
+	unsigned long size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
-	return stack_memory_pool_allocate(pool, size, file, line);
+	return stack_memory_pool_allocate(pool, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 }
 
 static struct memory_block *stack_memory_pool_new_block_clear(
 	struct stack_memory_pool *pool,
-	unsigned long size,
-	char const *file,
-	long line)
+	unsigned long size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
-	struct memory_block *block = stack_memory_pool_allocate(pool, size, file, line);
+	struct memory_block *block = stack_memory_pool_allocate(pool, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 
 	if (block)
 	{
@@ -557,9 +647,12 @@ static struct memory_block *stack_memory_pool_new_block_clear(
 static struct memory_block *stack_memory_pool_resize_block(
 	struct stack_memory_pool *pool,
 	struct memory_block *reference,
-	unsigned long new_size,
-	char const *file,
-	long line)
+	unsigned long new_size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
 	struct memory_block *new_block = NULL;
 
@@ -567,7 +660,11 @@ static struct memory_block *stack_memory_pool_resize_block(
 	{
 		if (!reference)
 		{
-			new_block = stack_memory_pool_allocate(pool, new_size, file, line);
+			new_block = stack_memory_pool_allocate(pool, new_size
+#ifdef DEBUG
+				, file, line
+#endif
+				);
 		}
 		else
 		{
@@ -579,7 +676,11 @@ static struct memory_block *stack_memory_pool_resize_block(
 			}
 			else
 			{
-				new_block = stack_memory_pool_allocate(pool, new_size, file, line);
+				new_block = stack_memory_pool_allocate(pool, new_size
+#ifdef DEBUG
+					, file, line
+#endif
+					);
 
 				if (new_block)
 				{
@@ -715,9 +816,12 @@ static void stack_memory_pool_set_next_block_index(
 
 static struct memory_block *stack_memory_pool_allocate(
 	struct stack_memory_pool *pool,
-	unsigned long size,
-	char const *file,
-	long line)
+	unsigned long size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
 	struct memory_block *block = NULL;
 
@@ -775,8 +879,10 @@ static struct memory_block *stack_memory_pool_allocate(
 
 				memory_block_set_size_and_index(pool->blocks[pool->next_block_index], size, pool->next_block_index);
 				block = pool->blocks[pool->next_block_index];
+#ifdef DEBUG
 				block->file = file;
 				block->line = line;
+#endif
 
 				if (!pool->first_block)
 				{

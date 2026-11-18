@@ -142,6 +142,7 @@ void _rasterizer_environment_lightmap_draw(
 
 	if (rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_vectors)
 	{
+#ifdef DEBUG
 		if (vertex_buffer->type == _rasterizer_vertex_type_environment_compressed)
 		{
 			struct
@@ -306,6 +307,7 @@ void _rasterizer_environment_lightmap_draw(
 					&vertex_buffer[!local_lightmap_has_no_data]);
 			}
 		}
+#endif
 	}
 	else if ((rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_normal ||
 		rasterizer_debug_options.drawing_mode == _rasterizer_drawing_mode_bump_color ||
@@ -542,7 +544,9 @@ void _rasterizer_environment_lightmap_draw(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_environment_lightmap_draw failed");
+#endif
 	}
 
 	return;

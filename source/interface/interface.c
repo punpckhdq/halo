@@ -74,12 +74,15 @@ struct profile_value /* fake name */
 /* ---------- prototypes */
 
 static long interface_get_weapon_hud_index(real *flashlight_power);
+#ifdef DEBUG
 static void render_debug_profile_stall_tick(short stall_type, real_rectangle2d const *bounds, real *below_position, real x, real scale);
 static void render_debug_profile(void);
+#endif
 static void interface_splitscreen_render(void);
 
 /* ---------- globals */
 
+#ifdef DEBUG
 short profile_game_value_count = 3;
 struct profile_value profile_game_values[MAXIMUM_PROFILE_VALUES] =
 {
@@ -112,6 +115,7 @@ struct profile_value profile_graph_values[MAXIMUM_PROFILE_VALUES] =
 	{ "pushbuffer", "pushbuffer", &global_real_argb_darkgreen, NONE, NONE, FALSE, TRUE },
 	{ "dt", "dt", &global_real_argb_grey, NONE, NONE, FALSE, TRUE }
 };
+#endif
 
 /* ---------- public code */
 
@@ -412,6 +416,7 @@ void interface_draw_screen(
 	return;
 }
 
+#ifdef DEBUG
 void profile_graph_toggle(
 	char const *graph_name)
 {
@@ -782,6 +787,7 @@ static void render_debug_profile(
 
 	return;
 }
+#endif
 
 void interface_draw_fullscreen_overlays(
 	void)
@@ -791,7 +797,9 @@ void interface_draw_fullscreen_overlays(
 	hud_render_timer();
 	terminal_draw();
 	main_framerate_render();
+#ifdef DEBUG
 	render_debug_profile();
+#endif
 
 	return;
 }

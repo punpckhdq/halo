@@ -294,7 +294,7 @@ void rasterizer_dispose(
 }
 
 void rasterizer_set_vblank_callback(
-	void (*callback)(unsigned long))
+	void (__cdecl *callback)(unsigned long))
 {
 	_rasterizer_set_vblank_callback(callback);
 
@@ -640,6 +640,7 @@ void rasterizer_screen_flash(
 void rasterizer_models_begin(
 	boolean sky)
 {
+#ifdef DEBUG
 	if (!sky)
 	{
 		struct collision_result collision;
@@ -657,6 +658,7 @@ void rasterizer_models_begin(
 	{
 		rasterizer_debug_model_vertices_object_index = NONE;
 	}
+#endif
 
 	_rasterizer_models_begin(sky);
 
@@ -723,6 +725,7 @@ void rasterizer_debug_model_vertices(
 	struct render_skinning const *skinning,
 	struct model_geometry_part const *part)
 {
+#ifdef DEBUG
 	match_assert("c:\\halo\\SOURCE\\rasterizer\\rasterizer.c", 830, part);
 
 	if (rasterizer_debug_options.debug_model_vertices_enabled && target_object_index==rasterizer_debug_model_vertices_object_index)
@@ -867,15 +870,20 @@ void rasterizer_debug_model_vertices(
 					sprintf(temp2, "%d%c", info->vertex_indices[index], index==info->vertex_index_count-1 ? ' ' : ',');
 					strcat(temporary, temp2);
 				}
+#ifdef DEBUG
 				render_debug_point(FALSE, &info->position, 0.03125f, global_real_argb_red);
 				render_debug_string_at_point(FALSE, &info->position, temporary, global_real_argb_yellow);
+#endif
 			}
 			else
 			{
+#ifdef DEBUG
 				render_debug_point(FALSE, &info->position, 0.03125f, global_real_argb_white);
+#endif
 			}
 		}
 	}
+#endif
 
 	return;
 }

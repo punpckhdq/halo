@@ -10,6 +10,7 @@ TAG_GROUPS.C
 
 // NOTE: 3000 lines of tool-specific code lives here
 
+#ifdef DEBUG
 long verify_tag_reference(
 	struct tag_reference const *reference)
 {
@@ -28,6 +29,7 @@ long verify_tag_reference(
 
 	return index;
 }
+#endif
 
 void *tag_data_get_pointer(
 	struct tag_data const *data,

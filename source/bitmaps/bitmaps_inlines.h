@@ -25,7 +25,7 @@ file has inline function assertions.
 /* ---------- public code */
 
 // these are ASM blocks in sapien as well
-__inline pixel32 real_argb_color_to_pixel32(
+__inline pixel32 __cdecl real_argb_color_to_pixel32(
 	real_argb_color const *color)
 {
 	real scale = 255.f;
@@ -69,6 +69,7 @@ __inline pixel32 real_argb_color_to_pixel32(
 		}
 	}
 
+#ifdef DEBUG
 	{
 		pixel32 verify;
 
@@ -104,11 +105,12 @@ __inline pixel32 real_argb_color_to_pixel32(
 
 		match_assert("..\\bitmaps\\bitmaps_inlines.h", 188, verify == result);
 	}
+#endif
 
 	return result;
 }
 
-__inline pixel32 real_rgb_color_to_pixel32(
+__inline pixel32 __cdecl real_rgb_color_to_pixel32(
 	real_rgb_color const *color)
 {
 	pixel32 result;
@@ -143,7 +145,7 @@ __inline pixel32 real_rgb_color_to_pixel32(
 	return result;
 }
 
-__inline pixel32 real_a_rgb_color_to_pixel32(
+__inline pixel32 __cdecl real_a_rgb_color_to_pixel32(
 	real alpha,
 	real_rgb_color const *color)
 {
@@ -185,7 +187,7 @@ __inline pixel32 real_a_rgb_color_to_pixel32(
 	return result;
 }
 
-__inline pixel32 real_alpha_to_pixel32(
+__inline pixel32 __cdecl real_alpha_to_pixel32(
 	real alpha)
 {
 	pixel32 result;

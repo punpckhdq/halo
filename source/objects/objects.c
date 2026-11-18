@@ -151,7 +151,7 @@ static long recursive_object_adder(
 	long object_count,
 	long maximum_count,
 	long *object_indices);
-static long sort_dumps(struct dump_datum const *dump1, struct dump_datum const *dump2);
+static long __cdecl sort_dumps(struct dump_datum const *dump1, struct dump_datum const *dump2);
 static void object_add_to_dump(long object_index, struct dump_datum *dump);
 static void object_dump_write(FILE *stream, struct dump_datum *dump);
 static short object_find_region_permutations_available_with_variant(struct model_region *region, short variant_number, short *available_indices);
@@ -166,6 +166,7 @@ static void object_delete_attachments(long object_index);
 static void object_delete_recursive(long object_index, boolean delete_siblings);
 static void object_compute_function_values(long object_index);
 static void object_compute_change_colors(long object_index);
+static boolean object_update(long object_index);
 
 /* ---------- globals */
 
@@ -181,23 +182,29 @@ static long *object_name_list;
 
 static struct profile_section objects_update_section = {"objects_update", NONE, TRUE};
 
+#ifdef DEBUG
 boolean debug_objects_names;
 boolean debug_objects_pathfinding_spheres;
 boolean debug_objects_physics;
 boolean debug_objects_root_node;
+#endif
 
 long global_object_marker;
 
 struct cluster_partition noncollideable_object_cluster_partition;
 struct cluster_partition collideable_object_cluster_partition;
 
+#ifdef DEBUG
 boolean debug_object_garbage_collection;
+#endif
 
 struct data_array *object_header_data;
 
+#ifdef DEBUG
 boolean debug_objects_position_velocity = FALSE;
 boolean debug_objects_bounding_spheres = TRUE;
 boolean debug_objects_collision_models = TRUE;
+#endif
 
 /* ---------- public code */
 
@@ -267,6 +274,7 @@ void *object_try_and_get_and_verify_type(
 	return result;
 }
 
+#ifdef DEBUG
 void *object_get_and_verify_type(
 	long object_index,
 	unsigned long valid_type_flags)
@@ -285,13 +293,16 @@ void *object_get_and_verify_type(
 
 	return result;
 }
+#endif
 
 void object_iterator_new(
 	struct object_iterator *iterator,
 	unsigned long type_flags,
 	byte flags)
 {
+#ifdef DEBUG
 	data_verify(object_header_data);
+#endif
 	iterator->signature = OBJECT_ITERATOR_SIGNATURE;
 	iterator->type_flags = type_flags;
 	iterator->flags = flags;
@@ -314,7 +325,9 @@ void *object_iterator_next(
 		iterator->signature==OBJECT_ITERATOR_SIGNATURE,
 		"uninitialized iterator passed to object_iterator_next()");
 
+#ifdef DEBUG
 	data_verify(object_header_data);
+#endif
 	
 	abs_index = iterator->absolute_index;
 
@@ -404,6 +417,7 @@ void object_set_garbage(
 	struct object_datum* object = object_get(object_index);
 	
 	long garbage_object_index;
+#ifdef DEBUG
 	for (garbage_object_index = object_globals->first_garbage_object_index;
 		garbage_object_index!=NONE;
 		garbage_object_index = garbage_object->object.next_garbage_object_index)
@@ -414,6 +428,7 @@ void object_set_garbage(
 			1952,
 			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit));
 	}
+#endif
 
 	if (garbage)
 	{
@@ -444,6 +459,7 @@ void object_set_garbage(
 		}
 	}
 
+#ifdef DEBUG
 	for (garbage_object_index = object_globals->first_garbage_object_index;
 		garbage_object_index!=NONE;
 		garbage_object_index = garbage_object->object.next_garbage_object_index)
@@ -454,6 +470,7 @@ void object_set_garbage(
 			2006,
 			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit));
 	}
+#endif
 
 	return;
 }
@@ -528,10 +545,12 @@ void object_pvs_set_camera_point(
 		scenario_location_from_point(&location, &point->position);
 		if (location.cluster_index==NONE)
 		{
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"object_pvs_set_camera_point: camera point %s is outside the map",
 				point->name);
+#endif
 			object_globals->pvs_activation_type = FALSE;
 		}
 		else
@@ -637,6 +656,7 @@ void object_beautify(
 	return;
 }
 
+#ifdef DEBUG
 void *object_header_block_get(
 	long object_index,
 	struct object_header_block_reference *reference)
@@ -649,6 +669,7 @@ void *object_header_block_get(
 
 	return (byte *)object + reference->offset;
 }
+#endif
 
 static long object_header_new(
 	struct data_array *data, 
@@ -659,7 +680,7 @@ static long object_header_new(
 	
 	if (index!=NONE)
 	{
-		struct object_header_datum *header = (struct object_header_datum *)datum_get(data, index);
+		struct object_header_datum *header = DATUM_GET(data, index, struct object_header_datum);
 		if (memory_pool_block_allocate(object_memory_pool, (void**)&header->datum, size))
 		{
 			header->data_size = size;
@@ -679,7 +700,7 @@ static void object_header_delete(
 	struct data_array *data,
 	long object_index)
 {
-	struct object_header_datum *object_header = (struct object_header_datum *)datum_get(data, object_index);
+	struct object_header_datum *object_header = DATUM_GET(data, object_index, struct object_header_datum);
 
 	if (object_header->datum)
 	{
@@ -769,12 +790,19 @@ void object_marker_end(
 boolean object_unmarked_function(
 	long object_index)
 {
-	struct object_datum *object = object_get(object_index);
 	boolean result;
+	struct object_datum *object = object_get(object_index);
 
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 3526, object_globals->object_marker_initialized);
 
-	result = object->object.magic_number!=global_object_marker;
+	if (object->object.magic_number!=global_object_marker)
+	{
+		result = TRUE;
+	}
+	else
+	{
+		result = FALSE;
+	}
 	
 	return result;
 }
@@ -856,7 +884,7 @@ long find_objects_from_point_vector(
 								k!=NONE;
 								k = cluster_get_next_collideable_object(&reference))
 							{
-								if (object_mark_function(k))
+								if (object_mark(k))
 								{
 									state = recursive_object_adder(
 										k,
@@ -1558,7 +1586,7 @@ short objects_in_clusters_by_indices(
 				object_index!=NONE;
 				object_index = cluster_get_next_collideable_object(&reference))
 			{
-				if (object_mark_function(object_index))
+				if (object_mark(object_index))
 				{
 					if (object_count>=maximum_object_count)
 					{
@@ -1579,7 +1607,7 @@ short objects_in_clusters_by_indices(
 				object_index!=NONE;
 				object_index = cluster_get_next_noncollideable_object(&reference))
 			{
-				if (object_mark_function(object_index))
+				if (object_mark(object_index))
 				{
 					if (object_count>=maximum_object_count)
 					{
@@ -1728,10 +1756,12 @@ static void object_delete_initial_recursive(
 	struct object_header_datum *header = object_header_get(object_index);
 	struct object_datum *object = object_get(object_index);
 
+#ifdef DEBUG
 	if (game_engine_running() && object->object.type == _object_type_weapon)
 	{
 		match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 829, !(weapon_is_flag(object_index)));
 	}
+#endif
 	
 	if (object->object.first_child_object_index!=NONE)
 	{
@@ -1846,15 +1876,9 @@ real_matrix4x3 *object_get_node_matrix(
 	long object_index,
 	short node_index)
 {
-	real_matrix4x3 *node_matrices;
-	struct object_datum *object;
-
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1060, object_has_node(object_index, node_index));
 
-	object = object_get(object_index);
-	node_matrices = (real_matrix4x3 *)object_header_block_get(object_index, &object->object.node_matrices);
-
-	return &node_matrices[node_index];
+	return &object_get_node_matrices(object_index)[node_index];
 }
 
 short object_get_marker_by_name(
@@ -1867,7 +1891,6 @@ short object_get_marker_by_name(
 
 	struct object_datum const *object = object_get(object_index);
 	struct object_definition const *object_definition = object_definition_get(object->definition_index);
-	real_matrix4x3 const *matrices = object_get_node_matrices(object_index);
 
 	marker = model_get_marker_by_name(
 		object_definition->object.model.index,
@@ -1875,7 +1898,7 @@ short object_get_marker_by_name(
 		object->object.region_permutations,
 		FALSE,
 		NONE,
-		matrices,
+		object_get_node_matrices(object_index),
 		TEST_FLAG(object->object.flags, _object_mirrored_bit),
 		markers,
 		maximum_marker_count);
@@ -2575,6 +2598,7 @@ void object_compute_node_matrices(
 					object_nodes[node_stack_index] = node_matrix;
 				}
 
+#ifdef DEBUG
 				if (!valid_real_matrix4x3(&object_nodes[node_stack_index]))
 				{
 					error(_error_silent, "object_compute_node_matrices FAILURE on root node of %s", tag_get_name(object->definition_index));
@@ -2672,6 +2696,7 @@ void object_compute_node_matrices(
 						&object_nodes[node_stack_index],
 						"object_compute_node_matrices root node matrix");
 				}
+#endif
 			}
 			else
 			{
@@ -2814,6 +2839,7 @@ void objects_scripting_detach(
 void object_render_debug(
 	long object_index)
 {
+#ifdef DEBUG
 	struct object_datum *object = object_get(object_index);
 	struct object_definition *object_definition = object_definition_get(object->definition_index);
 
@@ -3030,6 +3056,7 @@ void object_render_debug(
 	}
 
 	return;
+#endif
 }
 
 static void attachments_new(
@@ -3486,7 +3513,7 @@ boolean object_force_inside_bsp(
 	return result;
 }
 
-boolean object_update(
+static boolean object_update(
 	long object_index)
 {
 	struct object_header_datum *header = object_header_get(object_index);
@@ -3758,6 +3785,7 @@ void objects_garbage_collection(
 		short garbage_object_count = 0;
 		boolean should_collect = FALSE;
 
+#ifdef DEBUG
 		if (debug_object_garbage_collection)
 		{
 			console_printf(
@@ -3767,6 +3795,7 @@ void objects_garbage_collection(
 				OBJECT_MEMORY_POOL_SIZE - memory_pool_get_free_size(object_memory_pool),
 				memory_pool_get_contiguous_free_size(object_memory_pool));
 		}
+#endif
 
 		{
 			long garbage_object_index;
@@ -3835,10 +3864,12 @@ void objects_garbage_collection(
 				if (TEST_FLAG(_object_mask_unit, garbage_object->object.type) &&
 					!TEST_FLAG(garbage_object->object.damage_flags, _object_dead_bit))
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"WARNING: garbage collecting a living unit (%s)",
 						ai_debug_describe_actor(NONE, object_index, TRUE, temporary, NUMBEROF(temporary)));
+#endif
 				}
 
 				if (TEST_FLAG(header->flags, _object_header_active_bit))
@@ -3853,6 +3884,7 @@ void objects_garbage_collection(
 
 		memory_pool_compact(object_memory_pool);
 		
+#ifdef DEBUG
 		if (debug_object_garbage_collection)
 		{
 			console_printf(
@@ -3861,6 +3893,7 @@ void objects_garbage_collection(
 				object_header_data->actual_count,
 				memory_pool_get_contiguous_free_size(object_memory_pool));
 		}
+#endif
 
 		if (!should_collect)
 		{
@@ -4039,7 +4072,7 @@ void objects_update(
 	memcpy(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count));
 	memcpy(active_cluster_bits, players_get_combined_pvs(), BIT_VECTOR_SIZE_IN_BYTES(cluster_count));
 
-	if (csmemcmp(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count)))
+	if (memcmp(last_active_cluster_bits, active_cluster_bits, BIT_VECTOR_SIZE_IN_BYTES(cluster_count)))
 	{
 		object_header = (struct object_header_datum *)object_header_data->data;
 		for (i = 0; i<object_header_data->count; ++object_header)
@@ -4301,7 +4334,7 @@ static long recursive_object_adder(
 	return object_count;
 }
 
-static long sort_dumps(
+static long __cdecl sort_dumps(
 	struct dump_datum const *dump1,
 	struct dump_datum const *dump2)
 {

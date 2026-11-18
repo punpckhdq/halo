@@ -133,7 +133,7 @@ enum
 
 /* ---------- macros */
 
-#define object_header_get(index)			((struct object_header_datum*)datum_get(object_header_data, (index)))
+#define object_header_get(index)			DATUM_GET(object_header_data, index, struct object_header_datum)
 #define object_header_try_and_get(index)	((struct object_header_datum*)datum_try_and_get(object_header_data, (index)))
 
 #define object_get(index)			((struct object_datum*)object_get_and_verify_type(index, _object_mask_all))
@@ -291,7 +291,11 @@ long cluster_get_first_collideable_object(long *reference_index, short cluster_i
 long cluster_get_next_collideable_object(long *reference_index);
 short object_get_next_cluster(struct object_cluster_iterator *iterator, long object_index);
 void *object_try_and_get_and_verify_type(long object_index, unsigned long valid_type_flags);
+#ifdef DEBUG
 void *object_get_and_verify_type(long object_index, unsigned long valid_type_flags);
+#else
+#define object_get_and_verify_type(object_index, valid_type_flags) (((struct object_header_datum *)object_header_data->data)[DATUM_INDEX_TO_ABSOLUTE_INDEX(object_index)].datum)
+#endif
 void object_iterator_new(struct object_iterator *iterator, unsigned long type_flags, byte flags);
 void *object_iterator_next(struct object_iterator *iterator);
 long object_get_ultimate_parent(long object_index);
@@ -308,13 +312,19 @@ short objects_get_activating_cluster_index(void);
 void object_definition_predict(long definition_index);
 void object_predict(long object_index);
 void object_beautify(long object_index, boolean beautiful);
+#ifdef DEBUG
 void *object_header_block_get(long object_index, struct object_header_block_reference *reference);
+#endif
 boolean object_header_block_allocate(long object_index, short block_reference_offset, short size);
 void object_scripting_set_collideable(long object_index, boolean collideable);
 void object_marker_begin(void);
 void object_marker_end(void);
 boolean object_unmarked_function(long object_index);
 boolean object_mark_function(long object_index);
+#ifdef DEBUG
+#define object_unmarked object_unmarked_function
+#define object_mark object_mark_function
+#endif
 void objects_place(void);
 long find_objects_from_point_vector(
 	real_point3d const *position,
@@ -373,7 +383,6 @@ void object_translate(long object_index, real_point3d const *new_position, struc
 long object_new(struct object_placement_data *data);
 void object_attach_to_node(long parent_object_index, long child_object_index, short parent_node_index);
 boolean object_force_inside_bsp(long object_index, real_point3d const *known_good_point);
-boolean object_update(long object_index);
 void object_compute_node_matrices_recursive(long object_index);
 long object_new_from_scenario(struct scenario_object_datum *scenario_object, struct tag_block *palette);
 void object_attach_to_marker(long parent_object_index, char const *parent_marker_name, long child_object_index, char const *child_marker_name);
@@ -452,5 +461,53 @@ __inline void object_get_render_bounding_sphere(
 
 	return;
 }
+
+#ifndef DEBUG
+__inline boolean object_unmarked(
+	long object_index)
+{
+	struct object_datum *object = object_get(object_index);
+	boolean result;
+
+	if (object->object.magic_number!=global_object_marker)
+	{
+		result = TRUE;
+	}
+	else
+	{
+		result = FALSE;
+	}
+
+	return result;
+}
+
+__inline boolean object_mark(
+	long object_index)
+{
+	struct object_datum *object = object_get(object_index);
+	boolean result;
+
+	if (object->object.magic_number!=global_object_marker)
+	{
+		object->object.magic_number = global_object_marker;
+		result = TRUE;
+	}
+	else
+	{
+		result = FALSE;
+	}
+
+	return result;
+}
+
+__inline void *object_header_block_get(
+	long object_index,
+	struct object_header_block_reference *reference)
+{
+	struct object_datum *object = object_get(object_index);
+
+	return (byte *)object + reference->offset;
+}
+#endif
 
 #endif // __OBJECTS_H

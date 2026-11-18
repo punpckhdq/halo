@@ -30,6 +30,7 @@ enum
 
 /* ---------- macros */
 
+#ifdef DEBUG
 #define profile_enter(section)							\
 if (profile_global_enable && section.active)	\
 {														\
@@ -41,6 +42,11 @@ if (profile_global_enable && section.active)	\
 {														\
 	profile_exit_private(&section);						\
 }														\
+
+#else
+#define profile_enter(section)
+#define profile_exit(section)
+#endif
 
 /* ---------- structures */
 

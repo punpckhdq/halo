@@ -39,7 +39,7 @@ enum
 
 /* ---------- macros */
 
-#define particle_get(index) ((struct particle_datum *)datum_get(particle_data, (index)))
+#define particle_get(index) DATUM_GET(particle_data, index, struct particle_datum)
 
 /* ---------- structures */
 
