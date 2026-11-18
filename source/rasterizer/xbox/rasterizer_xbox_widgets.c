@@ -189,7 +189,11 @@ void _rasterizer_widget_begin(
 		SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
 		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 		SetRenderStateSmart(D3DRS_ZWRITEENABLE, rasterizer_debug_options.lens_flare_occlusion_debug);
+#ifdef DEBUG
 		SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+#else
+		SetRenderStateSmart(D3DRS_ZBIAS, 8);
+#endif
 
 		rasterizer_set_vertex_shader_permutation(_vertex_shader_lens_flare, _rasterizer_vertex_type_dynamic_unlit, _vertex_shader_permutation_default);
 

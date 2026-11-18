@@ -357,7 +357,11 @@ static void render_model_parts(
 				struct model_region_permutation *permutation = TAG_BLOCK_GET_ELEMENT(&region->permutations, region_permutation_indices[region_index], struct model_region_permutation);
 				short geometry_index = permutation->geometry_indices[geometry_detail_level_index];
 
+#ifdef DEBUG
 				if (!render_model_no_geometry && geometry_index!=NONE)
+#else
+				if (geometry_index!=NONE)
+#endif
 				{
 					short part_index;
 					struct model_geometry *geometry = TAG_BLOCK_GET_ELEMENT(&model->geometries, geometry_index, struct model_geometry);

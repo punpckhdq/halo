@@ -485,7 +485,9 @@ static short const ascii_to_key_table[NUMBER_OF_ASCII_CODES]=
 };
 
 static XINPUT_FEEDBACK gamepad_feedback[MAXIMUM_GAMEPADS] = {0}; /* fake name */
+#ifdef DEBUG
 static point2d gamepad_raw_sticks[MAXIMUM_GAMEPADS][NUMBER_OF_GAMEPAD_STICKS] = {0}; /* fake name */
+#endif
 static struct input_globals_xbox input_globals = {0};
 
 /* ---------- public code */
@@ -960,10 +962,12 @@ static void input_update_gamepads(
 					update_ticks(&gamepad->buttons[FIRST_GAMEPAD_BINARY_BUTTON + button_index], state.Gamepad.wButtons & gamepad_binary_button_table[button_index]);
 				}
 
+#ifdef DEBUG
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_left].x = state.Gamepad.sThumbLX;
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_left].y = state.Gamepad.sThumbLY;
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_right].x = state.Gamepad.sThumbRX;
 				gamepad_raw_sticks[gamepad_index][_gamepad_stick_right].y = state.Gamepad.sThumbRY;
+#endif
 
 				gamepad->sticks[_gamepad_stick_left].x = fix_dead_zone(state.Gamepad.sThumbLX, GAMEPAD_STICK_DEAD_ZONE);
 				gamepad->sticks[_gamepad_stick_left].y = fix_dead_zone(state.Gamepad.sThumbLY, GAMEPAD_STICK_DEAD_ZONE);

@@ -227,6 +227,7 @@ __inline real build_sprite_compute_vertex_fade(
 void build_sprite_prepare_for_window(
 	void)
 {
+#ifdef DEBUG
 	if (debug_sprites)
 	{
 		char printbuffer[512];
@@ -236,10 +237,9 @@ void build_sprite_prepare_for_window(
 			"   coverage: %.1f big sprites: %d",
 			build_sprite_globals.screen_coverage,
 			build_sprite_globals.big_sprite_count);
-#ifdef DEBUG
 		render_debug_string(FALSE, printbuffer);
-#endif
 	}
+#endif
 
 	build_sprite_globals.screen_coverage = 0.f;
 	build_sprite_globals.big_sprite_count = 0;

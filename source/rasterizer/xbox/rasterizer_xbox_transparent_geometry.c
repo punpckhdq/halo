@@ -43,10 +43,12 @@ void rasterizer_transparent_geometry_groups_begin(
 	local_last_source_object_index = 0;
 	__test_no_more_active_camo = FALSE;
 
+#ifdef DEBUG
 	if (rasterizer_debug_options.__unknown88 && rasterizer_debug_options.transparent_pixel_counter_enabled && global_window_parameters.window_index!=NONE)
 	{
 		IDirect3DDevice8_BeginVisibilityTest(global_d3d_device);
 	}
+#endif
 
 	return;
 }
@@ -395,7 +397,11 @@ void rasterizer_transparent_geometry_group_draw(
 					SetRenderStateSmart(D3DRS_ZENABLE, TRUE);
 					SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
 					SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+#ifdef DEBUG
 					SetRenderStateSmart(D3DRS_ZBIAS, shader_is_decal(group->shader) ? rasterizer_debug_options.zbias : 0);
+#else
+					SetRenderStateSmart(D3DRS_ZBIAS, shader_is_decal(group->shader) ? 8 : 0);
+#endif
 				}
 
 				for (pass = 0; pass<2; pass++)

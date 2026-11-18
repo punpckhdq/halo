@@ -267,13 +267,17 @@ void rasterizer_transparent_geometry_draw(
 			group_index = 0;
 		}
 
+#ifdef DEBUG
 		if (water && global_window_parameters.window_index!=NONE)
 		{
 			rasterizer_debug_options.__unknown88 = TRUE;
 		}
+#endif
 
 		rasterizer_transparent_geometry_groups_begin();
+#ifdef DEBUG
 		rasterizer_debug_options.__unknown88 = FALSE;
+#endif
 
 		for (; group_index<transparent_geometry_group_count; group_index++)
 		{
@@ -303,12 +307,16 @@ void rasterizer_transparent_geometry_draw(
 			rasterizer_transparent_geometry_group_draw(group, FALSE);
 		}
 
+#ifdef DEBUG
 		if (!water && global_window_parameters.window_index!=NONE)
 		{
 			rasterizer_debug_options.__unknown88 = TRUE;
 		}
+#endif
 		rasterizer_transparent_geometry_groups_end();
+#ifdef DEBUG
 		rasterizer_debug_options.__unknown88 = FALSE;
+#endif
 
 		if (first_person_flag)
 		{

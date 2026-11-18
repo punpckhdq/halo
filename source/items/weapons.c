@@ -187,10 +187,12 @@ boolean weapon_new(
 void weapon_delete(
 	long weapon_index)
 {
+#ifdef DEBUG
 	if (game_engine_running())
 	{
 		match_assert("c:\\halo\\SOURCE\\items\\weapons.c", 234, !weapon_is_flag(weapon_index));
 	}
+#endif
 
 	return;
 }

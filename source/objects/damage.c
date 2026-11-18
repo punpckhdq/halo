@@ -1074,6 +1074,7 @@ void object_cause_damage(
 					damage_data->material_effect_scale = PIN(current_object->object.body_vitality, 0.f, 1.f);
 				}
 
+#ifdef DEBUG
 				if (debug_damage && current_object_index == damage_debug_object_index)
 				{
 					console_printf(
@@ -1086,6 +1087,7 @@ void object_cause_damage(
 						shield_damage,
 						body_damage);
 				}
+#endif
 
 				caused_damage = TRUE;
 			}

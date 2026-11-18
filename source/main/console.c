@@ -285,7 +285,6 @@ void console_startup(
 {
 	char buffer[200];
 	FILE *file;
-	short newest_previous_command_index;
 
 	if (!game_in_editor())
 	{
@@ -301,15 +300,8 @@ void console_startup(
 		while (fgets(buffer, NUMBEROF(buffer)-1, file))
 		{
 			strtok(buffer, "\r\n\t");
-			newest_previous_command_index = (console_globals.newest_previous_command_index + 1) % MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS;
 
-			console_globals.newest_previous_command_index = newest_previous_command_index;
-			strcpy(console_globals.previous_commands[newest_previous_command_index], buffer);
-
-			console_globals.previous_command_count = MIN(console_globals.previous_command_count + 1, MAXIMUM_NUMBER_OF_PREVIOUS_COMMANDS);
-
-			console_globals.selected_previous_command_index = NONE;
-			if (hs_compile_and_evaluate(buffer))
+			if (console_process_command(buffer))
 			{
 				error(_error_log, "init: %s", buffer);
 			}

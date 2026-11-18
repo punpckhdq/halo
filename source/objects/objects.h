@@ -312,7 +312,9 @@ short objects_get_activating_cluster_index(void);
 void object_definition_predict(long definition_index);
 void object_predict(long object_index);
 void object_beautify(long object_index, boolean beautiful);
+#ifdef DEBUG
 void *object_header_block_get(long object_index, struct object_header_block_reference *reference);
+#endif
 boolean object_header_block_allocate(long object_index, short block_reference_offset, short size);
 void object_scripting_set_collideable(long object_index, boolean collideable);
 void object_marker_begin(void);
@@ -497,6 +499,15 @@ __inline boolean object_mark(
 	}
 
 	return result;
+}
+
+__inline void *object_header_block_get(
+	long object_index,
+	struct object_header_block_reference *reference)
+{
+	struct object_datum *object = object_get(object_index);
+
+	return (byte *)object + reference->offset;
 }
 #endif
 

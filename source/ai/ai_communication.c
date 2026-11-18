@@ -3198,10 +3198,12 @@ static short ai_communication_consider_speech(
 
 	if (play_type == _unit_play_speech_none)
 	{
+#ifdef DEBUG
 		if (debugstring)
 		{
 			sprintf(debugstring, "nospch-%s", unit_get_speech_priority_name(speech_priority));
 		}
+#endif
 	}
 	else if (play_type == _unit_play_speech_queue)
 	{
@@ -3222,10 +3224,12 @@ static short ai_communication_consider_speech(
 			play_type = _unit_play_speech_none;
 			*weight = 0.f;
 
+#ifdef DEBUG
 			if (debugstring)
 			{
 				sprintf(debugstring, "spk%d<tol%d+%d", time_since_speech, delay_ticks, tolerance_ticks - delay_ticks);
 			}
+#endif
 		}
 		else if (time_since_speech < tolerance_ticks + communication_unit_prefer_silent_time)
 		{

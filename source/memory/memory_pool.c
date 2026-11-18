@@ -215,7 +215,9 @@ void memory_pool_block_free(
 		pool->last_block = block->previous_block;
 	}
 
+#ifdef DEBUG
 	memset(block, 0, block->size);
+#endif
 
 	return;
 }
@@ -350,7 +352,9 @@ static struct memory_pool_block *memory_pool_block_get(
 	void **reference)
 {
 	struct memory_pool_block *block;
+#ifdef DEBUG
 	struct memory_pool_block *other_block;
+#endif
 
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 372, reference && (*reference));
 #ifdef DEBUG
@@ -360,8 +364,10 @@ static struct memory_pool_block *memory_pool_block_get(
 	block = (struct memory_pool_block *)*reference - 1;
 	match_vassert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 379, block->reference==reference, csprintf(temporary, "expected reference %08x but got %08x", block->reference, reference));
 
+#ifdef DEBUG
 	for (other_block = pool->first_block; other_block && block!=other_block; other_block = other_block->next_block);
 	match_assert("c:\\halo\\SOURCE\\memory\\memory_pool.c", 388, other_block);
+#endif
 
 	return block;
 }

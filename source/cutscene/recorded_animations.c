@@ -105,9 +105,8 @@ static struct data_array *animation_threads = NULL;
 #ifdef DEBUG
 boolean debug_recording = FALSE;
 short debug_recording_newlines = 10;
-#endif
-
 static struct animation_thread_debug *animation_threads_debug = NULL;
+#endif
 
 /* ---------- public code */
 
@@ -120,8 +119,10 @@ void recorded_animations_initialize(
 		sizeof(struct animation_thread));
 	match_assert("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 108, animation_threads);
 
+#ifdef DEBUG
 	animation_threads_debug = match_malloc("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 111, MAX_RECORDINGS_PLAYING*sizeof(struct animation_thread_debug));
 	match_assert("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 112, animation_threads_debug);
+#endif
 
 	return;
 }
@@ -235,7 +236,9 @@ static boolean recorded_animation_play_internal(
 
 				if (thread)
 				{
+#ifdef DEBUG
 					struct animation_thread_debug *thread_debug;
+#endif
 
 					match_assert("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 233, animation->version>0&&animation->version<=RECORDED_ANIMATION_VERSION&&playback_codec[animation->version-1]);
 					thread->unit_index = unit_index;
@@ -243,11 +246,13 @@ static boolean recorded_animation_play_internal(
 					thread->ticks_left = animation->ticks;
 					thread->event_stream = tag_data_get_pointer_inline(&animation->animation_data, 0, animation->animation_data.size);
 
+#ifdef DEBUG
 					thread_debug = &animation_threads_debug[DATUM_INDEX_TO_ABSOLUTE_INDEX(thread_index)];
 					thread_debug->valid = TRUE;
 					thread_debug->event_stream_start = thread->event_stream;
 					thread_debug->stream_length = animation->animation_data.size;
 					thread_debug->animation_index = animation_index;
+#endif
 
 					thread->version = animation->version - 1;
 					SET_FLAG(thread->flags, _recording_thread_finished_bit, FALSE);
@@ -272,6 +277,7 @@ static boolean recorded_animation_play_internal(
 			}
 			else if (thread)
 			{
+#ifdef DEBUG
 				struct animation_thread_debug const *thread_debug = &animation_threads_debug[DATUM_INDEX_TO_ABSOLUTE_INDEX(thread_index)];
 				char const *name = "<unknown>";
 
@@ -282,7 +288,6 @@ static boolean recorded_animation_play_internal(
 					name = current_animation->name;
 				}
 
-#ifdef DEBUG
 				error(_error_silent, "trying to play %s while %s is playing", animation->name, name);
 #endif
 			}
@@ -339,7 +344,9 @@ void recorded_animations_update(
 		{
 			if (!TEST_FLAG(thread->flags, _recording_thread_finished_bit))
 			{
+#ifdef DEBUG
 				struct animation_thread_debug const *thread_debug;
+#endif
 
 				thread->ticks_left--;
 				finished = !playback_codec[thread->version]->apply_event_stream(
@@ -348,12 +355,14 @@ void recorded_animations_update(
 					&thread->relative_ticks,
 					&thread->event_stream);
 				match_assert("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 347, thread->relative_ticks>=0);
+#ifdef DEBUG
 				thread_debug = &animation_threads_debug[DATUM_INDEX_TO_ABSOLUTE_INDEX(iterator.index)];
 
 				if (thread_debug->valid)
 				{
 					match_assert("c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 354, thread->event_stream-thread_debug->event_stream_start<thread_debug->stream_length||(thread->event_stream-thread_debug->event_stream_start==thread_debug->stream_length&&finished));
 				}
+#endif
 
 				thread->relative_ticks++;
 				unit_control(thread->unit_index, &thread->controller);
@@ -361,6 +370,7 @@ void recorded_animations_update(
 			}
 			else
 			{
+#ifdef DEBUG
 				struct animation_thread_debug *thread_debug = &animation_threads_debug[DATUM_INDEX_TO_ABSOLUTE_INDEX(iterator.index)];
 
 				match_vassert(
@@ -372,6 +382,7 @@ void recorded_animations_update(
 						"animation %s appears corrupt",
 						TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->recorded_animations, thread_debug->animation_index, struct recorded_animation_definition)->name));
 				thread_debug->valid = FALSE;
+#endif
 
 				unit_set_controllable(thread->unit_index, TEST_FLAG(thread->flags, _recording_thread_unit_was_controlled_bit));
 				unit_set_possessed(thread->unit_index, FALSE);

@@ -221,7 +221,9 @@ long transport_initialize(
 	if (!transport_initialized)
 	{
 		unsigned long link_status;
+#ifdef DEBUG
 		FILE *file;
+#endif
 		WSADATA winsock_data = {0};
 		XNetStartupParams startup = {0};
 
@@ -249,16 +251,16 @@ long transport_initialize(
 
 		startup.cfgSizeOfStruct = sizeof(XNetStartupParams);
 		startup.cfgFlags = 0;
+#ifdef DEBUG
 		file = fopen("d:\\bypass_security.txt", "r");
 
 		if (file)
 		{
-#ifdef DEBUG
 			error(_error_silent, "XNET_STARTUP_BYPASS_SECURITY [ON]");
-#endif
 			startup.cfgFlags |= XNET_STARTUP_BYPASS_SECURITY;
 			fclose(file);
 		}
+#endif
 
 		net_startup_debug(&startup);
 

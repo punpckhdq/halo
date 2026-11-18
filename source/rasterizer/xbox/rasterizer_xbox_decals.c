@@ -275,7 +275,11 @@ void _rasterizer_decals_begin(
 		SetRenderStateSmart(D3DRS_ZWRITEENABLE, FALSE);
 		SetRenderStateSmart(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
+#ifdef DEBUG
 		SetRenderStateSmart(D3DRS_ZBIAS, rasterizer_debug_options.zbias);
+#else
+		SetRenderStateSmart(D3DRS_ZBIAS, 8);
+#endif
 
 		if (layer == _decal_layer_alpha_tested)
 		{

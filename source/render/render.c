@@ -496,6 +496,7 @@ void render_frame_present(
 	return;
 }
 
+#ifdef DEBUG
 boolean render_location_visible(
 	struct location *location)
 {
@@ -503,6 +504,7 @@ boolean render_location_visible(
 
 	return BIT_VECTOR_TEST_FLAG(render.visible_cluster_flags, location->cluster_index);
 }
+#endif
 
 #ifdef DEBUG
 struct rendered_cluster *rendered_cluster_get(

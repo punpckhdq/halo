@@ -548,6 +548,7 @@ long actor_place(
 
 	unit_index = object_new(&placement_data);
 
+#ifdef DEBUG
 	if (unit_index==NONE)
 	{
 		char aibuf[256];
@@ -561,10 +562,9 @@ long actor_place(
 			ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), aibuf, sizeof(aibuf));
 		}
 
-#ifdef DEBUG
 		error(_error_silent, "WARNING: cannot create unit for actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
-#endif
 	}
+#endif
 
 	if (unit_index!=NONE)
 	{
@@ -616,6 +616,7 @@ long actor_place(
 			command_list_index,
 			noncombat_sequence_id);
 
+#ifdef DEBUG
 		if (actor_index==NONE)
 		{
 			char aibuf[256];
@@ -629,10 +630,9 @@ long actor_place(
 				ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), aibuf, sizeof(aibuf));
 			}
 
-#ifdef DEBUG
 			error(_error_silent, "WARNING: cannot create actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
-#endif
 		}
+#endif
 	}
 
 	if (actor_index==NONE || unit_index==NONE)

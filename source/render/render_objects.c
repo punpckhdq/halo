@@ -459,6 +459,7 @@ static void render_object_list(
 
 					object_header = object_header_get(object_index);
 
+#ifdef DEBUG
 					if (debug_inactive_objects &&
 						object->object.parent_object_index == NONE &&
 						!TEST_FLAG(object_header->flags, _object_header_active_bit) &&
@@ -473,15 +474,14 @@ static void render_object_list(
 							INACTIVE_OBJECT_TEXT_HEIGHT,
 							&text_point);
 						sprintf(text_buffer, "inactive %s", tag_name_strip_path(tag_get_name(object->definition_index)));
-#ifdef DEBUG
 						render_debug_point(
 							FALSE,
 							&object->object.bounding_sphere_center,
 							object->object.bounding_sphere_radius,
 							global_real_argb_blue);
 						render_debug_string_at_point(FALSE, &text_point, text_buffer, global_real_argb_blue);
-#endif
 					}
+#endif
 
 					render_model(
 						definition->object.model.index,

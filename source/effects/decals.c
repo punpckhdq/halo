@@ -109,7 +109,9 @@ struct decal_wrap_parameters const decal_wrap_parameters[NUMBER_OF_DECAL_TYPES] 
 	{ 10.f, 10.f, 1.5f, FALSE }
 };
 
+#ifdef DEBUG
 static struct decal_geometry decal_geometry;
+#endif
 static struct decal_globals *decal_globals;
 static real const SECONDS_PER_TICK = 1.f / TICKS_PER_SECOND;
 
@@ -395,8 +397,10 @@ void decals_initialize(
 	decal_globals = game_state_malloc("decal globals", NULL, sizeof(struct decal_globals));
 	match_assert("c:\\halo\\SOURCE\\effects\\decals.c", 596, decal_globals);
 	rasterizer_decals_initialize();
+#ifdef DEBUG
 	decal_geometry.decal_vertex_count = 0;
 	decal_geometry.decal_surface_count = 0;
+#endif
 
 	return;
 }
@@ -413,8 +417,10 @@ void decals_initialize_for_new_map(
 	decal_globals->permanent_count = 0;
 	data_make_valid(global_decal_data);
 	rasterizer_decals_initialize_for_new_map();
+#ifdef DEBUG
 	decal_geometry.decal_vertex_count = 0;
 	decal_geometry.decal_surface_count = 0;
+#endif
 
 	return;
 }
@@ -566,8 +572,10 @@ void decals_dispose(
 void decals_unlock(
 	boolean permanent)
 {
+#ifdef DEBUG
 	static boolean locked_count_warning_issued = FALSE;
 	static boolean permanent_count_warning_issued = FALSE;
+#endif
 
 	match_assert("c:\\halo\\SOURCE\\effects\\decals.c", 801, global_decal_data);
 
@@ -595,16 +603,15 @@ void decals_unlock(
 			}
 		}
 
+#ifdef DEBUG
 		if (decal_globals->locked_count)
 		{
 			if (!locked_count_warning_issued)
 			{
-#ifdef DEBUG
 				error(
 					_error_silent,
 					"### ERROR decals: locked count is invalid (#%d) -- tell Bernie!!",
 					decal_globals->locked_count);
-#endif
 				locked_count_warning_issued = TRUE;
 			}
 
@@ -615,21 +622,22 @@ void decals_unlock(
 		{
 			if (!permanent_count_warning_issued)
 			{
-#ifdef DEBUG
 				error(
 					_error_silent,
 					"### ERROR decals: permanent count is invalid (#%d) -- tell Bernie!!",
 					decal_globals->permanent_count);
-#endif
 				permanent_count_warning_issued = TRUE;
 			}
 
 			decal_globals->permanent_count = 0;
 		}
+#endif
 	}
 
+#ifdef DEBUG
 	decal_geometry.decal_vertex_count = 0;
 	decal_geometry.decal_surface_count = 0;
+#endif
 
 	return;
 }
@@ -975,7 +983,11 @@ static void decal_clip_to_surface(
 						point_from_line3d(
 							&geometry->decal_vertices[geometry->decal_vertex_count].position,
 							&surface_plane.n,
+#ifdef DEBUG
 							rasterizer_debug_options.zoffset,
+#else
+							0.00390625f,
+#endif
 							&geometry->decal_vertices[geometry->decal_vertex_count].position);
 					}
 
@@ -1138,6 +1150,9 @@ void decal_new_from_collision(
 	real radius;
 	real_matrix4x3 basis;
 	real_rectangle2d extent;
+#ifndef DEBUG
+	struct decal_geometry decal_geometry;
+#endif
 	real_rectangle2d sprite_bounds;
 	short sequence_index;
 	short sprite_index;
@@ -1567,7 +1582,11 @@ void decal_new_from_collision(
 					up_bounds.y1 + up_bounds.y0,
 					up_bounds.z1 + up_bounds.z0);
 				normalize3d(&decal_offset);
+#ifdef DEBUG
 				scale_vector3d(&decal_offset, rasterizer_debug_options.zoffset, &decal_offset);
+#else
+				scale_vector3d(&decal_offset, 0.00390625f, &decal_offset);
+#endif
 			}
 
 			for (decal_surface_index = 0; decal_surface_index < decal_geometry.decal_surface_count; decal_surface_index++)

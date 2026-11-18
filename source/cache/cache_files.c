@@ -176,12 +176,14 @@ boolean scenario_structure_bsp_load(
 	struct scenario_structure_bsp_reference *reference)
 {
 	struct cache_file_tag_instance *tag_instance;
+#ifdef DEBUG
 	byte *tag_cache_base_address = physical_memory_get_tag_cache_base_address();
 
 	memset(
 		tag_cache_base_address + cache_file_globals.header.tags_size,
 		TAG_CACHE_GARBAGE_FILL_BYTE,
 		TAG_CACHE_SIZE - cache_file_globals.header.tags_size);
+#endif
 
 	{
 		boolean completion_flag;

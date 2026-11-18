@@ -507,25 +507,21 @@ void _rasterizer_environment_fog_screen_begin(
 
 						if (animation_index < 0)
 						{
+#ifdef DEBUG
 							static boolean warned = FALSE;
 
 							if (!warned)
 							{
-#ifdef DEBUG
 								error(_error_silent, "### ERROR fog screen animation index is invalid -- tell Bernie!!");
-#endif
 								error(_error_silent, "\tindex=%d", animation_index);
 								error(_error_silent, "\ttime=%f[%x]", global_frame_parameters.game_time_sec, *(unsigned long *)&global_frame_parameters.game_time_sec);
-#ifdef DEBUG
 								error(_error_silent, "\tperiod=%f[%x]", screen->animation_period, *(unsigned long *)&screen->animation_period);
 								error(_error_silent, "\tphase=%f[%x]", phases[layer_index], *(unsigned long *)&phases[layer_index]);
-#endif
 								error(_error_silent, "\tt=%f[%x]", t, *(unsigned long *)&t);
-#ifdef DEBUG
 								error(_error_silent, "\tanimation_time=%f[%x]", animation_time, *(unsigned long *)&layer_animation_t[layer_index]);
-#endif
 								warned = TRUE;
 							}
+#endif
 
 							animation_index = 0;
 						}

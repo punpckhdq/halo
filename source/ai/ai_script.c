@@ -1879,8 +1879,10 @@ static void ai_scripting_migrate_internal(
 							}
 						}
 
+#ifdef DEBUG
 						sprintf(temporary, "squad %s", squad_definition->name);
 						debug_description = temporary;
+#endif
 						target_squad_indices[source_iterator.squad_index] = ai_scripting_migrate_find_target_squad(
 							source_encounter_index,
 							(short)source_iterator.squad_index,
