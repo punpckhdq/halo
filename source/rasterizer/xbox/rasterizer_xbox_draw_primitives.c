@@ -131,11 +131,7 @@ boolean rasterizer_dynamic_geometry_initialize(
 			count = 0;
 		}
 
-		if (count <= 0)
-		{
-			group->d3d_vertex_buffer = NULL;
-		}
-		else
+		if (count > 0)
 		{
 			D3DCALL(success, IDirect3DDevice8_CreateVertexBuffer(global_d3d_device,
 				rasterizer_geometry_get_vertex_size(vertex_type)*count,
@@ -154,6 +150,10 @@ boolean rasterizer_dynamic_geometry_initialize(
 				group->d3d_vertex_buffer = NULL;
 				error(_error_silent, "### ERROR failed to create dynamic vertex buffer");
 			}
+		}
+		else
+		{
+			group->d3d_vertex_buffer = NULL;
 		}
 
 		group->max_vertex_count = count;

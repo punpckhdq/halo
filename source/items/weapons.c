@@ -37,8 +37,13 @@ WEAPONS.C
 
 /* ---------- prototypes */
 
+#ifdef DEBUG
 static struct weapon_trigger *weapon_trigger_get(struct weapon_datum *weapon, short trigger_index);
 static struct weapon_magazine *weapon_magazine_get(struct weapon_datum *weapon, short magazine_index);
+#else
+#define weapon_trigger_get(datum, trigger_index) (&(datum)->weapon.triggers[trigger_index])
+#define weapon_magazine_get(datum, magazine_index) (&(datum)->weapon.magazines[magazine_index])
+#endif
 static boolean weapon_busy(long weapon_index);
 static boolean weapon_magazine_state_change_ok(long weapon_index);
 static long weapon_get_effect_object_index(long weapon_index);
@@ -1442,6 +1447,7 @@ boolean weapon_overcharged(
 	return weapon->weapon.triggers[_weapon_trigger_primary].state == _trigger_charging || weapon->weapon.triggers[_weapon_trigger_primary].state == _trigger_charged;
 }
 
+#ifdef DEBUG
 static struct weapon_trigger *weapon_trigger_get(
 	struct weapon_datum *weapon,
 	short trigger_index)
@@ -1463,6 +1469,7 @@ static struct weapon_magazine *weapon_magazine_get(
 
 	return &weapon->weapon.magazines[magazine_index];
 }
+#endif
 
 static boolean weapon_busy(
 	long weapon_index)

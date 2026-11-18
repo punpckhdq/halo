@@ -1876,15 +1876,9 @@ real_matrix4x3 *object_get_node_matrix(
 	long object_index,
 	short node_index)
 {
-	real_matrix4x3 *node_matrices;
-	struct object_datum *object;
-
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 1060, object_has_node(object_index, node_index));
 
-	object = object_get(object_index);
-	node_matrices = (real_matrix4x3 *)object_header_block_get(object_index, &object->object.node_matrices);
-
-	return &node_matrices[node_index];
+	return &object_get_node_matrices(object_index)[node_index];
 }
 
 short object_get_marker_by_name(
@@ -1897,7 +1891,6 @@ short object_get_marker_by_name(
 
 	struct object_datum const *object = object_get(object_index);
 	struct object_definition const *object_definition = object_definition_get(object->definition_index);
-	real_matrix4x3 const *matrices = object_get_node_matrices(object_index);
 
 	marker = model_get_marker_by_name(
 		object_definition->object.model.index,
@@ -1905,7 +1898,7 @@ short object_get_marker_by_name(
 		object->object.region_permutations,
 		FALSE,
 		NONE,
-		matrices,
+		object_get_node_matrices(object_index),
 		TEST_FLAG(object->object.flags, _object_mirrored_bit),
 		markers,
 		maximum_marker_count);

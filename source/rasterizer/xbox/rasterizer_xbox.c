@@ -166,7 +166,7 @@ boolean rasterizer_preinitialize__fill_you_up_with_the_devils_cock(
 		else
 		{
 			IDirect3DDevice8_GetDeviceCaps(global_d3d_device, &global_d3d_caps);
-			success = SUCCEEDED(IDirect3DDevice8_Present(global_d3d_device, NULL, NULL, NULL, NULL));
+			D3DCALL(success, IDirect3DDevice8_Present(global_d3d_device, NULL, NULL, NULL, NULL));
 
 			if (global_d3d_device)
 			{
@@ -984,7 +984,7 @@ void _rasterizer_present(
 						memcpy(destination, (byte *)d3d_locked_rect.pBits + row_index*d3d_locked_rect.Pitch, d3d_locked_rect.Pitch);
 					}
 
-					success = SUCCEEDED(IDirect3DSurface8_UnlockRect(d3d_backbuffer));
+					D3DCALL(success, IDirect3DSurface8_UnlockRect(d3d_backbuffer));
 				}
 				else
 				{
