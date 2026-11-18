@@ -796,6 +796,7 @@ static void game_engine_generate_title_string(
 	long player_index,
 	wchar_t *title_string)
 {
+#if CONFIG_VERSION >= 2342
 	wchar_t n_limited_lives_string[128];
 	struct player_datum *player = player_get(player_index);
 	wchar_t *lives_string = L"";
@@ -916,6 +917,107 @@ static void game_engine_generate_title_string(
 	}
 
 	title_string[MAXIMUM_TITLE_STRING_LENGTH - 1] = '\0';
+#else
+	wchar_t lives_string[40];
+	struct player_datum *player = player_get(player_index);
+
+	match_assert("c:\\halo\\SOURCE\\game\\game_engine.c", MATCH_LINE_NTSC(867, 878), title_string);
+
+	usprintf(lives_string, L"");
+
+	if (global_variant.universal_variant.lives > 0)
+	{
+		long lives_remaining = global_variant.universal_variant.lives - player_get(player_index)->statistics.deaths;
+
+		switch (lives_remaining)
+		{
+		case 0:
+			usprintf(lives_string, L"(no lives)");
+			break;
+		case 1:
+			usprintf(lives_string, L"(1 life)");
+			break;
+		default:
+			usprintf(lives_string, L"(%d lives)", lives_remaining);
+			break;
+		}
+	}
+
+	if (game_engine_globals.mode == game_engine_mode_postgame_delay)
+	{
+		long win = game_engine_did_player_win(player_index);
+		boolean teams = game_engine_has_teams();
+
+		switch (win)
+		{
+		case NONE:
+			usprintf(title_string, L"Game ends in a draw");
+			break;
+		case FALSE:
+			if (teams)
+			{
+				usprintf(title_string, L"Your team lost");
+			}
+			else
+			{
+				usprintf(title_string, L"You lost");
+			}
+			break;
+		case TRUE:
+			if (teams)
+			{
+				usprintf(title_string, L"Your team won");
+			}
+			else
+			{
+				usprintf(title_string, L"You won");
+			}
+			break;
+		}
+	}
+	else if (game_engine_has_teams())
+	{
+		wchar_t team0_score_string[8];
+		wchar_t team1_score_string[8];
+		long team0_score;
+		long team1_score;
+
+		game_engine->get_team_score_string(0, team0_score_string);
+		game_engine->get_team_score_string(1, team1_score_string);
+		team0_score = game_engine_get_team_score(0);
+		team1_score = game_engine_get_team_score(1);
+
+		if (team0_score > team1_score)
+		{
+			usprintf(title_string, L"Red leads Blue %s to %s %s", team0_score_string, team1_score_string, lives_string);
+		}
+		else if (team0_score < team1_score)
+		{
+			usprintf(title_string, L"Blue leads Red %s to %s %s", team1_score_string, team0_score_string, lives_string);
+		}
+		else
+		{
+			usprintf(title_string, L"Teams tied at %s %s", team1_score_string, lives_string);
+		}
+	}
+	else
+	{
+		struct statistic_buffer place;
+		wchar_t personalScore[256];
+
+		place = game_engine_get_player_place(player_index);
+		game_engine->get_score_string(player_index, personalScore);
+
+		if (is_place_tied(&place))
+		{
+			usprintf(title_string, L"Tied for %s place with %s %s", get_place_string(&place), personalScore, lives_string);
+		}
+		else
+		{
+			usprintf(title_string, L"In %s place with %s %s", get_place_string(&place), personalScore, lives_string);
+		}
+	}
+#endif
 
 	return;
 }
@@ -1092,7 +1194,9 @@ void game_engine_post_rasterize_post_game(
 		real_argb_color normal_color;
 		real_argb_color hilite_color;
 		real_argb_color winner_color;
+#if CONFIG_VERSION >= 2342
 		wchar_t *fields[5];
+#endif
 		long player_count;
 		long index;
 		short tab_stops[6] = {50, 125, 250, 350, 410, 500};
@@ -1132,8 +1236,13 @@ void game_engine_post_rasterize_post_game(
 			long team_order[2] = {0, 1};
 			long team_won = game_engine_did_team_win(0);
 
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(team_string[0], _string_tab_red_team_tab_string);
 			multiplayer_game_text_get_string(team_string[1], _string_tab_blue_team_tab_string);
+#else
+			team_string[0] = L"\tRed Team\t%s";
+			team_string[1] = L"\tBlue Team\t%s";
+#endif
 
 			if (!team_won)
 			{
@@ -1148,12 +1257,17 @@ void game_engine_post_rasterize_post_game(
 				long team_index = team_order[index];
 
 				game_engine->get_team_score_string(team_index, custom_buffer);
+#if CONFIG_VERSION >= 2342
 				usnprintf(buffer, NUMBEROF(buffer), team_string[team_index], custom_buffer);
 				buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+				usprintf(buffer, team_string[team_index], custom_buffer);
+#endif
 				drawline(buffer, index + 4, 0);
 			}
 		}
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(fields[0], _string_place);
 		multiplayer_game_text_get_string(fields[1], _string_name);
 		multiplayer_game_text_get_string(fields[2], _string_kills);
@@ -1171,6 +1285,18 @@ void game_engine_post_rasterize_post_game(
 			fields[3],
 			fields[4]);
 		buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+		game_engine->get_score_header_string(custom_buffer);
+		usprintf(
+			buffer,
+			L"\t%s\t%s\t%s\t%s\t%s\t%s",
+			L"Place",
+			L"Name",
+			custom_buffer,
+			L"Kills",
+			L"Assists",
+			L"Deaths");
+#endif
 		draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
 		drawline(buffer, 7, 0);
 		player_count = select_players_to_display(NONE, statistic_buffer, _postgame_statistic_ranking, 12);
@@ -1191,8 +1317,12 @@ void game_engine_post_rasterize_post_game(
 			}
 
 			draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t%s", get_place_string(&statistic_buffer[index]));
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t%s", get_place_string(&statistic_buffer[index]));
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1211,8 +1341,12 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&team_colors[PIN(player->team_index, 0, 1)]);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t%s", player->name);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t%s", player->name);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1222,8 +1356,12 @@ void game_engine_post_rasterize_post_game(
 			}
 
 			game_engine->get_score_string(player_index, custom_buffer);
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t%s", custom_buffer);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t%s", custom_buffer);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1232,8 +1370,12 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&winner_color);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t \t%d", player->statistics.kills[0]);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t \t%d", player->statistics.kills[0]);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1242,8 +1384,12 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&winner_color);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t \t \t%d", player->statistics.assists[0]);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t \t \t%d", player->statistics.assists[0]);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_color(&normal_color);
 
@@ -1252,14 +1398,20 @@ void game_engine_post_rasterize_post_game(
 				draw_string_set_color(&winner_color);
 			}
 
+#if CONFIG_VERSION >= 2342
 			usnprintf(buffer, NUMBEROF(buffer), L" \t \t \t \t \t \t%d", player->statistics.deaths);
 			buffer[NUMBEROF(buffer) - 1] = '\0';
+#else
+			usprintf(buffer, L" \t \t \t \t \t \t%d", player->statistics.deaths);
+#endif
 			drawline(buffer, line, 0);
 			draw_string_set_tab_stops(tab_stops, NUMBEROF(tab_stops));
 		}
 
 		{
+#if CONFIG_VERSION >= 2342
 			wchar_t *string;
+#endif
 			rectangle2d bounds = render.camera.window_bounds;
 			real_argb_color options_color = normal_color;
 
@@ -1273,14 +1425,22 @@ void game_engine_post_rasterize_post_game(
 			if (global_network_game_server_get())
 			{
 				bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - 260;
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_server_post_game_stats_footer);
 				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, string, FALSE);
+#else
+				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, L"\t%b-button =quit    %a-button =pick game", FALSE);
+#endif
 			}
 			else
 			{
 				bounds.x0 = RASTERIZER_TARGET_RENDER_PRIMARY_WIDTH - 120;
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(string, _string_client_post_game_stats_footer);
 				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, string, FALSE);
+#else
+				draw_string_and_hack_in_icons(&bounds, NULL, NULL, 0, L"\t%b-button =quit", FALSE);
+#endif
 			}
 		}
 	}
@@ -3174,11 +3334,16 @@ static void game_engine_update_teleporter(
 							}
 							else
 							{
+#if CONFIG_VERSION >= 2342
 								wchar_t *string;
 
 								blocked_message_delay = 120;
 								multiplayer_game_text_get_string(string, _string_teleporter_is_blocked);
 								hud_print_message(unit_get_local_player_index(teleported_player->unit_index), string);
+#else
+								blocked_message_delay = 120;
+								hud_print_message(unit_get_local_player_index(teleported_player->unit_index), L"Teleporter is blocked");
+#endif
 							}
 
 							goto exit;
@@ -5826,8 +5991,10 @@ static void game_engine_rasterize_in_game_score(
 	wchar_t custom_buffer[256];
 	real_argb_color team_colors[2];
 	real_argb_color normal_color;
+#if CONFIG_VERSION >= 2342
 	wchar_t *place_string;
 	wchar_t *name_string;
+#endif
 	long statistic_index;
 	boolean teams = game_engine_has_teams();
 
@@ -5842,6 +6009,7 @@ static void game_engine_rasterize_in_game_score(
 	color.green = 0.5f;
 	color.blue = 0.5f;
 	color.alpha = alpha;
+#if CONFIG_VERSION >= 2342
 	multiplayer_game_text_get_string(place_string, _string_place);
 	multiplayer_game_text_get_string(name_string, _string_name);
 
@@ -5852,6 +6020,15 @@ static void game_engine_rasterize_in_game_score(
 		place_string,
 		name_string,
 		custom_buffer);
+#else
+	game_engine->get_score_header_string(custom_buffer);
+	usprintf(
+		buffer,
+		L"\t%s\t%s\t%s",
+		L"Place",
+		L"Name",
+		custom_buffer);
+#endif
 	rasterize_in_game_score_draw_line(buffer, FALSE, &color, 1);
 
 	for (statistic_index = 0; statistic_index < count; statistic_index++)
@@ -5881,11 +6058,19 @@ static void game_engine_rasterize_in_game_score(
 
 			if (game_engine_player_is_out_of_lives(statistic_player_index))
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(status_string, _string_dead);
+#else
+				status_string = L"Dead";
+#endif
 			}
 			else if (player->quit_out_of_game)
 			{
+#if CONFIG_VERSION >= 2342
 				multiplayer_game_text_get_string(status_string, _string_quit);
+#else
+				status_string = L"Quit";
+#endif
 			}
 			else
 			{

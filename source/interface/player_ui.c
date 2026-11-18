@@ -809,6 +809,7 @@ void player0_look_invert_pitch(
 
 	if (player_ui_globals.player_data[0].profile_index != NONE)
 	{
+#if CONFIG_VERSION >= 2342
 		wchar_t *string;
 		long string_list_index = tag_loaded(UNICODE_STRING_LISTS_GROUP_TAG, TEMPORARY_STRINGS_TAG_NAME);
 
@@ -822,6 +823,9 @@ void player0_look_invert_pitch(
 		}
 
 		hud_message_to_all(string);
+#else
+		hud_message_to_all(L"Saving...");
+#endif
 		player_profile_save(player_ui_globals.player_data[0].profile_index, &player_ui_globals.player_data[0].profile);
 	}
 

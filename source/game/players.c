@@ -734,10 +734,14 @@ void players_update_after_game(
 				{
 					if (player->local_player_index != NONE)
 					{
+#if CONFIG_VERSION >= 2342
 						wchar_t *string;
 
 						multiplayer_game_text_get_string(string, 183);
 						hud_print_message(player->local_player_index, string);
+#else
+						hud_print_message(player->local_player_index, L"You were telefragged");
+#endif
 					}
 
 					player_telefrag_effect_stop(iterator.index);
