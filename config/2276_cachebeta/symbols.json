@@ -22442,7 +22442,7 @@
 { "address": 3078144, "flags": 0, "name": "_game_update_section", "static": true },
 { "address": 3079672, "flags": 0, "name": "_global_game_team_names" },
 { "address": 3079712, "flags": 0, "name": "_debug_player_color" },
-{ "address": 3079720, "flags": 0, "name": "_data_2276_002efe28" },
+{ "address": 3079720, "flags": 0, "name": "_place_strings", "static": true },
 { "address": 3079784, "flags": 0, "name": "?screen_flash_type@?1??game_engine_update_teleporter@@9@9", "static": true },
 { "address": 3079788, "flags": 0, "name": "?max_intensity@?1??game_engine_update_teleporter@@9@9", "static": true },
 { "address": 3079792, "flags": 0, "name": "?alpha@?1??game_engine_update_teleporter@@9@9", "static": true },

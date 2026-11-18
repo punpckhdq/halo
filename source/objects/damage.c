@@ -795,10 +795,12 @@ void object_cause_damage(
 
 	match_assert("c:\\halo\\SOURCE\\objects\\damage.c", 824, region_index==NONE || (region_index>=0 && region_index<MAXIMUM_REGIONS_PER_OBJECT));
 
+#ifdef DEBUG
 	if (damage_data->owner_player_index != NONE)
 	{
 		damage_debug_object_index = object_index;
 	}
+#endif
 
 	total_damage = damage_data->multiplier * ((1.f - damage_data->scale) * damage_definition->damage_minimum +
 		damage_data->scale * real_random_range(damage_definition->damage_lower_bound, damage_definition->damage_upper_bound));

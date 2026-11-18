@@ -16729,7 +16729,7 @@
 { "address": 2412710, "flags": 0, "name": "_weather" },
 { "address": 2412712, "flags": 0, "name": "_global_game_difficulty_level_names" },
 { "address": 2412728, "flags": 0, "name": "_global_game_team_names" },
-{ "address": 2412768, "flags": 0, "name": "_data_2276_002efe28" },
+{ "address": 2412768, "flags": 0, "name": "_place_strings", "static": true },
 { "address": 2412832, "flags": 0, "name": "?screen_flash_type@?1??game_engine_update_teleporter@@9@9", "static": true },
 { "address": 2412836, "flags": 0, "name": "?max_intensity@?1??game_engine_update_teleporter@@9@9", "static": true },
 { "address": 2412840, "flags": 0, "name": "?alpha@?1??game_engine_update_teleporter@@9@9", "static": true },

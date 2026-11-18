@@ -606,13 +606,13 @@ void hud_render_timer(
 #endif
 	}
 
+#ifdef DEBUG
 	if (time_code_time != NONE)
 	{
 		sprintf(temporary, "%d", (time_code_stop_time == NONE ? game_time_get() : time_code_stop_time) - time_code_time);
-#ifdef DEBUG
 		render_debug_string(TRUE, temporary);
-#endif
 	}
+#endif
 
 	return;
 }

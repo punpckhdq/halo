@@ -986,6 +986,7 @@ void render_ui_widgets(
 					local_window_bounds.y0 = 0;
 					widget_instance_render_recursive(widget_globals.active_widgets[widget_stack], &local_window_bounds, offset, TRUE, FALSE);
 
+#ifdef DEBUG
 					if (widget_globals.debug_show_path)
 					{
 						real_argb_color color = { 1.f, 1.f, 1.f, 1.f };
@@ -997,6 +998,7 @@ void render_ui_widgets(
 						draw_string_set_draw_mode(tag_loaded(FONT_GROUP_TAG, SMALL_UI_FONT_TAG_NAME), NONE, _text_justification_left, 0, &color);
 						rasterizer_draw_string(&local_window_bounds, NULL, NULL, 0, tag_get_name(widget_globals.active_widgets[widget_stack]->ui_widget_tag_index));
 					}
+#endif
 				}
 			}
 
