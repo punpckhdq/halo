@@ -7,6 +7,11 @@ TIFF_FILE.C
 #include "cseries.h"
 #include "bitmaps.h"
 #include "bitmap_macros.h"
+// halo decomp add
+#ifdef xbox
+#define	USE_PROTOTYPES	1
+#endif
+// halo decomp end
 #include "tiffio.h"
 
 /* ---------- constants */
