@@ -784,40 +784,66 @@ static boolean oddball_engine_display_score(
 {
 	struct player_datum *player = player_get(player_index);
 	boolean result = TRUE;
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
+#endif
 
 	switch (message)
 	{
 	case oddball_message_you_are_it:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_are_it);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"You are it!");
+#endif
 		break;
 	case oddball_message_ally_is_it:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_ally_is_it);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"Ally is it!");
+#endif
 		break;
 	case oddball_message_enemy_is_it:
 	{
 		struct player_datum *message_player = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_name_is_it);
 		usnprintf(buffer, buffer_size, string, message_player->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s is it.", message_player->name);
+#endif
 		break;
 	}
 	case oddball_message_you_have_the_ball:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_you_have_the_ball);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"You have the ball.");
+#endif
 		break;
 	case oddball_message_ally_has_the_ball:
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_an_ally_has_the_ball);
 		ustrncpy(buffer, string, buffer_size);
+#else
+		usnprintf(buffer, buffer_size, L"An ally has the ball.");
+#endif
 		break;
 	case oddball_message_enemy_has_the_ball:
 	{
 		struct player_datum *message_player = player_get(message_data);
 
+#if CONFIG_VERSION >= 2342
 		multiplayer_game_text_get_string(string, _string_name_has_the_ball);
 		usnprintf(buffer, buffer_size, string, message_player->name);
+#else
+		usnprintf(buffer, buffer_size, L"%s has the ball.", message_player->name);
+#endif
 		break;
 	}
 	case oddball_message_enemy_has_the_ball_tick:
@@ -831,18 +857,30 @@ static boolean oddball_engine_display_score(
 		{
 			wchar_t *place_name = get_place_name(game_engine_get_place(player_index, _get_score_team));
 
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(string, _string_place_score_seconds);
 			usnprintf(buffer, buffer_size, string, place_name, seconds);
+#else
+			usnprintf(buffer, buffer_size, L"%s (%d seconds)", place_name, seconds);
+#endif
 		}
 		else if (message == oddball_message_ally_has_the_ball_tick)
 		{
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(string, _string_ally_name_has_the_ball_score_seconds);
 			usnprintf(buffer, buffer_size, string, message_player->name, seconds);
+#else
+			usnprintf(buffer, buffer_size, L"Ally %s has the ball (%d seconds)", message_player->name, seconds);
+#endif
 		}
 		else if (message == oddball_message_enemy_has_the_ball_tick)
 		{
+#if CONFIG_VERSION >= 2342
 			multiplayer_game_text_get_string(string, _string_enemy_name_has_the_ball_score_seconds);
 			usnprintf(buffer, buffer_size, string, message_player->name, seconds);
+#else
+			usnprintf(buffer, buffer_size, L"Enemy %s has the ball (%d seconds)", message_player->name, seconds);
+#endif
 		}
 		break;
 	}
@@ -1030,6 +1068,7 @@ static wchar_t *oddball_get_score_string(
 static wchar_t *oddball_get_score_header_string(
 	wchar_t *buffer)
 {
+#if CONFIG_VERSION >= 2342
 	short string_index;
 	wchar_t *string;
 
@@ -1044,6 +1083,16 @@ static wchar_t *oddball_get_score_header_string(
 
 	multiplayer_game_text_get_string(string, string_index);
 	ustrcpy(buffer, string);
+#else
+	if (terminator_scoring_rules())
+	{
+		usprintf(buffer, L"Score");
+	}
+	else
+	{
+		usprintf(buffer, L"Time");
+	}
+#endif
 
 	return buffer;
 }

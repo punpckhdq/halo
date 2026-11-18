@@ -718,11 +718,15 @@ static boolean ctf_engine_display_score(
 	wchar_t *buffer,
 	long buffer_size)
 {
-	long team_index = player_get(player_index)->team_index;
+	struct player_datum *player = player_get(player_index);
+	long team_index = player->team_index;
 	long other_team_index = OTHER_TEAM(team_index);
 	boolean result = TRUE;
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
+#endif
 
+#if CONFIG_VERSION >= 2342
 	switch (message)
 	{
 	case ctf_message_score:
@@ -789,6 +793,60 @@ static boolean ctf_engine_display_score(
 		result = FALSE;
 		break;
 	}
+#else
+	switch (message)
+	{
+	case ctf_message_score:
+		usnprintf(buffer, buffer_size, L"Red Team %d Blue Team %d", ctf_globals.score[_team_red], ctf_globals.score[_team_blue]);
+		break;
+	case ctf_message_you_scored:
+		usnprintf(buffer, buffer_size, L"You scored %d to %d.", ctf_globals.score[team_index], ctf_globals.score[other_team_index]);
+		break;
+	case ctf_message_enemy_scored:
+		usnprintf(buffer, buffer_size, L"Enemy scored %d to %d.", ctf_globals.score[team_index], ctf_globals.score[other_team_index]);
+		break;
+	case ctf_message_good_guys_scored:
+		usnprintf(buffer, buffer_size, L"Your ally scored %d to %d.", ctf_globals.score[team_index], ctf_globals.score[other_team_index]);
+		break;
+	case ctf_message_you_have_the_flag:
+		usnprintf(buffer, buffer_size, L"");
+		break;
+	case ctf_message_you_returned_the_flag:
+		usnprintf(buffer, buffer_size, L"You returned the flag.");
+		break;
+	case ctf_message_enemy_has_the_flag:
+	case ctf_message_enemy_has_the_flag_tick:
+		usnprintf(buffer, buffer_size, L"The enemy has your flag.");
+		break;
+	case ctf_message_enemy_returned_the_flag:
+		usnprintf(buffer, buffer_size, L"The enemy returned the flag.");
+		break;
+	case ctf_message_good_guys_have_the_flag:
+		usnprintf(buffer, buffer_size, L"Your ally has the flag.");
+		break;
+	case ctf_message_good_guys_returned_the_flag:
+		usnprintf(buffer, buffer_size, L"Your ally returned the flag.");
+		break;
+	case ctf_message_your_flag_was_returned:
+		usnprintf(buffer, buffer_size, L"Your flag was returned.");
+		break;
+	case ctf_message_enemy_flag_was_returned:
+		usnprintf(buffer, buffer_size, L"The enemy's flag was returned.");
+		break;
+	case ctf_message_time_expired:
+		usnprintf(buffer, buffer_size, L"Time expired.");
+		break;
+	case ctf_message_you_are_on_attack:
+		usnprintf(buffer, buffer_size, L"You are on offense.");
+		break;
+	case ctf_message_you_are_on_defense:
+		usnprintf(buffer, buffer_size, L"You are on defense.");
+		break;
+	default:
+		result = FALSE;
+		break;
+	}
+#endif
 
 	return result;
 }
@@ -952,10 +1010,14 @@ static wchar_t *ctf_get_score_string(
 static wchar_t *ctf_get_score_header_string(
 	wchar_t *buffer)
 {
+#if CONFIG_VERSION >= 2342
 	wchar_t *string;
 
 	multiplayer_game_text_get_string(string, _string_score);
 	ustrcpy(buffer, string);
+#else
+	usprintf(buffer, L"Score");
+#endif
 
 	return buffer;
 }
