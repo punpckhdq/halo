@@ -16764,7 +16764,7 @@
 { "address": 2414168, "flags": 0, "name": "_hs_function_table" },
 { "address": 2415912, "flags": 0, "name": "_data_002e07c8" },
 { "address": 2421216, "flags": 0, "name": "_hs_external_globals" },
-{ "address": 2422992, "flags": 0, "name": "_data_002e2370" },
+{ "address": 2422992, "flags": 0, "name": "_hs_type_inspectors", "static": true },
 { "address": 2423192, "flags": 0, "name": "_typecasting_procedures" },
 { "address": 2432800, "flags": 0, "name": "_hs_script_types_enum" },
 { "address": 2432812, "flags": 0, "name": "_hs_types_enum" },
