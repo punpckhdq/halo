@@ -110,7 +110,11 @@ enum
 #define RASTERIZER_MAXIMUM_COMBINER_STAGES 8
 
 /* fake name */
+#ifdef DEBUG
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
+#else
+#define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); }
+#endif
 
 /* ---------- prototypes/RASTERIZER_XBOX.C */
 
