@@ -567,13 +567,19 @@ boolean vehicle_causes_collision_damage(
 }
 
 boolean vehicle_build_update(
-	void)
+	long vehicle_index,
+	void *buffer,
+	short *size,
+	real priority)
 {
 	return TRUE;
 }
 
 boolean vehicle_parse_update(
-	void)
+	long vehicle_index,
+	void *buffer,
+	short *size,
+	real priority)
 {
 	return TRUE;
 }
