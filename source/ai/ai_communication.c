@@ -767,9 +767,11 @@ void ai_communication_event(
 	short time_since_shout[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	short time_since_talk[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	short time_since_chatter[NUMBER_OF_AI_COMMUNICATION_TEAMS];
+#ifdef DEBUG
 	real seconds_since_shout[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	real seconds_since_talk[NUMBER_OF_AI_COMMUNICATION_TEAMS];
 	real seconds_since_chatter[NUMBER_OF_AI_COMMUNICATION_TEAMS];
+#endif
 	short speech_disabled_reason[NUMBER_OF_AI_COMMUNICATION_TEAMS][NUMBER_OF_AI_COMMUNICATION_PRIORITIES][NUMBER_OF_COMMUNICATION_RATINGS];
 	boolean enemy_status_enabled[NUMBER_OF_COMMUNICATION_ENEMY_STATUS_TYPES];
 	boolean hostility_enabled[NUMBER_OF_AI_COMMUNICATION_HOSTILITIES];
@@ -1065,9 +1067,11 @@ void ai_communication_event(
 		time_since_shout[team_index] = (short)MAX(0, current_time - ai_globals->last_shout_time[team_index]);
 		time_since_talk[team_index] = (short)MAX(0, current_time - ai_globals->last_talk_time[team_index]);
 		time_since_chatter[team_index] = (short)MAX(0, current_time - ai_globals->last_chatter_time[team_index]);
+#ifdef DEBUG
 		seconds_since_shout[team_index] = time_since_shout[team_index] * SECONDS_PER_TICK;
 		seconds_since_talk[team_index] = time_since_talk[team_index] * SECONDS_PER_TICK;
 		seconds_since_chatter[team_index] = time_since_chatter[team_index] * SECONDS_PER_TICK;
+#endif
 		speech_disabled[team_index][_ai_communication_priority_none][_communication_rating_normal] = TRUE;
 		speech_disabled[team_index][_ai_communication_priority_none][_communication_rating_low] = TRUE;
 
@@ -1192,7 +1196,9 @@ void ai_communication_event(
 			real player_rating;
 			real recent_rating;
 			real reply_rating;
+#ifdef DEBUG
 			char classificationbuf[256];
+#endif
 			boolean no_unit;
 			short communication_priority = usage->communication_priority;
 
@@ -1321,7 +1327,9 @@ void ai_communication_event(
 			speech_enable_after = 0;
 			recent_rating = 1.f;
 			reply_rating = 1.f;
+#ifdef DEBUG
 			strcpy(classificationbuf, "<err>");
+#endif
 
 			switch (usage->protagonist_type)
 			{
@@ -1550,7 +1558,9 @@ void ai_communication_event(
 				communication_priority = communication_player_speaking_priorities[communication_priority];
 				low_priority = FALSE;
 				player_rating = 2.f;
+#ifdef DEBUG
 				strcpy(classificationbuf, "player");
+#endif
 			}
 			else
 			{
@@ -1580,7 +1590,9 @@ void ai_communication_event(
 
 				if (communication_team == NONE)
 				{
+#ifdef DEBUG
 					strcpy(classificationbuf, "unteamed");
+#endif
 				}
 				else
 				{
@@ -1591,6 +1603,7 @@ void ai_communication_event(
 						(communication_priority > _ai_communication_priority_none) &&
 						(communication_priority < NUMBER_OF_AI_COMMUNICATION_PRIORITIES));			
 					
+#ifdef DEBUG
 					sprintf(
 						classificationbuf,
 						"%s-%c%c%c%s",
@@ -1599,6 +1612,7 @@ void ai_communication_event(
 						global_communication_priority_names[communication_priority][1],
 						global_communication_priority_names[communication_priority][2],
 						low_priority ? "-lo" : "-hi");
+#endif
 
 					if (speech_disabled[communication_team][communication_priority][low_priority])
 					{

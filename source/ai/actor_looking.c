@@ -443,6 +443,7 @@ static boolean actor_look_decode_direction(
 
 	if (result)
 	{
+#ifdef DEBUG
 		real magnitude_squared = magnitude_squared3d(direction);
 
 		if (!valid_realcmp(magnitude_squared, 1.f))
@@ -584,6 +585,7 @@ static boolean actor_look_decode_direction(
 
 			match_vwarn("c:\\halo\\SOURCE\\ai\\actor_looking.c", 526, FALSE, temporary);
 		}
+#endif
 
 		match_assert_valid_real_normal3d("c:\\halo\\SOURCE\\ai\\actor_looking.c", 529, direction);
 	}

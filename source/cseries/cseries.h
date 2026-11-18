@@ -136,7 +136,11 @@ enum
 #define match_warn(file, line, expr)
 #define match_vwarn(file, line, expr, string)
 #endif
+#ifdef DEBUG
 #define match_unreachable(file, line) match_assert(file, line, !"unreachable")
+#else
+#define match_unreachable(file, line) __assume(0)
+#endif
 
 #define halt() match_halt(__FILE__, __LINE__)
 #define vhalt(string) match_vhalt(__FILE__, __LINE__, string)
@@ -144,7 +148,7 @@ enum
 #define vassert(expr, string) match_vassert(__FILE__, __LINE__, expr, string)
 #define warn(expr) match_warn(__FILE__, __LINE__, expr)
 #define vwarn(expr, string) match_vwarn(__FILE__, __LINE__, expr, string)
-#define unreachable() match_assert(__FILE__, __LINE__, !"unreachable")
+#define unreachable() match_unreachable(__FILE__, __LINE__)
 
 #define ABS(x) ((x>=0) ? (x) : -(x))
 

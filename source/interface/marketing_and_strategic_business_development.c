@@ -129,7 +129,8 @@ static void clean_up_for_image_launch(
 		cache_files_precache_map_end();
 	}
 
-	match_vassert("c:\\halo\\SOURCE\\interface\\marketing_and_strategic_business_development.c", 64,
-		SUCCEEDED(IDirect3DDevice8_PersistDisplay(global_d3d_device)),
-		"IDirect3DDevice8_PersistDisplay() failed in clean_up_for_image_launch()");
+	if (FAILED(IDirect3DDevice8_PersistDisplay(global_d3d_device)))
+	{
+		match_vhalt("c:\\halo\\SOURCE\\interface\\marketing_and_strategic_business_development.c", 64, "IDirect3DDevice8_PersistDisplay() failed in clean_up_for_image_launch()");
+	}
 }

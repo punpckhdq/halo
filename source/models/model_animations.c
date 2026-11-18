@@ -57,6 +57,7 @@ static boolean animation_is_compressed(
 	return TEST_FLAG(animation->flags, _animation_compressed_bit) && (hs_model_animation_compression_enabled || !animation->compressed_data_offset);
 }
 
+#ifdef DEBUG
 short build_damage_animation_index(
 	short damage_type,
 	short damage_direction,
@@ -68,6 +69,7 @@ short build_damage_animation_index(
 
 	return (damage_type*NUMBER_OF_ANIMATION_DAMAGE_DIRECTIONS + damage_direction)*NUMBER_OF_DAMAGE_PARTS + damage_part;
 }
+#endif
 
 void animation_get_x_offsets(
 	struct animation *animation,

@@ -71,6 +71,7 @@ void byte_swap_data(
 {
 	match_assert("c:\\halo\\SOURCE\\memory\\byte_swapping.c", 77, definition);
 
+#ifdef DEBUG
 	if (!definition->verified && definition->size>=0)
 	{
 		long size_in_bytes;
@@ -80,6 +81,7 @@ void byte_swap_data(
 		match_vassert("c:\\halo\\SOURCE\\memory\\byte_swapping.c", 88, size_in_bytes==definition->size, csprintf(temporary, "%s bs data @%p is #%d but should be #%d bytes", definition->name, definition, size_in_bytes, definition->size));
 		definition->verified = TRUE;
 	}
+#endif
 
 	if (data)
 	{

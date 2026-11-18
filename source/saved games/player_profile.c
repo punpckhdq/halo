@@ -461,11 +461,11 @@ static void build_default_profile(
 	memset(profile, 0, sizeof(*profile));
 	profile->primary_color_index = NONE;
 	profile->controller_settings.look_sensitivity = DEFAULT_LOOK_SENSITIVITY;
+	SET_FLAG(profile->flags, _profile_is_default_bit, TRUE);
+	profile->flags |= i << CHAR_BITS;
 	profile->controller_settings.invert_look = FALSE;
 	profile->controller_settings.flight_stick_aircraft_controls = FALSE;
 	profile->controller_settings.ingame_help_disabled = FALSE;
-	SET_FLAG(profile->flags, _profile_is_default_bit, TRUE);
-	profile->flags |= i << CHAR_BITS;
 	profile->controller_settings.vibration_disabled = FALSE;
 	profile->last_single_player_map_played = 0;
 

@@ -386,7 +386,9 @@ void main_loop(
 
 			if ((!game_in_editor() && (input_key_is_down(_key_end) || input_key_is_down(_key_escape))) || editor_should_exit())
 			{
+#ifdef DEBUG
 				main_movie_stop();
+#endif
 
 				if (!game_engine_running())
 				{
