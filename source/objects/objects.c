@@ -783,12 +783,19 @@ void object_marker_end(
 boolean object_unmarked_function(
 	long object_index)
 {
-	struct object_datum *object = object_get(object_index);
 	boolean result;
+	struct object_datum *object = object_get(object_index);
 
 	match_assert("c:\\halo\\SOURCE\\objects\\objects.c", 3526, object_globals->object_marker_initialized);
 
-	result = object->object.magic_number!=global_object_marker;
+	if (object->object.magic_number!=global_object_marker)
+	{
+		result = TRUE;
+	}
+	else
+	{
+		result = FALSE;
+	}
 	
 	return result;
 }
@@ -870,7 +877,7 @@ long find_objects_from_point_vector(
 								k!=NONE;
 								k = cluster_get_next_collideable_object(&reference))
 							{
-								if (object_mark_function(k))
+								if (object_mark(k))
 								{
 									state = recursive_object_adder(
 										k,
@@ -1572,7 +1579,7 @@ short objects_in_clusters_by_indices(
 				object_index!=NONE;
 				object_index = cluster_get_next_collideable_object(&reference))
 			{
-				if (object_mark_function(object_index))
+				if (object_mark(object_index))
 				{
 					if (object_count>=maximum_object_count)
 					{
@@ -1593,7 +1600,7 @@ short objects_in_clusters_by_indices(
 				object_index!=NONE;
 				object_index = cluster_get_next_noncollideable_object(&reference))
 			{
-				if (object_mark_function(object_index))
+				if (object_mark(object_index))
 				{
 					if (object_count>=maximum_object_count)
 					{

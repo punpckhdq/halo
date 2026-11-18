@@ -319,6 +319,10 @@ void object_marker_begin(void);
 void object_marker_end(void);
 boolean object_unmarked_function(long object_index);
 boolean object_mark_function(long object_index);
+#ifdef DEBUG
+#define object_unmarked object_unmarked_function
+#define object_mark object_mark_function
+#endif
 void objects_place(void);
 long find_objects_from_point_vector(
 	real_point3d const *position,
@@ -456,5 +460,44 @@ __inline void object_get_render_bounding_sphere(
 
 	return;
 }
+
+#ifndef DEBUG
+__inline boolean object_unmarked(
+	long object_index)
+{
+	struct object_datum *object = object_get(object_index);
+	boolean result;
+
+	if (object->object.magic_number!=global_object_marker)
+	{
+		result = TRUE;
+	}
+	else
+	{
+		result = FALSE;
+	}
+
+	return result;
+}
+
+__inline boolean object_mark(
+	long object_index)
+{
+	struct object_datum *object = object_get(object_index);
+	boolean result;
+
+	if (object->object.magic_number!=global_object_marker)
+	{
+		object->object.magic_number = global_object_marker;
+		result = TRUE;
+	}
+	else
+	{
+		result = FALSE;
+	}
+
+	return result;
+}
+#endif
 
 #endif // __OBJECTS_H

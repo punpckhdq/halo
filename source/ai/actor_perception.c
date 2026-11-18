@@ -1431,7 +1431,7 @@ static long actor_perception_unit_from_swarm(
 
 			if (mark_units)
 			{
-				object_mark_function(swarm->unit_indices[index]);
+				object_mark(swarm->unit_indices[index]);
 			}
 		}
 	}
@@ -1462,7 +1462,7 @@ static long actor_perception_unit_from_swarm(
 
 			if (mark_units)
 			{
-				object_mark_function(unit_index);
+				object_mark(unit_index);
 			}
 
 			unit_index = unit->unit.swarm_next_unit_index;
@@ -2337,7 +2337,7 @@ static void actor_perception_refresh(
 
 					for (index = 0; index<swarm->unit_count; index++)
 					{
-						object_mark_function(swarm->unit_indices[index]);
+						object_mark(swarm->unit_indices[index]);
 					}
 				}
 				else
@@ -2348,13 +2348,13 @@ static void actor_perception_refresh(
 					{
 						struct unit_datum *unit = unit_get(unit_index);
 
-						object_mark_function(unit_index);
+						object_mark(unit_index);
 						unit_index = unit->unit.swarm_next_unit_index;
 					}
 				}
 			}
 
-			object_mark_function(prop->unit_index);
+			object_mark(prop->unit_index);
 
 			if (desired)
 			{
@@ -2570,7 +2570,7 @@ static void actor_perception_refresh_test_object(
 	{
 		struct object_datum *object = object_get(object_index);
 
-		if (object_mark_function(object_index))
+		if (object_mark(object_index))
 		{
 			if (object->object.type==_object_type_biped)
 			{

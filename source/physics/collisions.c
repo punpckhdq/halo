@@ -266,7 +266,7 @@ boolean collision_test_vector(
 
 					for (object_index = cluster_get_first_collideable_object(&state, cluster_index); object_index != NONE; object_index = cluster_get_next_collideable_object(&state))
 					{
-						if (object_mark_function(object_index) && object_test_vector(object_index, flags, bsp_flags, point, vector, ignore_object_index, collision))
+						if (object_mark(object_index) && object_test_vector(object_index, flags, bsp_flags, point, vector, ignore_object_index, collision))
 						{
 							hit = TRUE;
 						}
@@ -534,7 +534,7 @@ boolean collision_get_features_in_sphere(
 
 					for (object_index = cluster_get_first_collideable_object(&state, leaf->cluster_index); object_index != NONE; object_index = cluster_get_next_collideable_object(&state))
 					{
-						if (object_mark_function(object_index))
+						if (object_mark(object_index))
 						{
 							object_get_features_in_sphere(flags, object_index, center, radius, height, width, ignore_object_index, features);
 						}
