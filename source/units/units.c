@@ -4077,9 +4077,7 @@ void unit_impulse(
 		struct physics_definition *physics = physics_definition_get(unit_definition->object.physics.index);
 		real scale = mass / physics->mass;
 
-		unit->object.translational_velocity.i += scale * velocity->i;
-		unit->object.translational_velocity.j += scale * velocity->j;
-		unit->object.translational_velocity.k += scale * velocity->k;
+		vector_from_line3d(&unit->object.translational_velocity, velocity, scale, &unit->object.translational_velocity);
 	}
 
 	return;

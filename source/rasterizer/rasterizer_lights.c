@@ -381,7 +381,7 @@ void rasterizer_lens_flares_submit_occlusion_tests(
 					point_from_line3d(&lens_flare_parameters->position, &global_window_parameters.camera.forward, -definition->occlusion_radius, &point);
 					break;
 				case _lens_flare_occlusion_offset_direction_marker_forward:
-					point_from_line3d(&lens_flare_parameters->position, &direction, definition->occlusion_radius*1.41421356f, &point);
+					point_from_line3d(&lens_flare_parameters->position, &direction, definition->occlusion_radius*(real)M_SQRT2, &point);
 					break;
 				case _lens_flare_occlusion_offset_direction_none:
 					point = lens_flare_parameters->position;
