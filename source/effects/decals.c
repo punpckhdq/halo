@@ -207,7 +207,9 @@ static void decal_update(
 	long decal_index)
 {
 	struct decal_definition const *definition;
+#ifdef DEBUG
 	static boolean locked_count_warning_issued = FALSE;
+#endif
 	struct decal_datum *decal = decal_get(decal_index);
 	real age = (real)(game_time_get() - decal->creation_time) * SECONDS_PER_TICK;
 
@@ -233,16 +235,18 @@ static void decal_update(
 			{
 				SET_FLAG(decal->flags, _decal_locked_bit, FALSE);
 
-				if (--decal_globals->locked_count < 0 && !locked_count_warning_issued)
-				{
+				decal_globals->locked_count--;
+
 #ifdef DEBUG
+				if (decal_globals->locked_count < 0 && !locked_count_warning_issued)
+				{
 					error(
 						_error_silent,
 						"### ERROR decals: locked count is invalid (#%d) -- tell Bernie!!",
 						decal_globals->locked_count);
-#endif
 					locked_count_warning_issued = TRUE;
 				}
+#endif
 			}
 
 			rasterizer_decal_vertices_delete(decal_index);
@@ -282,7 +286,9 @@ static long decal_insert(
 	long next_decal_index,
 	boolean permanent)
 {
+#ifdef DEBUG
 	static boolean locked_count_warning_issued = FALSE;
+#endif
 	long new_decal_index = datum_new_at_index(global_decal_data, cache_index);
 
 	match_assert("c:\\halo\\SOURCE\\effects\\decals.c", 479, cluster_index>=0 && cluster_index<MAXIMUM_CLUSTERS_PER_STRUCTURE);
@@ -335,16 +341,16 @@ static long decal_insert(
 					}
 				}
 
+#ifdef DEBUG
 				if (decal_globals->locked_count < 0 && !locked_count_warning_issued)
 				{
-#ifdef DEBUG
 					error(
 						_error_silent,
 						"### ERROR decals: locked count is invalid (#%d) -- tell Bernie!!",
 						decal_globals->locked_count);
-#endif
 					locked_count_warning_issued = TRUE;
 				}
+#endif
 			}
 		}
 		else
@@ -719,27 +725,27 @@ void decals_delete_permanent_from_cluster(
 void decal_delete(
 	long decal_index)
 {
+#ifdef DEBUG
 	static boolean locked_warning_issued = FALSE;
 	static boolean permanent_warning_issued = FALSE;
+#endif
 	struct decal_datum *decal = decal_get(decal_index);
 
 	match_assert("c:\\halo\\SOURCE\\effects\\decals.c", 947, decal);
 
+#ifdef DEBUG
 	if (TEST_FLAG(decal->flags, _decal_locked_bit) && !locked_warning_issued)
 	{
-#ifdef DEBUG
 		error(_error_silent, "### ERROR decals: deleting locked decal (#%d) -- tell Bernie!!", decal_index);
-#endif
 		locked_warning_issued = TRUE;
 	}
 
 	if (TEST_FLAG(decal->flags, _decal_permanent_bit) && !permanent_warning_issued)
 	{
-#ifdef DEBUG
 		error(_error_silent, "### ERROR decals: deleting permanent decal (#%d) -- tell Bernie!!", decal_index);
-#endif
 		permanent_warning_issued = TRUE;
 	}
+#endif
 
 	if (decal->next_decal_index != NONE)
 	{

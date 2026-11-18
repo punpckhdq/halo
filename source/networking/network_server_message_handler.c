@@ -538,7 +538,7 @@ boolean network_game_server_send_player_joined_info_ingame(
 {
 	struct network_player message_player;
 	message_header *message;
-	boolean result;
+	boolean result = FALSE;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_message_handler.c", 432, server && player);
 
@@ -560,7 +560,6 @@ boolean network_game_server_send_player_joined_info_ingame(
 	else
 	{
 		network_event("failed to create a message_server_add_player_ingame message");
-		result = FALSE;
 	}
 
 	return result;

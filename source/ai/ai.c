@@ -2077,8 +2077,10 @@ void ai_handle_spatial_effect(
 
 			if (!spatial_effect)
 			{
+#ifdef DEBUG
 				short distance_to_effect;
 				short distance_to_end_of_queue;
+#endif
 
 				if (empty_effect_index == NONE)
 				{
@@ -2095,9 +2097,11 @@ void ai_handle_spatial_effect(
 					effect_index = empty_effect_index;
 				}
 
+#ifdef DEBUG
 				distance_to_effect = (effect_index - ai_globals->spatial_effects_first_index + NUMBER_OF_CACHED_SPATIAL_EFFECTS) & (NUMBER_OF_CACHED_SPATIAL_EFFECTS - 1);
 				distance_to_end_of_queue = (ai_globals->spatial_effects_last_index - ai_globals->spatial_effects_first_index + NUMBER_OF_CACHED_SPATIAL_EFFECTS) & (NUMBER_OF_CACHED_SPATIAL_EFFECTS - 1);
 				match_assert("c:\\halo\\SOURCE\\ai\\ai.c", 2161, (distance_to_effect >= 0) && (distance_to_effect < distance_to_end_of_queue));
+#endif
 				spatial_effect = &ai_globals->spatial_effects[effect_index];
 				spatial_effect->position = *position;
 				spatial_effect->last_tick = current_time;

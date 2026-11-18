@@ -1091,7 +1091,7 @@ boolean network_game_server_add_player_to_game(
 	struct network_client_machine *machine,
 	struct network_player *player)
 {
-	boolean success;
+	boolean success = FALSE;
 	static long next_team_index = 0;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_manager.c", 1132, server);
@@ -1135,7 +1135,6 @@ boolean network_game_server_add_player_to_game(
 	else
 	{
 		network_event("client machine tried to add a player with a non-matching machine identifier");
-		success = FALSE;
 	}
 
 	return success;
@@ -1146,7 +1145,7 @@ boolean network_game_server_remove_player_from_game(
 	struct network_client_machine *machine,
 	struct network_player *player)
 {
-	boolean success;
+	boolean success = FALSE;
 
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_manager.c", 1184, server);
 	match_assert("c:\\halo\\SOURCE\\networking\\network_server_manager.c", 1185, machine);
@@ -1171,7 +1170,6 @@ boolean network_game_server_remove_player_from_game(
 	else
 	{
 		network_event("client machine tried to remove a player with a non-matching machine identifier");
-		success = FALSE;
 	}
 
 	return success;

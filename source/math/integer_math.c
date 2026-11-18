@@ -254,7 +254,7 @@ short ceiling_log2(
 	if (k > 0)
 	{
 		counter = k - 1;
-		for (; counter != 1; result++)
+		for (result = 0; counter != 1; result++)
 		{
 			counter >>= 1;
 		}

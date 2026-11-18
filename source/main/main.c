@@ -2260,7 +2260,9 @@ void main_rasterizer_throttle(
 {
 	boolean at_minimum;
 	short lapsed;
+#ifdef DEBUG
 	__int64 vblank_index = rasterizer_globals.vblank_index;
+#endif
 	boolean throttled = FALSE;
 
 	main_globals.last_achievable_vblank_index = rasterizer_globals.vblank_index+1;

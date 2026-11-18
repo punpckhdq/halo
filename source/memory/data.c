@@ -105,7 +105,6 @@ long datum_new_at_index(
 {
 	short identifier = DATUM_INDEX_TO_IDENTIFIER(index);
 	short absolute_index = DATUM_INDEX_TO_ABSOLUTE_INDEX(index);
-	long result = NONE;
 
 #ifdef DEBUG
 	data_verify(data);
@@ -127,11 +126,19 @@ long datum_new_at_index(
 			datum_initialize(data, header);
 			header->identifier = identifier;
 
-			result = DATUM_INDEX_NEW(absolute_index, identifier);
+			index = DATUM_INDEX_NEW(absolute_index, identifier);
+		}
+		else
+		{
+			index = NONE;
 		}
 	}
+	else
+	{
+		index = NONE;
+	}
 
-	return result;
+	return index;
 }
 
 long datum_new(

@@ -417,6 +417,7 @@ void object_set_garbage(
 	struct object_datum* object = object_get(object_index);
 	
 	long garbage_object_index;
+#ifdef DEBUG
 	for (garbage_object_index = object_globals->first_garbage_object_index;
 		garbage_object_index!=NONE;
 		garbage_object_index = garbage_object->object.next_garbage_object_index)
@@ -427,6 +428,7 @@ void object_set_garbage(
 			1952,
 			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit));
 	}
+#endif
 
 	if (garbage)
 	{
@@ -457,6 +459,7 @@ void object_set_garbage(
 		}
 	}
 
+#ifdef DEBUG
 	for (garbage_object_index = object_globals->first_garbage_object_index;
 		garbage_object_index!=NONE;
 		garbage_object_index = garbage_object->object.next_garbage_object_index)
@@ -467,6 +470,7 @@ void object_set_garbage(
 			2006,
 			TEST_FLAG(garbage_object->object.flags, _object_garbage_bit));
 	}
+#endif
 
 	return;
 }

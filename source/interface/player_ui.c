@@ -323,11 +323,15 @@ boolean player_ui_rumble_disabled(
 boolean player_ui_autolevel_enabled(
 	short controller_index)
 {
-	short local_player_index = controller_index;
+	short local_player_index;
 
 	match_assert("c:\\halo\\SOURCE\\interface\\player_ui.c", 320, (controller_index>=0) && (controller_index<MAXIMUM_GAMEPADS));
 
-	if (!network_game_is_active())
+	if (network_game_is_active())
+	{
+		local_player_index = controller_index;
+	}
+	else
 	{
 		local_player_index = player_ui_get_single_player_local_player_from_controller(controller_index);
 	}

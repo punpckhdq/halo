@@ -2588,10 +2588,12 @@ short unit_update_animation(
 
 		match_assert("c:\\halo\\SOURCE\\units\\units.c", 2931, desired_base_seat_index!=NONE);
 
+#ifdef DEBUG
 		if (unit->unit.player_index != NONE && magic_base_animation_seat_index != NONE)
 		{
 			desired_base_seat_index = PIN(magic_base_animation_seat_index, 0, NUMBER_OF_UNIT_BASE_SEATS);
 		}
+#endif
 
 		if (unit->unit.magic_seat_index != NONE)
 		{
