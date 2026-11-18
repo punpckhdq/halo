@@ -52,6 +52,7 @@ struct _bink_globals
 	long surface_type; /* fake name */
 	long bytes_per_pixel; /* fake name */
 	IDirect3DTexture8 *texture; /* fake name */
+#ifdef DEBUG
 	struct _debug_info
 	{
 		long previous_skipped_frames;
@@ -62,6 +63,7 @@ struct _bink_globals
 		long display_skipped_blits;
 		long display_frames;
 	} debug_info;
+#endif
 	struct rasterizer_dynamic_screen_geometry_parameters screen_geometry_parameters; /* fake name */
 	void *memory_pool_base;
 	long memory_pool_offset;
@@ -236,7 +238,9 @@ void bink_playback_render(
 		}
 
 		bink_draw_frame();
+#ifdef DEBUG
 		bink_globals.debug_info.desired_frame_index++;
+#endif
 
 		if (!global_frame_rate_throttle)
 		{
@@ -369,6 +373,7 @@ void bink_playback_start(
 				}
 
 				bink_decompress_video_frame();
+#ifdef DEBUG
 				bink_globals.debug_info.previous_skipped_frames = 0;
 				bink_globals.debug_info.previous_skipped_blits = 0;
 				bink_globals.debug_info.previous_desired_frame_index = 0;
@@ -376,6 +381,7 @@ void bink_playback_start(
 				bink_globals.debug_info.display_skipped_frames = 0;
 				bink_globals.debug_info.display_skipped_blits = 0;
 				bink_globals.debug_info.display_frames = 0;
+#endif
 				bink_saved_frame_rate_throttle = global_frame_rate_throttle;
 				global_frame_rate_throttle = FALSE;
 			}

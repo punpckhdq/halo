@@ -468,7 +468,11 @@ struct widget_instance *ui_widget_load_by_name_or_tag(
 	{
 		struct ui_widget_definition *definition = ui_widget_definition_get(tag_index);
 
-		widget = pool_new_pointer(widget_memory_pool, sizeof(*widget), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 395);
+		widget = pool_new_pointer(widget_memory_pool, sizeof(*widget)
+#ifdef DEBUG
+			, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(395)
+#endif
+			);
 
 		if (widget)
 		{
@@ -1077,11 +1081,18 @@ struct widget_instance *widget_instance_get_nth_child(
 
 void *ui_widget_realloc(
 	void *ptr,
-	word size,
-	char const *file,
-	long line)
+	word size
+#ifdef DEBUG
+	, char const *file
+	, long line
+#endif
+	)
 {
-	return pool_resize_pointer(widget_memory_pool, ptr, size, file, line);
+	return pool_resize_pointer(widget_memory_pool, ptr, size
+#ifdef DEBUG
+		, file, line
+#endif
+		);
 }
 
 void widget_free(
@@ -2398,7 +2409,11 @@ static void push_widget(
 	struct widget_stack_node **top,
 	struct _widget_stack_node_data const *data)
 {
-	struct widget_stack_node *node = pool_new_pointer(widget_memory_pool, sizeof(*node), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 2532);
+	struct widget_stack_node *node = pool_new_pointer(widget_memory_pool, sizeof(*node)
+#ifdef DEBUG
+		, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(2532)
+#endif
+		);
 
 	match_assert("c:\\halo\\SOURCE\\interface\\ui_widget.c", 2534, top && data);
 
@@ -4083,7 +4098,11 @@ static void widget_instance_render_text_box(
 
 		string = unicode_string_list_get_string(definition->text_label_unicode_string_list_tag.index, string_index);
 		string_length = ustrlen(string);
-		widget->parameters.text_box_parameters.text = pool_resize_pointer(widget_memory_pool, widget->parameters.text_box_parameters.text, (string_length + 1) * sizeof(wchar_t), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4421);
+		widget->parameters.text_box_parameters.text = pool_resize_pointer(widget_memory_pool, widget->parameters.text_box_parameters.text, (string_length + 1) * sizeof(wchar_t)
+#ifdef DEBUG
+			, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(4421)
+#endif
+			);
 
 		if (widget->parameters.text_box_parameters.text)
 		{
@@ -4255,7 +4274,11 @@ static void widget_instance_render_spinner_list(
 				wchar_t *list_string = unicode_string_list_get_string(definition->text_label_unicode_string_list_tag.index, item_index);
 				long string_length = ustrlen(list_string);
 
-				string = pool_new_pointer(widget_memory_pool, (string_length + 1) * sizeof(wchar_t), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4610);
+				string = pool_new_pointer(widget_memory_pool, (string_length + 1) * sizeof(wchar_t)
+#ifdef DEBUG
+					, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(4610)
+#endif
+					);
 
 				if (string)
 				{
@@ -4591,7 +4614,11 @@ static long search_and_replace(
 
 			if (replace_count > 0)
 			{
-				result = pool_resize_pointer(widget_memory_pool, result, sizeof(wchar_t) * (string_length + difference * replace_count), "c:\\halo\\SOURCE\\interface\\ui_widget.c", 4994);
+				result = pool_resize_pointer(widget_memory_pool, result, sizeof(wchar_t) * (string_length + difference * replace_count)
+#ifdef DEBUG
+					, MATCH_FILE("c:\\halo\\SOURCE\\interface\\ui_widget.c"), MATCH_LINE(4994)
+#endif
+					);
 
 				if (!result)
 				{

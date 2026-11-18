@@ -23,7 +23,11 @@ SAVED_GAME_FILES.C
 
 enum
 {
+#ifdef DEBUG
 	SAVED_GAME_FILES_MUTEX_TIMEOUT = MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE * MINUTES_PER_HOUR,	/* fake name */
+#else
+	SAVED_GAME_FILES_MUTEX_TIMEOUT = 5 * MILLISECONDS_PER_SECOND,										/* fake name */
+#endif
 	MEMORY_UNIT_ROOT_PATH_SIZE = 8,																		/* fake name */
 	MAXIMUM_UNTITLED_SAVED_GAMES = 999,																	/* fake name */
 	MINIMUM_FREE_DISK_SPACE = 40 * 1024 * 1024															/* fake name */

@@ -68,12 +68,14 @@ struct network_connection
 	network_connection_rejection_procedure connection_rejection_procedure;
 	struct circular_queue *reliable_incoming_queue;
 	struct circular_queue *unreliable_incoming_queue;
+#ifdef DEBUG
 	FILE *traffic_log; /* fake name */
 	unsigned long traffic_log_start_time; /* fake name */
 	long datagrams_sent; /* fake name */
 	long datagrams_received; /* fake name */
 	long stream_messages_sent; /* fake name */
 	long stream_messages_received; /* fake name */
+#endif
 	unsigned long flags;
 	word well_known_port;
 };

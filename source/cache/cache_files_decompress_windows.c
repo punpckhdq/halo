@@ -24,7 +24,11 @@ enum
 
 enum
 {
+#ifdef DEBUG
 	EVENT_TIMEOUT = 5000,
+#else
+	EVENT_TIMEOUT = 10000,
+#endif
 	BLOCKING_PROGRESS_CHECK_SLEEP_INTERVAL = 16,
 };
 

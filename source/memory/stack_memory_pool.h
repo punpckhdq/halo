@@ -65,15 +65,27 @@ struct stack_memory_pool_medium
 
 /* ---------- prototypes/STACK_MEMORY_POOL.C */
 
+#ifdef DEBUG
 handle pool_new_handle(struct stack_memory_pool *pool, unsigned long size, char const *file, long line);
 handle pool_new_handle_clear(struct stack_memory_pool *pool, unsigned long size, char const *file, long line);
 boolean pool_resize_handle(struct stack_memory_pool *pool, handle *h, unsigned long new_size, char const *file, long line);
+#else
+handle pool_new_handle(struct stack_memory_pool *pool, unsigned long size);
+handle pool_new_handle_clear(struct stack_memory_pool *pool, unsigned long size);
+boolean pool_resize_handle(struct stack_memory_pool *pool, handle *h, unsigned long new_size);
+#endif
 void dispose_handle(struct stack_memory_pool *pool, handle h);
 void lock_handle(struct stack_memory_pool *pool, handle *h);
 void unlock_handle(struct stack_memory_pool *pool, handle h);
+#ifdef DEBUG
 void *pool_new_pointer(struct stack_memory_pool *pool, unsigned long size, char const *file, long line);
 void *pool_new_pointer_clear(struct stack_memory_pool *pool, unsigned long size, char const *file, long line);
 void *pool_resize_pointer(struct stack_memory_pool *pool, void *p, unsigned long new_size, char const *file, long line);
+#else
+void *pool_new_pointer(struct stack_memory_pool *pool, unsigned long size);
+void *pool_new_pointer_clear(struct stack_memory_pool *pool, unsigned long size);
+void *pool_resize_pointer(struct stack_memory_pool *pool, void *p, unsigned long new_size);
+#endif
 void dispose_pointer(struct stack_memory_pool *pool, void *p);
 void stack_memory_pool_reset(struct stack_memory_pool *pool);
 
