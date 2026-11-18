@@ -562,6 +562,7 @@ void hs_node_gc(
 	return;
 }
 
+#ifdef DEBUG
 struct hs_function_definition const *hs_function_get(
 	short function_index)
 {
@@ -569,6 +570,7 @@ struct hs_function_definition const *hs_function_get(
 
 	return hs_function_table[function_index];
 }
+#endif
 
 short hs_find_script_by_name(
 	char const *name)
@@ -617,6 +619,7 @@ short hs_find_tag_reference_by_index(
 	return NONE;
 }
 
+#ifdef DEBUG
 struct hs_global_external *hs_global_external_get(
 	short global_index)
 {
@@ -624,6 +627,7 @@ struct hs_global_external *hs_global_external_get(
 
 	return hs_external_globals[global_index];
 }
+#endif
 
 short hs_global_get_type(
 	short designator)
