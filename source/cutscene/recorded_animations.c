@@ -241,7 +241,7 @@ static boolean recorded_animation_play_internal(
 					thread->unit_index = unit_index;
 					thread->relative_ticks = 0;
 					thread->ticks_left = animation->ticks;
-					thread->event_stream = tag_data_get_pointer(&animation->animation_data, 0, animation->animation_data.size);
+					thread->event_stream = tag_data_get_pointer_inline(&animation->animation_data, 0, animation->animation_data.size);
 
 					thread_debug = &animation_threads_debug[DATUM_INDEX_TO_ABSOLUTE_INDEX(thread_index)];
 					thread_debug->valid = TRUE;

@@ -696,7 +696,7 @@ wchar_t const *hud_messaging_get_objective(
 
 		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(673, 674), message->element_count==1);
 		match_assert("c:\\halo\\SOURCE\\interface\\hud_messaging.c", MATCH_LINE_NTSC(674, 675), element->type==_hud_message_type_text);
-		result = tag_data_get_pointer(&messages->text_data, message->text_start_index * sizeof(wchar_t), element->data * sizeof(wchar_t));
+		result = tag_data_get_pointer_inline(&messages->text_data, message->text_start_index * sizeof(wchar_t), element->data * sizeof(wchar_t));
 	}
 
 	return result;
@@ -1002,7 +1002,7 @@ void hud_messaging_update(
 						render_state_text(
 							&bounds,
 							&cursor_bounds,
-							tag_data_get_pointer(&messages->text_data, text_index * sizeof(wchar_t), element->data * sizeof(wchar_t)),
+							tag_data_get_pointer_inline(&messages->text_data, text_index * sizeof(wchar_t), element->data * sizeof(wchar_t)),
 							FALSE);
 						text_index += element->data;
 						break;

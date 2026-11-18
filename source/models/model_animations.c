@@ -1395,7 +1395,7 @@ static void animation_get_keyframe_rotation(
 	short node_index,
 	real_quaternion *result)
 {
-	struct animation_compressed_data_header *header = tag_data_get_pointer(&animation->data, animation->compressed_data_offset, 0);
+	struct animation_compressed_data_header *header = tag_data_get_pointer_inline(&animation->data, animation->compressed_data_offset, 0);
 	struct compressed_quaternion_6byte *default_data = (struct compressed_quaternion_6byte *)((byte *)header + header->rotation_default_data_offset);
 	unsigned long keyframe_info = header->rotation_keyframe_info[adjusted_node_index];
 	short first_keyframe_index = (short)(keyframe_info>>12);
@@ -1475,7 +1475,7 @@ static void animation_get_keyframe_translation(
 	short node_index,
 	real_point3d *result)
 {
-	struct animation_compressed_data_header *header = tag_data_get_pointer(&animation->data, animation->compressed_data_offset, 0);
+	struct animation_compressed_data_header *header = tag_data_get_pointer_inline(&animation->data, animation->compressed_data_offset, 0);
 	real_point3d *default_data = (real_point3d *)((byte *)header + header->translation_default_data_offset);
 	unsigned long keyframe_info = *(unsigned long *)((byte *)header + header->translation_keyframe_info_offset + adjusted_node_index*sizeof(unsigned long));
 	short first_keyframe_index = (short)(keyframe_info>>12);
@@ -1551,7 +1551,7 @@ static void animation_get_keyframe_scale(
 	short node_index,
 	real *result)
 {
-	struct animation_compressed_data_header *header = tag_data_get_pointer(&animation->data, animation->compressed_data_offset, 0);
+	struct animation_compressed_data_header *header = tag_data_get_pointer_inline(&animation->data, animation->compressed_data_offset, 0);
 	real *default_data = (real *)((byte *)header + header->scale_default_data_offset);
 	unsigned long keyframe_info = *(unsigned long *)((byte *)header + header->scale_keyframe_info_offset + adjusted_node_index*sizeof(unsigned long));
 	short first_keyframe_index = (short)(keyframe_info>>12);

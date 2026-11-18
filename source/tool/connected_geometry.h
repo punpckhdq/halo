@@ -18,8 +18,8 @@ enum
 /* ---------- macros */
 
 #define CONNECTED_GEOMETRY_GET_EDGE_POINT(geometry, edge_designator) /* fake name */ \
-	((real_point3d *)dynamic_array_get_element(&(geometry)->points,						\
-		((struct connected_edge *)dynamic_array_get_element(&(geometry)->edges,			\
+	((real_point3d *)dynamic_array_get_element_inline(&(geometry)->points,						\
+		((struct connected_edge *)dynamic_array_get_element_inline(&(geometry)->edges,			\
 			(edge_designator)&LONG_MAX, sizeof(struct connected_edge)))->point_indices[((edge_designator)&LONG_MIN)!=0], \
 		sizeof(real_point3d)))
 

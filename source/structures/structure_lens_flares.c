@@ -202,7 +202,7 @@ boolean build_structure_lens_flares(
 
 									for (triangle_index = 0; triangle_index < geometry.triangles.count; triangle_index++)
 									{
-										struct connected_triangle *triangle = dynamic_array_get_element(&geometry.triangles, triangle_index, sizeof(*triangle));
+										struct connected_triangle *triangle = dynamic_array_get_element_inline(&geometry.triangles, triangle_index, sizeof(*triangle));
 
 										if (triangle->group_index == coplanar_group_index)
 										{

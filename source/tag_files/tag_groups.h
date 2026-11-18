@@ -280,6 +280,9 @@ long verify_tag_reference(struct tag_reference const *reference);
 #define verify_tag_reference(reference) ((reference)->index)
 #endif
 void *tag_data_get_pointer(struct tag_data const *data, long offset, long size);
+#ifdef DEBUG
+#define tag_data_get_pointer_inline tag_data_get_pointer
+#endif
 void *tag_block_get_element_with_size(struct tag_block const *block, long index, long element_size);
 long tag_block_add_element(struct tag_block *block);
 boolean tag_block_resize(struct tag_block *block, long element_count);
@@ -314,5 +317,15 @@ __inline void *tag_data_get_address(
 {
 	return data->address;
 }
+
+#ifndef DEBUG
+__inline void *tag_data_get_pointer_inline(
+	struct tag_data const *data,
+	long offset,
+	long size)
+{
+	return (void *)((byte *)data->address + offset);
+}
+#endif
 
 #endif // __TAG_GROUPS_H
