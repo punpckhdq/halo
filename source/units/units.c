@@ -173,16 +173,17 @@ static void unit_drop_item(long unit_index, long item_index);
 static void unit_verify_vectors(long unit_index, char const *debugstring);
 #endif
 static void unit_align_facing(long unit_index, real_vector2d const *alignment_vector);
-static void unit_flame_to_death(long unit_index);
+void unit_flame_to_death(long unit_index);
 static void unit_running_blind(long unit_index, real_vector3d *run_vector);
 
 static boolean unit_integrated_night_vision_is_active(long unit_index);
 
 static void unit_animation_start_overlay_action(long unit_index, short overlay_action);
-static short unit_test_spawning(long unit_index);
+short unit_test_spawning(long unit_index);
 
 static short unit_animation_impulse_get_index(short animation_impulse, short *interpolation_frame_count);
 static boolean unit_can_play_animation_impulse(long unit_index, short animation_impulse);
+static void unit_ping_animation(long unit_index, boolean died, boolean feign_death, boolean died_flying, boolean ignore_hard_pings, boolean force_hard_pings, real angle, short damage_part, real_vector2d *alignment_vector);
 
 /* ---------- globals */
 
@@ -3875,7 +3876,7 @@ boolean unit_enter_seat(
 	return result;
 }
 
-void unit_ping_animation(
+static void unit_ping_animation(
 	long unit_index,
 	boolean died,
 	boolean feign_death,
@@ -4577,7 +4578,7 @@ void unit_record_damage(
 	return;
 }
 
-static short unit_test_spawning(
+short unit_test_spawning(
 	long unit_index)
 {
 	struct unit_datum *unit = unit_get(unit_index);
@@ -8712,7 +8713,7 @@ void unit_stop_running_blindly(
 	return;
 }
 
-static void unit_flame_to_death(
+void unit_flame_to_death(
 	long unit_index)
 {
 	struct unit_datum *unit = unit_get(unit_index);

@@ -276,7 +276,7 @@ void player_control_new_unit(
 	return;
 }
 
-boolean player_control_camera_control_is_active(
+static boolean player_control_camera_control_is_active(
 	void)
 {
 	if (TEST_FLAG(player_control_globals->control_flags, _player_control_camera_off_bit) || game_time_get_paused())

@@ -560,6 +560,7 @@ boolean network_game_player_is_valid(
 	return success;
 }
 
+/* TODO make this work with static */
 void network_game_assign_players_to_team(
 	struct network_game_data *game)
 {

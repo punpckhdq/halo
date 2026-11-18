@@ -59,7 +59,6 @@ void bitmap_draw_string(struct bitmap_data *bitmap, rectangle2d const *bounds, r
 void draw_string(draw_character_proc draw_character, rectangle2d const *bounds, point2d *cursor_reference, rectangle2d const *clip, short height_adjust, char *string);
 void draw_unicode_string(draw_character_proc draw_character, rectangle2d const *bounds, point2d *cursor_reference, rectangle2d const *clip, short height_adjust, wchar_t const *string);
 
-short parse_string(struct parse_string_state *state);
 
 /* ---------- globals */
 

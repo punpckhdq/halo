@@ -166,6 +166,7 @@ static void object_delete_attachments(long object_index);
 static void object_delete_recursive(long object_index, boolean delete_siblings);
 static void object_compute_function_values(long object_index);
 static void object_compute_change_colors(long object_index);
+static boolean object_update(long object_index);
 
 /* ---------- globals */
 
@@ -3515,7 +3516,7 @@ boolean object_force_inside_bsp(
 	return result;
 }
 
-boolean object_update(
+static boolean object_update(
 	long object_index)
 {
 	struct object_header_datum *header = object_header_get(object_index);

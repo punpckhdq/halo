@@ -162,7 +162,6 @@ void rasterizer_error(HRESULT hr, char const *format, ...);
 
 /* ---------- prototypes/RASTERIZER_XBOX_PROFILE.C */
 
-boolean rasterizer_profile_enabled(void);
 boolean rasterizer_profile_initialize(void);
 void rasterizer_profile_dispose(void);
 void rasterizer_profile_frame_begin(void);

@@ -656,7 +656,6 @@ void unit_abort_animation(long unit_index);
 short unit_find_nearby_seat(long unit_index, long parent_unit_index, short *parent_seat_index);
 boolean unit_can_enter_seat(long unit_index, long parent_unit_index, short seat_index, long *occupant_unit_index_reference);
 boolean unit_enter_seat(long unit_index, long parent_unit_index, short seat_index);
-void unit_ping_animation(long unit_index, boolean died, boolean feign_death, boolean died_flying, boolean ignore_hard_pings, boolean force_hard_pings, real angle, short damage_part, real_vector2d *alignment_vector);
 void unit_impulse(long unit_index, real_point3d const *origin, real_vector3d const *velocity, real mass);
 void unit_handle_weapon_state_change(long unit_index, short new_weapon_state);
 void unit_damage_aftermath(long unit_index, struct damage_data *damage_data, unsigned long being_damaged_flags, real shield_damage, real body_damage, real body_damage_multiplier, short body_part);
