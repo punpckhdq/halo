@@ -951,7 +951,14 @@ static void game_engine_generate_title_string(
 		switch (win)
 		{
 		case NONE:
-			usprintf(title_string, L"Game ends in a draw");
+			if (teams)
+			{
+				usprintf(title_string, L"Game ends in a draw");
+			}
+			else
+			{
+				usprintf(title_string, L"Game ends in a draw");
+			}
 			break;
 		case FALSE:
 			if (teams)
@@ -3870,59 +3877,59 @@ struct game_variant game_engine_get_variant_by_name(
 
 	memset(&result, 0, sizeof(result));
 
-	if (!strcmp(name, "race"))
+	if (0 == strcmp(name, "race"))
 	{
 		result = build_game_variant_race();
 	}
-	else if (!strcmp(name, "team_race"))
+	else if (0 == strcmp(name, "team_race"))
 	{
 		result = build_game_variant_team_race();
 	}
-	else if (!strcmp(name, "rally"))
+	else if (0 == strcmp(name, "rally"))
 	{
 		result = build_game_variant_rally();
 	}
-	else if (!strcmp(name, "slayer"))
+	else if (0 == strcmp(name, "slayer"))
 	{
 		result = build_game_variant_slayer();
 	}
-	else if (!strcmp(name, "team_slayer"))
+	else if (0 == strcmp(name, "team_slayer"))
 	{
 		result = build_game_variant_team_slayer();
 	}
-	else if (!strcmp(name, "elimination"))
+	else if (0 == strcmp(name, "elimination"))
 	{
 		result = build_game_variant_elimination();
 	}
-	else if (!strcmp(name, "stalker"))
+	else if (0 == strcmp(name, "stalker"))
 	{
 		result = build_game_variant_stalker();
 	}
-	else if (!strcmp(name, "team_oddball"))
+	else if (0 == strcmp(name, "team_oddball"))
 	{
 		result = build_game_variant_team_oddball();
 	}
-	else if (!strcmp(name, "accumulation"))
+	else if (0 == strcmp(name, "accumulation"))
 	{
 		result = build_game_variant_accumulation();
 	}
-	else if (!strcmp(name, "oddball"))
+	else if (0 == strcmp(name, "oddball"))
 	{
 		result = build_game_variant_oddball();
 	}
-	else if (!strcmp(name, "ctf"))
+	else if (0 == strcmp(name, "ctf"))
 	{
 		result = build_game_variant_ctf();
 	}
-	else if (!strcmp(name, "ironctf"))
+	else if (0 == strcmp(name, "ironctf"))
 	{
 		result = build_game_variant_iron_ctf();
 	}
-	else if (!strcmp(name, "king"))
+	else if (0 == strcmp(name, "king"))
 	{
 		result = build_game_variant_king();
 	}
-	else if (!strcmp(name, "team_king"))
+	else if (0 == strcmp(name, "team_king"))
 	{
 		result = build_game_variant_team_king();
 	}
@@ -6308,7 +6315,7 @@ void game_engine_variant_cleanup(
 		break;
 	}
 
-	if (memcmp(&old_variant, variant, sizeof(*variant)))
+	if (0 != memcmp(&old_variant, variant, sizeof(*variant)))
 	{
 		struct game_variant test;
 

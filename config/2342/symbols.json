@@ -4891,7 +4891,7 @@
 { "address": 5350208, "flags": 32, "name": "_network_game_generate_local_machine_name" },
 { "address": 5350352, "flags": 32, "name": "_network_game_end_and_load_ui" },
 { "address": 5350416, "flags": 32, "name": "_network_game_reset_for_next_round" },
-{ "address": 5350592, "flags": 32, "name": "_network_game_assign_players_to_team" },
+{ "address": 5350592, "flags": 32, "name": "_network_game_assign_players_to_team", "static": true },
 { "address": 5350608, "flags": 32, "name": "_network_player_is_valid" },
 { "address": 5350656, "flags": 32, "name": "_network_game_invalidate_machine" },
 { "address": 5350832, "flags": 32, "name": "_network_game_add_player" },

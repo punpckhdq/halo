@@ -4644,7 +4644,7 @@
 { "address": 945840, "flags": 32, "name": "@network_game_generate_local_machine_name@4" },
 { "address": 945984, "flags": 32, "name": "@network_game_end_and_load_ui@4" },
 { "address": 946016, "flags": 32, "name": "@network_game_reset_for_next_round@8" },
-{ "address": 946128, "flags": 32, "name": "@network_game_assign_players_to_team@4" },
+{ "address": 946128, "flags": 32, "name": "@network_game_assign_players_to_team@4", "static": true },
 { "address": 946144, "flags": 32, "name": "@network_player_is_valid@4" },
 { "address": 946192, "flags": 32, "name": "@network_game_invalidate_machine@8" },
 { "address": 946512, "flags": 32, "name": "@network_game_add_player@8" },

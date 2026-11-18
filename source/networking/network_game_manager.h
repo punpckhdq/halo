@@ -101,7 +101,6 @@ void network_game_generate_local_machine_name(wchar_t *machine_name);
 void network_game_end_and_load_ui(struct network_game_data *game);
 void network_game_reset_for_next_round(struct network_game_data *game, boolean unload_game_objects);
 boolean network_game_player_is_valid(struct network_player *player, struct network_game_data *game);
-void network_game_assign_players_to_team(struct network_game_data *game);
 boolean network_player_is_valid(struct network_player *player);
 
 /* ---------- globals */

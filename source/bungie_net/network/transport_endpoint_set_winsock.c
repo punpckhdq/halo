@@ -136,7 +136,7 @@ boolean transport_nonce_is_equal(
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_set_winsock.c", 163, src != NULL);
 	match_assert("c:\\halo\\SOURCE\\bungie_net\\network\\transport_endpoint_set_winsock.c", 164, dst != NULL);
 
-	if (!memcmp(src, dst, sizeof(global_nonce)))
+	if (0 == memcmp(src, dst, sizeof(global_nonce)))
 	{
 		result = TRUE;
 	}

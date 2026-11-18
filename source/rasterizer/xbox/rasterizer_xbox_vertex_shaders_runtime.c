@@ -798,10 +798,12 @@ void rasterizer_set_vertex_shader_permutation(
 
 		current_vertex_shader_index = vertex_shader_index;
 
+#ifdef DEBUG
 		if (!success)
 		{
 			error(_error_silent, "### ERROR rasterizer_set_vertex_shader failed");
 		}
+#endif
 	}
 
 	return;
