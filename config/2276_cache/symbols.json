@@ -17328,7 +17328,7 @@
 { "address": 2640444, "flags": 0, "name": "?alpha@?1??player_active_camo_screen_effect@@9@9", "static": true },
 { "address": 2640448, "flags": 0, "name": "?blue@?1??player_active_camo_screen_effect@@9@9", "static": true },
 { "address": 2640452, "flags": 0, "name": "_bss_00453468" },
-{ "address": 2640472, "flags": 0, "name": "_bss_00453480" },
+{ "address": 2640472, "flags": 0, "name": "_hs_compile_globals" },
 { "address": 2640772, "flags": 0, "name": "_bss_004535ac" },
 { "address": 2640784, "flags": 0, "name": "_input_abstraction_globals" },
 { "address": 2641004, "flags": 0, "name": "?time_of_first_device_insertion@?1??input_abstraction_update_device_changes@@9@9" },
