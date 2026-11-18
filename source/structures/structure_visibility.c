@@ -990,7 +990,11 @@ static void structure_visibility_find_clusters(
 			struct structure_cluster *cluster = TAG_BLOCK_GET_ELEMENT(&structure_bsp->clusters, rendered_cluster->cluster_index, struct structure_cluster);
 
 			render_camera_build_clipped_frustum_bounds(&render.camera, &rendered_cluster->clip_bounds, &frustum_bounds);
+#ifdef DEBUG
 			render_camera_build_frustum(&render.camera, &frustum_bounds, &rendered_cluster->frustum, TRUE);
+#else
+			render_camera_build_frustum(&render.camera, &frustum_bounds, &rendered_cluster->frustum, FALSE);
+#endif
 		}
 	}
 

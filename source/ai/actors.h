@@ -1260,6 +1260,7 @@ struct firing_position_evaluation_context
 	boolean post_evaluation_bounded;
 	real post_evaluation_bound;
 
+#ifdef DEBUG
 	/* fake names */
 	short encounter_count; /* fake name */
 	short consider_count; /* fake name */
@@ -1267,6 +1268,7 @@ struct firing_position_evaluation_context
 	short nonrejected_count; /* fake name */
 	short post_evaluation_count; /* fake name */
 	short skipped_count; /* fake name */
+#endif
 };
 
 /* ---------- prototypes/ACTORS.C */

@@ -1197,6 +1197,7 @@ static boolean firing_position_forced_evaluation(
 
 	firing_position_pre_evaluate(actor_index, evaluation_context, 1, firing_position);
 
+#ifdef DEBUG
 	if (firing_position->valid)
 	{
 		evaluation_context->valid_count++;
@@ -1205,6 +1206,7 @@ static boolean firing_position_forced_evaluation(
 	{
 		evaluation_context->nonrejected_count++;
 	}
+#endif
 
 	if (firing_position->valid)
 	{
@@ -1215,7 +1217,9 @@ static boolean firing_position_forced_evaluation(
 
 		firing_position->pre_evaluation = firing_position->evaluation;
 		firing_position->valid = firing_position_post_evaluate(actor_index, evaluation_context, firing_position);
+#ifdef DEBUG
 		evaluation_context->post_evaluation_count++;
+#endif
 	}
 
 	return firing_position->valid;
@@ -1643,12 +1647,14 @@ short actor_select_firing_position(
 			}
 		}
 
+#ifdef DEBUG
 		evaluation_context->skipped_count = 0;
 		evaluation_context->post_evaluation_count = 0;
 		evaluation_context->nonrejected_count = 0;
 		evaluation_context->valid_count = 0;
 		evaluation_context->consider_count = 0;
 		evaluation_context->encounter_count = 0;
+#endif
 
 		if (debug)
 		{
@@ -1752,8 +1758,10 @@ short actor_select_firing_position(
 			}
 		}
 
+#ifdef DEBUG
 		evaluation_context->encounter_count = (short)encounter_definition->firing_positions.count;
 		evaluation_context->consider_count = firing_position_count;
+#endif
 
 		if (firing_position_count == 0)
 		{
@@ -1946,6 +1954,7 @@ short actor_select_firing_position(
 					firing_position_index = (short)firing_position_indices[sorted_index];
 					firing_position = &firing_positions[firing_position_index];
 
+#ifdef DEBUG
 					if (firing_position->valid)
 					{
 						evaluation_context->valid_count++;
@@ -1954,12 +1963,14 @@ short actor_select_firing_position(
 					{
 						evaluation_context->nonrejected_count++;
 					}
+#endif
 
 					if (!firing_position->valid ||
 						(evaluation_context->post_evaluation_bounded && firing_position->evaluation + evaluation_context->post_evaluation_bound <= best_evaluation))
 					{
 						if (!AI_BEHAVIOR(evaluate_all_positions))
 						{
+#ifdef DEBUG
 							short index;
 
 							for (index = sorted_index; index < firing_position_count; index++)
@@ -1970,6 +1981,7 @@ short actor_select_firing_position(
 									evaluation_context->skipped_count++;
 								}
 							}
+#endif
 							break;
 						}
 
@@ -1983,7 +1995,9 @@ short actor_select_firing_position(
 							firing_position_compute_line_of_sight(actor_index, evaluation_context, firing_position);
 						}
 
+#ifdef DEBUG
 						evaluation_context->post_evaluation_count++;
+#endif
 						firing_position->pre_evaluation = firing_position->evaluation;
 						if (firing_position_post_evaluate(actor_index, evaluation_context, firing_position) &&
 							firing_position->evaluation > best_evaluation)
