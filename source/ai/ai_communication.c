@@ -1845,12 +1845,14 @@ void ai_communication_event(
 				{
 					if (num_possibilities >= MAXIMUM_COMMUNICATION_POSSIBILITIES)
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"ai_communication_event: type %d (%s) overflowed MAXIMUM_COMMUNICATION_POSSIBILITIES (%d)",
 							communication_type,
 							global_communication_type_names[communication_type],
 							MAXIMUM_COMMUNICATION_POSSIBILITIES);
+#endif
 						break;
 					}
 
@@ -3920,7 +3922,9 @@ boolean ai_conversation(
 
 		if (conversation_index == NONE)
 		{
+#ifdef DEBUG
 			error(_error_silent, "WARNING: too many executing conversations (ran out of MAXIMUM_CONVERSATIONS_PER_MAP %d)", MAXIMUM_CONVERSATIONS_PER_MAP);
+#endif
 		}
 		else
 		{

@@ -355,7 +355,9 @@ struct rasterizer_triangle *_rasterizer_dynamic_triangles_lock(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR failed to lock dynamic triangles");
+#endif
 	}
 
 	return triangles;
@@ -384,7 +386,9 @@ void _rasterizer_dynamic_triangles_unlock(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR failed to unlock dynamic triangles");
+#endif
 	}
 
 	return;
@@ -497,7 +501,9 @@ void *_rasterizer_dynamic_vertices_lock(
 
 	if (rasterizer_globals.current_lock_operation == _rasterizer_lock_none)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### WARNING: tried to lock dynamic vertices without specifying a lock operation");
+#endif
 	}
 
 	if (dynamic_vertex_buffer_index != NONE)
@@ -645,7 +651,9 @@ void rasterizer_draw_dynamic_vertices(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_vertices failed");
+#endif
 	}
 
 	return;
@@ -713,7 +721,9 @@ void rasterizer_draw_dynamic_triangles_dynamic_vertices(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_triangles_dynamic_vertices failed");
+#endif
 	}
 
 	return;
@@ -769,7 +779,9 @@ void rasterizer_draw_dynamic_triangles_static_vertices(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_triangles_static_vertices failed");
+#endif
 	}
 
 	return;
@@ -832,7 +844,9 @@ void rasterizer_draw_dynamic_triangles_static_vertices2(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_dynamic_triangles_static_vertices2 failed");
+#endif
 	}
 
 	return;
@@ -906,7 +920,9 @@ void rasterizer_draw_static_triangles_dynamic_vertices(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_static_triangles_dynamic_vertices failed");
+#endif
 	}
 
 	return;
@@ -970,7 +986,9 @@ void rasterizer_draw_static_triangles_static_vertices(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_draw_static_triangles_static_vertices failed");
+#endif
 	}
 
 	return;

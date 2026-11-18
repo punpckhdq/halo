@@ -1302,13 +1302,13 @@ static void action_obey_command_end(
 
 #ifdef DEBUG
 					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
-#endif
 					error(
 						_error_silent,
 						"%s: command list %s entry #%d tried to loop to itself",
 						actorbuf,
 						command_list->name,
 						simple_control->current_command_index);
+#endif
 				}
 				else if (simple_control->loop_counter>=MAXIMUM_COMMAND_LIST_LOOPS)
 				{
@@ -1316,13 +1316,13 @@ static void action_obey_command_end(
 
 #ifdef DEBUG
 					ai_debug_describe_actor(actor_index, NONE, TRUE, actorbuf, sizeof(actorbuf));
-#endif
 					error(
 						_error_silent,
 						"%s: command list %s is stuck looping (aborting on loop #%d)",
 						actorbuf,
 						command_list->name,
 						simple_control->current_command_index);
+#endif
 				}
 				else
 				{
@@ -1629,8 +1629,8 @@ boolean action_obey_command_list_setup(
 
 #ifdef DEBUG
 				ai_debug_describe_actor(actor_index, NONE, TRUE, tempbuf, sizeof(tempbuf));
-#endif
 				error(_error_silent, "swarm actor %s cannot execute command list, ran out of swarm caches", tempbuf);
+#endif
 			}
 			else
 			{

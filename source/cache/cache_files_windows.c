@@ -763,7 +763,9 @@ boolean cache_files_precache_map_begin(
 	else
 	{
 		error(_error_silent, "couldn't find map '%s' on the DVD", stripped_name);
+#ifdef DEBUG
 		error(_error_silent, "full path name '%s'", name);
+#endif
 
 		if (blocking)
 		{

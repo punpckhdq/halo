@@ -920,7 +920,9 @@ void _rasterizer_frame_end(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_frame_end failed");
+#endif
 	}
 
 	return;
@@ -1568,7 +1570,9 @@ void rasterizer_set_target_as_texture(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_set_target_as_texture failed");
+#endif
 	}
 
 	return;

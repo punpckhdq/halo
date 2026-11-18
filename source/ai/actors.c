@@ -375,12 +375,14 @@ long actor_create_for_unit(
 
 					if (actor->meta.swarm!=actor_type_get_swarm(actor->meta.type))
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"%s actor variant %s cannot have type %s (swarm flag does not match)",
 							actor->meta.swarm ? "swarm" : "individual",
 							tag_name_strip_path(tag_get_name(actor_variant_definition_index)),
 							actor_type_get_name(actor->meta.type));
+#endif
 						actor_delete(actor_index, FALSE);
 						actor_index = NONE;
 					}
@@ -559,7 +561,9 @@ long actor_place(
 			ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), aibuf, sizeof(aibuf));
 		}
 
+#ifdef DEBUG
 		error(_error_silent, "WARNING: cannot create unit for actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
+#endif
 	}
 
 	if (unit_index!=NONE)
@@ -625,7 +629,9 @@ long actor_place(
 				ai_index_to_string(AI_INDEX_NEW(_ai_index_squad, encounter_index, squad_index), global_scenario_get(), aibuf, sizeof(aibuf));
 			}
 
+#ifdef DEBUG
 			error(_error_silent, "WARNING: cannot create actor %s %s", tag_name_strip_path(tag_get_name(actor_variant_definition_index)), aibuf);
+#endif
 		}
 	}
 
@@ -730,7 +736,9 @@ short actors_spawn_from_unit(
 
 					if (spawned_actor_index==NONE)
 					{
+#ifdef DEBUG
 						error(_error_silent, "WARNING: cannot create actor to be spawned from unit");
+#endif
 						object_delete(spawned_unit_index);
 					}
 					else
@@ -913,7 +921,9 @@ boolean actor_set_active(
 
 				if (actor->meta.swarm_cache_index==NONE)
 				{
+#ifdef DEBUG
 					error(_error_silent, "swarm tried to become active but couldn't, erasing %d units", actor->meta.swarm_unit_count);
+#endif
 					actor->meta.erase_next_tick = TRUE;
 					success = FALSE;
 				}
@@ -1196,7 +1206,9 @@ boolean actor_swarm_attach_unit(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "unable to create any more swarm components (max %d)", MAXIMUM_NUMBER_OF_SWARM_COMPONENTS);
+#endif
 		}
 		else
 		{
@@ -1458,7 +1470,9 @@ long actor_swarm_cache_new(
 
 		if (actor->meta.swarm_cache_index==NONE)
 		{
+#ifdef DEBUG
 			error(_error_silent, "exceeded MAXIMUM_NUMBER_OF_ACTIVE_SWARMS (%d)", MAXIMUM_NUMBER_OF_ACTIVE_SWARMS);
+#endif
 		}
 		else
 		{
@@ -1477,7 +1491,9 @@ long actor_swarm_cache_new(
 
 				if (swarm_component_index==NONE)
 				{
+#ifdef DEBUG
 					error(_error_silent, "unable to create any more swarm components (max %d)", MAXIMUM_NUMBER_OF_SWARM_COMPONENTS);
+#endif
 					break;
 				}
 
@@ -3040,18 +3056,24 @@ static void actor_decision_loop(
 	struct actor_datum *actor = actor_get(actor_index);
 	boolean performed = FALSE;
 	long iteration_count = 0;
+#ifdef DEBUG
 	long history_index = 0;
 	short update_history[ACTOR_DECISION_HISTORY_COUNT];
+#endif
 	boolean error_condition;
 
+#ifdef DEBUG
 	memset(update_history, NONE, sizeof(update_history));
+#endif
 
 	while (TRUE)
 	{
 		error_condition = FALSE;
 		++iteration_count;
+#ifdef DEBUG
 		update_history[history_index] = actor->state.action;
 		history_index = (history_index + 1) % ACTOR_DECISION_HISTORY_COUNT;
+#endif
 		actor->state.action_changed = FALSE;
 
 		actor_type_decide_action(actor_index);
@@ -3081,6 +3103,7 @@ static void actor_decision_loop(
 
 	if (error_condition)
 	{
+#ifdef DEBUG
 		char errbuf[1024];
 		char encounterbuf[256];
 
@@ -3124,6 +3147,7 @@ static void actor_decision_loop(
 
 		match_vwarn("c:\\halo\\SOURCE\\ai\\actors.c", 3436, FALSE, errbuf);
 		error(_error_silent, "AI error condition detected, attempting to recover (please tell butcher)...");
+#endif
 		actor_action_change(actor_index, _actor_action_none, NULL);
 	}
 

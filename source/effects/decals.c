@@ -233,10 +233,12 @@ static void decal_update(
 
 				if (--decal_globals->locked_count < 0 && !locked_count_warning_issued)
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"### ERROR decals: locked count is invalid (#%d) -- tell Bernie!!",
 						decal_globals->locked_count);
+#endif
 					locked_count_warning_issued = TRUE;
 				}
 			}
@@ -333,10 +335,12 @@ static long decal_insert(
 
 				if (decal_globals->locked_count < 0 && !locked_count_warning_issued)
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"### ERROR decals: locked count is invalid (#%d) -- tell Bernie!!",
 						decal_globals->locked_count);
+#endif
 					locked_count_warning_issued = TRUE;
 				}
 			}
@@ -435,7 +439,9 @@ void decals_reconnect_to_structure_bsp(
 
 			if (iterations++ > MAXIMUM_DECAL_LIST_ITERATIONS)
 			{
+#ifdef DEBUG
 				error(_error_silent, "### ERROR decals: infinite loop -- tell Bernie!!");
+#endif
 				break;
 			}
 
@@ -505,7 +511,9 @@ void decals_disconnect_from_structure_bsp(
 
 					if (iterations++ > MAXIMUM_DECAL_LIST_ITERATIONS)
 					{
+#ifdef DEBUG
 						error(_error_silent, "### ERROR decals: infinite loop -- tell Bernie!!");
+#endif
 						break;
 					}
 
@@ -591,10 +599,12 @@ void decals_unlock(
 		{
 			if (!locked_count_warning_issued)
 			{
+#ifdef DEBUG
 				error(
 					_error_silent,
 					"### ERROR decals: locked count is invalid (#%d) -- tell Bernie!!",
 					decal_globals->locked_count);
+#endif
 				locked_count_warning_issued = TRUE;
 			}
 
@@ -605,10 +615,12 @@ void decals_unlock(
 		{
 			if (!permanent_count_warning_issued)
 			{
+#ifdef DEBUG
 				error(
 					_error_silent,
 					"### ERROR decals: permanent count is invalid (#%d) -- tell Bernie!!",
 					decal_globals->permanent_count);
+#endif
 				permanent_count_warning_issued = TRUE;
 			}
 
@@ -707,13 +719,17 @@ void decal_delete(
 
 	if (TEST_FLAG(decal->flags, _decal_locked_bit) && !locked_warning_issued)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR decals: deleting locked decal (#%d) -- tell Bernie!!", decal_index);
+#endif
 		locked_warning_issued = TRUE;
 	}
 
 	if (TEST_FLAG(decal->flags, _decal_permanent_bit) && !permanent_warning_issued)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR decals: deleting permanent decal (#%d) -- tell Bernie!!", decal_index);
+#endif
 		permanent_warning_issued = TRUE;
 	}
 
@@ -1725,14 +1741,12 @@ void render_debug_decals(
 			{
 				struct decal_vertex_internal const *vertex = &decal_geometry.decal_vertices[vertex_offset + vertex_index];
 
-#ifdef DEBUG
 				render_debug_line(TRUE, &previous_vertex->position, &vertex->position, global_real_argb_yellow);
 				render_debug_point(
 					TRUE,
 					&vertex->position,
 					DECAL_DEBUG_POINT_SIZE,
 					vertex->clipped ? global_real_argb_red : global_real_argb_white);
-#endif
 				previous_vertex = vertex;
 			}
 
@@ -1762,9 +1776,7 @@ void render_debug_decals(
 					struct decal_datum const *decal = decal_get(decal_index);
 
 					sprintf(decal_string, "%d", DECAL_VERTICES_PER_QUAD * decal->quad_count);
-#ifdef DEBUG
 					render_debug_string_at_point(FALSE, &decal->position, decal_string, global_real_argb_red);
-#endif
 					decal_index = decal->next_decal_index;
 				}
 			}

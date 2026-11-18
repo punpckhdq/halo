@@ -138,6 +138,7 @@ void render_model(
 		}
 		match_assert("c:\\halo\\SOURCE\\models\\models.c", 169, geometry_detail_level_index>=0 && geometry_detail_level_index<NUMBER_OF_DETAIL_LEVELS_PER_MODEL);
 
+#ifdef DEBUG
 		if (!TEST_FLAG(flags, _render_model_shadow_bit))
 		{
 			if (render_model_nodes)
@@ -150,13 +151,9 @@ void render_model(
 
 					if (node->parent_node_index!=NONE)
 					{
-#ifdef DEBUG
 						render_debug_line(TRUE, &node_matrices[node_index].position, &node_matrices[node->parent_node_index].position, global_real_argb_white);
-#endif
 					}
-#ifdef DEBUG
 					render_debug_matrix(TRUE, &node_matrices[node_index], 0.05f);
-#endif
 				}
 			}
 
@@ -179,10 +176,8 @@ void render_model(
 
 							matrix4x3_from_point_and_quaternion(&marker_matrix, &instance->translation, &instance->rotation);
 							matrix4x3_multiply(&node_matrices[instance->node_index], &marker_matrix, &marker_matrix);
-#ifdef DEBUG
 							render_debug_matrix(FALSE, &marker_matrix, 0.05f);
 							render_debug_string_at_point(FALSE, &marker_matrix.position, marker->name, global_real_argb_white);
-#endif
 						}
 					}
 				}
@@ -281,13 +276,12 @@ void render_model(
 						}
 
 						set_real_point3d(&point, centroid->x, centroid->y, centroid->z + height);
-#ifdef DEBUG
 						render_debug_string_at_point(FALSE, &point, string, color);
-#endif
 					}
 				}
 			}
 		}
+#endif
 
 		model_parameters.unique_id = object_index;
 		model_parameters.lighting = *lighting;

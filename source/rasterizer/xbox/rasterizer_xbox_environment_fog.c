@@ -476,6 +476,7 @@ void _rasterizer_environment_fog_screen_begin(
 
 					if (window->offset < 0.f || window->offset >= 1.f)
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"### ERROR fog_screen: base z failure (near=%f, far=%f, z=%f, offset=%d) -- tell Bernie!",
@@ -483,6 +484,7 @@ void _rasterizer_environment_fog_screen_begin(
 							screen->far_distance,
 							window->offset,
 							layer_offset);
+#endif
 						return;
 					}
 				}
@@ -509,13 +511,19 @@ void _rasterizer_environment_fog_screen_begin(
 
 							if (!warned)
 							{
+#ifdef DEBUG
 								error(_error_silent, "### ERROR fog screen animation index is invalid -- tell Bernie!!");
+#endif
 								error(_error_silent, "\tindex=%d", animation_index);
 								error(_error_silent, "\ttime=%f[%x]", global_frame_parameters.game_time_sec, *(unsigned long *)&global_frame_parameters.game_time_sec);
+#ifdef DEBUG
 								error(_error_silent, "\tperiod=%f[%x]", screen->animation_period, *(unsigned long *)&screen->animation_period);
 								error(_error_silent, "\tphase=%f[%x]", phases[layer_index], *(unsigned long *)&phases[layer_index]);
+#endif
 								error(_error_silent, "\tt=%f[%x]", t, *(unsigned long *)&t);
+#ifdef DEBUG
 								error(_error_silent, "\tanimation_time=%f[%x]", animation_time, *(unsigned long *)&layer_animation_t[layer_index]);
+#endif
 								warned = TRUE;
 							}
 
@@ -761,7 +769,9 @@ void _rasterizer_environment_fog_screen_begin(
 
 			if (!success)
 			{
+#ifdef DEBUG
 				error(_error_silent, "### ERROR rasterizer_environment_fog_screen_begin failed");
+#endif
 			}
 		}
 	}

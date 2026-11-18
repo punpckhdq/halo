@@ -55,7 +55,9 @@ void ui_load_tags_for_scenario(
 
 		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, TEMPORARY_STRINGS_TAG_NAME, 0) == NONE)
 		{
+#ifdef DEBUG
 			error(_error_silent, "failed to load miscellaneous localized strings tag");
+#endif
 		}
 		break;
 	case _scenario_type_multiplayer:

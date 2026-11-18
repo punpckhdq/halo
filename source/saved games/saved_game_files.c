@@ -1546,10 +1546,12 @@ static void enumerate_memory_units(
 
 												if (!memcmp(&old_style_crc, block + checksum_data_size, sizeof(old_style_crc)))
 												{
+#ifdef DEBUG
 													error(
 														_error_silent,
 														"checksum validation matched old-style crc; updating saved game file '%s'",
 														file.full_path);
+#endif
 													memcpy(block + checksum_data_size, &checksum, sizeof(checksum));
 
 													if (file_set_position(&saved_game_file, 0) &&

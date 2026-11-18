@@ -293,6 +293,7 @@ long effect_new_from_object(
 			SET_FLAG(effect->flags, _effect_nonviolent_bit, TRUE);
 		}
 
+#ifdef DEBUG
 		if (debug_effects_nonviolent)
 		{
 			struct object_datum const *object = object_try_and_get(object_index);
@@ -304,6 +305,7 @@ long effect_new_from_object(
 				tag_name_strip_path(tag_get_name(definition_index)),
 				!object ? "<none>" : tag_name_strip_path(tag_get_name(object->definition_index)));
 		}
+#endif
 
 		memset(effect->location_datum_indices, NONE, sizeof(effect->location_datum_indices));
 		effect_build_locations(effect, object_get_marker_by_name);
@@ -361,6 +363,7 @@ long effect_new_attached_from_markers(
 			SET_FLAG(effect->flags, _effect_nonviolent_bit, TRUE);
 		}
 
+#ifdef DEBUG
 		if (debug_effects_nonviolent)
 		{
 			struct object_datum const *object = object_try_and_get(object_index);
@@ -372,6 +375,7 @@ long effect_new_attached_from_markers(
 				tag_name_strip_path(tag_get_name(definition_index)),
 				!object ? "<none>" : tag_name_strip_path(tag_get_name(object->definition_index)));
 		}
+#endif
 
 		marker_list.count = marker_count;
 		marker_list.names = marker_names;

@@ -282,11 +282,15 @@ static boolean recorded_animation_play_internal(
 					name = current_animation->name;
 				}
 
+#ifdef DEBUG
 				error(_error_silent, "trying to play %s while %s is playing", animation->name, name);
+#endif
 			}
 			else
 			{
+#ifdef DEBUG
 				error(_error_silent, "can't play animation on unit");
+#endif
 			}
 		}
 		else

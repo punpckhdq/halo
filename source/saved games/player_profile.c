@@ -730,7 +730,9 @@ long player_profile_new(
 			ustrncpy(profile->player_name, name, MAXIMUM_PLAYER_PROFILE_NAME_LENGTH);
 			profile->player_name[MAXIMUM_PLAYER_PROFILE_NAME_LENGTH] = '\0';
 
+#ifdef DEBUG
 			error(_error_silent, "### DEBUG unlocking all solo levels for newly created profile");
+#endif
 
 			for (level = 0; level < NUMBER_OF_SINGLE_PLAYER_LEVELS; level++)
 			{

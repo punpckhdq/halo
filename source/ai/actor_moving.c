@@ -196,7 +196,9 @@ void actor_destination_update(
 
 		if (magnitude3d(&actor->control.moving_towards_vector)>=1000000.f)
 		{
+#ifdef DEBUG
 			error(_error_silent, "pathfinding is attempting to walk to tau ceti");
+#endif
 			actor->control.path.path.valid = FALSE;
 		}
 	}
@@ -2562,7 +2564,9 @@ void actor_move_get_avoidance_direction(
 	if (angle==REAL_MAX)
 	{
 		angle = 0.f;
+#ifdef DEBUG
 		error(_error_silent, "warning: actor_move_get_avoidance_vector couldn't find out-of-bounds direction %.4f", direction);
+#endif
 	}
 
 	match_assert("c:\\halo\\SOURCE\\ai\\actor_moving.c", 2743, (angle >= 0.0f) && (angle < _full_circle));

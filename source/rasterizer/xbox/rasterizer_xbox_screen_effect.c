@@ -192,7 +192,9 @@ static void rasterizer_screen_effect_set_texture_transforms(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_screen_effect_set_texture_transforms failed");
+#endif
 	}
 
 	return;
@@ -666,7 +668,9 @@ void _rasterizer_screen_effect(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_screen_effect failed");
+#endif
 	}
 
 	return;
@@ -818,7 +822,9 @@ void _rasterizer_screen_flash(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_screen_flash failed");
+#endif
 	}
 
 	return;

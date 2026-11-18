@@ -540,10 +540,12 @@ void object_pvs_set_camera_point(
 		scenario_location_from_point(&location, &point->position);
 		if (location.cluster_index==NONE)
 		{
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"object_pvs_set_camera_point: camera point %s is outside the map",
 				point->name);
+#endif
 			object_globals->pvs_activation_type = FALSE;
 		}
 		else
@@ -2589,6 +2591,7 @@ void object_compute_node_matrices(
 
 				if (!valid_real_matrix4x3(&object_nodes[node_stack_index]))
 				{
+#ifdef DEBUG
 					error(_error_silent, "object_compute_node_matrices FAILURE on root node of %s", tag_get_name(object->definition_index));
 					error(
 						_error_silent,
@@ -2602,26 +2605,32 @@ void object_compute_node_matrices(
 						object->object.up.i,
 						object->object.up.j,
 						object->object.up.k);
+#endif
 
 					if (object_definition->object.physics.index!=NONE)
 					{
 						struct physics_definition *physics_definition= physics_definition_get(object_definition->object.physics.index);
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"  center-of-mass translation %f %f %f",
 							-physics_definition->center_of_mass.x,
 							-physics_definition->center_of_mass.y,
 							-physics_definition->center_of_mass.z);
+#endif
 					}
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"  origin-offset %f %f %f",
 						object_definition->object.origin_offset.x,
 						object_definition->object.origin_offset.y,
 						object_definition->object.origin_offset.z);
+#endif
 
 					if (object_node_matrix)
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"  parent-node matrix fwd  %f %f %f",
@@ -2647,13 +2656,17 @@ void object_compute_node_matrices(
 							object_node_matrix->position.y,
 							object_node_matrix->position.z);
 						error(_error_silent, "                     scale (jason's ugly secret) %f", object_node_matrix->scale);
+#endif
 					}
 					else
 					{
+#ifdef DEBUG
 						error(_error_silent, "  no parent node");
+#endif
 					}
 
 					error(_error_silent, "");
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"computed matrix fwd  %f %f %f",
@@ -2677,6 +2690,7 @@ void object_compute_node_matrices(
 						object_nodes[node_stack_index].position.y,
 						object_nodes[node_stack_index].position.z);
 					error(_error_silent, "                scale %f", object_nodes[node_stack_index].scale);
+#endif
 
 					match_assert_valid_real_matrix4x3_custom_string(
 						"c:\\halo\\SOURCE\\objects\\objects.c",

@@ -416,7 +416,9 @@ void rasterizer_model_draw_environment_shader(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_model_draw_environment failed");
+#endif
 	}
 
 	return;
@@ -959,7 +961,9 @@ void _rasterizer_model_draw(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_model_draw failed");
+#endif
 	}
 
 	return;

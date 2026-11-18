@@ -1561,10 +1561,12 @@ void ai_create_mounted_weapons_for_unit(
 		{
 			struct unit_datum *unit = unit_get(unit_index);
 
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"WARNING: cannot create mounted weapons for %s, exceeded MAXIMUM_NUMBER_OF_MOUNTED_WEAPON_UNITS",
 				tag_name_strip_path(tag_get_name(unit->definition_index)));
+#endif
 		}
 	}
 

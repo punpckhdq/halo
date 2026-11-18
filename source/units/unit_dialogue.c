@@ -677,7 +677,9 @@ void unit_dialogue_determine_variant(
 				}
 				else
 				{
+#ifdef DEBUG
 					error(_error_silent, "unit_dialogue_determine_variant overflowed variant array");
+#endif
 					break;
 				}
 			}

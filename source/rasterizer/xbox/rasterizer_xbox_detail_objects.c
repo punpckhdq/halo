@@ -89,7 +89,9 @@ boolean rasterizer_detail_objects_initialize(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_detail_objects_initialize failed");
+#endif
 	}
 
 	return success;
@@ -187,7 +189,9 @@ void _rasterizer_detail_objects_begin(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_detail_objects_begin failed");
+#endif
 	}
 
 	return;
@@ -275,7 +279,9 @@ void _rasterizer_detail_objects_rebuild_vertices(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_detail_objects_rebuild_vertices failed");
+#endif
 	}
 
 	return;
@@ -399,7 +405,9 @@ void _rasterizer_detail_objects_draw(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "### ERROR rasterizer_detail_objects_draw failed");
+#endif
 		}
 	}
 

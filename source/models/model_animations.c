@@ -780,7 +780,9 @@ void overlay_animation_apply_continuous_scaled(
 
 	if (real_frame_index<0.f || real_frame_index>(real)animation->frame_count)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR animation frame index out of bounds B(%f,%x) -- tell Bernie!!", real_frame_index, *(long *)&real_frame_index);
+#endif
 	}
 
 	if (frame_index>=animation->frame_count)

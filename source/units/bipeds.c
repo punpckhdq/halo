@@ -2349,6 +2349,7 @@ static void biped_update_jumping(
 		}
 	}
 
+#ifdef DEBUG
 	if (cheat.jetpack && biped->unit.player_index != NONE)
 	{
 		struct player_datum *player = player_get(biped->unit.player_index);
@@ -2387,6 +2388,7 @@ static void biped_update_jumping(
 			rumble_player_impulse(player->local_player_index, &rumble, 1.f, 1.f);
 		}
 	}
+#endif
 
 	return;
 }

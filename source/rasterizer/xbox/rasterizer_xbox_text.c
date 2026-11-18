@@ -166,7 +166,9 @@ void rasterizer_text_draw_character(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "### ERROR rasterizer_text_draw_character failed");
+#endif
 		}
 	}
 

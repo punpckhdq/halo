@@ -128,7 +128,9 @@ struct _main_globals
 	unsigned long *vblank_flip_counter;
 	short vblank_flip_delta_next_index;
 	short vblank_flip_deltas[15];
+#ifdef DEBUG
 	char time_debug_string[512]; /* fake name */
+#endif
 };
 
 /* ---------- prototypes */
@@ -2055,7 +2057,9 @@ static void main_update_time(
 
 	if (throttle)
 	{
+#ifdef DEBUG
 		strcpy(main_globals.time_debug_string, "");
+#endif
 
 		if (global_frame_rate_throttle && rasterizer_globals.refresh_rate>=0)
 		{
@@ -2071,9 +2075,11 @@ static void main_update_time(
 				short elapsed = game_time_get_elapsed();
 				short frame_index = (short)current_vblank_index;
 
+#ifdef DEBUG
 				_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "last%6I64d init%6I64d achv%6I64d pres%6I64d g%d cur%d... ",
 					main_globals.last_vblank_index, main_globals.last_initial_vblank_index, main_globals.last_achievable_vblank_index, main_globals.last_present_vblank_index,
 					elapsed, main_globals.vblank_interval_current);
+#endif
 
 				best_interval = 5;
 
@@ -2099,19 +2105,25 @@ static void main_update_time(
 							main_globals.vblank_last_failure_time[interval] = current_vblank_index;
 						}
 
+#ifdef DEBUG
 						_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "(%s%2d) ",
 							ignore ? "ignor" : "fail ", failure_count);
+#endif
 					}
 					else if (current_vblank_index>=main_globals.vblank_last_failure_time[interval]+15)
 					{
 						main_globals.vblank_failure_count[interval] = 0;
+#ifdef DEBUG
 						_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "(ok   %2d) ",
 							frames_since_failure);
+#endif
 					}
 					else
 					{
+#ifdef DEBUG
 						_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "(%s%2d/%2d) ",
 							main_globals.vblank_failure_count[interval]>=4 ? "dn" : "wt", failure_count, frames_since_failure);
+#endif
 					}
 
 					if (interval>=main_globals.vblank_interval_minimum && main_globals.vblank_failure_count[interval]<4)
@@ -2124,19 +2136,27 @@ static void main_update_time(
 
 				if (best_interval>main_globals.vblank_interval_current)
 				{
+#ifdef DEBUG
 					_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " FAILDOWN %d", frame_rate);
+#endif
 				}
 				else if (best_interval<main_globals.vblank_interval_current)
 				{
+#ifdef DEBUG
 					_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " RESTORE  %d", frame_rate);
+#endif
 				}
 				else
 				{
+#ifdef DEBUG
 					_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " MAINTAIN %d", frame_rate);
+#endif
 				}
 
+#ifdef DEBUG
 				_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), " des %d targ%6I64d",
 					best_interval, current_vblank_index+best_interval);
+#endif
 
 				main_globals.vblank_interval_current = best_interval;
 			}
@@ -2232,7 +2252,9 @@ void main_rasterizer_throttle(
 
 		if (rasterizer_globals.vblank_index<vblank_to_begin_present)
 		{
+#ifdef DEBUG
 			unsigned long time_ms = system_milliseconds();
+#endif
 			boolean precaching = cache_files_precache_in_progress();
 
 			throttled = TRUE;
@@ -2247,12 +2269,14 @@ void main_rasterizer_throttle(
 					Sleep(1);
 				}
 
+#ifdef DEBUG
 				if (system_milliseconds()>time_ms+1000)
 				{
 					console_warning("stuck waiting for VBLANK callback! disabling rasterizer framerate control");
 					rasterizer_globals.use_rasterizer_frame_rate_throttle = FALSE;
 					break;
 				}
+#endif
 			}
 
 #ifdef DEBUG
@@ -2265,10 +2289,12 @@ void main_rasterizer_throttle(
 	at_minimum = main_globals.vblank_interval_current==main_globals.vblank_interval_minimum;
 	lapsed = PIN(main_globals.last_present_vblank_index-main_globals.last_vblank_index, 0, SHRT_MAX);
 
+#ifdef DEBUG
 	_snprintf(main_globals.time_debug_string+strlen(main_globals.time_debug_string), NUMBEROF(main_globals.time_debug_string)-strlen(main_globals.time_debug_string), "%6I64d(targ%6I64d %s%2d)",
 		vblank_index, main_globals.last_vblank_index,
 		throttled ? "THROTTLE" : (lapsed==0 ? "SYNCED  " : "LAPSED  "),
 		throttled ? rasterizer_globals.vblank_index-vblank_index : lapsed);
+#endif
 
 	main_globals.vblank_interval_held = main_globals.vblank_interval_current>0 && lapsed==0;
 #ifdef DEBUG

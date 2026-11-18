@@ -2378,11 +2378,13 @@ static void actor_perception_refresh(
 
 						if (last_overflow_time==NONE || game_time_get()>last_overflow_time + 5 * TICKS_PER_SECOND)
 						{
+#ifdef DEBUG
 							error(
 								_error_silent,
 								"actor_perception_refresh overflowed max %s (%d), discarding",
 								prop->enemy ? "enemies" : "friends",
 								MAXIMUM_OPTIONAL_PROPS_PER_ACTOR);
+#endif
 							last_overflow_time = game_time_get();
 						}
 					}

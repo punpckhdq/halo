@@ -352,10 +352,14 @@ void hud_update_unit(
 void hud_render_unit_interface(
 	struct player_datum *player)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 	match_assert("c:\\halo\\SOURCE\\interface\\hud_unit.c", 521, player->local_player_index==render.local_player_index);
 
 	unit_hud_shield_meter_mapper_tick();
@@ -638,11 +642,13 @@ void hud_render_unit_interface(
 			}
 		}
 	}
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_hud_verify_stack("c:\\halo\\SOURCE\\interface\\hud_unit.c", 969);
 	}
+#endif
 
 	return;
 }
@@ -686,11 +692,15 @@ static struct unit_hud_state *get_hud_state(
 static void hud_update_unit_local_player(
 	short local_player_index)
 {
+#ifdef DEBUG
 	long return_eip = get_return_eip();
 	long stack_buffer[HUD_STACK_BUFFER_LONG_COUNT];
+#endif
 	long unit_index;
 
+#ifdef DEBUG
 	memset(stack_buffer, HUD_STACK_BUFFER_BYTE, sizeof(stack_buffer));
+#endif
 	unit_index = local_player_get_player_index(local_player_index) == NONE ? NONE : player_get(local_player_get_player_index(local_player_index))->unit_index;
 	if (unit_index != NONE)
 	{
@@ -738,12 +748,14 @@ static void hud_update_unit_local_player(
 		if (player_index != NONE)
 			hud_play_unit_sounds(player_get(player_index), hud_scripted_globals->show_hud);
 	}
+#ifdef DEBUG
 	{
 		short corrupt_index = check_stack_buffer(stack_buffer);
 
 		match_vassert("c:\\halo\\SOURCE\\interface\\hud_unit.c", 513, return_eip == get_return_eip(), "corrupt return address!");
 		match_vassert("c:\\halo\\SOURCE\\interface\\hud_unit.c", 513, corrupt_index == NONE, csprintf(temporary, "corrupt stack at %d!", corrupt_index));
 	}
+#endif
 
 	return;
 }

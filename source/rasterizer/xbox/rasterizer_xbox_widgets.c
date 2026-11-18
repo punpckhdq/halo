@@ -459,7 +459,9 @@ long _rasterizer_widget_submit_occlusion_test(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_widget_submit_occlusion_test failed");
+#endif
 	}
 
 	return occlusion_pixels;
@@ -498,7 +500,9 @@ long _rasterizer_widget_get_occlusion_test_result(
 
 		if (!success)
 		{
+#ifdef DEBUG
 			error(_error_silent, "### ERROR rasterizer_widget_get_occlusion_test_result failed");
+#endif
 		}
 	}
 	else

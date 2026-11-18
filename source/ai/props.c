@@ -171,7 +171,9 @@ static void prop_add(
 
 		if (last_warning_time == NONE || current_time >= last_warning_time + 30 * TICKS_PER_SECOND)
 		{
+#ifdef DEBUG
 			error(_error_silent, "AI knowledge database (%d entries) is full (warns once every 30 sec)", MAXIMUM_NUMBER_OF_PROPS);
+#endif
 			last_warning_time = current_time;
 		}
 	}

@@ -542,7 +542,9 @@ void _rasterizer_environment_lightmap_draw(
 
 	if (!success)
 	{
+#ifdef DEBUG
 		error(_error_silent, "### ERROR rasterizer_environment_lightmap_draw failed");
+#endif
 	}
 
 	return;

@@ -186,7 +186,9 @@ const char *attract_mode_get_localized_movie_path(
 
 		if (language==NUMBER_OF_SUPPORTED_LANGUAGES)
 		{
+#ifdef DEBUG
 			error(_error_silent, "unable to locate any movie for movie #%d (checked for all possible language variations)", movie);
+#endif
 			bss_00453ae8[0] = '\0';
 
 			break;

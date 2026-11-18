@@ -746,12 +746,14 @@ boolean unit_update(
 		* Grenade throw button
 		* Primary weapon fire button
 		*/
+#ifdef DEBUG
 		if (cheat.jetpack &&
 			TEST_FLAG(unit->unit.control_flags, _unit_control_weapon_primary_trigger_bit) &&
 			TEST_FLAG(unit->unit.control_flags, _unit_control_throw_grenade_bit))
 		{
 			jetpack_cheat_active = TRUE;
 		}
+#endif
 
 		if (TEST_FLAG(unit->unit.flags, _unit_active_camouflaged_bit))
 		{
@@ -8748,7 +8750,9 @@ static void unit_flame_to_death(
 
 	if (!TEST_FLAG(unit->object.damage_flags, _object_dead_bit))
 	{
+#ifdef DEBUG
 		error(_error_silent, "WARNING: %s tried to die from flaming to death but couldn't", tag_name_strip_path(tag_get_name(unit->definition_index)));
+#endif
 		SET_FLAG(unit->object.damage_flags, _object_die_act_of_god_bit, TRUE);
 	}
 

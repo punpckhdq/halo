@@ -614,12 +614,16 @@ boolean player_ui_save_profile(
 	case _saved_game_file_type_player_profile:
 		if (TEST_FLAG(player_ui_globals.edit_profile_data.profile_index, _default_profile_bit30))
 		{
+#ifdef DEBUG
 			error(_error_silent, "### WARNING: saving over a default player profile");
+#endif
 		}
 
 		if (!player_ui_edit_profile_is_dirty())
 		{
+#ifdef DEBUG
 			error(_error_silent, "### WARNING: saving player profile even though it hasn't been changed");
+#endif
 		}
 
 		player_profile_save(player_ui_globals.edit_profile_data.profile_index, &player_ui_globals.edit_profile_data.edit_profile.player_profile);
@@ -628,7 +632,9 @@ boolean player_ui_save_profile(
 	case _saved_game_file_type_play_list:
 		if (!player_ui_edit_profile_is_dirty())
 		{
+#ifdef DEBUG
 			error(_error_silent, "### WARNING: saving player profile even though it hasn't been changed");
+#endif
 		}
 
 		if (TEST_FLAG(player_ui_globals.edit_profile_data.profile_index, _default_profile_bit30))

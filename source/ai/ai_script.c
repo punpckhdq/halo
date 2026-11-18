@@ -622,19 +622,23 @@ void ai_scripting_attach_unit(
 
 				if (!success)
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"ai_attach: no actor variant specified for %s/%s, cannot create actor to attach to biped",
 						encounter->name,
 						squad_definition->name);
+#endif
 				}
 			}
 			else
 			{
+#ifdef DEBUG
 				error(
 					_error_silent,
 					"ai_attach: could not find a squad in encounter %s to attach actor",
 					encounter->name);
+#endif
 			}
 		}
 	}
@@ -3411,11 +3415,13 @@ void ai_scripting_force_active_by_unit(
 					actor->meta.squad_index,
 					struct squad_definition);
 
+#ifdef DEBUG
 				error(
 					_error_silent,
 					"ai_force_active_by_unit: unit is a member of encounter %s/%s, you must use ai_force_active instead",
 					encounter_definition->name,
 					squad_definition->name);
+#endif
 			}
 		}
 	}

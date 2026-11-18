@@ -759,11 +759,13 @@ void encounter_attach_actor(
 				}
 				else
 				{
+#ifdef DEBUG
 					error(
 						_error_silent,
 						"WARNING: actor changing to encounter %s/%s is being forced to change teams",
 						encounter_definition->name,
 						squad_definition->name);
+#endif
 					actor_set_team(actor_index, encounter->team_index);
 				}
 			}
@@ -1192,10 +1194,12 @@ static long encounter_find_pursuit(
 		}
 		else
 		{
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"WARNING: too many actors searching, exceeded MAXIMUM_EXAMINED_PURSUIT_POSITIONS_PER_MAP (%d)",
 				MAXIMUM_EXAMINED_PURSUIT_POSITIONS_PER_MAP);
+#endif
 		}
 	}
 
@@ -2827,11 +2831,13 @@ static boolean encounter_place_actor(
 
 		if (actor_palette_index < 0 || actor_palette_index >= scenario->ai_actor_palette.count)
 		{
+#ifdef DEBUG
 			error(
 				_error_silent,
 				"WARNING: cannot spawn actors in %s/%s because the actor variant specified for this squad is NONE or invalid",
 				encounter_definition->name,
 				squad_definition->name);
+#endif
 		}
 		else
 		{
@@ -3341,6 +3347,7 @@ static void encounter_update_follow(
 					}
 					else if (squad_definition->platoon_index != NONE)
 					{
+#ifdef DEBUG
 						error(
 							_error_silent,
 							"WARNING: squad %s/%s has an invalid platoon - %d is outside range of [0, %d)",
@@ -3348,6 +3355,7 @@ static void encounter_update_follow(
 							squad_definition->name,
 							squad_definition->platoon_index,
 							encounter_definition->platoons.count);
+#endif
 					}
 
 					if (defending)

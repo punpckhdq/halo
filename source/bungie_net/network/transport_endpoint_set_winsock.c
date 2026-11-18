@@ -252,7 +252,9 @@ long transport_initialize(
 
 		if (file)
 		{
+#ifdef DEBUG
 			error(_error_silent, "XNET_STARTUP_BYPASS_SECURITY [ON]");
+#endif
 			startup.cfgFlags |= XNET_STARTUP_BYPASS_SECURITY;
 			fclose(file);
 		}
