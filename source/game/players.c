@@ -2146,7 +2146,7 @@ static boolean player_handle_action(
 		player_unit->unit.last_vehicle_index = player->action_object_index;
 		player_unit->unit.game_time_at_last_vehicle_exit = game_time_get();
 
-		if (fabs(vehicle->object.forward.k) > (real)M_SQRT1_2)
+		if (fabs(vehicle->object.forward.k) > 0.70710677f)
 		{
 			vehicle->vehicle.upending_type = _vehicle_upending_along_left + (vehicle->object.forward.k < 0.f);
 		}
