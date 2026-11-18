@@ -1067,7 +1067,9 @@ static boolean is_player_in_trigger(
 	long unit_index,
 	short switch_trigger_index)
 {
-	return switch_trigger_index != NONE && scenario_trigger_volume_test_object(TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->bsp_switch_trigger_volumes, switch_trigger_index, struct scenario_bsp_switch_trigger_volume)->trigger_volume_index, unit_index);
+	struct scenario_bsp_switch_trigger_volume *switch_trigger = switch_trigger_index == NONE ? NULL : TAG_BLOCK_GET_ELEMENT(&global_scenario_get()->bsp_switch_trigger_volumes, switch_trigger_index, struct scenario_bsp_switch_trigger_volume);
+
+	return switch_trigger_index != NONE && scenario_trigger_volume_test_object(switch_trigger->trigger_volume_index, unit_index);
 }
 
 static void player_teleport_on_bsp_switch(

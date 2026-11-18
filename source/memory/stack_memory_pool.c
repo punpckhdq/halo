@@ -485,6 +485,7 @@ __inline static boolean memory_block_valid(
 	struct memory_block *block)
 {
 	boolean valid;
+#ifdef DEBUG
 	unsigned long real_size;
 
 	if (!block)
@@ -500,7 +501,6 @@ __inline static boolean memory_block_valid(
 			match_assert("c:\\halo\\SOURCE\\memory\\stack_memory_pool.c", 484, !"pointer has invalid size");
 			valid = FALSE;
 		}
-#ifdef DEBUG
 		else if (block->signature!=MEMORY_BLOCK_HEADER_SIGNATURE)
 		{
 			match_assert("c:\\halo\\SOURCE\\memory\\stack_memory_pool.c", 489, !"this memory has been corrupted");
@@ -511,12 +511,21 @@ __inline static boolean memory_block_valid(
 			match_assert("c:\\halo\\SOURCE\\memory\\stack_memory_pool.c", 494, !"wrote beyond the valid address space for this block");
 			valid = FALSE;
 		}
-#endif
 		else
 		{
 			valid = TRUE;
 		}
 	}
+#else
+	if (block && memory_block_get_real_size(block) - INTERNAL_POINTER_OVERHEAD>0)
+	{
+		valid = TRUE;
+	}
+	else
+	{
+		valid = FALSE;
+	}
+#endif
 
 	return valid;
 }

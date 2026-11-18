@@ -113,7 +113,7 @@ enum
 #ifdef DEBUG
 #define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); if (!(success)) rasterizer_error(result, #call); }
 #else
-#define D3DCALL(success, call) { HRESULT result = (call); (success) = (success) && SUCCEEDED(result); }
+#define D3DCALL(success, call) (call)
 #endif
 
 /* ---------- prototypes/RASTERIZER_XBOX.C */
