@@ -287,36 +287,27 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
     n.comment("Generated headers")
     generated_include_dir = build_path / "include"
     symbols_json = sln.version_config_dir / "symbols.json"
-    dsp_image_script = sln.tools_dir / "dsp_image.py"
-    dsp_image_header = generated_include_dir / "sound_dsound_xbox_effects_image.h"
+    extract_json = sln.version_config_dir / "extract.json"
+    extract_script = sln.tools_dir / "extract_symbol.py"
     n.rule(
-        name="dsp_image",
-        command=f"$python {dsp_image_script} $in $symbols $out",
-        description="DSP_IMAGE $out",
+        name="extract_symbol",
+        command=f"$python {extract_script} $in $symbols $extract $symbol $out",
+        description="EXTRACT $out",
         restat=True,
     )
-    n.build(
-        outputs=dsp_image_header,
-        rule="dsp_image",
-        inputs=sln.baserom,
-        implicit=[dsp_image_script, sln.tools_dir / "baserom.py", symbols_json],
-        variables={"symbols": symbols_json},
-    )
-    monk_tone_script = sln.tools_dir / "monk_tone.py"
-    monk_tone_header = generated_include_dir / "progress_bar_monk_tone.h"
-    n.rule(
-        name="monk_tone",
-        command=f"$python {monk_tone_script} $in $symbols $out",
-        description="MONK_TONE $out",
-        restat=True,
-    )
-    n.build(
-        outputs=monk_tone_header,
-        rule="monk_tone",
-        inputs=sln.baserom,
-        implicit=[monk_tone_script, sln.tools_dir / "baserom.py", symbols_json],
-        variables={"symbols": symbols_json},
-    )
+    extracted_headers: Dict[Path, List[Path]] = {}
+    with open(extract_json, "r", encoding="utf-8") as f:
+        extract_entries = json.load(f)
+    for entry in extract_entries:
+        extracted_header = generated_include_dir / entry["header"]
+        n.build(
+            outputs=extracted_header,
+            rule="extract_symbol",
+            inputs=sln.baserom,
+            implicit=[extract_script, sln.tools_dir / "baserom.py", symbols_json, extract_json],
+            variables={"symbols": symbols_json, "extract": extract_json, "symbol": entry["symbol"]},
+        )
+        extracted_headers.setdefault(Path(entry["source"]), []).append(extracted_header)
     n.newline()
 
     ###
@@ -374,8 +365,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
                 cflags.extend([f"/I\"{path}\"" for path in obj.options["include_dirs"]])
                 cflags.append(f"/I\"{generated_include_dir}\"")
                 implicit: List[Path] = [wrapper_implicit] if wrapper_implicit else []
-                implicit.append(dsp_image_header)
-                implicit.append(monk_tone_header)
+                implicit.extend(extracted_headers.get(obj.file_path, []))
                 implicit_outputs: List[Path] = []
                 if pch and obj.options["pch"] is not False:
                     header = pch["header"]
@@ -504,6 +494,7 @@ def generate_build_ninja(sln: SolutionConfig) -> None:
         rule="configure",
         implicit=[
             sln.config_dir / "config.json",
+            sln.version_config_dir / "extract.json",
             configure_script,
             python_lib,
             python_lib_dir / "ninja_syntax.py",
@@ -631,6 +622,7 @@ def generate_solution(sln: SolutionConfig) -> None:
         vc_extras: List[Path] = [
             relative_root / sln.config_dir / "config.json",
             relative_root / sln.version_config_dir / "symbols.json",
+            relative_root / sln.version_config_dir / "extract.json",
         ]
         vc_proj.add_extra_files(vc_extras)
         

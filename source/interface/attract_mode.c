@@ -37,7 +37,9 @@ extern short seed_random_range(unsigned long *seed, short lower_bound, short upp
 /* ---------- globals */
 
 static unsigned long bss_00453ad8 = 0;
+#if CONFIG_VERSION >= 2342
 static char bss_00453ae8[128] = {0};
+#endif
 
 short data_002e4c84 = NONE;
 
@@ -99,6 +101,7 @@ void attract_mode_reset_timer(
 	return;
 }
 
+#if CONFIG_VERSION >= 2342
 const char *attract_mode_get_localized_movie_path(
 	short movie)
 {
@@ -197,10 +200,19 @@ const char *attract_mode_get_localized_movie_path(
 
 	return bss_00453ae8;
 }
+#endif
 
 void attract_mode_start(
 	void)
 {
+#if CONFIG_VERSION < 2342
+	char const *movies[NUMBER_OF_ATTRACT_MODE_MOVIES] = /* fake name */
+	{
+		"d:\\bink\\attract1.bik",
+		"d:\\bink\\attract2.bik",
+		"d:\\bink\\attract3.bik"
+	};
+#endif
 	short video_index;
 
 	while (TRUE)
@@ -217,7 +229,11 @@ void attract_mode_start(
 
 	ui_stop_main_menu_music();
 
+#if CONFIG_VERSION >= 2342
 	bink_playback_start(attract_mode_get_localized_movie_path(video_index), 0x2e);
+#else
+	bink_playback_start(movies[video_index], 0x2e);
+#endif
 
 	if (!bink_playback_active())
 	{
@@ -233,7 +249,11 @@ void game_end_credits_start(
 	ui_stop_main_menu_music();
 	sound_stop_all();
 
+#if CONFIG_VERSION >= 2342
 	bink_playback_start(attract_mode_get_localized_movie_path(_bink_outro_movie), 0x2e);
+#else
+	bink_playback_start("d:\\bink\\credits.bik", 0x2e);
+#endif
 
 	return;
 }

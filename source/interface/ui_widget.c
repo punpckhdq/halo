@@ -1500,7 +1500,11 @@ void main_screen_shell_load(
 			SET_FLAG(flags, _bink_playback_return_to_main_menu_when_finished_bit, TRUE);
 			SET_FLAG(flags, _bink_playback_dont_allow_skipping_if_filesystem_check_thread_is_active_bit, TRUE);
 			SET_FLAG(flags, _bink_playback_eat_up_memory_like_a_goddamn_beaver_bit, TRUE);
+#if CONFIG_VERSION >= 2342
 			bink_playback_start(attract_mode_get_localized_movie_path(_bink_intro_movie), flags);
+#else
+			bink_playback_start("d:\\bink\\intro.bik", flags);
+#endif
 			load_main_menu = FALSE;
 
 			if (!bink_playback_active())

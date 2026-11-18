@@ -51,6 +51,7 @@ static struct
 
 /* ---------- public code */
 
+#if CONFIG_VERSION >= 2342
 char *cache_files_map_directory(
 	void)
 {
@@ -103,6 +104,7 @@ char *cache_files_map_directory(
 
 	return map_directory;
 }
+#endif
 
 long scenario_tags_load(
 	char const *name)

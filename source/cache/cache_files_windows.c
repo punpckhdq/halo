@@ -93,7 +93,9 @@ static struct cache_request *cache_request_get(short request_index);
 static short cache_request_next_free_index(void);
 static void cache_requests_flush(void);
 static void cached_map_files_delete(short map_file_index);
+#if CONFIG_VERSION >= 2342
 static void cache_files_zap_if_language_has_changed(void);
+#endif
 static void cached_map_files_open_all(void);
 static void cached_map_file_set_modification_date(short map_file_index);
 static void cached_map_file_read_header(short map_file_index);
@@ -135,7 +137,9 @@ void cache_files_initialize(
 	cache_file_globals.requests = (struct cache_request *)match_malloc("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(183, 187), MAXIMUM_SIMULTANEOUS_CACHE_REQUESTS * sizeof(struct cache_request));
 	match_assert("c:\\halo\\SOURCE\\cache\\cache_files_windows.c", MATCH_LINE_NTSC(184, 188), cache_file_globals.requests);
 	cache_file_windows_thread_create();
+#if CONFIG_VERSION >= 2342
 	cache_files_zap_if_language_has_changed();
+#endif
 	cached_map_files_open_all();
 	cache_copy_initialize();
 }
@@ -539,6 +543,7 @@ static void cached_map_files_delete(
 	return;
 }
 
+#if CONFIG_VERSION >= 2342
 static void cache_files_zap_if_language_has_changed(
 	void)
 {
@@ -577,6 +582,7 @@ static void cache_files_zap_if_language_has_changed(
 
 	return;
 }
+#endif
 
 static void cached_map_files_open_all(
 	void)
@@ -763,7 +769,7 @@ boolean cache_files_precache_map_begin(
 	else
 	{
 		error(_error_silent, "couldn't find map '%s' on the DVD", stripped_name);
-#ifdef DEBUG
+#if defined(DEBUG) && CONFIG_VERSION >= 2342
 		error(_error_silent, "full path name '%s'", name);
 #endif
 
@@ -1111,7 +1117,11 @@ static void scenario_name_to_cache_file_path(
 	char const *scenario_name,
 	char *path)
 {
+#if CONFIG_VERSION >= 2342
 	sprintf(path, "%s%s.map", cache_files_map_directory(), scenario_name);
+#else
+	sprintf(path, "d:\\maps\\%s.map", scenario_name);
+#endif
 
 	return;
 }

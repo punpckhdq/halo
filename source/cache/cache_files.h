@@ -90,7 +90,9 @@ struct cache_file_structure_bsp_header
 
 /* ---------- prototypes/CACHE_FILES.C */
 
+#if CONFIG_VERSION >= 2342
 char *cache_files_map_directory(void);
+#endif
 long scenario_tags_load(char const *name);
 void scenario_tags_unload(void);
 boolean scenario_structure_bsp_load(struct scenario_structure_bsp_reference *reference);
