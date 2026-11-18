@@ -2954,7 +2954,7 @@
 { "address": 796736, "flags": 32, "name": "_scripted_sound_new_evaluate", "static": true },
 { "address": 796800, "flags": 32, "name": "_scripted_sound_time_evaluate", "static": true },
 { "address": 796864, "flags": 32, "name": "_scripted_sound_stop_evaluate", "static": true },
-{ "address": 796928, "flags": 32, "name": "_code_000b1ca0" },
+{ "address": 796928, "flags": 32, "name": "_scripted_foley_predict_evaluate", "static": true },
 { "address": 796992, "flags": 32, "name": "_scripted_looping_sound_start_evaluate", "static": true },
 { "address": 797056, "flags": 32, "name": "_scripted_looping_sound_stop_evaluate", "static": true },
 { "address": 797120, "flags": 32, "name": "_scripted_looping_sound_set_scale_evaluate", "static": true },

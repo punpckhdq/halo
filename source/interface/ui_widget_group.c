@@ -52,6 +52,7 @@ void ui_load_tags_for_scenario(
 		{
 			error(_error_silent, "failed to load the solo scenario ui_widget_collection tag");
 		}
+#if CONFIG_VERSION >= 2342
 
 		if (tag_load(UNICODE_STRING_LISTS_GROUP_TAG, TEMPORARY_STRINGS_TAG_NAME, 0) == NONE)
 		{
@@ -59,6 +60,7 @@ void ui_load_tags_for_scenario(
 			error(_error_silent, "failed to load miscellaneous localized strings tag");
 #endif
 		}
+#endif
 		break;
 	case _scenario_type_multiplayer:
 		if (tag_load(UI_WIDGET_COLLECTION_TAG, MULTIPLAYER_WIDGET_COLLECTION_TAG_NAME, 0) == NONE)

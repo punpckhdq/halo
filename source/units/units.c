@@ -1505,6 +1505,7 @@ void unit_export_function_values(
 				{
 					struct animation_graph *animation_graph = animation_graph_definition_get(unit->object.animation.animation_graph_index);
 					struct animation *animation = TAG_BLOCK_GET_ELEMENT(&animation_graph->animations, unit->object.animation.state.index, struct animation);
+#if CONFIG_VERSION >= 2342
 					short loop_frame_index = animation_loop_frame_index(animation);
 
 					if (unit->object.animation.state.index >= loop_frame_index)
@@ -1515,6 +1516,17 @@ void unit_export_function_values(
 					{
 						value = (real)unit->object.animation.state.index / loop_frame_index;
 					}
+#else
+
+					if (unit->object.animation.state.index >= animation_loop_frame_index(animation))
+					{
+						value = 1.f - unit->unit.shield_sap_timeout / 90.f;
+					}
+					else
+					{
+						value = (real)unit->object.animation.state.index / animation_loop_frame_index(animation);
+					}
+#endif
 				}
 				break;
 			}
@@ -7414,10 +7426,12 @@ static void unit_throw_grenade_release(
 				}
 			}
 		}
+#if CONFIG_VERSION >= 2342
 		else
 		{
 			unit->unit.grenade_throw_state = _unit_grenade_throw_ending;
 		}
+#endif
 	}
 
 	return;

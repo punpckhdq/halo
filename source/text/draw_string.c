@@ -786,9 +786,15 @@ static void bitmap_draw_character(
 	short dy)
 {
 	word color16;
+#if CONFIG_VERSION >= 2342
 	short format = draw_character_software_globals.bitmap->format;
 	short alpha = (short)PIXEL32_ALPHA(color);
 	byte *character_pixels = (byte *)font_header->pixels.address + character->pixels_offset;
+#else
+	byte *character_pixels = (byte *)font_header->pixels.address + character->pixels_offset;
+	short format = draw_character_software_globals.bitmap->format;
+	short alpha = (short)PIXEL32_ALPHA(color);
+#endif
 
 	if (format == _bitmap_format_r5g6b5)
 	{

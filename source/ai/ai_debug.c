@@ -5240,6 +5240,7 @@ void ai_debug_teleport_to(
 static long ai_debug_get_this_actor(
 	void)
 {
+#if CONFIG_VERSION >= 2342
 	short local_player_index;
 
 	long actor_index = NONE;
@@ -5303,6 +5304,52 @@ static long ai_debug_get_this_actor(
 			}
 		}
 	}
+#else
+	long actor_index = NONE;
+	struct observer_result const *camera = observer_get_camera(0);
+
+	if (camera)
+	{
+		struct collision_result collision;
+		long object_index;
+		real_vector3d v;
+		long ignore_object_index = NONE;
+
+		if (director_get_perspective(0)==_director_perspective_first_person)
+		{
+			ignore_object_index = player_get(local_player_get_player_index(0))->unit_index;
+		}
+
+		scale_vector3d(&camera->forward, 50.f, &v);
+		if (collision_test_vector(
+			FLAG(_collision_test_front_facing_surfaces_bit)|FLAG(_collision_test_objects_bit),
+			&camera->position,
+			&v,
+			ignore_object_index,
+			&collision) &&
+			collision.type==_collision_result_object)
+		{
+			object_index = collision.object_index;
+
+			if (object_index!=NONE)
+			{
+				struct unit_datum const *unit = unit_try_and_get(object_index);
+
+				if (unit)
+				{
+					actor_index = unit->unit.swarm_actor_index!=NONE ? unit->unit.swarm_actor_index : unit->unit.actor_index;
+
+					if (actor_index==NONE && unit->unit.driver_object_index!=NONE)
+					{
+						struct unit_datum const *driver_unit = unit_get(unit->unit.driver_object_index);
+
+						actor_index = driver_unit->unit.swarm_actor_index!=NONE ? driver_unit->unit.swarm_actor_index : driver_unit->unit.actor_index;
+					}
+				}
+			}
+		}
+	}
+#endif
 
 	return actor_index;
 }

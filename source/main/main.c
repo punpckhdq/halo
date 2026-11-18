@@ -160,7 +160,9 @@ static void main_setup_connection(void);
 static void main_exit(void);
 static void main_initialize_time(void);
 static void main_reset_time(void);
+#if CONFIG_VERSION >= 2342
 static boolean main_time_is_throttled(void);
+#endif
 static void main_update_time(void);
 static void screenshot_render(struct render_window *window);
 static void screenshot_record(struct bitmap_data *screen, struct file_reference *file);
@@ -2040,11 +2042,13 @@ static void main_reset_time(
 	return;
 }
 
+#if CONFIG_VERSION >= 2342
 static boolean main_time_is_throttled(
 	void)
 {
 	return rasterizer_globals.use_rasterizer_frame_rate_throttle;
 }
+#endif
 
 static void main_update_time(
 	void)
@@ -2053,9 +2057,14 @@ static void main_update_time(
 	unsigned long current_milliseconds = system_milliseconds();
 	__int64 current_vblank_index = MAX(main_globals.last_vblank_index, main_globals.last_present_vblank_index);
 	__int64 target_display_vblank_index = current_vblank_index;
+#if CONFIG_VERSION >= 2342
 	boolean throttle = main_time_is_throttled();
 
 	if (throttle)
+#else
+
+	if (rasterizer_globals.use_rasterizer_frame_rate_throttle)
+#endif
 	{
 #ifdef DEBUG
 		strcpy(main_globals.time_debug_string, "");
@@ -2170,9 +2179,13 @@ static void main_update_time(
 	}
 	else
 	{
+#if CONFIG_VERSION >= 2342
 		long delta_msec = current_milliseconds-main_globals.last_time_msec;
 		real elapsed = (real)delta_msec;
 		long elapsed_msec = (long)elapsed;
+#else
+		long elapsed_msec = current_milliseconds-main_globals.last_time_msec;
+#endif
 
 		main_globals.vblank_interval_held = FALSE;
 
@@ -2202,7 +2215,11 @@ static void main_update_time(
 	current_milliseconds = system_milliseconds();
 	target_display_vblank_index = MAX(rasterizer_globals.vblank_index, target_display_vblank_index);
 
+#if CONFIG_VERSION >= 2342
 	if (throttle)
+#else
+	if (rasterizer_globals.use_rasterizer_frame_rate_throttle)
+#endif
 	{
 		seconds_elapsed = (target_display_vblank_index-main_globals.last_vblank_index)*(1.f/VBLANKS_PER_SECOND);
 	}
@@ -2246,7 +2263,11 @@ void main_rasterizer_throttle(
 
 	main_globals.last_achievable_vblank_index = rasterizer_globals.vblank_index+1;
 
+#if CONFIG_VERSION >= 2342
 	if (main_time_is_throttled())
+#else
+	if (global_frame_rate_throttle && rasterizer_globals.use_rasterizer_frame_rate_throttle)
+#endif
 	{
 		__int64 vblank_to_begin_present = main_globals.last_vblank_index-1;
 
